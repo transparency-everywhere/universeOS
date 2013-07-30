@@ -1,0 +1,149 @@
+<?
+if(empty($_SESSION[userid])){
+    session_start();
+}
+
+//request limitator untill reload.php is tidy
+if(!isset($global_userGroupData) && $_SESSION[personalFeed] > (time()-60)){
+	die();
+}
+
+require_once("inc/config.php");
+require_once("inc/functions.php");
+?>
+<style>
+    #personalFeed{
+        position:absolute;
+        bottom: 60px;
+        left: 0px;
+    }
+    
+</style>
+<?
+$i = "1";
+$friendRequestSql = mysql_query("SELECT * FROM buddylist WHERE buddy='$_SESSION[userid]' && request='1' LIMIT 0, 3");
+while($friendRequestData = mysql_fetch_array($friendRequestSql)){
+	$session .= "buddyRequest $friendRequestData[id]";
+	
+    $friendRequestSql2 = mysql_query("SELECT * FROM user WHERE userid='$friendRequestData[owner]'");
+    $friendRequestData2 = mysql_fetch_array($friendRequestSql2);
+?>
+<?
+if("1" == "2"){
+?>
+
+    
+    $("#box<?=$i;?>").click(function () {
+      createNewTab('reader_tabView','<?=$friendRequestData2[username];?>','','./profile.php?user=<?=$friendRequestData2[userid];?>',true);
+    });
+    <? } ?>
+    <script>
+        if($("#friendRequest_<?=$friendRequestData[id];?>").length == '0'){
+            $('#dockMenuBuddyAlerts').append('<li id="friendRequest_<?=$friendRequestData[id];?>"><?=showUserPicture("$friendRequestData2[userid]", '15', '', true);?><div class="messageMain"><a href="#" onclick="showProfile(\'<?=$friendRequestData2[userid];?>\');"><?=$friendRequestData2[username];?></a> wants to be your friend</div><div class="messageButton"><a href="doit.php?action=requestpositive&buddy=<?=$friendRequestData2[userid];?>" target="submitter" class="btn btn-info btn-mini" style="margin-right:25px;" onclick="$(\'#friendRequest_<?=$newGroupData[id];?>\').remove();">Add to Buddylist</a><a href="doit.php?action=requestnegative&buddy=<?=$friendRequestData2[userid];?>" class="btn btn-mini" target="submitter" onclick="$(\'#friendRequest_<?=$friendRequestData2[id];?>\').remove();">Decline</a></div></li>');
+        }
+    </script>
+<?
+$i++;
+}
+$newMessagesSql = mysql_query("SELECT * FROM  `messages` WHERE  receiver='$_SESSION[userid]' AND  `read`='0'  ORDER BY timestamp DESC LIMIT 0, 3");
+while($newMessagesData = mysql_fetch_array($newMessagesSql)){
+	$session .= "newMessage $newMessagesData[id]";
+    
+        $text = substr($newMessagesData[text], 0, 100);
+
+    $newMessagesSql2 = mysql_query("SELECT userid, username FROM user WHERE userid='$newMessagesData[sender]'");
+    $newMessagesData2 = mysql_fetch_array($newMessagesSql2);
+?>
+    
+    <script>
+        if($("#message_<?=$newMessagesData[id];?>").length == 0){
+            $('#dockMenuBuddyAlerts').append('<li id="message_<?=$newMessagesData[id];?>"><?=showUserPicture("$newMessagesData[sender]", '15', '', true);?><div class="messageMain"><a href="#" onclick="showProfile(\'<?=$newMessagesData2[username];?>\');"><?=$newMessagesData2[username];?></a> <?=$text;?></div><div class="messageButton"><a onclick="createNewTab(\'chat_tabView1\',\'<?=$newMessagesData2[username];?>\',\'\',\'modules/chat/chatt.php?buddy=<?=$newMessagesData2[username];?>\',true); $(\'#message_<?=$newMessagesData[id];?>\').remove();" class="btn btn-info btn-mini" style="margin-right:25px;"><i class="icon-envelope icon-white"> </i> Show</a><a class="btn btn-mini" target="submitter" onclick="$(\'#message_<?=$newMessagesData[id];?>\').remove();">Ignore</a></div></li>');
+        }
+    </script>
+<? 
+$i++;
+}
+$newGroupSql = mysql_query("SELECT * FROM  `groupAttachments` WHERE  item='user' AND  `validated`='0' AND itemId='$userid' ORDER BY timestamp DESC LIMIT 0, 3");
+while($newGroupData = mysql_fetch_array($newGroupSql)){
+	$session .= "newGroup $newGroupData[id]";
+
+    $newGroupSql2 = mysql_query("SELECT * FROM groups WHERE id='$newGroupData[group]'");
+    $newGroupData2 = mysql_fetch_array($newGroupSql2);
+        $newGroupSql3 = mysql_query("SELECT userid, username FROM user WHERE userid='$newGroupData[author]'");
+        $newGroupData3 = mysql_fetch_array($newGroupSql3);
+?>
+    <script>
+        if($("#groupRequest_<?=$newGroupData[id];?>").length == 0){
+            $('#dockMenuSystemAlerts').append('<li id="groupRequest_<?=$newGroupData[id];?>"><?=showUserPicture("$newGroupData3[userid]", '15', '', true);?><div class="messageMain"><a href="#" onclick="showProfile(\'<?=$newGroupData3[userid];?>\');"><?=$newGroupData3[username];?></a> Invited you into the  group <a href="#" onclick="createNewTab(\'reader_tabView\',\'<?=$newGroupData2[title];?>\',\'\',\'group.php?id=<?=$newGroupData2[id];?>\',true);return false"><?=$newGroupData2[title];?></a></div><div class="messageButton"><a href="doit.php?action=joinGroup&id=<?=$newGroupData[id];?>" class="btn btn-info btn-mini" target="submitter" style="margin-right:25px;" onclick="$(\'#groupRequest_<?=$newGroupData[id];?>\').remove();">Join</a><a href="doit.php?action=declineGroup&id=<?=$newGroupData[id];?>" class="btn btn-mini" target="submitter" onclick="$(\'#groupRequest_<?=$newGroupData[id];?>\').remove();">Decline</a></div></li>');
+        }
+    </script>
+<? 
+$i++;
+}
+$personalEventSql = mysql_query("SELECT * FROM personalEvents WHERE owner='$_SESSION[userid]' AND seen='0'");
+while($personalEventData = mysql_fetch_array($personalEventSql)){
+	$session .= "newPersonalEvent $personalEventData[id]";
+    $newEventSql2 = mysql_query("SELECT username FROM user WHERE userid='$personalEventData[user]'");
+    $newEventData2 = mysql_fetch_array($newEventSql2);
+    $countEvents++;
+
+    if($personalEventData[event] == "comment"){
+        if($personalEventData[info] == "feed"){
+            $description = "Has commented your post.";
+            $link = "createNewTab(\'reader_tabView\',\'Comment\','\',\'modules/reader/showComment.php?type=$personalEventData[info]&itemid=$personalEventData[eventId]\',true);";
+        }else if($personalEventData[info] == "profile"){
+            $description = "Has commented in your profile.";
+            $link = "showProfile(\'$_SESSION[userid]\');";
+        }
+    }
+    ?>
+    <script>
+        if($("#personalEvent_<?=$personalEventData[event];?>_<?=$personalEventData[info];?>_<?=$personalEventData[eventId];?>").length == 0){
+            $('#dockMenuBuddyAlerts').append('<li id="personalEvent_<?=$personalEventData[event];?>_<?=$personalEventData[info];?>_<?=$personalEventData[eventId];?>"><?=showUserPicture("$personalEventData[user]", '15', '', true);?><div class="messageMain"><a href="#" onclick="showProfile(\'<?=$personalEventData[user];?>\');"><?=$newEventData2[username];?></a> <?=$description;?></div><div class="messageButton"><a class="btn btn-info btn-mini" target="submitter" style="margin-right:25px;" onclick="deleteFromPersonals(\'<?=$personalEventData[id];?>\');<?=$link;?>$(\'#personalEvent_<?=$personalEventData[event];?>_<?=$personalEventData[info];?>_<?=$personalEventData[eventId];?>\').remove();">Show</a><a href="#" class="btn btn-mini" target="submitter" onclick="deleteFromPersonals(\'<?=$personalEventData[id];?>\');$(\'#personalEvent_<?=$personalEventData[event];?>_<?=$personalEventData[info];?>_<?=$personalEventData[eventId];?>\').remove();">Ignore</a></div></li>');
+        }
+    </script>
+<?
+$i++;
+}
+
+$friendRequestSql = mysql_query("SELECT buddy, request FROM buddylist WHERE buddy='$_SESSION[userid]' && request='1'");
+$countFriendRequests = mysql_num_rows($friendRequestSql);
+
+$zero = 0;
+$messagesSql = mysql_query("SELECT * FROM  `messages` WHERE  receiver='$_SESSION[userid]' AND  `read`='0'");
+$countMessages = mysql_num_rows($messagesSql);
+
+$countgroup = mysql_num_rows($newGroupSql);
+
+
+$amount = ($countFriendRequests + $countMessages + $countgroup + $countEvents);
+
+if($i > 1){
+	$_SESSION[personalFeed] = time();
+}
+
+    echo"<script>";
+    
+//check for new fbuddyactions
+    
+    $buddyActions = $countFriendRequests + $countgroup;
+    
+if($buddyActions != "0"){
+    echo "$('#openFriendRequests').html('$buddyActions');";
+}
+
+//check for new messages
+if($countMessages != "0"){
+    echo "$('#newMessages').html('$countMessages');";
+}
+
+if($appAlerts != "0"){
+    echo "$('#appAlerts').html('$countEvents');";
+}
+    echo"</script>";
+
+
+//if($amount != "0"){
+//$text = $amount;
+//}
+?>

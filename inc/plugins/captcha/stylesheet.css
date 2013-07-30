@@ -1,0 +1,22 @@
+body { background:#000000; font-family:Arial, Helvetica, sans-serif; }
+#container {
+	display:block;
+	position:relative;
+	width:600px;
+	margin:0px auto 0px;
+	background:#FFF;
+	padding:20px;
+	font-size:12px;
+	line-height:18px;
+}
+
+h1 { background:#333333; text-align:center; color:#FFFFFF; padding:10px; }
+h2 { font-size:12px; font-style:italic; color:#333333; }
+
+#container p{
+	clear:both; 
+	float:none;
+	margin:10px 0px 10px;
+}
+
+span.explain { display:block; font-size:10px; color:#999999; }
