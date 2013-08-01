@@ -4,12 +4,6 @@ if(empty($_GET[action])){
    setcookie("userid","$_SESSION[userid]",time()+(3600*24));
 }
 
-$noJq = htmlspecialchars($_GET[noJq]);
-//if(!$noJq){
-?>
-<!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>-->
-<?
-//}
 include("inc/config.php");
 include("inc/functions.php");
 $time = time();
@@ -968,6 +962,7 @@ if($_GET[action] == "scorePlus"){
                                                     <option value="link">Standard Link<option>
                                                     <option value="RSS">RSS</option>
                                                     <option value="youTube">Youtube</option>
+                                                    <option value="soundcloud">Soundcloud</option>
                                                     <option value="file">File</option>
                                                     <option value="other">Other</option>
                                                 </select>
@@ -2243,6 +2238,9 @@ if($_GET[action] == "scorePlus"){
 						case 'youTube':
 							$selected[youTube] = 'selected="selected"';
 							break;
+						case 'soundcloud':
+							$selected[soundcloud] = 'selected="selected"';
+							break;
 						case 'file':
 							$selected['file'] = 'selected="selected"';
 							break;
@@ -2262,11 +2260,11 @@ if($_GET[action] == "scorePlus"){
                     <tr>
                         <td style=\"vertical-align: middle\">Type:</td>
                         <td>
-                        	
                               <select name=\"type\">
                                   <option value=\"link\" $selected[link]>Standard Link<option>
                                   <option value=\"RSS\" $selected[RSS]>RSS</option>
                                   <option value=\"youTube\" $selected[youTube]>Youtube</option>
+                                  <option value=\"soundcloud\" $selected[youTube]>Soundcloud</option>
                                   <option value=\"file\" $selected[file]>File</option>
                                   <option value=\"other\" $selected[other]>Other</option>
                               </select>

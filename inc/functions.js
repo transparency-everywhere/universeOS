@@ -1,3 +1,120 @@
+//initialize
+
+                
+                
+                $(document).ready(function(){
+                			
+                	//init search
+					$("#searchField").keyup(function()
+					{
+						var search;
+						
+						search = $("#searchField").val();
+						if (search.length > 1)
+						{
+							$.ajax(
+							{
+								type: "POST",
+								url: "modules/suggestions/dockSearch.php",
+								data: "search=" + search,
+								success: function(message)
+								{	
+									$("#suggest").empty();
+							  		if (message.length > 1)
+									{						
+										$("#suggest").append(message);
+									}
+								}
+							});
+						}
+						else
+						{
+							$("#suggest").empty();
+						}
+					});
+                
+                	//old creepy way to initalize windows => in future => css media width
+                    var docWidth;
+                    var oneSixthWidth;
+                    var oneSixthHeight;
+                        docWidth = $(document).width();
+                    var docHeight = $(document).height();
+                        oneSixthWidth = docWidth/6;
+                        oneSixthHeight = docHeight/6;
+                        var FeedOb = {
+                        'top' : oneSixthHeight/6,
+                        'left' : oneSixthWidth/5,
+                        'width' : oneSixthWidth,
+                        'height' : oneSixthHeight*2.75
+                            }
+                        var FileOb = {
+                        'top' : oneSixthHeight*3.4-100,
+                        'left' : oneSixthWidth/5,
+                        'width' : oneSixthWidth*2.5,
+                        'height' : oneSixthHeight*1.8
+                            }
+                        var ReaderOb = {
+                        'top' : oneSixthHeight/6,
+                        'left' : oneSixthWidth*1.3,
+                        'width' : oneSixthWidth*3.5,
+                        'height' : oneSixthHeight*2.75
+                            }
+                        var ChatOb = {
+                        'top' : oneSixthHeight*3.4,
+                        'left' : oneSixthWidth*2.8,
+                        'width' : oneSixthWidth*2,
+                        'height' : oneSixthHeight*1.8
+                            }
+                        var BuddylistOb = {
+                        'top' : oneSixthHeight/6,
+                        'left' : oneSixthWidth*4.9,
+                        'width' : oneSixthWidth*1,
+                        'height' : oneSixthHeight*5
+                            }
+                        $("#feed").css(FeedOb);
+                        $("#filesystem").css(FileOb);
+                        $("#reader").css(ReaderOb);
+                        $("#chat").css(ChatOb);
+                        $("#buddylist").css(BuddylistOb);
+                        //$("#feed:hidden").fadeIn(3000);
+                        $("#filesystem:hidden").fadeIn(3000);
+                        $("#reader:hidden").fadeIn(3000);
+                        //$("#chat:hidden").fadeIn(3000);
+                        $("#buddylist:hidden").fadeIn(3000);
+                        
+                        
+                        
+                        //init draggable windows
+                        initDraggable();
+                        
+                        //init bootstrap popover
+                        $('.bsPopOver').popover();
+                        
+                        //init bootstrap alert
+                        $(".alert").alert();
+                    
+                });
+                
+                
+
+                $(document).mousemove(function(event){
+                    window.mouseX = event.pageX;
+                    window.mouseY = event.pageY;
+                    $('.mousePop').hide();
+                });
+                
+                
+                
+                //initialize mousePop(tooltip)
+                $('.tooltipper').mouseenter(function(){
+                    
+                    var type = $(this).attr("data-popType");
+                    var id = $(this).attr("data-typeId");
+                    var text = $(this).attr("data-text");
+                    mousePop(type, id, text);
+                }).mouseleave(function(){
+                    $('.mousePop').hide();
+                });
 
     
               
@@ -107,6 +224,19 @@
               	
               }
               
+              function jsAlert(type, message){
+              	var alertClass;
+              	if(empty(type)){
+              		alertClass = 'alert-info';
+              	}else if(type == 'success'){
+              		alertClass = 'alert-success';
+              	}else if(type == 'error'){
+              		alertClass = 'alert-error';
+              	}
+              	$('#alerter').append('<div class="alert '+alertClass+'"><button type="button" class="close" data-dismiss="alert">&times;</button>'+message+'</div>');
+              	
+              }
+              
        
        
        
@@ -132,6 +262,14 @@
 //           }
 //       }
 
+	  function empty(value){
+	  	if(value.length == 0) {
+	  		return true;
+	  	}else{
+	  		return false;
+	  	}
+	  }
+
 	  //shows settings for opbjects (button with cog)
       function showSettingsWindow(id){
           
@@ -152,6 +290,7 @@
         createNewTab('reader_tabView', title,'','showContent.php?content='+content,true);return true
           
       }
+      
       function mousePop(type, id, html){
             $('.mousePop').remove();
             if($('#mousePop_'+type+id).length == 0){   
@@ -494,6 +633,121 @@
     	}
     }
 //old index functions
+
+
+	//rightclick
+                function clearMenu() { //used to make the menu disappear
+                    //this function should be used at the beginning of any function that is called from the menu
+                    var cssObj = {
+                        'display' : 'none'
+                        }
+                    $(".rightclick").css(cssObj);
+                }
+              
+                function showMenu(id) {
+                    /*  check whether the event is a right click 
+                    *  because different browser (ahem IE) assign different numbers to the keys to
+                    *  your mouse buttons and different values to the event, you'll have to do some evaluation
+                    */
+                    var rightclick; //will be set to true or false
+                    if (event.button) {
+                        rightclick = (event.button == 2);
+                    } else if (e.button) {
+                        rightclick = (event.which == 3);
+                    }
+
+                    if(rightclick) { //if the secondary mouse botton was clicked
+                        $(".rightclick").hide();
+                        var menu = document.getElementById("rightClick" + id + "");
+                        var Event = event;
+                        menu.style.position = "fixed"; //show menu
+                        menu.style.display = "block"; //show menu
+                        menu.style.left  = Event.clientX + "px";
+                        menu.style.top = Event.clientY + "px";
+
+                        
+                        $(".rightclick").css('z-index', '9999');
+
+                    }
+                }
+                
+                
+	//the rest
+
+              function showModuleMail() {
+                    $.get("modules/mail/index.php",function(data){
+                          $('#bodywrap').append(data);
+                    },'html');
+                }
+              function showModuleSettings() {
+                    $.get("modules/settings/index.php",function(data){
+                          $('#bodywrap').append(data);
+                          applicationOnTop('settings');
+                    },'html');
+                    
+                }
+              
+              function updateUserActivity() {
+              	$("#loader").load("doit.php?action=updateUserActivity");
+              }
+              
+              function closeModuleSettings() {
+              	$("#invisibleSettings").hide("slow");
+              }
+              function openModule(moduleId) {
+              	$("#invisible" + moduleId + "").toggle("slow");
+              }
+              
+              function openModuleMail() {
+              	$("#invisiblemail").show("slow");
+              }
+              
+              function closeModuleMail() {
+              	$("#invisiblemail").hide("slow");
+              }
+                
+              function play() {
+              	$("#jquery_jplayer_2").jPlayer("play");
+              } 
+                 
+              function playPlaylist(playlist, row, fileId) {
+                  
+	              alert("lol a" + fileId + " b" + playlist + " c" + row + " ");
+	              $("#dockplayer").load("./player/dockplayer.php?file=" + fileId +"&reload=1&playList=" + playlist +"&row=" + row + "");
+	              play();
+              }
+              function playFileDock(fileId) {
+              	$("#dockplayer").load("./player/dockplayer.php?file=" + fileId +"&reload=1");
+              }
+                
+              function nextPlaylistItem(playList, row){
+             	  $("#playListPlayer").load("playListplayer.php?playList=" + playList +"&row=" + row +"");
+              }
+
+              function addBuddy(userId) {
+              	$("#loader").load("addbuddy.php?user=" + userId +"");
+              }
+                
+              function showSubComment(commentId) {
+                  $("#comment" + commentId + "").load("showComment.php?id=" + commentId +"");
+                  $("#comment" + commentId + "").toggle("slow");
+              }
+              function showfeedComment(feedId) {
+                  $("#feed" + feedId + "").load("showComment.php?type=feed&feedid=" + feedId +"");
+                  $("#feed" + feedId + "").toggle("slow");
+              }
+              function loader(id, link){
+                  $("#" + id + "").load("" + link + "");
+              }
+              
+              
+              
+              function deleteFromPersonals(id){
+                  $("#loader").load("doit.php?action=deleteFromPersonals&id=" + id + "");
+              }
+              
+              
+              
 
               function showProfile(userId){
                   showApplication('reader');

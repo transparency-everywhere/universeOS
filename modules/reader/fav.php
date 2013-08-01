@@ -135,7 +135,7 @@ if($_GET[action] == "add"){
                                             echo"<li><img src=\"./gfx/icons/rss.png\" height=\"10\">&nbsp;<a href=\"#\" onclick=\"loader('newsContentFrame','doit.php?action=showSingleRssFeed&id=$favData[item]');\">$title</a></li>";
                         }
                         ?>
-                        <li><img src="./gfx/icons/rss.png" height="10">&nbsp;BBC</li>
+                        <li><img src="./gfx/icons/rss.png" height="10">&nbsp;<a href="#" onclick="loader('newsContentFrame','doit.php?action=showSingleRssFeed&id=12');">BBC News - World</a></li>
                     </ul>
                     <ul>
                         <li><i style="font-size: 8pt;">Add RSS Feeds to your favourites, to see them here</i></li>
@@ -161,18 +161,18 @@ if($_GET[action] == "add"){
                     </div>
                     <div class="frameRight" style="top: 151px;" id="personalFileFrame">
                         <?
-                  $user = $_SESSION[userid];
-                 
-                  //show folders and elements
-                  $folderQuery = "WHERE creator='$user' ORDER BY timestamp DESC";
-                  $elementQuery = "WHERE author='$user' ORDER BY timestamp DESC";
-                  showFileBrowser($folder, "$folderQuery", "$elementQuery");
-                  
-                  //show files
-                  $fileQuery = "owner='$user' ORDER BY timestamp DESC";
-                  echo'<table width="100%">';
-                  showFileList('', $fileQuery);
-                  echo"</table>";
+		                  $user = $_SESSION[userid];
+		                 
+		                  //show folders and elements
+		                  $folderQuery = "WHERE creator='$user' ORDER BY timestamp DESC";
+		                  $elementQuery = "WHERE author='$user' ORDER BY timestamp DESC";
+		                  showFileBrowser($folder, "$folderQuery", "$elementQuery");
+		                  
+		                  //show files
+		                  $fileQuery = "owner='$user' ORDER BY timestamp DESC";
+		                  echo'<table width="100%">';
+		                  showFileList('', $fileQuery);
+		                  echo"</table>";
                         ?>
                         
                         

@@ -41,7 +41,7 @@
             <td><div class="module" id="startButton"><?=showUserPicture($userdata['userid'], 15);?><i class="icon-retweet icon-white" style="margin-left:15px;"><span class="iconAlert" id="appAlerts"></span></i><i class="icon-user icon-white"><span class="iconAlert" id="openFriendRequests"></span></i><i class="icon-envelope icon-white"><span class="iconAlert" id="newMessages"></span></i></div><td>
 
             <td><div id="modulePlayer" class="module">&nbsp;&nbsp;Player</div>   </td>
-            <td><a href="logout.php" target="submitter" class="module" style="tex-decoration: none; color: #797979; font-size: 12pt; font-family: arial;">&nbsp;&nbsp;Logout</a></td>
+            <td><a href="logout.php" target="submitter" class="module" style="tex-decoration: none; color: #797979; min-width:10px;" title="logout">&nbsp;<i class="icon-white icon-off"></i>&nbsp;</a></td>
             <td align="right" id="clockDiv" style="color: #FFFFFF; float: right"></td>
             <td align="right"><input type="text" name="searchField" id="searchField" class="border-radius" placeholder="search"></td>
         </tr>

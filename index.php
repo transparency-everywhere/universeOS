@@ -36,7 +36,9 @@ if(!isset($_SESSION["userid"])) {
 } ?>
         <div id="reload"></div>
         <div id="bodywrap">
-            <div id="loader"></div><div id="popper"></div><iframe name="submitter" style="display:none;" id="submitter"></iframe>
+        	
+        	
+            <div id="alerter" class="container"></div><div id="loader"></div><div id="popper"></div><iframe name="submitter" style="display:none;" id="submitter"></iframe>
             <div id="suggest">
             </div>
 

@@ -56,8 +56,8 @@ while($newMessagesData = mysql_fetch_array($newMessagesSql)){
 ?>
     
     <script>
-        if($("#message_<?=$newMessagesData[id];?>").length == 0){
-            $('#dockMenuBuddyAlerts').append('<li id="message_<?=$newMessagesData[id];?>"><?=showUserPicture("$newMessagesData[sender]", '15', '', true);?><div class="messageMain"><a href="#" onclick="showProfile(\'<?=$newMessagesData2[username];?>\');"><?=$newMessagesData2[username];?></a> <?=$text;?></div><div class="messageButton"><a onclick="createNewTab(\'chat_tabView1\',\'<?=$newMessagesData2[username];?>\',\'\',\'modules/chat/chatt.php?buddy=<?=$newMessagesData2[username];?>\',true); $(\'#message_<?=$newMessagesData[id];?>\').remove();" class="btn btn-info btn-mini" style="margin-right:25px;"><i class="icon-envelope icon-white"> </i> Show</a><a class="btn btn-mini" target="submitter" onclick="$(\'#message_<?=$newMessagesData[id];?>\').remove();">Ignore</a></div></li>');
+        if($("#message_<?=$newMessagesData[sender];?>").length == 0){
+            $('#dockMenuBuddyAlerts').append('<li id="message_<?=$newMessagesData[sender];?>"><?=showUserPicture("$newMessagesData[sender]", '15', '', true);?><div class="messageMain"><a href="#" onclick="showProfile(\'<?=$newMessagesData2[username];?>\');"><?=$newMessagesData2[username];?></a> <?=$text;?></div><div class="messageButton"><a onclick="openChatDialoge(\'<?=$newMessagesData2[username];?>\'); $(\'#message_<?=$newMessagesData[id];?>\').remove();" class="btn btn-info btn-mini" style="margin-right:25px;"><i class="icon-envelope icon-white"> </i> Show</a><a class="btn btn-mini" target="submitter" onclick="$(\'#message_<?=$newMessagesData[id];?>\').remove();">Ignore</a></div></li>');
         }
     </script>
 <? 
@@ -139,6 +139,14 @@ if($countMessages != "0"){
 
 if($appAlerts != "0"){
     echo "$('#appAlerts').html('$countEvents');";
+}
+    echo"</script>";
+
+
+//if($amount != "0"){
+//$text = $amount;
+//}
+?>Events');";
 }
     echo"</script>";
 

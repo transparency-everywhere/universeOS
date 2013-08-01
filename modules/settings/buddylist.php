@@ -52,7 +52,8 @@ function confirmation(id) {
 	var answer = confirm("Are you sure to delete this buddy?")
 	if (answer){
             
-		$("#submitter").load("modules/settings/index.php?action=friends&reload=1&delete=1&buddy=" + id +"");
+		$("#submitter").load("modules/settings/buddylist.php?reload=1&delete=1&buddy=" + id +"");
+		return false;
 	}
 	else{
             return false;

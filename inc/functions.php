@@ -1296,10 +1296,16 @@ echo"</div>";
    }
    function jsAlert($text){
         ?>
-       <script language="javascript" type="text/javascript">
-       <!-- // JavaScript-Bereich für ältere Browser auskommentieren
-           alert ('<?=$text;?>');
-       </script> 
+        <script>
+        //check if function is calles from window or from iframe
+        //if it is called from iframe parent. needs to be used
+        if (typeof(window.jsAlert) === "function") {
+		   jsAlert('', '<?=addslashes($text);?>');
+		}else{
+		   parent.jsAlert('', '<?=addslashes($text);?>');
+		}
+		return false;
+        </script> 
             <?
     }
     function init(){
@@ -2505,7 +2511,7 @@ echo"</div>";
     
     
     
-    function openFile($fileId, $link=NULL, $type=NULL, $typeInfo=NULL, $extraInfo=NULL){
+    function openFile($fileId=NULL, $link=NULL, $type=NULL, $typeInfo=NULL, $extraInfo1=NULL, $extraInfo2=NULL){
         
         
         
@@ -2607,7 +2613,7 @@ echo"</div>";
 					$title = $linkData[title];
 				}else{
 					$url = $typeInfo;
-					$title = $extraInfo;
+					$title = $extraInfo1;
 				}
 		        $output .= "<div class=\"rssReader windowContent\">";
 		        $output .= getRssfeed("$url","$title","auto",10,3);

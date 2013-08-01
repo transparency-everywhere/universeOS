@@ -5,7 +5,7 @@
     top: 21px;
     left: 0px;
     bottom: 0px;
-    background: #29abe2;
+    background: #FFFFFF;
 }
 
 #offlineMain{
@@ -20,18 +20,14 @@
     height: 100%;
     border-top: 1px solid #9c9894;
     font-size: 12pt;
-    color:#c9c9c9;
-    
-    
-    background: #75a6b5; /* Old browsers */
-	background: -moz-linear-gradient(top, #75a6b5 0%, #3f7577 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#75a6b5), color-stop(100%,#3f7577)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #75a6b5 0%,#3f7577 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #75a6b5 0%,#3f7577 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #75a6b5 0%,#3f7577 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #75a6b5 0%,#3f7577 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#75a6b5', endColorstr='#3f7577',GradientType=0 ); /* IE6-9 */
-    
+    color:#FFFFFF;background: #4f85bb; /* Old browsers */
+	background: -moz-linear-gradient(top, #4f85bb 0%, #4f85bb 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#4f85bb), color-stop(100%,#4f85bb)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #4f85bb 0%,#4f85bb 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #4f85bb 0%,#4f85bb 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #4f85bb 0%,#4f85bb 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #4f85bb 0%,#4f85bb 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4f85bb', endColorstr='#4f85bb',GradientType=0 ); /* IE6-9 */
     z-index: 1;
 }
 
@@ -252,11 +248,11 @@
 		    	<h2>universeOS - IM</h2>
 		    	<div class="itemContent">
 		    	<img style="border-style: initial; border-color: initial; cursor: default; outline-width: 1px; outline-style: solid; outline-color: black; border-width: 0px; float: left; margin-left: 15px; margin-bottom: 15px;" title="chat" src="http://www.transparency-everywhere.com/upload/chat.png" alt="chat" width="20%" />
-		    	<ul style="float:right; max-width: 75%">
+		    	<ul style="float:right; max-width: 75%; margin-bottom: 40px;">
 		    			<li>The instant messenger allows the user to use an encrypted writing.</li>
+		    			<li>You can write with another conversation-partner without anyone, even us seeing what you are really writing.</li>
 		    	</ul>
-		    	<p style="float: left;">You can write with another conversation-partner without anyone, even us seeing what you are really writing.</p>
-                        <p>
+                        <p style="float: left;">
                            <ul id="offlinePageImList">
                                 <li style="font-size: 14pt; margin-bottom: 5px;">Its that easy:</li>
                                 <li style="clear: left;"><i class="btn  btn-small btn-info">1</i> Sign Up</li>
