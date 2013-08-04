@@ -1,115 +1,228 @@
-<html>
-<head>
-<title>Open Graph Getting Started App - og.likes</title>
-<style type="text/css">
-div { padding: 10px; }
-</style>
-<meta charset="UTF-8">
-</head>
-<body>
-<div id="fb-root"></div>
-<script type="text/javascript">
-  // You probably don't want to use globals, but this is just example code
-  var fbAppId = '459795090736643';
-  var objectToLike = 'http://universeos.org/';
 
-  // This check is just here to make sure you set your app ID. You don't
-  // need to use it in production. 
-  if (fbAppId === 'replace me') {
-    alert('Please set the fbAppId in the sample.');
-  }
+<!DOCTYPE html> 
+<html xmlns:fb="https://www.facebook.com/2008/fbml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>New JavaScript SDK & OAuth 2.0 based FBConnect Tutorial | Thinkdiff.net</title>
+        <!--
+            @author: Mahmud Ahsan (http://mahmud.thinkdiff.net)
+        -->
+    </head>
+    <body>
+        <div id="fb-root"></div>
+        <script type="text/javascript">
+            var button;
+            var userInfo;
+            
+            window.fbAsyncInit = function() {
+                FB.init({ appId: '459795090736643', 
+                    status: true, 
+                    cookie: true,
+                    xfbml: true,
+                    oauth: true});
 
-  // This is boilerplate code that is used to initialize the Facebook
-  // JS SDK.  You would normally set your App ID in this code.
+               showLoader(true);
+               
+               function updateButton(response) {
+                    button       =   document.getElementById('fb-auth');
+                    userInfo     =   document.getElementById('user-info');
+                    
+                    if (response.authResponse) {
+                        //user is already logged in and connected
+                        FB.api('/me', function(info) {
+                            login(response, info);
+                        });
+                        
+                        button.onclick = function() {
+                            FB.logout(function(response) {
+                                logout(response);
+                            });
+                        };
+                    } else {
+                        //user is not connected to your app or logged out
+                        button.innerHTML = 'Login';
+                        button.onclick = function() {
+                            showLoader(true);
+                            FB.login(function(response) {
+                                if (response.authResponse) {
+                                    FB.api('/me', function(info) {
+                                        login(response, info);
+                                    });	   
+                                } else {
+                                    //user cancelled login or did not grant authorization
+                                    showLoader(false);
+                                }
+                            }, {scope:'email,user_birthday,status_update,publish_stream,user_about_me'});  	
+                        }
+                    }
+                }
+                
+                // run once with current status and whenever the status changes
+                FB.getLoginStatus(updateButton);
+                FB.Event.subscribe('auth.statusChange', updateButton);	
+            };
+            (function() {
+                var e = document.createElement('script'); e.async = true;
+                e.src = document.location.protocol 
+                    + '//connect.facebook.net/en_US/all.js';
+                document.getElementById('fb-root').appendChild(e);
+            }());
+            
+            
+            function login(response, info){
+                if (response.authResponse) {
+                    var accessToken                                 =   response.authResponse.accessToken;
+                    
+                    userInfo.innerHTML                             = '<img src="https://graph.facebook.com/' + info.id + '/picture">' + info.name
+                                                                     + "<br /> Your Access Token: " + accessToken;
+                    button.innerHTML                               = 'Logout';
+                    showLoader(false);
+                    document.getElementById('other').style.display = "block";
+                }
+            }
+        
+            function logout(response){
+                userInfo.innerHTML                             =   "";
+                document.getElementById('debug').innerHTML     =   "";
+                document.getElementById('other').style.display =   "none";
+                showLoader(false);
+            }
 
-  // Additional JS functions here
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId      : fbAppId,        // App ID
-      status     : true,           // check login status
-      cookie     : true,           // enable cookies to allow the server to access the session
-      xfbml      : true            // parse page for xfbml or html5 social plugins like login button below
-    });
+            //stream publish method
+            function streamPublish(name, description, hrefTitle, hrefLink, userPrompt){
+                showLoader(true);
+                FB.ui(
+                {
+                    method: 'stream.publish',
+                    message: '',
+                    attachment: {
+                        name: name,
+                        caption: '',
+                        description: (description),
+                        href: hrefLink
+                    },
+                    action_links: [
+                        { text: hrefTitle, href: hrefLink }
+                    ],
+                    user_prompt_message: userPrompt
+                },
+                function(response) {
+                    showLoader(false);
+                });
 
-    // Put additional init code here
-  };
+            }
+            function showStream(){
+                FB.api('/me', function(response) {
+                    //console.log(response.id);
+                    streamPublish(response.name, 'I like fast scripts and I can not lie', 'hrefTitle', 'http://universeOS.org', "universeOS");
+                });
+            }
 
-  // Load the SDK Asynchronously
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "//connect.facebook.net/en_US/all.js";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
+            function share(){
+                showLoader(true);
+                var share = {
+                    method: 'stream.share',
+                    u: 'http://thinkdiff.net/'
+                };
 
-  /*
-   * This function makes a call to the og.likes API.  The object argument is
-   * the object you like.  Other types of APIs may take other arguments.
-   * (i.e. the book.reads API takes a book= argument.)
-   *
-   * Because it's a sample, it also sets the privacy parameter so that it will
-   * create a story that only you can see.  Remove the privacy parameter and
-   * the story will be visible to whatever the default privacy was when you
-   * added the app.
-   *
-   * Also note that you can view any story with the id, as demonstrated with
-   * the code below.
-   *
-   * APIs used in postLike():
-   * Call the Graph API from JS:
-   *   https://developers.facebook.com/docs/reference/javascript/FB.api
-   * The Open Graph og.likes API:
-   *   https://developers.facebook.com/docs/reference/opengraph/action-type/og.likes
-   * Privacy argument:
-   *   https://developers.facebook.com/docs/reference/api/privacy-parameter
-   */
+                FB.ui(share, function(response) { 
+                    showLoader(false);
+                    console.log(response); 
+                });
+            }
 
-  function postLike() {
-    FB.api(
-       'https://graph.facebook.com/me/og.likes',
-       'post',
-       { object: objectToLike,
-         privacy: {'value': 'SELF'} },
-       function(response) {
-         if (!response) {
-           alert('Error occurred.');
-         } else if (response.error) {
-           document.getElementById('result').innerHTML = 'Error: ' + response.error.message;
-         } else {
-           document.getElementById('result').innerHTML =
-             '<a href=\"https://www.facebook.com/me/activity/' + response.id + '\">' +
-             'Story created.  ID is ' + response.id + '</a>';
-         }
-       }
-    );
-  }
-</script>
+            function graphStreamPublish(){
+                showLoader(true);
+                
+                FB.api('/me/feed', 'post', 
+                    { 
+                        message     : "I like fast scripts and I can not lie!",
+                        link        : 'http://universeos.org',
+                        picture     : 'http://universeos.org/gfx/logo.png',
+                        name        : 'universeOS.org',
+                        description : 'Aufklärung ist der Ausgang des Menschen aus seiner selbst verschuldeten Unmündigkeit. Selbstverschuldet bla bla bla'
+                        
+                }, 
+                function(response) {
+                    showLoader(false);
+                    
+                    if (!response || response.error) {
+                        alert('Error occured');
+                    } else {
+                        alert('Post ID: ' + response.id);
+                    }
+                });
+            }
 
-<!--
-  Login Button - https://developers.facebook.com/docs/reference/plugins/login
+            function fqlQuery(){
+                showLoader(true);
+                
+                FB.api('/me', function(response) {
+                    showLoader(false);
+                    
+                    //http://developers.facebook.com/docs/reference/fql/user/
+                    var query       =  FB.Data.query('select name, profile_url, sex, pic_small from user where uid={0}', response.id);
+                    query.wait(function(rows) {
+                       document.getElementById('debug').innerHTML =  
+                         'FQL Information: '+  "<br />" + 
+                         'Your name: '      +  rows[0].name                                                            + "<br />" +
+                         'Your Sex: '       +  (rows[0].sex!= undefined ? rows[0].sex : "")                            + "<br />" +
+                         'Your Profile: '   +  "<a href='" + rows[0].profile_url + "'>" + rows[0].profile_url + "</a>" + "<br />" +
+                         '<img src="'       +  rows[0].pic_small + '" alt="" />' + "<br />";
+                     });
+                });
+            }
 
-  This example needs the 'publish_actions' permission in order to publish an
-  action.  The scope parameter below is what prompts the user for that permission.
--->
+            function setStatus(){
+                showLoader(true);
+                
+                status1 = document.getElementById('status').value;
+                FB.api(
+                  {
+                    method: 'status.set',
+                    status: status1
+                  },
+                  function(response) {
+                    if (response == 0){
+                        alert('Your facebook status not updated. Give Status Update Permission.');
+                    }
+                    else{
+                        alert('Your facebook status updated');
+                    }
+                    showLoader(false);
+                  }
+                );
+            }
+            
+            function showLoader(status){
+                if (status)
+                    document.getElementById('loader').style.display = 'block';
+                else
+                    document.getElementById('loader').style.display = 'none';
+            }
+            
+        </script>
 
-<div
-  class="fb-login-button"
-  data-show-faces="true"
-  data-width="200"
-  data-max-rows="1"
-  data-scope="publish_actions">
-</div>
-
-<div>
-This example creates a story on Facebook using the <a href="https://developers.facebook.com/docs/reference/ogaction/og.likes"><code>og.likes</code></a> API.  That story will just say that you like an <a href="http://techcrunch.com/2013/02/06/facebook-launches-developers-live-video-channel-to-keep-its-developer-ecosystem-up-to-date/">article on TechCrunch</a>.  The story should only be visible to you.
-</div>
-
-<div>
-<input type="button" value="Create a story with an og.likes action" onclick="postLike();">
-</div>
-
-<div id="result"></div>
-
-</body>
+        <h3>New JavaScript SDK & OAuth 2.0 based FBConnect Tutorial | Thinkdiff.net</h3>
+        <button id="fb-auth">Login</button>
+        <div id="loader" style="display:none">
+            <img src="ajax-loader.gif" alt="loading" />
+        </div>
+        <br />
+        <div id="user-info"></div>
+        <br />
+        <div id="debug"></div>
+        
+        <div id="other" style="display:none">
+            <a href="#" onclick="showStream(); return false;">Publish Wall Post</a> |
+            <a href="#" onclick="share(); return false;">Share With Your Friends</a> |
+            <a href="#" onclick="graphStreamPublish(); return false;">Publish Stream Using Graph API</a> |
+            <a href="#" onclick="fqlQuery(); return false;">FQL Query Example</a>
+            
+            <br />
+            <textarea id="status" cols="50" rows="5">Write your status here and click 'Status Set Using Legacy Api Call'</textarea>
+            <br />
+            <a href="#" onclick="setStatus(); return false;">Status Set Using Legacy Api Call</a>
+        </div>
+    </body>
 </html>

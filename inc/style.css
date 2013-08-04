@@ -352,6 +352,30 @@ h3{
     
 }
 
+.blueModal {
+	
+    position: absolute;
+    z-index: 9999;
+    overflow: auto;
+    top: 50%;
+    left: 50%;
+    background-color: #4f85bb;
+    color: #FFFFFF;
+    
+    margin-top: -175px;;
+    margin-left: -275px;
+    width: 500px;
+    height: 350px;
+}
+
+.blueModal > div{
+	margin:15px;
+}
+
+.blueModal h3{
+	line-height:17pt;
+}
+
 .jqPopUp {
     position: absolute;
     top: 50%;
@@ -369,20 +393,17 @@ h3{
 
     .jqPopUp a:link {
         color: #FFFFFF;
-        font-color: #FFFFFF;
     }
     
     .jqPopUp header{
         text-align: center;
-        font-color: #FFF;
-        color: #FFF;
+        color: #FFFFFF;
         margin-bottom: 15px;
         font-size: 14pt;
     }
 
     .jqPopUp h2{
-        font-color: #FFF;
-        color: #FFF;
+        color: #FFFFFF;
         margin-bottom: 10px;
         font-size: 17pt;
     }

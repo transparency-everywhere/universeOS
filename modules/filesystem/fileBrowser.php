@@ -59,11 +59,11 @@ if(1 == 2){?>
 <div class="border-box frameRight fileBrowser_<?=$folder;?>">
     <div class="underFrame" style="overflow: none;">
         <div class="grayBar" style="top: 0px; left:0px; right: 0px; height: 20px; overflow: none;">
-            <? if(isset($_SESSION[userid]) && !empty($folder)) {?>
-            <a href="#" onclick="$('.fileBrowserSettings<?=$folder;?>').slideToggle('slow'); return false" title="more..."><img src="./gfx/icons/filesystem/folderSettings.png" height="22"></a>
-                <? } ?>&nbsp;&nbsp;
-                <? if($folder !== "1"){ ?>
-            <a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=<?=$pathdata[folder];?>&reload=1');return false" title="parent folder"><img src="./gfx/icons/filesystem/folderUp.png" height="22"> </a>
+            	<? if($folder !== "1") {?>
+            	<a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=<?=$pathdata[folder];?>&reload=1');return false" title="parent folder" class="btn btn-small" style="margin-right:3px;"><i class="icon-arrow-up"></i></a>
+                <? }
+                if(isset($_SESSION[userid]) && !empty($folder)){ ?>
+            	<a href="#" onclick="$('.fileBrowserSettings<?=$folder;?>').slideToggle('slow'); return false" title="more..." class="btn btn-small"><i class="icon-cog"></i></a>
                 <? }?>
         </div>
         <div class="fileBrowser">

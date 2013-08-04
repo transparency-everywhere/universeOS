@@ -1,5 +1,5 @@
-  <html>
-    <head>
+
+<html lang="en" dir="ltr" class="client-nojs">
         
         
         <!--meta information-->
@@ -12,9 +12,12 @@
         <meta name="reply-to" content=info@transparency-everywhere.com>
         <meta name="Identifier-URL" content="universeOS.org">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="initial-scale=0.5, user-scalable=no">
+
         
-        <!--facebook pic-->
-        <meta property="og:image" content="http://universeos.org/logo.png"/>
+        <!--facebook open graph-->
+        <meta property="og:image" content="http://universeos.org/gfx/logo.png"/>
+        <meta property="og:site_name" content="universeOS"/>
         
         <!--favicon-->
         <link rel="shortcut icon" href="http://universeOS.org/gfx/favicon.ico" />

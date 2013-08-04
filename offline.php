@@ -37,7 +37,7 @@
     margin-top:0px;
 }
 
-#offlineFooter .item h2{
+#offlineFooter .item h2, #offlineFooter .item h3{
 	float:right;
 	clear:right;
 	line-height: 62px;
@@ -218,15 +218,6 @@
                  </div>
             </div>
 		    <div class="item">
-		    	<h2>We want you to trust us</h2>
-		    	<div class="itemContent">
-		    	<div style="margin-bottom: 20px;">
-		    		<p style="max-width: 60%; float: left;"><img src="gfx/startPage/admin.jpg" style="width: 30%; float: left; margin-right:15px; margin-bottom:15px;">With the version 1.0 the whole source code will be published.</p>
-		    		<img src="gfx/startPage/piwik.jpg" style="width: 30%; float: right; margin-left:15px; margin-bottom:15px;"><p style="float:left;">We display detailed which information about users and visitors are saved.</p></div>
-		    	
-		    	</div>
-            </div>
-		    <div class="item">
 		    	<h2>We stand up for your rights.</h2>
 		    	<div class="itemContent">
 		    		<p style="margin-bottom: 20px;">We are not profit- and growth-oriented. Therefore we are not using the path of least resistance but vouch for the users privacy.</p>
@@ -236,16 +227,17 @@
 				</div>
             </div>
 		    <div class="item">
-		    	<h2>Filesystem</h2>
+		    	<h2>Manage your files.</h2>
+		    	
 		    	<div class="itemContent">
 		    		<p><img style="border-style: initial; border-color: initial; cursor: default; outline-width: 1px; outline-style: solid; outline-color: black; border-width: 0px; float: left; margin-right: 15px; margin-bottom: 15px;" title="chat" src="http://www.transparency-everywhere.com/upload/chat.png" alt="chat" width="15%" />Use thousands of free publications.</p>
                	 	<p style="margin-bottom: 20px;">Share your work with the rest of the world, your friends or chosen groups.</p>
-                	<p>Include the filesystem on your websitely. </p>
+                	<p>Include your personal filesystem on your website. </p>
 					<p>&nbsp;</p>
 				</div>
 		    </div>
 		    <div class="item">
-		    	<h2>universeOS - IM</h2>
+		    	<h2>universeOS - a safe place to talk</h2>
 		    	<div class="itemContent">
 		    	<img style="border-style: initial; border-color: initial; cursor: default; outline-width: 1px; outline-style: solid; outline-color: black; border-width: 0px; float: left; margin-left: 15px; margin-bottom: 15px;" title="chat" src="http://www.transparency-everywhere.com/upload/chat.png" alt="chat" width="20%" />
 		    	<ul style="float:right; max-width: 75%; margin-bottom: 40px;">
@@ -259,6 +251,20 @@
                                 <li> <img src="gfx/icons/whiteArrowRight.png" /> <i class="btn btn-mini btn-info">2</i> Add your Buddy </li>
                                 <li> <img src="gfx/icons/whiteArrowRight.png" /> <i class="btn btn-mini btn-info">3</i> Set a key</li>
                                 <li> <img src="gfx/icons/whiteArrowRight.png" /> <i class="btn btn-mini btn-info">4</i> Communicate safely</li>
+                           </ul>
+                        </p>
+			</div>
+		    </div>
+		  </div>
+		  <!-- Carousel nav -->
+		  <a class="carousel-control left" href="#myCarousel" data-slide="prev" style="left: 2%; top: 120px;">&lsaquo;</a>
+		  <a class="carousel-control right" href="#myCarousel" data-slide="next" style="top: 120px">&rsaquo;</a>
+		</div>
+		<script>
+		$('#').carousel();
+		</script>
+    </div>
+</div>                             <li> <img src="gfx/icons/whiteArrowRight.png" /> <i class="btn btn-mini btn-info">4</i> Communicate safely</li>
                            </ul>
                         </p>
 			</div>

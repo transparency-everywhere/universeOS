@@ -430,7 +430,7 @@
         }
         
         if(type == 'RSS'){
-            createNewTab('reader_tabView',title,'','./modules/reader/showfile.php?type=link&id='+typeId,true);
+            createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=RSS&linkId='+typeId,true);
             return false
         }
         

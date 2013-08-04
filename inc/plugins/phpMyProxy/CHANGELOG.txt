@@ -1,0 +1,50 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~ Version 1.0.3: Maintenanance Release
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ - Fixes: Undefined index: WWW-Authenticate in phpMyProxy_1.0.2\index.php on line 369
+ - Fixes: Authorization show incomplete 'Basic Realm'
+ - Fixes: proxify CSS incorrectly
+ - Fixes: the webpage takes you to http:///index.php
+ - Fixes: proxify attribute has no value incorrectly
+ - Fixes: XSS bug
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~ Version 1.0.2: Maintenanance Release
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ - Fixes: output handler 'ob_gzhandler' cannot be used twice
+ - Fixes: CURLOPT_FOLLOWLOCATION cannot be activated when in safe_mode or an open_basedir is set
+ - Fixes: Unable to access cookie file when in safe_mode or an open_basedir is set
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~ Version 1.0.1: Maintenanance Release
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ - Fixes: PHP Notice:  Undefined index:  Content-Type in /path/to/proxy/index.php on line 374
+ - Fixes: Warning: Wrong datatype for second argument in /path/to/proxy/index.php on line 115 on PHP4
+ - Fixes: call to undefined function 'http_build_query' on PHP4
+ - Fixes: CURLOPT_AUTOREFERER and CURLOPT_UNRESTRICTED_AUTH are undefined constants on PHP4
+ - Fixes: Referer is not sent properly
+ - Fixes: Debug code cause error
+ - Fixes: 'Sorry, we don\'t support the protocal you request.' in lang/english.php
+ - Fixes: When compress_output = 1, IE can't load CSS, Firefox show images inproperly
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~ Version 1.0: First Release
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ - Feature: Fast and Secure 
+ - Feature: Requires a little server resource 
+ - Feature: Encode Web Address 
+ - Feature: Supports HTTP methods: GET, POST 
+ - Feature: Supports HTTP Files Uploading 
+ - Feature: Supports HTTP Authentication 
+ - Feature: Supports HTTPS (Secure HTTP) 
+ - Feature: Supports Max File Size Limit 
+ - Feature: Supports Gzip Compression to save bandwidth 
+ - Feature: Supports Multiple Languages 
+ - Feature: Supports Multiple Themes 
+ - Feature: Supports HotLink Prevention 
+ - Feature: Ability to change behaviour for HotLink Prevention 
+ - Feature: Ability to prevent hotlinking automatically for non-referer visits 
+ - Feature: Ability to customize domains for HotLink Prevention 
+ - Feature: Ability to set default proxy options 
+ - Feature: Ability to freeze proxy options 
+ - Feature: Ability to block hosts 

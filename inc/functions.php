@@ -1788,39 +1788,8 @@ echo"</div>";
         }
     }
     function universeText($str){
-        # HTML Zeichen maskieren
-//
-//        # Smilies
-//        $str = str_replace(':)', '<img src="smile.gif" />', $str);
-//        $str = str_replace(':lol:', '<img src="lol.gif" />', $str);
-//
-//        # Formatierungen
-//        $str = preg_replace('#\[b\](.*)\[/b\]#isU', "<b>$1</b>", $str);
-//        $str = preg_replace('#\[i\](.*)\[/i\]#isU', "<i>$1</i>", $str);
-//        $str = preg_replace('#\[u\](.*)\[/u\]#isU', "<u>$1</u>", $str);
-//        $str = preg_replace('#\[s\](.*)\[/s\]#isU', "<s>$1</s>", $str);
-//        $str = preg_replace('#\[color=(.*)\](.*)\[/color\]#isU', "<span style=\"color: $1\">$2</span>", $str);
-//        $str = preg_replace('#\[size=(8|10|12)\](.*)\[/size\]#isU', "<span style=\"font-size: $1 pt\">$2</span>", $str);
-//
-//        # Links
-//        $str = preg_replace('#\[url\](.*)\[/url\]#isU', "<a href=\"$1\">$1</a>", $str);
-//        $str = preg_replace('#\[ url=(.*)\](.*)\[/url\]#isU', "<a href=\"$1\">$2</a>", $str);
-//        
-//        # Grafiken
-//        $str = preg_replace('#\[img\](.*)\[/img\]#isU', "<img src=\"$1\" alt=\"$1\" />", $str);
-//
-//        # Zitate
-//        $str = preg_replace('#\[quote\](.*)\[/quote\]#isU', "<div class=\"zitat\">$1</div>", $str);
-//
-//        # Quelltext
-//        $str = preg_replace('#\[code\](.*)\[/code\]#isU', "<div class=\"code\">$1</div>", $str);
-//
-//        # Listen
-//        $str = preg_replace('#\[list\](.*)\[/list\]#isU', "<ul>$1</ul>", $str);
-//        $str = preg_replace('#\[list=(1|a)\](.*)\[/list\]#isU', "<ol type=\"$1\">$2</ol>", $str);
-//        $str = preg_replace("#\[*\](.*)\\r\\n#U", "<li>$1</li>", $str);
         
-        $str = str_replace(":&#039;(", '<a class="smiley smiley1"></a>', $str);//crying smilye /&#039; = '
+        $str = str_replace(":'(", '<a class="smiley smiley1"></a>', $str);//crying smilye /&#039; = '
         $str = str_replace(':|', '<a class="smiley smiley2"></a>', $str);
         $str = str_replace(';)', '<a class="smiley smiley3"></a>', $str);
         $str = str_replace(':P', '<a class="smiley smiley4"></a>', $str);

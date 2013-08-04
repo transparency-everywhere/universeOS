@@ -190,25 +190,25 @@ if($_GET[action] == "add"){
             	$('#favTabBar .interactive').removeClass('active');
                 $(".favTab").slideUp();
                 $("#favTab_Group").slideDown();
-                $('#showfavGroup').parent("td").addClass('active');
+                $('#showfavGroup').addClass('active');
             });            
             $("#showfavPlayList").click(function() {
             	$('#favTabBar .interactive').removeClass('active');
                 $(".favTab").slideUp();
                 $("#favTab_playList").slideDown();
-                $('#showfavPlayList').parent("td").addClass('active');
+                $('#showfavPlayList').addClass('active');
             });            
             $("#showfavNews").click(function() {
             	$('#favTabBar .interactive').removeClass('active');
                 $(".favTab").slideUp();
                 $("#favTab_News").slideDown();
-                $('#showfavNews').parent("td").addClass('active');
+                $('#showfavNews').addClass('active');
             });            
             $("#showfavFiles").click(function() {
             	$('#favTabBar .interactive').removeClass('active');
                 $(".favTab").slideUp();
                 $("#favTab_Files").slideDown();
-                $('#showfavFiles').parent("td").addClass('active');
+                $('#showfavFiles').addClass('active');
             });
         </script>
 <?

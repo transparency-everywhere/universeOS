@@ -131,7 +131,6 @@ function processRegistration(){
         bottom: 41px;
     }
 </style>
-    <body onclick="clearMenu()" onload="clock()<?=$startLink;?>">
         <div style="position: absolute; top: 0px; right: 0px; left: 0px; padding-top:10px; padding-bottom:10px; background: #000; color: #383D3C; padding-top: 5px; padding-bottom: 3px; padding-left:10px;">
             <span style="color: #54545B;">&copy; 2013 <a href="http://transparency-everywhere.com" target="blank" style="color: #54545B;">Transparency Everywhere</a></span>
             
@@ -368,7 +367,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#262626', end
     <div id="dock">
         <table>
             <tr valign="top">
-                <td><div id="personalButton" class="module" style="margin-top: 4px;">&nbsp;&nbsp;Login</div></td>
+                <td><div id="personalButton" class="module" style="margin-top: 4px;">&nbsp;&nbsp;Sign In</div></td>
                 <td><div id="moduleMenu" class="module" style="font-color: #FFF;">&nbsp;&nbsp;Start</div></td>
                 <td><div id="modulePlayer" class="module">&nbsp;&nbsp;Player</div></td>
                 <td align="right" id="clockDiv" style="color: #FFFFFF; float: right"></td>
@@ -420,6 +419,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#262626', end
 
 </script>
 <noscript><p><img src="http://analytics.universeos.org/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript>
+<!-- End Piwik Code -->
+
+    </body>
+    
+
+"" /></p></noscript>
 <!-- End Piwik Code -->
 
     </body>

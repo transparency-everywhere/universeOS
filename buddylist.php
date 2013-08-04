@@ -57,6 +57,19 @@ if(empty($i)){
                 </div>
     <?
 }
+$mayKnow = friendsYouMayKnow();
+if(!empty($mayKnow)){
+	
+	echo"<div>";
+	echo"you may know<br>";
+	echo"<a href=\"#\" onclick=\"showProfile('$mayKnow')\">";
+	echo"&nbsp;";
+	echo showUserPicture($mayKnow, 25);
+	echo useridToUsername($mayKnow);
+	echo"</a>";
+	echo"</div>";
+	
+}
 ?>
         </div>
    </div>

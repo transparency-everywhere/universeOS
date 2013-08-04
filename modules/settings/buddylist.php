@@ -12,10 +12,6 @@
              
              
          <h2>Your Buddies</h2>
-	         <table>
-	             <tr>
-	                 <td>&nbsp;</td>
-	             </tr>
 	         <?
 	         
 	            if(isset($_GET[delete])){
@@ -23,6 +19,7 @@
 	                mysql_query("DELETE FROM buddylist WHERE owner='".mysql_real_escape_string($_GET[buddy])."' && buddy='$_SESSION[userid]' LIMIT 1");
 	                jsAlert("worked :(");
 	            }
+			 echo"<ul>";
 	         $buddyEditSql = mysql_query("SELECT * FROM buddylist WHERE owner='$_SESSION[userid]'");
 	         while($buddyEditData = mysql_fetch_array($buddyEditSql)){
 	            $path = "../../";
@@ -34,18 +31,18 @@
 	            $alias = "$buddyEditData[alias]";
 	            }
 	         ?>
-	             <tr>
-	                 <td>&nbsp;</td>
-	                <td><a href="#" onclick="confirmation(<?=$buddyEditData[buddy];?>);"><img src="./gfx/delete_2.png" width="16"></a></td>
-	                <td><?=showUserPicture($buddyEditData[buddy], 30);?></td>
-	                <td><form action="modules/settings/index.php?action=friends&reload=1" target="submitter" method="post"><?=$userpicture;?>&nbsp;
+	             <li>
+	             	<center>
+	                <?=showUserPicture($buddyEditData[buddy], 30);?><br>
+	                <form action="modules/settings/index.php?action=friends&reload=1" target="submitter" method="post"><?=$userpicture;?>&nbsp;
 	                    <input type="hidden" name="buddy" value="<?=$buddyEditData[buddy];?>">
-	                    <input type="text" name="alias" value="<?=$alias;?>">&nbsp;
+	                    <input type="text" name="alias" value="<?=$alias;?>">&nbsp;<a href="#" onclick="confirmation(<?=$buddyEditData[buddy];?>);"><img src="./gfx/delete_2.png" width="16"></a>
 	                    <input type="submit" name="submit" value="save">
-	                    </form></td>
-	             </tr>
-	         <? } ?>  
-	         </table>
+	                    </form>
+	                </center>
+	             </li>
+	         <? }
+			 echo"</ul>"; ?>
          </div>
          <script type="text/javascript">
 function confirmation(id) {

@@ -1,0 +1,33 @@
+NOTE: If you installed mods, uninstall them. Then, upgrade phpMyProxy. Final, re-install mods.
+
+=========================================================
+= phpMyProxy 1.0.2 to phpMyProxy 1.0.3 UPGRADE
+=========================================================
+1. Upload and overwrite index.php into your server.
+
+=========================================================
+= phpMyProxy 1.0.1 to phpMyProxy 1.0.2 UPGRADE
+=========================================================
+1. Upload and overwrite index.php into your server.
+2. Update language file.
+    a/ Open lang/english.php
+    b/ Find:
+        $_lang['hotlinking'] = 'xxxxxxxxxxxxxxxxxxxx';
+    c/ Bellow, add:
+        $_lang['server_not_found'] = 'Server not found. The server may be down or check the address for typing errors.';
+    d/ Save and close.
+		e/ Do the same for other languages if you have.
+3. Create new directory 'cookies' and change permission to 0777.
+
+=========================================================
+= phpMyProxy 1.0 to phpMyProxy 1.0.1 UPGRADE
+=========================================================
+1. Upload and overwrite index.php into your server.
+2. Update language file.
+    a/ Open lang/english.php
+    b/ Find:
+        $_lang['unsupported_protocol'] = 'Sorry, we don\'t support the protocal you request.';
+    c/ Replace it with:
+        $_lang['unsupported_protocol'] = 'Sorry, we don\'t support the protocol you request.';
+    d/ Save and close.
+		e/ Do the same for other languages if you have.

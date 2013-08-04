@@ -1,0 +1,16 @@
+Here is TODO list, we will try our best to implement them but we can't sure that all items will be implemented.
+ - Ability to turn off the proxy.
+ - Ability to show a message to users if the proxy turned off.
+ - Handle HTTP Status better.
+ - Support Personal Mode.
+ - Support Demo Mode.
+ - Support Public Mode.
+ - Support File Caching.
+ - Support Administrative Control Panel to administrate proxy easier.
+ - Support Template Engine.
+ - Support FTP Download.
+ - Support IDN Domains.
+ - Support More URL Encoding.
+ - Support Download Speed Limit.
+
+And sure that your suggestions, ideas are always welcome. Feel free to request new features for your phpMyProxy at http://www.eproxies.info/support/

@@ -1291,7 +1291,7 @@ if($_GET[action] == "scorePlus"){
                     $crypt = "0";
                 } 
 				
-				$message = $_POST[message];
+				$message = addslashes($_POST[message]);
                 mysql_query("INSERT INTO messages (`sender`,`receiver`,`timestamp`,`text`,`read`,`crypt`) VALUES('$_SESSION[userid]', '$buddy', '$time', '$message', '0', '$crypt');");
                 $postCheck = 1;?>
         <script>
@@ -1550,7 +1550,8 @@ if($_GET[action] == "scorePlus"){
                 }}
                 
                 $groupFolder = createFolder("3", $groupId, $userid, "$groupId//$groupId");
-                mysql_query("UPDATE `groups` SET `homeFolder`='$groupFolder' WHERE id='$groupId'");
+				$groupElement = createElement($groupFolder, $title, "other", $userid,  "$groupId//$groupId");
+                mysql_query("UPDATE `groups` SET `homeFolder`='$groupFolder', `homeElement`='$groupElement' WHERE id='$groupId'");
 
             //add user which added group to group and validate
             mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`, `validated`) VALUES ('$groupId', 'user', '$_SESSION[userid]', '$time', '$_SESSION[userid]', '1');");
@@ -1665,108 +1666,162 @@ if($_GET[action] == "scorePlus"){
             <script>
                     $(".fenster").hide("slow");
             </script>
-            <div class="jqPopUp border-radius transparency">
-                <p class="breadCrum" style="margin-top: -1em;">
-                    Welcome Message >> <b>Start</b>
-                </p>
-                <p style="font-size: 18pt; margin-top:12px;">
-                    Welcome <?=$userdata[username];?>!
-                </p>
-                <p style="margin-top: 20px;">
-                    We try to give you the experience of an operatingsystem, without the disadvantage that its bound to a singlecomputer. <br>You joined this project at a very early state, so please excuse us if you trap over some errors.<br>
-                </p>
-                <p style="margin-top: 75px; font-size: 17pt;">
-                    We want to tell you more about the Universe within the next <i>three steps</i>.
-                </p>
-                <p onclick="javascript: popper('doit.php?action=showStartMessage&step=1&noJq=true')" class="btn" style="margin-left: 440px; margin-top: 20px;">Next</p>
+            <div class="blueModal border-radius container">
+            	<div>
+            		<h2>Thank you for joining the unvierse OS</h2>
+	                <p style="margin-top: 20px;">
+	                    We try to give you the experience of an operatingsystem, without the disadvantage that its bound to a singlecomputer. <br>You joined this project at a very early state, so please excuse us if you trap over some errors.<br>
+	                </p>
+	                <h3>We want to tell you more about the Universe within the next three steps.</h3>
+	                <a href="#" onclick="javascript: popper('doit.php?action=showStartMessage&step=1&noJq=true'); return false" class="btn btn-primary pull-right">Next</a>
+            	</div>
             </div>
             <?
             }else if($_GET[step] == "1"){?>
-            <div class="jqPopUp border-radius transparency" style="width: 940px; height: 520px; margin-left: -470px; margin-top: -260px;">
-                <p class="breadCrum" style="margin-top: -1em;">
-                    Welcome Message >> <b>Your Desktop</b>
-                </p>
-                <p class="courier" style="font-size: 18pt;">
-                    Your Desktop
-                </p>
-                <p style="margin-top: 40px;">
-                    <img src="./upload/pictures/Universe/thumbs/exampleImages_screenDesktop_screenDesktop.jpg">
-                </p>
-                <span style="position: absolute; top: 93px; right: 240px; width: 400px;">
-                    <b>Apps</b><br>
-                    Apps are the most important component of the Universe. They are little programms like the reader, the feed or the buddylist which can be opened with the "Start" button in your Dock.
-                </span>
-                <span style="position: absolute; top: 300px; left: 30px; width: 400px;">
-                    <img src="/upload/pictures/Universe/exampleImages_screenDesktop_screenDock.jpg" class=" border-radius" width="700" style="margin-top: 115px;"><br><br>
-                    <b>The Dock</b><br>
-                    The Dock conatains everything you always need to see.<br>Click on Start to see all your Apps.
-                </span>
-                <span style="position: absolute; top: 325px; left: 530px; width: 400px;">
-                    <b>The Search</b><br>
-                    Look for your friends, your favourite writer, a song on Spotify or your favourite Youtube movie.<br>Just type what you are looking for!
-                </span>
-                <span style="position: absolute; top: 325px; left: 30px; width: 400px;">
-                    <b>Your Userbutton</b><br>
-                    Your Userbutton shows whats new. It shows the number of news (like buddyrequests or messages) on your user picture
-                </span>
-                <p style="margin-top: 30px; font-size: 17pt;" class="courier">
-                </p>
-                <p onclick="javascript: popper('doit.php?action=showStartMessage&step=2&noJq=true')" class="btn" style="margin-left: 830px; margin-top: 165px">&nbsp;&nbsp;Next&nbsp;&nbsp;</p>
-            </div>    
+            
+            <div class="blueModal border-radius container"><p class="courier" style="font-size: 18pt;">
+            	<div>
+	            	<h2>
+	                    Your Desktop
+	                </h2>
+	                <span>
+	                    <h3>Apps</h3><br>
+	                    Apps are the most important component of the Universe. They are little programms like the reader, the feed or the buddylist which can be opened with the "Start" button in your Dock.
+	                </span>
+	                <span>
+	                    <h3>The Dock</h3><br>
+	                    The Dock conatains everything you always need to see.<br>Click on Start to see all your Apps.
+	                </span>
+	                <span>
+	                    <h3>The Search</h3><br>
+	                    Look for your friends, your favourite writer, a song on Spotify or your favourite Youtube movie.<br>Just type what you are looking for!
+	                </span>
+	                <span>
+	                    <h3>Your Userbutton</h3><br>
+	                    Your Userbutton shows whats new. It shows the number of news (like buddyrequests or messages) on your user picture
+	                </span>
+	                <p>
+	                 	<a href="#" onclick="javascript: popper('doit.php?action=showStartMessage'); return false" class="btn pull-left">Back</a>
+	                	<a href="#" onclick="javascript: popper('doit.php?action=showStartMessage&step=2'); return false" class="btn btn-primary pull-right">&nbsp;&nbsp;Next&nbsp;&nbsp;</a>
+	                </p>
+	                </div>
+	               </div>
+            
             <?}else if($_GET[step] == "2"){?>
-            <div class="jqPopUp border-radius transparency" style="width: 940px; height: 480px; margin-left: -470px; margin-top: -300px;">
-                <p class="breadCrum" style="margin-top: -1em;">
-                    Welcome Message >> <b>The Filesystem</b>
-                </p>
-                <p style="font-size: 18pt;">
+            <div class="blueModal border-radius">
+            	<div>
+                <h2>
                     The Filesystem
+                </h2>
+                <p>
+                    <b>Folders</b>
+                    Like on your own computer you can create folders within the filesystem
                 </p>
                 <p>
-                    <img src="/upload/pictures/Universe/exampleImages_screenDesktop_screenFilesystem.jpg" style="margin-left: 500; margin-top: 30;" width="400">
-                </p>
-                <span style="position: absolute; top: 95px; left: 30px; width: 400px;">
-                    <b>Folders</b><br>
-                    Like on your own computer you can create folders within the filesystem
-                </span>
-                <span style="position: absolute; top: 170px; left: 60px; width: 400px;">
-                    <b>Elements</b><br>
+                    <b>Elements</b>
                     Elements contain files and links which belong together. They are listed in the filesystem like folders.<br><i><b>For example</b> you could create the image-element "My Nice Holiday In Somalia" and upload all your holiday pictures in it.</i>
-                </span>
-                <span style="position: absolute; top: 390px; left: 30px; width: 400px;">
-                    <b>Create Something Big</b><br>
+                </p>
+                <p>
+                    <b>Create Something Big</b>
                     If you want to, everyone can see, download, edit and rate your files, elements and folders.<br>So use the intelligence of the swarm!
-                </span>
-                <span style="position: absolute; top: 350px; left: 530px; width: 400px;">
-                    <b>Privacy</b><br>
+                </p>
+                <p>
+                    <b>Privacy</b>
                     When you add a folder, an element, a file or a link you always have to choose the privacy. Eitheir you choose that everyone can see it, that only particular groups, you are member of, or just you can see it.
-                </span>
-                <p onclick="javascript: popper('doit.php?action=showStartMessage&step=3&noJq=true')" class="btn" style="margin-left: 830px; margin-top: 130px;">Next</p>
+                </p>
+                <p>
+	                <a href="#" onclick="javascript: popper('doit.php?action=showStartMessage&step=1'); return false" class="btn pull-left">Back</a>
+                	<a href="#" onclick="javascript: popper('doit.php?action=showStartMessage&step=3&noJq=true'); return false" class="btn btn-primary pull-right" style="">Next<a>
+                </p>
+                </div>
             </div>  
             <?}else if($_GET[step] == "3"){
+			?>
+            <div class="blueModal border-radius transparency">
+            	<div>
+                <h2>
+                    Buddylist & Chat
+                </h2>
+                <p>
+                   will be added
+                </p>
+                <p>
+	                <a href="#" onclick="javascript: popper('doit.php?action=showStartMessage&step=2'); return false" class="btn pull-left">Back</a>
+                	<a href="#" onclick="javascript: popper('doit.php?action=showStartMessage&step=4&noJq=true'); return false" class="btn btn-primary pull-right" style="">Next<a>
+                </p>
+               </div>
+            </div>
+            <?}else if($_GET[step] == "4"){
                 mysql_query("UPDATE user SET startLink='' WHERE userid='$_SESSION[userid]'");?>
             <script>
                 $("#finalStep").click(function(){
-                    $(".jqPopUp").hide("slow", function(){
+                    $(".blueModal").hide("slow", function(){
                         
                         $(".fenster").show("slow", function(){
                             initDraggable();
                         });
-                        showModuleSettings();
                         
                     });
                 });
             </script>
-            <div class="jqPopUp border-radius transparency" style="width: 940px; height: 500px; margin-left: -470px; margin-top: -250px;">
-                <p class="breadCrum" style="margin-top: -1em;">
-                    Welcome Message >> <b>Buddylist & Chat</b>
-                </p>
-                <p class="courier" style="font-size: 18pt;">
-                    Buddylist & Chat
-                </p>
-                <p>
-                    I need a friend to make a screenshot of a chatwindow!
-                </p>
-                <p id="finalStep" class="btn" style="margin-left: 850px;">Try The Universe</p>
+            <div class="blueModal border-radius transparency">
+            	<div>
+                <h2>
+                    Update your profile
+                </h2>
+                <div>
+                	<?
+                    $AccSetSql = mysql_query("SELECT * FROM user WHERE userid='$_SESSION[userid]'");
+                    $AccSetData = mysql_fetch_array($AccSetSql);
+                    if($AccSetData[birthdate]){
+                    $birth_day = date("d", $AccSetData[birthdate]);
+                    $birth_month = date("m", $AccSetData[birthdate]);
+                    $birth_year = date("Y", $AccSetData[birthdate]);
+                    }
+                 ?>
+		            <form action="modules/settings/index.php" method="post" target="submitter">
+		                <div class="controls">
+		                    
+		                    <div class="controls controlls-row">
+		                        <span class="span2">Name</span>
+		                        <input type="text" name="AccSetRealname" class="span3" value="<?=$AccSetData[realname];?>">
+		                    </div>
+		                    <div class="controls controlls-row">
+		                        <span class="span2">City</span>
+		                        <input type="text" name="place" class="span3" value="<?=$AccSetData[place];?>">
+		                    </div>
+		                    <div class="controls controlls-row">
+		                        <span class="span2">Hometown</span>
+		                        <input type="text" name="home" class="span3" value="<?=$AccSetData[home];?>">
+		                    </div>
+		                    <div class="controls controlls-row">
+		                        <span class="span2">Birthdate</span>
+		                        <input type="text" name="birth_day" class="span1" value="<?=$birth_day;?>">
+		                        <input type="text" name="birth_month" class="span1" value="<?=$birth_month;?>">
+		                        <input type="text" name="birth_year" class="span1" value="<?=$birth_year;?>">
+		                    </div>
+		                    <div class="controls controlls-row">
+		                        <span class="span2">School</span>
+		                        <input type="text" name="school1" class="span3" value="<?=$AccSetData[school1];?>">
+		                    </div>
+		                    <div class="controls controlls-row">
+		                        <span class="span2">University</span>
+		                        <input type="text" name="university1" class="span3" value="<?=$AccSetData[university1];?>">
+		                    </div>
+		                    <div class="controls controlls-row">
+		                        <span class="span2">Work</span>
+		                        <input type="text" name="work" class="span3" value="<?=$AccSetData[employer];?>">
+		                    </div>
+		                    <div class="controls controlls-row">
+		                        <span class="span5">
+		                            <input type="submit" id="finalStep" name="AccSetSubmit" value="enter the universe" class="btn btn-info pull-right">
+		                            <a href="#" class="btn pull-left" onclick="javascript: popper('doit.php?action=showStartMessage&step=3'); return false">back</a>
+		                        </span>
+		                    </div>
+		                </div>
+		            </form>
+                </div>
+               </div>
             </div>
             <?}
         }else if($_GET[action] == "showSingleRssFeed"){
