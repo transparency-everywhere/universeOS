@@ -1673,13 +1673,15 @@ if($_GET[action] == "scorePlus"){
 	                    We try to give you the experience of an operatingsystem, without the disadvantage that its bound to a singlecomputer. <br>You joined this project at a very early state, so please excuse us if you trap over some errors.<br>
 	                </p>
 	                <h3>We want to tell you more about the Universe within the next three steps.</h3>
+	            </div>
+	            <footer>
 	                <a href="#" onclick="javascript: popper('doit.php?action=showStartMessage&step=1&noJq=true'); return false" class="btn btn-primary pull-right">Next</a>
-            	</div>
+	            </footer>
             </div>
             <?
             }else if($_GET[step] == "1"){?>
             
-            <div class="blueModal border-radius container"><p class="courier" style="font-size: 18pt;">
+            <div class="blueModal border-radius container">
             	<div>
 	            	<h2>
 	                    Your Desktop
@@ -1700,11 +1702,11 @@ if($_GET[action] == "scorePlus"){
 	                    <h3>Your Userbutton</h3><br>
 	                    Your Userbutton shows whats new. It shows the number of news (like buddyrequests or messages) on your user picture
 	                </span>
-	                <p>
+	                </div>
+	                <footer>
 	                 	<a href="#" onclick="javascript: popper('doit.php?action=showStartMessage'); return false" class="btn pull-left">Back</a>
 	                	<a href="#" onclick="javascript: popper('doit.php?action=showStartMessage&step=2'); return false" class="btn btn-primary pull-right">&nbsp;&nbsp;Next&nbsp;&nbsp;</a>
-	                </p>
-	                </div>
+	                </footer>
 	               </div>
             
             <?}else if($_GET[step] == "2"){?>
@@ -1729,15 +1731,15 @@ if($_GET[action] == "scorePlus"){
                     <b>Privacy</b>
                     When you add a folder, an element, a file or a link you always have to choose the privacy. Eitheir you choose that everyone can see it, that only particular groups, you are member of, or just you can see it.
                 </p>
-                <p>
+                </div>
+                <footer>
 	                <a href="#" onclick="javascript: popper('doit.php?action=showStartMessage&step=1'); return false" class="btn pull-left">Back</a>
                 	<a href="#" onclick="javascript: popper('doit.php?action=showStartMessage&step=3&noJq=true'); return false" class="btn btn-primary pull-right" style="">Next<a>
-                </p>
-                </div>
+                </footer>
             </div>  
             <?}else if($_GET[step] == "3"){
 			?>
-            <div class="blueModal border-radius transparency">
+            <div class="blueModal border-radius">
             	<div>
                 <h2>
                     Buddylist & Chat
@@ -1745,11 +1747,11 @@ if($_GET[action] == "scorePlus"){
                 <p>
                    will be added
                 </p>
-                <p>
+               </div>
+                <footer>
 	                <a href="#" onclick="javascript: popper('doit.php?action=showStartMessage&step=2'); return false" class="btn pull-left">Back</a>
                 	<a href="#" onclick="javascript: popper('doit.php?action=showStartMessage&step=4&noJq=true'); return false" class="btn btn-primary pull-right" style="">Next<a>
-                </p>
-               </div>
+                </footer>
             </div>
             <?}else if($_GET[step] == "4"){
                 mysql_query("UPDATE user SET startLink='' WHERE userid='$_SESSION[userid]'");?>
@@ -1764,7 +1766,7 @@ if($_GET[action] == "scorePlus"){
                     });
                 });
             </script>
-            <div class="blueModal border-radius transparency">
+            <div class="blueModal border-radius">
             	<div>
                 <h2>
                     Update your profile
@@ -2666,6 +2668,7 @@ if($_GET[action] == "scorePlus"){
 			                <?
                         }
                 }else{
+                $elementData = mysql_fetch_array(mysql_query("SELECT privacy FROM elements WHERE id='$element'"));
                 ?>
             <div class="jqPopUp border-radius transparency" id="newUFF" style="width: 600px; height: 400px;">
                 <a href="#" class="jqClose" id="closeNewUff">X</a>
@@ -2693,7 +2696,7 @@ if($_GET[action] == "scorePlus"){
                             </tr>
                             <tr>
                                 <td colspan="3">
-                                    <?=showPrivacySettings();?>
+                                    <?=showPrivacySettings($elementData[privacy]);?>
                                 </td>
                             </tr>
                             <tr>

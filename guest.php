@@ -150,7 +150,7 @@ function processRegistration(){
         <? include("modules/reader/index.php") ?>
         
         <div id="invisiblefilesystem"><? include("modules/filesystem/filesystem.php") ?></div></div>
-        <div id="loader"></div><iframe name="submitter" style="display:none;" id="submitter"></iframe>
+        <div id="alerter" class="container"></div><div id="loader"></div><iframe name="submitter" style="display:none;" id="submitter"></iframe>
         <div id="suggest">
         </div>
         
@@ -420,13 +420,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#262626', end
 </script>
 <noscript><p><img src="http://analytics.universeos.org/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript>
 <!-- End Piwik Code -->
-
-    </body>
-    
-
-"" /></p></noscript>
-<!-- End Piwik Code -->
-
+    <?
+    include("openFileFromLink.php");
+    ?>
     </body>
     
 

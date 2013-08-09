@@ -146,12 +146,4 @@ if($appAlerts != "0"){
 //if($amount != "0"){
 //$text = $amount;
 //}
-?>Events');";
-}
-    echo"</script>";
-
-
-//if($amount != "0"){
-//$text = $amount;
-//}
 ?>

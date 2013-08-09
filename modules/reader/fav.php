@@ -40,10 +40,11 @@ if($_GET[action] == "add"){
             <table width="100%" height="40" cellspacing="0" style="cursor: pointer;">
                 <tr style="border-top: 1px solid #c9c9c9;" id="favTabBar">
                 	<!-- this cols toggle the tabs the javascript is located at bottom -->
-                    <td width="25%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive active" id="showfavGroup"><span class=""><img src="./gfx/icons/group.png">&nbsp;Groups</span></td>
-                    <td width="25%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" id="showfavPlayList"><span class=""><img src="./gfx/icons/playlist.png">&nbsp;Playlists</span></td>
-                    <td width="25%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" id="showfavNews"><span class=""><img src="./gfx/icons/rss.png">&nbsp;News</span></td>
-                    <td width="25%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" id="showfavFiles"><span class=""><img src="./gfx/icons/folder.png">&nbsp;Files</span></td>
+                    <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive active" id="showfavGroup"><span class=""><img src="./gfx/icons/group.png">&nbsp;Groups</span></td>
+                    <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" id="showfavFav"><span class=""><img src="./gfx/icons/fav.png">&nbsp;Fav</span></td>
+                    <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" id="showfavPlayList"><span class=""><img src="./gfx/icons/playlist.png">&nbsp;Playlists</span></td>
+                    <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" id="showfavNews"><span class=""><img src="./gfx/icons/rss.png">&nbsp;News</span></td>
+                    <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" id="showfavFiles"><span class=""><img src="./gfx/icons/folder.png">&nbsp;Files</span></td>
                 </tr>
             </table>
             <div style="position: absolute;  top: 151px; right: 0px; bottom: 0px; left: 0px; background: #FFFFFF; overflow: auto; padding: 15px;" class="favTab" id="favTab_Group">
@@ -80,6 +81,12 @@ if($_GET[action] == "add"){
                        }
                        ?>
                      </table>
+            </div>
+            <div style="position: absolute;  top: 151px; right: 0px; bottom: 0px; left: 0px; background: #FFFFFF; overflow: auto; padding: 15px; display: none;" class="favTab" id="favTab_Fav">
+                   
+                    <h3 class="readerStartItem">
+                        <img src="./gfx/icons/group.png" height="14">&nbsp;Your Favorites</span>
+                    </h3>
             </div>
             <div style="position: absolute;  top: 151px; right: 0px; bottom: 0px; left: 0px; background: #FFFFFF; overflow: auto; padding: 15px; display: none;" class="favTab" id="favTab_playList">
                 
@@ -192,6 +199,12 @@ if($_GET[action] == "add"){
                 $("#favTab_Group").slideDown();
                 $('#showfavGroup').addClass('active');
             });            
+            $("#showfavFav").click(function() {
+            	$('#favTabBar .interactive').removeClass('active');
+                $(".favTab").slideUp();
+                $("#favTab_Fav").slideDown();
+                $('#showfavFav').addClass('active');
+            });             
             $("#showfavPlayList").click(function() {
             	$('#favTabBar .interactive').removeClass('active');
                 $(".favTab").slideUp();

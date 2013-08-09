@@ -12,7 +12,6 @@
         <meta name="reply-to" content=info@transparency-everywhere.com>
         <meta name="Identifier-URL" content="universeOS.org">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta name="viewport" content="initial-scale=0.5, user-scalable=no">
 
         
         <!--facebook open graph-->
@@ -24,19 +23,16 @@
         
         <link href="inc/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
         <link rel="stylesheet" type="text/css" href="inc/style.css">
-        <script type="text/javascript" src="inc/ajax.js"></script>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-        <script type="text/javascript" src="inc/jquery2.js"></script>
-        <script src="inc/plugins/uploadify/jquery.uploadify.min.js" type="text/javascript"></script>
+        
+        
 		<script type="text/javascript" src="inc/plugins.js"></script>
-	
-		<script src="inc/plugins/CryptoJS/rollups/aes.js"></script>
-	
         <script type="text/javascript" src="inc/functions.js"></script>
-        <link rel="shortcut icon" href="http://universeOS.org/gfx/favicon.ico" />
+        
         <link href="inc/blue.monday/jplayer.blue.monday.css" rel="stylesheet" type="text/css" />
+        
         <script type="inc/jquery.jplayer.min.js"></script>
         <script src="inc/bootstrap/js/bootstrap.min.js"></script>
+        
                 <script type="text/javascript">
 
 

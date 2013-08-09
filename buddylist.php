@@ -36,11 +36,17 @@ while($buddylistData = mysql_fetch_array($buddylistSql)) {
         }
     ?>
                 <tr class="strippedRow height60">
-                 <td style="padding-left: 3px;"><?=showUserPicture($blUserData['userid'], "30");?></td>
-                 <td><a href="#" onclick="openChatDialoge('<?=$username;?>');"><?=$username;?></a></td>
-                 <td><a href="#" onclick="createNewTab('reader_tabView','<?=$blUserData[username];?>','','./profile.php?user=<?=$blUserData[userid];?>',true);return false"><img src="./gfx/user.gif"></a></td>
-                 <td>&nbsp;</td>        
-                 <td><a href="#" onclick="popper('doit.php?action=writeMessage&buddy=<?=$blUserData[userid];?>')"><img src="./gfx/mail.gif"></a></td>
+	                 <td style="padding-left: 3px; width: 35px;"><?=showUserPicture($blUserData['userid'], "30");?></td>
+	                 <td><a href="#" onclick="openChatDialoge('<?=$username;?>');"><?=$username;?></a></td>
+	                 <td>
+	                 	
+	                 	<div class="btn-toolbar">
+						  <div class="btn-group">
+						    <a class="btn btn-small" href="#" onclick="showProfile('<?=$blUserData[userid];?>')"><i class="icon-user"></i></a>
+						    <a class="btn btn-small" href="#" onclick="popper('doit.php?action=writeMessage&buddy=<?=$blUserData[userid];?>')"><i class="icon-envelope"></i></a>
+						  </div>
+						</div>
+					 </td>
                 </tr>
 <?
 $i++;
@@ -56,12 +62,18 @@ if(empty($i)){
                     search for the user- or realname of your friends, to add them to your buddylist.
                 </div>
     <?
-}
+}?>
+        </div>
+   </div>
+   <?
 $mayKnow = friendsYouMayKnow();
 if(!empty($mayKnow)){
 	
-	echo"<div>";
-	echo"you may know<br>";
+	echo"<div id=\"buddySuggestions\">";
+	echo"<header>";
+	echo"&nbsp;you may know";
+	echo"<a id=\"closeSuggestions\" onclick=\"$('#buddySuggestions').hide();\">x</a>";
+	echo"</header>";
 	echo"<a href=\"#\" onclick=\"showProfile('$mayKnow')\">";
 	echo"&nbsp;";
 	echo showUserPicture($mayKnow, 25);
@@ -71,7 +83,5 @@ if(!empty($mayKnow)){
 	
 }
 ?>
-        </div>
-   </div>
 </div>
 <? } ?>

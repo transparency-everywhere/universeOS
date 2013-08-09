@@ -368,7 +368,7 @@ h3{
     height: 350px;
 }
 
-.blueModal > div{
+.blueModal > div, .blueModal > footer{
 	margin:15px;
 }
 
@@ -625,13 +625,6 @@ h3{
     overflow: none;
 }
 
-#buddyListfooter {
-    width: 100%;
-    height: 10%;
-    overflow: none;
-    
-}
-
 #buddyListfooter > center { 
     padding-top: 5%;
 }
@@ -643,23 +636,18 @@ h3{
     background: rgba(0,0,0,0.8);
     right: 0px;
     left: 0px;
-    margin-left: 17px;
-    margin-right: 17px;
+    margin-left:7px;
+    margin-right:7px;
     color: #FFFFFF;
 }
 
-#buddySuggestions > ul{
-    margin-left:3px;
-    margin-top:5px;
+#buddySuggestions #closeSuggestions{
+	color: #FFFFFF;
+	float:right;
+	clear:right;
+	cursor:pointer;
+	margin-right:3px;
 }
-
-#buddySuggestions > ul > li{
-    background: rgba(255,255,255,0.2);
-    padding:4px;
-    margin-right:3px;
-    cursor: pointer;
-}
-    
 
 #feed {
     

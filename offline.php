@@ -264,18 +264,4 @@
 		$('#').carousel();
 		</script>
     </div>
-</div>                             <li> <img src="gfx/icons/whiteArrowRight.png" /> <i class="btn btn-mini btn-info">4</i> Communicate safely</li>
-                           </ul>
-                        </p>
-			</div>
-		    </div>
-		  </div>
-		  <!-- Carousel nav -->
-		  <a class="carousel-control left" href="#myCarousel" data-slide="prev" style="left: 2%; top: 120px;">&lsaquo;</a>
-		  <a class="carousel-control right" href="#myCarousel" data-slide="next" style="top: 120px">&rsaquo;</a>
-		</div>
-		<script>
-		$('#').carousel();
-		</script>
-    </div>
 </div>

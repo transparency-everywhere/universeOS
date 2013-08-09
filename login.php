@@ -32,10 +32,17 @@ if(isset($_POST[submit]) && !empty($_POST[username])) {
      }
      
      else {
-      $loginerror = "wrong";
-      jsAlert("$loginerror");
+      ?>
+      	   <script>
+		   parent.jsAlert('', '<?=addslashes("The username and password doesn't match");?>');
+      	   </script>
+      <?
      }
   }else{
-	jsAlert("error!");
+      ?>
+      	   <script>
+		   parent.jsAlert('', '<?=addslashes($loginerror);?>');
+      	   </script>
+      <?
   }
   ?>
