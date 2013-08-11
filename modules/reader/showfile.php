@@ -133,13 +133,6 @@ if($_GET[type] == "document"){
         <?
         }
     }
-    else if($_GET[type] == "wiki"){
-        $title = urlencode($_GET[title]);
-            $wikiUrl = "http://en.wikipedia.org/w/index.php?title=$title&printable=yes";
-            ?>
-            <iframe style="width: 100%; height: 100%" src="<?=$wikiUrl;?>"></iframe>
-            <?
-    }
     else if($_GET[type] == "image"){ ?>
         <div id="<?=$documentElementData[title];?>ImageViewer" class="readerImageTab">
             <center> 
@@ -178,15 +171,7 @@ if($_GET[type] == "document"){
              </table>
         </div>
         
-   <? }else if($_GET[type] == "audio"){
-       ?>
-        <div>
-            <header class="grayBar">
-                <center><?=$documentData[title];?></center>
-            </header>
-        </div>
-        <?
-   }else if($_GET[type] == "youTube"){
+   <?}else if($_GET[type] == "youTube"){
        if(isset($_GET[vId])){
        $id = "$_GET[vId]";
        }else{

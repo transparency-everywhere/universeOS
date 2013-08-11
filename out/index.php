@@ -4,8 +4,6 @@ include_once("../inc/config.php");
 include_once("../inc/functions.php");
 echo"<html>";
 echo"<head>";
-echo"<meta name=\"description\" content='Discover the social webOS. Connect with your friends, read your favourite book or RSS-Feed, watch your favourite movie, listen your favourite song and be creative...'>";
-
 
 //define type and itemId
 if(!empty($_GET[folder])){
@@ -22,7 +20,13 @@ if(!empty($_GET[folder])){
 }else if(!empty($_GET[file])){
 	$type = "File";
 	$itemId = $_GET[file];
+	$query = mysql_query("SELECT title FROM files WHERE id='".mysql_real_escape_string($itemId)."'");
+	$data = mysql_fetch_array($query);
 }
+	$metaDescriptionContent = "universeOS $type $title.";
+	$metaDescriptionContent .= "Discover the social webOS. Connect with your friends, read your favourite book or RSS-Feed, watch your favourite movie, listen your favourite song and be creative...";
+	echo"<meta name=\"description\" content='$metaDescriptionContent'>";
+
 
 	//page title
 	echo"<title>";
@@ -40,7 +44,7 @@ if(!empty($_GET[folder])){
 	
 	//meta information
 	echo"<meta name=\"title\" content=\"universeOS - $type $title\">";
-	echo"<meta name=\"keywords\" content=\"universeOS, $type, $title\">";
+	echo"<meta name=\"keywords\" content=\"universeOS $type $title, $type, $title, $type $title\">";
         echo"<meta name=\"Robots\" content=\"index,follow\">";
         echo"<style>";
         ?>

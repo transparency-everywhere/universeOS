@@ -49,21 +49,15 @@ $folder = "1";
 
 $pathsql = mysql_query("SELECT id, folder, path, privacy FROM folders WHERE id='".mysql_real_escape_string($folder)."'");
 $pathdata = mysql_fetch_array($pathsql);
-?>
-<?
-if(1 == 2){?>
-    <div>
-          &nbsp;// at: universe<?=$pathdata[path];?>&nbsp;&nbsp;&nbsp;&nbsp;
-    </div>
-<? }} ?>
+} ?>
 <div class="border-box frameRight fileBrowser_<?=$folder;?>">
     <div class="underFrame" style="overflow: none;">
         <div class="grayBar" style="top: 0px; left:0px; right: 0px; height: 20px; overflow: none;">
             	<? if($folder !== "1") {?>
-            	<a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=<?=$pathdata[folder];?>&reload=1');return false" title="parent folder" class="btn btn-small" style="margin-right:3px;"><i class="icon-arrow-up"></i></a>
+            	<a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=<?=$pathdata[folder];?>&reload=1');return false" title="parent folder" class="btn btn-mini" style="margin-right:3px;"><i class="icon-arrow-up"></i></a>
                 <? }
                 if(isset($_SESSION[userid]) && !empty($folder)){ ?>
-            	<a href="#" onclick="$('.fileBrowserSettings<?=$folder;?>').slideToggle('slow'); return false" title="more..." class="btn btn-small"><i class="icon-cog"></i></a>
+            	<a href="#" onclick="$('.fileBrowserSettings<?=$folder;?>').slideToggle('slow'); return false" title="more..." class="btn btn-mini"><i class="icon-cog"></i></a>
                 <? }?>
         </div>
         <div class="fileBrowser">

@@ -391,7 +391,7 @@
         }
         if(!empty($privacy) || !empty($fav) || !empty($delete) || !empty($edit) || !empty($report)){
         $return = "
-        <a href=\"#\" onclick=\"showSettingsWindow('$type$itemId');\" class=\"btn btn-small\"><i class=\"icon-cog\"></i></a>
+        <a href=\"#\" onclick=\"showSettingsWindow('$type$itemId');\" class=\"btn btn-mini\"><i class=\"icon-cog\"></i></a>
         <div class=\"itemSettingsWindow itemSettingsWindow$type$itemId\">
             <ul>
                 $privacy
@@ -411,8 +411,11 @@
       if($type == "folder"){
           //info1 is the creator of the folder
           //it is used to proof if privacy settings should be shown
+          $checkFolderSql = mysql_query("SELECT privacy, creator FROM folders WHERE id='$itemId'");
+          $checkFolderData = mysql_fetch_array($checkFolderSql);
+          
           $open = "<li><a href=\"javascript: openFolder('$itemId')\">Open</a></li>";
-          if($info1 == $_SESSION[userid]){
+          if(authorize($checkFolderData[privacy], "edit", $checkFolderData[creator])){
               $privacy = "<li><a href=\"javascript: popper('doit.php?action=changePrivacy&type=folder&itemId=$itemId')\">Privacy</a></li>";
           }
                 
@@ -420,14 +423,15 @@
       }
       
       if($type == "element"){
-          //info1 is the creator of the folder
-          //it is used to proof if privacy settings should be shown
-          $open = "<li><a href=\"#\" onclick=\"openElement('$itemId', '$title'); return false;\">Open</a></li>";
+         $checkElementSql = mysql_query("SELECT privacy, author FROM elements WHERE id='$itemId'");
+         $checkElementData = mysql_fetch_array($checkElementSql);
+		 
+          	$open = "<li><a href=\"#\" onclick=\"openElement('$itemId', '$title'); return false;\">Open</a></li>";
           
-          if($info1 == $_SESSION[userid]){
-              $privacy = "<li><a href=\"javascript: popper('doit.php?action=changePrivacy&type=element&itemId=$itemId')\">Privacy</a></li>";  
-          }
-          $fav = "<li><a href=\"doit.php?action=addFav&type=element&item=$itemId\" target=\"submitter\">Add to Fav</a></li>";
+         if(authorize($checkElementData[privacy], "edit", $checkElementData[author])){
+            $privacy = "<li><a href=\"javascript: popper('doit.php?action=changePrivacy&type=element&itemId=$itemId')\">Privacy</a></li>";  
+         }
+         $fav = "<li><a href=\"doit.php?action=addFav&type=element&item=$itemId\" target=\"submitter\">Add to Fav</a></li>";
       }
       if($type == "file"){
           $open = "<li><a href=\"#\" onclick=\"openFile('$info1', '$itemId', '$title');\">Open</a>";
@@ -436,12 +440,14 @@
           $download = "<li><a href=\"doit.php?action=download&fileId=$itemId\">download</a></li>";
       }
         if($type == "image"){
-          $open = "<li><a href=\"#\" onclick=\"openFile('image', '$itemId', '$title');\">Open</a>";
-          $background = "<li><a href=\"doit.php?action=changeBackgroundImage&type=file&id=$itemId\" target=\"submitter\">set as background</a></li>";
-          $fav = "<li><a href=\"doit.php?action=addFav&type=file&item=$itemId\" target=\"submitter\">Add to Fav</a></li>";
-          $download = "<li><a href=\"doit.php?action=download&fileId=$itemId\">download</a></li>";
-          if($info1 == $_SESSION[userid]){
-          $delete = "<li><a href=\"doit.php?action=deleteItem&type=file&itemId=$itemId\" target=\"submitter\">Delete</a></li>";
+          $checkFileSql = mysql_query("SELECT privacy, owner FROM files WHERE id='$itemId'");
+          $checkFileData = mysql_fetch_array($checkFileSql);
+	          $open = "<li><a href=\"#\" onclick=\"openFile('image', '$itemId', '$title');\">Open</a>";
+	          $background = "<li><a href=\"doit.php?action=changeBackgroundImage&type=file&id=$itemId\" target=\"submitter\">set as background</a></li>";
+	          $fav = "<li><a href=\"doit.php?action=addFav&type=file&item=$itemId\" target=\"submitter\">Add to Fav</a></li>";
+	          $download = "<li><a href=\"doit.php?action=download&fileId=$itemId\">download</a></li>";
+	      if(authorize($checkFileData[privacy], "edit", $checkFileData[owner])){
+          	  $delete = "<li><a href=\"doit.php?action=deleteItem&type=file&itemId=$itemId\" target=\"submitter\">Delete</a></li>";
           }
         }
       if($type == "link"){
@@ -452,7 +458,7 @@
           
       }
       ?>
-      <div id="rightClick<?=$type;?><?=$itemId;?>" class="rightclick" style="display: none;">
+      <span id="rightClick<?=$type;?><?=$itemId;?>" class="rightclick" style="display: none;">
           <ul>
               <?=$open;?>
               <?=$fav;?>
@@ -462,7 +468,7 @@
               <?=$background;?>
               <?=$delete;?>
           </ul>
-      </div>
+      </span>
       <?
   }
   
@@ -607,6 +613,7 @@
             $folderpath = "300";
 
         }
+		$size.="px";
     
     if(empty($picData[userPicture])){
         
@@ -743,6 +750,20 @@
     </div>
       <?
   }
+
+
+  function getUserFavs($userid=NULL){
+  	if(empty($userid)){
+  		$userid=$_SESSION[userid];
+  	}
+  	$favSQL = mysql_query("SELECT * FROM fav WHERE user='$userid'");
+		while($favData = mysql_fetch_array($favSQL)){
+			$return[] = $favData;
+		}
+		
+		return $return;
+  }
+
     //shows userpicture, username, and timestamp in a post
   function addFav($type, $typeid, $userid){
       $type = $_GET[type];
@@ -1739,6 +1760,27 @@ echo"</div>";
         echo "}";
     }
 	
+	function getPlaylists($userid=NULL){
+		if(empty($userid))
+			$userid = $_SESSION[userid];
+		
+		$sql = mysql_query("SELECT `id` FROM playlist WHERE `user`='".mysql_real_escape_string($userid)."'");
+		while($data = mysql_fetch_array($sql)){
+			$playlists[] = $data[id];
+		}
+		
+		return $playlists;
+	}
+	
+	function getPlaylistTitle($playlistId){
+		$sql = mysql_query("SELECT `title` FROM playlist WHERE id='".mysql_real_escape_string($playlistId)."'");
+		$data = mysql_fetch_array($sql);
+		return $data[title];
+		
+		
+		
+		
+	}
 	
 	function getUserPlaylistArray($userId=null){
 		if($userId == null){
@@ -1837,11 +1879,39 @@ echo"</div>";
         $title = $video_info->title;
         return $title; // title
     }
+	
+	function getGroups($userid=NULL){
+		if(empty($userid))
+			$userid = $_SESSION[userid];
+		
+		$sql = mysql_query("SELECT `group` FROM `groupAttachments` WHERE `item`='user' AND `validated`='1' AND `itemId`='".mysql_real_escape_string($userid)."'");
+		while($data = mysql_fetch_array($sql)){
+			$groups[] = $data['group'];
+		}
+		return $groups;
+		
+	}
 
+	function getGroupName($groupId){
+		$data = mysql_fetch_array(mysql_query("SELECT title FROM groups WHERE id='".mysql_real_escape_string($groupId)."'"));
+		return $data[title];
+	}
+	
     function countGroupMembers($groupId){
         $total = mysql_query("SELECT COUNT(*) FROM `groupAttachments` WHERE `group`='$groupId' AND `item`='user' AND `validated`='1' "); 
         $total = mysql_fetch_array($total); 
         return $total[0];
+    }
+	
+	
+	
+	
+    
+    function createElement($folder, $title, $type, $user, $privacy){
+    	$title = mysql_real_escape_string($title);
+        $time = time();
+        mysql_query("INSERT INTO `elements` (`title`, `folder`, `type`, `author`, `timestamp`, `privacy`) VALUES ('$title', '$folder', '$type', '$user', '$time', '$privacy');");
+        return mysql_insert_id();
     }
     
     function deleteElement($elementId){
@@ -1886,13 +1956,6 @@ echo"</div>";
 
                     }
                
-    }
-    
-    function createElement($folder, $title, $type, $user, $privacy){
-    	$title = mysql_real_escape_string($title);
-        $time = time();
-        mysql_query("INSERT INTO `elements` (`title`, `folder`, `type`, `author`, `timestamp`, `privacy`) VALUES ('$title', '$folder', '$type', '$user', '$time', '$privacy');");
-        return mysql_insert_id();
     }
 	
 	function getFilesInElement($elementId){
@@ -2217,7 +2280,7 @@ echo"</div>";
 			echo"</select>";
 		}
     
-      	function addFile($file, $element, $folder, $privacy, $user, $lang=NULL){
+     function addFile($file, $element, $folder, $privacy, $user, $lang=NULL){
         
                 //upload file
         $target_path = basename( $file['tmp_name']);
@@ -2480,14 +2543,25 @@ echo"</div>";
     
     
     
-    function openFile($fileId=NULL, $link=NULL, $type=NULL, $typeInfo=NULL, $extraInfo1=NULL, $extraInfo2=NULL){
+    function openFile($fileId=NULL, $link=NULL, $type=NULL, $title=NULL, $typeInfo=NULL, $extraInfo1=NULL, $extraInfo2=NULL){
         
         
         
         
-        //at first we need to choose if file is located in the table
-        //files or in the table links
-        if(empty($link)){
+        //choose if function needs to handle real file
+        //or a link
+        
+        //youtube, wiki, rss etc. actually needs a linkId
+        //but in this case the handler for links still needs
+        //to be called
+        if(!empty($link) || $type == "wiki" || $type == "RSS" || $type == "youtTube")
+        	$isLink = true;
+		else 
+			$isFile = true;
+		
+		
+		
+       	if($isFile){
             //get filedata
             $fileQuery = mysql_query("SELECT * FROM files WHERE id='$fileId'");
             $fileData = mysql_fetch_array($fileQuery);
@@ -2501,23 +2575,30 @@ echo"</div>";
             $path = getFullFilePath($fileId);
             
             
-            //define type if type is undefined
+            //check type if type is undefined
             if(empty($type)){
             $type = $fileData[type];
             }
             
-        }else{
-            //get linkdata
-            $linkQuery = mysql_query("SELECT * FROM links WHERE id='$link'");
-            $linkData = mysql_fetch_array($linkQuery);
-            
-            $title = $linkData[title];
-            
-            
-            //define type if type is undefined
-            if(empty($type)){
-            $type = $linkData[type];
-            }
+        }
+        if($isLink){
+        	//extra handler for extarnal links
+			if(empty($link))
+				$extarnal = true;
+			
+				if(!$extarnal){
+		            //get linkdata
+		            $linkQuery = mysql_query("SELECT * FROM links WHERE id='$link'");
+		            $linkData = mysql_fetch_array($linkQuery);
+		            
+		            $title = $linkData[title];
+		            
+		            
+		            //define type if type is undefined
+		            if(empty($type)){
+		            $type = $linkData[type];
+		            }
+				}
         }
 		
         if($type == "image/jpeg'"){
@@ -2569,10 +2650,13 @@ echo"</div>";
                 break;
             case wiki:
 				
-	       		$title = urlencode($_GET[title]);
+	       		$title = urlencode($title);
 	            $wikiUrl = "http://en.wikipedia.org/w/index.php?title=$title&printable=yes";
-	            $output = "<iframe style=\"position: absolute; top: 61px; left: 0px; right:0px; bottom:0px; border:0px; width: 100%; min-height:100%;\" src=\"$wikiUrl\"></iframe>";
-	            
+				
+				
+                $output .= "<div class=\"iframeFrame\">";
+	            $output .= "<iframe frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"auto\"  src=\"$wikiUrl\"></iframe>";
+	            $output .= "</div>";
                 break;
             case RSS:
 				
@@ -2592,6 +2676,41 @@ echo"</div>";
             
             //real file types
             //documents
+			case UFF:
+						if(authorize($fileData[privacy], "edit", $fileData[owner])){
+						    $readOnly = "false";
+						}else{
+						    $readOnly = "true";
+						}
+						
+						$title = $fileData[title];
+						$activeUsers = explode(";", $fileData[var1]);
+						//this iframe is used to handle all the onload, onsubmit, onkeyup events, its necessary because of the fact that the dhtml-goddies tab script parses the damn js
+						//dirty solution!!!
+						$output .= "<iframe src=\"modules/reader/UFF/javascript.php?fileId=$fileId&readOnly=$readOnly\" style=\"display:none;\"></iframe>";
+						$output .= "<div class=\"uffViewerNav\">";
+							$output .= "<div style=\"margin: 10px;\">";
+								$output .= "<ul>";
+						            $output .= '<li style="font-size: 11pt; margin-bottom: 05px;"><i class="icon-user"></i>&nbsp;<strong>Active Users</strong></li>';
+						            //show active users
+						            foreach($activeUsers AS &$activeUser){
+						                if(!empty($activeUser)){
+						                $output .= "<li onclick=\"openProfile($activeUser);\" style=\"cursor: pointer;\">";
+						                $output .= showUserPicture($activeUser, "11");
+						                $output .=  "&nbsp;";
+						                $output .=  useridToUsername($activeUser);
+						                $output .= "</li>";
+						                }
+						            }
+								$output .= "</ul>";
+							$output .= "</div>";
+						$output .= "</div>";
+						//document frame
+						$output .= "<div class=\"uffViewerMain\">";
+							$output .= "<textarea class=\"uffViewer_$fileId WYSIWYGeditor\" id=\"editor1\">";
+							$output .= "</textarea>";
+						$output .= "</div>";
+				break;
             case 'text/plain':
                 
                 
@@ -2604,19 +2723,19 @@ echo"</div>";
                 break;
             
             case 'application/pdf':
-                
-                $output .= "<iframe src=\"http://docs.google.com/gview?url=http://universeos.org/$path&embedded=true\" style=\"width: 99%; height:100%;\"></iframe>";
-
+                $output .= "<div class=\"iframeFrame\">";
+                $output .= "<iframe src=\"http://universeos.org/$path\" frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"auto\"></iframe>";
+                $output .= "</div>";
                 
                 break;
             
             
             //pictures
-            case 'image/jpeg':
+            case 'image':
 				
-				$output .= "<div id=\"<?=$documentElementData[title];?>ImageViewer\" class=\"readerImageTab\">";
+				$output .= "<div id=\"$elementData[title]ImageViewer\" class=\"readerImageTab\">";
 				$output .= "<center>";
-				$output .= "<img src=\"<?=$path;?>/<?=$documentData[title];?>\" width=\"100%\" id=\"viewedPicture\">";
+				$output .= "<img src=\"$path\" width=\"100%\" id=\"viewedPicture\">";
 				$output .= "</center>";
 				$output .= "</div>";
 				
@@ -2627,38 +2746,33 @@ echo"</div>";
 					$output .= '<tr>';
 					
 					
-			        $documentSQL = mysql_query("SELECT id, title, folder FROM files WHERE folder='$documentElementData[id]'");
+			        $documentSQL = mysql_query("SELECT id, title, folder FROM files WHERE folder='$elementData[id]'");
 			        while($documentData = mysql_fetch_array($documentSQL)){
-				        $documentFolderSQL = mysql_query("SELECT path FROM folders WHERE id='$documentElementData[folder]'");
+				        $documentFolderSQL = mysql_query("SELECT path FROM folders WHERE id='$elementData[folder]'");
 				        $documentFolderData = mysql_fetch_array($documentFolderSQL);
-				        if($documentElementData[title] == "profile pictures"){
+				        if($elementData[title] == "profile pictures"){
 				        $folderPath = urldecode($documentFolderData[path]);    
 				        $folderPath = "http://universeos.org/upload$folderPath/thumb/300/";
 				        }else{
-				        $path = getFolderPath($documentElementData[folder])."thumbs/";
+				        $thumbPath = getFolderPath($elementData[folder])."thumbs/";
 				        }
 						
 						
-				        $output .= "<td onmouseup=\"showMenu('image<?=$documentData[id];?>')\" oncontextmenu=\"showMenu('image<?=$documentData[id];?>'); return false;\"><div id=\"viewerClick<?=$documentData[id];?>\"><a href=\"#\" onclick=\"addAjaxContentToTab('<?=$documentElementData[title];?>','./modules/reader/showfile.php?type=image&id=<?=$documentData[id];?>');return false\"><img src=\"<?=$path;?><?=$documentData[title];?>\" height=\"100px\"></a></div></td>";   
+				        $output .= "<td onmouseup=\"showMenu('image$documentData[id]')\" oncontextmenu=\"showMenu('image$documentData[id]'); return false;\"><div id=\"viewerClick$documentData[id]\"><a href=\"#\" onclick=\"addAjaxContentToTab('$documentElementData[title]','./modules/reader/showfile.php?type=image&id=$documentData[id]');return false\"><img src=\"$thumbPath$documentData[title]\" height=\"100px\"></a></div></td>";   
 			        }
-			        $output .= "<script>";
-					$output .= "$(\"#viewerClick<?=$documentData[id];?>\").click(function (){";
-			        ?>
-			                    <script>
-			                        $("#viewerClick<?=$documentData[id];?>").click(function (){
-			                            alert("lol");
-			                        });
-			                     function zoomIn(){
-			                        var PictureWidth = $("#viewedPicture").width();
-			                        var newWidth = PictureWidth*1.25;
-			                        $("#viewedPicture").css("width", newWidth);
-			                     }
-			                    </script>
-			               </tr>
-			             </table>
-			        </div>
-			        
-			   <?
+					$output .= "</tr>";
+				        $output .= "<script>";
+							$output .= "$(\"#viewerClick$documentData[id]\").click(function (){";
+								$output .= "alert('lol');";
+							$output .= "});";
+							$output .= "function zoomIn(){";
+								$output .= "var PictureWidth = $(\"#viewedPicture\").width();";
+								$output .= "var newWidth = PictureWidth*1.25;";
+								$output .= "$(\"#viewedPicture\").css(\"width\", newWidth);";
+							$output .= "}";
+						$output .= "</script>";
+					$output .= "</table>";
+					$ouput .="</div>";
 				
 				
 				
@@ -2784,7 +2898,10 @@ echo"</div>";
         if(authorize($filefdata[privacy], "show", $filefdata[creator])){
         ?>
             <tr class="strippedRow" oncontextmenu="showMenu('folder<?=$filefdata[id];?>'); return false;" height="30">
-                <td width="30">&nbsp;<img src="http://universeos.org/gfx/icons/filesystem/folder.png" height="22"></td>
+                <td width="30"><?
+            	if($rightClick){
+            	showRightClickMenu("folder", $filefdata[id], $filefdata[name], $filefdata[creator]);
+            	}?>&nbsp;<img src="http://universeos.org/gfx/icons/filesystem/folder.png" height="22"></td>
                 <td><a href="http://universeos.org/out/?folder=<?=$filefdata[id];?>" onclick="openFolder('<?=$filefdata[id];?>'); return false;"><?=$filefdata[name];?>/</a></td>
                 <td width="50px">
                 	<?
@@ -2796,9 +2913,6 @@ echo"</div>";
                 <td width="50px"><?=showScore("folder", $filefdata[id]);?></td>
             </tr>
             <?
-            if($rightClick){
-            showRightClickMenu("folder", $filefdata[id], $filefdata[name], $filefdata[creator]);
-            }
             }}}
             $filedsql = mysql_query("SELECT * FROM elements $query2");
             while($fileddata = mysql_fetch_array($filedsql)) {
@@ -2891,6 +3005,11 @@ echo"</div>";
                     $image = "../music.png";
                 }
                 else if($fileListData[type] == "video/mp4"){
+                    //define link for openFileFunction
+                    $openFileType = "video";
+                    
+                    //define openFile function
+                    $link = "openFile('$openFileType', '$fileListData[id]', '$title10');";
                     $rightLink = "createNewTab('reader_tabView','See $title10','','./modules/reader/player.php?id=$fileListData[id]',true);return false";
                 }
                 else if($fileListData[type] == "UFF"){

@@ -225,7 +225,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#262626', end
     margin-left: 20px;
 }
 
-.button{
+/*.button{
 	cursor: pointer;
 	text-decoration:none;
 	border: 1px solid rgb(153, 153, 153);
@@ -287,7 +287,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#262626', end
 	background-image:linear-gradient(-90deg, rgb(238, 238, 238), rgb(204, 204, 204));
 	background-image:-webkit-gradient(linear, 50% 0%, 50% 100%, from(rgb(238, 238, 238)), to(rgb(204, 204, 204)));
 	background-image:-moz-linear-gradient(-90deg, rgb(238, 238, 238), rgb(204, 204, 204));
-}
+}*/
 </style>
     <div class="box-shadow border-top-right-radius" id="startbox" style="display: none;">
         <div id="startMainWindow">
@@ -316,25 +316,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#262626', end
         </hgroup>
         </div>
     </div>
-    <script>
-    <?
-    $type = $_GET[type];
-	$typeId = $_GET[typeId];
-	switch($type){
-		//focus on filesystem 
-		case folders:
-			echo"openFolder('$typeId');";
-			break;
-		case elements:
-			break;
-		//focus on reader
-		case files:
-			break;
-		case links:
-			break;
-	}
-    ?>
-    </script>
         
 <div id="dockMenu" class="fancy" style="display: none">
     <p style="font-size:15pt; margin-bottom:-15px;">universeOS</p>
@@ -395,16 +376,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#262626', end
             $("#startbox").css('position', 'absolute');
         });
     </script>
-        
-        
-    </div>
-    <? 
-    $zeit=gettimeofday();
-    $endzeit=$zeit["usec"];
-    $gesamtzeit=round(($endzeit-$startzeit)/1000,0);
-    
-    //jsAlert("$gesamtzeit");
-    ?><!-- Piwik -->
+<!-- Piwik only on page for unregistered users -->
 <script type="text/javascript"> 
   var _paq = _paq || [];
   _paq.push(['trackPageView']);

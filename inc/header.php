@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="en" dir="ltr" class="client-nojs">
         
         
@@ -12,6 +12,7 @@
         <meta name="reply-to" content=info@transparency-everywhere.com>
         <meta name="Identifier-URL" content="universeOS.org">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
 
         
         <!--facebook open graph-->

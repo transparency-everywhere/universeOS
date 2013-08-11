@@ -32,7 +32,7 @@ $elementdata = mysql_fetch_array($elementsql);
 $title10 = substr("$elementdata[title]", 0, 10);
 ?>
 <div class="jqPopUp border-radius transparency" id="addFile"> 
-   <a style="position: absolute; top: 10px; right: 10px; color: #FFF;" id="closeFile">X</a>
+   <a class="jqClose" id="closeFile">X</a>
     <form action="modules/filesystem/addFile.php?element=<?=$_GET[element];?>" method="post" enctype="multipart/form-data" target="submitter"> 
    <table>
     <tr>
@@ -71,7 +71,7 @@ $title10 = substr("$elementdata[title]", 0, 10);
         	
         	<?
         	
-        	showLanguageDropdown($elementdata[privacy]);
+        	showLanguageDropdown();
         	
         	?>
         	
@@ -84,7 +84,7 @@ $title10 = substr("$elementdata[title]", 0, 10);
            <td colspan="2">
                
                             <?
-                                    showPrivacySettings();
+                                    showPrivacySettings($elementdata[privacy]);
                             ?>
            </td>
        </tr>

@@ -13,15 +13,15 @@ if(!isset($_SESSION[userid])){
         <div class="windowHeader" id="feedheader">
             <form id="feedInputForm" method="post" action=" doit.php?action=createFeed" target="submitter">
             <div style="margin: 15px;">
-                        <textarea style="width: 86%; margin-left: 7%; margin-bottom: 0px; height: 2em;resize: none;" rows="1" id="feedInput" name="feedInput"></textarea>
+                        <textarea style="" id="feedInput" name="feedInput"></textarea>
                         <div style="display: none; width: 86%; margin-left: 7%; margin-bottom: 0px;" id="feedInputBar">
                                 <div class="btn-toolbar" style="float: left;">
                                     <div class="btn-group">
-                                        <a class="btn btn-small" href="#" onclick="$('#feedInput').focus(); $('#addFeedFile').hide('slow'); $('#addFeedPrivacy').slideToggle(500);" title="privacy"><i class="icon-eye-open"></i></a>
-                                        <a class="btn btn-small" href="#" title="Add file to your library" onclick="$('#feedInput').focus();$('#addFeedPrivacy').hide('slow'); $('#addFeedFile').slideToggle(500);"><i class="icon-file"></i></a>
+                                        <a class="btn btn-mini" href="#" onclick="$('#feedInput').focus(); $('#addFeedFile').hide('slow'); $('#addFeedPrivacy').slideToggle(500);" title="privacy"><i class="icon-eye-open"></i></a>
+                                        <a class="btn btn-mini" href="#" title="Add file to your library" onclick="$('#feedInput').focus();$('#addFeedPrivacy').hide('slow'); $('#addFeedFile').slideToggle(500);"><i class="icon-file"></i></a>
                                     </div>
                                 </div>
-                                <input type="submit" style="float:right; margin-top: 5px;" value="submit" class="btn btn-success btn-small">
+                                <input type="submit" style="float:right; margin-top: 10px; margin-right:-13px;" value="submit" class="btn btn-success btn-mini">
                         </div>
                     </div>
                     <div id="addFeedPrivacy" class="coolGradient">

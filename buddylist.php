@@ -11,13 +11,6 @@ if(empty($_GET[reload])){
         <p>Buddylist&nbsp;</p><p class="windowMenu"><a href="javascript: toggleApplication('buddylist');" style="color: #FFF;"><img src="./gfx/icons/close.png" width="16"></a></p>
     </header>
     <div class="inhalt">
-<? if(1 == 2){ ?>
-        <div class="blackgradient windowHeader" id="buddyListheader">
-            <hgroup>
-                <h3 style="margin-top:25px;"><center><div id="userdock" class="module" style="height: 36px; margin-bottom: 30px;"><a href="javascript: openPersonalFeed()"><?=showUserPicture($userdata['userid'], 30);?></a></div></h3>
-            </hgroup>
-        </div>
-<? } ?>
         <div id="buddyListFrame">
         <? } ?>
             <table width="100%" cellspacing="0">
@@ -42,8 +35,8 @@ while($buddylistData = mysql_fetch_array($buddylistSql)) {
 	                 	
 	                 	<div class="btn-toolbar">
 						  <div class="btn-group">
-						    <a class="btn btn-small" href="#" onclick="showProfile('<?=$blUserData[userid];?>')"><i class="icon-user"></i></a>
-						    <a class="btn btn-small" href="#" onclick="popper('doit.php?action=writeMessage&buddy=<?=$blUserData[userid];?>')"><i class="icon-envelope"></i></a>
+						    <a class="btn btn-mini" href="#" onclick="showProfile('<?=$blUserData[userid];?>')"><i class="icon-user"></i></a>
+						    <a class="btn btn-mini" href="#" onclick="popper('doit.php?action=writeMessage&buddy=<?=$blUserData[userid];?>')"><i class="icon-envelope"></i></a>
 						  </div>
 						</div>
 					 </td>

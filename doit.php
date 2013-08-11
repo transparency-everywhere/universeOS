@@ -2354,7 +2354,7 @@ if($_GET[action] == "scorePlus"){
                 ?>
                     <form action="doit.php?action=editItem&type=<?=$_GET[type];?>&itemId=<?=$_GET[itemId];?>" method="post" target="submitter">
                         <div class="jqPopUp border-radius transparency" id="editItem" style="display: block">
-                            <a style="position: absolute; top: 10px; right: 10px; color: #FFF;" id="closeEditItem">X</a>  
+                            <a class="jqClose" id="closeEditItem">X</a>  
                             <header>
                                 Edit <?=$headTitle;?>
                             </header>
@@ -2371,11 +2371,15 @@ if($_GET[action] == "scorePlus"){
                                 <tr>
                                 	<td>&nbsp;</td>
                                 </tr>
-                                <tr>
-                                    <td colspan="2"><span class="pull-left"><a href="javascript: showPlaylist('<?=$itemId;?>');" class="btn">back</a></span><span class="pull-right"><input type="submit" value="save" name="submit" id="submitPrivacy" class="btn btn-success">&nbsp;&nbsp;<?=$delete;?></span></td>
-                                </tr>
                             </table>
                             </div>
+                            <footer>
+                            	<span class="pull-left"><?=$back;?></span>
+                            	<span class="pull-right">
+                            		<input type="submit" value="save" name="submit" id="submitPrivacy" class="btn btn-success">&nbsp;&nbsp;
+                            		<?=$delete;?>
+                            		</span>
+                            </footer>
                         </div>
                     </form>
             <script>

@@ -200,10 +200,10 @@
                   
                   var fullscreenCss = {
                         'position' : 'absolute',
-                        'top' : '5',
-                        'bottom' : '10',
-                        'left' : '5',
-                        'right' : '5',
+                        'top' : '5px',
+                        'bottom' : '10px',
+                        'left' : '5px',
+                        'right' : '5px',
                         'width' : 'auto',
                         'height' : 'auto'
                         }
@@ -435,17 +435,18 @@
         }
         
         if(type == 'wikipedia'){
-            createNewTab('reader_tabView',title,'','./modules/reader/showfile.php?type=wiki&title='+typeId,true);
+        	//typeId needs to be changed to title
+            createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=wiki&title='+typeId,true);
             return false
         }
         
         //real files
         if(type == 'UFF'){
-            createNewTab('reader_tabView',title,'','./modules/reader/uffViewer.php?id='+typeId,true);
+            createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=UFF&fileId='+typeId,true);
             return false
         }
         if(type == 'document' ||type == 'application/pdf'){
-            createNewTab('reader_tabView',title,'','./modules/reader/showfile.php?type=document&id='+typeId,true);
+            createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?fileId='+typeId,true);
             return false
         }
         if(type == 'video'){

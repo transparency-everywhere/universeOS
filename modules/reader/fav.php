@@ -77,7 +77,7 @@ if($_GET[action] == "add"){
                                </tr>
                        <?}
                        if($i < 1){
-                           echo"<tr><td>Your are in no group</td></tr>";
+                           echo"<tr><td>You are in no group</td></tr>";
                        }
                        ?>
                      </table>
@@ -87,6 +87,24 @@ if($_GET[action] == "add"){
                     <h3 class="readerStartItem">
                         <img src="./gfx/icons/group.png" height="14">&nbsp;Your Favorites</span>
                     </h3>
+                    <table>
+                    	<tr>
+                    		<td>Type</td>
+                    		<td>Item</td>
+                    		<td>Date</td>
+                    	</tr>
+                    </table>
+                    <?
+                    $userFavs = getUserFavs();
+					foreach($userFavs AS $userFav){
+						// echo"<li>";
+						// echo $userFav['type'];
+						// echo $userFav['item'];
+						// echo $userFav['timestamp'];
+						// echo $userFav['hidden'];
+						// echo"</li>";
+					}
+                    ?>
             </div>
             <div style="position: absolute;  top: 151px; right: 0px; bottom: 0px; left: 0px; background: #FFFFFF; overflow: auto; padding: 15px; display: none;" class="favTab" id="favTab_playList">
                 
