@@ -12,13 +12,39 @@ $playlists = getPlaylists();
 ?>
 <style>
 	.dashBox{
+		color: #FFFFFF;
 		width: 200px;
-		border-radius: 5px;
-		background: #c9c9c9;
+		border-radius: 1px;
+		background: rgba(15,15,15,0.8);
 		margin: 7px 0px 0px 7px;
+		position: relative;
 	}
+	
+	.dashBox header{
+		padding:5px;
+		background: rgba(30,30,30,0.8);
+	}
+	
+	.dashBox div, .dashBox ul{
+		padding: 5px;
+	}
+	
+	.dashBox .dashClose{
+		position: absolute;
+		top: 5px;
+		right: 5px;
+		background-position: -312px 0;
+		background-image: url("inc/img/glyphicons-halflings-white.png");display: inline-block;
+		width: 14px;
+		height: 14px;
+		margin-top: 1px;
+		line-height: 14px;
+		vertical-align: text-top;
+	}
+	
 </style>
 <div class="dashBox">
+	<a class="dashClose"></a>
 	<header>Welcome</header>
 	<div>
          <p style="float: left"><?=showUserPicture($_SESSION[userid], "20");?>Hey <a href="#" onclick="showProfile(<?=$_SESSION[userid];?>)"><?=$userData[username];?></a>,<br>good to see you!</p>
@@ -26,6 +52,7 @@ $playlists = getPlaylists();
 	</div>
 </div>
 <div class="dashBox">
+	<a class="dashClose"></a>
 	<header>Your Groups</header>
 	<ul>
 		<?
@@ -39,6 +66,7 @@ $playlists = getPlaylists();
 	</ul>
 </div>
 <div class="dashBox">
+	<a class="dashClose"></a>
 	<header>Your Playlists</header>
 	<ul>
 		<?

@@ -50,7 +50,7 @@ if($_GET[action] == "add"){
             <div style="position: absolute;  top: 151px; right: 0px; bottom: 0px; left: 0px; background: #FFFFFF; overflow: auto; padding: 15px;" class="favTab" id="favTab_Group">
                    
                     <h3 class="readerStartItem">
-                        <img src="./gfx/icons/group.png" height="14">&nbsp;Your Groups <a href="#" class="btn btn-info btn-small bsPopOver" data-toggle="popover" title="" data-content="And here's some amazing content. It's very engaging. right?" data-original-title="A Title" id="popoooo"><i class="icon-info-sign"></i></a> <span style="float:right"><a href="javascript: popper('doit.php?action=addGroup');" class="btn"><img src="./gfx/icons/group.png" height="14">&nbsp;Add Group</a>  </span>
+                        <img src="./gfx/icons/group.png" height="14">&nbsp;Your Groups <span style="float:right"><a href="javascript: popper('doit.php?action=addGroup');" class="btn"><img src="./gfx/icons/group.png" height="14">&nbsp;Add Group</a>  </span>
                     </h3>
                     <table class="border-top-radius border-box readerStartItem" cellspacing="0"  style="border: 1px solid #c9c9c9; margin-top: -15px;">
                        <tr class="grayBar" height="35">
@@ -87,24 +87,26 @@ if($_GET[action] == "add"){
                     <h3 class="readerStartItem">
                         <img src="./gfx/icons/group.png" height="14">&nbsp;Your Favorites</span>
                     </h3>
-                    <table>
+                    <table><!-- 
                     	<tr>
+                    		<td></td>
                     		<td>Type</td>
                     		<td>Item</td>
                     		<td>Date</td>
-                    	</tr>
+                    	</tr> -->
                     </table>
                     <?
-                    $userFavs = getUserFavs();
-					foreach($userFavs AS $userFav){
-						// echo"<li>";
-						// echo $userFav['type'];
-						// echo $userFav['item'];
-						// echo $userFav['timestamp'];
-						// echo $userFav['hidden'];
-						// echo"</li>";
-					}
-                    ?>
+                    // $userFavs = getUserFavs();
+					// foreach($userFavs AS $userFav){
+						// echo "<tr>";
+						// echo "<td>".getFileIcon($userFav[type])."</td>";
+						// echo "<td>$userFav[type];</td>";
+						// echo "<td>$userFav[item];</td>";
+						// echo "<td>$userFav[timestamp];</td>";
+						// echo "<td>$userFav[hidden];</td>";
+						// echo"</tr>";
+					// }
+                    ?> 
             </div>
             <div style="position: absolute;  top: 151px; right: 0px; bottom: 0px; left: 0px; background: #FFFFFF; overflow: auto; padding: 15px; display: none;" class="favTab" id="favTab_playList">
                 
@@ -167,18 +169,18 @@ if($_GET[action] == "add"){
                     </ul>
                 </div>
                     <div style="top: 151px;" class="frameRight" id="newsContentFrame">
-            <?php
-            $url = "http://feeds.bbci.co.uk/news/world/rss.xml";
-            echo"<div style=\"padding: 20px;\">";
-            showRssFeed($url);
-            echo"</div>";
-            ?>
+			            <?php
+			            $url = "http://feeds.bbci.co.uk/news/world/rss.xml";
+			            echo"<div style=\"padding: 20px;\">";
+			            showRssFeed($url);
+			            echo"</div>";
+			            ?>
                     </div>
             </div>
             <div style="position: absoute; top: 140px; bottom: 0px; background: #FFFFFF; overflow: auto; display: none;" class="favTab" id="favTab_Files">
 
                     <div class="leftNav" style="top: 151px;">
-                    <ul style="float: left; background: #e5f2ff; padding: 10px;">
+                    <ul style="float: left; padding: 10px;">
                         <li onclick="loader('personalFileFrame','doit.php?action=loadPersonalFileFrame&query=allFiles');"><img src="./gfx/icon7.png" width="16">&nbsp;All Files</li>
                         <li onclick="loader('personalFileFrame','doit.php?action=loadPersonalFileFrame&query=myFiles');"><img src="./gfx/icons/filesystem/element.png" width="17" style="margin-bottom: -2px;">&nbsp;myFiles</li>
                         <li><i style="font-size: 8pt;">some Info about this list.</i></li>

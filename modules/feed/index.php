@@ -25,7 +25,7 @@ if(!isset($_SESSION[userid])){
                         </div>
                     </div>
                     <div id="addFeedPrivacy" class="coolGradient">
-                        <?=showPrivacySettings("f/");?>
+                        <?=showPrivacySettings("h//f");?>
                     </div>
                     </form>
                     <div id="addFeedFile" class="coolGradient">

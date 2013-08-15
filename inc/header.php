@@ -22,7 +22,7 @@
         <!--favicon-->
         <link rel="shortcut icon" href="http://universeOS.org/gfx/favicon.ico" />
         
-        <link href="inc/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
+        <link rel="stylesheet" type="text/css" href="inc/css/plugins.css">
         <link rel="stylesheet" type="text/css" href="inc/style.css">
         
         

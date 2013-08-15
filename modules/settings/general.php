@@ -28,7 +28,6 @@
                             <a href="javascript: loader('settingsFrame', 'modules/settings/picture.php');" class="btn" style="margin-top: 10px; margin-bottom: 15px;">edit</a>
                         </div>
                     </div>
-                    
                     <div class="controls controlls-row">
                         <span class="span2">Name</span>
                         <input type="text" name="AccSetRealname" class="span3" value="<?=$AccSetData[realname];?>">

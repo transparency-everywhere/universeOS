@@ -30,7 +30,7 @@ while($buddylistData = mysql_fetch_array($buddylistSql)) {
     ?>
                 <tr class="strippedRow height60">
 	                 <td style="padding-left: 3px; width: 35px;"><?=showUserPicture($blUserData['userid'], "30");?></td>
-	                 <td><a href="#" onclick="openChatDialoge('<?=$username;?>');"><?=$username;?></a></td>
+	                 <td><a href="#" onclick="openChatDialoge('<?=$blUserData[username];?>');"><?=$username;?></a></td>
 	                 <td>
 	                 	
 	                 	<div class="btn-toolbar">

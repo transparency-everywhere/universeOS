@@ -33,7 +33,7 @@ include_once("inc/config.php");
                 });
                 $(".checkRegBox").each(function() {
                     checkBox = $(this).is(':checked');
-                        if(valuee){
+                        if(checkBox){
                             checkBox = "TRUE";
                         }else{
                             checkBox = "FALSE";

@@ -2469,10 +2469,16 @@ echo"</div>";
             case "image/gif":
                     $image = "img.png";
             break;
+            case "image":
+                    $image = "img.png";
+            break;
         
             //links
             case "youTube":
                     $image = "../youTube.png";
+            break;
+            case "wiki":
+                    $image = "../wikipedia.png";
             break;
             case "RSS":
                     $image = "rss.png";
@@ -2543,7 +2549,7 @@ echo"</div>";
     
     
     
-    function openFile($fileId=NULL, $link=NULL, $type=NULL, $title=NULL, $typeInfo=NULL, $extraInfo1=NULL, $extraInfo2=NULL){
+    function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo=NULL, $extraInfo1=NULL, $extraInfo2=NULL){
         
         
         
@@ -2554,9 +2560,9 @@ echo"</div>";
         //youtube, wiki, rss etc. actually needs a linkId
         //but in this case the handler for links still needs
         //to be called
-        if(!empty($link) || $type == "wiki" || $type == "RSS" || $type == "youtTube")
+        if(!empty($linkId) || $type == "wiki" || $type == "RSS" || $type == "youtTube")
         	$isLink = true;
-		else 
+		if(!empty($fileId)) 
 			$isFile = true;
 		
 		
@@ -2570,12 +2576,14 @@ echo"</div>";
 			$elementData = mysql_fetch_array($elementQuery);
             
           	$title = $fileData[title];
-            $download = "<a href=\"doit.php?action=download&fileId=$fileId\" target=\"submitter\" class=\"btn\" title=\"download file\"><img src=\"./gfx/icons/download.png\" alt=\"download\" height=\"10\"></a>";
+			$element = $fileData[folder];
+			$elementTitle = $elementData[title];
+			$download = "<a href=\"doit.php?action=download&fileId=$fileId\" target=\"submitter\" class=\"btn btn-mini\" title=\"download file\"><img src=\"./gfx/icons/download.png\" alt=\"download\" height=\"10\"></a>";
             $filename = $fileData[filename];
             $path = getFullFilePath($fileId);
             
             
-            //check type if type is undefined
+            //check type if type is undefined get type from db
             if(empty($type)){
             $type = $fileData[type];
             }
@@ -2583,12 +2591,13 @@ echo"</div>";
         }
         if($isLink){
         	//extra handler for extarnal links
-			if(empty($link))
+			if(empty($linkId))
+				if(is_int($linkId))
 				$extarnal = true;
 			
 				if(!$extarnal){
 		            //get linkdata
-		            $linkQuery = mysql_query("SELECT * FROM links WHERE id='$link'");
+		            $linkQuery = mysql_query("SELECT * FROM links WHERE id='$linkId'");
 		            $linkData = mysql_fetch_array($linkQuery);
 		            
 		            $title = $linkData[title];
@@ -2598,51 +2607,102 @@ echo"</div>";
 		            if(empty($type)){
 		            $type = $linkData[type];
 		            }
+					if($type == "youTube"){
+						//generate link out of youtubelink
+						$vId = youTubeURLs($linkData[link]);
+					}
 				}
         }
 		
-        if($type == "image/jpeg'"){
-        	$bar = "<a href=\"javascript: zoomIn();\" id=\"zoomIn\" class=\"btn\" title=\"zoom in\"><img src=\"./gfx/icons/zoomIn.png\" height=\"10\" border=\"0\"></a>&nbsp;<a id=\"zoomOut\" href=\"javascript: zoomOut();\" class=\"btn\" style=\"\" title=\"zoom out\"><img src=\"./gfx/icons/zoomOut.png\" height=\"10\" border=\"0\"></a>&nbsp;$download";
+		if($type == "youTube"){
+			
+			//GET YOUTUBE VIDEO ID
+			
+			if(!empty($vId)){
+			$vId = "$typeInfo";
+			}
+			//if $vId is still empty the youtube videoId is passed
+			//through $typeInfo
+			else{
+			$vId = "$typeInfo";
+			}
+			
+			//get title from youtube server
+			if(empty($title)){
+				$title = youTubeIdToTitle($vId);
+			}
+			
+			//optional options
+			$playlist = $extraInfo1;
+			$row = $extraInfo2;
+			
+			//add playlistdropdown to add video
+			// to a playlist to the header
+			
+			//get all the playlists
+			$playlists = getUserPlaylistArray();
+			//init form and select
+			$options = "<form action=\"doit.php?action=addYouTubeItemToPlaylistVeryLongName&vId=$vId\" target=\"submitter\" method=\"post\"><select name=\"playlistId\">";
+			foreach ($playlists[ids] as $key => $id){
+				
+				
+                    //add options to dropdown
+                    $options .= "<option value=\"$id\">".$playlists[titles][$key]."</option>";
+				
+			}
+			//close select, form and and submit button
+			$options .= "</select><input type=\"submit\" name=\"submit\" value=\"add\" class=\"btn btn-mini\" style=\"margin-top: -11px;\"></form>";
+			$controls = $options;
+			//extraInfo1 is a playlist
+			if(!empty($extraInfo1)){
+				//id of fileWindow needs to have playlistId inside
+				//so that playlistplayer.php can proof if playlist
+				//is already opened
+				$fileWindowId = "playListFrame_$extraInfo1";
+				$iframeId = "playListiFrame_$extraInfo1";
+				
+				//title needs to contain span with playlistid, so it can
+				//be updated from the iframe, in which the youtubevideo
+				//is located(doit => showYoutube)
+	            $title .= "<span id=\"togglePlayListTitle_$extraInfo1\" class=\"readerPlayListTitle\">$title</span>";
+			
+			
+				$bar .= "<div id=\"togglePlayList_$extraInfo1\" class=\"readerPlayListToggle\"></div>";
+				
+				
+				
+			}
+		}
+		
+		
+        if($type == "image/jpeg'" || $type == "image/png'" || $type == "image" ){
+        	//add zoom buttons to header
+        	$bar = "<a href=\"javascript: zoomIn('$element');\" id=\"zoomIn\" class=\"btn btn-mini\" title=\"zoom in\"><img src=\"./gfx/icons/zoomIn.png\" height=\"10\" border=\"0\"></a>&nbsp;<a id=\"zoomOut\" href=\"javascript: zoomOut('$element');\" class=\"btn btn-mini\" style=\"\" title=\"zoom out\"><img src=\"./gfx/icons/zoomOut.png\" height=\"10\" border=\"0\"></a>";
         }
 		
         $icon = getFileIcon($type);
-        $icon = "<img src=\"http://universeos.org/gfx/icons/fileIcons/$icon\">";
+        $icon = "<img src=\"http://universeos.org/gfx/icons/fileIcons/$icon\" height=\"20\">";
         
         $output .= "<header class=\"gray-gradient\">";
         $output .= $icon;
         $output .= "<span class=\"title\">$title</span>";
-		$output .= "<span class=\"bar\”>$bar</span>";
+		$output .= "<span class=\"controls\">$controls</span>";
+		$output .= "<span class=\"bar\">$bar</span>";
         $output .= "<span class=\"download\">$download</span>";
         $output .= "</header>";
-        $output .= "<div class=\"fileWindow\">";
+        $output .= "<div class=\"fileWindow\" id=\"$fileWindowId\">";
         
         switch($type){
             //link types
             case youTube:
 			  
-				  //GET YOUTUBE VIDEO ID
-				  //generate link out of youtubelink
-				  $vId = youTubeURLs($linkData[link]);
-				  
-			      if(!empty($vId)){
-			      $vId = $vId;
-			      }
-			      //if $vId is still empty the youtube videoId is passed
-			      //through $typeInfo
-			      else{
-			      $vId = "$typeInfo";
-			      }
-				  
-				  //optional options
-				  $playlist = $extraInfo1;
-				  $row = $extraInfo2;
 			      
 				  
 				  //DISPLAY VIDEO
 				  //define content
-			      $output .= '<div id="playListReaderTab" style="background: #000000;">';
+			      $output .= '<div class="iframeFrame" style="background: #000000;">';
 				  //show an iframe which loads the openyoutube...() function via the doit.php
-			      $output .= "<iframe src=\"doit.php?action=showYoutube&id=$vId&playList=$playlist&row=$row\" width=\"100%\" height=\"100%\" id=\"playListLoaderFrame\" name=\"playListLoaderFrame\"></iframe><br>";
+			      $output .= "<iframe src=\"doit.php?action=showYoutube&id=$vId&playList=$playlist&row=$row\" id=\"$iframeId\" name=\"playListLoaderFrame\" frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"auto\"></iframe>";
 			      $output .= '</div>';
 				
 				
@@ -2696,7 +2756,7 @@ echo"</div>";
 						            foreach($activeUsers AS &$activeUser){
 						                if(!empty($activeUser)){
 						                $output .= "<li onclick=\"openProfile($activeUser);\" style=\"cursor: pointer;\">";
-						                $output .= showUserPicture($activeUser, "11");
+						                //$output .= showUserPicture($activeUser, "11");
 						                $output .=  "&nbsp;";
 						                $output .=  useridToUsername($activeUser);
 						                $output .= "</li>";
@@ -2714,10 +2774,10 @@ echo"</div>";
             case 'text/plain':
                 
                 
-                $filePath = "../$path";
+                $filePath = urldecode("../../$path");
 
                 $file = fopen($filePath, 'r');
-                $output .= nl2br(fread($file, filesize($filePath)));
+                $output .= nl2br(htmlentities(fread($file, filesize($filePath))));
                 fclose($file);
                 
                 break;
@@ -2733,9 +2793,9 @@ echo"</div>";
             //pictures
             case 'image':
 				
-				$output .= "<div id=\"$elementData[title]ImageViewer\" class=\"readerImageTab\">";
+				$output .= "<div id=\"ImageViewer_$element\" class=\"readerImageTab\">";
 				$output .= "<center>";
-				$output .= "<img src=\"$path\" width=\"100%\" id=\"viewedPicture\">";
+				$output .= "<img src=\"$path\" width=\"100%\" id=\"viewedPicture_$element\">";
 				$output .= "</center>";
 				$output .= "</div>";
 				
@@ -2746,31 +2806,23 @@ echo"</div>";
 					$output .= '<tr>';
 					
 					
-			        $documentSQL = mysql_query("SELECT id, title, folder FROM files WHERE folder='$elementData[id]'");
+			        $documentSQL = mysql_query("SELECT id, title, folder, privacy, owner FROM files WHERE folder='$elementData[id]' AND type IN('image/png','image/jpeg','image')");
 			        while($documentData = mysql_fetch_array($documentSQL)){
-				        $documentFolderSQL = mysql_query("SELECT path FROM folders WHERE id='$elementData[folder]'");
-				        $documentFolderData = mysql_fetch_array($documentFolderSQL);
-				        if($elementData[title] == "profile pictures"){
-				        $folderPath = urldecode($documentFolderData[path]);    
-				        $folderPath = "http://universeos.org/upload$folderPath/thumb/300/";
-				        }else{
-				        $thumbPath = getFolderPath($elementData[folder])."thumbs/";
-				        }
-						
-						
-				        $output .= "<td onmouseup=\"showMenu('image$documentData[id]')\" oncontextmenu=\"showMenu('image$documentData[id]'); return false;\"><div id=\"viewerClick$documentData[id]\"><a href=\"#\" onclick=\"addAjaxContentToTab('$documentElementData[title]','./modules/reader/showfile.php?type=image&id=$documentData[id]');return false\"><img src=\"$thumbPath$documentData[title]\" height=\"100px\"></a></div></td>";   
+        				if(authorize($documentData[privacy], "show", $documentData[owner])){
+					        //$documentFolderSQL = mysql_query("SELECT path FROM folders WHERE id='$elementData[folder]'");
+					        //$documentFolderData = mysql_fetch_array($documentFolderSQL);
+					        if($elementData[title] == "profile pictures"){
+					        	$folderPath = urldecode($documentFolderData[path]);    
+					        	$folderPath = "http://universeos.org/upload$folderPath/thumb/300/";
+					        }else{
+					        	$thumbPath = getFolderPath($elementData[folder])."thumbs/";
+					        }
+							
+							
+					        $output .= "<td onmouseup=\"showMenu('image$documentData[id]')\" oncontextmenu=\"showMenu('image$documentData[id]'); return false;\"><div id=\"viewerClick$documentData[id]\"><a href=\"#\" onclick=\"addAjaxContentToTab('Open ".substr("$elementTitle", 0, 10)."','./modules/reader/openFile.php?type=image&fileId=$documentData[id]');return false\"><img src=\"$thumbPath$documentData[title]\" height=\"100px\"></a></div></td>";   
+			       		}
 			        }
 					$output .= "</tr>";
-				        $output .= "<script>";
-							$output .= "$(\"#viewerClick$documentData[id]\").click(function (){";
-								$output .= "alert('lol');";
-							$output .= "});";
-							$output .= "function zoomIn(){";
-								$output .= "var PictureWidth = $(\"#viewedPicture\").width();";
-								$output .= "var newWidth = PictureWidth*1.25;";
-								$output .= "$(\"#viewedPicture\").css(\"width\", newWidth);";
-							$output .= "}";
-						$output .= "</script>";
 					$output .= "</table>";
 					$ouput .="</div>";
 				
@@ -2779,7 +2831,8 @@ echo"</div>";
 				
                 break;
             
-            case 'image/png':
+            case 'video':
+				$output .= "<video src=\"$path\">";
                 break;
             
             case 'image/tiff':
@@ -3031,13 +3084,20 @@ echo"</div>";
                     $link = "openFile('$openFileType', '$fileListData[id]', '$title10');";
                 }
                 else if($fileListData[type] == "image/jpeg" OR $fileListData[type] == "image/png" OR $fileListData[type] == "image/gif"){
-                //standard from know on (19.02.2013)
+                //if a image is opened the tab is not named after the file
+                //it is named after the parent element, because images are
+                //shown in a gallery with all the images listed in the parent
+                //element
+                $elementData = mysql_fetch_array(mysql_query("SELECT title FROM elements WHERE id='$fileListData[folder]'"));
+                $elementTitle10 = substr("$elementData[title]", 0,10);
+                
+                	
                     
                     //define link for openFileFunction
                     $openFileType = "image";
                     
                     //define openFile function
-                    $link = "openFile('$openFileType', '$fileListData[id]', '$title10');";
+                    $link = "openFile('$openFileType', '$fileListData[id]', '$elementTitle10');";
                 }
                 $image = getFileIcon($fileListData[type]);
                     ?>
@@ -3061,7 +3121,7 @@ echo"</div>";
                 $link = "$link&id=$linkListData[id]";
                 if($linkListData[type] == "youTube"){
                     $vId = youTubeURLs($linkListData[link]);
-                    $link = "openFile('youTube', '$vId', '$title10');";
+                    $link = "openFile('youTube', '$linkListData[id]', '$title10', '$vId');";
                 }
                 
                 if($linkListData[type] == "audio/mp3"){
@@ -3166,7 +3226,7 @@ echo"</div>";
 		}
 		$margin = $level*10;
 		if(!empty($margin)){
-			$style = "style=\"padding-left: $margin;\"";
+			$style = "style=\"padding-left: $margin"."px;\"";
 		}
 		$level++;
 		
@@ -3371,9 +3431,9 @@ echo"</div>";
     function showFav($user){
         echo"<table cellspacing=\"0\" width=\"100%\">";    
                         
-                        $query = "WHERE user='$user' ORDER BY timestamp DESC";
-                        $filefsql = mysql_query("SELECT * FROM fav $query");
-                        while($filefdata = mysql_fetch_array($filefsql)) {
+                        
+                    	$userFavs = getUserFavs($user);
+					foreach($userFavs AS $filefdata){
                             $type = $filefdata[type];
                             
                             //derive the table and the image from fav-type
@@ -3411,15 +3471,6 @@ echo"</div>";
                                     <td onmouseup="showMenu(<?=$favFolderData[id];?>)" width="35">&nbsp;<img src="./gfx/icons/<?=$img;?>" height="20"></td>
                                     <td onmouseup="showMenu(<?=$favFolderData[id];?>)"><a href="#" onclick="<?=$link;?>"><?=$favFolderData[name];?><?=$favFolderData[title];?>/</a></td>
                                 </tr>
-                                <div id="rightClickfolder<?=$favFolderData[id];?>" class="rightclick" style="display: none;">
-                                    <ul>
-                                        <li>Open</li>
-                                        <li>Download</li>
-                                        <li>Add to Fav</li>
-                                        <li><a href="javascript: popper('doit.php?action=addFileToPlaylist&folder=<?=$favFolderData[id];?>')">Add to Playlist</a></li>
-                                        <li>Edit</li>
-                                    </ul>
-                                </div>
                         <? }
                     echo"</table>";
         
@@ -3510,7 +3561,7 @@ echo"</div>";
             break;
             case 'file':
             
-                $fileSQL = mysql_query("SELECT title, type, size FROM files WHERE id='$itemId'");
+                $fileSQL = mysql_query("SELECT title, type, folder, size, filename FROM files WHERE id='$itemId'");
                 $fileData = mysql_fetch_array($fileSQL);
 
 
@@ -3525,16 +3576,21 @@ echo"</div>";
                 $link = "openFile('$fileData[type]', '$itemId', '$shortTitle')";
 
                 //define fileIcon
+                
+                //if image no info is shown. the complete first row is used to preview image
                 if($fileData['type'] == "image/jpg" || $fileData['type'] == "image/jpeg" || $fileData['type'] == "image/png"){
+                	$elementData = mysql_fetch_array(mysql_query("SELECT folder FROM elements WHERE id='$fileData[folder]'"));
+                	$img = "../../".getFolderPath($elementData[folder])."thumbs/".$fileData['filename'];
                 	
+                	//the column which normaly includes the icon needs to fill out the full width
+                	$imgColumnStyle = "colspan=\"2\"";
                 }else{
                 $img = "fileIcons/";
                 $img .= getFileIcon($fileData[type]);
-				}
-
                 //define info 1
                 $info[0] = "size";
                 $info[1] = round($fileData[size]/(1024*1024), 2)." MB";
+				}
 
             break;
             case 'link':
@@ -3570,23 +3626,31 @@ echo"</div>";
             <table width=\"100%\" cellspacing=\"0\">
                 <tr style=\"height: 30px;\" bgcolor=\"#F2F2F2\">
                     <td colspan=\"4\">&nbsp;<a href=\"#\" onclick=\"$link;return false;\" title=\"$title\"><strong>$shortTitle</strong></a></td>
-                </tr>
-                <tr style=\"height: 10px\">
+                </tr>";
+		
+		//add spacer
+		if(!empty($info[0]) || !empty($info[1])){
+        $return .= "<tr style=\"height: 10px\">
                     <td></td>
-                </tr>
-                <tr>
-                    <td style=\"min-width: 34px;\">
-                        &nbsp;<img src=\"./gfx/icons/$img\"/>
-                    </td>
-                    <td>
+                </tr>";
+		}
+         //add icon/thumbnail
+         $return .= "<tr>
+                    <td style=\"min-width: 34px;\" $imgColumnStyle>
+                    	<img src=\"./gfx/icons/$img\"/>
+                    </td>";
+					
+		//add information
+		if(!empty($info[0]) || !empty($info[1])){
+		$return .=  "<td>
                         <table class=\"eightPt\">
                             <tr>
                                 <td style=\"text-align: right\">$info[0]:&nbsp;</td>
                                 <td class=\"ellipsis\"><span class=\"ellipsis\">$info[1]</span></td>
                             </tr>
                         </table>
-                    </td>
-                </tr>
+                    </td>";}
+		$return .=  "</tr>
                 <tr height=\"22px\">
                     <td bgcolor=\"#F2F2F2\">".showItemSettings($itemType, $itemId)."</td>
                     <td bgcolor=\"#F2F2F2\" align=\"right\">

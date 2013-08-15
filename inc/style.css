@@ -170,7 +170,6 @@ h3{
     overflow: hidden;
 }
 
-
 .signature{
     height: 40px;
 }
@@ -408,8 +407,8 @@ h3{
     }
     .jqPopUp footer{
     	position:absolute;
-    	left:0px;
-    	right:0px;
+		left: 10px;
+		right: 10px;
 		height: 40px;
 		bottom: 0px;
         text-align: center;
@@ -443,7 +442,7 @@ h3{
     }
     
     
-    
+    .jqPopUp .strippedRow{border: none;}
 	.jqPopUp .strippedRow:first-child {background:rgb(53, 53, 53)}
 	.jqPopUp .strippedRow:nth-child(2n+3)  {background:rgb(53, 53, 53)}
 
@@ -839,7 +838,40 @@ h3{
     margin-left: 15%;
 }
 
-
+	.openFile header{
+		height:40px;
+	}
+	
+	.openFile header > img{
+		float: left;
+		margin-top: 10px;
+	}
+	
+	.openFile header .title{
+		float:left;
+		font-size: 16pt;
+		margin-top: 10px;
+		margin-left: 5px;
+		overflow:hidden;
+		max-width: 30%;
+		line-height: 30px;
+		height: 30px;
+	}
+	.openFile header .controls{
+		float:right;
+		margin-top: 9px;
+		margin-right:5px;
+	}
+	.openFile header .bar{
+		float:right;
+		margin-top: 9px;
+		margin-right:5px;
+	}
+	.openFile header .download{
+		float:right;
+		margin-top: 9px;
+		margin-right:5px;
+	}
 
             .uffViewerMain{
                 position: absolute;
@@ -1651,6 +1683,11 @@ font-weight:bold;
 
 .miniFileBrowser{
 	border: 1px solid #c9c9c9;
+}
+
+.miniFileBrowser li{
+	line-height:25pt;
+	clear:both;
 }
 
 .miniFileBrowser .choosenItem:empty{

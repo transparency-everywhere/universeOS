@@ -126,8 +126,9 @@ if($_GET[action] == "scorePlus"){
         }
             ?>
             <div class="jqPopUp border-radius transparency" id="showPlaylist">
-                    <a style="position: absolute; top: 10px; right: 10px; color: #FFF;" id="closePlaylist">X</a>
+                    
                     <header>
+                    		<a class="jqClose">X</a>
                             <img src="./gfx/icons/playlist.png">&nbsp;<?=$playListData[title];?>
                     </header>
                     <div class="jqContent">
@@ -220,21 +221,21 @@ if($_GET[action] == "scorePlus"){
                             }?>
                                 </table>
                             </div>
-                            <p style="margin-top: 15px;">
+                        </center>
+                    </div>
+                            <footer>
                                 <a href="javascript: nextPlaylistItem('<?=$playListData[id];?>', '0')" class="btn btn-success"><i class="icon-play icon-white"></i>&nbsp;Play</a>&nbsp;
                                 <? if(proofLogin()){ ?>
                                 <a href="#" onclick="popper('doit.php?action=copyPlaylist&playlist=<?=$playListData[id];?>')" class="btn btn-info" style="color: #FFFFFF"><i class="icon-share icon-white"></i>&nbsp;Copy</a>&nbsp;
                                 <a href="#" onclick="popper('doit.php?action=editItem&type=playlist&itemId=<?=$playListData[id];?>')" class=" btn btn-warning" style="color: #FFFFFF"><i class="icon-edit icon-white"></i>&nbsp;Edit</a>
                                 <? } ?>
-                            </p>
-                        </center>
-                    </div>
+                            </footer>
+            	<script>	
+				$('.jqClose').click(function(){
+					$('.jqPopUp').hide();
+				});
+            	</script>
             </div>
-    <script>
-        $("#closePlaylist").click(function () {
-        $('#showPlaylist').slideUp();
-        });
-    </script>
     <?
      }
     else if($_GET[action] == "addFileToPlaylist"){
@@ -312,8 +313,11 @@ if($_GET[action] == "scorePlus"){
                         </select>
                         <p>Add to new Playlist:</p>
                         <input type="text" name="playlistName">
-                        <input type="submit" value="add" id="playlistSubmit">
                     </div>
+			        <footer>
+			         	<span class="pull-left"><a class="btn" onclick="$('.jqClose').hide();">Back</a></span>
+			         	<span class="pull-right"><input type="submit" value="add" id="playlistSubmit"></span>
+			        </footer>
                 </div> 
             </form>
             <script>
@@ -345,6 +349,7 @@ if($_GET[action] == "scorePlus"){
         ?>
         <form action="doit.php?action=addPlaylist" method="post" target="submitter">
         <div class="jqPopUp border-radius transparency" id="addPlaylist">
+        	<a class="jqClose" id="closePlaylist">X</a>
             <header>
                 Add a new Playlists
             </header>
@@ -364,12 +369,12 @@ if($_GET[action] == "scorePlus"){
                                 ?>
                         </td>
                     </tr>
-                    <tr>
-                        <td><input type="submit" name="submit" value="add" id="playlistSubmit" class="btn"></td>
-                    </tr>
                 </table>
             </div>
-        <a class="jqClose" id="closePlaylist">X</a>
+			<footer>
+			 	<span class="pull-left"><a class="btn" onclick="$('.jqClose').hide();">Back</a></span>
+			 	<span class="pull-right"><input type="submit" name="submit" value="add" id="playlistSubmit" class="btn btn-success"></span>
+			</footer>
         </div>
         <script>
             $("#playlistSubmit").click(function () {
@@ -388,27 +393,18 @@ if($_GET[action] == "scorePlus"){
          
          if(isset($_POST[submit])){
                         
-                    //setting privacy
-                    $groups = $_POST[groups];
-                    foreach ($groups as $group){
-                        $Groups = "$group; $Groups";
-                    }
-                    if(empty($Groups)){
-                        $Groups = "p";
-                    }
-                    //checking if upload is anonymous
-                    if(!empty($_POST[anonymous])){
-                        $user = "0";
-                    }else{
-                        $user = $userid;
-                    }
-                    if(isset($_POST[hidden])){
-                        $Groups = "u";
-                    }
-                mysql_query("INSERT INTO playlist (user, title, privacy, links, files, youTube) VALUES('$user', '$_POST[title]', '$Groups', '$playlistData[links]', '$playlistData[files]', '$playlistData[youTube]')");
+                    //set privacy
+                    $customShow = $_POST[privacyCustomSee];
+                    $customEdit = $_POST[privacyCustomEdit];
+                    
+                    $privacy = exploitPrivacy("$_POST[privacyPublic]", "$_POST[privacyHidden]", $customEdit, $customShow);
+                    $user = $_SESSION[userid];
+					
+                mysql_query("INSERT INTO playlist (user, title, privacy, links, files, youTube) VALUES('$user', '$_POST[title]', '$privacy', '$playlistData[links]', '$playlistData[files]', '$playlistData[youTube]')");
+ 				jsAlert("The playlist has been added");
                 ?>
             <script>
-            praent.$('#favTab_playList').load('doit.php?action=showUserPlaylists');
+            parent.$('#favTab_playList').load('doit.php?action=showUserPlaylists');
             </script>
             <?
              }
@@ -425,36 +421,19 @@ if($_GET[action] == "scorePlus"){
                         <td width="180">Title:</td>
                         <td><input type="text" name="title" style="width:300px;" value="<?=$playlistData[title];?>"></td>
                     </tr>
-                    <tr height="65">
-                        <td>create anonymous:</td>
-                        <td><input type="checkbox" name="anonymous" value="hehe"></td>
-                    </tr>
                     <tr>
                         <td valign="top">Privacy</td>
                         <td>
-
-                                    <div id="selectGroups" style="height:100px; overflow: scroll; border: 1px solid; background: #C0C0C0;">
-
-                                        <?
-                                        $attSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='$_SESSION[userid]'");
-                                        while($attData = mysql_fetch_array($attSql)){ 
-                                            $groupSql = mysql_query("SELECT id, title FROM groups WHERE id='$attData[group]'");
-                                            $groupData = mysql_fetch_array($groupSql); ?>
-                                        <div style="font-color: #00000; color: #000;"><input type="checkbox" name="groups[]" value="<?=$groupData[id];?>">&nbsp;<?=$groupData[title];?></div>
-                                        <?}?>
-                                    </div>
+							<?
+							showPrivacySettings("h//f");
+							?>
                         </td>
-                    </tr>
-                    <tr height="65">
-                        <td>Hidden</td>
-                        <td><input type="checkbox" name="hidden" value="hehe"></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td><input type="submit" name="submit" value="add" class="btn btn-success" id="playlistSubmit"></td>
                     </tr>
                 </table>
             </div>
+            <footer>
+            	<span class="pull-right"><input type="submit" name="submit" value="add" class="btn btn-success" id="playlistSubmit"></span>
+            </footer>
         </div>
         <script>
             $("#playlistSubmit").click(function () {
@@ -652,10 +631,6 @@ if($_GET[action] == "scorePlus"){
                                                 ?>
                                             </td>
                                         </tr>
-                                        <tr height="50"><td>&nbsp;</td>
-                                            <td valign="top"><input type="submit" value="Add" name="submit" id="submitFolder" class="btn btn-success"></td>
-
-                                        </tr>
                                         </table>
                                         </td>
                                         </tr>
@@ -664,6 +639,10 @@ if($_GET[action] == "scorePlus"){
                                     </tr>
                                     </table>
                                 </div>
+	                            <footer>
+	                            	<span class="pull-left"><a class="btn" onclick="$('.jqPopUp').slideUp();">back</a></span>
+	                            	<span class="pull-right"><input type="submit" value="Add" name="submit" id="submitFolder" class="btn btn-success"></span>
+	                            </footer>
                                 </div>
                 </form>
                 <script>
@@ -769,13 +748,12 @@ if($_GET[action] == "scorePlus"){
                             
                         </td>
                     </tr>
-                <tr>
-                    <td></td>
-                        
-                    <td><input type="submit" name="submit" value="add" class="btn btn-success" id="elementSubmit"><input type="hidden" name="step1"></td>
-                </tr>
             </table>
             </div>
+	        <footer>
+	        	<span class="pull-left"><a class="btn" onclick="$('.jqPopUp').slideUp();">back</a></span>
+	        	<span class="pull-right"><input type="submit" name="submit" value="add" class="btn btn-success" id="elementSubmit"><input type="hidden" name="step1"></span>
+	        </footer>
         </div>
         </form>
         <script>
@@ -863,10 +841,6 @@ if($_GET[action] == "scorePlus"){
                                         <tr>
                                             <td colspan="2">&nbsp;</td>
                                         </tr>
-                                        <tr height="50"><td>&nbsp;</td>
-                                            <td valign="top"><input type="submit" value="Add" name="submit" id="submitInternLink" class="btn btn-success"></td>
-
-                                        </tr>
                                         </table>
                                         </td>
                                         </tr>
@@ -875,6 +849,10 @@ if($_GET[action] == "scorePlus"){
                                     </tr>
                                     </table>
                                 </div>
+						        <footer>
+						        	<span class="pull-left"><a class="btn" onclick="$('.jqPopUp').slideUp();">back</a></span>
+						        	<span class="pull-right"><input type="submit" value="Add" name="submit" id="submitInternLink" class="btn btn-success"></span>
+						        </footer>
                                 </div>
                 </form>
                 <script>
@@ -927,13 +905,13 @@ if($_GET[action] == "scorePlus"){
                 $title10 = substr("$title", 0, 10);
                 ?>
 
+                <form action="./doit.php?action=addLink" method="post" target="submitter">
                 <div class="jqPopUp border-radius transparency" id="addLink">
-                <a style="position: absolute; top: 10px; right: 10px; color: #FFF;" id="closeLink">X</a>
+                <a class="jqClose" id="closeLink">X</a>
                 <header>
                 Add Link
                 </header>
                 <div class="jqContent">
-                    <form action="./doit.php?action=addLink" method="post" target="submitter"> 
                         <table width="100%">
                             <tr valign="top" height="25">
                                 <td align="center">&nbsp;</td>
@@ -993,9 +971,13 @@ if($_GET[action] == "scorePlus"){
                                 </td>
                             </tr>
                         </table>
-                    </form>
                 </div>
+		        <footer>
+		        	<span class="pull-left"><a class="btn" onclick="$('.jqPopUp').slideUp();">back</a></span>
+		        	<span class="pull-right"><input type="submit" name="submit" value="add" class="btn btn-success" id="submitLink"></span>
+		        </footer>
                 </div>
+                </form>
         <script>
             $("#submitLink").click(function () {
             $('#addLink').slideUp();
@@ -1037,9 +1019,9 @@ if($_GET[action] == "scorePlus"){
     jsAlert("Worked :)");
     }
     }         
-         ?>
+         ?><form action="./doit.php?action=writeMessage&buddy=<?=$user;?>" method="post" target="submitter">
         <div class="jqPopUp border-radius transparency" id="writeMessage">
-            <a style="position: absolute; top: 10px; right: 10px; color: #FFF;" id="closeMessage">X</a>
+            <a class="jqClose" id="closeMessage">X</a>
             <header>
                 Write Message
             </header>
@@ -1048,7 +1030,7 @@ if($_GET[action] == "scorePlus"){
                 <tr>
                     <td>&nbsp;</td>
                 </tr>
-                <tr><form action="./doit.php?action=writeMessage&buddy=<?=$user;?>" method="post" target="submitter">
+                <tr>
                     <td>To:</td>
                     <td>
          <?
@@ -1071,17 +1053,14 @@ if($_GET[action] == "scorePlus"){
                         <textarea name="feed" style="width:90%; height: 150px; overflow-y:hidden; margin-top:5px;" onkeyup="autoGrowField(this ,300)" cols="30" rows="10"></textarea>
                     </td>
                 </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="submit" name="submit" value="send" id="messageSubmit" class="button">
-                    </td></form>
-                </tr>
             </table>
         </div>
+        <footer>
+        	<span class="pull-left"><a class="btn" onclick="$('#writeMessage').slideUp();">back</a></span>
+        	<span class="pull-right"><input type="submit" name="submit" value="send" id="messageSubmit" class="btn btn-success"></span>
+        </footer>
         </div>
+        </form>
         <script>
             $("#messageSubmit").click(function () {
             $('#writeMessage').slideUp();
@@ -1461,7 +1440,7 @@ if($_GET[action] == "scorePlus"){
             ytplayer.addEventListener("onStateChange", "onytplayerStateChange");
             }
             <?
-            if(isset($_GET[playList])){
+            if(!empty($_GET[playList])){
                 $row = ($_GET[row]+1);?>
             function onytplayerStateChange(newState) {
             if(newState == "0"){
@@ -1483,12 +1462,12 @@ if($_GET[action] == "scorePlus"){
             //load new next and start button
             ?>
                         <script> 
-                        parent.$('#togglePlayListTitle<?=$_GET[playList];?>').text('<?=youTubeIdToTitle($_GET[id]);?>');
-                        $('#togglePlayList<?=$_GET[playList];?>', parent.document).html( function(){
+                        parent.$('#togglePlayListTitle_<?=$_GET[playList];?>').text('<?=youTubeIdToTitle($_GET[id]);?>');
+                        parent.$('#togglePlayList_<?=$_GET[playList];?>').html( function(){
                             
                
                             
-                            var playListToggleLink = '<a href="#" onclick="nextPlaylistItem(\'<?=$_GET[playList];?>\',\'<?=($row-2);?>\');" title="last Track" class="btn"><i class=\"icon-backward\"></i></a>&nbsp;<a href="#" onclick="nextPlaylistItem(\'<?=$_GET[playList];?>\',\'<?=($row);?>\');" title="next Track" class="btn"><i class=\"icon-forward\"></i></a>';
+                            var playListToggleLink = '<a href="#" onclick="nextPlaylistItem(\'<?=$_GET[playList];?>\',\'<?=($row-2);?>\');" title="last Track" class="btn btn-mini"><i class=\"icon-backward\"></i></a>&nbsp;<a href="#" onclick="nextPlaylistItem(\'<?=$_GET[playList];?>\',\'<?=($row);?>\');" title="next Track" class="btn btn-mini"><i class=\"icon-forward\"></i></a>';
 
                             $(this).html(playListToggleLink);
                         });
@@ -1568,82 +1547,77 @@ if($_GET[action] == "scorePlus"){
     ?>
     
          <div class="jqPopUp border-radius transparency" id="addGroup" style="width: 600px; height: 400px;">
-            <a style="position: absolute; top: 10px; right: 10px; color: #FFF;" id="closeGroup">X</a>
+            <a class="jqClose" id="closeGroup">X</a>
          <header>
              Add Group
          </header>
-            <div class="jqContent">
          <form action="doit.php?action=addGroup" method="post" target="submitter">
-         <table>
-             <tr>
-                 <td>&nbsp;</td>
-             </tr>
-             <tr>
-                 <td width="150" align="right">Groupname:&nbsp;</td>
-                 <td><input type="text" name="title" style="width: 400px;"></td>
-             </tr>
-             <tr>
-                 <td>&nbsp;</td>
-             </tr>
-             <tr>
-                 <td align="right">Type:&nbsp;</td>
-                 <td><input type="radio" name="privacy" value="0" style="margin-left:30px;">Public&nbsp;&nbsp;<input type="radio" name="privacy" value="1">Private</td>
-             </tr>
-             <tr>
-                 <td>&nbsp;</td>
-             </tr>
-             <tr>
-                 <td style="vertical-align:top;" align="right">Description:&nbsp;</td>
-                 <td><textarea name="description" style="width: 400px; height: 50px;"></textarea></td>
-             </tr>
-             <tr>
-                 <td>&nbsp;</td>
-             </tr>
-             <tr>
-                 <td valign="top">Invite Buddies:</td>
-                 <td>
-                     <div style="width: 400px; height: 200px; overflow: auto;" cellspacing="0">
-                         <table cellspacing="0" cellspacing="0" width="100%">
-        <?
-        $buddylistSql = mysql_query("SELECT * FROM buddylist WHERE owner='$_SESSION[userid]' && request='0'");
-        while($buddylistData = mysql_fetch_array($buddylistSql)) {
-            $blUserSql = mysql_query("SELECT userid, username FROM user WHERE userid='$buddylistData[buddy]'");
-            $blUserData = mysql_fetch_array($blUserSql);
-            if(!empty($buddylistData[alias])){
-                $username = $buddylistData[alias];
-            } else{
-            $username = htmlspecialchars($blUserData[username]);
-                }
-            if($i%2 == 0) {
-                $bgcolor="000000";
-
-            } else {    
-                $bgcolor="0f0f0f";
-            }
-            $i++;
-            ?>
-                             <tr bgcolor="#<?=$bgcolor;?>" width="399" height="30">
-                                 <td width="20"><input type="checkbox" name="users[]" value="<?=$blUserData[userid];?>"></td>
-                                 <td width="40"><?=showUserPicture($blUserData[userid], 20);?></td>
-                                 <td><?=$blUserData[username];?></td>
-                             </tr>
-            <?}?> 
-                         </table>
-                     </div>
-                 </td>
-             </tr>
-             <tr>
-                 <td>&nbsp;</td>
-             </tr>
-             <tr>
-                 <td></td>
-                 <td>
-                     <input type="submit" value="add" name="submit" id="groupSubmit" class="btn">
-                 </td>
-             </tr>
-         </table>
+         <div class="jqContent">
+	         <table>
+	             <tr>
+	                 <td>&nbsp;</td>
+	             </tr>
+	             <tr>
+	                 <td width="150" align="right">Groupname:&nbsp;</td>
+	                 <td><input type="text" name="title" style="width: 400px;"></td>
+	             </tr>
+	             <tr>
+	                 <td>&nbsp;</td>
+	             </tr>
+	             <tr>
+	                 <td align="right">Type:&nbsp;</td>
+	                 <td><input type="radio" name="privacy" value="0" style="margin-left:30px;">Public&nbsp;&nbsp;<input type="radio" name="privacy" value="1">Private</td>
+	             </tr>
+	             <tr>
+	                 <td>&nbsp;</td>
+	             </tr>
+	             <tr>
+	                 <td style="vertical-align:top;" align="right">Description:&nbsp;</td>
+	                 <td><textarea name="description" style="width: 400px; height: 50px;"></textarea></td>
+	             </tr>
+	             <tr>
+	                 <td>&nbsp;</td>
+	             </tr>
+	             <tr>
+	                 <td valign="top">Invite Buddies:</td>
+	                 <td>
+	                     <div style="width: 400px; height: 200px; overflow: auto;" cellspacing="0">
+	                         <table cellspacing="0" cellspacing="0" width="100%">
+	        <?
+	        $buddylistSql = mysql_query("SELECT * FROM buddylist WHERE owner='$_SESSION[userid]' && request='0'");
+	        while($buddylistData = mysql_fetch_array($buddylistSql)) {
+	            $blUserSql = mysql_query("SELECT userid, username FROM user WHERE userid='$buddylistData[buddy]'");
+	            $blUserData = mysql_fetch_array($blUserSql);
+	            if(!empty($buddylistData[alias])){
+	                $username = $buddylistData[alias];
+	            } else{
+	            $username = htmlspecialchars($blUserData[username]);
+	                }
+	            if($i%2 == 0) {
+	                $bgcolor="000000";
+	
+	            } else {    
+	                $bgcolor="0f0f0f";
+	            }
+	            $i++;
+	            ?>
+	                             <tr bgcolor="#<?=$bgcolor;?>" width="399" height="30">
+	                                 <td width="20"><input type="checkbox" name="users[]" value="<?=$blUserData[userid];?>"></td>
+	                                 <td width="40"><?=showUserPicture($blUserData[userid], 20);?></td>
+	                                 <td><?=$blUserData[username];?></td>
+	                             </tr>
+	            <?}?> 
+	                         </table>
+	                     </div>
+	                 </td>
+	             </tr>
+	         </table>
+         </div>
+         <footer>
+         	<span class="pull-left"><a class="btn" onclick="$('.jqClose').hide();">Back</a></span>
+         	<span class="pull-right"><input type="submit" value="add" name="submit" id="groupSubmit" class="btn"></span>
+         </footer>
          </form>
-            </div>
      </div>
 <script>
     $("#groupSubmit").click(function () {
@@ -1928,15 +1902,17 @@ if($_GET[action] == "scorePlus"){
                     <?
                 }
             }else if($type == "playlist"){
-                $checkPlaylistSql = mysql_query("SELECT user FROM playlist WHERE id='$itemId'");
+                $checkPlaylistSql = mysql_query("SELECT user, privacy FROM playlist WHERE id='$itemId'");
                 $checkPlaylistData = mysql_fetch_array($checkPlaylistSql);
                 if(authorize($checkPlaylistData[privacy], "edit", $checkPlaylistData[user])){
                     mysql_query("DELETE FROM playlist WHERE id='$itemId'"); 
                     ?>
                     <script>
-                    parent.$('#favTab_playList').remove();
+                    parent.$('#favTab_playList').load('doit.php?action=showUserPlaylists');
                     </script>
                     <?
+                }else{
+                	jsAlert("Not authorized!");
                 }
                 
             }else if($type == "folder"){
@@ -2347,7 +2323,7 @@ if($_GET[action] == "scorePlus"){
                         ";
                     $privacy = "$editData[privacy]";
                     
-					$back = "<a href=\"doit.php?action=deleteItem&type=playlist&itemId=$itemId\" target=\"submitter\" class=\"btn\" onclick=\"$('#editItem').hide();\"><i class=\"icon-remove icon-white\"></i>&nbsp;delete</a>";
+					$back = "";
                     
                     $delete = "<a href=\"doit.php?action=deleteItem&type=playlist&itemId=$itemId\" target=\"submitter\" class=\"btn btn-danger\" onclick=\"$('#editItem').hide();\"><i class=\"icon-remove icon-white\"></i>&nbsp;delete</a>";
                 }

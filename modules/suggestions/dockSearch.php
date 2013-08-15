@@ -208,8 +208,8 @@ $k = 5;//limit
 			
 			
 
-            $youhref = $item2->id;
-            $vId = youTubeURLs($youhref);
+            
+            $vId = youTubeURLs($item2->id);
 			
 			
     
@@ -218,7 +218,7 @@ $k = 5;//limit
 			//icon
 			echo"<img src=\"gfx/icons/youTube.png\" height=\"16\" style=\"margin-bottom: -8px; margin-left:5px; margin-right:5px;\">";
 			//title
-			echo"<a href=\"#\" onclick=\"openFile('youTube', '$vId', '".urlencode(substr("$item2->title", 0, 10))."');\">".substr("$item2->title", 0, 40)."</a>";
+			echo"<a href=\"#\" onclick=\"openFile('youTube', '', '".urlencode(substr("$item2->title", 0, 10))."', '$vId');\">".substr("$item2->title", 0, 40)."</a>";
 			
 			echo"</li>";
 			

@@ -20,8 +20,9 @@ if(!empty($_GET[folder])){
 }else if(!empty($_GET[file])){
 	$type = "File";
 	$itemId = $_GET[file];
-	$query = mysql_query("SELECT title FROM files WHERE id='".mysql_real_escape_string($itemId)."'");
+	$query = mysql_query("SELECT `title` FROM `files` WHERE id='".mysql_real_escape_string($itemId)."'");
 	$data = mysql_fetch_array($query);
+	$title = $data[title];
 }
 	$metaDescriptionContent = "universeOS $type $title.";
 	$metaDescriptionContent .= "Discover the social webOS. Connect with your friends, read your favourite book or RSS-Feed, watch your favourite movie, listen your favourite song and be creative...";

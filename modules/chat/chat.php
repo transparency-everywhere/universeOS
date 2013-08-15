@@ -1,7 +1,11 @@
 <div id="invisiblechat">
 <div class="fenster" id="chat" style="display: none;">
     <header class="titel">
-        <p>Chat</p><p class="windowMenu"><a href="javascript:hideApplication('chat');" style="color: #FFF;"><img src="./gfx/icons/close.png" width="16"></a></p>
+        <p>Chat</p>
+        <p class="windowMenu">
+        	<a href="javascript:hideApplication('chat');" style="color: #FFF;"><img src="./gfx/icons/close.png" width="16"></a>
+        	<a href="#" onclick="moduleFullscreen('chat');" class="fullScreenIcon"><img src="./gfx/icons/fullScreen.png" width="16"></a>
+        </p>
     </header>
     <div class="inhalt" style="overflow: hidden;">
         <div id="chat_tabView1">
@@ -42,35 +46,6 @@
                 </ul>
                 </div>
             </div>
-            <?
-            if("1" == "2"){
-if (isset($_COOKIE['openChatWindows'])) {
-    unset($i);
-    foreach ($_COOKIE['openChatWindows'] as $name => $value) {
-        $name = htmlspecialchars($name);
-        $value = htmlspecialchars($value);
-        if(empty($i)) {
-            $initWindows = ",'$value'";
-            $initValue = ",true";
-            $i = 1;
-        }  else {
-            $i++;
-            $initWindows = "$initWindows,'$value'";
-            $initValue = "$initValue,true";
-        }
-        ?>
-   <div id="chatContainer<?=$value;?>" class="dhtmlgoodies_aTab" style="position: absolute; top: 20px; right:0px ;bottom: 0px; left: 0px;">
-       <div id="chatWindow_<?=$value;?>">
-      <?
-      $buddy = $value;
-      include("chatreload.php");
-      ?>
-       </div>
-    </div>
-            <?
-    }
-}}
-?>
 </div>
 </div>
 

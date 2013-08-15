@@ -33,13 +33,13 @@ $i = "0";
                         }
                         
                         $rightLink[] = "
-                        if($('#playListReaderTab').length == 0){
-                        createNewTab('reader_tabView','$playListData[title]','','$link',true);return false
+                        if($('#playListFrame_$playList').length == 0){
+                        	alert('ufta');
+                        	openFile('youTube', '', '".addslashes($playListData[title])."', '$vId', '$playList', '$row');
                         }
-                        if($('#playListReaderTab').length > 0){
-                        //$('#playListReaderTab').load('$link2');
-                        loadIframe('playListLoaderFrame', '$link2');
-                        alert('one');
+                        if($('#playListiFrame_$playList').length > 0){
+                        	
+                        loadIframe('playListiFrame_$playList', '$link2');
                         }
                         ";
                         $i++;
@@ -51,12 +51,13 @@ $i = "0";
                         $vId = "$value";
                         $link = "./modules/reader/showfile.php?type=youTube&vId=$vId&playList=$playList&row=$_GET[row]";
                         $link2 = "doit.php?action=showYoutube&id=$vId&playList=$playList&row=$_GET[row]";
+                        $title = addslashes($playListData[title]);
                         $rightLink[] = "
-                        if($('#playListReaderTab').length == 0){
-                        createNewTab('reader_tabView','$playListData[title]','','$link',true);return false
+                        if($('#playListFrame_$playList').length == 0){
+                        	openFile('youTube', '', '$title', '$vId', '$playList', '$row');
                         }
-                        if($('#playListReaderTab').length > 0){
-                        loadIframe('playListLoaderFrame', '$link2');
+                        if($('#playListiFrame_$playList').length > 0){
+                        loadIframe('playListiFrame_$playList', '$link2');
                         }
                         ";
                         $i++;

@@ -286,7 +286,7 @@
       }
 
       function showContent(content, title){
-        showApplication('filesystem');
+        showApplication('reader');
         createNewTab('reader_tabView', title,'','showContent.php?content='+content,true);return true
           
       }
@@ -415,7 +415,7 @@
         createNewTab('fileBrowser_tabView', title,'','modules/filesystem/showElement.php?element='+elementId,true);return true
     }
 
-    function openFile(type, typeId, title){
+    function openFile(type, typeId, title, typeInfo, extraInfo1, extraInfo2){
         
         title = 'Open '+title;
         
@@ -425,8 +425,27 @@
         
         //Link types
         if(type == 'youTube'){
-            createNewTab('reader_tabView',title,'','./modules/reader/showfile.php?type=youTube&id='+typeId+'&external=1',true);
-            return false
+        	if(extraInfo1 == undefined){
+        		var extraInfo1 = '';
+        	}
+        	if(extraInfo2 == undefined){
+        		var extraInfo2 = '';
+        	}
+        	if(typeInfo == undefined){
+        		var typeInfo = '';
+        	}
+        	
+        	var playlist = extraInfo1;
+        	var row = extraInfo2;
+        	var vId = typeInfo;
+        	var linkId = typeId;
+        	if(linkId.length == 0){
+            	createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=youTube&linkId='+linkId+'&typeInfo='+vId+'&extraInfo1='+playlist+'&extraInfo2='+row+'&external=1',true);	
+        	}else{
+        		
+            	createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=youTube&linkId='+linkId+'&typeInfo='+vId+'&extraInfo1='+playlist+'&extraInfo2='+row+'&external=1',true);
+            
+        	}return false
         }
         
         if(type == 'RSS'){
@@ -445,16 +464,16 @@
             createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=UFF&fileId='+typeId,true);
             return false
         }
-        if(type == 'document' ||type == 'application/pdf'){
+        if(type == 'document' ||type == 'application/pdf' ||type == 'text/plain'){
             createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?fileId='+typeId,true);
             return false
         }
-        if(type == 'video'){
-            createNewTab('reader_tabView',title,'','./modules/reader/player.php?id='+typeId,true);
+        if(type == 'video' ||type == 'video/mp4' ||type == 'video/quicktime'  ){
+            createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=video&fileId='+typeId,true);
             return false
         }
         if(type == 'image/png' ||type == 'image/jpeg' || type == 'image'){
-            createNewTab('reader_tabView',title,'','./modules/reader/showfile.php?type=image&id='+typeId,true);
+            createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=image&fileId='+typeId,true);
             return false
             
         }else{
@@ -464,16 +483,16 @@
     }
     
     //zoom functions for pictures
-    function zoomIn(){
-       var PictureWidth = $("#viewedPicture").width();
+    function zoomIn(element){
+       var PictureWidth = $("#viewedPicture_"+element).width();
        var newWidth = PictureWidth*1.25;
-       $("#viewedPicture").css("width", newWidth);
+       $("#viewedPicture_"+element).css("width", newWidth);
     }
     
-    function zoomOut(){
-       var PictureWidth = $("#viewedPicture").width();
+    function zoomOut(element){
+       var PictureWidth = $("#viewedPicture_"+element).width();
        var newWidth = PictureWidth/1.25;
-       $("#viewedPicture").css("width", newWidth);
+       $("#viewedPicture_"+element).css("width", newWidth);
     }
     
 	//UFF
@@ -489,11 +508,11 @@
 		    var config = {
 		        
 			extraPlugins: 'autogrow',
-		        toolbarGroups: [
-		                                    { name: 'document',	   groups: [ 'mode', 'document' ] },			
-		                                    { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },			
-		                                    { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-		                                    { name: 'links' }],
+		        // toolbarGroups: [
+		                                    // { name: 'document',	   groups: [ 'mode', 'document' ] },			
+		                                    // { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },			
+		                                    // { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+		                                    // { name: 'links' }],
 		        removePlugins: 'resize',
 		        readOnly: readOnly,
 		        autoGrow_onStartup: true,
