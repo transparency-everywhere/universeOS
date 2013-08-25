@@ -18,7 +18,7 @@
 		        <li><a href="javascript: loader('settingsFrame', 'modules/settings/general.php');">General</a></li>
 		        <li><a href="javascript: loader('settingsFrame', 'modules/settings/privacy.php');">Privacy</a></li>
 		        <li><a href="javascript: loader('settingsFrame', 'modules/settings/buddylist.php');">Buddylist</a></li>
-		        <li><a href="javascript: loader('settingsFrame', 'modules/settings/groups.php');">Groups</a></li>
+		        <!-- <li><a href="javascript: loader('settingsFrame', 'modules/settings/services.php');">Services</a></li> -->
 		    </ul>
 			</div>
 		      
@@ -51,7 +51,6 @@
 		                            <a href="javascript: loader('settingsFrame', 'modules/settings/picture.php');" class="btn" style="margin-top: 10px; margin-bottom: 15px;">edit</a>
 		                        </div>
 		                    </div>
-		                    
 		                    <div class="controls controlls-row">
 		                        <span class="span2">Name</span>
 		                        <input type="text" name="AccSetRealname" class="span3" value="<?=$AccSetData[realname];?>">

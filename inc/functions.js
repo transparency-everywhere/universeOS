@@ -1,7 +1,4 @@
-//initialize
-
-                
-                
+//initialize    
                 $(document).ready(function(){
                 			
                 	//init search
@@ -78,7 +75,6 @@
                         $("#buddylist").css(BuddylistOb);
                         //$("#feed:hidden").fadeIn(3000);
                         $("#filesystem:hidden").fadeIn(3000);
-                        $("#reader:hidden").fadeIn(3000);
                         //$("#chat:hidden").fadeIn(3000);
                         $("#buddylist:hidden").fadeIn(3000);
                         
@@ -240,13 +236,6 @@
        
        
        
-      function feedLoadMore(destination ,type, user, limit){
-           $.get("doit.php?action=feedLoadMore&user="+user+"&limit="+limit+"&type="+type,function(data){
-                    $(destination).append(data);
-            },'html');
-       }
-       
-       
               
 //general functions
         
@@ -369,7 +358,13 @@
 
 
 //feed
-
+	function feedLoadMore(destination ,type, user, limit){
+	    $.get("doit.php?action=feedLoadMore&user="+user+"&limit="+limit+"&type="+type,function(data){
+	    	$(destination).append(data);
+		},'html');
+	}
+       
+       
     function reloadFeed(type){
         console.log('reloadFeed - initialised...');
         if(type === "friends"){
@@ -391,7 +386,9 @@
     }
        
 //reader
-
+	function openUploadTab(element){
+        createNewTab('reader_tabView', 'Upload File','','modules/reader/addFile.php?element='+element,true);return true
+	}
 	
     function toggleProfileTabs(id){
         $(".profileSlider").hide();
@@ -546,10 +543,15 @@
 		}
     
     
-    //    opens articles out of the universe wiki
-    //    located in reader cause it will be placed there in future
+    //opens articles out of the universe wiki
+    //located in reader cause it will be placed there in future
     function openUniverseWikiArticle(title){
         window.open("http://wiki.universeos.org/index.php?title="+title,'_blank');
+    }
+    
+    function openURL(url, title){
+            createNewTab('reader_tabView',title,'',url,true);
+            return false
     }
     
     
@@ -726,17 +728,17 @@
               	$("#invisiblemail").hide("slow");
               }
                 
-              function play() {
+              function play(){
               	$("#jquery_jplayer_2").jPlayer("play");
               } 
                  
-              function playPlaylist(playlist, row, fileId) {
+              function playPlaylist(playlist, row, fileId){
                   
 	              alert("lol a" + fileId + " b" + playlist + " c" + row + " ");
 	              $("#dockplayer").load("./player/dockplayer.php?file=" + fileId +"&reload=1&playList=" + playlist +"&row=" + row + "");
 	              play();
               }
-              function playFileDock(fileId) {
+              function playFileDock(fileId){
               	$("#dockplayer").load("./player/dockplayer.php?file=" + fileId +"&reload=1");
               }
                 
@@ -744,6 +746,12 @@
              	  $("#playListPlayer").load("playListplayer.php?playList=" + playList +"&row=" + row +"");
               }
 
+			  function removeFav(type, typeId){
+			  	if($.post("doit.php?action=removeFav", { type: type, typeId: typeId } )){
+			  		jsAlert('', 'Your favorite has been removed.');
+			  	}
+			  }
+			  
               function addBuddy(userId) {
               	$("#loader").load("addbuddy.php?user=" + userId +"");
               }
@@ -1219,3 +1227,10 @@
                         }
                 })(jQuery);  	
 
+				var delay = (function(){
+				  var timer = 0;
+				  return function(callback, ms){
+				    clearTimeout (timer);
+				    timer = setTimeout(callback, ms);
+				  };
+				})();

@@ -12,6 +12,8 @@
         <meta name="reply-to" content=info@transparency-everywhere.com>
         <meta name="Identifier-URL" content="universeOS.org">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
 
         
@@ -22,8 +24,8 @@
         <!--favicon-->
         <link rel="shortcut icon" href="http://universeOS.org/gfx/favicon.ico" />
         
-        <link rel="stylesheet" type="text/css" href="inc/css/plugins.css">
-        <link rel="stylesheet" type="text/css" href="inc/style.css">
+        <link rel="stylesheet" type="text/css" href="inc/css/plugins.css" />
+        <link rel="stylesheet" type="text/css" href="inc/style.css" media="all" />
         
         
 		<script type="text/javascript" src="inc/plugins.js"></script>

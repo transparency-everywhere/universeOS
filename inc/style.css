@@ -11,6 +11,8 @@ body {
     background-image: url(../gfx/bg/1.jpg);
     background-attachment: no-repeat;
     background-position:top left;
+	background-repeat: no-repeat;
+	background: #000000;
 	font:normal print, arial,sans-serif;
 	font-family: print;
 	font-style: normal;
@@ -19,6 +21,7 @@ body {
 	font-variant: normal;
 	margin: 0;
 	padding: 0;
+	word-wrap: break-word;
 }
 
 ul {
@@ -26,6 +29,57 @@ ul {
 } 
 
 li {
+}
+
+@media (min-width: 240px) {
+	body{
+    	background-image: url('../gfx/bg/universeos_240x320.jpg');
+	}
+}
+@media (min-width: 320px){
+	body{
+    	background-image: url('../gfx/bg/universeos_320x568.jpg');
+	}
+}
+}@media (min-width: 380px) {
+	body{
+    	background-image: url('../gfx/bg/universeos_380x685.jpg');
+	}
+}
+@media (min-width: 480px) {
+	body{
+    	background-image: url('../gfx/bg/universeos_480x320.jpg');
+	}
+}
+@media (min-width: 568px) {
+	body{
+    	background-image: url('../gfx/bg/universeos_568x320.jpg');
+	}
+}
+@media (min-width: 600px) {
+	body{
+    	background-image: url('../gfx/bg/universeos_600x1024.jpg');
+	}
+}
+@media (min-width: 768px) {
+	body{
+    	background-image: url('../gfx/bg/universeos_768x1024.jpg');
+	}
+}
+@media (min-width: 1024px) {
+	body{
+    	background-image: url('../gfx/bg/universeos_1024x768.jpg');
+    }
+}
+@media (min-width: 1280px) {
+	body{
+    	background-image: url('../gfx/bg/universeos_1280x800.jpg');
+	}
+}
+@media (min-width: 1281px) {
+	body{
+    	background-image: url('../gfx/bg/universeos_1920x1080.jpg');
+	}
 }
 
 /*.strippedRow:first-child {background:rgb(223, 236, 250)}
@@ -250,7 +304,7 @@ h3{
 	clear: right;
 }
 .dockSeachResult > .listContainer{
-	margin: 50 15px;
+	margin: 50px 15px;
 	margin-bottom: 0px;
 }
 
@@ -1123,6 +1177,14 @@ h3{
     right: 0px;
     bottom: 41px;
     left: 0px;
+}
+
+#alerter{
+	position: absolute;
+	left: 50%;
+	margin-left: -470px;
+	z-index: 9999;
+	margin-top:20px;
 }
 
 #windowWrap {

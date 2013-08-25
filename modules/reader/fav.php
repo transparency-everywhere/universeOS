@@ -87,13 +87,15 @@ if($_GET[action] == "add"){
                     <h3 class="readerStartItem">
                         <img src="./gfx/icons/group.png" height="14">&nbsp;Your Favorites</span>
                     </h3>
-                    <table><!-- 
-                    	<tr>
+                    <table class="border-top-radius border-box readerStartItem" cellspacing="0"  style="border: 1px solid #c9c9c9; margin-top: -15px;">
+                    	<tr class="grayBar" height="35">
                     		<td></td>
-                    		<td>Type</td>
                     		<td>Item</td>
-                    		<td>Date</td>
-                    	</tr> -->
+                    		<td></td>
+                    	</tr>
+                    	<? 
+					     showFav($_SESSION[userid]);
+					     ?>
                     </table>
                     <?
                     // $userFavs = getUserFavs();

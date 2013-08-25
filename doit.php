@@ -8,7 +8,7 @@ include("inc/config.php");
 include("inc/functions.php");
 $time = time();
 if($_GET[action] == "showScore"){
-    showScore($_GET[type], $_GET[typeid], 1);
+    echo showScore($_GET[type], $_GET[typeid], 1);
 } 
 if($_GET[action] == "scorePlus"){
     $type = $_GET[type];
@@ -54,7 +54,10 @@ if($_GET[action] == "scorePlus"){
             
             }
         }
-    }
+    }else if($_GET[action] == "removeFav"){
+    	removeFav($_POST[type], $_POST[typeId]);
+    	jsAlert("Your favorite has been removed.");
+  	}
     else if($_GET[action] == "requestpositive"){
         $value = "0";
         mysql_query("UPDATE buddylist SET request='$value' WHERE owner='".mysql_real_escape_string($_GET[buddy])."' && buddy='$_SESSION[userid]'");
@@ -957,10 +960,6 @@ if($_GET[action] == "scorePlus"){
                                                 ?>
                                             </td>
                                         </tr>
-                                        <tr height="50">
-                                            <td valign="top"><input type="submit" value="Add" name="submit" id="submitLink" class="btn btn-info"></td>
-                                            <td>&nbsp;</td>
-                                        </tr>
                                         </table>   
                                         </td>
                                         </tr>
@@ -1281,7 +1280,7 @@ if($_GET[action] == "scorePlus"){
         <?
                 }
         } 
-/*del*/ }else if($_GET[action] == "updateMessageStatus"){
+        }else if($_GET[action] == "updateMessageStatus"){
              
         //updates if the message was seen, after the receiver clicked the input in the textarea
 
@@ -1289,18 +1288,18 @@ if($_GET[action] == "scorePlus"){
             
         $user = $_SESSION[userid];
         $buddy = $_GET[buddy];
-        $chatSQL = mysql_query("SELECT * FROM messages WHERE read='0' && sender='$user' && receiver='$buddy' OR sender='$buddy' && receiver='$userid' ORDER BY timestamp DESC LIMIT 0, 30");
-        while($chatData = mysql_fetch_array($chatSQL)) {
-        jsAlert("lol");
-            
-            if($chatData[receiver] == $_SESSION[userid] && $chatData[read] == "0"){
-            mysql_query("UPDATE `messages` SET  `read`='1' WHERE  id='$chatData[id]'");
-            }
-            if($chatData[sender] == $_SESSION[userid] && $chatData[seen] == "0"){
-            mysql_query("UPDATE `messages` SET  `seen`='1' WHERE  id='$chatData[id]'");
-            }
-            
-        }
+	        $chatSQL = mysql_query("SELECT * FROM messages WHERE (sender='$user' && receiver='$buddy') OR (sender='$buddy' && receiver='$userid') AND (read='0' OR seen='0') ORDER BY timestamp DESC LIMIT 0, 30");
+	        while($chatData = mysql_fetch_array($chatSQL)) {
+	        jsAlert("lol");
+	            
+	            if($chatData[receiver] == $_SESSION[userid] && $chatData[read] == "0"){
+	            mysql_query("UPDATE `messages` SET  `read`='1' WHERE  id='$chatData[id]'");
+	            }
+	            if($chatData[sender] == $_SESSION[userid] && $chatData[seen] == "0"){
+	            mysql_query("UPDATE `messages` SET  `seen`='1' WHERE  id='$chatData[id]'");
+	            }
+	            
+	        }
         }else if($_GET[action] == "chatLoadMore"){
             
             $userid = $_SESSION[userid];
@@ -1642,14 +1641,14 @@ if($_GET[action] == "scorePlus"){
             </script>
             <div class="blueModal border-radius container">
             	<div>
-            		<h2>Thank you for joining the unvierse OS</h2>
+            		<h2>Thank you for joining the universe OS</h2>
 	                <p style="margin-top: 20px;">
 	                    We try to give you the experience of an operatingsystem, without the disadvantage that its bound to a singlecomputer. <br>You joined this project at a very early state, so please excuse us if you trap over some errors.<br>
 	                </p>
 	                <h3>We want to tell you more about the Universe within the next three steps.</h3>
 	            </div>
 	            <footer>
-	                <a href="#" onclick="javascript: popper('doit.php?action=showStartMessage&step=1&noJq=true'); return false" class="btn btn-primary pull-right">Next</a>
+	                <a href="#" onclick="popper('doit.php?action=showStartMessage&step=1&noJq=true'); return false" class="btn btn-primary pull-right">Next</a>
 	            </footer>
             </div>
             <?
@@ -1678,8 +1677,8 @@ if($_GET[action] == "scorePlus"){
 	                </span>
 	                </div>
 	                <footer>
-	                 	<a href="#" onclick="javascript: popper('doit.php?action=showStartMessage'); return false" class="btn pull-left">Back</a>
-	                	<a href="#" onclick="javascript: popper('doit.php?action=showStartMessage&step=2'); return false" class="btn btn-primary pull-right">&nbsp;&nbsp;Next&nbsp;&nbsp;</a>
+	                 	<a href="#" onclick="popper('doit.php?action=showStartMessage'); return false" class="btn pull-left">Back</a>
+	                	<a href="#" onclick="popper('doit.php?action=showStartMessage&step=2'); return false" class="btn btn-primary pull-right">&nbsp;&nbsp;Next&nbsp;&nbsp;</a>
 	                </footer>
 	               </div>
             
@@ -1707,8 +1706,8 @@ if($_GET[action] == "scorePlus"){
                 </p>
                 </div>
                 <footer>
-	                <a href="#" onclick="javascript: popper('doit.php?action=showStartMessage&step=1'); return false" class="btn pull-left">Back</a>
-                	<a href="#" onclick="javascript: popper('doit.php?action=showStartMessage&step=3&noJq=true'); return false" class="btn btn-primary pull-right" style="">Next<a>
+	                <a href="#" onclick="popper('doit.php?action=showStartMessage&step=1'); return false" class="btn pull-left">Back</a>
+                	<a href="#" onclick="popper('doit.php?action=showStartMessage&step=3&noJq=true'); return false" class="btn btn-primary pull-right" style="">Next<a>
                 </footer>
             </div>  
             <?}else if($_GET[step] == "3"){
@@ -1723,8 +1722,8 @@ if($_GET[action] == "scorePlus"){
                 </p>
                </div>
                 <footer>
-	                <a href="#" onclick="javascript: popper('doit.php?action=showStartMessage&step=2'); return false" class="btn pull-left">Back</a>
-                	<a href="#" onclick="javascript: popper('doit.php?action=showStartMessage&step=4&noJq=true'); return false" class="btn btn-primary pull-right" style="">Next<a>
+	                <a href="#" onclick="popper('doit.php?action=showStartMessage&step=2'); return false" class="btn pull-left">Back</a>
+                	<a href="#" onclick="popper('doit.php?action=showStartMessage&step=4&noJq=true'); return false" class="btn btn-primary pull-right" style="">Next<a>
                 </footer>
             </div>
             <?}else if($_GET[step] == "4"){

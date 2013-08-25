@@ -5,7 +5,6 @@ include_once("inc/config.php");
 //$usersql = mysql_query("SELECT * FROM user WHERE userid='$_SESSION[userid]'");
 //$userdata = mysql_fetch_array($usersql);?>
     <script>
-    
     	//
 		function showRegistration(){
 			showApplication('reader');
@@ -39,7 +38,7 @@ include_once("inc/config.php");
                             checkBox = "FALSE";
                         }
                 });
-                if($("#password1").val() != $("#password2").val()){
+                if($("#registration #password").val() != $("#registration #passwordRepeat").val()){
                     passwordCheck = "FALSE";
                 }
 
@@ -59,6 +58,9 @@ include_once("inc/config.php");
                     }
         }
 function checkUsername(id){
+	
+	$('.captchaContainer').slideDown('slow');
+	
     var username = $("#"+id).val();
     if(/^[a-zA-Z0-9- ]*$/.test(username) == false) {
         $('#checkUsernameStatus').html('<a style="color: red">&nbsp;contains illegal characters</a>');
@@ -84,11 +86,16 @@ function checkUsername(id){
         //html to short
         $('#checkUsernameStatus').html('<o style="color: red">&nbsp;to short</o>');
     }
+							       $("#"+id).keyup(function() {
+									    delay(function(){
+									      checkUsername(id);
+									    }, 500 );
+									});
 }
 
 function processRegistration(){
-    var username = $("#username").val();
-    var password = $("#password1").val();
+    var username = $("#regUsername").val();
+    var password = $("#registration #password").val();
     var captcha = $("#captcha").val();
                 //submit registration
                 $.post("api.php?action=processSiteRegistration", {
@@ -99,8 +106,12 @@ function processRegistration(){
                             var res = result;
                             if(res == 1){
                                 //load checked message
-                                alert('You just joined the universeOS');
-                                deleteTab('Register');
+                                jsAlert('','You just joined the universeOS');
+                                $('#registration').slideUp('');
+                                
+                                $('#loginUsername').val(username);
+                                $('#loginPassword').val(password);
+                                $('#loginForm').submit();
                             }else{
                                 alert(res);
                             }
@@ -130,22 +141,35 @@ function processRegistration(){
     .dockSeachResult{
         bottom: 41px;
     }
+    
+    #topThing{
+    	position: absolute; top: 0px; right: 0px; left: 0px; padding-top:10px; padding-bottom:10px; background: #000; color: #383D3C; padding-top: 5px; padding-bottom: 3px; padding-left:10px;
+    }
+    
+    #topThing span:first-of-type{
+    	color: #54545B;
+    	float:left;
+    	
+    }
+    
+    #topThing span{
+    	margin-right: 15px; 
+    	margin-left:15px;
+    	float:right;
+    }
+    
 </style>
-        <div style="position: absolute; top: 0px; right: 0px; left: 0px; padding-top:10px; padding-bottom:10px; background: #000; color: #383D3C; padding-top: 5px; padding-bottom: 3px; padding-left:10px;">
-            <span style="color: #54545B;">&copy; 2013 <a href="http://transparency-everywhere.com" target="blank" style="color: #54545B;">Transparency Everywhere</a></span>
+        <div id="topThing">
+            <span>&copy; 2013 <a href="http://transparency-everywhere.com" target="blank" style="color: #54545B;">Transparency Everywhere</a></span>
             
-            <span style="margin-right: 10px; float:right;"><iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.facebook.com%2FuniverseOS&amp;send=false&amp;layout=button_count&amp;width=200&amp;show_faces=true&amp;font=segoe+ui&amp;colorscheme=light&amp;action=like&amp;height=21&amp;appId=459795090736643" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:83px; height:21px; float: left" allowTransparency="true"></iframe>&nbsp;&nbsp;<a href="#" style="color: #54545B;" onclick="showContent('1', 'Site Notice');">Site Notice</a></span>
-            <span style="margin-right: 30px; float:right;"></span>
+            <span style=""><iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.facebook.com%2FuniverseOS&amp;send=false&amp;layout=button_count&amp;width=200&amp;show_faces=true&amp;font=segoe+ui&amp;colorscheme=light&amp;action=like&amp;height=21&amp;appId=459795090736643" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:83px; height:21px; float: left" allowTransparency="true"></iframe>&nbsp;&nbsp;<a href="#" style="color: #54545B;" onclick="showContent('1', 'Site Notice');">Site Notice</a></span>
+            <span style=""></span>
         </div>
         <div id="reload"></div>
         <div id="bodywrap">
-        	<div id="" style="position: absolute; top: 30px; left:30px;">
-        		<ul>
-        			<li>
-        				
-					</li>
-        		</ul>
-			</div>
+        	  <?
+    include("register.php");
+    ?>
             
         <? include("modules/reader/index.php") ?>
         
@@ -164,130 +188,129 @@ function processRegistration(){
         
         
     <style type="text/css">
-#startbox {
+/*registration at guest.php*/
+    #registration{
+    	position: absolute;
+    	top: 50px;
+    	right: 50px;
+    	position: absolute;
+		top: 10px;
+		right: 10px;
+		color: #FFFFFF;
+		text-align:right;
+    }
     
-    position: absolute;
-    bottom: 40px;
-    left: 0px;
-    height: 150px;
-    width: 460px;
-    background: #3a3a3a; /* Old browsers */
-	background: -moz-linear-gradient(top, #3a3a3a 0%, #303030 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3a3a3a), color-stop(100%,#303030)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #3a3a3a 0%,#303030 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #3a3a3a 0%,#303030 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #3a3a3a 0%,#303030 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #3a3a3a 0%,#303030 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3a3a3a', endColorstr='#303030',GradientType=0 ); /* IE6-9 */
+    #registration span{
+		position: absolute;
+		width: 200px;
+		margin-left: -205px;
+		font-size: 17pt;
+		margin-top: 7px;
+		text-align: right;
+    }
+    
+    #registration a:link{
+    	color: #FFFFFF;
+    }
+    
+    #registration li{
+    	height: 37px;
+		width: 220px;
+    }
+    
+    #registration li span:empty{
+    	display:none;
+    }
+    
+    #registration .captchaContainer{
+    	display:none;
+    }
+    
+    #registration #username{
+    	-webkit-border-bottom-right-radius: 0px;
+		-webkit-border-bottom-left-radius: 0px;
+		-moz-border-radius-bottomright: 0px;
+		-moz-border-radius-bottomleft: 0px;
+		border-bottom-right-radius: 0px;
+		border-bottom-left-radius: 0px;
+    }
+    
+    #registration #password{
+		-webkit-border-radius: 0px;
+		-moz-border-radius: 0px;
+		border-radius: 0px;
+    }
+    
+    #registration #passwordRepeat{
+    	-webkit-border-top-left-radius: 0px;
+		-webkit-border-top-right-radius: 04px;
+		-moz-border-radius-topleft: 0px;
+		-moz-border-radius-topright: 0px;
+		border-top-left-radius: 0px;
+		border-top-right-radius: 0px;
+		border-top: none;
+    }
+/*registration end*/
+    
+#startbox {
+	    position: absolute;
+	    bottom: 40px;
+	    left: 0px;
+	    height: 150px;
+	    width: 460px;
+	    background: #3a3a3a; /* Old browsers */
+		background: -moz-linear-gradient(top, #3a3a3a 0%, #303030 100%); /* FF3.6+ */
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3a3a3a), color-stop(100%,#303030)); /* Chrome,Safari4+ */
+		background: -webkit-linear-gradient(top, #3a3a3a 0%,#303030 100%); /* Chrome10+,Safari5.1+ */
+		background: -o-linear-gradient(top, #3a3a3a 0%,#303030 100%); /* Opera 11.10+ */
+		background: -ms-linear-gradient(top, #3a3a3a 0%,#303030 100%); /* IE10+ */
+		background: linear-gradient(to bottom, #3a3a3a 0%,#303030 100%); /* W3C */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3a3a3a', endColorstr='#303030',GradientType=0 ); /* IE6-9 */
 }
 
 #startMainWindow {
-    height: 150px;
-    overflow: none;
+	    height: 150px;
+	    overflow: none;
 }
 
 #startMainHeader{
-    height:30px;
-    width: 460px;
-    border-bottom:2px solid #3a3a3a;
-    color: #FFF;
-    padding-top: 10px;background: rgb(38,38,38); /* Old browsers */
-background: -moz-linear-gradient(top, rgba(38,38,38,1) 0%, rgba(40,40,40,1) 49%, rgba(40,40,40,1) 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(38,38,38,1)), color-stop(49%,rgba(40,40,40,1)), color-stop(100%,rgba(40,40,40,1))); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top, rgba(38,38,38,1) 0%,rgba(40,40,40,1) 49%,rgba(40,40,40,1) 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, rgba(38,38,38,1) 0%,rgba(40,40,40,1) 49%,rgba(40,40,40,1) 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top, rgba(38,38,38,1) 0%,rgba(40,40,40,1) 49%,rgba(40,40,40,1) 100%); /* IE10+ */
-background: linear-gradient(to bottom, rgba(38,38,38,1) 0%,rgba(40,40,40,1) 49%,rgba(40,40,40,1) 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#262626', endColorstr='#282828',GradientType=0 ); /* IE6-9 */
+	    height:30px;
+	    width: 460px;
+	    border-bottom:2px solid #3a3a3a;
+	    color: #FFF;
+	    padding-top: 10px;background: rgb(38,38,38); /* Old browsers */
+		background: -moz-linear-gradient(top, rgba(38,38,38,1) 0%, rgba(40,40,40,1) 49%, rgba(40,40,40,1) 100%); /* FF3.6+ */
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(38,38,38,1)), color-stop(49%,rgba(40,40,40,1)), color-stop(100%,rgba(40,40,40,1))); /* Chrome,Safari4+ */
+		background: -webkit-linear-gradient(top, rgba(38,38,38,1) 0%,rgba(40,40,40,1) 49%,rgba(40,40,40,1) 100%); /* Chrome10+,Safari5.1+ */
+		background: -o-linear-gradient(top, rgba(38,38,38,1) 0%,rgba(40,40,40,1) 49%,rgba(40,40,40,1) 100%); /* Opera 11.10+ */
+		background: -ms-linear-gradient(top, rgba(38,38,38,1) 0%,rgba(40,40,40,1) 49%,rgba(40,40,40,1) 100%); /* IE10+ */
+		background: linear-gradient(to bottom, rgba(38,38,38,1) 0%,rgba(40,40,40,1) 49%,rgba(40,40,40,1) 100%); /* W3C */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#262626', endColorstr='#282828',GradientType=0 ); /* IE6-9 */
 }
 
 .border-radius {
-    border-radius: 6px;
-    -o-border-radius: 6px;
-    -moz-border-radius: 6px;
-    -khtml-border-radius: 6px;
-    -webkit-border-radius: 6px;
+	    border-radius: 6px;
+	    -o-border-radius: 6px;
+	    -moz-border-radius: 6px;
+	    -khtml-border-radius: 6px;
+	    -webkit-border-radius: 6px;
 }
 
 .border-top-right-radius {
-    border-top-right-radius: 6px;
-    -o-border-top-right-radius: 6px;
-    -moz-border-top-right-radius: 6px;
-    -khtml-border-top-right-radius: 6px;
-    -webkit-border-top-right-radius: 6px;
+	    border-top-right-radius: 6px;
+	    -o-border-top-right-radius: 6px;
+	    -moz-border-top-right-radius: 6px;
+	    -khtml-border-top-right-radius: 6px;
+	    -webkit-border-top-right-radius: 6px;
 }
 
 .text-shadow{
-   text-shadow:0 0 1px #fff, 2px 2px 3px #fff, -3px -3px 5px #fff, -3px 3px 5px #fff, 3px -3px 5px #fff;
+   		text-shadow:0 0 1px #fff, 2px 2px 3px #fff, -3px -3px 5px #fff, -3px 3px 5px #fff, 3px -3px 5px #fff;
 }
 
 .margin{
     margin-left: 20px;
 }
-
-/*.button{
-	cursor: pointer;
-	text-decoration:none;
-	border: 1px solid rgb(153, 153, 153);
-	padding: 5px 5px 5px 5px;
-	color:rgb(0, 0, 0);
-	font-size:12px;
-	font-family:arial, serif;
-	text-shadow: 0px 0px 5px rgb(255, 255, 255);
-	font-size: 12px;
-	border-radius:5px 5px 5px 5px;
-	-moz-border-radius:5px 5px 5px 5px;
-	-webkit-border-radius:5px 5px 5px 5px;
-	box-shadow:0px 0px 0px rgb(0, 0, 0);
-	-moz-box-shadow:0px 0px 0px rgb(0, 0, 0);
-	-webkit-box-shadow:0px 0px 0px rgb(0, 0, 0);
-	background-color: rgb(255, 255, 255);
-	background-image:linear-gradient(-90deg, rgb(238, 238, 238), rgb(204, 204, 204));
-	background-image:-webkit-gradient(linear, 50% 0%, 50% 100%, from(rgb(238, 238, 238)), to(rgb(204, 204, 204)));
-	background-image:-moz-linear-gradient(-90deg, rgb(238, 238, 238), rgb(204, 204, 204));
-}
-.button:hover{
-	cursor: pointer;
-	text-decoration:none;
-	border: 1px solid rgb(153, 153, 153);
-	padding: 5px 5px 5px 5px;
-	color:rgb(0, 0, 0);
-	font-size:12px;
-	font-family:arial, serif;
-	text-shadow: 0px 0px 5px rgb(255, 255, 255);
-	font-size: 12px;
-	border-radius:5px 5px 5px 5px;
-	-moz-border-radius:5px 5px 5px 5px;
-	-webkit-border-radius:5px 5px 5px 5px;
-	box-shadow:0px 0px 0px rgb(0, 0, 0);
-	-moz-box-shadow:0px 0px 0px rgb(0, 0, 0);
-	-webkit-box-shadow:0px 0px 0px rgb(0, 0, 0);
-	background-color: rgb(255, 255, 255);
-	background-image:linear-gradient(-90deg, rgb(238, 238, 238), rgb(204, 204, 204));
-	background-image:-webkit-gradient(linear, 50% 0%, 50% 100%, from(rgb(238, 238, 238)), to(rgb(204, 204, 204)));
-	background-image:-moz-linear-gradient(-90deg, rgb(238, 238, 238), rgb(204, 204, 204));
-}
-.button:active{
-	cursor: pointer;
-	text-decoration:none;
-	border: 1px solid rgb(153, 153, 153);
-	padding: 5px 5px 5px 5px;
-	color:rgb(0, 0, 0);
-	font-size:12px;
-	font-family:arial, serif;
-	text-shadow: 0px 0px 5px rgb(255, 255, 255);
-	font-size: 12px;
-	border-radius:5px 5px 5px 5px;
-	-moz-border-radius:5px 5px 5px 5px;
-	-webkit-border-radius:5px 5px 5px 5px;
-	box-shadow:0px 0px 0px rgb(0, 0, 0);
-	-moz-box-shadow:0px 0px 0px rgb(0, 0, 0);
-	-webkit-box-shadow:0px 0px 0px rgb(0, 0, 0);
-	background-color: rgb(255, 255, 255);
-	background-image:linear-gradient(-90deg, rgb(238, 238, 238), rgb(204, 204, 204));
-	background-image:-webkit-gradient(linear, 50% 0%, 50% 100%, from(rgb(238, 238, 238)), to(rgb(204, 204, 204)));
-	background-image:-moz-linear-gradient(-90deg, rgb(238, 238, 238), rgb(204, 204, 204));
-}*/
 </style>
     <div class="box-shadow border-top-right-radius" id="startbox" style="display: none;">
         <div id="startMainWindow">
@@ -295,20 +318,19 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#262626', end
                 <span style="font-size:19pt;font-weight: 1; font-weight: 100; margin-left:5px;">Please Sign In</span>
             </div>
         <hgroup>
-            <form action="login.php" method="post" target="submitter">
+            <form action="login.php" method="post" target="submitter" id="loginForm">
             <table width="100%" valign="center">
                 <tr height="10">
                     <td></td>
                 </tr>
                 <tr valign="top">
-                    <td><input type="text" name="username" placeholder="username" class="margin bigInput" style="width: 170px;"></td>
-                    <td><input type="password" name="password" placeholder="password" class="margin bigInput" style="width: 170px;"></td>
+                    <td><input type="text" name="username" placeholder="username" id="loginUsername" class="margin bigInput" style="width: 170px;"></td>
+                    <td><input type="password" name="password" placeholder="password" id="loginPassword" class="margin bigInput" style="width: 170px;"></td>
                 </tr>
                 <tr>
                     <td style="color: #FFFFFF" align="center"><?=$loginerror;?></td>
                 </tr>
                 <tr>
-                    <td><input type="button" onclick="showRegistration();" class="btn btn-success margin" value="Create Account"></td>
                     <td><input type="submit" value="Sign In" name="submit" class="btn btn-primary margin"></td>
                 </tr>
             </table>
@@ -327,24 +349,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#262626', end
         <li class="" onclick="javascript: toggleApplication('reader')" onmouseup="closeDockMenu()"><img src="./gfx/viewer.png" border="0" height="16">&nbsp;&nbsp;Reader</li>
     </ul>
     <div>
-    <div class="listContainer">
-        <ul class="list messageList" id="dockMenuSystemAlerts"></ul>
-        <header>System</header>
     </div>
-    <div class="listContainer">
-        <ul class="list messageList" id="dockMenuBuddyAlerts"></ul>
-        <header>Buddies</header>
-    </div>
-    </div>
-<!--    <p>Buddies</p>
-    <ul class="messageList" id="dockMenuBuddyAlerts">
-        
-    </ul>-->
 </div>
-<!--    <div id="dockMenu" class="" style="display: none">
-        <div class="dockMenuElement" onclick="toggleApplication('filesystem')" onmouseup="closeDockMenu()"><img src="./gfx/filesystem.png" border="0" height="16">&nbsp;&nbsp;Filesystem</div>
-        <div class="dockMenuElement" onclick="javascript: toggleApplication('reader')" onmouseup="closeDockMenu()"><img src="./gfx/viewer.png" border="0" height="16">&nbsp;&nbsp;Reader</div>
-    </div>-->
     <div id="dock">
         <table>
             <tr valign="top">
@@ -396,5 +402,4 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#262626', end
     include("openFileFromLink.php");
     ?>
     </body>
-    
-
+    </html>

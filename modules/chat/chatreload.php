@@ -104,7 +104,7 @@ unset($intWindows);?>
                   <a class="btn" onclick="$('.chatAdditionalSettings').toggle();">
                       <i class="icon-plus"></i>
                   </a>
-                  <input type="text" placeholder="type a message..." name="message" class="input border-radius chatInput" id="chatInput_<?=$buddy;?>" style="postion: absolute; width: 60%; margin-bottom: -1px;">
+                  <input type="text" placeholder="type a message..." name="message" class="input border-radius chatInput" id="chatInput_<?=$buddy;?>" style="postion: absolute; width: 60%; margin-bottom: -1px; height: 19px;">
 				  <input type="hidden" name="cryption" value="false" id="chatCryptionMarker_<?=$buddyName;?>">
                   <input type="submit" value="Send" class="btn">
               </form>

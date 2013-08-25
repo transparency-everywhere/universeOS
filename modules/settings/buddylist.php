@@ -27,12 +27,9 @@
 	         ?>
 	             <tr>
 	                <td><?=showUserPicture($buddyEditData[buddy], 30);?></td>
-	                <td></td>
-	                <form action="modules/settings/index.php?action=friends&reload=1" target="submitter" method="post"><?=$userpicture;?>&nbsp;
-	                    <input type="hidden" name="buddy" value="<?=$buddyEditData[buddy];?>"></td>
+	                <td><?=$userpicture;?><input type="hidden" name="buddy" value="<?=$buddyEditData[buddy];?>"></td>
 	                <td><?=$blUserData[username];?><a href="#" onclick="confirmation(<?=$buddyEditData[buddy];?>);"><img src="./gfx/delete_2.png" width="16"></a>
-	                    <input type="submit" name="submit" value="save">
-	                </form></td>
+	                </td>
 	             </tr>
 	         <? }
 			 echo"</table>"; ?>

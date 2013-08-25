@@ -5,13 +5,14 @@ session_start();
 // //if user uses internetexplorer => include error template
 // $browser = get_browser(null, true);
 // echo$browser['browser'];
-// if($browser[browser] == "Internet Explorer"){
-// 
-    // include("inc/crossbrowsing/ie/ie.php");
-//     
-    // die();
-// 	
-// }
+preg_match('/MSIE (.*?);/', $_SERVER['HTTP_USER_AGENT'], $matches);
+if (count(preg_match('/MSIE (.*?);/', $_SERVER['HTTP_USER_AGENT'], $matches))>1){
+
+    include("inc/crossbrowsing/ie/ie.php");
+    
+    die();
+	
+}
 // unset($browser);
 
 include_once("inc/functions.php");
@@ -24,7 +25,6 @@ $userdata = mysql_fetch_array($usersql);
 
 include("inc/header.php");
 ?>
-
     <body onclick="clearMenu()" onload="clock()<?=$startLink;?>">
 <?
 if(!isset($_SESSION["userid"])) {
@@ -88,6 +88,10 @@ if(!isset($_SESSION["userid"])) {
     <?
     include("openFileFromLink.php");
     ?>
+<script>
+	
+      $("#reader:hidden").fadeIn(3000);
+</script>
     </body>
     
 

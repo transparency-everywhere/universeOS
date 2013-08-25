@@ -201,7 +201,7 @@
 			$link = preg_replace('/<!\[CDATA\[(.+)\]\]>/Uism', '$1', $link);
 		
 			$output .= "<div class=\"rssTitle\">\n";
-			$output .= "<a href=\"".$link[1]."\" target=\"blank\" title=\"";
+			$output .= "<a href=\"#\" onclick=\"openURL('".$link[1]."', '$channeltitle')\" target=\"blank\" title=\"";
 			if($encode != "no")
 			{$output .= htmlentities($title[1],ENT_QUOTES,$encoding);}
 			else
@@ -271,7 +271,7 @@
    echo" 
    <div style='font-family:arial; font-size: 12pt;' class='newsArticleBox'>
    <h3 style='line-height: 30px;'>{$item->title}</h3>
-   $newstring <br><br><a href='{$item->guid}' target='blank' class='btn btn-info'>read all</a>
+   $newstring <br><br><a href='#' onclick=\"openURL('{$item->guid}', '{".mysql_real_escape_string($item->title)."}')\" target='blank' class='btn btn-info'>read all</a>
    <br /><br /> 
    </div> 
    ";  
@@ -801,6 +801,38 @@
        }
    }
    
+   //gets all unseen messages for receiver=user
+   function getUnseenMessages($user=NULL){
+   	if($user == NULL){
+   		$user = $_SESSION[userid];
+   	}else{
+   		$user = save($user);
+   	}
+   	
+	$newMessagesSql = mysql_query("SELECT * FROM  `messages` WHERE  receiver='$user' AND  `read`='0'  ORDER BY timestamp DESC LIMIT 0, 3");
+	while($newMessagesData = mysql_fetch_array($newMessagesSql)){
+		$session .= "newMessage $newMessagesData[id]";
+	    
+	    $text = substr($newMessagesData[text], 0, 100);
+	
+	    $newMessagesSql2 = mysql_query("SELECT username FROM user WHERE userid='$newMessagesData[sender]'");
+	    $newMessagesData2 = mysql_fetch_array($newMessagesSql2);
+	    
+		$return['messageId'] = $newMessagesData['id'];
+		$return['sender'] = $newMessagesData['sender'];
+		$return['receiver'] = $newMessagesData['receiver'];
+		$return['sender'] = $newMessagesData['sender'];
+		$return['timestamp'] = $newMessagesData['timestamp'];
+		$return['text'] = $newMessagesData['text'];
+		
+		
+		$return['senderUsername'] = $newMessagesData2['username'];
+	}
+	
+	return $return;
+	
+   }
+   
     function plusOne($type, $typeid){
        if($type == "comment"){
            mysql_query("UPDATE comments SET votes = votes + 1, score = score + 1 WHERE id='$typeid'");
@@ -881,31 +913,21 @@
                $scoreData = mysql_fetch_array($scoreSql); 
                }
                if(!isset($reload)){
-                   echo "<div class=\"score$type$typeid\">";
+                   $output .=  "<div class=\"score$type$typeid\">";
                }
-               if(1 == 2){    ?>
-    
-       <div class="scoreCase button" >
-           <a href="doit.php?action=scorePlus&type=<?=$type;?>&typeid=<?=$typeid;?>" target="submitter" style="float: left; color: #000;">+1</a>
-           
-           <p style="float: left;"><?=$scoreData[score];?></p>
-           
-           <a href="doit.php?action=scoreMinus&type=<?=$type;?>&typeid=<?=$typeid;?>" target="submitter" style="float: left; color: #000;">-1</a>
-           
-       </div>
-    
-        <?  } ?>
-            <div class="btn-toolbar" style="margin: 0px;">
-                <div class="btn-group">
-                <a class="btn btn-mini" href="doit.php?action=scoreMinus&type=<?=$type;?>&typeid=<?=$typeid;?>" target="submitter"><i class="icon-thumbs-down"></i></a>
-                <p class="btn btn-mini" href="#"><?=$scoreData[score];?></p>
-                <a class="btn btn-mini" href="doit.php?action=scorePlus&type=<?=$type;?>&typeid=<?=$typeid;?>" target="submitter"><i class="icon-thumbs-up"></i></a>
-                </div>
-            </div>
-        <?
+			   
+			   $output .= '<div class="btn-toolbar" style="margin: 0px;">';
+			   $output .= '<div class="btn-group">';
+			   $output .="<a class=\"btn btn-mini\" href=\"doit.php?action=scoreMinus&type=$type&typeid=$typeid\" target=\"submitter\"><i class=\"icon-thumbs-down\"></i></a>";
+			   $output .= "<p class=\"btn btn-mini\" href=\"#\">$scoreData[score]</p>";
+			   $output .= "<a class=\"btn btn-mini\" href=\"doit.php?action=scorePlus&type=$type&typeid=$typeid\" target=\"submitter\"><i class=\"icon-thumbs-up\"></i></a>";
+			   $output .= '</div>';
+			   $output .= '</div>';
                if(!isset($reload)){
-                   echo "</div>";
+                   $output .=  "</div>";
                }
+			   
+			   return $output;
         }
            
        }
@@ -929,8 +951,8 @@ function showComments($type, $itemid) {
           <table>
               <tr>
                   <td><?=showUserPicture($_SESSION[userid], "25");?></td>
-                  <td><input type="text" name="comment" placeholder="write commenta.." class="commentField" style="width: 100%;"></td>
-                  <td><input type="submit" value="send" class="btn btn-small" name="submitComment" style=""></td>
+                  <td><input type="text" name="comment" placeholder="write commenta.." class="commentField" style="width: 100%; height:17px;"></td>
+                  <td><input type="submit" value="send" class="btn btn-small" name="submitComment" style="margin-left:13px;"></td>
               </tr>
                 <input type="hidden" name="itemid" value="<?=$itemid;?>">
                 <input type="hidden" name="user" value="<?=$_SESSION[userid];?>">
@@ -2582,6 +2604,8 @@ echo"</div>";
             $filename = $fileData[filename];
             $path = getFullFilePath($fileId);
             
+			
+    		$score = showScore("file", $fileId, 1);
             
             //check type if type is undefined get type from db
             if(empty($type)){
@@ -2602,6 +2626,8 @@ echo"</div>";
 		            
 		            $title = $linkData[title];
 		            
+    				$score = showScore("link", $linkId, 1);
+					
 		            
 		            //define type if type is undefined
 		            if(empty($type)){
@@ -2687,7 +2713,7 @@ echo"</div>";
         $output .= $icon;
         $output .= "<span class=\"title\">$title</span>";
 		$output .= "<span class=\"controls\">$controls</span>";
-		$output .= "<span class=\"bar\">$bar</span>";
+		$output .= "<span class=\"bar\">$bar $score</span>";
         $output .= "<span class=\"download\">$download</span>";
         $output .= "</header>";
         $output .= "<div class=\"fileWindow\" id=\"$fileWindowId\">";
@@ -3426,10 +3452,16 @@ echo"</div>";
 		}
 	}
 
+	function getUserFavOutput($user){
+		if(empty($user)){
+			$user = $_SESSION[userid];
+		}
+		
+		
+	}
 
     
-    function showFav($user){
-        echo"<table cellspacing=\"0\" width=\"100%\">";    
+    function showFav($user){ 
                         
                         
                     	$userFavs = getUserFavs($user);
@@ -3470,14 +3502,28 @@ echo"</div>";
                                 <tr bgcolor="#<?=$color;?>" onmouseup="showMenu('folder<?=$filefdata[id];?>')" height="35">
                                     <td onmouseup="showMenu(<?=$favFolderData[id];?>)" width="35">&nbsp;<img src="./gfx/icons/<?=$img;?>" height="20"></td>
                                     <td onmouseup="showMenu(<?=$favFolderData[id];?>)"><a href="#" onclick="<?=$link;?>"><?=$favFolderData[name];?><?=$favFolderData[title];?>/</a></td>
+                                    <?
+                                    if($user == $_SESSION[userid]){
+                                    ?>
+                                    <td align="right"><a class="btn btn-mini" onclick="removeFav('<?=$filefdata[type];?>', '<?=$filefdata[item];?>')"><i class="icon-remove"></i></a></td>
+                                    <?
+                                    }
+                                    ?>
                                 </tr>
                         <? }
-                    echo"</table>";
         
         
     }
+
+	function removeFav($type, $item){
+		
+			if(mysql_query("DELETE FROM fav WHERE type='".mysql_real_escape_string($type)."' AND user='$_SESSION[userid]' AND item='".mysql_real_escape_string($item)."'")){
+				return true;
+			}
+		
+	}
     //shows a picture of element or folder if available
-    function showThumb($type, $itemId){
+  	function showThumb($type, $itemId){
         switch($type){
             case 'folder':
                 $elementSQL = mysql_query("SELECT id FROM elements WHERE folder='$itemId' ORDER BY RAND() LIMIT 0,1");

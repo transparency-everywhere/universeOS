@@ -8,6 +8,9 @@ $groups = getGroups();
 //playlists
 $playlists = getPlaylists();
 
+//unseenMessages
+$unseenMessages = getUnseenMessages();
+
 //fav, //playlists, //groups, //files
 ?>
 <style>
@@ -73,6 +76,25 @@ $playlists = getPlaylists();
 		foreach($playlists AS $playlist){
 			echo"<li>";
 			echo getPlaylistTitle($playlist);
+			echo"</li>";
+		}
+		?>
+		
+	</ul>
+</div>
+<div class="dashBox">
+	<a class="dashClose"></a>
+	<header>Your Messages</header>
+	<ul>
+		<?
+		foreach($unseenMessages AS $message){
+			echo"<li>";
+				echo "<span>";
+				echo $message['senderUsername'];
+				echo "</span>";
+				echo "<span>";
+				echo $message['text'];
+				echo "</span>";
 			echo"</li>";
 		}
 		?>

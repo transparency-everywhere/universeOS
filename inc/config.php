@@ -4,7 +4,7 @@ $timestamp = time();
 //mysql connect
 	$server = "85.214.203.132";
 	$user = "universe";
-	$password = "wer345tzu567fgh098";
+	$password = "kghjfgfxFFFassd5432As";
 	
 	$db = "universe";
 	

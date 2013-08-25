@@ -342,7 +342,7 @@ switch($action){
         if(empty($data[username])){
             echo"1";
         }else{
-            echo"1";
+            echo"0";
         }
         
         
