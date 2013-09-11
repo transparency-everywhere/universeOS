@@ -47,7 +47,7 @@ if($_GET[action] == "add"){
                     <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" id="showfavFiles"><span class=""><img src="./gfx/icons/folder.png">&nbsp;Files</span></td>
                 </tr>
             </table>
-            <div style="position: absolute;  top: 151px; right: 0px; bottom: 0px; left: 0px; background: #FFFFFF; overflow: auto; padding: 15px;" class="favTab" id="favTab_Group">
+            <div class="favTab" id="favTab_Group">
                    
                     <h3 class="readerStartItem">
                         <img src="./gfx/icons/group.png" height="14">&nbsp;Your Groups <span style="float:right"><a href="javascript: popper('doit.php?action=addGroup');" class="btn"><img src="./gfx/icons/group.png" height="14">&nbsp;Add Group</a>  </span>
@@ -82,7 +82,7 @@ if($_GET[action] == "add"){
                        ?>
                      </table>
             </div>
-            <div style="position: absolute;  top: 151px; right: 0px; bottom: 0px; left: 0px; background: #FFFFFF; overflow: auto; padding: 15px; display: none;" class="favTab" id="favTab_Fav">
+            <div style="display: none;" class="favTab" id="favTab_Fav">
                    
                     <h3 class="readerStartItem">
                         <img src="./gfx/icons/group.png" height="14">&nbsp;Your Favorites</span>
@@ -110,7 +110,7 @@ if($_GET[action] == "add"){
 					// }
                     ?> 
             </div>
-            <div style="position: absolute;  top: 151px; right: 0px; bottom: 0px; left: 0px; background: #FFFFFF; overflow: auto; padding: 15px; display: none;" class="favTab" id="favTab_playList">
+            <div style="display: none;" class="favTab" id="favTab_playList">
                 
                     <h3 class="readerStartItem">
                         <img src="./gfx/icons/playlist.png" height="14">&nbsp;Your Playlists<span style="float: right;"><a href="javascript: popper('doit.php?action=addPlaylist');" class="btn"><img src="./gfx/icons/playlist.png" height="14">&nbsp;Add Playlist</a></span>
@@ -152,8 +152,8 @@ if($_GET[action] == "add"){
 ?>
                         </table><br><br>
             </div>
-            <div style="position: absoute; top: 140px; bottom: 0px; background: #FFFFFF; overflow: auto; display: none;" class="favTab" id="favTab_News">
-                <div class="leftNav" style="top: 151px;">
+            <div style="display: none;" class="favTab" id="favTab_News">
+                <div class="leftNav">
                     <ul style="padding: 10px;" id="rssFavList">
                         <?
                         $favSql = mysql_query("SELECT item FROM fav WHERE user='$_SESSION[userid]' AND type='link'");
@@ -170,7 +170,7 @@ if($_GET[action] == "add"){
                         <li><i style="font-size: 8pt;">Add RSS Feeds to your favourites, to see them here</i></li>
                     </ul>
                 </div>
-                    <div style="top: 151px;" class="frameRight" id="newsContentFrame">
+                    <div class="frameRight" id="newsContentFrame">
 			            <?php
 			            $url = "http://feeds.bbci.co.uk/news/world/rss.xml";
 			            echo"<div style=\"padding: 20px;\">";
@@ -179,16 +179,16 @@ if($_GET[action] == "add"){
 			            ?>
                     </div>
             </div>
-            <div style="position: absoute; top: 140px; bottom: 0px; background: #FFFFFF; overflow: auto; display: none;" class="favTab" id="favTab_Files">
+            <div style="display: none;" class="favTab" id="favTab_Files">
 
-                    <div class="leftNav" style="top: 151px;">
+                    <div class="leftNav">
                     <ul style="float: left; padding: 10px;">
                         <li onclick="loader('personalFileFrame','doit.php?action=loadPersonalFileFrame&query=allFiles');"><img src="./gfx/icon7.png" width="16">&nbsp;All Files</li>
                         <li onclick="loader('personalFileFrame','doit.php?action=loadPersonalFileFrame&query=myFiles');"><img src="./gfx/icons/filesystem/element.png" width="17" style="margin-bottom: -2px;">&nbsp;myFiles</li>
                         <li><i style="font-size: 8pt;">some Info about this list.</i></li>
                     </ul>
                     </div>
-                    <div class="frameRight" style="top: 151px;" id="personalFileFrame">
+                    <div class="frameRight" id="personalFileFrame">
                         <?
 		                  $user = $_SESSION[userid];
 		                 

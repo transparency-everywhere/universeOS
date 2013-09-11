@@ -2,8 +2,9 @@
 session_start();
 include("inc/config.php");
 include("inc/functions.php");
-$group = "$_GET[id]";
+$group = $_GET[id];
 $needle = "$_GET[id];";
+$group = save($group);
 $groupSql = mysql_query("SELECT * FROM groups WHERE id='$group'");
 $groupData = mysql_fetch_array($groupSql);
 $link = "group.php?id=$group";
@@ -19,8 +20,7 @@ $memberSql = mysql_query("SELECT * FROM groupAttachments WHERE `group`='$group' 
 $memberData = mysql_fetch_array($memberSql);
 if (!empty($memberData[itemId])) {
    $member = "1";
-}    
-
+}
 ?>
     <div id="profileWrap">
     <div>&nbsp;</div>
@@ -97,7 +97,7 @@ if (!empty($memberData[itemId])) {
     <div id="groupFiles" class="groupSlider" style="display:none">
         <table cellspacing="0" style="font-size: 9px;" width="100%">
           <?php
-          $query = "WHERE INSTR(`privacy`, '{$needle}') > 0 ORDER BY timestamp DESC LIMIT 5";
+          $query = "WHERE privacy LIKE '%$group%'";
           
         
                         showFileBrowser($folder, "$query", "$query");

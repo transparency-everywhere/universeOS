@@ -15,28 +15,22 @@ if(empty($_GET[reload])){
         <? } ?>
             <table width="100%" cellspacing="0">
             <?
-$buddylistSql = mysql_query("SELECT * FROM buddylist WHERE owner='$_SESSION[userid]' && request='0'");
-while($buddylistData = mysql_fetch_array($buddylistSql)) {
-    $blUserSql = mysql_query("SELECT * FROM user WHERE userid='$buddylistData[buddy]'");
-    $blUserData = mysql_fetch_array($blUserSql);
-    
-    //sets a hasttag for this 
-    $userRow = md5("$blUserData[lastactivity],$userRow");
-    if(!empty($buddylistData[alias])){
-        $username = $buddylistData[alias];
-    } else{
-    $username = htmlspecialchars($blUserData[username]);
-        }
+            
+            $buddies = buddyListArray();
+			foreach($buddies AS $buddy){
+				
+				$username =  useridToUsername($buddy);
+			
     ?>
                 <tr class="strippedRow height60">
-	                 <td style="padding-left: 3px; width: 35px;"><?=showUserPicture($blUserData['userid'], "30");?></td>
-	                 <td><a href="#" onclick="openChatDialoge('<?=$blUserData[username];?>');"><?=$username;?></a></td>
+	                 <td style="padding-left: 3px; width: 35px;"><?=showUserPicture($buddy, "30");?></td>
+	                 <td><a href="#" onclick="openChatDialoge('<?=$username;?>');"><?=$username;?></a></td>
 	                 <td>
 	                 	
 	                 	<div class="btn-toolbar">
 						  <div class="btn-group">
-						    <a class="btn btn-mini" href="#" onclick="showProfile('<?=$blUserData[userid];?>')"><i class="icon-user"></i></a>
-						    <a class="btn btn-mini" href="#" onclick="popper('doit.php?action=writeMessage&buddy=<?=$blUserData[userid];?>')"><i class="icon-envelope"></i></a>
+						    <a class="btn btn-mini" href="#" onclick="showProfile('<?=$buddy;?>')"><i class="icon-user"></i></a>
+						    <a class="btn btn-mini" href="#" onclick="popper('doit.php?action=writeMessage&buddy=<?=$buddy;?>')"><i class="icon-envelope"></i></a>
 						  </div>
 						</div>
 					 </td>
@@ -67,9 +61,11 @@ if(!empty($mayKnow)){
 	echo"&nbsp;you may know";
 	echo"<a id=\"closeSuggestions\" onclick=\"$('#buddySuggestions').hide();\">x</a>";
 	echo"</header>";
-	echo"<a href=\"#\" onclick=\"showProfile('$mayKnow')\">";
+	echo"&nbsp<a href=\"#\" onclick=\"showProfile('$mayKnow')\">";
 	echo"&nbsp;";
-	echo showUserPicture($mayKnow, 25);
+	echo"<span>";
+	echo showUserPicture($mayKnow, 11);
+	echo"</span>";
 	echo useridToUsername($mayKnow);
 	echo"</a>";
 	echo"</div>";

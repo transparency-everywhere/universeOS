@@ -2,17 +2,8 @@
 session_start();
 include_once("inc/functions.php");
 include_once("inc/config.php");
-//$usersql = mysql_query("SELECT * FROM user WHERE userid='$_SESSION[userid]'");
-//$userdata = mysql_fetch_array($usersql);?>
+?>
     <script>
-    	//
-		function showRegistration(){
-			showApplication('reader');
-			if($('#registerTable').length == 0){
-				createNewTab('reader_tabView','Register','','register_new.php',true);return false
-			}
-		}
-    
     
         //proof registration
         function checkReg(){
@@ -119,50 +110,11 @@ function processRegistration(){
 
 }
 </script>
-<style>
-    #bodywrap{
-        top: 31px;
-    }
-    
-    #offlineHeader{
-        position: absolute;
-        top: 0px;
-        right: 0px;
-        left: 0px;
-        padding-top:10px;
-        padding-bottom:10px;
-        background: #000000;
-        color: #383D3C;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        padding-left:10px;
-    }
-    
-    .dockSeachResult{
-        bottom: 41px;
-    }
-    
-    #topThing{
-    	position: absolute; top: 0px; right: 0px; left: 0px; padding-top:10px; padding-bottom:10px; background: #000; color: #383D3C; padding-top: 5px; padding-bottom: 3px; padding-left:10px;
-    }
-    
-    #topThing span:first-of-type{
-    	color: #54545B;
-    	float:left;
-    	
-    }
-    
-    #topThing span{
-    	margin-right: 15px; 
-    	margin-left:15px;
-    	float:right;
-    }
-    
-</style>
+        <link rel="stylesheet" type="text/css" href="inc/css/guest.css" media="all" />
         <div id="topThing">
             <span>&copy; 2013 <a href="http://transparency-everywhere.com" target="blank" style="color: #54545B;">Transparency Everywhere</a></span>
             
-            <span style=""><iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.facebook.com%2FuniverseOS&amp;send=false&amp;layout=button_count&amp;width=200&amp;show_faces=true&amp;font=segoe+ui&amp;colorscheme=light&amp;action=like&amp;height=21&amp;appId=459795090736643" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:83px; height:21px; float: left" allowTransparency="true"></iframe>&nbsp;&nbsp;<a href="#" style="color: #54545B;" onclick="showContent('1', 'Site Notice');">Site Notice</a></span>
+            <span style="">&nbsp;&nbsp;<a href="#" style="color: #54545B;" onclick="showContent('1', 'Site Notice');">Site Notice</a></span>
             <span style=""></span>
         </div>
         <div id="reload"></div>
@@ -226,7 +178,7 @@ function processRegistration(){
     	display:none;
     }
     
-    #registration #username{
+    #registration #regUsername{
     	-webkit-border-bottom-right-radius: 0px;
 		-webkit-border-bottom-left-radius: 0px;
 		-moz-border-radius-bottomright: 0px;
@@ -315,7 +267,7 @@ function processRegistration(){
     <div class="box-shadow border-top-right-radius" id="startbox" style="display: none;">
         <div id="startMainWindow">
             <div id="startMainHeader" class="border-top-right-radius">
-                <span style="font-size:19pt;font-weight: 1; font-weight: 100; margin-left:5px;">Please Sign In</span>
+                <span style="font-size:19pt;font-weight: 1; font-weight: 100; margin-left:5px;">Please Log In</span>
             </div>
         <hgroup>
             <form action="login.php" method="post" target="submitter" id="loginForm">
@@ -331,7 +283,7 @@ function processRegistration(){
                     <td style="color: #FFFFFF" align="center"><?=$loginerror;?></td>
                 </tr>
                 <tr>
-                    <td><input type="submit" value="Sign In" name="submit" class="btn btn-primary margin"></td>
+                    <td><input type="submit" value="Log In" name="submit" class="btn btn-primary margin"></td>
                 </tr>
             </table>
             </form>
@@ -354,7 +306,7 @@ function processRegistration(){
     <div id="dock">
         <table>
             <tr valign="top">
-                <td><div id="personalButton" class="module" style="margin-top: 4px;">&nbsp;&nbsp;Sign In</div></td>
+                <td><div id="personalButton" class="module" style="margin-top: 4px;">&nbsp;&nbsp;Log In</div></td>
                 <td><div id="moduleMenu" class="module" style="font-color: #FFF;">&nbsp;&nbsp;Start</div></td>
                 <td><div id="modulePlayer" class="module">&nbsp;&nbsp;Player</div></td>
                 <td align="right" id="clockDiv" style="color: #FFFFFF; float: right"></td>
@@ -365,19 +317,19 @@ function processRegistration(){
     <script>
         //open player
         $("#modulePlayer").click(function () {
-            $("#dockplayer").toggle("slow");
+            $("#dockplayer").slideToggle("slow");
         });
         
         //open menu
         $("#moduleMenu").click(function () {
             $("#startbox").hide("slow");
-            $("#dockMenu").toggle("slow");
+            $("#dockMenu").slideToggle("slow");
         }); 
         
         //open login box
         $("#personalButton").click(function () {
             $("#dockMenu").hide("slow");
-            $("#startbox").toggle("slow");
+            $("#startbox").slideToggle("slow");
             $("#startbox").css('z-index', 9999);
             $("#startbox").css('position', 'absolute');
         });

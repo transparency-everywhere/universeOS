@@ -4,6 +4,12 @@ if(isset($_GET[reload])) {
     include_once("../../inc/config.php");
     include_once("../../inc/functions.php");
 }
+
+
+	
+$showFileBrowser = true;
+
+
 if(!isset($_GET[initter])){
     
 ?>
@@ -15,13 +21,18 @@ if(!isset($_GET[initter])){
                   <li><a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?special=document&reload=1');return false"><i class="icon-book"></i> Documents</a></li>
                   <li><a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?special=audio&reload=1');return false"><i class="icon-music"></i> Audio Files</a></li>
                   <li><a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?special=video&reload=1');return false"><i class="icon-film"></i> Video Files</a></li>
-                  <li><i class="icon-heart"></i> Fav</li>
-                  <li><i class="icon-warning-sign"></i> deleted</li>
+					<?
+					if(proofLogin()){
+					?>
+                  <li><a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?special=fav&reload=1');return false"><i class="icon-heart"></i> Fav</a></li>
+ 				  <? } ?>
+                  <!-- <li><i class="icon-warning-sign"></i> deleted</li> -->
               </ul>
           </div>
 <?
 if(isset($_GET[special])){
-// aranges special querys, like show all music, show popular files etc.
+	
+	//special querys, like show all music, show popular files etc.
     if($_GET[special] == "pupularity"){
         $folderQuery = "ORDER BY votes DESC LIMIT 0, 10";
         $elementQuery = "ORDER BY votes DESC LIMIT 0, 10";
@@ -38,6 +49,10 @@ if(isset($_GET[special])){
         $folderQuery = NULL;
         $elementQuery = "WHERE type LIKE '%document%'";
     }
+	else if($_GET['special'] == "fav"){
+		$showFileBrowser = false;
+		$fav = true;
+	}
     
 }else{
 if(isset($_GET[folder])){
@@ -47,7 +62,7 @@ $folder = "1";
 }}
 
 
-$pathsql = mysql_query("SELECT id, folder, path, privacy FROM folders WHERE id='".mysql_real_escape_string($folder)."'");
+$pathsql = mysql_query("SELECT id, folder, path, privacy, creator FROM folders WHERE id='".mysql_real_escape_string($folder)."'");
 $pathdata = mysql_fetch_array($pathsql);
 } ?>
 <div class="border-box frameRight fileBrowser_<?=$folder;?>">
@@ -65,19 +80,30 @@ $pathdata = mysql_fetch_array($pathsql);
         	if(!empty($folder)){
         	?>
         	<ul class="fileBrowserSettings fileBrowserSettings<?=$folder;?>">
-        		<li><a href="#" onclick="javascript: popper('doit.php?action=addElement&folder=<?=$folder;?>&reload=1');return false">Fav</a></li>
         		<?
-        		if(authorize("$pathdata[privacy]", "edit")){ ?>
+        		if(proofLogin()){
+        			?>
+        			<li><a href="#" onclick="javascript: popper('doit.php?action=addElement&folder=<?=$folder;?>&reload=1');return false">Fav</a></li>
+        		<?
+        		}
+        		if(authorize("$pathdata[privacy]", "edit", $pathdata[creator])){ ?>
         		<li><a href="#" onclick="javascript: popper('doit.php?action=addElement&folder=<?=$folder;?>&reload=1');return false">Add Element</a></li>
         		<li><a href="#" onclick="javascript: popper('doit.php?action=addFolder&folder=<?=$folder;?>&reload=1');return false">Add Folder</a></li>
         		<li><a href="#" onclick="javascript: popper('doit.php?action=addInternLink&parentFolder=<?=$folder;?>&reload=1');return false">Add Shortcut</a></li>
 				<? } ?>
         	</ul>
-        	<? } ?>
-     
-            
-                <?
-                showFileBrowser($folder, "$folderQuery", "$elementQuery");
+        	<? } 
+			
+			
+				if($showFileBrowser){
+                	showFileBrowser($folder, "$folderQuery", "$elementQuery");
+				}else if($fav){
+					echo"<table>";
+					showFav();
+					echo"</table>";
+				}
+				
+				
                 ?>
         </div>
     </div>

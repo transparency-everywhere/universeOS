@@ -9,7 +9,7 @@ if(!empty($_GET[openFromLink])){
 	switch($_GET[type]){
 		case folder:
 			$folder = $_GET[folder];
-			echo"openFile('$folder');";
+			echo"openFolder('$folder');";
 			break;
 		case element:
 			$element = $_GET[element];

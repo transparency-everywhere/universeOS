@@ -42,7 +42,9 @@ if(!isset($_SESSION["userid"])) {
             <div id="suggest">
             </div>
 <?
-//include("modules/desktop/dashboard.php");
+if($_SESSION[userid] == "1"){
+ include("modules/desktop/dashboard.php");
+}
 ?>
 
             <div id="invisiblefeed">

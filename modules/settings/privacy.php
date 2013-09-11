@@ -105,7 +105,7 @@
             </tr>
             <tr>
                 <td>&nbsp;</td>
-            </tr>
+            </tr><!-- 
             <tr>
                 <td colspan="2"><h2>General</h2></td>
             </tr>
@@ -113,9 +113,9 @@
                 <td>&nbsp;</td>
             </tr>
             <tr>
-                <td><input type="checkbox" name="priv_profilePicture" <?=$checked[priv_profilePicture];?> value="1"></td>
+                <td><input type="checkbox" name="priv_profilePicture" value="1"></td>
                 <td>Show profilepicture to foreigners</td>
-            </tr>
+            </tr> -->
             <tr>
                 <td>&nbsp;</td>
             </tr>

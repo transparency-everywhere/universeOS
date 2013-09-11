@@ -181,10 +181,8 @@
     <div id="offlineFooter">
         <div id="offlineFooterBox">
             <a href="http://wiki.universeos.org" target="blank" title="universe Wiki - everything you need to know" style="float: left;"><img src="./gfx/icons/wikipedia.png" height="32"></a>
-            <a class="btn btn-inverse" href="#" style="float: left; margin-left: 10px; color: #FFFFFF" title="Site Notice" onclick="showContent('1', 'Site Notice');">Site Notice</a>
         </div>
-        <input type="button" onclick="showRegistration();" class="btn btn-success margin" value="Create Account" style="position: absolute; right: 1em; bottom: 1em;">
-		<div id="myCarousel" class="carousel slide">
+        <div id="myCarousel" class="carousel slide">
 		  <ol class="carousel-indicators" style="position: absolute; right: 2%; top: 22px; margin-right: 50px;">
 		    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
 		    <li data-target="#myCarousel" data-slide-to="1"></li>

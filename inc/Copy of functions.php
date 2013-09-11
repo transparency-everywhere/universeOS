@@ -662,9 +662,58 @@
 //            $return .= "</script>";
             echo $return;
         }
-      }function updateActivity($userid){
+      }
+
+//groups
+//groups
+//groups
+
+
+
+  function universeTime($unixtime){
+     $time = time();
+     $difference = ($time - $unixtime);
+     if($difference < 60){
+         $unTime = "just";
+     } else if($difference > 60 && $difference < 600){
+         $unTime = "some minutes ago";
+     } else if($difference > 600 && $difference < 3600){
+         $unTime = round($difference / 60);
+         $unTime = "$unTime minutes ago";
+     } else if($difference > 3600 && $difference < 3600*24){
+         $unTime = "one day ago";
+     } else if($difference > 3600*24 && $difference < 3600*24*31){
+         $udTime = round($difference / 86400);
+         $unTime = "$udTime days ago";
+     } else if($difference > 3600*24*31){
+         $unTime = "one month ago";
+     }
+     echo $unTime;
+     
+  }
+     
+  function updateActivity($userid){
       $time = time();
       mysql_query("UPDATE user SET lastactivity='$time' WHERE userid='$userid'");
+  }
+  
+  function showActivity($userid, $subpath = NULL) {
+     $sql = mysql_query("SELECT userid, lastactivity FROM user WHERE userid='$userid'");
+     $row = mysql_fetch_array($sql);
+     $time = time();
+     $difference = ($time - $row[lastactivity]);
+     if(isset($subpath)) {
+        $path = "./../.";
+     }
+     
+     if($difference < 90){ ?>
+    <img src="<?=$path;?>./gfx/online.png" width="16">
+    <?}
+     else if($difference > 90 && $difference < 600) {?>
+    <img src="<?=$path;?>./gfx/away.png" width="16">
+    <?} elseif($difference > 600) {?>
+    <img src="<?=$path;?>./gfx/offline.png" width="16">
+    <?}
   }
   //shows online status
      
@@ -726,14 +775,43 @@
 		return $return;
   }
 
-	function getUserFavOutput($user){
-		if(empty($user)){
-			$user = $_SESSION['userid'];
-		}
-		
-		
-	}
-
+    //shows userpicture, username, and timestamp in a post
+  function addFav($type, $typeid, $userid){
+      $type = $_GET[type];
+      $check = mysql_query("SELECT type,item FROM fav WHERE type='$_GET[type]' && item='$_GET[item]'");
+      $checkData = mysql_fetch_array($check);
+      if(isset($checkData[type])){
+        echo"allready your favourite";
+      } else {
+        $time = time();
+        mysql_query("INSERT INTO fav (`type` ,`item` ,`user` ,`timestamp`) VALUES('$_GET[type]', '$_GET[item]', '$_SESSION[userid]', '$time');"); 
+        echo"worked :)";
+    }
+  }
+    
+  function addComment($type, $itemid, $author, $message){
+     $time = time();
+     mysql_query("INSERT INTO comments (`type`,`typeid`,`author`,`timestamp`,`text`, `privacy`) VALUES('$type','$itemid','$author','$time','$message', 'p');");
+     $commentId = mysql_insert_id();
+     if($type == "feed"){
+         //fügt Benachrichtigung für den Author des Feeds hinzu, falls ein anderer User einen Kommentar erstellt
+         $feedSql = mysql_query("SELECT owner FROM userfeeds WHERE feedid='$itemid'");
+         $feedData = mysql_fetch_array($feedSql);
+         if($_SESSION[userid] !== "$feedData[owner]"){
+         mysql_query("INSERT INTO personalEvents (`owner`,`user`,`event`,`info`,`eventId`,`timestamp`) VALUES('$feedData[owner]','$_SESSION[userid]', 'comment','feed','$itemid','$time');");
+         }
+   }
+   else if($type == "profile"){
+        mysql_query("INSERT INTO personalEvents (`owner`,`user`,`event`,`info`,`eventId`,`timestamp`) VALUES('$itemid','$_SESSION[userid]', 'comment','profile','$itemid','$time');");
+   }
+   }
+   
+   function deleteComments($type, $itemid){
+       if(mysql_query("DELETE FROM `comments` WHERE `type`='$type' AND `typeid`='$itemid'")){
+           return true;
+       }
+   }
+   
    //gets all unseen messages for receiver=user
    function getLastMessages($user=NULL){
    	if($user == NULL){
@@ -779,156 +857,6 @@
    	$newMessagesSql = mysql_query("SELECT * FROM  `messages` WHERE  id='".mysql_real_escape_string($messageId)."'");
 	return mysql_fetch_array($newMessagesSql);
    }
-   
-//fav
-//fav
-//fav
-
-  function addFav($type, $typeid, $userid){
-      $type = $_GET[type];
-      $check = mysql_query("SELECT type,item FROM fav WHERE type='$_GET[type]' && item='$_GET[item]'");
-      $checkData = mysql_fetch_array($check);
-      if(isset($checkData[type])){
-        echo"allready your favourite";
-      } else {
-        $time = time();
-        mysql_query("INSERT INTO fav (`type` ,`item` ,`user` ,`timestamp`) VALUES('$_GET[type]', '$_GET[item]', '$_SESSION[userid]', '$time');"); 
-        echo"worked :)";
-    }
-  }
-
-    
-    function showFav($user=NULL){ 
-                        if($user == NULL){
-                        	$user = getUser();
-                       	}
-                        
-                    	$userFavs = getUserFavs($user);
-					foreach($userFavs AS $filefdata){
-							$item = $filefdata['item'];
-                            $type = $filefdata['type'];
-                            
-                            //derive the table and the image from fav-type
-                            if($type == "folder"){
-                                $typeTable = "folders";
-                                $img = "filesystem/folder.png";
-                                $link = "openFolder($item); return false;";
-                            }else if($type == "element"){
-                                $typeTable = "elements";
-                                $img = "filesystem/element.png";
-                            }else if($type == "file"){
-                                $typeTable = "files";
-                                $fileType = fileIdToFileType($item);
-                                $img = "fileIcons/".getFileIcon($fileType, $size=NULL);
-                                
-                            }else if($type == "link"){
-                                $typeTable = "links";
-                                $fileType = linkIdToFileType($item);
-                                $img = "fileIcons/".getFileIcon($fileType, $size=NULL);
-                                
-                            }
-                            $favFolderSql = mysql_query("SELECT * FROM $typeTable WHERE id='$item'");
-                            $favFolderData = mysql_fetch_array($favFolderSql);
-                            if($filefdata['type'] == "folder"){
-                            $filefdata['title'] = $filefdata['name'];
-                            }
-                            if($i%2 == 0){
-                                $color="FFFFFF";
-                            }else {
-                                $color="e5f2ff";
-                            }
-                            $i++;
-                        ?>
-                                <tr bgcolor="#<?=$color;?>" onmouseup="showMenu('folder<?=$filefdata[id];?>')" height="35">
-                                    <td onmouseup="showMenu(<?=$favFolderData['id'];?>)" width="35">&nbsp;<img src="./gfx/icons/<?=$img;?>" height="20"></td>
-                                    <td onmouseup="showMenu(<?=$favFolderData['id'];?>)"><a href="#" onclick="<?=$link;?>"><?=$favFolderData['name'];?><?=$favFolderData['title'];?>/</a></td>
-                                    <?
-                                    if($user == $_SESSION[userid]){
-                                    ?>
-                                    <td align="right"><a class="btn btn-mini" onclick="removeFav('<?=$type;?>', '<?=$item;?>')"><i class="icon-remove"></i></a></td>
-                                    <?
-                                    }
-                                    ?>
-                                </tr>
-                        <? }
-        
-        
-    }
-
-	function removeFav($type, $item){
-		
-			if(mysql_query("DELETE FROM fav WHERE type='".mysql_real_escape_string($type)."' AND user='$_SESSION[userid]' AND item='".mysql_real_escape_string($item)."'")){
-				return true;
-			}
-		
-	}
-    
-//comments
-//comments
-//comments	
-	
-  function addComment($type, $itemid, $author, $message){
-     $time = time();
-     mysql_query("INSERT INTO comments (`type`,`typeid`,`author`,`timestamp`,`text`, `privacy`) VALUES('$type','$itemid','$author','$time','$message', 'p');");
-     $commentId = mysql_insert_id();
-     if($type == "feed"){
-         //fügt Benachrichtigung für den Author des Feeds hinzu, falls ein anderer User einen Kommentar erstellt
-         $feedSql = mysql_query("SELECT owner FROM userfeeds WHERE feedid='$itemid'");
-         $feedData = mysql_fetch_array($feedSql);
-         if($_SESSION[userid] !== "$feedData[owner]"){
-         mysql_query("INSERT INTO personalEvents (`owner`,`user`,`event`,`info`,`eventId`,`timestamp`) VALUES('$feedData[owner]','$_SESSION[userid]', 'comment','feed','$itemid','$time');");
-         }
-   }
-   else if($type == "profile"){
-        mysql_query("INSERT INTO personalEvents (`owner`,`user`,`event`,`info`,`eventId`,`timestamp`) VALUES('$itemid','$_SESSION[userid]', 'comment','profile','$itemid','$time');");
-   }
-   }
-   
-   function deleteComments($type, $itemid){
-       if(mysql_query("DELETE FROM `comments` WHERE `type`='$type' AND `typeid`='$itemid'")){
-           return true;
-       }
-   }
-   
-
-//groups
-//groups
-//groups
-
-  function createGroup(){
-  	
-  }
-  function groupMakeUserAdmin($groupId, $userId){
-  	
-  }
-  function groupRemoveAdmin($groupId, $userId){
-  	
-  }
-
-
-  function universeTime($unixtime){
-     $time = time();
-     $difference = ($time - $unixtime);
-     if($difference < 60){
-         $unTime = "just";
-     } else if($difference > 60 && $difference < 600){
-         $unTime = "some minutes ago";
-     } else if($difference > 600 && $difference < 3600){
-         $unTime = round($difference / 60);
-         $unTime = "$unTime minutes ago";
-     } else if($difference > 3600 && $difference < 3600*24){
-         $unTime = "one day ago";
-     } else if($difference > 3600*24 && $difference < 3600*24*31){
-         $udTime = round($difference / 86400);
-         $unTime = "$udTime days ago";
-     } else if($difference > 3600*24*31){
-         $unTime = "one month ago";
-     }
-     echo $unTime;
-     
-  }
-     
-  
    
     function plusOne($type, $typeid){
        if($type == "comment"){
@@ -1196,12 +1124,8 @@ echo"</div>";
     <?
     
     }
-
-
-//buddylist
-//buddylist
-//buddylist
-
+    
+    
    function buddyListArray($user=NULL, $request=0){
    //returns all buddies of $user
         if(empty($user)){
@@ -1269,10 +1193,7 @@ echo"</div>";
        return $return;
        
    }
-
-//feed
-//feed
-//feed
+    
     
    function addFeed($owner, $feed, $type, $feedLink1, $feedLink2, $validity=NULL, $groups=NULL){
        $time = time();
@@ -3572,6 +3493,80 @@ echo"</div>";
 				mysql_query("UPDATE `links` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
 				break;
 		}
+	}
+
+	function getUserFavOutput($user){
+		if(empty($user)){
+			$user = $_SESSION['userid'];
+		}
+		
+		
+	}
+
+    
+    function showFav($user=NULL){ 
+                        if($user == NULL){
+                        	$user = getUser();
+                       	}
+                        
+                    	$userFavs = getUserFavs($user);
+					foreach($userFavs AS $filefdata){
+							$item = $filefdata['item'];
+                            $type = $filefdata['type'];
+                            
+                            //derive the table and the image from fav-type
+                            if($type == "folder"){
+                                $typeTable = "folders";
+                                $img = "filesystem/folder.png";
+                                $link = "openFolder($item); return false;";
+                            }else if($type == "element"){
+                                $typeTable = "elements";
+                                $img = "filesystem/element.png";
+                            }else if($type == "file"){
+                                $typeTable = "files";
+                                $fileType = fileIdToFileType($item);
+                                $img = "fileIcons/".getFileIcon($fileType, $size=NULL);
+                                
+                            }else if($type == "link"){
+                                $typeTable = "links";
+                                $fileType = linkIdToFileType($item);
+                                $img = "fileIcons/".getFileIcon($fileType, $size=NULL);
+                                
+                            }
+                            $favFolderSql = mysql_query("SELECT * FROM $typeTable WHERE id='$item'");
+                            $favFolderData = mysql_fetch_array($favFolderSql);
+                            if($filefdata['type'] == "folder"){
+                            $filefdata['title'] = $filefdata['name'];
+                            }
+                            if($i%2 == 0){
+                                $color="FFFFFF";
+                            }else {
+                                $color="e5f2ff";
+                            }
+                            $i++;
+                        ?>
+                                <tr bgcolor="#<?=$color;?>" onmouseup="showMenu('folder<?=$filefdata[id];?>')" height="35">
+                                    <td onmouseup="showMenu(<?=$favFolderData['id'];?>)" width="35">&nbsp;<img src="./gfx/icons/<?=$img;?>" height="20"></td>
+                                    <td onmouseup="showMenu(<?=$favFolderData['id'];?>)"><a href="#" onclick="<?=$link;?>"><?=$favFolderData['name'];?><?=$favFolderData['title'];?>/</a></td>
+                                    <?
+                                    if($user == $_SESSION[userid]){
+                                    ?>
+                                    <td align="right"><a class="btn btn-mini" onclick="removeFav('<?=$type;?>', '<?=$item;?>')"><i class="icon-remove"></i></a></td>
+                                    <?
+                                    }
+                                    ?>
+                                </tr>
+                        <? }
+        
+        
+    }
+
+	function removeFav($type, $item){
+		
+			if(mysql_query("DELETE FROM fav WHERE type='".mysql_real_escape_string($type)."' AND user='$_SESSION[userid]' AND item='".mysql_real_escape_string($item)."'")){
+				return true;
+			}
+		
 	}
     //shows a picture of element or folder if available
   	function showThumb($type, $itemId){

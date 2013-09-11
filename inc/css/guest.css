@@ -1,0 +1,38 @@
+
+    #bodywrap{
+        top: 31px;
+    }
+    
+    #offlineHeader{
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        left: 0px;
+        padding-top:10px;
+        padding-bottom:10px;
+        background: #000000;
+        color: #383D3C;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left:10px;
+    }
+    
+    .dockSeachResult{
+        bottom: 41px;
+    }
+    
+    #topThing{
+    	position: absolute; top: 0px; right: 0px; left: 0px; padding-top:10px; padding-bottom:10px; background: #000; color: #383D3C; padding-top: 5px; padding-bottom: 3px; padding-left:10px;
+    }
+    
+    #topThing span:first-of-type{
+    	color: #54545B;
+    	float:left;
+    	
+    }
+    
+    #topThing span{
+    	margin-right: 15px; 
+    	margin-left:15px;
+    	float:right;
+    }

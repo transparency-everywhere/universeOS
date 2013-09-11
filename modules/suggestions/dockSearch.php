@@ -107,7 +107,7 @@ $k = 5;//limit
 			echo"<img src=\"gfx/icons/fileIcons/$image\" height=\"16\" style=\"margin-bottom: -8px; margin-left:5px; margin-right:5px;\">";
 
 			//title
-			echo"<a href=\"#\" onclick=\"openElement('$suggestData[id]');\">$suggestData[title]</a>";
+			echo"<a href=\"#\" onclick=\"openFile('$suggestData[type]', '$suggestData[id]', '$suggestData[title]');\">$suggestData[title]</a>";
 			
 			echo"</li>";
 		}  }

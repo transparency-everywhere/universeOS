@@ -15,7 +15,7 @@
 								url: "modules/suggestions/dockSearch.php",
 								data: "search=" + search,
 								success: function(message)
-								{	
+								{
 									$("#suggest").empty();
 							  		if (message.length > 1)
 									{						
@@ -546,11 +546,14 @@
     //opens articles out of the universe wiki
     //located in reader cause it will be placed there in future
     function openUniverseWikiArticle(title){
-        window.open("http://wiki.universeos.org/index.php?title="+title,'_blank');
+    	openURL("http://wiki.universeos.org/index.php?title="+title, title)
     }
     
     function openURL(url, title){
+    		url = encodeURI(url);
+    		url = 'modules/reader/browser/?url='+url;
             createNewTab('reader_tabView',title,'',url,true);
+            showApplication('reader');   
             return false
     }
     
@@ -777,6 +780,12 @@
               
               
 
+              function showGroup(groupId){
+                  showApplication('reader');
+                  createNewTab('reader_tabView',"" + groupId + "",'',"./group.php?id=" + groupId + "",true);
+                  return false
+              }
+              
               function showProfile(userId){
                   showApplication('reader');
                   createNewTab('reader_tabView',"" + userId + "",'',"./profile.php?user=" + userId + "",true);

@@ -1,10 +1,10 @@
 <?
-if(empty($_SESSION[userid])){
+if(empty($_SESSION['userid'])){
     session_start();
 }
 
 //request limitator untill reload.php is tidy
-if(!isset($global_userGroupData) && $_SESSION[personalFeed] > (time()-60)){
+if(!isset($global_userGroupData) && $_SESSION['personalFeed'] > (time()-60)){
 	die();
 }
 
@@ -21,11 +21,11 @@ require_once("inc/functions.php");
 </style>
 <?
 $i = "1";
-$friendRequestSql = mysql_query("SELECT * FROM buddylist WHERE buddy='$_SESSION[userid]' && request='1' LIMIT 0, 3");
+$friendRequestSql = mysql_query("SELECT * FROM buddylist WHERE buddy='".$_SESSION['userid']."' && request='1' LIMIT 0, 3");
 while($friendRequestData = mysql_fetch_array($friendRequestSql)){
 	$session .= "buddyRequest $friendRequestData[id]";
 	
-    $friendRequestSql2 = mysql_query("SELECT * FROM user WHERE userid='$friendRequestData[owner]'");
+    $friendRequestSql2 = mysql_query("SELECT * FROM user WHERE userid='".$friendRequestData['owner']."'");
     $friendRequestData2 = mysql_fetch_array($friendRequestSql2);
 ?>
 <?
@@ -34,7 +34,7 @@ if("1" == "2"){
 
     
     $("#box<?=$i;?>").click(function () {
-      createNewTab('reader_tabView','<?=$friendRequestData2[username];?>','','./profile.php?user=<?=$friendRequestData2[userid];?>',true);
+      createNewTab('reader_tabView','<?=$friendRequestData2['username'];?>','','./profile.php?user=<?=$friendRequestData2['userid'];?>',true);
     });
     <? } ?>
     <script>

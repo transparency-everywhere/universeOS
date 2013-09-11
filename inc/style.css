@@ -421,8 +421,22 @@ h3{
     height: 350px;
 }
 
-.blueModal > div, .blueModal > footer{
-	margin:15px;
+.blueModal > header{
+	height: 30px;
+	font-size: 20pt;
+	margin: 10px;
+	margin-bottom: 0px;
+}
+
+.blueModal > .content{
+	height: 270px;
+	margin: 0px 5px;
+	overflow: auto;
+	
+}
+.blueModal > footer{
+	height: 30px;
+	margin: 5px 5px 0px 5px;
 }
 
 .blueModal h3{
@@ -615,7 +629,7 @@ h3{
 .leftNav{
     position: absolute;
     width: 150px;
-    top: 21px;
+    top: 0px;
     bottom: 0px;
     left: 0px;
     overflow: auto;
@@ -647,7 +661,7 @@ h3{
 
 .frameRight{
     position: absolute;
-    top: 21px;
+    top: 0px;
     right: 0px;
     bottom: 0px;
     left: 150px;
@@ -929,7 +943,7 @@ h3{
 
             .uffViewerMain{
                 position: absolute;
-                top: 61px;
+                top: 40px;
                 right: 150px;
                 bottom: 0px;
                 left: 0px;
@@ -946,7 +960,7 @@ h3{
 
             .uffViewerNav{
                 position: absolute;
-                top: 61px;
+                top: 40px;
                 right: 0px;
                 bottom: 0px;
                 width: 150px;
@@ -988,6 +1002,19 @@ h3{
 		width: 100%;
 		height: 100%;
 	}
+	
+	.favTab{
+		position: absolute;  
+		top: 130px;
+		right: 0px; 
+		bottom: 0px;
+		left: 0px; 
+		background: #FFFFFF; 
+		overflow: auto; 
+		padding: 15px;
+	}
+	
+	/*chat*/
 #chat {
     top: auto;
     left: 45%;
@@ -1177,6 +1204,7 @@ h3{
     right: 0px;
     bottom: 41px;
     left: 0px;
+    overflow: hidden;
 }
 
 #alerter{
@@ -1269,7 +1297,12 @@ h3{
         }
 	.dhtmlgoodies_aTab{
             
-		
+		position: absolute;
+		top: 21px;
+		right: 0px;
+		bottom: 0px;
+		left: 0px;
+		overflow: auto;
 	}
 	.dhtmlgoodies_tabPane DIV{
             

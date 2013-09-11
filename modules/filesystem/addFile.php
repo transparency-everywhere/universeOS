@@ -34,79 +34,78 @@ $title10 = substr("$elementdata[title]", 0, 10);
 <div class="jqPopUp border-radius transparency" id="addFile"> 
    <a class="jqClose" id="closeFile">X</a>
     <form action="modules/filesystem/addFile.php?element=<?=$_GET[element];?>" method="post" enctype="multipart/form-data" target="submitter"> 
-   <table>
-    <tr>
-     <td align="center">Add File</td>
-    </tr>
-    <tr>
-     <td>
-      <table>
-       <tr height="50">
-        <td>&nbsp;<?=$message;?></td>
-       </tr>
-       <tr height="45">
-        <td>file</td>
-        <td><input type="file" name="uploadedfile" class="button"><br><i>(files with the same filename will be overwritten)</td>
-       </tr>
-       <tr height="15">
-        <td>&nbsp;</td>
-       </tr>
-       <tr height="45">
-        <td><input type="checkbox" name="download" value="1" checked></td>
-        <td>allow other users to download this file</td>
-       </tr>
-       <tr height="15">
-        <td>&nbsp;</td>
-       </tr>
-       <tr>
-        <td>element:</td>
-        <td><?=$elementdata[title];?><input type="hidden" name="element" value="<?=$_GET[element];?>"><input type="hidden" name="folder" value="<?=$elementdata[folder];?>"></td>
-       </tr>
-       <tr height="15">
-        <td>&nbsp;</td>
-       </tr>
-       <tr>
-        <td>language:</td>
-        <td>
-        	
-        	<?
-        	
-        	showLanguageDropdown();
-        	
-        	?>
-        	
-        </td>
-       </tr>
-       <tr height="15">
-        <td>&nbsp;</td>
-       </tr>
-       <tr>
-           <td colspan="2">
-               
-                            <?
-                                    showPrivacySettings($elementdata[privacy]);
-                            ?>
-           </td>
-       </tr>
-       <tr>
-           <td>&nbsp;</td>
-       </tr>
-       <tr>
-        <td>&nbsp;</td>
-        <td><input type="submit" value="add" name="submit" id="fileSubmit" class="btn btn-success" onsubmit="popper('google.com');"></form></td>
-
-       </tr>
-       <tr>
-           <td>&nbsp;</td>
-       </tr>
-       <tr>
-           <td>&nbsp;</td>
-           <td><a class="btn btn-info" href="#" onclick="loader('loader', 'doit.php?action=createNewUFF&element=<?=$element;?>'); " target="submitter"><i class="icon-file"></i> Create New UFF</a></td>
-       </tr>
-      </table> 
-     </td>
-    </tr>
-   </table>
+	<header>
+		Add File
+	</header>
+	<div class="jqContent">
+	   <table>
+	    <tr>
+	     <td>
+	      <table>
+	       <tr height="50">
+	        <td>&nbsp;<?=$message;?></td>
+	       </tr>
+	       <tr height="45">
+	        <td>file</td>
+	        <td><input type="file" name="uploadedfile" class="button"><br><i>(files with the same filename will be overwritten)</td>
+	       </tr>
+	       <tr height="15">
+	        <td>&nbsp;</td>
+	       </tr>
+	       <tr height="45">
+	        <td><input type="checkbox" name="download" value="1" checked></td>
+	        <td>allow other users to download this file</td>
+	       </tr>
+	       <tr height="15">
+	        <td>&nbsp;</td>
+	       </tr>
+	       <tr>
+	        <td>element:</td>
+	        <td><?=$elementdata[title];?><input type="hidden" name="element" value="<?=$_GET[element];?>"><input type="hidden" name="folder" value="<?=$elementdata[folder];?>"></td>
+	       </tr>
+	       <tr height="15">
+	        <td>&nbsp;</td>
+	       </tr>
+	       <tr>
+	        <td>language:</td>
+	        <td>
+	        	
+	        	<?
+	        	
+	        	showLanguageDropdown();
+	        	
+	        	?>
+	        	
+	        </td>
+	       </tr>
+	       <tr height="15">
+	        <td>&nbsp;</td>
+	       </tr>
+	       <tr>
+	           <td colspan="2">
+	               
+	                            <?
+	                                    showPrivacySettings($elementdata[privacy]);
+	                            ?>
+	           </td>
+	       </tr>
+	       
+	       
+	       
+	       
+	       
+	       
+	
+	       
+	      </table> 
+	     </td>
+	    </tr>
+	   </table>
+	</div>
+	<footer>
+	 	<span class="pull-left"><a class="btn" onclick="$('.jqClose').hide();">Back</a></span>
+	 	<span class="pull-right"><input type="submit" value="add" name="submit" id="fileSubmit" class="btn btn-success" onsubmit="popper('api.php');"></span>
+	</footer>
     </form>
 </div>
 <script>

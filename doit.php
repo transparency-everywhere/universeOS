@@ -298,8 +298,8 @@ if($_GET[action] == "scorePlus"){
 
             <form action="doit.php?action=addFileToPlaylist&file=<?=$file;?>&folder=<?=$folder;?>&element=<?=$element;?>&link=<?=$link;?>" method="post" target="submitter">
 
-                <div class="jqPopUp border-radius transparency" id="addPlaylist">
-                    <a style="position: absolute; top: 10px; right: 10px; color: #FFF;" id="closePlaylist">X</a>
+                <div class="jqPopUp border-radius transparency">
+                    <a class="jqClose" id="closePlaylist">X</a>
                     <header>
                         <?=$fileData[title];?>
                     </header>
@@ -319,15 +319,12 @@ if($_GET[action] == "scorePlus"){
                     </div>
 			        <footer>
 			         	<span class="pull-left"><a class="btn" onclick="$('.jqClose').hide();">Back</a></span>
-			         	<span class="pull-right"><input type="submit" value="add" id="playlistSubmit"></span>
+			         	<span class="pull-right"><input type="submit" value="add" id="playlistSubmit" class="btn btn-success"></span>
 			        </footer>
                 </div> 
             </form>
             <script>
                 $("#playlistSubmit").click(function () {
-                $('#addPlaylist').slideUp();
-                });
-                $("#closePlaylist").click(function () {
                 $('#addPlaylist').slideUp();
                 });
             </script>
@@ -582,19 +579,21 @@ if($_GET[action] == "scorePlus"){
      }else if($_GET[action] == "addFolder"){
          if(proofLogin()){
          if($_POST[submit]) {
-             
+             $checkSQL = mysql_query("SELECT privacy, creator FROM folders WHERE id='".mysql_real_escape_string($_POST[folder])."'");
+             $checkData = mysql_fetch_array($checkSQL);
+			 if(authorize($checkData[privacy], "edit", $checkData[creator])){
              
                     //set privacy
-                    $customShow = $_POST[privacyCustomSee];
+                   	$customShow = $_POST[privacyCustomSee];
                     $customEdit = $_POST[privacyCustomEdit];
                     
                     $privacy = exploitPrivacy("$_POST[privacyPublic]", "$_POST[privacyHidden]", $customEdit, $customShow);
                     $user = $_SESSION[userid];
                 if(!empty($_POST[folder]) AND !empty($_POST[name])){
-                createFolder($_POST[folder], $_POST[name], $user, $privacy);
+                $answer = createFolder($_POST[folder], $_POST[name], $user, $privacy);
 				}
                 
-                
+                if(!empty($answer)){
                 $message="The folder has been added!";
                 jsAlert($message);
                 ?>
@@ -602,7 +601,8 @@ if($_GET[action] == "scorePlus"){
                     parent.addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=<?=$_POST[folder];?>&reload=1');
                 </script>
                 <?
-
+				}
+                }
                 }
                 $selectsql = mysql_query("SELECT id, name, privacy FROM folders WHERE id='$_GET[folder]'");
                 $selectdata = mysql_fetch_array($selectsql);
@@ -1079,6 +1079,9 @@ if($_GET[action] == "scorePlus"){
  
      
      else if($_GET[action] == "groupAdmin"){
+     	//shows the group admin window
+		
+		
          
          $group = $_GET[id];
          if($_POST[submit]){
@@ -1247,6 +1250,10 @@ if($_GET[action] == "scorePlus"){
             });
         </script>
         <?}
+     }else if($_GET[action] == "groupMakeUserAdmin"){
+     	
+     }else if($_GET[action] == "groupremoveAdmin"){
+     	
      }else if($_GET[action] == "groupLeave"){
          $group = "$_GET[id]";
          mysql_query("DELETE FROM groupAttachments WHERE `group`='$group' AND `item`='user' AND `itemId`='$_SESSION[userid]'");
@@ -1640,40 +1647,46 @@ if($_GET[action] == "scorePlus"){
                     $(".fenster").hide("slow");
             </script>
             <div class="blueModal border-radius container">
-            	<div>
-            		<h2>Thank you for joining the universe OS</h2>
+            	<header>
+            		Welcome
+            	</header>
+            	<div class="content">
+            		<h2>Thank you for joining universeOS</h2>
 	                <p style="margin-top: 20px;">
-	                    We try to give you the experience of an operatingsystem, without the disadvantage that its bound to a singlecomputer. <br>You joined this project at a very early state, so please excuse us if you trap over some errors.<br>
+	                    We try to give you the experience of an operating system without the disadvantage that its bound to a single computer. <br>You joined this project at a very early state, so please keep in mind that this is only the beta version and errors might still be occuring.<br>
 	                </p>
-	                <h3>We want to tell you more about the Universe within the next three steps.</h3>
+	                <h3>In the following three steps you'll get to know more about the project universeOS.</h3>
 	            </div>
 	            <footer>
-	                <a href="#" onclick="popper('doit.php?action=showStartMessage&step=1&noJq=true'); return false" class="btn btn-primary pull-right">Next</a>
+	                <a href="#" onclick="popper('doit.php?action=showStartMessage&step=1&noJq=true'); return false" class="btn btn-primary pull-right">&nbsp;&nbsp;Next&nbsp;&nbsp;</a>
 	            </footer>
             </div>
             <?
             }else if($_GET[step] == "1"){?>
             
             <div class="blueModal border-radius container">
-            	<div>
+            	<header>
+            		Welcome
+            	</header>
+            	<div class="content">
 	            	<h2>
 	                    Your Desktop
 	                </h2>
-	                <span>
-	                    <h3>Apps</h3><br>
-	                    Apps are the most important component of the Universe. They are little programms like the reader, the feed or the buddylist which can be opened with the "Start" button in your Dock.
+	                <span><br>
+	                    <h3>The Dock</h3>
+	                    The Dock gives you an overview of any activity thats going on in your universeOS.<br>Here you'll find your "User" button including all of your Apps, your "Player", your "logout button" and the search engine.
 	                </span>
-	                <span>
-	                    <h3>The Dock</h3><br>
-	                    The Dock conatains everything you always need to see.<br>Click on Start to see all your Apps.
+	                <span><br>
+	                    <h3>The Search</h3>
+	                    Look for your friends, your favourite writer, a song on Spotify or your favourite Youtube video.<br>Just type in whatever you are looking for!
 	                </span>
-	                <span>
-	                    <h3>The Search</h3><br>
-	                    Look for your friends, your favourite writer, a song on Spotify or your favourite Youtube movie.<br>Just type what you are looking for!
+	                <span><br>
+	                    <h3>The "User" button</h3>
+	                    Your "User" Button is the gateway to all of your universeOS functions. Here you'll find your Apps including your "Messenger", your "Buddylist", your "Filesystem" and the Reader. Additionally you can keep track of everything thats going on by clicking on your "Feed" or make changes to your profile by clicking on your "Settings".
 	                </span>
-	                <span>
-	                    <h3>Your Userbutton</h3><br>
-	                    Your Userbutton shows whats new. It shows the number of news (like buddyrequests or messages) on your user picture
+	                <span><br>
+	                    <h3>Apps</h3>
+	                    Apps are the most important component of the Universe. They are little programs like the "Reader", the "Feed" or the "Buddylist" that can be opened with the "User" button in your Dock. 
 	                </span>
 	                </div>
 	                <footer>
@@ -1684,46 +1697,59 @@ if($_GET[action] == "scorePlus"){
             
             <?}else if($_GET[step] == "2"){?>
             <div class="blueModal border-radius">
-            	<div>
-                <h2>
-                    The Filesystem
-                </h2>
-                <p>
-                    <b>Folders</b>
-                    Like on your own computer you can create folders within the filesystem
-                </p>
-                <p>
-                    <b>Elements</b>
-                    Elements contain files and links which belong together. They are listed in the filesystem like folders.<br><i><b>For example</b> you could create the image-element "My Nice Holiday In Somalia" and upload all your holiday pictures in it.</i>
-                </p>
-                <p>
-                    <b>Create Something Big</b>
-                    If you want to, everyone can see, download, edit and rate your files, elements and folders.<br>So use the intelligence of the swarm!
-                </p>
-                <p>
-                    <b>Privacy</b>
-                    When you add a folder, an element, a file or a link you always have to choose the privacy. Eitheir you choose that everyone can see it, that only particular groups, you are member of, or just you can see it.
-                </p>
+            	<header>
+            		Welcome
+            	</header>
+            	<div class="content">
+	                <h2>
+	                    The Filesystem
+	                </h2>
+	                <p>Enter the Filesystem by clicking your "User" Button.<br></p>
+	                <p><br>
+	                    <h3>Folders</h3>
+	                    You can create folders within the filesystem in your universeOS just like on your own computer.
+	                </p>
+	                <p><br>
+	                    <h3>Elements</h3>
+	                    Elements are part of your filesystem, and can be found within you folders. They structure files and links and give you the opportunity to rate, edit or comment on the entire data contained within one element instead of having to do so on each file separately.<br><i><b>For example</b> you could create the Element "My Favorite Artist" and upload all your artist's songs into the element so that you or your friends can choose to comment either on the entire music or on each song individually.</i>
+	                </p>
+	                <p><br>
+	                    <h3>Create Something Big Together</h3>
+	                    If you feel like sharing you can decide to open up your files, elements or folders so that everyone can see, download, edit and rate them.<br>This way you can spread, share and increase your knowledge with the entire community. 
+	                </p>
+	                <p><br>
+	                    <h3>Privacy</h3>
+	                    Each time you add a folder, an element, a file or a link you can chose to adjust the privacy settings. The preset privacy thereby orientates itself at the superordinated element or folder. You can choose who can see or edit your data: whether it is everyone, particular groups or just you.
+	                </p>
                 </div>
                 <footer>
 	                <a href="#" onclick="popper('doit.php?action=showStartMessage&step=1'); return false" class="btn pull-left">Back</a>
-                	<a href="#" onclick="popper('doit.php?action=showStartMessage&step=3&noJq=true'); return false" class="btn btn-primary pull-right" style="">Next<a>
+                	<a href="#" onclick="popper('doit.php?action=showStartMessage&step=3&noJq=true'); return false" class="btn btn-primary pull-right" style="">&nbsp;&nbsp;Next&nbsp;&nbsp;<a>
                 </footer>
             </div>  
             <?}else if($_GET[step] == "3"){
 			?>
             <div class="blueModal border-radius">
-            	<div>
+            	<header>
+            		Welcome
+            	</header>
+            	<div class="content">
                 <h2>
                     Buddylist & Chat
                 </h2>
-                <p>
-                   will be added
-                </p>
+	                <p>Open the Buddylist and the Chat by clicking your "User" Button.<br></p>
+	                <p><br>
+	                    <h3>Buddylist</h3>
+	                    The Buddylist gives you an overview of all your buddies. You can add friends to your buddylist by looking them up in the search engine or by accepting open friend requests on your "User" button. Click your buddies' user pictures to open their profiles and check out their information and latest updates. Here you'll have the possibility to write them a message, chat with them or browse their unlocked folders, elements and files.
+	                </p>
+	                <p><br>
+	                    <h3>Chat</h3>
+	                     The chat gives you the opportunity to communicate with your buddies in a safe encrypted way. Open up a dialogue window by leftclicking on your buddies' name in the buddylist or reopen an existing conversation by clicking directly on the chat button to review your chat history. To give your conversation extra protection we would recommend you to secure your conversations with a password that you and your conversation partner choose at the beginning of each dialogue.
+	                </p>
                </div>
                 <footer>
 	                <a href="#" onclick="popper('doit.php?action=showStartMessage&step=2'); return false" class="btn pull-left">Back</a>
-                	<a href="#" onclick="popper('doit.php?action=showStartMessage&step=4&noJq=true'); return false" class="btn btn-primary pull-right" style="">Next<a>
+                	<a href="#" onclick="popper('doit.php?action=showStartMessage&step=4&noJq=true'); return false" class="btn btn-primary pull-right" style="">&nbsp;&nbsp;Next&nbsp;&nbsp;<a>
                 </footer>
             </div>
             <?}else if($_GET[step] == "4"){
@@ -1739,8 +1765,12 @@ if($_GET[action] == "scorePlus"){
                     });
                 });
             </script>
+		            <form action="modules/settings/index.php" method="post" target="submitter">
             <div class="blueModal border-radius">
-            	<div>
+            	<header>
+            		Welcome
+            	</header>
+            	<div class="content">
                 <h2>
                     Update your profile
                 </h2>
@@ -1754,7 +1784,6 @@ if($_GET[action] == "scorePlus"){
                     $birth_year = date("Y", $AccSetData[birthdate]);
                     }
                  ?>
-		            <form action="modules/settings/index.php" method="post" target="submitter">
 		                <div class="controls">
 		                    
 		                    <div class="controls controlls-row">
@@ -1787,17 +1816,15 @@ if($_GET[action] == "scorePlus"){
 		                        <span class="span2">Work</span>
 		                        <input type="text" name="work" class="span3" value="<?=$AccSetData[employer];?>">
 		                    </div>
-		                    <div class="controls controlls-row">
-		                        <span class="span5">
-		                            <input type="submit" id="finalStep" name="AccSetSubmit" value="enter the universe" class="btn btn-info pull-right">
-		                            <a href="#" class="btn pull-left" onclick="javascript: popper('doit.php?action=showStartMessage&step=3'); return false">back</a>
-		                        </span>
-		                    </div>
 		                </div>
-		            </form>
-                </div>
-               </div>
+	                </div>
+	               </div>
+	               <footer>
+				       <input type="submit" id="finalStep" name="AccSetSubmit" value="enter the universe" class="btn btn-success pull-right">
+				       <a href="#" class="btn pull-left" onclick="javascript: popper('doit.php?action=showStartMessage&step=3'); return false">back</a>
+	               </footer>
             </div>
+		       </form>
             <?}
         }else if($_GET[action] == "showSingleRssFeed"){
             $rssSql = mysql_query("SELECT link FROM links WHERE id='".mysql_real_escape_string($_GET[id])."'");
@@ -2115,7 +2142,7 @@ if($_GET[action] == "scorePlus"){
             ?>
             <form action="doit.php?action=changePrivacy&type=<?=$_GET[type];?>&itemId=<?=$_GET[itemId];?>" target="submitter" method="post">
             <div class="jqPopUp border-radius transparency" id="editPrivacy">
-                <a style="position: absolute; top: 10px; right: 10px; color: #FFF;" id="closePrivacy">X</a>
+                <a class="jqClose" id="closePrivacy">X</a>
                 <header>Set privacy of <?=$title;?></header>
                 <p style="font-size: 13pt;">
                 <?
@@ -2711,6 +2738,14 @@ if($_GET[action] == "scorePlus"){
             }else if($_GET[action] == "removeUFFcookie"){
                 $id = save($_POST[id]);
                 removeUFFcookie($id);
+            }else if($_GET[action] == "logout"){
+            	
+				session_unset();
+    			jsAlert( "good bye");
+				?>
+				<script>top.window.location.href='http://universeos.org';</script>
+				<?
+            	
             }else if($_GET[action] == "tester"){
             	echo "woff";
 echo getMime('dings.pdf') . "\n";
