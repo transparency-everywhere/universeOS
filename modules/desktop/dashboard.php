@@ -26,17 +26,19 @@ $(document).ready(function(){
 	}
 
 	.dashBox{
-		color: #FFFFFF;
-		width: 230px;height: 155px;
+		color: #474747;
+		font-size: 15pt;
+		width: 230px;
+		height: 155px;
 		border-radius: 1px;
-		background: rgba(15,15,15,0.8);
+		background: rgba(219, 219, 219, 0.95);
 		margin: 10px 0px 0px 10px;
 		position: relative;
 		-webkit-border-radius: 3px;
 		-moz-border-radius: 3px;
 		border-radius: 3px;
-		
-		float:left;
+		float: left;
+		border: 1px solid #919191;
 	}
 	
 	.dashBox .content{
@@ -45,15 +47,41 @@ $(document).ready(function(){
 	}
 	
 	.dashBox header{
-		padding:5px;
-		background: rgba(30,30,30,0.8);
-		
+		padding: 5px;
+		font-size: 16pt;
+		line-height: 15px;
+		text-align: right;
+		height: 12px;
+		border-bottom: 2px solid #3a3a3a;
+		color: #FFF;
+		padding-top: 10px;
+		background: rgb(38,38,38);
+		background: -moz-linear-gradient(top, rgba(38,38,38,1) 0%, rgba(40,40,40,1) 49%, rgba(40,40,40,1) 100%);
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(38,38,38,1)), color-stop(49%,rgba(40,40,40,1)), color-stop(100%,rgba(40,40,40,1)));
+		background: -webkit-linear-gradient(top, rgba(38,38,38,1) 0%,rgba(40,40,40,1) 49%,rgba(40,40,40,1) 100%);
+		background: -o-linear-gradient(top, rgba(38,38,38,1) 0%,rgba(40,40,40,1) 49%,rgba(40,40,40,1) 100%);
+		background: -ms-linear-gradient(top, rgba(38,38,38,1) 0%,rgba(40,40,40,1) 49%,rgba(40,40,40,1) 100%);
+		background: linear-gradient(to bottom, rgba(38,38,38,1) 0%,rgba(40,40,40,1) 49%,rgba(40,40,40,1) 100%);
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#262626', endColorstr='#282828',GradientType=0 );
 		-webkit-border-top-left-radius: 3px;
-		-webkit-border-top-right-radius: 3px;
-		-moz-border-radius-topleft: 3px;
-		-moz-border-radius-topright: 3px;
+		-moz-border-top-left-radius: 3px;
 		border-top-left-radius: 3px;
+		-webkit-border-top-right-radius: 3px;
+		-moz-border-top-right-radius: 3px;
 		border-top-right-radius: 3px;
+		border: 1px solid #555555;
+		margin-left: -1px;
+		margin-right: -1px;
+		margin-top: -1px;
+		border-bottom: none;
+	}
+	
+	.dashBox footer{
+		position: absolute;
+		bottom: 0px;
+		left: 0px;
+		right: 0px;
+		height: 15px;
 	}
 	
 	.dashBox div, .dashBox ul{
@@ -63,7 +91,7 @@ $(document).ready(function(){
 	.dashBox .dashClose{
 		position: absolute;
 		top: 5px;
-		right: 5px;
+		left: 5px;
 		background-position: -312px 0;
 		background-image: url("inc/img/glyphicons-halflings-white.png");display: inline-block;
 		width: 14px;
@@ -75,6 +103,11 @@ $(document).ready(function(){
 		cursor: pointer;
 	}
 	
+	.dashBox .userPicture{
+		margin-right:5px;
+		margin-bottom:5px;
+	}
+	
 	.dashBox #messageList .unseen{
 		font-weight: bold;
 	}
@@ -83,13 +116,28 @@ $(document).ready(function(){
 		margin-left:5px;
 	}
 	
+	#dashBoard .filetable img{
+		min-width:22px;/*force table to display icon right*/
+	}
+	#dashBox .filetable ul{
+		padding:0px;/*force table to display icon right*/
+	}
+	
+	#dashBoard .strippedRow{
+		border: none;
+	}
+	
+	.marginRight{
+		margin-right: 5px;
+	}
+	
 </style>
 <div id="dashBoard">
 	<div class="dashBox">
 		<a class="dashClose"></a>
 		<header>Welcome</header>
-		<div>
-	         <p style="float: left"><?=showUserPicture($_SESSION[userid], "20");?>Hey <a href="#" onclick="showProfile(<?=$_SESSION[userid];?>)"><?=$userData[username];?></a>,<br>good to see you!</p>
+		<div style="position: absolute;text-indent: 9px;line-height: 28pt;">
+	         <?=showUserPicture($_SESSION[userid], "20");?>Hey <a href="#" onclick="showProfile(<?=$_SESSION[userid];?>)"><?=$userData[username];?></a>,<br>good to see you!
 	         
 		</div>
 	</div>
@@ -100,7 +148,7 @@ $(document).ready(function(){
 			<?
 			foreach($groups AS $group){
 				echo"<li>";
-					echo"<span>";
+					echo"<span class=\"marginRight\">";
 						echo"<img src=\"./gfx/icons/group.png\" height=\"14\">";
 					echo"</span>";
 					echo"<span>";
@@ -113,6 +161,9 @@ $(document).ready(function(){
 			?>
 			
 		</ul>
+		<footer>
+			<a href="#addGroup" onclick="popper('doit.php?action=addGroup')" title="Create a new Group"><i class="icon icon-plus"></i></a>
+		</footer>
 	</div>
 	<div class="dashBox">
 		<a class="dashClose"></a>
@@ -134,6 +185,9 @@ $(document).ready(function(){
 					echo "$message[senderUsername]";
 					echo "</span>";
 					echo "<span>";
+					echo universeTime($message[timestamp]);
+					echo "</span>";
+					echo "<span>";
 					echo "<a href=\"#\" onclick=\"openChatDialoge('$message[senderUsername]');\">";
 					echo substr($message['text'], 0, 15);
 					echo "</a>";
@@ -151,7 +205,7 @@ $(document).ready(function(){
 			<?
 			foreach($playlists AS $playlist){
 				echo"<li>";
-					echo"<span>";
+					echo"<span class=\"marginRight\">";
 						echo"<img src=\"./gfx/icons/playlist.png\" height=\"14\">";
 					echo"</span>";
 					echo"<span>";
@@ -179,7 +233,7 @@ $(document).ready(function(){
 			                  
 			                  //show files
 			                  $fileQuery = "owner='$user' ORDER BY timestamp DESC";
-			                  echo'<table width="100%">';
+			                  echo'<table>';
 			                  showFileList('', $fileQuery);
 			                  echo"</table>";
 		?>

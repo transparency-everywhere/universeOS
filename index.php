@@ -79,15 +79,7 @@ if($_SESSION[userid] == "1"){
         </div>
             <?
             include("dock.php");
-            ?>
-    <? 
-    $zeit=gettimeofday();
-    $endzeit=$zeit["usec"];
-    $gesamtzeit=round(($endzeit-$startzeit)/1000,0);
-    ?>
-    
-    
-    <?
+			
     include("openFileFromLink.php");
     ?>
 <script>

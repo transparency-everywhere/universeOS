@@ -1267,33 +1267,24 @@ if($_GET[action] == "scorePlus"){
      
      
      else if($_GET[action] == "chatSendMessage"){
-        if(proofLogin()){
-        $buddy = "$_GET[buddy]";
-             if(!isset($postCheck)) {
-                if($_POST[cryption] == "true"){
-                    $crypt = "1";
-                }else{
-                    $crypt = "0";
-                } 
-				
-				$message = addslashes($_POST[message]);
-                mysql_query("INSERT INTO messages (`sender`,`receiver`,`timestamp`,`text`,`read`,`crypt`) VALUES('$_SESSION[userid]', '$buddy', '$time', '$message', '0', '$crypt');");
-                $postCheck = 1;?>
-        <script>
-            parent.$('.chatInput').val('');
-            parent.$('#test_<?=str_replace(" ","_",$_GET[buddyname]);?>').load('modules/chat/chatt.php?buddy=<?=urlencode($_GET[buddyname]);?>&initter=1');
-        
-        </script>
-        <?
-                }
-        } 
+     	
+		if(sendMessage($_GET[buddy], $_POST[message], $_POST[cryption])){
+			
+	        echo"<script>";
+				?>
+	            parent.$('.chatInput').val('');
+	            parent.$('#test_<?=str_replace(" ","_",$_GET[buddyname]);?>').load('modules/chat/chatt.php?buddy=<?=urlencode($_GET[buddyname]);?>&initter=1');
+	        	<?
+	        echo"</script>";
+		}
+		
         }else if($_GET[action] == "updateMessageStatus"){
              
         //updates if the message was seen, after the receiver clicked the input in the textarea
 
             
             
-        $user = $_SESSION[userid];
+        $user = getUser();
         $buddy = $_GET[buddy];
 	        $chatSQL = mysql_query("SELECT * FROM messages WHERE (sender='$user' && receiver='$buddy') OR (sender='$buddy' && receiver='$userid') AND (read='0' OR seen='0') ORDER BY timestamp DESC LIMIT 0, 30");
 	        while($chatData = mysql_fetch_array($chatSQL)) {
@@ -1309,7 +1300,7 @@ if($_GET[action] == "scorePlus"){
 	        }
         }else if($_GET[action] == "chatLoadMore"){
             
-            $userid = $_SESSION[userid];
+            $userid = getUser();
             $buddyName = save("$_GET[buddy]");
             $buddy = usernameToUserid($buddyName);
             
@@ -1365,6 +1356,52 @@ if($_GET[action] == "scorePlus"){
                 echo "<div onclick=\"chatLoadMore('$buddyName', '$newLimit'); $(this).hide();\">...load more</div>";
             
                 
+        }else if($_GET[action] == "chatSendItem"){
+        	if(isset($_POST[submit])){
+        		
+				
+					$message = "[itemThumb type=".$_POST[type]." typeId=".$_POST[typeId]."]";
+					if(sendMessage($_POST[buddy], $message, $_POST[cryption])){
+						jsAlert("message");
+				        echo"<script>";
+							?>
+				            parent.$('.chatInput').val('');
+				            parent.$('#test_<?=str_replace(" ","_",$_POST[buddyName]);?>').load('modules/chat/chatt.php?buddy=<?=urlencode($_POST[buddyName]);?>&initter=1');
+				        	<?
+				        echo"</script>";
+					}
+        	}
+        	$buddy = $_GET[buddy];
+			$buddyName = useridToUsername($buddy);
+                ?>
+                			<form action="doit.php?action=chatSendItem" method="post" target="submitter" onsubmit="$('.jqPopUp').slideUp();">
+                                <div class="jqPopUp border-radius transparency" id="chatSendItem">
+                                <a class="jqClose" id="closeFolder">X</a>
+                                <header>Send Item to <?=$buddyName;?></header>
+                                <div class="jqContent">
+                				<input type="hidden" name="buddy" value="<?=$buddy;?>">
+                				<input type="hidden" name="buddyName" value="<?=$buddyName;?>">
+                                	
+                                	<?php
+                                		echo"<h3>Please choose a File from the Filesystem:</h3>";
+                                		echo"<div>";
+												showMiniFileBrowser("1");
+                                		echo"</div>";
+									?>
+                                </div>
+	                            <footer>
+	                            	<span class="pull-left"><a class="btn" onclick="$('.jqPopUp').slideUp();">back</a></span>
+	                            	<span class="pull-right"><input type="submit" name="submit" id="submitSend" class="btn btn-success" value="Send"></span>
+	                            </footer>
+                                </div>
+                               </form>
+                <script>
+                    $(".jqClose").click(function(){
+                        $('.jqPopUp').slideUp();
+                    });
+                </script>
+         
+		<?
         }else if($_GET[action] == "createFeed"){
             
             
@@ -1388,7 +1425,7 @@ if($_GET[action] == "scorePlus"){
             $('.addFeed', parent.document).load('../../doit.php?action=showSingleFeed&feedId=<?=$id;?>'); 
             $('#feedInput', parent.document).val('');
             </script>
-            <?
+            <?php
                 }
             
         }
@@ -1421,7 +1458,7 @@ if($_GET[action] == "scorePlus"){
             
             
         }else if($_GET[action] == "showYoutube"){?>
-         <?
+         <?php
          if(isset($_GET[start])){?>
                     <div id="playListReaderTab" style="background: #000000;">
                     <?}?>
@@ -1445,7 +1482,7 @@ if($_GET[action] == "scorePlus"){
             ytplayer = document.getElementById("myytplayer");
             ytplayer.addEventListener("onStateChange", "onytplayerStateChange");
             }
-            <?
+            <?php
             if(!empty($_GET[playList])){
                 $row = ($_GET[row]+1);?>
             function onytplayerStateChange(newState) {
@@ -1463,7 +1500,7 @@ if($_GET[action] == "scorePlus"){
                                 $("#ytapiplayer").css(youTubeObj);
             </script>
                     </center>
-        <?
+        <?php
         if(isset($_GET[playList])){
             //load new next and start button
             ?>
@@ -1478,7 +1515,7 @@ if($_GET[action] == "scorePlus"){
                             $(this).html(playListToggleLink);
                         });
                         </script>
-            <?
+            <?php
             
             }
         if(isset($_GET[start])){?>
@@ -1544,7 +1581,7 @@ if($_GET[action] == "scorePlus"){
                 <script>
                 parent.$('#favTab_Group').load('doit.php?action=showUserGroups');
                 </script>
-                <?
+                <?php
             }else{
                 jsAlert("please fill out everything");
             }
@@ -1552,7 +1589,7 @@ if($_GET[action] == "scorePlus"){
         }
     ?>
     
-         <div class="jqPopUp border-radius transparency" id="addGroup" style="width: 600px; height: 400px;">
+         <div class="jqPopUp border-radius transparency" id="addGroup">
             <a class="jqClose" id="closeGroup">X</a>
          <header>
              Add Group
@@ -1589,7 +1626,7 @@ if($_GET[action] == "scorePlus"){
 	                 <td>
 	                     <div style="width: 400px; height: 200px; overflow: auto;" cellspacing="0">
 	                         <table cellspacing="0" cellspacing="0" width="100%">
-	        <?
+	        <?php
 	        $buddylistSql = mysql_query("SELECT * FROM buddylist WHERE owner='$_SESSION[userid]' && request='0'");
 	        while($buddylistData = mysql_fetch_array($buddylistSql)) {
 	            $blUserSql = mysql_query("SELECT userid, username FROM user WHERE userid='$buddylistData[buddy]'");
@@ -1634,7 +1671,7 @@ if($_GET[action] == "scorePlus"){
     });
 </script>
      
-     <?
+     <?php
     }}else if($_GET[action] == "showSingleComment"){
         if($_GET[type] == "feed"){
             showFeedComments($_GET[itemid]);
@@ -1661,7 +1698,7 @@ if($_GET[action] == "scorePlus"){
 	                <a href="#" onclick="popper('doit.php?action=showStartMessage&step=1&noJq=true'); return false" class="btn btn-primary pull-right">&nbsp;&nbsp;Next&nbsp;&nbsp;</a>
 	            </footer>
             </div>
-            <?
+            <?php
             }else if($_GET[step] == "1"){?>
             
             <div class="blueModal border-radius container">
@@ -1775,7 +1812,7 @@ if($_GET[action] == "scorePlus"){
                     Update your profile
                 </h2>
                 <div>
-                	<?
+                	<?php
                     $AccSetSql = mysql_query("SELECT * FROM user WHERE userid='$_SESSION[userid]'");
                     $AccSetData = mysql_fetch_array($AccSetSql);
                     if($AccSetData[birthdate]){
@@ -1890,7 +1927,7 @@ if($_GET[action] == "scorePlus"){
              <script>
              parent.$('.playList<?=$type;?>No<?=$itemId;?>').remove();
              </script>
-             <?
+             <?php
              }
         }else if($_GET[action] == "deleteItem"){
             if(proofLogin()){
@@ -2142,15 +2179,16 @@ if($_GET[action] == "scorePlus"){
             ?>
             <form action="doit.php?action=changePrivacy&type=<?=$_GET[type];?>&itemId=<?=$_GET[itemId];?>" target="submitter" method="post">
             <div class="jqPopUp border-radius transparency" id="editPrivacy">
-                <a class="jqClose" id="closePrivacy">X</a>
-                <header>Set privacy of <?=$title;?></header>
-                <p style="font-size: 13pt;">
+                
+                <header>Set privacy of <?=$title;?><a class="jqClose" id="closePrivacy">X</a></header>
+                <div class="jqContent">
                 <?
                   showPrivacySettings($privacyData[privacy]);
                 ?>
-                    
-                <input type="submit" name="submit" value="save" class="btn btn-info" style="margin-top: 15px;">
-                </p>
+                </div>
+                <footer>
+                	<span class="pull-right"><input type="submit" name="submit" value="save" class="btn btn-info" style="margin-top: 15px;"></span>
+                </footer>
             </div>
             </form>
             <script>
@@ -2393,6 +2431,26 @@ if($_GET[action] == "scorePlus"){
                 });
             </script>
                 <?}
+            }else if($_GET[action] == "shareItem"){
+                ?>
+                                <div class="jqPopUp border-radius transparency" id="addFolder">
+                                <a class="jqClose" id="closeFolder">X</a>
+                                <header>Share Item</header>
+                                <div class="jqContent">
+                                
+                                	
+                                </div>
+	                            <footer>
+	                            	<span class="pull-left"><a class="btn" onclick="$('.jqPopUp').slideUp();">back</a></span>
+	                            </footer>
+                                </div>
+                <script>
+                    $(".jqClose").click(function(){
+                        $('.jqPopUp').slideUp();
+                    });
+                </script>
+         
+		<?
             }else if($_GET[action] == "showItemThumb"){ 
                 $type = $_GET[type];
                 $itemId = $_GET[itemId];
@@ -2459,7 +2517,7 @@ if($_GET[action] == "scorePlus"){
                         Report File
                     </header>
                     <div class="jqContent">
-                        <table width="500">
+                        <table>
                             <tr height="70">
                                 <td width="120">Reason:</td>
                                 <td>
@@ -2473,14 +2531,15 @@ if($_GET[action] == "scorePlus"){
                             <tr>
                                 <td colspan="2">
                                     <span style="font-size: 8pt;">Please give us a litle hint, why we should delete this File.</span>
-                                    <textarea name="message" style="width: 500px; height: 120px;"></textarea>
+                                    <textarea name="message" style="width: 300px; height: 120px;"></textarea>
                                 </td>
-                            </tr>
-                            <tr height="70">
-                                <td><input type="submit" value="save" name="submit" id="reportFileSubmit" class="button"></td>
                             </tr>
                         </table>
                     </div>
+	                <footer>
+	                	<span class="pull-left"><a class="btn" onclick="$('.jqPopUp').slideUp();">back</a></span>
+	                	<span class="pull-right"><input type="submit" value="save" name="submit" id="reportFileSubmit" class="button"></span>
+	                </footer>
                 </div>
             </form>
             <script>
@@ -2505,7 +2564,7 @@ if($_GET[action] == "scorePlus"){
                 }?>
                 <form action="doit.php?action=reportBug&fileId=<?=$_GET[fileId];?>" method="post" target="submitter">
                     <div class="jqPopUp border-radius transparency" id="reportBug" style="display: block">
-                        <a style="position: absolute; top: 10px; right: 10px; color: #FFF;" id="closereportBug">X</a>  
+                        <a class="jqClose" id="closereportBug">X</a>  
                         <header>
                             Report a bug
                         </header>
@@ -2519,16 +2578,17 @@ if($_GET[action] == "scorePlus"){
                                         <textarea name="message" style="width: 500px; height: 120px;"></textarea>
                                     </td>
                                 </tr>
-                                <tr height="70">
-                                    <td><input type="submit" value="send" name="submit" id="reportBugSubmit" class="button"></td>
-                                </tr>
                             </table>
                         </div>
+		                <footer>
+		                	<span class="pull-left"><a class="btn" onclick="$('.jqPopUp').slideUp();">back</a></span>
+		                	<span class="pull-right"><input type="submit" value="send" name="submit" id="reportBugSubmit" class="button"></span>
+		                </footer>
                     </div>
                 </form>
                 <script>
-                    $("#reportBugSubmit").click(function () {
-                    $('#reportBug').slideUp();
+                    $(".jqClose").click(function () {
+                    $('.jqPopUp').slideUp();
                     });
                     $("#closereportBug").click(function () {
                     $('#reportBug').slideUp();
@@ -2564,6 +2624,9 @@ if($_GET[action] == "scorePlus"){
             }else if($_GET[action] == "protectFileSystemItems"){
             	protectFilesystemItem($_GET[type], $_GET[itemId]);
 				jsAlert("worked!");
+            }else if($_GET[action] == "removeProtectionFromFileSystemItems"){
+            	removeProtectionFromFilesystemItem($_GET[type], $_GET[itemId]);
+				jsAlert("worked!");
             }
             
             
@@ -2571,7 +2634,7 @@ if($_GET[action] == "scorePlus"){
 // ajax stuff
 // ajax stuff
             
-            else if($_GET[action] == "mousePop"){
+          	else if($_GET[action] == "mousePop"){
                 $type = $_POST[type];
                 $id = $_POST[id];
                 $html = $_POST[html];

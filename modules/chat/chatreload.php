@@ -25,8 +25,8 @@ if(isset($_SESSION[$intWindows])){
 
 if(empty($_GET[initter])){
  ?>
-      <div style="top: 0px; right: 0px; bottom: 40px; left: 0px; width: 100%">
-          <header style="position: absolute; top: <?=(0+$top);?>px; right: 0px; left:0px; height:20px" class="grayBar">
+      <div class="chatMainFrame">
+          <header style="" class="grayBar">
               <span><a href="javascript: toggleKey('<?=$buddyName;?>');" id="toggleKey_<?=$buddyName;?>"><i class="lockIcon"></i></a></span>
               <span id="chatKeySettings_<?=$buddyName;?>" class="chatKeySettings">
    
@@ -91,20 +91,20 @@ unset($intWindows);?>
               
           </div>
       </div>
-      <div class="chatAdditionalSettings" style="position: absolute; bottom: 40px; left: 0px; padding: 4px; font-size: 8pt; background: rgba(0,0,0,0.8); border-right: 1px solid #c9c9c9; border-top: 1px solid #c9c9c9; display: none; color: #fcfcfc;">
+      <div class="chatAdditionalSettings">
           <ul>
               <li><a class="smiley smiley1" onclick="addStrToChatInput('<?=$buddy;?>', ':\'(');"></a><a class="smiley smiley2" onclick="addStrToChatInput('<?=$buddy;?>', ':|');"></a><a class="smiley smiley3" onclick="addStrToChatInput('<?=$buddy;?>', ';)');"></a><a class="smiley smiley4" onclick="addStrToChatInput('<?=$buddy;?>', ':P');"></a></li>
               <li><a class="smiley smiley5" onclick="addStrToChatInput('<?=$buddy;?>', ':D');"></a><a class="smiley smiley6" onclick="addStrToChatInput('<?=$buddy;?>', ':)');"></a><a class="smiley smiley7" onclick="addStrToChatInput('<?=$buddy;?>', ':(');"></a><a class="smiley smiley8" onclick="addStrToChatInput('<?=$buddy;?>', ':-*');"></a></li>
-              <li>&nbsp;</li>
+              <li><a href="#" onclick="popper('doit.php?action=chatSendItem&buddy=<?=$buddyData[userid];?>');">Send File</a></li>
           </ul>
       </div>
-      <footer class="blackGradient" style="position:absolute; right: 0px; bottom: 0px; left: 0px; height:40px;">
+      <footer class="blackGradient">
           <center style="margin-top: 6px;">
               <form action="doit.php?action=chatSendMessage&buddy=<?=$buddy;?>&buddyname=<?=$buddyName;?>" method="post" target="submitter"  autocomplete="off" onsubmit="chatMessageSubmit('<?=$buddyName;?>', '<?=$buddy;?>');">
                   <a class="btn" onclick="$('.chatAdditionalSettings').toggle();">
                       <i class="icon-plus"></i>
                   </a>
-                  <input type="text" placeholder="type a message..." name="message" class="input border-radius chatInput" id="chatInput_<?=$buddy;?>" style="postion: absolute; width: 60%; margin-bottom: -1px; height: 19px;">
+                  <input type="text" placeholder="type a message..." name="message" class="input border-radius chatInput" id="chatInput_<?=$buddy;?>" style="">
 				  <input type="hidden" name="cryption" value="false" id="chatCryptionMarker_<?=$buddyName;?>">
                   <input type="submit" value="Send" class="btn">
               </form>

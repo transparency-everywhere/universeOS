@@ -11,7 +11,7 @@
         <div id="chat_tabView1">
             <div class="dhtmlgoodies_aTab">
                 <div class="grayBar">Your last conversations:</div>
-                <div style="position: absolute; top: 51px; right: 0px; bottom: 0px; left: 0px; overflow: auto;">
+                <div style="position: absolute; top: 29px; right: 0px; bottom: 0px; left: 0px; overflow: auto;">
                    <ul id="chatWelcomeList">
 <?
             $userArray[0] = 0;

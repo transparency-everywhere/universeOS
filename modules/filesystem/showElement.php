@@ -71,7 +71,7 @@ if($elementData[type] == "image"){
 ?>
 <div id="showElement">
         <h2 style="margin-left: 5%; margin-bottom:0px; margin-top:5%;">
-            <?=htmlentities($elementData[title]);?>&nbsp;<i class="icon-info-sign" onclick="$('.elementInfo<?=$elementData[id];?>').slideDown();"></i>
+            <?=htmlspecialchars($elementData[title]);?>&nbsp;<i class="icon-info-sign" onclick="$('.elementInfo<?=$elementData[id];?>').slideDown();"></i>
         </h2>
         <div class="elementInfo<?=$elementData[id];?> hidden">
     <table width="100%" class="fileBox" cellspacing="0">
@@ -96,11 +96,8 @@ if($elementData[type] == "image"){
             <td><?=$elementData[license];?></td>
         </tr>
     </table>
-    <div style="float:left; width:40%; margin-top: 3%; background: #c9c9c9; height: 250px;">
-        				 <!-- Begin BidVertiser code -->
-						<SCRIPT LANGUAGE="JavaScript1.1" SRC="http://bdv.bidvertiser.com/BidVertiser.dbm?pid=534419&bid=1334038" type="text/javascript"></SCRIPT>
-						<noscript><a href="http://www.bidvertiser.com/bdv/BidVertiser/bdv_advertiser.dbm">pay per click advertising</a></noscript>
-						<!-- End BidVertiser code --> 
+    <div style="display:none; float:left; width:40%; margin-top: 3%; background: #c9c9c9; height: 250px;">
+        			
   	</div>
   	</div>
 

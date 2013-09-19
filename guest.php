@@ -133,9 +133,9 @@ function processRegistration(){
         
         
     <div id="dockplayer" style="display: none">
-        <?
-        include("player/dockplayer.php");
-        ?>
+	    <?
+	    include("modules/player/dockplayer.php");
+	    ?>
     </div>
         
         
@@ -292,7 +292,7 @@ function processRegistration(){
     </div>
         
 <div id="dockMenu" class="fancy" style="display: none">
-    <p style="font-size:15pt; margin-bottom:-15px;">universeOS</p>
+	<header>universeOS&nbsp;</header>
     <ul class="appList">
 
         <li class="" onclick="toggleApplication('filesystem')" onmouseup="closeDockMenu()"><img src="./gfx/filesystem.png" border="0" height="16">&nbsp;&nbsp;Filesystem</li>

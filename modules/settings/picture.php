@@ -13,7 +13,7 @@
                 
                     if(isset($_POST[submit])) {
                         $time = time();
-                        $imgSql = mysql_query("SELECT userid, profilepictureelement FROM user WHERE userid='$_SESSION[userid]'");
+                        $imgSql = mysql_query("SELECT `userid`, `profilepictureelement` FROM `user` WHERE userid='".getUser()."'");
                         $imgData = mysql_fetch_array($imgSql);
 
                         $target_path = "../../upload/userFiles/$_SESSION[userid]/userPictures/";
@@ -34,7 +34,7 @@
                         mkthumb("$imgName",40,40,$path,$thumbPath40); 
                         mkthumb("$imgName",300,300,$path,$thumbPath300);
 
-                        mysql_query("INSERT INTO `files` (`folder`, `title`, `type`. `filename`, `owner`, `timestamp`, `privacy`) VALUES ( '$imgData[profilepictureelement]', '$imgName', '$type',  '$imgName', '$_SESSION[userid]', '$time', 'p');");
+                        mysql_query("INSERT INTO `files` (`folder`, `title`, `type`, `filename`, `owner`, `timestamp`, `privacy`) VALUES ( '$imgData[profilepictureelement]', '$imgName', '$type',  '$imgName', '$_SESSION[userid]', '$time', 'p');");
                         mysql_query("UPDATE user SET userPicture='$imgName' WHERE userid='$_SESSION[userid]'");
                         jsAlert("The file ".  basename( $_FILES['uploadedfile']['name']). " has been uploaded");
 

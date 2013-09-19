@@ -115,9 +115,9 @@ h3{
 
 /*describes the drag and drop window */
 .fenster {
-	-moz-border-radius:7px;
-	-webkit-border-radius:7px;
-	border-radius:7px;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	border-radius:4px;
 	-moz-box-shadow:0 0 0 1px #212121 inset, 0 0 5px rgba(0,0,0,0.9);
 	-webkit-box-shadow:0 0 0 1px #212121 inset, 0 0 5px rgba(0,0,0,0.9);
 	box-shadow:0 0 0 0px #212121 inset, 0 0 5px rgba(0,0,0,0.9);
@@ -130,12 +130,11 @@ h3{
 .fenster .titel {
     color:#454545;
 	cursor:move;
-	font:normal 15px;
 	height:16px;
 	overflow:hidden;
 	padding:4px 0 5px 5px;
 	text-overflow:ellipsis;
-	font-weight: bold;
+	font-size: 16pt;
 	white-space:nowrap;
 	text-shadow: 1px 1px 1px #e8e8e8;
     filter: dropshadow(color=#e8e8e8, offx=1, offy=1);
@@ -519,7 +518,7 @@ h3{
 	overflow: auto;
 	position: absolute;
 	top: 40px;
-	right:0px;
+	right:15px;
 	bottom: 40px;
 	left: 15px;
 }
@@ -889,7 +888,7 @@ h3{
 
 .readerImageTab{
     position: absolute;
-    top: 60.5px;
+    top: 40px;
     right: 0px;
     bottom: 100px;
     left: 0px;
@@ -925,17 +924,7 @@ h3{
 		line-height: 30px;
 		height: 30px;
 	}
-	.openFile header .controls{
-		float:right;
-		margin-top: 9px;
-		margin-right:5px;
-	}
-	.openFile header .bar{
-		float:right;
-		margin-top: 9px;
-		margin-right:5px;
-	}
-	.openFile header .download{
+	.openFile header span{
 		float:right;
 		margin-top: 9px;
 		margin-right:5px;
@@ -1031,6 +1020,7 @@ h3{
 	#chatWelcomeList li{
 		border-top:1px solid #ADADAD;
 		height: auto;
+		padding: 5px;
 	}
 	
 	#chatwelcomeList header{
@@ -1050,6 +1040,32 @@ h3{
     border: 0px;
     
 }
+
+.chatMainFrame{
+top: 0px; right: 0px; bottom: 40px; left: 0px; width: 100%;
+}
+
+.chatMainFrame header{
+	position: absolute; 
+	top: 0px; 
+	right: 0px; 
+	left:0px; 
+	height:20px;
+}
+#chat footer{
+	position:absolute; 
+	right: 0px; 
+	bottom: 0px; 
+	left: 0px; 
+	height:40px;
+}
+
+#chat .chatInput{
+	width: 60%; 
+	margin-bottom: -1px; 
+	height: 19px;
+}
+
 
 .chatKeySettings{
 	display: none;
@@ -1083,6 +1099,32 @@ h3{
 }
 .chatKeySettings a:hover{
 	color: #c1c1c1;
+}
+
+.chatAdditionalSettings{
+	display:none;
+	position: absolute;
+	bottom: 40px;
+	left: 0px;
+	padding: 4px;
+	font-size: 8pt;
+	background-color: rgba(0, 0, 0, 0.8);
+	border-right-width: 1px;
+	border-right-style: solid;
+	border-right-color: rgb(201, 201, 201);
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: rgb(201, 201, 201);
+	color: rgb(252, 252, 252);
+	font-size:12pt;
+}
+
+.chatAdditionalSettings .smiley{
+	cursor: pointer;
+}
+
+.chatAdditionalSettings a, .chatAdditionalSettings a:link{
+color:#FFFFFF;
 }
 
 #pepperSteak {
@@ -1434,28 +1476,38 @@ h3{
             max-width: 301px;
         }
         
-            #dockMenu > p{
-                margin:25px;
-                margin-bottom:5px;
+            #dockMenu > header{
                 float:left;
                 clear: left;
-                
+                width: 300px;
+                font-size: 16pt;
+                line-height: 39px;
+				text-align: right;
+	    		height:30px;
+			    border-bottom:2px solid #3a3a3a;
+			    color: #FFF;
+			    padding-top: 10px;background: rgb(38,38,38); /* Old browsers */
+				background: -moz-linear-gradient(top, rgba(38,38,38,1) 0%, rgba(40,40,40,1) 49%, rgba(40,40,40,1) 100%); /* FF3.6+ */
+				background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(38,38,38,1)), color-stop(49%,rgba(40,40,40,1)), color-stop(100%,rgba(40,40,40,1))); /* Chrome,Safari4+ */
+				background: -webkit-linear-gradient(top, rgba(38,38,38,1) 0%,rgba(40,40,40,1) 49%,rgba(40,40,40,1) 100%); /* Chrome10+,Safari5.1+ */
+				background: -o-linear-gradient(top, rgba(38,38,38,1) 0%,rgba(40,40,40,1) 49%,rgba(40,40,40,1) 100%); /* Opera 11.10+ */
+				background: -ms-linear-gradient(top, rgba(38,38,38,1) 0%,rgba(40,40,40,1) 49%,rgba(40,40,40,1) 100%); /* IE10+ */
+				background: linear-gradient(to bottom, rgba(38,38,38,1) 0%,rgba(40,40,40,1) 49%,rgba(40,40,40,1) 100%); /* W3C */
+				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#262626', endColorstr='#282828',GradientType=0 ); /* IE6-9 */
+		                
             }
             
             #dockMenu > div,#dockMenu > ul{
-                margin: 25px;
-                margin-bottom: 25px;
-                float:left;
+            	margin: 10px;
+				margin-bottom: 15px;
+				float: left;
             }
             
                 #dockMenu > .appList{
-                    border-top: 1px solid rgb(20, 20, 20);
-                    border-right: 1px solid #c1c1c1;
-                    border-left: 1px solid rgb(20, 20, 20);
-                    border-bottom: 1px solid #c1c1c1;
+                    border-right: 1px solid #414141;
                 }
             
-                #dockMenu > .appList > li{
+                #dockMenu .appList > li{
                     background: #303030; /* Old browsers */
                     background: -moz-linear-gradient(top, #303030 0%, #212121 100%); /* FF3.6+ */
                     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#303030), color-stop(100%,#212121)); /* Chrome,Safari4+ */
@@ -1472,9 +1524,13 @@ h3{
                     border: 0px;
                     border-top: #1C1C1C 1px solid;
                     border-left: #1C1C1C 1px solid;
-                    width: 113px;
+                    width: 129px;
                     cursor:pointer;
                     float:left;
+                }
+                
+                #dockMenu .appList > li:hover{
+                    background: #303030; /* Old browsers */
                 }
                 
                 #dockMenu .messageList{
@@ -1777,12 +1833,17 @@ font-weight:bold;
 }
 
 .miniFileBrowser{
-	border: 1px solid #c9c9c9;
+	border: 1px solid #474545;
 }
 
 .miniFileBrowser li{
 	line-height:25pt;
 	clear:both;
+}
+
+.miniFileBrowser img{
+height: 20px;
+margin-bottom: -5px;
 }
 
 .miniFileBrowser .choosenItem:empty{

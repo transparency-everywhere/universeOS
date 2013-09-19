@@ -3,11 +3,11 @@
 ?>
 <div id="dockplayer" style="display: none">
     <?
-    include("player/dockplayer.php");
+    include("modules/player/dockplayer.php");
     ?>
 </div>
 <div id="dockMenu" class="fancy" style="display: none">
-    <p style="font-size:15pt; margin-bottom:-15px;">universeOS</p>
+	<header>universeOS&nbsp;</header>
     <ul class="appList">
         <li onclick="toggleApplication('feed')" onmouseup="closeDockMenu()"><img src="./gfx/feed.png" border="0" height="16">&nbsp;&nbsp;Feed</li>
 

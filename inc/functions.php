@@ -1,5 +1,5 @@
 <?php
-  $userid = $_SESSION[userid];
+  $userid = $_SESSION['userid'];
   $time = time();
 
   require_once('config.php');
@@ -90,7 +90,7 @@
 
 	</script>
 
-	<?
+	<?php
  }
  function getRssfeed($rssfeed, $cssclass="", $encode="auto", $anzahl=10, $mode=0) {
      $data = @file($rssfeed);
@@ -681,7 +681,7 @@
     <div class="signature" style="background: #EDEDED; border-bottom: 1px solid #c9c9c9;">
     <table width="100%">
         <tr width="100%">
-            <?
+            <?php
             if(empty($reverse)){ ?>
             <td>
                 <table>
@@ -710,7 +710,7 @@
         </tr>
     </table>
     </div>
-      <?
+      <?php
   }
 
 
@@ -842,11 +842,11 @@
                                 <tr bgcolor="#<?=$color;?>" onmouseup="showMenu('folder<?=$filefdata[id];?>')" height="35">
                                     <td onmouseup="showMenu(<?=$favFolderData['id'];?>)" width="35">&nbsp;<img src="./gfx/icons/<?=$img;?>" height="20"></td>
                                     <td onmouseup="showMenu(<?=$favFolderData['id'];?>)"><a href="#" onclick="<?=$link;?>"><?=$favFolderData['name'];?><?=$favFolderData['title'];?>/</a></td>
-                                    <?
+                                    <?php
                                     if($user == $_SESSION[userid]){
                                     ?>
                                     <td align="right"><a class="btn btn-mini" onclick="removeFav('<?=$type;?>', '<?=$item;?>')"><i class="icon-remove"></i></a></td>
-                                    <?
+                                    <?php
                                     }
                                     ?>
                                 </tr>
@@ -878,10 +878,10 @@
          if($_SESSION[userid] !== "$feedData[owner]"){
          mysql_query("INSERT INTO personalEvents (`owner`,`user`,`event`,`info`,`eventId`,`timestamp`) VALUES('$feedData[owner]','$_SESSION[userid]', 'comment','feed','$itemid','$time');");
          }
-   }
-   else if($type == "profile"){
-        mysql_query("INSERT INTO personalEvents (`owner`,`user`,`event`,`info`,`eventId`,`timestamp`) VALUES('$itemid','$_SESSION[userid]', 'comment','profile','$itemid','$time');");
-   }
+	   }
+	   else if($type == "profile"){
+	        mysql_query("INSERT INTO personalEvents (`owner`,`user`,`event`,`info`,`eventId`,`timestamp`) VALUES('$itemid','$_SESSION[userid]', 'comment','profile','$itemid','$time');");
+	   }
    }
    
    function deleteComments($type, $itemid){
@@ -890,14 +890,179 @@
        }
    }
    
+function countComment($type, $itemid){
+    $result = mysql_query("SELECT * FROM comments WHERE type='$type' && typeid='$itemid' ORDER BY timestamp");
+    $num_rows = mysql_num_rows($result);
+    return $num_rows;
+}
+
+function showComments($type, $itemid) {
+    if(proofLogin()){?>
+    <div id="<?=$type;?>Comment_<?=$itemid;?>">    
+     <script>
+     $('#addComment').submit(function() {
+     return false;
+     });
+    </script>
+    <div class="shadow commentRow">
+      <center>
+      <form action="showComment.php" method="post" id="addComment" target="submitter">
+          <table>
+              <tr>
+                  <td><?=showUserPicture($_SESSION[userid], "25");?></td>
+                  <td><input type="text" name="comment" placeholder="write commenta.." class="commentField" style="width: 100%; height:17px;"></td>
+                  <td><input type="submit" value="send" class="btn btn-small" name="submitComment" style="margin-left:13px;"></td>
+              </tr>
+                <input type="hidden" name="itemid" value="<?=$itemid;?>">
+                <input type="hidden" name="user" value="<?=$_SESSION[userid];?>">
+                <input type="hidden" name="type" value="<?=$type;?>">
+          </table>
+      </form>
+      </center>
+    </div>
+
+    <?php
+    }
+    if($type == "comment"){
+        $comment_sql = mysql_query("SELECT * FROM comments WHERE type='$type' && typeid='$itemid' ORDER BY timestamp DESC");
+        while($comment_data = mysql_fetch_array($comment_sql)) {?>
+            <div class="shadow subComment commentBox<?=$comment_data[id];?>" id="<?=$type;?>Comment" style="background-color: #FFF;">
+            <?=userSignature($comment_data[author], $comment_data[timestamp]);?>
+            <br><?=$comment_data[text];?><br><br>
+
+            <div style="padding: 15px; "><div><span style="float:left;"><?=showScore(comment, $comment_data[id]);?></span><span style="float:left;"><?=showItemSettings('comment', "$comment_data[id]");?></span></div></div>
+            </div>
+            <?php
+            }
+
+    }else{
+    $comment_sql = mysql_query("SELECT * FROM comments WHERE type='$type' && typeid='$itemid' ORDER BY timestamp DESC");
+    while($comment_data = mysql_fetch_array($comment_sql)) { 
+    $jsId = $comment_data[id];
+    ?>
+    <div class="shadow subComment commentBox<?=$comment_data[id];?>" id="<?=$type;?>Comment">
+    <?=userSignature($comment_data[author], $comment_data[timestamp]);?>
+    <br><?=$comment_data[text];?><br><br>
+
+    <div style="padding: 15px; margin-bottom: 20px;"><div><div style="float:left;"><?=showScore(comment, $comment_data[id]);?></div><div style="float:left; margin-left: 10px;"><?=showItemSettings('comment', "$comment_data[id]");?></div></div>
+                <a href="javascript:showSubComment(<?=$jsId;?>);" class="btn btn-mini" style="float: right; margin-right: 30px; color: #606060;"><i class="icon-comment"></i>&nbsp;(<?=countComment("comment", $comment_data[id]);?>)</a></div>
+                <div class="shadow subComment" id="comment<?=$jsId;?>" style="display: none;"></div>
+    </div>
+<?php
+}}
+echo"</div>";
+}
+    
+    function showFeedComments($feedid) 
+    { ?>
+    <div id="feedComment_<?=$feedid;?>">
+    <div class="shadow subcomment">
+    <?php
+    if(proofLogin()){
+        ?>
+    <div class="shadow commentRow" id="feedfeed">
+      <center> 
+          <form action="showComment.php" method="post" id="addComment" target="submitter">
+              <table>
+                  <tr>
+                      <td width="10"></td>
+                      <td><?=showUserPicture($_SESSION[userid], "25");?></td>
+                      <td style="vertical-align:middle;"><input type="text" name="comment" placeholder="write commenta.." class="commentField" style="width: 100%;"></td>
+                      <td><input type="submit" value="send" class="btn btn-small" name="submitComment" style=""></td>
+                      <td width="10"></td>
+
+                  </tr><input type="hidden" name="itemid" value="<?=$feedid;?>"><input type="hidden" name="user" value="<?=$_SESSION[userid];?>"><input type="hidden" name="type" value="feed">
+              </table>
+          </form>
+      </center>
+    </div>
+        <? }else{
+            echo"Please log in to write a comment";
+        } ?>
+
+    <?php
+
+    $comment_sql = mysql_query("SELECT * FROM comments WHERE type='feed' && typeid='$feedid' ORDER BY timestamp DESC");
+    while($comment_data = mysql_fetch_array($comment_sql)) { 
+    ?>
+    <div class="shadow subComment commentBox<?=$comment_data[id];?>" id="feedComment">
+    <?=userSignature($comment_data[author], $comment_data[timestamp]);?>
+        <div style="margin: 7px;">
+            <br>
+            <?=$comment_data[text];?><br><br>
+            <div style="padding: 15px;"><div style="margin-bottom:15px;"><span style="float:left;margin-right:15px;"><?=showScore(comment, $comment_data[id]);?></span><span style="float:left;"><?=showItemSettings('comment', "$comment_data[id]");?></span></div></div>
+        </div>
+    </div>
+    <?php
+    }
+    echo"</div>";
+    echo"</div>";
+    }
 
 //groups
 //groups
 //groups
 
-  function createGroup(){
+	function getGroups($userid=NULL){
+		if(empty($userid))
+			$userid = getUser();
+		
+		$sql = mysql_query("SELECT `group` FROM `groupAttachments` WHERE `item`='user' AND `validated`='1' AND `itemId`='".mysql_real_escape_string($userid)."'");
+		while($data = mysql_fetch_array($sql)){
+			$groups[] = $data['group'];
+		}
+		return $groups;
+		
+	}
+
+	function getGroupName($groupId){
+		$data = mysql_fetch_array(mysql_query("SELECT title FROM groups WHERE id='".mysql_real_escape_string($groupId)."'"));
+		return $data[title];
+	}
+	
+    function countGroupMembers($groupId){
+        $total = mysql_query("SELECT COUNT(*) FROM `groupAttachments` WHERE `group`='$groupId' AND `item`='user' AND `validated`='1' "); 
+        $total = mysql_fetch_array($total); 
+        return $total[0];
+    }
+	
+  function createGroup($title, $privacy, $description, $users){
+  	
+	
+            $userid = getUser();
+
+            //check if nessecary informations are given
+            if((isset($description)) && (isset($title)) && (isset($privacy))){
+            //insert group into db    
+            mysql_query("INSERT INTO `groups` (`title`, `description`, `public`, `admin`) VALUES ('$title', '$description', '$privacy', '$userid');");
+            $groupId = mysql_insert_id();
+
+                //add users to group
+                if(isset($userlist)){
+                foreach ($users as &$user) {
+
+                mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`) VALUES ('$groupId', 'user', '$user', '$time', '$userid');");
+
+
+                }}
+                
+                $groupFolder = createFolder("3", $groupId, $userid, "$groupId//$groupId");
+				$groupElement = createElement($groupFolder, $title, "other", $userid,  "$groupId//$groupId");
+                mysql_query("UPDATE `groups` SET `homeFolder`='$groupFolder', `homeElement`='$groupElement' WHERE id='$groupId'");
+
+            //add user which added group to group and validate
+            mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`, `validated`) VALUES ('$groupId', 'user', '$userid', '$time', '$userid', '1');");
+            jsAlert("worked:)"); 
+
+				return true;
+
+           	}else{
+                jsAlert("please fill out everything");
+            }
   	
   }
+  
+  
   function groupMakeUserAdmin($groupId, $userId){
   	
   }
@@ -906,6 +1071,22 @@
   }
 
 
+//basic universe stuff
+
+   function jsAlert($text){
+        ?>
+        <script>
+        //check if function is calles from window or from iframe
+        //if it is called from iframe parent. needs to be used
+        if (typeof(window.jsAlert) === "function") {
+		   jsAlert('', '<?=addslashes($text);?>');
+		}else{
+		   parent.jsAlert('', '<?=addslashes($text);?>');
+		}
+		return false;
+        </script> 
+            <?php
+    }
   function universeTime($unixtime){
      $time = time();
      $difference = ($time - $unixtime);
@@ -1028,174 +1209,169 @@
         }
            
        }
-function countComment($type, $itemid){
-    $result = mysql_query("SELECT * FROM comments WHERE type='$type' && typeid='$itemid' ORDER BY timestamp");
-    $num_rows = mysql_num_rows($result);
-    return $num_rows;
-}
 
-function showComments($type, $itemid) {
-    if(proofLogin()){?>
-    <div id="<?=$type;?>Comment_<?=$itemid;?>">    
-     <script>
-     $('#addComment').submit(function() {
-     return false;
-     });
-    </script>
-    <div class="shadow commentRow">
-      <center>
-      <form action="showComment.php" method="post" id="addComment" target="submitter">
-          <table>
-              <tr>
-                  <td><?=showUserPicture($_SESSION[userid], "25");?></td>
-                  <td><input type="text" name="comment" placeholder="write commenta.." class="commentField" style="width: 100%; height:17px;"></td>
-                  <td><input type="submit" value="send" class="btn btn-small" name="submitComment" style="margin-left:13px;"></td>
-              </tr>
-                <input type="hidden" name="itemid" value="<?=$itemid;?>">
-                <input type="hidden" name="user" value="<?=$_SESSION[userid];?>">
-                <input type="hidden" name="type" value="<?=$type;?>">
-          </table>
-      </form>
-      </center>
-    </div>
-
-    <?
-    }
-    if($type == "comment"){
-        $comment_sql = mysql_query("SELECT * FROM comments WHERE type='$type' && typeid='$itemid' ORDER BY timestamp DESC");
-        while($comment_data = mysql_fetch_array($comment_sql)) {?>
-            <div class="shadow subComment commentBox<?=$comment_data[id];?>" id="<?=$type;?>Comment" style="background-color: #FFF;">
-            <?=userSignature($comment_data[author], $comment_data[timestamp]);?>
-            <br><?=$comment_data[text];?><br><br>
-
-            <div style="padding: 15px; "><div><span style="float:left;"><?=showScore(comment, $comment_data[id]);?></span><span style="float:left;"><?=showItemSettings('comment', "$comment_data[id]");?></span></div></div>
-            </div>
-            <?
-            }
-
-    }else{
-    $comment_sql = mysql_query("SELECT * FROM comments WHERE type='$type' && typeid='$itemid' ORDER BY timestamp DESC");
-    while($comment_data = mysql_fetch_array($comment_sql)) { 
-    $jsId = $comment_data[id];
-    ?>
-    <div class="shadow subComment commentBox<?=$comment_data[id];?>" id="<?=$type;?>Comment">
-    <?=userSignature($comment_data[author], $comment_data[timestamp]);?>
-    <br><?=$comment_data[text];?><br><br>
-
-    <div style="padding: 15px; margin-bottom: 20px;"><div><div style="float:left;"><?=showScore(comment, $comment_data[id]);?></div><div style="float:left; margin-left: 10px;"><?=showItemSettings('comment', "$comment_data[id]");?></div></div>
-                <a href="javascript:showSubComment(<?=$jsId;?>);" class="btn btn-mini" style="float: right; margin-right: 30px; color: #606060;"><i class="icon-comment"></i>&nbsp;(<?=countComment("comment", $comment_data[id]);?>)</a></div>
-                <div class="shadow subComment" id="comment<?=$jsId;?>" style="display: none;"></div>
-    </div>
-<?
-}}
-echo"</div>";
-}
+		function showLanguageDropdown($value=NULL){
+			//References :
+		    //1. http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+		    //2. http://blog.xoundboy.com/?p=235
+			$languages = array(
+	        'en' => 'English' , 
+	        'aa' => 'Afar' , 
+	        'ab' => 'Abkhazian' , 
+	        'af' => 'Afrikaans' , 
+	        'am' => 'Amharic' , 
+	        'ar' => 'Arabic' , 
+	        'as' => 'Assamese' , 
+	        'ay' => 'Aymara' , 
+	        'az' => 'Azerbaijani' , 
+	        'ba' => 'Bashkir' , 
+	        'be' => 'Byelorussian' , 
+	        'bg' => 'Bulgarian' , 
+	        'bh' => 'Bihari' , 
+	        'bi' => 'Bislama' , 
+	        'bn' => 'Bengali/Bangla' , 
+	        'bo' => 'Tibetan' , 
+	        'br' => 'Breton' , 
+	        'ca' => 'Catalan' , 
+	        'co' => 'Corsican' , 
+	        'cs' => 'Czech' , 
+	        'cy' => 'Welsh' , 
+	        'da' => 'Danish' , 
+	        'de' => 'German' , 
+	        'dz' => 'Bhutani' , 
+	        'el' => 'Greek' , 
+	        'eo' => 'Esperanto' , 
+	        'es' => 'Spanish' , 
+	        'et' => 'Estonian' , 
+	        'eu' => 'Basque' , 
+	        'fa' => 'Persian' , 
+	        'fi' => 'Finnish' , 
+	        'fj' => 'Fiji' , 
+	        'fo' => 'Faeroese' , 
+	        'fr' => 'French' , 
+	        'fy' => 'Frisian' , 
+	        'ga' => 'Irish' , 
+	        'gd' => 'Scots/Gaelic' , 
+	        'gl' => 'Galician' , 
+	        'gn' => 'Guarani' , 
+	        'gu' => 'Gujarati' , 
+	        'ha' => 'Hausa' , 
+	        'hi' => 'Hindi' , 
+	        'hr' => 'Croatian' , 
+	        'hu' => 'Hungarian' , 
+	        'hy' => 'Armenian' , 
+	        'ia' => 'Interlingua' , 
+	        'ie' => 'Interlingue' , 
+	        'ik' => 'Inupiak' , 
+	        'in' => 'Indonesian' , 
+	        'is' => 'Icelandic' , 
+	        'it' => 'Italian' , 
+	        'iw' => 'Hebrew' , 
+	        'ja' => 'Japanese' , 
+	        'ji' => 'Yiddish' , 
+	        'jw' => 'Javanese' , 
+	        'ka' => 'Georgian' , 
+	        'kk' => 'Kazakh' , 
+	        'kl' => 'Greenlandic' , 
+	        'km' => 'Cambodian' , 
+	        'kn' => 'Kannada' , 
+	        'ko' => 'Korean' , 
+	        'ks' => 'Kashmiri' , 
+	        'ku' => 'Kurdish' , 
+	        'ky' => 'Kirghiz' , 
+	        'la' => 'Latin' , 
+	        'ln' => 'Lingala' , 
+	        'lo' => 'Laothian' , 
+	        'lt' => 'Lithuanian' , 
+	        'lv' => 'Latvian/Lettish' , 
+	        'mg' => 'Malagasy' , 
+	        'mi' => 'Maori' , 
+	        'mk' => 'Macedonian' , 
+	        'ml' => 'Malayalam' , 
+	        'mn' => 'Mongolian' , 
+	        'mo' => 'Moldavian' , 
+	        'mr' => 'Marathi' , 
+	        'ms' => 'Malay' , 
+	        'mt' => 'Maltese' , 
+	        'my' => 'Burmese' , 
+	        'na' => 'Nauru' , 
+	        'ne' => 'Nepali' , 
+	        'nl' => 'Dutch' , 
+	        'no' => 'Norwegian' , 
+	        'oc' => 'Occitan' , 
+	        'om' => '(Afan)/Oromoor/Oriya' , 
+	        'pa' => 'Punjabi' , 
+	        'pl' => 'Polish' , 
+	        'ps' => 'Pashto/Pushto' , 
+	        'pt' => 'Portuguese' , 
+	        'qu' => 'Quechua' , 
+	        'rm' => 'Rhaeto-Romance' , 
+	        'rn' => 'Kirundi' , 
+	        'ro' => 'Romanian' , 
+	        'ru' => 'Russian' , 
+	        'rw' => 'Kinyarwanda' , 
+	        'sa' => 'Sanskrit' , 
+	        'sd' => 'Sindhi' , 
+	        'sg' => 'Sangro' , 
+	        'sh' => 'Serbo-Croatian' , 
+	        'si' => 'Singhalese' , 
+	        'sk' => 'Slovak' , 
+	        'sl' => 'Slovenian' , 
+	        'sm' => 'Samoan' , 
+	        'sn' => 'Shona' , 
+	        'so' => 'Somali' , 
+	        'sq' => 'Albanian' , 
+	        'sr' => 'Serbian' , 
+	        'ss' => 'Siswati' , 
+	        'st' => 'Sesotho' , 
+	        'su' => 'Sundanese' , 
+	        'sv' => 'Swedish' , 
+	        'sw' => 'Swahili' , 
+	        'ta' => 'Tamil' , 
+	        'te' => 'Tegulu' , 
+	        'tg' => 'Tajik' , 
+	        'th' => 'Thai' , 
+	        'ti' => 'Tigrinya' , 
+	        'tk' => 'Turkmen' , 
+	        'tl' => 'Tagalog' , 
+	        'tn' => 'Setswana' , 
+	        'to' => 'Tonga' , 
+	        'tr' => 'Turkish' , 
+	        'ts' => 'Tsonga' , 
+	        'tt' => 'Tatar' , 
+	        'tw' => 'Twi' , 
+	        'uk' => 'Ukrainian' , 
+	        'ur' => 'Urdu' , 
+	        'uz' => 'Uzbek' , 
+	        'vi' => 'Vietnamese' , 
+	        'vo' => 'Volapuk' , 
+	        'wo' => 'Wolof' , 
+	        'xh' => 'Xhosa' , 
+	        'yo' => 'Yoruba' , 
+	        'zh' => 'Chinese' , 
+	        'zu' => 'Zulu' , 
+	        );
+			
+			
+			
+			echo"<select name=\"language\">";
+			
+			
+			foreach($languages AS $language){
+				if(isset($value)){
+					if($language == $value){
+						$selected = 'selected="selected"';
+					}else{
+						$selected = '';
+					}
+				}
+				echo"<option $selected>$language</option>";
+				
+			}
+			echo"</select>";
+		}
     
-    function showFeedComments($feedid) 
-    { ?>
-    <div id="feedComment_<?=$feedid;?>">
-    <div class="shadow subcomment">
-    <?
-    if(proofLogin()){
-        ?>
-    <div class="shadow commentRow" id="feedfeed">
-      <center> 
-          <form action="showComment.php" method="post" id="addComment" target="submitter">
-              <table>
-                  <tr>
-                      <td width="10"></td>
-                      <td><?=showUserPicture($_SESSION[userid], "25");?></td>
-                      <td style="vertical-align:middle;"><input type="text" name="comment" placeholder="write commenta.." class="commentField" style="width: 100%;"></td>
-                      <td><input type="submit" value="send" class="btn btn-small" name="submitComment" style=""></td>
-                      <td width="10"></td>
 
-                  </tr><input type="hidden" name="itemid" value="<?=$feedid;?>"><input type="hidden" name="user" value="<?=$_SESSION[userid];?>"><input type="hidden" name="type" value="feed">
-              </table>
-          </form>
-      </center>
-    </div>
-        <? }else{
-            echo"Please log in to write a comment";
-        } ?>
-
-    <?
-
-    $comment_sql = mysql_query("SELECT * FROM comments WHERE type='feed' && typeid='$feedid' ORDER BY timestamp DESC");
-    while($comment_data = mysql_fetch_array($comment_sql)) { 
-    ?>
-    <div class="shadow subComment commentBox<?=$comment_data[id];?>" id="feedComment">
-    <?=userSignature($comment_data[author], $comment_data[timestamp]);?>
-        <div style="margin: 7px;">
-            <br>
-            <?=$comment_data[text];?><br><br>
-            <div style="padding: 15px;"><div style="margin-bottom:15px;"><span style="float:left;margin-right:15px;"><?=showScore(comment, $comment_data[id]);?></span><span style="float:left;"><?=showItemSettings('comment', "$comment_data[id]");?></span></div></div>
-        </div>
-    </div>
-    <?
-    }
-    echo"</div>";
-    echo"</div>";
-    }
-
-    
-    function showFeed($feedid, $type=NULL, $mobile=NULL) {
-        if($mobile == 1){
-            $subPath = '1';
-        }
-        $where = "ORDER BY timestamp DESC LIMIT 30"; //defines Query
-        $needStructure = "1"; //defines if whole HTML structure is needed
-        if($type == "single"){
-            $where = "WHERE owner='$feedid' ORDER BY timestamp DESC LIMIT 0,1";
-            $needStructure = "";
-        }
-        $feedSql = mysql_query("SELECT * FROM userfeeds $where");
-        while($feedData = mysql_fetch_array($feedSql)) {
-            if($feedData[owner] == "$_SESSION[userid]"){
-                $ownerLink = "<a href=\"doit.php?action=deleteFeed&feedId=$feedData[feedid]\" target=\"submitter\"><img src=\"gfx/trash.gif\" alt=\"delete\" style=\"position: absolute; margin-left: 60px; margin-top: -20px;\"></a>";
-            }else{
-                unset($ownerLink);
-            }
-            
-            
-            
-            // in the table elements the elements have a "title", in the table folders the folders have a "name" that realy sucks!
-            if($feedData[protocoll_type] == "fileUpload"){
-                $folderAddSql = mysql_query("SELECT id, title FROM elements WHERE id='$feedData[feedLink2]'");
-                $folderAddData = mysql_fetch_array($folderAddSql);
-                $text = "<a href=\"#\" onclick=\"createNewTab('fileBrowser_tabView','".$folderAddData[title]."','','modules/filesystem/showelement.php?element=".$folderAddData[id]."',true);return false\"> ".$folderAddData[title]."</a>";
-                }if($feedData[protocoll_type]=="elementAdd"){
-                $folderAddSql = mysql_query("SELECT id, name FROM folders WHERE id='$feedData[feedLink2]'");
-                $folderAddData = mysql_fetch_array($folderAddSql);
-                $text = "<a href=\"#\" onclick=\"addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=".$folderAddData[id]."&reload=1');return false\"> ".$folderAddData[name]."/</a>";   
-                }if($feedData[protocoll_type]=="folderAdd"){
-                $folderAddSql = mysql_query("SELECT id, name FROM folders WHERE id='$feedData[feedLink2]'");
-                $folderAddData = mysql_fetch_array($folderAddSql);
-                $text = "<a href=\"#\" onclick=\"addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=".$folderAddData[id]."&reload=1');return false\"> ".$folderAddData[name]."/</a>";   
-                }
-                
-
-?>
-    <? if($needStructure == "1"){ ?><div id="add"></div><? } ?>
-    <div id="realFeed" class="feedNo<?=$feedData[feedid];?>">
-        <?=userSignature($feedData[owner], $feedData[timestamp]);?>
-        <div style="padding: 10px;"><?=nl2br(htmlspecialchars($feedData[feed]));?><?=$text;?></div><br>
-        <div style="padding: 15px;"><div><?=showScore("feed", $feedData[feedid]);?><div style=" width: 150px; float:right; margin-top: -22px;"><?=showItemSettings('feed', "$feedData[feedid]");?></div></div></div>
-                <a href="javascript:showfeedComment(<?=$feedData[feedid];?>);" class="btn btn-mini" style="float: right; margin-top: -29px; margin-right: 5px; color: #606060">comments&nbsp;(<?=countComment("feed", $feedData[feedid]);?>)</a><div class="shadow" id="feed<?=$feedData[feedid];?>" style="padding:15px; display:none;"></div><hr style="margin: 0px;">
-    </div>
-    <?
-                //feeds like the login feed are deleted after the validity passed
-                if($feedData[validity] == TRUE) {
-                $time = time();
-                if($feedData[validity] < $time){
-                    mysql_query("DELETE FROM userfeeds WHERE feedid='$feedData[feedid]'");
-                }}
-                unset($text);
-    }
-    ?>
-    <div>...load more</div>
-    <?
-    
-    }
 
 
 //buddylist
@@ -1273,6 +1449,64 @@ echo"</div>";
 //feed
 //feed
 //feed
+    function showFeed($feedid, $type=NULL, $mobile=NULL) {
+        if($mobile == 1){
+            $subPath = '1';
+        }
+        $where = "ORDER BY timestamp DESC LIMIT 30"; //defines Query
+        $needStructure = "1"; //defines if whole HTML structure is needed
+        if($type == "single"){
+            $where = "WHERE owner='$feedid' ORDER BY timestamp DESC LIMIT 0,1";
+            $needStructure = "";
+        }
+        $feedSql = mysql_query("SELECT * FROM userfeeds $where");
+        while($feedData = mysql_fetch_array($feedSql)) {
+            if($feedData[owner] == "$_SESSION[userid]"){
+                $ownerLink = "<a href=\"doit.php?action=deleteFeed&feedId=$feedData[feedid]\" target=\"submitter\"><img src=\"gfx/trash.gif\" alt=\"delete\" style=\"position: absolute; margin-left: 60px; margin-top: -20px;\"></a>";
+            }else{
+                unset($ownerLink);
+            }
+            
+            
+            
+            // in the table elements the elements have a "title", in the table folders the folders have a "name" that realy sucks!
+            if($feedData[protocoll_type] == "fileUpload"){
+                $folderAddSql = mysql_query("SELECT id, title FROM elements WHERE id='$feedData[feedLink2]'");
+                $folderAddData = mysql_fetch_array($folderAddSql);
+                $text = "<a href=\"#\" onclick=\"createNewTab('fileBrowser_tabView','".$folderAddData[title]."','','modules/filesystem/showelement.php?element=".$folderAddData[id]."',true);return false\"> ".$folderAddData[title]."</a>";
+                }if($feedData[protocoll_type]=="elementAdd"){
+                $folderAddSql = mysql_query("SELECT id, name FROM folders WHERE id='$feedData[feedLink2]'");
+                $folderAddData = mysql_fetch_array($folderAddSql);
+                $text = "<a href=\"#\" onclick=\"addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=".$folderAddData[id]."&reload=1');return false\"> ".$folderAddData[name]."/</a>";   
+                }if($feedData[protocoll_type]=="folderAdd"){
+                $folderAddSql = mysql_query("SELECT id, name FROM folders WHERE id='$feedData[feedLink2]'");
+                $folderAddData = mysql_fetch_array($folderAddSql);
+                $text = "<a href=\"#\" onclick=\"addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=".$folderAddData[id]."&reload=1');return false\"> ".$folderAddData[name]."/</a>";   
+                }
+                
+
+?>
+    <? if($needStructure == "1"){ ?><div id="add"></div><? } ?>
+    <div id="realFeed" class="feedNo<?=$feedData[feedid];?>">
+        <?=userSignature($feedData[owner], $feedData[timestamp]);?>
+        <div style="padding: 10px;"><?=nl2br(htmlspecialchars($feedData[feed]));?><?=$text;?></div><br>
+        <div style="padding: 15px;"><div><?=showScore("feed", $feedData[feedid]);?><div style=" width: 150px; float:right; margin-top: -22px;"><?=showItemSettings('feed', "$feedData[feedid]");?></div></div></div>
+                <a href="javascript:showfeedComment(<?=$feedData[feedid];?>);" class="btn btn-mini" style="float: right; margin-top: -29px; margin-right: 5px; color: #606060">comments&nbsp;(<?=countComment("feed", $feedData[feedid]);?>)</a><div class="shadow" id="feed<?=$feedData[feedid];?>" style="padding:15px; display:none;"></div><hr style="margin: 0px;">
+    </div>
+    <?php
+                //feeds like the login feed are deleted after the validity passed
+                if($feedData[validity] == TRUE) {
+                $time = time();
+                if($feedData[validity] < $time){
+                    mysql_query("DELETE FROM userfeeds WHERE feedid='$feedData[feedid]'");
+                }}
+                unset($text);
+    }
+    ?>
+    <div>...load more</div>
+    <?php
+    
+    }
     
    function addFeed($owner, $feed, $type, $feedLink1, $feedLink2, $validity=NULL, $groups=NULL){
        $time = time();
@@ -1417,7 +1651,7 @@ echo"</div>";
             <div class="shadow" id="feed<?=$feedData[id];?>" style="display:none;"></div>
             <hr style="margin: 0px;">
         </div>
-                <?
+                <?php
                 //feeds like the login feed are deleted after the validity passed
                 if($feedData[validity] == TRUE) {
                 $time = time();
@@ -1444,20 +1678,6 @@ echo"</div>";
        
        echo $typeTable;
    }
-   function jsAlert($text){
-        ?>
-        <script>
-        //check if function is calles from window or from iframe
-        //if it is called from iframe parent. needs to be used
-        if (typeof(window.jsAlert) === "function") {
-		   jsAlert('', '<?=addslashes($text);?>');
-		}else{
-		   parent.jsAlert('', '<?=addslashes($text);?>');
-		}
-		return false;
-        </script> 
-            <?
-    }
     function init(){
     	
 		
@@ -1698,6 +1918,14 @@ echo"</div>";
     }
     
     function showPrivacySettings($value=NULL){
+    	
+		if(end(explode(";", $value)) == "PROTECTED"){
+        	
+			
+			$protected = true;
+        	
+        }
+		
     	if(empty($value)){
     		$value = "p";
     	}
@@ -1738,6 +1966,10 @@ echo"</div>";
             
             
         }
+		
+		if($protected){
+			echo"PROTECTED";
+		}else{
         ?>
         	<div class="privacySettings">
         		<h3>Privacy Settings</h3>
@@ -1847,7 +2079,8 @@ echo"</div>";
 
 
                                 </script>
-       <?
+       <?php
+       }
     }
     
     function exploitPrivacy($public, $hidden, $customEdit, $customShow){
@@ -1891,7 +2124,7 @@ echo"</div>";
 	
 	function getPlaylists($userid=NULL){
 		if(empty($userid))
-			$userid = $_SESSION[userid];
+			$userid = getUser();
 		
 		$sql = mysql_query("SELECT `id` FROM playlist WHERE `user`='".mysql_real_escape_string($userid)."'");
 		while($data = mysql_fetch_array($sql)){
@@ -2008,30 +2241,6 @@ echo"</div>";
         $title = $video_info->title;
         return $title; // title
     }
-	
-	function getGroups($userid=NULL){
-		if(empty($userid))
-			$userid = $_SESSION[userid];
-		
-		$sql = mysql_query("SELECT `group` FROM `groupAttachments` WHERE `item`='user' AND `validated`='1' AND `itemId`='".mysql_real_escape_string($userid)."'");
-		while($data = mysql_fetch_array($sql)){
-			$groups[] = $data['group'];
-		}
-		return $groups;
-		
-	}
-
-	function getGroupName($groupId){
-		$data = mysql_fetch_array(mysql_query("SELECT title FROM groups WHERE id='".mysql_real_escape_string($groupId)."'"));
-		return $data[title];
-	}
-	
-    function countGroupMembers($groupId){
-        $total = mysql_query("SELECT COUNT(*) FROM `groupAttachments` WHERE `group`='$groupId' AND `item`='user' AND `validated`='1' "); 
-        $total = mysql_fetch_array($total); 
-        return $total[0];
-    }
-	
 	
 	
 	
@@ -2253,167 +2462,6 @@ echo"</div>";
         }
     }
 
-		function showLanguageDropdown($value=NULL){
-			//References :
-		    //1. http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-		    //2. http://blog.xoundboy.com/?p=235
-			$languages = array(
-	        'en' => 'English' , 
-	        'aa' => 'Afar' , 
-	        'ab' => 'Abkhazian' , 
-	        'af' => 'Afrikaans' , 
-	        'am' => 'Amharic' , 
-	        'ar' => 'Arabic' , 
-	        'as' => 'Assamese' , 
-	        'ay' => 'Aymara' , 
-	        'az' => 'Azerbaijani' , 
-	        'ba' => 'Bashkir' , 
-	        'be' => 'Byelorussian' , 
-	        'bg' => 'Bulgarian' , 
-	        'bh' => 'Bihari' , 
-	        'bi' => 'Bislama' , 
-	        'bn' => 'Bengali/Bangla' , 
-	        'bo' => 'Tibetan' , 
-	        'br' => 'Breton' , 
-	        'ca' => 'Catalan' , 
-	        'co' => 'Corsican' , 
-	        'cs' => 'Czech' , 
-	        'cy' => 'Welsh' , 
-	        'da' => 'Danish' , 
-	        'de' => 'German' , 
-	        'dz' => 'Bhutani' , 
-	        'el' => 'Greek' , 
-	        'eo' => 'Esperanto' , 
-	        'es' => 'Spanish' , 
-	        'et' => 'Estonian' , 
-	        'eu' => 'Basque' , 
-	        'fa' => 'Persian' , 
-	        'fi' => 'Finnish' , 
-	        'fj' => 'Fiji' , 
-	        'fo' => 'Faeroese' , 
-	        'fr' => 'French' , 
-	        'fy' => 'Frisian' , 
-	        'ga' => 'Irish' , 
-	        'gd' => 'Scots/Gaelic' , 
-	        'gl' => 'Galician' , 
-	        'gn' => 'Guarani' , 
-	        'gu' => 'Gujarati' , 
-	        'ha' => 'Hausa' , 
-	        'hi' => 'Hindi' , 
-	        'hr' => 'Croatian' , 
-	        'hu' => 'Hungarian' , 
-	        'hy' => 'Armenian' , 
-	        'ia' => 'Interlingua' , 
-	        'ie' => 'Interlingue' , 
-	        'ik' => 'Inupiak' , 
-	        'in' => 'Indonesian' , 
-	        'is' => 'Icelandic' , 
-	        'it' => 'Italian' , 
-	        'iw' => 'Hebrew' , 
-	        'ja' => 'Japanese' , 
-	        'ji' => 'Yiddish' , 
-	        'jw' => 'Javanese' , 
-	        'ka' => 'Georgian' , 
-	        'kk' => 'Kazakh' , 
-	        'kl' => 'Greenlandic' , 
-	        'km' => 'Cambodian' , 
-	        'kn' => 'Kannada' , 
-	        'ko' => 'Korean' , 
-	        'ks' => 'Kashmiri' , 
-	        'ku' => 'Kurdish' , 
-	        'ky' => 'Kirghiz' , 
-	        'la' => 'Latin' , 
-	        'ln' => 'Lingala' , 
-	        'lo' => 'Laothian' , 
-	        'lt' => 'Lithuanian' , 
-	        'lv' => 'Latvian/Lettish' , 
-	        'mg' => 'Malagasy' , 
-	        'mi' => 'Maori' , 
-	        'mk' => 'Macedonian' , 
-	        'ml' => 'Malayalam' , 
-	        'mn' => 'Mongolian' , 
-	        'mo' => 'Moldavian' , 
-	        'mr' => 'Marathi' , 
-	        'ms' => 'Malay' , 
-	        'mt' => 'Maltese' , 
-	        'my' => 'Burmese' , 
-	        'na' => 'Nauru' , 
-	        'ne' => 'Nepali' , 
-	        'nl' => 'Dutch' , 
-	        'no' => 'Norwegian' , 
-	        'oc' => 'Occitan' , 
-	        'om' => '(Afan)/Oromoor/Oriya' , 
-	        'pa' => 'Punjabi' , 
-	        'pl' => 'Polish' , 
-	        'ps' => 'Pashto/Pushto' , 
-	        'pt' => 'Portuguese' , 
-	        'qu' => 'Quechua' , 
-	        'rm' => 'Rhaeto-Romance' , 
-	        'rn' => 'Kirundi' , 
-	        'ro' => 'Romanian' , 
-	        'ru' => 'Russian' , 
-	        'rw' => 'Kinyarwanda' , 
-	        'sa' => 'Sanskrit' , 
-	        'sd' => 'Sindhi' , 
-	        'sg' => 'Sangro' , 
-	        'sh' => 'Serbo-Croatian' , 
-	        'si' => 'Singhalese' , 
-	        'sk' => 'Slovak' , 
-	        'sl' => 'Slovenian' , 
-	        'sm' => 'Samoan' , 
-	        'sn' => 'Shona' , 
-	        'so' => 'Somali' , 
-	        'sq' => 'Albanian' , 
-	        'sr' => 'Serbian' , 
-	        'ss' => 'Siswati' , 
-	        'st' => 'Sesotho' , 
-	        'su' => 'Sundanese' , 
-	        'sv' => 'Swedish' , 
-	        'sw' => 'Swahili' , 
-	        'ta' => 'Tamil' , 
-	        'te' => 'Tegulu' , 
-	        'tg' => 'Tajik' , 
-	        'th' => 'Thai' , 
-	        'ti' => 'Tigrinya' , 
-	        'tk' => 'Turkmen' , 
-	        'tl' => 'Tagalog' , 
-	        'tn' => 'Setswana' , 
-	        'to' => 'Tonga' , 
-	        'tr' => 'Turkish' , 
-	        'ts' => 'Tsonga' , 
-	        'tt' => 'Tatar' , 
-	        'tw' => 'Twi' , 
-	        'uk' => 'Ukrainian' , 
-	        'ur' => 'Urdu' , 
-	        'uz' => 'Uzbek' , 
-	        'vi' => 'Vietnamese' , 
-	        'vo' => 'Volapuk' , 
-	        'wo' => 'Wolof' , 
-	        'xh' => 'Xhosa' , 
-	        'yo' => 'Yoruba' , 
-	        'zh' => 'Chinese' , 
-	        'zu' => 'Zulu' , 
-	        );
-			
-			
-			
-			echo"<select name=\"language\">";
-			
-			
-			foreach($languages AS $language){
-				if(isset($value)){
-					if($language == $value){
-						$selected = 'selected="selected"';
-					}else{
-						$selected = '';
-					}
-				}
-				echo"<option $selected>$language</option>";
-				
-			}
-			echo"</select>";
-		}
-    
      function addFile($file, $element, $folder, $privacy, $user, $lang=NULL){
         
                 //upload file
@@ -2463,7 +2511,7 @@ echo"</div>";
             <script>
                 parent.addAjaxContentToTab('<?=substr($FileElementData[title], 0, 10);?>', 'modules/filesystem/showElement.php?element=<?=$element;?>&reload=1');
             </script>
-        <?
+        <?php
         $time = time();
         
         //add feed
@@ -2623,6 +2671,37 @@ echo"</div>";
         
         return $image;
     }
+
+//links
+//links
+//links
+
+	function addLink($folder, $title, $type, $privacy, $link){
+             
+             
+    
+                    //set privacy
+                    $customShow = $_POST[privacyCustomSee];
+                    $customEdit = $_POST[privacyCustomEdit];
+                    
+                    $privacy = exploitPrivacy("$_POST[privacyPublic]", "$_POST[privacyHidden]", $customEdit, $customShow);
+                    $user = getUser();
+
+                $time = time();
+                mysql_query("INSERT INTO `links` (`folder`, `type`, `title`, `link`, `privacy`, `author`, `timestamp`) VALUES ( '".save($folder)."', '".save($type)."', '".save($title)."', '".save($link)."', '$privacy', '$user', '$time');");
+                	$message="The Link has been added!";
+					echo"<script>";
+                	?>
+                    parent.addAjaxContentToTab('<?=$_POST[tabTitle];?>', 'modules/filesystem/showElement.php?element=<?=$$folder;?>&reload=1');
+                	<?
+                	echo"<script>";
+                	$feedText = "has created the link $title in the folder";
+                    $feedLink1 = mysql_insert_id();
+                    $feedLink2 = $folder;
+                    addFeed($user, $feedText, folderAdd, $feedLink1, $feedLink2);
+					
+					return true;
+                }
     
     function deleteLink($linkId){
         
@@ -2649,6 +2728,11 @@ echo"</div>";
                     return false;
                 }
     }
+	
+	
+//shortcuts
+//shortcuts
+//shortcuts
 	
 	function createInternLink($parentType, $parentId, $type, $typeId, $title=NULL){
 	//creates shortcut
@@ -2825,7 +2909,8 @@ echo"</div>";
         $output .= $icon;
         $output .= "<span class=\"title\">$title</span>";
 		$output .= "<span class=\"controls\">$controls</span>";
-		$output .= "<span class=\"bar\">$bar $score</span>";
+		$output .= "<span class=\"bar\">$bar</span>";
+		$output .= "<span class=\"score\">$score</span>";
         $output .= "<span class=\"download\">$download</span>";
         $output .= "</header>";
         $output .= "<div class=\"fileWindow\" id=\"$fileWindowId\">";
@@ -3092,20 +3177,20 @@ echo"</div>";
 	                </td>
 	                <td width="50px"></td>
 	            </tr>
-        		<?
+        		<?php
         	}
         $filefsql = mysql_query("SELECT * FROM folders $query");
         while($filefdata = mysql_fetch_array($filefsql)) {
         if(authorize($filefdata[privacy], "show", $filefdata[creator])){
         ?>
             <tr class="strippedRow" oncontextmenu="showMenu('folder<?=$filefdata[id];?>'); return false;" height="30">
-                <td width="30"><?
+                <td width="30"><?php
             	if($rightClick){
             	showRightClickMenu("folder", $filefdata[id], $filefdata[name], $filefdata[creator]);
             	}?>&nbsp;<img src="http://universeos.org/gfx/icons/filesystem/folder.png" height="22"></td>
                 <td><a href="http://universeos.org/out/?folder=<?=$filefdata[id];?>" onclick="openFolder('<?=$filefdata[id];?>'); return false;"><?=$filefdata[name];?></a></td>
                 <td width="50px">
-                	<?
+                	<?php
                 	if($rightClick){
                 	echo showItemSettings('folder', "$filefdata[id]");
 					}
@@ -3113,7 +3198,7 @@ echo"</div>";
                 </td>
                 <td width="50px"><?=showScore("folder", $filefdata[id]);?></td>
             </tr>
-            <?
+            <?php
             }}}
             $filedsql = mysql_query("SELECT * FROM elements $query2");
             while($fileddata = mysql_fetch_array($filedsql)) {
@@ -3130,7 +3215,7 @@ echo"</div>";
                 <td width="30">&nbsp;<img src="http://universeos.org/gfx/icons/filesystem/element.png" height="22"></td>
                 <td><a href="http://universeos.org/out/?element=<?=$fileddata[id];?>" onclick="openElement('<?=$fileddata[id];?>', '<?=addslashes($title10);?>'); return false;"><?=$title15;?></a></td>
                 <td width="50px">
-                	<?
+                	<?php
                 	if($rightClick){
                 	echo showItemSettings('element', "$fileddata[id]");
 					}
@@ -3138,7 +3223,7 @@ echo"</div>";
                 </td>
                 <td width="50px"><?=showScore("element", $fileddata[id]);?></td>
             </tr>
-            <?
+            <?php
             if($rightClick){
             showRightClickMenu("element", $fileddata[id], $title10, $fileddata[author]);
             }}}
@@ -3256,7 +3341,7 @@ echo"</div>";
                                 <? if(!$git){echo showItemSettings('file', "$fileListData[id]");}?></td>
                         <td width="50"><?=showScore(file, $fileListData[id]);?></td>
                     </tr>
-                    <?
+                    <?php
                     if(!$git){
                     showRightClickMenu("file", $fileListData[id], $title10, $openFileType);
                     }
@@ -3295,7 +3380,7 @@ echo"</div>";
                     <td><?=showItemSettings('link', $linkListData[id]);?></td>
                     <td><?=showScore(link, $linkListData[id]);?></td>
                 </tr>
-                <?
+                <?php
                 showRightClickMenu("link", $linkListData[id], $title10, $linkListData[type]);
                 }
                 
@@ -3405,13 +3490,13 @@ echo"</div>";
 	            <li class="strippedRow" <?=$style;?>>
 	                <span>&nbsp;<img src="http://universeos.org/gfx/icons/filesystem/folder.png" height="14"></span>
 	                <span><a href="#" onclick="<?=$action[folders];?>"><?=$filefdata[name];?>/</a></span>
-	                <span class="trigger"><a href="#" onclick="<?=$trigger[folders];?>" class="btn btn-mini"><i class="icon-ok icon-white"></i></a></span>
+	                <span class="trigger"><a href="#" onclick="<?=$trigger[folders];?>" class="btn btn-mini"><i class="icon-ok"></i></a>&nbsp;</span>
 	            </li>
 	            <!-- frame in which the folder data is loaded, if loadFolderDataIntoMiniBrowser() is called -->
 	            <li class="folder<?=$filefdata[id];?>LoadingFrame" style="display: none;"></li>
 	            <!-- keep strippedrow working-->
 	            <li class="strippedRow" style="display: none;"></li>
-	            <?
+	            <?php
 	            }
 			}
 			
@@ -3434,13 +3519,13 @@ echo"</div>";
 		            <li class="strippedRow" <?=$style;?>>
 		                <span>&nbsp;<img src="http://universeos.org/gfx/icons/filesystem/element.png" height="14"></span>
 		                <span><a href="#" onclick="<?=$action[elements];?>"><?=$title15;?></a></span>
-	                    <span class="trigger"><a href="#" onclick="<?=$trigger[elements];?>" class="btn btn-mini"><i class="icon-ok icon-white"></i></a></span>
+	                    <span class="trigger"><a href="#" onclick="<?=$trigger[elements];?>" class="btn btn-mini"><i class="icon-ok"></i></a>&nbsp;</span>
 		            </li>
 		            <!-- frame in which the element data is loaded, if loadElementDataIntoMiniBrowser() is called -->
 		            <li class="element<?=$fileddata[id];?>LoadingFrame" style="display: none;"></li>
 		            <!-- keep strippedrow working-->
 		            <li class="strippedRow" style="display: none;"></li>
-		            <?
+		            <?php
 	            }
 			}
 		}else if(isset($element)){
@@ -3470,10 +3555,10 @@ echo"</div>";
 	                    <li class="strippedRow" <?=$style;?>>
 	                        <span>&nbsp;<img src="http://universeos.org/gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData[type];?>" height="14px"></span>
 	                        <span><a href="#" onclick="<?=$action[files];?>"><?=substr($fileListData[title],0,30);?></a></span>
-	                        <span class="trigger"><a href="#" onclick="<?=$trigger[files];?>" class="btn btn-mini"><i class="icon-ok icon-white"></i></a></span>
+	                        <span class="trigger"><a href="#" onclick="<?=$trigger[files];?>" class="btn btn-mini"><i class="icon-ok"></i></a>&nbsp;</span>
 	                    </li>
 	                    
-	                    <?
+	                    <?php
 	
 	            }}
 	            $linkListSQL = mysql_query("SELECT * FROM links WHERE $query");
@@ -3498,7 +3583,7 @@ echo"</div>";
 	                    <span><a href="#" onclick="<?=$action[links];?>"><?=substr($linkListData[title],0,30);?></a></span>
 	                    <span class="trigger"><a href="#" onclick="<?=$trigger[files];?>" class="btn btn-mini"><i class="icon-ok icon-white"></i></a></span>
 	                </li>
-	                <?
+	                <?php
 	                } 
 			
 			
@@ -3533,6 +3618,58 @@ echo"</div>";
 				
 				$privacy = $folderData[privacy];
 				$privacy .= ";PROTECTED";
+				
+				
+				mysql_query("UPDATE `folders` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+				
+				
+				break;
+			case element:
+				
+				$elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
+				$elementData = mysql_fetch_array($elementSQL);
+				$privacy = $elementData[privacy];
+				$privacy .= ";PROTECTED";
+				
+				
+				mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+				
+				
+				break;
+			case file:
+				$fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
+				$fileData = mysql_fetch_array($fileSQL);
+				$privacy = $fileData[privacy];
+				$privacy .= ";PROTECTED";
+				
+				
+				mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+				break;
+			case link:
+				$linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
+				$linkData = mysql_fetch_array($linkSQL);
+				
+				
+				$privacy = $linkData[privacy];
+				$privacy .= ";PROTECTED";
+				
+				
+				mysql_query("UPDATE `links` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+				break;
+		}
+	}
+	function removeProtectionFromFilesystemItem($type, $typeId){
+		$type = save($type);
+		$typeId = save($typeId);
+		
+		switch($type){
+			case folder:
+				
+				$folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
+				$folderData = mysql_fetch_array($folderSQL);
+				
+				$privacy = $folderData[privacy];
+				$privacy = str_replace(";PROTECTED", "", $privacy);
 				
 				
 				mysql_query("UPDATE `folders` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
@@ -3766,6 +3903,8 @@ echo"</div>";
                 //and a $_SESSION with the checksum will be created, which shows the 
                 //reload.php if a reload of the document is nessacary
                 
+                $userid = getUser();
+                
                 if(!empty($_SESSION[openUffs])){
                     
                     //parse SESSION
@@ -3795,9 +3934,9 @@ echo"</div>";
                 //var1 with UFFs is used to 
                 $activeUserArray = explode(";", $fileData[var1]);
                 //check if user is allready in list
-                if (!in_array("$_SESSION[userid]", $activeUserArray)) {
+                if (!in_array("$userid", $activeUserArray)) {
                     //add user to array
-                    $activeUserArray[] = $_SESSION[userid];
+                    $activeUserArray[] = $userid;
                     
                     //parse array
                     $activeUserArray = implode(";", $activeUserArray);
@@ -3810,6 +3949,8 @@ echo"</div>";
     function removeUFFcookie($fileId){
                 //removes checksum and caller from $_SESSION so that the 
                 //reload.php dont handels and empty request
+                
+                	$userid = getUser();
                     
                     if(empty($fileId)){
                         unset($_SESSION[openUffs]);
@@ -3837,7 +3978,7 @@ echo"</div>";
                         $activeUserArray = explode(";", $fileData[var1]);
                         //get user out of array
                         foreach($activeUserArray AS &$user){
-                            if($user != $_SESSION[userid]){
+                            if($user != $userid){
                                 $newArray[] = $user;
                             }
                         }
@@ -3884,6 +4025,33 @@ echo"</div>";
                 addChecksumToUffCookie($fileId, $checksum);
                 return true;
     }
+	
+	
+		
+		function sendMessage($receiver, $text, $crypted){
+			
+	        if(proofLogin()){
+	        $sender = getUser();
+	      	$buddy = $receiver;
+	                if($crypted == "true"){
+	                    $crypt = "1";
+	                }else{
+	                    $crypt = "0";
+	                }
+					
+					$message = addslashes($text);
+	                if(mysql_query("INSERT INTO `messages` (`sender`,`receiver`,`timestamp`,`text`,`read`,`crypt`) VALUES('$sender', '$buddy', '".time()."', '$text', '0', '$crypt');")){
+	                	return true;
+						jsAlert("dings");
+	                }
+	                $postCheck = 1;
+					
+					
+					
+	                }
+		}
 
-
+	class chatMessages{
+		
+	}
        ?>

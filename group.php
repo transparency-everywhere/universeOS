@@ -97,7 +97,7 @@ if (!empty($memberData[itemId])) {
     <div id="groupFiles" class="groupSlider" style="display:none">
         <table cellspacing="0" style="font-size: 9px;" width="100%">
           <?php
-          $query = "WHERE privacy LIKE '%$group%'";
+          $query = "WHERE privacy LIKE '%$group;%'";
           
         
                         showFileBrowser($folder, "$query", "$query");

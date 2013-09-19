@@ -26,13 +26,15 @@ $url = $_GET['url'];
 }
 
 
+.browser header span{
+	float:left;
+}
+
 .browser header input{
+	float: left;
 	height: 15px;
 	padding: 5px 5px 2px 5px;
-	position: absolute;
-	top: 5px;
-	right: 5px;
-	left: 5px;
+	margin-left: 5px;
 	min-width: 400px;
 }
 
@@ -61,7 +63,7 @@ $url = $_GET['url'];
 		
 	</form>
 		
-		<input type="text" class="browserInput" placeholder="http://transparency-everywhere.com" value="<?=$url;?>">
+		<span><a href="#" class="browserBack btn btn-small"><<</a> <a href="#" class="browserNext btn btn-small">>></a> <a href="#" class="browserToggleProxy btn btn-small" class="You are currently not using your proxy"><i class="icon icon-eye-open"></i></a> </span><input type="text" class="browserInput" placeholder="http://transparency-everywhere.com" value="<?=$url;?>">
 </header>
 <iframe src="<?=$url;?>">
 	
