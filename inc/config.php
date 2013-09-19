@@ -3,10 +3,10 @@ $timestamp = time();
 
 //mysql connect
 	$server = "85.214.203.132";
-	$user = "universe";
-	$password = "kghjfgfxFFFassd5432As";
+	$user = "universeDevelopm";
+	$password = "syd567HGFuds";
 	
-	$db = "universe";
+	$db = "universeDevelopment";
 	
 	mysql_connect("$server","$user","$password");
 	mysql_select_db("$db");
