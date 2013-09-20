@@ -1170,7 +1170,7 @@ echo"</div>";
        
     
     function showScore($type, $typeid, $reload=NULL) {
-        if($_SESSION[userid]){
+        if(proofLogin()){
                if($type == "comment"){
                $scoreSql = mysql_query("SELECT id, votes, score FROM comments WHERE id='$typeid'");
                $scoreData = mysql_fetch_array($scoreSql);
