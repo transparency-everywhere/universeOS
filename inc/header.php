@@ -50,10 +50,6 @@
                 //loads clock into the dock, yeah.
                 clock();
                 
-                //replace all links with <a href=link>link</a>
-                $('body').html($('body').html().replace("/(b(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig","<a href='$1'>$1</a>"));
-                
-                
 
 
         </script>

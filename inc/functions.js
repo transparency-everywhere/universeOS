@@ -4,31 +4,44 @@
                 	//init search
 					$("#searchField").keyup(function()
 					{
-						var search;
 						
-						search = $("#searchField").val();
-						if (search.length > 1)
-						{
-							$.ajax(
+						delay(function(){
+							var search;
+							
+							search = $("#searchField").val();
+							if (search.length > 1)
 							{
-								type: "POST",
-								url: "modules/suggestions/dockSearch.php",
-								data: "search=" + search,
-								success: function(message)
+								$.ajax(
 								{
-									$("#suggest").empty();
-							  		if (message.length > 1)
-									{						
-										$("#suggest").append(message);
+									type: "POST",
+									url: "modules/suggestions/dockSearch.php",
+									data: "search=" + search,
+									success: function(message)
+									{
+										$("#suggest").empty();
+								  		if (message.length > 1)
+										{						
+											$("#suggest").append(message);
+										}
 									}
-								}
-							});
-						}
-						else
-						{
-							$("#suggest").empty();
-						}
+								});
+							}
+							else
+							{
+								$("#suggest").empty();
+							}
+							
+						}, 500 );
 					});
+                
+                	$(document).live(function(){
+                		
+                		//replace all links with <a href=link>link</a>
+		                $('body').html($('body').html().replace("/(b(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig","<a href='$1'>$1</a>"));
+		                
+		                
+                	});
+                
                 
                 	//old creepy way to initalize windows => in future => css media width
                     var docWidth;
@@ -833,7 +846,7 @@
                     var hoursRoundedTwo = pad.substring(0, pad.length - hoursRoundedOne.length) + hoursRoundedOne;
 
                 var outStr = hoursRoundedTwo+':'+minutesRoundedTwo;
-                document.getElementById('clockDiv').innerHTML=outStr;
+                $('#clockDiv').html(outStr);
                 setTimeout('clock()',1000);
               }
               

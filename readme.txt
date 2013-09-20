@@ -14,6 +14,7 @@ Recent:
 		buddylist
 		friends you may know
 		youtube titles
+		youTubeIdToTitle()
 		getUserFavs
 		
 	security

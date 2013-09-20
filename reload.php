@@ -6,7 +6,7 @@ if($_SESSION[userid]){
 require_once("inc/config.php");
 require_once("inc/functions.php");
 echo"<script>";
-$userid = $_SESSION['userid'];
+$userid = getUser();
 updateActivity($userid);
 $time = time();
 
@@ -48,7 +48,7 @@ $time = time();
 
 
 //check if the buddylists needs to be reloaded
-$buddylistSql = mysql_query("SELECT * FROM buddylist WHERE owner='$_SESSION[userid]' && request='0'");
+$buddylistSql = mysql_query("SELECT * FROM buddylist WHERE owner='$userid' && request='0'");
 while($buddylistData = mysql_fetch_array($buddylistSql)) {
     $blUserSql = mysql_query("SELECT lastactivity FROM user WHERE userid='$buddylistData[buddy]'");
     $blUserData = mysql_fetch_array($blUserSql);
@@ -61,11 +61,11 @@ echo"$('#buddyListFrame').load('buddylist.php?reload=1');";
 
 
 //check for new msg
-$newMessagesSql = mysql_query("SELECT sender FROM  `messages` WHERE  receiver='$_SESSION[userid]' AND  `read`='0'  ORDER BY timestamp DESC LIMIT 0, 3");
+$newMessagesSql = mysql_query("SELECT sender FROM  `messages` WHERE  receiver='$userid' AND  `read`='0'  ORDER BY timestamp DESC LIMIT 0, 3");
 $newMessagesData = mysql_fetch_array($newMessagesSql);
 
 
-$newMessagesSql2 = mysql_query("SELECT receiver FROM  `messages` WHERE  sender='$_SESSION[userid]' AND  `seen`='0'  ORDER BY timestamp DESC LIMIT 0, 3");
+$newMessagesSql2 = mysql_query("SELECT receiver FROM  `messages` WHERE  sender='$userid' AND  `seen`='0'  ORDER BY timestamp DESC LIMIT 0, 3");
 $newMessagesData2 = mysql_fetch_array($newMessagesSql2);
     if(isset($newMessagesData2[sender])){
         $UserSql = mysql_query("SELECT * FROM user WHERE userid='$newMessagesData2[receiver]'");
@@ -89,7 +89,7 @@ $newMessagesData2 = mysql_fetch_array($newMessagesSql2);
         unset($newMessagesOn);
     }
 //check for friend request
-$friendRequestSql = mysql_query("SELECT * FROM buddylist WHERE buddy='$_SESSION[userid]' && request='1' LIMIT 0, 3");
+$friendRequestSql = mysql_query("SELECT * FROM buddylist WHERE buddy='$userid' && request='1' LIMIT 0, 3");
 $friendRequestData = mysql_fetch_array($friendRequestSql);
  $newFriends = $friendRequestData[buddy];
  
@@ -139,7 +139,7 @@ if(isset($newMessagesOn)){
 <? }
 
 
-$personalEventSql = mysql_query("SELECT * FROM personalEvents WHERE owner='$_SESSION[userid]' AND seen='0'");
+$personalEventSql = mysql_query("SELECT * FROM personalEvents WHERE owner='$userid' AND seen='0'");
 $personalEvents = mysql_num_rows($personalEventSql);
 
 

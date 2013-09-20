@@ -2737,8 +2737,6 @@ echo"</div>";
 	function createInternLink($parentType, $parentId, $type, $typeId, $title=NULL){
 	//creates shortcut
 		
-		
-		
 		//check if link allready exists
 		$linkCheckData = mysql_fetch_array(mysql_query("SELECT type FROM internLinks WHERE type='$type' AND typeId='$typeId'"));
 		if(empty($linkCheckData[type])){
@@ -2751,7 +2749,7 @@ echo"</div>";
 	}
         
     function deleteInternLink($linkId){
-    //deletes single shortcut
+    	//deletes single shortcut
         if(mysql_query("DELETE FROM internLinks WHERE id='$linkId'")){
             return true;
         }
@@ -2759,7 +2757,6 @@ echo"</div>";
     
     function deleteInternLinks($parentType, $parentId){
         //is used when element which the shortcut is linked to is deleted
-        
         if(mysql_query("DELETE FROM internLinks WHERE type='$parentType' AND typeId='$parentId'")){
             return true;
         }
@@ -2812,7 +2809,10 @@ echo"</div>";
         if($isLink){
         	//extra handler for extarnal links
 			if(empty($linkId))
-				if(is_int($linkId))
+			
+				//check if link is "external" or if data needs to be taken out of the db
+				//if $type = wiki, linkId is empty but its still an external source
+				if(is_int($linkId) || $type == "wiki")  
 				$extarnal = true;
 			
 				if(!$extarnal){

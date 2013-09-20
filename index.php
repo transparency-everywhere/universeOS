@@ -19,7 +19,7 @@ include_once("inc/functions.php");
 include_once("inc/config.php");
 init();
 $timestamp = time();
-$usersql = mysql_query("SELECT * FROM user WHERE userid='$_SESSION[userid]'");
+$usersql = mysql_query("SELECT * FROM user WHERE userid='".getUser()."'");
 $userdata = mysql_fetch_array($usersql);
 
 
