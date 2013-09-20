@@ -1,12 +1,13 @@
 <?
-if(empty($_SESSION[userid])){
-session_start();
-}
-if($_SESSION[userid]){
 require_once("inc/config.php");
 require_once("inc/functions.php");
-echo"<script>";
+
 $userid = getUser();
+
+if(empty($userid)){
+session_start();
+}else{
+echo"<script>";
 updateActivity($userid);
 $time = time();
 

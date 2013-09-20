@@ -1,10 +1,12 @@
 <?
+error_reporting(0);
+@ini_set('display_errors', 0);
 $timestamp = time();
 
 //mysql connect
-	$server = "85.214.203.132";
-	$user = "universeDevelopm";
-	$password = "syd567HGFuds";
+	$server = "localhost";
+	$user = "root";
+	$password = "";
 	
 	$db = "universeDevelopment";
 	
@@ -17,11 +19,10 @@ $timestamp = time();
 	}
 
 
-//get gloabals for user
-if(!empty($_SESSION[userid])){
-	
-	$global_userData = mysql_fetch_array(mysql_query("SELECT * FROM user WHERE userid='$_SESSION[userid]'"));
-	
+//get userdata
+if(isset($_SESSION['userid'])){
+	$userid = $_SESSION['userid'];
+	$global_userData = mysql_fetch_array(mysql_query("SELECT * FROM user WHERE userid='$userid'"));
 	$global_userGroupData = mysql_fetch_array(mysql_query("SELECT * FROM userGroups WHERE id='$global_userData[usergroup]'"));
 	
 	

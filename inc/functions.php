@@ -1,5 +1,5 @@
 <?php
-  $userid = $_SESSION['userid'];
+  $userid = getUser();
   $time = time();
 
   require_once('config.php');
@@ -520,7 +520,12 @@
   }
   
   function getUser(){
-  	return $_SESSION['userid'];
+  	
+  	if(isset($_SESSION['userid'])){
+  		return $_SESSION['userid'];
+  	}else{
+  		return false;
+  	}
   }
   
   function hasRight($type){
