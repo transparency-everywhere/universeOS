@@ -85,7 +85,15 @@ $title10 = substr("$elementdata[title]", 0, 10);
 	           <td colspan="2">
 	               
 	                            <?
-	                                    showPrivacySettings($elementdata[privacy]);
+	                            
+	                            
+                                        if(isProtected($elementdata['privacy'])){
+                                        	if(hasRight("protectFileSystemItems")){
+                                        		
+												$elementdata['privacy'] = str_replace(";PROTECTED", "", $elementdata['privacy']);
+                                        	}
+                                        }
+	                                    showPrivacySettings($elementdata['privacy']);
 	                            ?>
 	           </td>
 	       </tr>

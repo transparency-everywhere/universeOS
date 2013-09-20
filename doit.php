@@ -626,7 +626,13 @@ if($_GET['action'] == "scorePlus"){
                                         <tr>
                                             <td colspan="2">
                                                 <?
-                                                showPrivacySettings($selectdata[privacy]);
+                                                if(isProtected($selectdata['privacy'])){
+                                                	if(hasRight("protectFileSystemItems")){
+                                                		
+														$selectdata['privacy'] = str_replace(";PROTECTED", "", $selectdata['privacy']);
+                                                	}
+                                                }
+                                                showPrivacySettings($selectdata['privacy']);
                                                 ?>
                                             </td>
                                         </tr>
@@ -742,7 +748,13 @@ if($_GET['action'] == "scorePlus"){
                     <tr>
                         <td colspan="2">
                             <?
-                                    showPrivacySettings($selectdata[privacy]);
+                                                if(isProtected($selectdata['privacy'])){
+                                                	if(hasRight("protectFileSystemItems")){
+                                                		
+														$selectdata['privacy'] = str_replace(";PROTECTED", "", $selectdata['privacy']);
+                                                	}
+                                                }
+                                    showPrivacySettings($selectdata['privacy']);
                             ?>
                             
                         </td>
@@ -2211,6 +2223,7 @@ if($_GET['action'] == "scorePlus"){
                             if(rename("$parentFolderPath$checkFolderData[name]", "$parentFolderPath".urldecode($_POST[name]))){
                             mysql_query("UPDATE folders SET name='$_POST[name]' WHERE id='$itemId'");
                             jsAlert("Saved :)");
+							echo"<script>parent.$('.jqPopUp').slideUp();</script>";
 							}}else{
 								jsAlert("A folder with this title already exists");
 							}

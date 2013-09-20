@@ -8,7 +8,7 @@ html {
 }
 body {
 	color: #000000;
-    background-image: url(../gfx/bg/1.jpg);
+    background-image: url(../../gfx/bg/1.jpg);
     background-attachment: no-repeat;
     background-position:top left;
 	background-repeat: no-repeat;
@@ -22,7 +22,7 @@ body {
 	margin: 0;
 	padding: 0;
 	word-wrap: break-word;
-	background-repeat:no-repa;
+	background-repeat:no-repeat;
 }
 
 ul {
@@ -82,7 +82,6 @@ li {
     	background-image: url('../../gfx/bg/universeos_1920x1080.jpg');
 	}
 }
-
 /*.strippedRow:first-child {background:rgb(223, 236, 250)}
 .strippedRow:nth-child(2n+3) {background:rgb(223, 236, 250)}*/
 
@@ -2141,7 +2140,7 @@ font-family:"Courier New", Courier, monospace;
 }
 
 .smiley{ 
-    background: url(../gfx/smileys.png) no-repeat top left;
+    background: url(../../gfx/smileys.png) no-repeat top left;
     display: inline-block;
     vertical-align: top;
 }
@@ -2156,14 +2155,14 @@ font-family:"Courier New", Courier, monospace;
 .smiley8{ background-position: 0 -455px; width: 15px; height: 15px; }
 
 .lockIcon{
-    background: url(../gfx/icons/lock.png) no-repeat top left;
+    background: url(../../gfx/icons/lock.png) no-repeat top left;
     display: inline-block;
     vertical-align: top; 
     background-position: 0 0; width: 15px; height: 18px; 
 }
 
 .lockIcon.locked{
-    background: url(../gfx/icons/locked.png) no-repeat top left;
+    background: url(../../gfx/icons/locked.png) no-repeat top left;
 }
 
 
@@ -2247,7 +2246,7 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 	background-color: #FDE5DD !important;
 }
 .uploadify-queue-item .cancel a {
-	background: url('../img/uploadify-cancel.png') 0 0 no-repeat;
+	background: url('../../img/uploadify-cancel.png') 0 0 no-repeat;
 	float: right;
 	height:	16px;
 	text-indent: -9999px;

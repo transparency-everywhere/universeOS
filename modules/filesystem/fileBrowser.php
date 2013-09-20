@@ -55,15 +55,24 @@ if(isset($_GET[special])){
 	}
     
 }else{
-if(isset($_GET[folder])){
-$folder = "$_GET[folder]";    
-} else if(empty($_GET[folder])  OR $_GET[folder]==0){
+if(isset($_GET['folder'])){
+	$folder = $_GET['folder']; 
+			//userFolder
+		if($folder == "2"){
+			$userData = getUserData();
+			$folder = $userData['homefolder'];
+		}
+	
+} else if(empty($_GET['folder'])  OR $_GET['folder']==0){
 $folder = "1";
 }}
 
 
 $pathsql = mysql_query("SELECT id, folder, path, privacy, creator FROM folders WHERE id='".mysql_real_escape_string($folder)."'");
 $pathdata = mysql_fetch_array($pathsql);
+	if($pathdata['folder'] == 2){
+		$pathdata['folder'] = "1";
+	}
 } ?>
 <div class="border-box frameRight fileBrowser_<?=$folder;?>">
     <div class="underFrame" style="overflow: none;">
@@ -71,9 +80,9 @@ $pathdata = mysql_fetch_array($pathsql);
             	<? if($folder !== "1") {?>
             	<a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=<?=$pathdata[folder];?>&reload=1');return false" title="parent folder" class="btn btn-mini" style="margin-right:3px;"><i class="icon-arrow-up"></i></a>
                 <? }
-                if(isset($_SESSION[userid]) && !empty($folder)){ ?>
-            	<a href="#" onclick="$('.fileBrowserSettings<?=$folder;?>').slideToggle('slow'); return false" title="more..." class="btn btn-mini"><i class="icon-cog"></i></a>
-                <? }?>
+                if(proofLogin() && !empty($folder)){ 
+            		echo"<a href=\"#\" onclick=\"$('.fileBrowserSettings$folder').slideToggle('slow'); return false\" title=\"more...\" class=\"btn btn-mini\"><i class=\"icon-cog\"></i></a>";
+                 }?>
         </div>
         <div class="fileBrowser">
         	<?

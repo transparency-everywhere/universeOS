@@ -1,4 +1,7 @@
 <?
+$userid = getUser();
+
+
 $userSql = mysql_query("SELECT username FROM user WHERE userid='$_SESSION[userid]'");
 $userData = mysql_fetch_array($userSql);
 
@@ -136,8 +139,8 @@ $(document).ready(function(){
 	<div class="dashBox">
 		<a class="dashClose"></a>
 		<header>Welcome</header>
-		<div style="position: absolute;text-indent: 9px;line-height: 28pt;">
-	         <?=showUserPicture($_SESSION[userid], "20");?>Hey <a href="#" onclick="showProfile(<?=$_SESSION[userid];?>)"><?=$userData[username];?></a>,<br>good to see you!
+		<div style="position: absolute;text-indent: 9px;line-height: 28pt; width:220px;">
+	         <?=showUserPicture($userid, "20");?>Hey <a href="#" onclick="showProfile(<?=$userid;?>)"><?=$userData[username];?></a>,<br>good to see you!
 	         
 		</div>
 	</div>
@@ -146,6 +149,7 @@ $(document).ready(function(){
 		<header>Your Groups</header>
 		<ul class="content">
 			<?
+			$i = 0;
 			foreach($groups AS $group){
 				echo"<li>";
 					echo"<span class=\"marginRight\">";
@@ -170,6 +174,7 @@ $(document).ready(function(){
 		<header>Your Messages</header>
 		<ul id="messageList" class="content">
 			<?
+			$i = 0;
 			foreach($lastMessages AS $message){
 				
 				$class = "";
@@ -194,6 +199,11 @@ $(document).ready(function(){
 					echo "</span>";
 				echo"</li>";
 			}
+			if($i == 0){
+				echo"<li>";
+				echo"You don't have any messages so far, search for friends, add them to your buddylist and open a chat dialoge to write a message.";
+				echo"</li>";
+			}
 			?>
 			
 		</ul>
@@ -203,6 +213,7 @@ $(document).ready(function(){
 		<header>Your Playlists</header>
 		<ul class="content">
 			<?
+			$i = 0;
 			foreach($playlists AS $playlist){
 				echo"<li>";
 					echo"<span class=\"marginRight\">";
@@ -215,6 +226,12 @@ $(document).ready(function(){
 					echo"</span>";
 				echo"</li>";
 			}
+			if($i == 0){
+				echo"<li>";
+				echo"You don't have any playlists so far.";
+				echo"<li>";
+			}
+			
 			?>
 			
 		</ul>
@@ -224,15 +241,14 @@ $(document).ready(function(){
 		<header>Your Files</header>
 		<div class="content">
 		<?
-			                  $user = $_SESSION[userid];
-			                 
+		
 			                  //show folders and elements
-			                  $folderQuery = "WHERE creator='$user' ORDER BY timestamp DESC";
-			                  $elementQuery = "WHERE author='$user' ORDER BY timestamp DESC";
+			                  $folderQuery = "WHERE creator='$userid' ORDER BY timestamp DESC";
+			                  $elementQuery = "WHERE author='$userid' ORDER BY timestamp DESC";
 			                  showFileBrowser($folder, "$folderQuery", "$elementQuery");
 			                  
 			                  //show files
-			                  $fileQuery = "owner='$user' ORDER BY timestamp DESC";
+			                  $fileQuery = "owner='$userid' ORDER BY timestamp DESC";
 			                  echo'<table>';
 			                  showFileList('', $fileQuery);
 			                  echo"</table>";
@@ -243,8 +259,8 @@ $(document).ready(function(){
 		<a class="dashClose"></a>
 		<header>Your Fav</header>
 		<div class="content">
-        <? 
-		 showFav($_SESSION[userid]);
+        <?
+		 showFav($userid);
 		?>
 		</div>
 	</div>
