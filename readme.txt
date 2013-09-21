@@ -22,6 +22,10 @@ Recent:
 	Bugs
 		Session login prob
 		
+	Privacy
+		die protectedfunktion muss zu einer undeleteablefunktion und dann muss für groupfiles und userfiles eine neue protectedfunktion geschrieben werden,
+		da sich derzeit bei protectedten ordnern keinen neuen ordner von nichtadmins erstellen lassen.
+		
 	Install
 		Vars
 				URL

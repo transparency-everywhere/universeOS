@@ -860,7 +860,7 @@
 						   if($i == 0){
 						   		echo"<tr>";
 							   		echo"<td colspan=\"2\">";
-									echo"You don't have any favorites so far. Add Folders, Elements, Files, Playlist or other items to your Favorites to see them here.";
+									echo"You don't have any favourites so far. Add folders, elements, files, playlists or other items to your favourites and they will appear here.";
 							   		echo"</td>";
 						   		echo"</tr>";
 						   }
@@ -2889,7 +2889,7 @@ echo"</div>";
 			
 			//add playlistdropdown to add video
 			// to a playlist to the header
-			
+			if(proofLogin()){
 			//get all the playlists
 			$playlists = getUserPlaylistArray();
 			//init form and select
@@ -2903,7 +2903,9 @@ echo"</div>";
 			}
 			//close select, form and and submit button
 			$options .= "</select><input type=\"submit\" name=\"submit\" value=\"add\" class=\"btn btn-mini\" style=\"margin-top: -11px;\"></form>";
+			}
 			$controls = $options;
+			
 			//extraInfo1 is a playlist
 			if(!empty($extraInfo1)){
 				//id of fileWindow needs to have playlistId inside

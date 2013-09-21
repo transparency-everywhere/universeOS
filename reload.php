@@ -1,55 +1,54 @@
 <?
+if(empty($_SESSION[userid])){
+session_start();
+}
+if($_SESSION[userid]){
 require_once("inc/config.php");
 require_once("inc/functions.php");
-
-$userid = getUser();
-
-if(empty($userid)){
-session_start();
-}else{
 echo"<script>";
+$userid = $_SESSION['userid'];
 updateActivity($userid);
 $time = time();
 
 //UFF Viewer
-	if(!empty($_SESSION[openUffs])){
-	    $openUffs = $_SESSION[openUffs];
-	    $openUffs = explode(";", $_SESSION["openUffs"]);
-	    foreach($openUffs AS &$file){
-	        $caller = "UFFsum_$file";
-	        $filePath = getFullFilePath($file);
-	        $checksum = md5_file($filePath);
-	        if($_SESSION[$caller] != $checksum){?>
-	
-	
-	            if($('.uffViewer_<?=$file;?>').length > 0){
-	                    $('.uffViewer_<?=$file;?>').html(function(){
-	                        var caretPosition = getCaretPosition(this);
-	                        
-	                        $.get('doit.php?action=loadUff&id=<?=$file;?>&noJq=true', function(uffContent) {
-	                            $('.uffViewer_<?=$file;?>').val(uffContent);
-	                        });
-	                        
-	
-	
-	                    });
-	                    //load
-	            }else{
-	
-	                //delete cookie from openUffs
-	                $.post("doit.php?action=removeUFFcookie", {
-	                           id:'<?=$file;?>'
-	                           });
-	            }
-	        <?
-	        }
-	    }
-	}
+        if(!empty($_SESSION[openUffs])){
+            $openUffs = $_SESSION[openUffs];
+            $openUffs = explode(";", $_SESSION["openUffs"]);
+            foreach($openUffs AS &$file){
+                $caller = "UFFsum_$file";
+                $filePath = getFullFilePath($file);
+                $checksum = md5_file($filePath);
+                if($_SESSION[$caller] != $checksum){?>
+        
+        
+                    if($('.uffViewer_<?=$file;?>').length > 0){
+                            $('.uffViewer_<?=$file;?>').html(function(){
+                                var caretPosition = getCaretPosition(this);
+                                
+                                $.get('doit.php?action=loadUff&id=<?=$file;?>&noJq=true', function(uffContent) {
+                                    $('.uffViewer_<?=$file;?>').val(uffContent);
+                                });
+                                
+        
+        
+                            });
+                            //load
+                    }else{
+        
+                        //delete cookie from openUffs
+                        $.post("doit.php?action=removeUFFcookie", {
+                                   id:'<?=$file;?>'
+                                   });
+                    }
+                <?
+                }
+            }
+        }
 
 
 
 //check if the buddylists needs to be reloaded
-$buddylistSql = mysql_query("SELECT * FROM buddylist WHERE owner='$userid' && request='0'");
+$buddylistSql = mysql_query("SELECT * FROM buddylist WHERE owner='$_SESSION[userid]' && request='0'");
 while($buddylistData = mysql_fetch_array($buddylistSql)) {
     $blUserSql = mysql_query("SELECT lastactivity FROM user WHERE userid='$buddylistData[buddy]'");
     $blUserData = mysql_fetch_array($blUserSql);
@@ -62,11 +61,11 @@ echo"$('#buddyListFrame').load('buddylist.php?reload=1');";
 
 
 //check for new msg
-$newMessagesSql = mysql_query("SELECT sender FROM  `messages` WHERE  receiver='$userid' AND  `read`='0'  ORDER BY timestamp DESC LIMIT 0, 3");
+$newMessagesSql = mysql_query("SELECT sender FROM  `messages` WHERE  receiver='$_SESSION[userid]' AND  `read`='0'  ORDER BY timestamp DESC LIMIT 0, 3");
 $newMessagesData = mysql_fetch_array($newMessagesSql);
 
 
-$newMessagesSql2 = mysql_query("SELECT receiver FROM  `messages` WHERE  sender='$userid' AND  `seen`='0'  ORDER BY timestamp DESC LIMIT 0, 3");
+$newMessagesSql2 = mysql_query("SELECT receiver FROM  `messages` WHERE  sender='$_SESSION[userid]' AND  `seen`='0'  ORDER BY timestamp DESC LIMIT 0, 3");
 $newMessagesData2 = mysql_fetch_array($newMessagesSql2);
     if(isset($newMessagesData2[sender])){
         $UserSql = mysql_query("SELECT * FROM user WHERE userid='$newMessagesData2[receiver]'");
@@ -90,7 +89,7 @@ $newMessagesData2 = mysql_fetch_array($newMessagesSql2);
         unset($newMessagesOn);
     }
 //check for friend request
-$friendRequestSql = mysql_query("SELECT * FROM buddylist WHERE buddy='$userid' && request='1' LIMIT 0, 3");
+$friendRequestSql = mysql_query("SELECT * FROM buddylist WHERE buddy='$_SESSION[userid]' && request='1' LIMIT 0, 3");
 $friendRequestData = mysql_fetch_array($friendRequestSql);
  $newFriends = $friendRequestData[buddy];
  
@@ -100,9 +99,9 @@ $newGroupData = mysql_fetch_array($newGroupSql);
  $newGroup = $newGroupData[item];
  
  
-	echo "$(document).ready(function(){";
-	
-	
+        echo "$(document).ready(function(){";
+        
+        
 //load new chat window if recent user is active
 if(isset($newMessagesOn)){
     $newMessageUserSql = mysql_query("SELECT userid, username FROM user WHERE username='$buddy'");
@@ -140,12 +139,12 @@ if(isset($newMessagesOn)){
 <? }
 
 
-$personalEventSql = mysql_query("SELECT * FROM personalEvents WHERE owner='$userid' AND seen='0'");
+$personalEventSql = mysql_query("SELECT * FROM personalEvents WHERE owner='$_SESSION[userid]' AND seen='0'");
 $personalEvents = mysql_num_rows($personalEventSql);
 
 
 if(!empty($newMessages) OR !empty($newFriends) OR !empty($newGroup) OR !empty($personalEvents)){
-   	echo"$('#personalFeed').load('personalFeed.php')";
+        echo"$('#personalFeed').load('personalFeed.php')";
 }else{
     echo "$('#newMessages').html('');";
     echo "$('#openFriendRequests').html('');";
@@ -155,4 +154,4 @@ if(!empty($newMessages) OR !empty($newFriends) OR !empty($newGroup) OR !empty($p
       
     echo"</script>";
     
-} ?>
+} ?>

@@ -201,7 +201,7 @@ $(document).ready(function(){
 			}
 			if($i == 0){
 				echo"<li>";
-				echo"You don't have any messages so far, search for friends, add them to your buddylist and open a chat dialoge to write a message.";
+				echo"You don't have any messages so far. Search for friends, add them to your buddylist and open a chat dialoge to write a message.";
 				echo"</li>";
 			}
 			?>
