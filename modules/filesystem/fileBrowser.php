@@ -16,15 +16,15 @@ if(!isset($_GET[initter])){
 
           <div class="leftNav">
               <ul>
-                  <li><a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?special=pupularity&reload=1');return false"><i class="icon-star"></i> Suggestions</a></li>
-                  <li><a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?reload=1');return false"><i class="icon-hdd"></i> All Files</a></li>
-                  <li><a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?special=document&reload=1');return false"><i class="icon-book"></i> Documents</a></li>
-                  <li><a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?special=audio&reload=1');return false"><i class="icon-music"></i> Audio Files</a></li>
-                  <li><a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?special=video&reload=1');return false"><i class="icon-film"></i> Video Files</a></li>
+                  <li><a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?special=pupularity&reload=1');return false"><img src="gfx/icons/filesystem/side_suggestions.png"> Suggestions</a></li>
+                  <li><a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?reload=1');return false"><img src="gfx/icons/filesystem/side_allFiles.png"> All Files</a></li>
+                  <li><a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?special=document&reload=1');return false"><img src="gfx/icons/filesystem/side_documents.png"> Documents</a></li>
+                  <li><a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?special=audio&reload=1');return false"><img src="gfx/icons/filesystem/side_audio.png"> Audio Files</a></li>
+                  <li><a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?special=video&reload=1');return false"><img src="gfx/icons/filesystem/side_video.png"> Video Files</a></li>
 					<?
 					if(proofLogin()){
 					?>
-                  <li><a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?special=fav&reload=1');return false"><i class="icon-heart"></i> Fav</a></li>
+                  <li><a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?special=fav&reload=1');return false"><img src="gfx/icons/filesystem/side_fav.png"> Fav</a></li>
  				  <? } ?>
                   <!-- <li><i class="icon-warning-sign"></i> deleted</li> -->
               </ul>

@@ -25,7 +25,7 @@ $(document).ready(function(){
 </script>
 <style>
 	#dashBoard{
-		width: 500px;
+		width: 728px;
 	}
 
 	.dashBox{
@@ -34,14 +34,13 @@ $(document).ready(function(){
 		width: 230px;
 		height: 155px;
 		border-radius: 1px;
-		background: rgba(219, 219, 219, 0.95);
+		background: rgba(240, 240, 240, 0.85);
 		margin: 10px 0px 0px 10px;
 		position: relative;
 		-webkit-border-radius: 3px;
 		-moz-border-radius: 3px;
 		border-radius: 3px;
 		float: left;
-		border: 1px solid #919191;
 	}
 	
 	.dashBox .content{
@@ -72,7 +71,6 @@ $(document).ready(function(){
 		-webkit-border-top-right-radius: 3px;
 		-moz-border-top-right-radius: 3px;
 		border-top-right-radius: 3px;
-		border: 1px solid #555555;
 		margin-left: -1px;
 		margin-right: -1px;
 		margin-top: -1px;
@@ -85,6 +83,14 @@ $(document).ready(function(){
 		left: 0px;
 		right: 0px;
 		height: 15px;
+	}
+	
+	.dashBox footer a:first-of-type{
+		float:left;
+	}
+	
+	.dashBox footer a{
+		float:right;
 	}
 	
 	.dashBox div, .dashBox ul{
@@ -161,12 +167,19 @@ $(document).ready(function(){
 						echo"</a>";
 					echo"</span>";
 				echo"</li>";
+				$i++;
+			}
+			if($i == 0){
+				echo"<li>";
+				echo"You don't have any messages so far. Search for friends, add them to your buddylist and open a chat dialoge to write a message.";
+				echo"</li>";
 			}
 			?>
 			
 		</ul>
 		<footer>
 			<a href="#addGroup" onclick="popper('doit.php?action=addGroup')" title="Create a new Group"><i class="icon icon-plus"></i></a>
+			<a href="#addGroup" onclick="popper('doit.php?action=addPlaylist')" title="Create a new Group"><i class="icon icon-plus"></i></a>
 		</footer>
 	</div>
 	<div class="dashBox">
@@ -198,6 +211,7 @@ $(document).ready(function(){
 					echo "</a>";
 					echo "</span>";
 				echo"</li>";
+				$i++;
 			}
 			if($i == 0){
 				echo"<li>";
@@ -225,6 +239,7 @@ $(document).ready(function(){
 						echo"</a>";
 					echo"</span>";
 				echo"</li>";
+				$i++;
 			}
 			if($i == 0){
 				echo"<li>";
@@ -235,6 +250,9 @@ $(document).ready(function(){
 			?>
 			
 		</ul>
+		<footer>
+			<a href="#addPlaylist" onclick="popper('doit.php?action=addPlaylist')" title="Create a new Playlist"><i class="icon icon-plus"></i></a>
+		</footer>
 	</div>
 	<div class="dashBox">
 		<a class="dashClose"></a>
@@ -254,6 +272,9 @@ $(document).ready(function(){
 			                  echo"</table>";
 		?>
 		</div>
+		<footer>
+			<a href="#uploadFile" onclick="popper('modules/filesystem/upload');" title="Upload a File"><i class="icon icon-plus"></i></a>
+		</footer>
 	</div>
 	<div class="dashBox">
 		<a class="dashClose"></a>
@@ -263,5 +284,14 @@ $(document).ready(function(){
 		 showFav($userid);
 		?>
 		</div>
+	</div>
+	<div class="dashBox">
+		<a class="dashClose"></a>
+		<header>Your Tasks</header>
+		<div class="content">
+		</div>
+		<footer>
+			<a href="#addGroup" onclick="popper('doit.php?action=addGroup')" title="Create a new Group"><i class="icon icon-plus"></i></a>
+		</footer>
 	</div>
 </div>

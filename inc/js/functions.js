@@ -717,6 +717,13 @@
                           $('#bodywrap').append(data);
                     },'html');
                 }
+                
+              function showModuleCalender() {
+                    $.get("modules/calender/index.php",function(data){
+                          $('#bodywrap').append(data);
+                    },'html');
+                }
+                
               function showModuleSettings() {
                     $.get("modules/settings/index.php",function(data){
                           $('#bodywrap').append(data);

@@ -116,19 +116,16 @@ h3{
 
 /*describes the drag and drop window */
 .fenster {
-	-moz-border-radius:4px;
-	-webkit-border-radius:4px;
-	border-radius:4px;
-	-moz-box-shadow:0 0 0 1px #212121 inset, 0 0 5px rgba(0,0,0,0.9);
-	-webkit-box-shadow:0 0 0 1px #212121 inset, 0 0 5px rgba(0,0,0,0.9);
-	box-shadow:0 0 0 0px #212121 inset, 0 0 5px rgba(0,0,0,0.9);
-	border:1px solid #959595;
+	-moz-border-radius:1px;
+	-webkit-border-radius:1px;
+	border-radius:1px;
+	border-bottom:1px solid #959595;
     padding: 2px 0 35px;
 	position:absolute;
 	z-index:1;
-	background: rgba(255,255,255,0.1);
+	background: rgba(255,255,255,0.9);
 }
-.fenster .titel {
+.fenster header {
     color:#454545;
 	cursor:move;
 	height:16px;
@@ -824,6 +821,9 @@ h3{
     
 }
 
+#filesystem .leftNav li img{
+	height: 20px;
+}
 #filelist {
     position: relative;
     height: 60%;
@@ -1748,19 +1748,12 @@ font-weight:bold;
 
 .grayBar{
 	text-decoration:none;
-	border: 1px solid rgb(153, 153, 153);
+	border-bottom: 1px solid rgb(153, 153, 153);
 	padding: 5px 5px 5px 5px;
 	color:#878787;
 	font-size:12px;
 	font-size: 12px;
-    background: #f7f7f7; /* Old browsers */
-	background: -moz-linear-gradient(top, #f7f7f7 0%, #f7f7f7 47%, #f2f2f2 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f7f7f7), color-stop(47%,#f7f7f7), color-stop(100%,#f2f2f2)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #f7f7f7 0%,#f7f7f7 47%,#f2f2f2 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #f7f7f7 0%,#f7f7f7 47%,#f2f2f2 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #f7f7f7 0%,#f7f7f7 47%,#f2f2f2 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #f7f7f7 0%,#f7f7f7 47%,#f2f2f2 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#f2f2f2',GradientType=0 ); /* IE6-9 */
+    background: #f7f7f7;
 }
 
 .grayBar.interactive:hover, .grayBar.interactive.active{

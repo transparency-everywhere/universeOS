@@ -2709,28 +2709,20 @@ echo"</div>";
              
              
     
-                    //set privacy
-                    $customShow = $_POST[privacyCustomSee];
-                    $customEdit = $_POST[privacyCustomEdit];
-                    
-                    $privacy = exploitPrivacy("$_POST[privacyPublic]", "$_POST[privacyHidden]", $customEdit, $customShow);
-                    $user = getUser();
+                $user = getUser();
 
                 $time = time();
-                mysql_query("INSERT INTO `links` (`folder`, `type`, `title`, `link`, `privacy`, `author`, `timestamp`) VALUES ( '".save($folder)."', '".save($type)."', '".save($title)."', '".save($link)."', '$privacy', '$user', '$time');");
-                	$message="The Link has been added!";
-					echo"<script>";
-                	?>
-                    parent.addAjaxContentToTab('<?=$_POST[tabTitle];?>', 'modules/filesystem/showElement.php?element=<?=$$folder;?>&reload=1');
-                	<?
-                	echo"<script>";
+                if(mysql_query("INSERT INTO `links` (`folder`, `type`, `title`, `link`, `privacy`, `author`, `timestamp`) VALUES ( '".save($folder)."', '".save($type)."', '".save($title)."', '".save($link)."', '$privacy', '$user', '$time');")){
+                	
                 	$feedText = "has created the link $title in the folder";
                     $feedLink1 = mysql_insert_id();
                     $feedLink2 = $folder;
+					
                     addFeed($user, $feedText, folderAdd, $feedLink1, $feedLink2);
 					
 					return true;
                 }
+	}
     
     function deleteLink($linkId){
         
@@ -3202,7 +3194,7 @@ echo"</div>";
         		$parentFolderData = mysql_fetch_array(mysql_query("SELECT folder FROM folders WHERE id='".mysql_real_escape_string($folder)."'"));
         		?>
 	            <tr class="strippedRow" height="30">
-	                <td width="30">&nbsp;<img src="http://universeos.org/gfx/icons/filesystem/folder.png" height="22"></td>
+	                <td width="30">&nbsp;<img src="gfx/icons/filesystem/folder.png" height="22"></td>
 	                <td><a href="http://universeos.org/out/?folder=<?=$parentFolderData[folder];?>" onclick="openFolder('<?=$parentFolderData[folder];?>'); return false;">...</a></td>
 	                <td width="50px">
 	                </td>
@@ -3218,7 +3210,7 @@ echo"</div>";
                 <td width="30"><?php
             	if($rightClick){
             	showRightClickMenu("folder", $filefdata[id], $filefdata[name], $filefdata[creator]);
-            	}?>&nbsp;<img src="http://universeos.org/gfx/icons/filesystem/folder.png" height="22"></td>
+            	}?>&nbsp;<img src="gfx/icons/filesystem/folder.png" height="22"></td>
                 <td><a href="http://universeos.org/out/?folder=<?=$filefdata[id];?>" onclick="openFolder('<?=$filefdata[id];?>'); return false;"><?=$filefdata[name];?></a></td>
                 <td width="50px">
                 	<?php

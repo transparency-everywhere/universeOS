@@ -7,12 +7,7 @@ html {
 	width:100%;
 }
 body {
-	color: #000000;
-    background-image: url(../../gfx/bg/1.jpg);
-    background-attachment: no-repeat;
-    background-position:top left;
-	background-repeat: no-repeat;
-	background: #000000;
+	color: #FFFFFF;
 	font:normal print, arial,sans-serif;
 	font-family: print;
 	font-style: normal;
@@ -22,6 +17,9 @@ body {
 	margin: 0;
 	padding: 0;
 	word-wrap: break-word;
+	background-image: url(../../gfx/bg/1.jpg);
+    background-attachment: no-repeat;
+    background-position:top left;
 	background-repeat:no-repeat;
 }
 
@@ -32,7 +30,7 @@ ul {
 li {
 }
 
-@media (min-width: 240px) {
+/*@media (min-width: 240px) {
 	body{
     	background-image: url('../../gfx/bg/universeos_240x320.jpg');
 	}
@@ -81,7 +79,7 @@ li {
 	body{
     	background-image: url('../../gfx/bg/universeos_1920x1080.jpg');
 	}
-}
+}*/
 /*.strippedRow:first-child {background:rgb(223, 236, 250)}
 .strippedRow:nth-child(2n+3) {background:rgb(223, 236, 250)}*/
 
@@ -115,19 +113,15 @@ h3{
 
 /*describes the drag and drop window */
 .fenster {
-	-moz-border-radius:4px;
-	-webkit-border-radius:4px;
-	border-radius:4px;
-	-moz-box-shadow:0 0 0 1px #212121 inset, 0 0 5px rgba(0,0,0,0.9);
-	-webkit-box-shadow:0 0 0 1px #212121 inset, 0 0 5px rgba(0,0,0,0.9);
-	box-shadow:0 0 0 0px #212121 inset, 0 0 5px rgba(0,0,0,0.9);
-	border:1px solid #959595;
+	-moz-border-radius:1px;
+	-webkit-border-radius:1px;
+	border-radius:1px;
     padding: 2px 0 35px;
 	position:absolute;
 	z-index:1;
-	background: rgba(255,255,255,0.1);
+	background: rgba(255,255,255,0.9);
 }
-.fenster .titel {
+.fenster header {
     color:#454545;
 	cursor:move;
 	height:16px;
@@ -146,7 +140,7 @@ h3{
 	-ms-border-radius:1px;
 	border-radius:1px;
 	background-color:#FFF;
-    border: 1px solid rgba(92, 92, 92, 0.9);
+	border: 1px solid rgba(223, 223, 223, 0.9);
 	color:#58585A;
 	height:100%;
 	margin:0 6px;
@@ -632,14 +626,12 @@ h3{
     bottom: 0px;
     left: 0px;
     overflow: auto;
-    background: #e5f2ff; /* Old browsers */
-    background: -moz-linear-gradient(left, rgb(223, 236, 250) 99%, #828282 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, right top, color-stop(99%,#4f85bb), color-stop(100%,#828282)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(left, rgb(223, 236, 250) 99%,#828282 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(left, rgb(223, 236, 250) 99%,#828282 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(left, rgb(223, 236, 250) 99%,#828282 100%); /* IE10+ */
-    background: linear-gradient(left, rgb(223, 236, 250) 99%,#828282 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(223, 236, 250)', endColorstr='#828282',GradientType=1 ); /* IE6-9 */
+    background: #3E3E3E;
+	color: #E2E2E2;
+}
+
+.leftNav a, leftNav a:link{
+	color: #E2E2E2;
 }
 
 .leftNav > ul > li{
@@ -823,6 +815,12 @@ h3{
     
 }
 
+
+#filesystem .leftNav li img{
+	height: 20px;
+	margin-bottom: -2px;
+}
+
 #filelist {
     position: relative;
     height: 60%;
@@ -840,6 +838,7 @@ h3{
 .filetable{
     width: 100%;
     overflow: scroll;
+    line-height:0px;
 }
 
 .autoFlow{
@@ -1452,11 +1451,12 @@ color:#FFFFFF;
         }    
         
         #clockDiv{
-            position: absolute;
-            right: 205px;
-            bottom: 10px;
-            width: 150px;
-            height: 20px;
+        	position: absolute;
+			right: 205px;
+			bottom: 10px;
+			width: 75px;
+			height: 20px;
+			font-size: 23pt;
         }
         
         #dockplayer{
@@ -1747,19 +1747,12 @@ font-weight:bold;
 
 .grayBar{
 	text-decoration:none;
-	border: 1px solid rgb(153, 153, 153);
+	border-bottom: 1px solid rgb(153, 153, 153);
 	padding: 5px 5px 5px 5px;
 	color:#878787;
 	font-size:12px;
 	font-size: 12px;
-    background: #f7f7f7; /* Old browsers */
-	background: -moz-linear-gradient(top, #f7f7f7 0%, #f7f7f7 47%, #f2f2f2 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f7f7f7), color-stop(47%,#f7f7f7), color-stop(100%,#f2f2f2)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #f7f7f7 0%,#f7f7f7 47%,#f2f2f2 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #f7f7f7 0%,#f7f7f7 47%,#f2f2f2 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #f7f7f7 0%,#f7f7f7 47%,#f2f2f2 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #f7f7f7 0%,#f7f7f7 47%,#f2f2f2 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#f2f2f2',GradientType=0 ); /* IE6-9 */
+    background: #f7f7f7;
 }
 
 .grayBar.interactive:hover, .grayBar.interactive.active{
