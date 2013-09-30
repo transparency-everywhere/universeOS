@@ -670,6 +670,23 @@
 	    	});
     	}
     }
+    
+//dashboard
+function updateDashbox(type){
+	
+}
+    
+    
+//group
+function groupMakeUserAdmin(groupId, userId){
+	
+	$.post( "doit.php?action=groupMakeUserAdmin&groupId="+groupId+"&userId="+userId, function( data ) {
+	  if(data == true){
+	  	jsAlert('', 'The admin has been added.');
+	  }
+	});
+	
+}
 //old index functions
 
 

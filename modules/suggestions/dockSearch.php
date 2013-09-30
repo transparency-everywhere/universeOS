@@ -157,28 +157,14 @@ $k = 5;//limit
 		
 		
 	//wiki
-        $url = "http://en.wikipedia.org/w/api.php?action=opensearch&limit=2&namespace=0&format=xml&search=$qEncoded"; 
-        //umgehen des HTTP Verbots
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "$url");
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_USERAGENT, "universeOS");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        
-        //Result in DomDocument Laden
-        $dom = new DOMDocument;
-        $dom->loadXML($result);
-        //Array der XML Datei auslesen.
-        $xml = simplexml_import_dom($dom);
+        $xml = curler("http://en.wikipedia.org/w/api.php?action=opensearch&limit=2&namespace=0&format=xml&search=$qEncoded");
         foreach ($xml->Section->Item as $item) {
 			
     
 			echo"<li class=\"strippedRow\">";
 			
 			//icon
-			echo"<img src=\"gfx/icons/wikipedia.png\" height=\"16\" style=\"margin-bottom: -8px; margin-left:5px; margin-right:5px;\">";
+			echo"<img src=\"gfx/icons/fileIcons/wikipedia.png\" height=\"16\" style=\"margin-bottom: -8px; margin-left:5px; margin-right:5px;\">";
 			//title
 			echo"<a href=\"#\" onclick=\"openFile('wikipedia', '".urlencode($item->Text)."', '".urlencode(substr("$item->Text", 0, 10))."');\">$item->Text</a>";
 			
@@ -188,58 +174,21 @@ $k = 5;//limit
 
 	
 	//youtube
-		$url2 = "http://gdata.youtube.com/feeds/api/videos?max-results=5&restriction=DE&q=$qEncoded"; 
-        //umgehen des HTTP Verbots
-        $ch2 = curl_init();
-        curl_setopt($ch2, CURLOPT_URL, "$url2");
-        curl_setopt($ch2, CURLOPT_HEADER, 0);
-        curl_setopt($ch2, CURLOPT_USERAGENT, "universeOS");
-        curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
-        $result2 = curl_exec($ch2);
-        curl_close($ch2);
-        
-        //Result in DomDocument Laden
-        $dom2 = new DOMDocument;
-        $dom2->loadXML($result2);
-        //Array der XML Datei auslesen.
-        $xml2 = simplexml_import_dom($dom2);
+        $xml2 = curler("http://gdata.youtube.com/feeds/api/videos?max-results=5&restriction=DE&q=$qEncoded");
         foreach ($xml2->entry as $item2) {
         	
-			
-			
-
-            
             $vId = youTubeURLs($item2->id);
-			
-			
-    
 			echo"<li class=\"strippedRow tooltipper\" data-popType=\"youTube\" data-typeId=\"$vId\" >";
-			
 			//icon
-			echo"<img src=\"gfx/icons/youTube.png\" height=\"16\" style=\"margin-bottom: -8px; margin-left:5px; margin-right:5px;\">";
+			echo"<img src=\"gfx/icons/fileIcons/youTube.png\" height=\"16\" style=\"margin-bottom: -8px; margin-left:5px; margin-right:5px;\">";
 			//title
 			echo"<a href=\"#\" onclick=\"openFile('youTube', '', '".urlencode(substr("$item2->title", 0, 10))."', '$vId');\">".substr("$item2->title", 0, 40)."</a>";
-			
 			echo"</li>";
 			
 		}
 		
 	//spotify
-        $url3 = "http://ws.spotify.com/search/1/track?q=$qEncoded"; 
-        //umgehen des HTTP Verbots
-        $ch3 = curl_init();
-        curl_setopt($ch3, CURLOPT_URL, "$url3");
-        curl_setopt($ch3, CURLOPT_HEADER, 0);
-        curl_setopt($ch3, CURLOPT_USERAGENT, "universeOS");
-        curl_setopt($ch3, CURLOPT_RETURNTRANSFER, true);
-        $result3 = curl_exec($ch3);
-        curl_close($ch3);
-        
-        //Result in DomDocument Laden
-        $dom3 = new DOMDocument;
-        $dom3->loadXML($result3);
-        //Array der XML Datei auslesen.
-        $xml3 = simplexml_import_dom($dom3);
+        $xml3 = curler("http://ws.spotify.com/search/1/track?q=$qEncoded");
  
  		$i = 0;
         foreach ($xml3->track as $item3) {
@@ -249,7 +198,7 @@ $k = 5;//limit
 			echo"<li class=\"strippedRow\">";
 			
 			//icon
-			echo"<img src=\"gfx/icons/spotify.png\" height=\"16\" style=\"margin-bottom: -8px; margin-left:5px; margin-right:5px;\">";
+			echo"<img src=\"gfx/icons/fileIcons/spotify.png\" height=\"16\" style=\"margin-bottom: -8px; margin-left:5px; margin-right:5px;\">";
 			//title
 			echo"<a href=\"$item3[href]\">".substr("$item3->name", 0, 40)."</a>";
 			

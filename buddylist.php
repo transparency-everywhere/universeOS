@@ -25,7 +25,7 @@ if(empty($_GET[reload])){
                 <tr class="strippedRow height60">
 	                 <td style="padding-left: 3px; width: 35px;"><?=showUserPicture($buddy, "30");?></td>
 	                 <td><a href="#" onclick="openChatDialoge('<?=$username;?>');"><?=$username;?></a></td>
-	                 <td>
+	                 <td align="right">
 	                 	
 	                 	<div class="btn-toolbar">
 						  <div class="btn-group">

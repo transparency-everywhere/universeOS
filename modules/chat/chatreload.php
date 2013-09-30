@@ -27,13 +27,17 @@ if(empty($_GET[initter])){
  ?>
       <div class="chatMainFrame">
           <header style="" class="grayBar">
+          	  <!-- toggle description key box -->
               <span><a href="javascript: toggleKey('<?=$buddyName;?>');" id="toggleKey_<?=$buddyName;?>"><i class="lockIcon"></i></a></span>
-              <span id="chatKeySettings_<?=$buddyName;?>" class="chatKeySettings">
-   
-              </span>
+              
+              <!-- buddydata -->
               <span style="float: right; margin-left: 10px;"><?=showUserPicture($buddyData[userid], 20);?></span>
               <span style="float: right;"><a href="#" onclick="showProfile(<?=$buddyData[userid];?>); return false;"><?=$buddyData[username];?></a></span>
           </header>
+          <!-- box for caht encription key -->
+          <div id="chatKeySettings_<?=$buddyName;?>" class="chatKeySettings">
+   
+          </div>
           <div id="test_<?=$buddyName;?>" style="position: absolute; top: <?=(30+$top);?>px; right: 0px; bottom:40px; left: 0px; overflow: auto;">
 <? } ?>          
 <script>

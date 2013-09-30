@@ -11,11 +11,6 @@ $profilesql = mysql_query("SELECT * FROM user WHERE userid='".mysql_real_escape_
 $profiledata = mysql_fetch_array($profilesql);
 if($_GET[showFeed] == "1"){
 ?>
-<html>
-    <head>
-        <link rel="stylesheet" type="text/css" href="inc/style.css">  
-    </head>
-    <body>
 <table width="100%" cellspacing="0">
     <?
         $userFeedSql = mysql_query("SELECT * FROM userfeeds WHERE owner='$user' ORDER BY timestamp DESC LIMIT 15");
@@ -149,7 +144,7 @@ if(isset($_GET[scoreaction])){
         <tr style="border-top: 1px solid #424242;" class="grayBar">
             <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" onclick="toggleProfileTabs('profileAktivity');"><img src="./gfx/icons/rss.png">&nbsp;Activity</td>
             <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" onclick="toggleProfileTabs('profileFav');"><img src="./gfx/icons/fav.png">&nbsp;Fav</td>
-            <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" onclick="toggleProfileTabs('profileFiles');"><img src="./gfx/icons/folder.png">&nbsp;Files</td>
+            <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" onclick="toggleProfileTabs('profileFiles');"><img src="./gfx/icons/filesystem/folder.png">&nbsp;Files</td>
             <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" onclick="toggleProfileTabs('profileFriends');"><img src="./gfx/icons/group.png">&nbsp;Friends</td>
             <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" onclick="toggleProfileTabs('profilePlaylists');"><img src="./gfx/icons/playlist.png">&nbsp;Playlists</td>
         </tr>

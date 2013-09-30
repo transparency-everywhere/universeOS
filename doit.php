@@ -1,4 +1,4 @@
-<?
+<?PHP
 session_start();
 include("inc/config.php");
 include("inc/functions.php");
@@ -1078,7 +1078,7 @@ if($_GET['action'] == "scorePlus"){
 		
 		
          
-         $group = $_GET[id];
+         $group = $_GET['id'];
          if($_POST[submit]){
              mysql_query("UPDATE groups SET public='$_POST[privacy]', description='$_POST[description]', membersInvite='$_POST[membersInvite]' WHERE id='$group'");
          jsAlert("Saved :)");
@@ -1094,23 +1094,23 @@ if($_GET['action'] == "scorePlus"){
              $unpublic = "checked";
          }
          ?>
+        <form action="doit.php?action=groupAdmin&id=<?=$group;?>" method="post" target="submitter">
         <div class="jqPopUp border-radius transparency" id="groupAdmin">
-            <a style="position: absolute; top: 10px; right: 10px; color: #FFF;" id="closeAdmin">X</a>
             <header>
+            <a class="jqClose" id="closeAdmin">X</a>
             Admin - <?=$groupData[title];?>
             </header>
             <div class="jqContent">
-                <form action="doit.php?action=groupAdmin&id=<?=$group;?>" method="post" target="submitter">
                     <table height="200" width="400" style="margin: 20px; line-height:22pt;">
                         <tr>
                             <td style="vertical-align: top;" align="right">Description:</td>
                             <td width="20"></td>
-                            <td><textarea name="description" cols="30" rows="3"><?=$groupData[description];?></textarea></td>
+                            <td><textarea name="description" cols="30" rows="2"><?=$groupData[description];?></textarea></td>
                         </tr>
                         <tr>
                             <td align="right">Privacy:</td>
                             <td></td>
-                            <td align="center"><input type="radio" name="privacy" value="1" <?=$public;?>>Private&nbsp;&nbsp;<input type="radio" name="privacy" value="0" <?=$unpublic;?>>Public</td>
+                            <td><input type="radio" name="privacy" value="1" <?=$public;?>>Private&nbsp;&nbsp;<input type="radio" name="privacy" value="0" <?=$unpublic;?>>Public</td>
                         </tr>
                         <tr>
                             <td align="right"></td>
@@ -1118,10 +1118,13 @@ if($_GET['action'] == "scorePlus"){
                             <td><input type="checkBox" name="membersInvite" value="1" <?=$membersInvite;?>> Allow members to invite users</td>
                         </tr>
                         <tr>
+                        	<td>&nbsp;</td>
+                        </tr>
+                        <tr>
                             <td style="vertical-align: top;" align="right">Users:</td>
                             <td></td>
                             <td>
-                                    <table cellspacing="0" style="font-size: 9px; font-color: #000; color: #000;" width="200"  height="50" style="overflow: scroll;">
+                                    <table cellspacing="0" style="font-size: 12px; overflow: auto;" width="200"  height="50">
                                     <?
                                     $groupUseSql = mysql_query("SELECT * FROM groupAttachments WHERE `group`='$group' AND validated='1'");
                                     while($groupUseData = mysql_fetch_array($groupUseSql)){
@@ -1134,25 +1137,39 @@ if($_GET['action'] == "scorePlus"){
                                         $groupUserSql = mysql_query("SELECT username FROM user WHERE userid='$groupUseData[itemId]'");
                                         $groupUserData = mysql_fetch_array($groupUserSql);
                                         ?>
-                                        <tr bgcolor="#<?=$color;?>">
-                                            <td><?=showUserPicture($groupUseData, 15);?></td>
-                                            <td style="font-color: #000; color: #000;"><?=$groupUserData[username];?></td>
-                                            <td style="font-color: #000; color: #000;">Admin</td>
-                                            <td style="font-color: #000; color: #000;">Delete</td>
+                                        <tr class="strippedRow" valign="top">
+                                            <td style="padding: 3px;"><?=showUserPicture($groupUseData, 15);?></td>
+                                            <td><?=$groupUserData[username];?></td>
+                                            <td align="right">
+                                            	<div class="btn-group" style="text-align:left;">
+												  <button class="btn btn-mini"><i class="icon icon-pencil"></i></button>
+												  <button class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
+												    <span class="caret"></span>
+												  </button>
+												  <ul class="dropdown-menu">
+												    <li>&nbsp;<a href="#">delete</a></li>
+												    <li>&nbsp;<a href="#" onclick="groupMakeUserAdmin('<?=$group;?>', '<?=$groupUseData[itemId];?>'); return false">make Admin</li>
+												  </ul>
+												</div>
+												&nbsp;
+											</td>
                                         </tr>
                                     <? } ?>
+                                    <script>
+                                    	$('.dropdown-toggle').dropdown();
+                                    </script>
                                     </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type="submit" id="adminSubmit" name="submit" value="save" class="btn"></form>
                             </td>
                         </tr>
                     </table>
                 </form>
             </div>
+	        <footer>
+	        	<span class="pull-left"><a class="btn" onclick="$('.jqPopUp').slideUp();">back</a></span>
+	        	<span class="pull-right"><input type="submit" id="adminSubmit" name="submit" value="save" class="btn btn-success"></span>
+	        </footer>
         </div>
+        </form>
         <script>
             $("#adminSubmit").click(function () {
             $('#groupAdmin').slideUp();
@@ -1169,84 +1186,76 @@ if($_GET['action'] == "scorePlus"){
          if($_POST[submit]){
          $userlist = $_POST[users];
          if(isset($userlist)){
-         foreach ($userlist as &$value) {
-         mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`) VALUES ('$group', 'user', '$value', '$time', '$_SESSION[userid]');");
-         }}jsAlert("worked:)");
+	         foreach ($userlist as &$value) {
+	         	userJoinGroup($group, $value);
+			 }
+		 }
+		 jsAlert("worked:)");
          }
          $groupSql = mysql_query("SELECT * FROM groups WHERE id='$group'");
          $groupData = mysql_fetch_array($groupSql);
 		 
 		 
 		 //query to slow needs to be replaced
-		 $userAttachmentsSQL = mysql_query("SELECT itemId FROM groupAttachments WHERE `group`='".mysql_real_escape_string($group)."' AND `item`='user' AND `validated`='1'");
+		 $userAttachmentsSQL = mysql_query("SELECT itemId FROM groupAttachments WHERE `group`='".mysql_real_escape_string($group)."' AND `item`='user'");
 		 while($userAttachmentsData = mysql_fetch_assoc($userAttachmentsSQL)){
 		 	$users[] = $userAttachmentsData[itemId];
 		 }
 		 ?>
+	<form action="doit.php?action=groupInviteUsers&id=<?=$group;?>" method="post" target="submitter" id="groupInviteForm">
        <div class="jqPopUp border-radius transparency" id="groupInvite">
-            <a style="position: absolute; top: 10px; right: 10px; color: #FFF;" id="closeInvite">X</a>
             <header>
+            <a class="jqClose" id="closeInvite" onclick="$('.jqPopUp').slideUp();">X</a>
             Invite Users - <?=$groupData[title];?>
             </header>
             <div class="jqContent">
-            <table height="250"><form action="doit.php?action=groupInviteUsers&id=<?=$group;?>" method="post" target="submitter">
-                <tr>
-                    <td valign="top">Choose Friends:&nbsp;</td>
-                    <td>
-                        <table>
-                            <tr>
-                                <td>
-                                    <div style="width: 300px; height: 200px; overflow: auto; font-color: #000;">
-                                        <ul>
-                        <?
-                        $buddylistSql = mysql_query("SELECT * FROM buddylist WHERE owner='$_SESSION[userid]' && request='0'");
-                        while($buddylistData = mysql_fetch_array($buddylistSql)) {
-                        	if(!in_array($buddylistData[buddy], $users)){
-                            
-                            $blUserSql = mysql_query("SELECT userid, username FROM user WHERE userid='$buddylistData[buddy]'");
-                            $blUserData = mysql_fetch_array($blUserSql);
-                            if(!empty($buddylistData[alias])){
-                                $username = $buddylistData[alias];
-                            } else{
-                            $username = htmlspecialchars($blUserData[username]);
-                                }
-                            if($i%2 == 0) {
-                                $bgcolor="FFFFFF";
-
-                            } else {    
-                                $bgcolor="e5f2ff";
-                            }
-                            $i++;
-                            ?>
-			                            	<li style="line-height: 37px;">
-			                            		&nbsp;<input type="checkbox" name="users[]" value="<?=$blUserData[userid];?>">&nbsp;<?=showUserPicture($blUserData[userid] , 25);?>&nbsp;<?=$blUserData[username];?>
-			                            	</li>
-                            <?}}?> 
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td><input type="submit" name="submit" value="invite" class="btn"></td></form>
-                </tr>
-            </table>
+	            <table height="250">
+	                <tr>
+	                    <td valign="top">Choose Friends:&nbsp;</td>
+	                    <td>
+	                        <table>
+	                            <tr>
+	                                <td>
+	                                    <div>
+	                                        <ul>
+					                        <?
+								            $buddies = buddyListArray();
+											foreach($buddies AS $buddy){
+												if(!in_array($buddy, $users)){
+													$username =  useridToUsername($buddy);
+												
+					                            	$i++;
+					                            echo"<li style=\"line-height: 37px;\">";
+				                            		echo"&nbsp;<input type=\"checkbox\" name=\"users[]\" value=\"$buddy\">&nbsp;".showUserPicture($buddy , 25)."&nbsp;$username";
+				                            	echo"</li>";
+	                            			}}?> 
+	                                        </ul>
+	                                    </div>
+	                                </td>
+	                            </tr>
+	                        </table>
+	                    </td>
+	                </tr>
+	            </table>
             </div>
+	        <footer>
+	        	<span class="pull-left"><a class="btn" onclick="$('.jqPopUp').slideUp();">back</a></span>
+	        	<span class="pull-right"><input type="submit" name="submit" value="invite" class="btn"></span>
+	        </footer>
         </div>
+        </form>
         <script>
-            $("#inviteSubmit").click(function () {
-            $('#groupInvite').slideUp();
-            });
-            $("#closeInvite").click(function () {
-            $('#groupInvite').slideUp();
+            $("#groupInviteForm").submit(function () {
+            $('.jqPopUp').slideUp();
             });
         </script>
         <?}
      }else if($_GET['action'] == "groupMakeUserAdmin"){
      	
+		
+     	echo groupMakeUserAdmin($_GET[groupId], $_GET[userId]);
+		
+		
      }else if($_GET['action'] == "groupremoveAdmin"){
      	
      }else if($_GET['action'] == "groupLeave"){
@@ -1549,37 +1558,15 @@ if($_GET['action'] == "scorePlus"){
             $description = $_POST[description];
             $title = $_POST[title];
             $privacy = $_POST[privacy];
-            $userlist = $_POST[users];
+            $users = $_POST[users];
 
-            //check if nessecary informations are given
-            if((isset($description)) && (isset($title)) && (isset($privacy))){
-            //insert group into db    
-            mysql_query("INSERT INTO `groups` (`title`, `description`, `public`, `admin`) VALUES ('$title', '$description', '$privacy', '$userid');");
-            $groupId = mysql_insert_id();
-
-                //add users to group
-                if(isset($userlist)){
-                foreach ($userlist as &$value) {
-
-                mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`) VALUES ('$groupId', 'user', '$value', '$time', '$userid');");
-
-
-                }}
-                
-                $groupFolder = createFolder("3", $groupId, $userid, "$groupId//$groupId");
-				$groupElement = createElement($groupFolder, $title, "other", $userid,  "$groupId//$groupId");
-                mysql_query("UPDATE `groups` SET `homeFolder`='$groupFolder', `homeElement`='$groupElement' WHERE id='$groupId'");
-
-            //add user which added group to group and validate
-            mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`, `validated`) VALUES ('$groupId', 'user', '$_SESSION[userid]', '$time', '$_SESSION[userid]', '1');");
-            jsAlert("worked:)");  ?>
-                <script>
-                parent.$('#favTab_Group').load('doit.php?action=showUserGroups');
-                </script>
-                <?php
-            }else{
-                jsAlert("please fill out everything");
-            }
+           	if(createGroup($title, $privacy, $description, $users)){
+           		echo"<script>";
+				echo"parent.$('.jqPopUp').hide();";
+				echo"parent.$('#favTab_Group').load('doit.php?action=showUserGroups');";
+				echo"</script>";
+				jsAlert("Your Group has been created.");
+           	}
 
         }
     ?>
@@ -2230,6 +2217,7 @@ if($_GET['action'] == "scorePlus"){
                         if($checkElementData[author] == "$_SESSION[userid]"){
                             mysql_query("UPDATE elements SET title='$_POST[title]', type='$_POST[type]', creator='$_POST[creator]', name='$_POST[name]', year='$_POST[year]' WHERE id='$itemId'");
                             jsAlert("Saved :)");
+							echo"<script>parent.$('.jqPopUp').slideUp();</script>";
                         }
                     }else if($type == "file"){
 
@@ -2242,6 +2230,7 @@ if($_GET['action'] == "scorePlus"){
                         		
                         		mysql_query("UPDATE links SET title='$_POST[title]', link='$_POST[link]', type='$_POST[type]', privacy='$privacy' WHERE id='$itemId'");
 								jsAlert("Saved :)");
+								echo"<script>parent.$('.jqPopUp').slideUp();</script>";
                         	
                          }else{
                          	
@@ -2262,6 +2251,7 @@ if($_GET['action'] == "scorePlus"){
                             
                             mysql_query("UPDATE playlist SET title='$_POST[title]', privacy='$privacy'  WHERE id='$itemId'");
                             jsAlert("Saved :)");
+							echo"<script>parent.$('.jqPopUp').slideUp();</script>";
                         }
 
                     }
@@ -2811,7 +2801,7 @@ if($_GET['action'] == "scorePlus"){
 				session_unset();
     			jsAlert( "good bye");
 				?>
-				<script>top.window.location.href='http://universeos.org';</script>
+				<script>top.window.location.href='index.php';</script>
 				<?
             	
             }else if($_GET['action'] == "tester"){

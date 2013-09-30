@@ -92,6 +92,26 @@
 
 	<?php
  }
+ 
+ function curler($url){
+ 	
+        //umgehen des HTTP Verbots
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "$url");
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_USERAGENT, "universeOS");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        
+        //Result in DomDocument Laden
+        $dom = new DOMDocument;
+        $dom->loadXML($result);
+        //Array der XML Datei auslesen.
+        $xml = simplexml_import_dom($dom);
+		return $xml;
+ }
+ 
  function getRssfeed($rssfeed, $cssclass="", $encode="auto", $anzahl=10, $mode=0) {
      $data = @file($rssfeed);
      $data = implode ("", $data);
@@ -256,6 +276,9 @@
                 $privacy = "<li><a href=\"javascript: popper('doit.php?action=changePrivacy&type=folder&itemId=$itemId')\">Privacy</a></li>";
                 $delete = "<li><a href=\"doit.php?action=deleteItem&type=folder&itemId=$itemId\" target=\"submitter\">Delete</a></li>";    
             }
+	        if(proofLogin()){
+	          	$fav = "<li><a href=\"doit.php?action=addFav&type=folder&item=$itemId\" target=\"submitter\">Add to Fav</a></li>";
+	        }
 			if(hasRight("protectFileSystemItems")){
 				$protect = "<li><a href=\"javascript: popper('doit.php?action=protectFileSystemItems&type=folder&itemId=$itemId')\">Protect</a></li>";
 			}
@@ -267,6 +290,9 @@
                 $edit = "<li><a href=\"#\" onclick=\"popper('doit.php?action=editItem&type=element&itemId=$itemId')\" target=\"submitter\">Edit</a></li>";
                 $delete = "<li><a href=\"#\" onclick=\"popper('doit.php?action=deleteItem&type=element&itemId=$itemId')\" target=\"submitter\">Delete</a></li>";
             }
+	        if(proofLogin()){
+	          	$fav = "<li><a href=\"doit.php?action=addFav&type=element&item=$itemId\" target=\"submitter\">Add to Fav</a></li>";
+	        }
 			if(hasRight("protectFileSystemItems")){
 				$protect = "<li><a href=\"javascript: popper('doit.php?action=protectFileSystemItems&type=element&itemId=$itemId')\">Protect</a></li>";
 			}
@@ -364,8 +390,9 @@
           if(authorize($checkFolderData[privacy], "edit", $checkFolderData[creator])){
               $privacy = "<li><a href=\"javascript: popper('doit.php?action=changePrivacy&type=folder&itemId=$itemId')\">Privacy</a></li>";
           }
-                
-          $fav = "<li><a href=\"doit.php?action=addFav&type=folder&item=$itemId\" target=\"submitter\">Add to Fav</a></li>";
+          if(proofLogin()){
+          	$fav = "<li><a href=\"doit.php?action=addFav&type=folder&item=$itemId\" target=\"submitter\">Add to Fav</a></li>";
+          }
       }
       
       if($type == "element"){
@@ -1016,6 +1043,24 @@ echo"</div>";
 //groups
 //groups
 
+	function userJoinGroup($group, $user=NULL){
+		
+		$userid = getUser();
+		
+		if(empty($user)){
+			$user = $userid;
+		}
+		
+        mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`) VALUES ('$group', 'user', '$user', '$time', '$userid');");
+         
+	}
+	
+	function userLeaveGroup($group, $user=NULL){
+		if(mysql_query("DELETE FROM `groupAttachments` WHERE group='$group' AND item='user' AND itemId='".save($user)."'")){
+			return true;
+		}
+	}
+
 	function getGroups($userid=NULL){
 		if(empty($userid))
 			$userid = getUser();
@@ -1026,6 +1071,11 @@ echo"</div>";
 		}
 		return $groups;
 		
+	}
+	
+	function getGroupData($groupId){
+		$data = mysql_fetch_array(mysql_query("SELECT * FROM groups WHERE id='".mysql_real_escape_string($groupId)."'"));
+		return $data;
 	}
 
 	function getGroupName($groupId){
@@ -1051,7 +1101,7 @@ echo"</div>";
             $groupId = mysql_insert_id();
 
                 //add users to group
-                if(isset($userlist)){
+                if(isset($users)){
                 foreach ($users as &$user) {
 
                 mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`) VALUES ('$groupId', 'user', '$user', '$time', '$userid');");
@@ -1063,9 +1113,8 @@ echo"</div>";
 				$groupElement = createElement($groupFolder, $title, "other", $userid,  "$groupId//$groupId");
                 mysql_query("UPDATE `groups` SET `homeFolder`='$groupFolder', `homeElement`='$groupElement' WHERE id='$groupId'");
 
-            //add user which added group to group and validate
-            mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`, `validated`) VALUES ('$groupId', 'user', '$userid', '$time', '$userid', '1');");
-            jsAlert("worked:)"); 
+           		//add user which added group to group and validate
+           		 mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`, `validated`) VALUES ('$groupId', 'user', '$userid', '$time', '$userid', '1');");
 
 				return true;
 
@@ -1075,12 +1124,40 @@ echo"</div>";
   	
   }
   
+  function updateGroup($groupId, $privacy, $description, $membersInvite){
+  	
+  		if(mysql_query("UPDATE groups SET public='$privacy', description='$description', membersInvite='$membersInvite' WHERE id='$groupId'")){
+  			return true;
+  		}
+         
+  }
   
   function groupMakeUserAdmin($groupId, $userId){
+  	
+		$groupData = getGroupData($groupId);
+		
+		$adminString = $groupData[admin];
+		
+		//proof if user is allready admin
+		$admins = explode($adminString, ";");
+		if(!in_array("$userId", $$admins)){
+			$adminString = "$adminString;$userId";
+			
+			if(mysql_query("UPDATE `groups` SET `admin`='$adminString' WHERE id='".save($groupId)."'")){
+				return true;
+			}
+			
+		}
   	
   }
   function groupRemoveAdmin($groupId, $userId){
   	
+		$groupData = getGroupData($groupId);
+		
+		$adminString = $groupData[admin];
+		
+		//proof if user is allready admin
+		$admins = explode($adminString, ";");
   }
 
 
@@ -1118,7 +1195,7 @@ echo"</div>";
      } else if($difference > 3600*24*31){
          $unTime = "one month ago";
      }
-     echo $unTime;
+     return $unTime;
      
   }
      
@@ -1588,7 +1665,7 @@ echo"</div>";
                 
                 //get all users which are in the buddylist
                 $buddies = buddyListArray();
-                $buddies[] = $_SESSION[userid];
+                $buddies[] = getUser();
                 $buddies = join(',',$buddies);  
                 //push array with the user, which is logged in
                 
@@ -2410,7 +2487,8 @@ echo"</div>";
                 deleteFeeds("folder", $folderId);
                 deleteInternLinks("folder", $folderId);
 				
-				jsAlert("The folder has been added.");
+				jsAlert("The folder has been deleted.");
+				return true;
         
     }
     
@@ -2509,8 +2587,7 @@ echo"</div>";
             $folderpath = getFolderPath($folder);
 			
 			
-            $newfolderpath = "$folderpath";
-            $thumbPath = $folderpath."thumbs/";
+            $thumbPath = "../../".$folderpath."thumbs/";
             $imgName = basename($file['name']);
             $type = mime_content_type($file['tmp_name']);
             $elementName = "$FileElementData[title]_";
@@ -2518,8 +2595,8 @@ echo"</div>";
  
 
 
-            move_uploaded_file($file['tmp_name'], $_SERVER['DOCUMENT_ROOT']."/".$folderpath.$file['name']);
-            rename( $_SERVER['DOCUMENT_ROOT']."/".$folderpath.$filename, $_SERVER['DOCUMENT_ROOT']."/".$folderpath.$imgName);
+            move_uploaded_file($file['tmp_name'], "../../".$folderpath.$file['name']);
+            rename( "../../".$folderpath.$filename, "../../".$folderpath.$imgName);
         if($type == "image/jpg" || $type == "image/jpeg" || $type == "image/png"){
                     $thumbPath= $_SERVER['DOCUMENT_ROOT']."/"."$thumbPath";
                     $path = $_SERVER['DOCUMENT_ROOT']."/$folderpath";
@@ -3837,8 +3914,8 @@ echo"</div>";
                 
                 //if image no info is shown. the complete first row is used to preview image
                 if($fileData['type'] == "image/jpg" || $fileData['type'] == "image/jpeg" || $fileData['type'] == "image/png"){
-                	$elementData = mysql_fetch_array(mysql_query("SELECT folder FROM elements WHERE id='$fileData[folder]'"));
-                	$img = "../../".getFolderPath($elementData[folder])."thumbs/".$fileData['filename'];
+                	//$elementData = mysql_fetch_array(mysql_query("SELECT folder FROM elements WHERE id='$fileData[folder]'"));
+                	//$img = "../../".getFolderPath($elementData['folder'])."thumbs/".$fileData['filename'];
                 	
                 	//the column which normaly includes the icon needs to fill out the full width
                 	$imgColumnStyle = "colspan=\"2\"";

@@ -20,16 +20,9 @@ $mailboxes = array(
 	array(
 		'label' 	=> 'transpev',
 		'enable'	=> true,
-		'mailbox' 	=> '{universeos.org:993/imap/ssl/novalidate-cert}INBOX',
+		'mailbox' 	=> '{transparency-everywhere.com:993/imap/ssl/novalidate-cert}INBOX',
 		'username' 	=> 'nic@transparency-everywhere.com',
-		'password' 	=> 'loool'
-	),
-	array(
-		'label' 	=> 'My Cpanel website',
-		'enable'	=> true,
-		'mailbox' 	=> '{mail.yourdomain.com:143/notls}INBOX',
-		'username' 	=> 'info+yourdomain.com',
-		'password' 	=> 'yourpassword'
+		'password' 	=> 'w1ttg3nst31n'
 	)
 );
 

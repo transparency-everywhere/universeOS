@@ -84,10 +84,6 @@ if($_SESSION[userid] == "1"){
 			
     include("openFileFromLink.php");
     ?>
-<script>
-	
-      $("#reader:hidden").fadeIn(3000);
-</script>
     </body>
     
 

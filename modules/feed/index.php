@@ -1,8 +1,6 @@
 <?php
 if(!isset($_SESSION[userid])){
     session_start();
-    include("../../inc/config.php");
-    include("../../inc/functions.php");
 }
 ?>  
 <div class="fenster" id="feed" style="display: none;">
@@ -60,7 +58,7 @@ if(!isset($_SESSION[userid])){
             </div>
             <div class="feedMain">
                 <?
-                showFeedNew("friends", "$_SESSION[userid]");
+                showFeedNew("friends", getUser());
                 echo "<div onclick=\"feedLoadMore('.feedMain' ,'friends', 'NULL', '1'); feedLoadMore('friends','1'); $(this).hide();\">...load more</div>";
                 ?>
             </div>

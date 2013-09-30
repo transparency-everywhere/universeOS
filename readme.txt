@@ -1,5 +1,8 @@
 Recent:
 
+	JS
+		updateDashbox(type)
+
 	OO/Functions
 		
 		in work
@@ -82,7 +85,7 @@ Files and the use of them
 	Will be deleted
 		function showActivity
 		function checkAuthorisation
-		
+		function showYoutubeVideo => no use at all
 		
 		
 		

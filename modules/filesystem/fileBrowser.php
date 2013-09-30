@@ -92,7 +92,7 @@ $pathdata = mysql_fetch_array($pathsql);
         		<?
         		if(proofLogin()){
         			?>
-        			<li><a href="#" onclick="javascript: popper('doit.php?action=addElement&folder=<?=$folder;?>&reload=1');return false">Fav</a></li>
+        			<li><a href="#" onclick="javascript: popper('doit.php?action=addFav&type=folder&item=<?=$folder;?>&reload=1');return false">Fav</a></li>
         		<?
         		}
         		if(authorize("$pathdata[privacy]", "edit", $pathdata[creator])){ ?>

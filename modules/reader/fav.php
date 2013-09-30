@@ -44,7 +44,7 @@ if($_GET[action] == "add"){
                     <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" id="showfavFav"><span class=""><img src="./gfx/icons/fav.png">&nbsp;Fav</span></td>
                     <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" id="showfavPlayList"><span class=""><img src="./gfx/icons/playlist.png">&nbsp;Playlists</span></td>
                     <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" id="showfavNews"><span class=""><img src="./gfx/icons/rss.png">&nbsp;News</span></td>
-                    <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" id="showfavFiles"><span class=""><img src="./gfx/icons/folder.png">&nbsp;Files</span></td>
+                    <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" id="showfavFiles"><span class=""><img src="gfx/icons/filesystem/folder.png">&nbsp;Files</span></td>
                 </tr>
             </table>
             <div class="favTab" id="favTab_Group">
