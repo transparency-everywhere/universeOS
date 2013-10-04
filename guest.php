@@ -17,7 +17,12 @@ include_once("inc/config.php");
         	  <?
     include("register.php");
     ?>
-            
+        <div id="guestInfoBox">
+        	<a href="#" onclick="$('.guestInfoBox').close();">x</a>
+        	<h2>universeOS?</h2>
+        	<h3>Tell me more!</h3>
+        	<p>The universeOS is bla lorem ipsum bla<br>something somthing intersting<br>might be in this useless texting.</p>
+        </div>
         <? include("modules/reader/index.php") ?>
         
         <div id="invisiblefilesystem"><? include("modules/filesystem/filesystem.php") ?></div></div>

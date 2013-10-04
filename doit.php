@@ -569,7 +569,7 @@ if($_GET['action'] == "scorePlus"){
          
      }else if($_GET['action'] == "loadMiniBrowser"){
      	
-		showMiniFileBrowser("$_GET[folder]", "$_GET[element]", "$_GET[level]", false);
+		showMiniFileBrowser("$_GET[folder]", "$_GET[element]", "$_GET[level]", false, $_GET[select]);
      	
      }else if($_GET['action'] == "addFolder"){
          if(proofLogin()){
@@ -821,7 +821,7 @@ if($_GET['action'] == "scorePlus"){
                 <form action="./doit.php?action=addInternLink" method="post" target="submitter"> 
                                 <div class="jqPopUp border-radius transparency" id="addInternLink">
                                 <a class="jqClose" id="closeFolder">X</a>
-                                <header>Create intern Link in <?=$titleText;?></header>
+                                <header>Create Shortcut in <?=$titleText;?></header>
                                 <div class="jqContent">
                                     <table>
                                     <tr valign="top">
@@ -2206,7 +2206,11 @@ if($_GET['action'] == "scorePlus"){
                             if(rename("$parentFolderPath$checkFolderData[name]", "$parentFolderPath".urldecode($_POST[name]))){
                             mysql_query("UPDATE folders SET name='$_POST[name]' WHERE id='$itemId'");
                             jsAlert("Saved :)");
-							echo"<script>parent.$('.jqPopUp').slideUp();</script>";
+							echo"<script>";
+							echo"parent.$('.jqPopUp').slideUp();";
+							echo"parent.addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=".$checkFolderData['folder']."&reload=1');";
+							echo"</script>";
+							
 							}}else{
 								jsAlert("A folder with this title already exists");
 							}
@@ -2356,7 +2360,7 @@ if($_GET['action'] == "scorePlus"){
                                   <option value=\"link\" $selected[link]>Standard Link<option>
                                   <option value=\"RSS\" $selected[RSS]>RSS</option>
                                   <option value=\"youTube\" $selected[youTube]>Youtube</option>
-                                  <option value=\"soundcloud\" $selected[youTube]>Soundcloud</option>
+                                  <option value=\"soundcloud\" $selected[soundcloud]>Soundcloud</option>
                                   <option value=\"file\" $selected[file]>File</option>
                                   <option value=\"other\" $selected[other]>Other</option>
                               </select>
@@ -2685,8 +2689,8 @@ if($_GET['action'] == "scorePlus"){
                 </script>
             <?}else if($_GET['action'] == "createNewUFF"){
                 
-                $element = save($_GET[element]);
-                if(isset($_POST[submit])){
+                $element = save($_GET['element']);
+                if(isset($_POST['submit'])){
                     $element = save($_POST[element]);
                     $title = save($_POST[title]);
                     $filename = save($_POST[filename]);
@@ -2695,7 +2699,7 @@ if($_GET['action'] == "scorePlus"){
                     $customEdit = $_POST[privacyCustomEdit];
                     
                     $privacy = exploitPrivacy("$_POST[privacyPublic]", "$_POST[privacyHidden]", $customEdit, $customShow);
-                            $user = $_SESSION[userid];
+                            $user = getUser();
 
 
                     //upload file
@@ -2705,7 +2709,7 @@ if($_GET['action'] == "scorePlus"){
 					    
             			$title10 = addslashes(substr("$elementData[title]", 0, 10));
                         
-                        $path = getFolderPath($elementData[folder]);
+                        $path = getFolderPath($elementData['folder']);
                         $filename = "$filename.UFF";
                         $folder = $element;
                         $timestamp = time();

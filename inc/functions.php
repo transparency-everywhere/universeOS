@@ -655,20 +655,23 @@
     if(empty($picData[userPicture])){
         
         
-        if($subpath !== "total"){ 
-            $src = "$path./gfx/standarduser.png";
-        }else{
-            $src = "http://universeOS.org/gfx/standarduser.png";
-        }
+    	$class = "standardUser";
     
     }else{
         
-
+		$class = "";
+		
         if($subpath !== "total"){
             
             $src = "$path./upload/userFiles/$userid/userPictures/thumb/$folderpath/".$picData['userPicture']."";
+			if(empty($class)){
+            	$style = "background-image: url('$src');";
+			}
         }else{
             $src = "http://universeOS.org/upload/userFiles/$userid/userPictures/thumb/$folderpath/".$picData['userPicture']."";
+			if(empty($class)){
+            	$style = "background-image: url('$src');";
+			}
         }
         
     }
@@ -676,16 +679,19 @@
 
         if($subpath !== "total"){
             
-            $return="<div class=\"userPicture userPicture_$userid\" onload=\"updatePictureStatus('$userid', '$color');\" onclick=\"showProfile('$userid');\" style=\"width: $size; height: $size; background-image: url('$src'); border-color: $color;\"></div>";
+            $return="<div class=\"userPicture userPicture_$userid $class\" onload=\"updatePictureStatus('$userid', '$color');\" onclick=\"showProfile('$userid');\" style=\"width: $size; height: $size; border-color: $color; $style\"></div>";
         }else{
-            $return="<div class=\"userPicture userPicture_$userid;\" onload=\"updatePictureStatus('$userid', '$color');\" onclick=\"showProfile('$userid;');\" style=\"width: $size; height: $size; background-image: url('$src'); border-color: $color;\"></div>";
+            $return="<div class=\"userPicture userPicture_$userid $class\" onload=\"updatePictureStatus('$userid', '$color');\" onclick=\"showProfile('$userid;');\" style=\"width: $size; height: $size; $style border-color: $color; $style\"></div>";
         }
       
       
       
       
         if($small){
-            $return="<div class=\"userPicture userPicture_$userid\" onload=\"updatePictureStatus(\'jjj$userid\', \\'$color\\');\" onclick=\"showProfile(\\'$userid\\');\" style=\"width: $size; height: $size; background-image: url(\\'$src\\'); border-color: $color;\"></div>";
+        	if(empty($class)){
+        		$style = " background-image: url(\\'$src\\');";
+			}
+            $return="<div class=\"userPicture userPicture_$userid $class\" onload=\"updatePictureStatus(\'jjj$userid\', \\'$color\\');\" onclick=\"showProfile(\\'$userid\\');\" style=\"$style width: $size; height: $size; border-color: $color;\"></div>";
 
             return $return;
         }else{
@@ -1284,10 +1290,16 @@ echo"</div>";
                    $output .=  "<div class=\"score$type$typeid\">";
                }
 			   
+			   if($scoreData[score] > 0){
+			   	$class = "btn-success";
+			   }else if($scoreData[score] < 0){
+			   	$class = "btn-warning";
+			   }
+			   
 			   $output .= '<div class="btn-toolbar" style="margin: 0px;">';
 			   $output .= '<div class="btn-group">';
 			   $output .="<a class=\"btn btn-mini\" href=\"doit.php?action=scoreMinus&type=$type&typeid=$typeid\" target=\"submitter\"><i class=\"icon-thumbs-down\"></i></a>";
-			   $output .= "<p class=\"btn btn-mini\" href=\"#\">$scoreData[score]</p>";
+			   $output .= "<p class=\"btn btn-mini $class\" href=\"#\">$scoreData[score]</p>";
 			   $output .= "<a class=\"btn btn-mini\" href=\"doit.php?action=scorePlus&type=$type&typeid=$typeid\" target=\"submitter\"><i class=\"icon-thumbs-up\"></i></a>";
 			   $output .= '</div>';
 			   $output .= '</div>';
@@ -2763,10 +2775,10 @@ echo"</div>";
         
             //links
             case "youTube":
-                    $image = "../youTube.png";
+                    $image = "youTube.png";
             break;
             case "wiki":
-                    $image = "../wikipedia.png";
+                    $image = "wikipedia.png";
             break;
             case "RSS":
                     $image = "rss.png";
@@ -3282,13 +3294,20 @@ echo"</div>";
         $filefsql = mysql_query("SELECT * FROM folders $query");
         while($filefdata = mysql_fetch_array($filefsql)) {
         if(authorize($filefdata[privacy], "show", $filefdata[creator])){
+        	
+        		$name = $filefdata['name'];
+        	//special folder handlers
+        	if($folder == 3){
+        		$name = getGroupName($filefdata['name']);
+			}
+			
         ?>
             <tr class="strippedRow" oncontextmenu="showMenu('folder<?=$filefdata[id];?>'); return false;" height="30">
                 <td width="30"><?php
             	if($rightClick){
             	showRightClickMenu("folder", $filefdata[id], $filefdata[name], $filefdata[creator]);
             	}?>&nbsp;<img src="gfx/icons/filesystem/folder.png" height="22"></td>
-                <td><a href="http://universeos.org/out/?folder=<?=$filefdata[id];?>" onclick="openFolder('<?=$filefdata[id];?>'); return false;"><?=$filefdata[name];?></a></td>
+                <td><a href="http://universeos.org/out/?folder=<?=$filefdata[id];?>" onclick="openFolder('<?=$filefdata[id];?>'); return false;"><?=$name;?></a></td>
                 <td width="50px">
                 	<?php
                 	if($rightClick){
@@ -3314,7 +3333,7 @@ echo"</div>";
             <tr class="strippedRow" oncontextmenu="showMenu('element<?=$filefdata[id];?>'); return false;" height="30">
                 <td width="30">&nbsp;<img src="http://universeos.org/gfx/icons/filesystem/element.png" height="22"></td>
                 <td><a href="http://universeos.org/out/?element=<?=$fileddata[id];?>" onclick="openElement('<?=$fileddata[id];?>', '<?=addslashes($title10);?>'); return false;"><?=$title15;?></a></td>
-                <td width="50px">
+                <td width="80px">
                 	<?php
                 	if($rightClick){
                 	echo showItemSettings('element', "$fileddata[id]");
@@ -3437,7 +3456,7 @@ echo"</div>";
                     <tr class="strippedRow" oncontextmenu="showMenu('file<?=$fileListData[id];?>'); return false;" height="40px">
                         <td width="30px">&nbsp;<img src="http://universeos.org/gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData[type];?>" height="22"></td>
                         <td><a href="http://universeos.org/out/?file=<?=$fileListData[id];?>" onclick="<?=$link;?> return false"><?=substr($fileListData[title],0,30);?></a></td>
-                        <td width="60"><a href="doit.php?action=download&fileId=<?=$fileListData[id];?>" target="submitter" class="btn btn-mini" title="download file"><i class="icon-download"></i></a>
+                        <td width="80" align="right"><a href="doit.php?action=download&fileId=<?=$fileListData[id];?>" target="submitter" class="btn btn-mini" title="download file"><i class="icon-download"></i></a>
                                 <? if(!$git){echo showItemSettings('file', "$fileListData[id]");}?></td>
                         <td width="50"><?=showScore(file, $fileListData[id]);?></td>
                     </tr>
@@ -3477,7 +3496,7 @@ echo"</div>";
                 <tr bgcolor="#<?=$color;?>" oncontextmenu="showMenu('link<?=$linkListData[id];?>'); return false;" height="22px">
                     <td width="65px">&nbsp;<img src="./gfx/icons/fileIcons/<?=$image;?>" alt="<?=$linkListData[type];?>" height="22px"></td>
                     <td><a href="#" onclick="<?=$link;?>"><?=substr($linkListData[title],0,30);?></a></td>
-                    <td><?=showItemSettings('link', $linkListData[id]);?></td>
+                    <td width="70" align="right"><?=showItemSettings('link', $linkListData[id]);?></td>
                     <td><?=showScore(link, $linkListData[id]);?></td>
                 </tr>
                 <?php
@@ -3550,7 +3569,7 @@ echo"</div>";
                 }
     }
 
-	function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true){
+	function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true, $select=NULL){
 		
 		//$level is used to give the list a regular margin
 		//each time a new list is loaded inside the old one
@@ -3563,6 +3582,24 @@ echo"</div>";
 		}
 		$level++;
 		
+		//define which buttons are shown
+		$showFolderButton = true;
+		$showElementButton = true;
+		$showFilebutton = true;
+		
+		
+		if($select == "folder"){
+			$showElementButton = false;
+			$showFilebutton = false;
+		}
+		if($select == "element"){
+			$showFolderButton = false;
+			$showFilebutton = false;
+		}
+		if($select == "file"){
+			$showElementButton = false;
+			$showFilebutton = false;
+		}
 		
         	
 		if($showGrid){
@@ -3582,7 +3619,7 @@ echo"</div>";
 	        while($filefdata = mysql_fetch_array($filefsql)) {
 	        	
 		        if(authorize($filefdata[privacy], "show", $filefdata[creator])){
-				$action[folders] = "$('.folder$filefdata[id]LoadingFrame').loadOuter('doit.php?action=loadMiniBrowser&folder=$filefdata[id]&level=$level');return false;";
+				$action[folders] = "$('.folder$filefdata[id]LoadingFrame').loadOuter('doit.php?action=loadMiniBrowser&folder=$filefdata[id]&level=$level&select=$select');return false;";
 		        $trigger[folders] = "$('.miniFileBrowser .choosenItem').html('<img src=\'http://universeos.org/gfx/icons/filesystem/folder.png\' alt=\'folder\' height=\'32px\'>&nbsp;$filefdata[name]<input type=\'hidden\' name=\'type\' value=\'folder\'><input type=\'hidden\' name=\'typeId\' value=\'$filefdata[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
 				
 					
@@ -3590,7 +3627,11 @@ echo"</div>";
 	            <li class="strippedRow" <?=$style;?>>
 	                <span>&nbsp;<img src="http://universeos.org/gfx/icons/filesystem/folder.png" height="14"></span>
 	                <span><a href="#" onclick="<?=$action[folders];?>"><?=$filefdata[name];?>/</a></span>
+	            <?
+	            if($showFolderButton){
+	            ?>
 	                <span class="trigger"><a href="#" onclick="<?=$trigger[folders];?>" class="btn btn-mini"><i class="icon-ok"></i></a>&nbsp;</span>
+				<? } ?>
 	            </li>
 	            <!-- frame in which the folder data is loaded, if loadFolderDataIntoMiniBrowser() is called -->
 	            <li class="folder<?=$filefdata[id];?>LoadingFrame" style="display: none;"></li>
@@ -3612,14 +3653,18 @@ echo"</div>";
 		        if(authorize($fileddata[privacy], "show", $fileddata[author])){
 		        	
 				
-				$action[elements] = "$('.element$fileddata[id]LoadingFrame').loadOuter('doit.php?action=loadMiniBrowser&element=$fileddata[id]&level=$level');return false;";
+				$action[elements] = "$('.element$fileddata[id]LoadingFrame').loadOuter('doit.php?action=loadMiniBrowser&element=$fileddata[id]&level=$level&select=$select');return false;";
 		        $trigger[elements] = "$('.miniFileBrowser .choosenItem').html('<img src=\'http://universeos.org/gfx/icons/filesystem/element.png\' alt=\'folder\' height=\'32px\'>&nbsp;$title<input type=\'hidden\' name=\'type\' value=\'element\'><input type=\'hidden\' name=\'typeId\' value=\'$fileddata[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
 						
 		        ?>
 		            <li class="strippedRow" <?=$style;?>>
 		                <span>&nbsp;<img src="http://universeos.org/gfx/icons/filesystem/element.png" height="14"></span>
 		                <span><a href="#" onclick="<?=$action[elements];?>"><?=$title15;?></a></span>
+		        		<?
+	           			 if($showElementButton){
+	            		?>
 	                    <span class="trigger"><a href="#" onclick="<?=$trigger[elements];?>" class="btn btn-mini"><i class="icon-ok"></i></a>&nbsp;</span>
+	                    <? } ?>
 		            </li>
 		            <!-- frame in which the element data is loaded, if loadElementDataIntoMiniBrowser() is called -->
 		            <li class="element<?=$fileddata[id];?>LoadingFrame" style="display: none;"></li>
@@ -3655,7 +3700,12 @@ echo"</div>";
 	                    <li class="strippedRow" <?=$style;?>>
 	                        <span>&nbsp;<img src="http://universeos.org/gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData[type];?>" height="14px"></span>
 	                        <span><a href="#" onclick="<?=$action[files];?>"><?=substr($fileListData[title],0,30);?></a></span>
+	                        
+			        		<?
+		           			 if($showFileButton){
+		            		?>
 	                        <span class="trigger"><a href="#" onclick="<?=$trigger[files];?>" class="btn btn-mini"><i class="icon-ok"></i></a>&nbsp;</span>
+	                        <? } ?>
 	                    </li>
 	                    
 	                    <?php
@@ -3681,7 +3731,11 @@ echo"</div>";
 	                <li class="strippedRow" <?=$style;?>>
 	                    <span>&nbsp;<img src="./gfx/icons/fileIcons/<?=$image;?>" alt="<?=$linkListData[type];?>" height="14px"></span>
 	                    <span><a href="#" onclick="<?=$action[links];?>"><?=substr($linkListData[title],0,30);?></a></span>
+			        	<?
+		           			 if($showFileButton){
+		            	?>
 	                    <span class="trigger"><a href="#" onclick="<?=$trigger[files];?>" class="btn btn-mini"><i class="icon-ok icon-white"></i></a></span>
+	                    <? } ?>
 	                </li>
 	                <?php
 	                } 

@@ -400,7 +400,9 @@
        
 //reader
 	function openUploadTab(element){
-        createNewTab('reader_tabView', 'Upload File','','modules/reader/addFile.php?element='+element,true);return true
+	
+        showApplication('filesystem');
+        createNewTab('fileBrowser_tabView', 'Upload File','','modules/filesystem/upload.php?element='+element,true);return true
 	}
 	
     function toggleProfileTabs(id){
@@ -535,7 +537,7 @@
 		                                        //if changed update file
 		                                        // ich muss ein lastudated feld zur db und eine javascript-lastupdated variable erstellen, um konflike zu vermiden
 		                                        var input = $('.uffViewer_'+id).val();
-		                                        $.post("../../../doit.php?action=writeUff", {
+		                                        $.post("doit.php?action=writeUff", {
 		                                            id:id,
 		                                            input:input
 		                                            });
@@ -604,13 +606,13 @@
     function chatSetKey(username){
 
 		if(localStorage.key[username]){
-			alert('The key already has been set.');
+	  		jsAlert('', 'The key already has been set.');
 		}else{
 			localStorage.key[username] = $('#chatKeyInput_'+username).val();
 			$('#chatCryptionMarker_'+username).val('true');
 		  	$('#chatKeySettings_'+username).html('<a href="#" onclick="chatDeactivateKey(\''+username+'\'); return false;">deactivate key</a>');
 			
-			alert('The key for your buddy '+username+' has been set.');
+	  		jsAlert('', 'The key for your buddy '+username+' has been set.');
 			
             chatEncrypt(username);
             
@@ -623,7 +625,7 @@
     	localStorage.key[username] = '';
 			$('#chatCryptionMarker_'+username).val('false');
 		$('#chatKeySettings_'+username).html('<form action="" method="post" target="submitter" onsubmit="chatSetKey(\''+username+'\'); return false;"><input type="password" name="key" placeholder="type key" id="chatKeyInput_'+username+'"></form>');
-	    alert('The key has been removed');
+	    jsAlert('', 'The key has been removed');
         $('#toggleKey_'+username+' .lockIcon').removeClass('locked');
     }
     

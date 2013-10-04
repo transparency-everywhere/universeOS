@@ -1,29 +1,54 @@
 <?php
+//this file will always be loaded with 
+//ajax so include  is used not include_once
+include("../../inc/functions.php");
+include("../../inc/config.php");
+
+
 if(isset($_POST[submit])){
 	
 }else{
 $folder = $_GET[folder];
 ?>
 <div id="upload">
-	<h3>Upload</h3>
-	<h3>Parent:</h3>
+	<h2>Upload File</h2>
+	<div id="uploadStepOne">
+	<h3>Choose Element</h3>
 	<div>
-		<?
-		showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true)
+		<?php
+		if(empty($_GET['element']) OR $_GET['element'] == "undefined"){
+			echo showMiniFileBrowser("1", '', '', true, "element");
+		}
 		?>
 	</div>
-	<h3>Upload File</h3>
-	<div>
+	<footer>
+	back
+	next
+	</footer>
+	</div>
+	<div id="uploadStepTwo" class="hidden">
+	<h3>Add Files</h3>
+	
 		
                         	<center style="margin-top:15px;">
-                        		Add file to <a href="#" onclick="openElement('<?=$global_userData[myFiles];?>', 'myFiles'); return false;"><img src="http://universeos.org/gfx/icons/filesystem/element.png" height="12" style="margin-top: -1px;"> myFiles</a>
-                                <input id="file_upload" name="feedFile" type="file" multiple="true" style="margin-top: 20px;">
+                                <input id="file_upload_<?php echo $time;?>" name="feedFile" type="file" multiple="true" style="margin-top: 20px;">
                         		<div id="queue"></div>
                         	</center>
+	<footer>
+	back next
+	</footer>
+	</div>
+	<div id="uploadStepThree" class="hidden">
+	<h3>Choose Privacy</h3>
+	<footer>
+	back finish
+	</footer>
+	</div>
+	<div>
 		<script type="text/javascript">
                                 <?php $timestamp = time();?>
                                 $(function() {
-                                        $('#file_upload').uploadify({
+                                        $('#file_upload_<?php echo $time;?>').uploadify({
                                                 'formData'     : {
                                                         'timestamp' : '<?php echo $timestamp;?>',
                                                         'token'     : '<?php echo md5('ichWeissEsNicht' . $timestamp*2);?>'

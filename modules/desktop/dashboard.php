@@ -85,7 +85,9 @@ class dashBoard{
 			
 		$output .= "</ul>";
 		
-		$output = $this->showDashBox($title, $output);
+		$footer = "<a href=\"#addGroup\" onclick=\"popper('doit.php?action=addGroup')\" title=\"Create a new Group\"><i class=\"icon icon-plus\"></i></a>";
+		
+		$output = $this->showDashBox($title, $output, $footer);
 		
 		return $output;
 		
@@ -117,8 +119,13 @@ class dashBoard{
 				$output .= "<li>";
 			}
 			$output .= "</ul>";
+			
+		$footer = "<a href=\"#addPlaylist\" onclick=\"popper('doit.php?action=addPlaylist')\" title=\"Create a new Playlist\"><i class=\"icon icon-plus\"></i></a>";
+			
 		
-		$output = $this->showDashBox($title, $output);
+		$output = $this->showDashBox($title, $output, $footer);
+		
+		$footer = "";
 		
 		return $output;
 		
@@ -145,9 +152,9 @@ class dashBoard{
 					$output .=  "<span>";
 					$output .=  "$message[senderUsername]";
 					$output .=  "</span>";
-					$output .=  "<span>";
-					$output .=  universeTime($message[timestamp]);
-					$output .=  "</span>";
+					//$output .=  "<span>";
+					//$output .=  universeTime($message[timestamp]);
+					//$output .=  "</span>";
 					$output .=  "<span>";
 					$output .=  "<a href=\"#\" onclick=\"openChatDialoge('$message[senderUsername]');\">";
 					$output .=  substr($message['text'], 0, 15);
@@ -228,7 +235,7 @@ $(document).ready(function(){
 		?>
 		</div>
 		<footer>
-			<a href="#uploadFile" onclick="popper('modules/filesystem/upload');" title="Upload a File"><i class="icon icon-plus"></i></a>
+			<a href="#uploadFile" onclick="openUploadTab();" title="Upload a File"><i class="icon icon-plus"></i></a>
 		</footer>
 	</div>
 	<div class="dashBox">

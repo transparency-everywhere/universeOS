@@ -237,6 +237,9 @@ h3{
     cursor: pointer;
 }
 
+.standardUser{
+	background-image: url('../../gfx/standarduser.png');
+}
 
 
 /* search */
@@ -762,7 +765,8 @@ h3{
     top: 61px;
     left: 0px;
     right: 0px;
-    height: 100px;
+    height: 90px;
+    padding: 5px;
     z-index: 1;
     overflow: auto;
     color: #FFFFFF;
@@ -1899,7 +1903,8 @@ margin-bottom: -5px;
     color: #FFFFFF;
     z-index: 9999;
     display: none;
-    font-size:8pt;
+    font-size:12pt;
+	text-align: left;
 }
 
 .rightclick{
@@ -1907,6 +1912,8 @@ margin-bottom: -5px;
     color:rgb(158, 158, 158);
     z-index: 9999;
     min-width: 100px;
+	font-size: 12px;
+	text-align: left;
 }
 
 .fileBrowserSettings{
@@ -1915,7 +1922,7 @@ margin-bottom: -5px;
 
 .itemSettingsWindow > ul > li, .rightclick > ul > li, .fileBrowserSettings > li{
 	border-bottom:1px solid rgb(53,53,53);
-	padding:3px;
+	padding:2px;
 }
 
 .itemSettingsWindow > ul > li:hover, .rightclick > ul > li:hover, .fileBrowserSettings > li:hover{
@@ -1931,6 +1938,9 @@ margin-bottom: -5px;
     color:rgb(158, 158, 158);
 }
 
+.rightclick > ul > li:last-of-type{
+	border: 0;
+}
 
 .rssTitle{
     font-size: 14px;
@@ -1977,16 +1987,9 @@ del.bar{
 
 
 .commentRow{
-    background: #ededed; /* Old browsers */
-    background: -moz-linear-gradient(top, #ededed 0%, #d8d8d8 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ededed), color-stop(100%,#d8d8d8)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, #ededed 0%,#d8d8d8 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, #ededed 0%,#d8d8d8 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, #ededed 0%,#d8d8d8 100%); /* IE10+ */
-    background: linear-gradient(to bottom, #ededed 0%,#d8d8d8 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ededed', endColorstr='#d8d8d8',GradientType=0 ); /* IE6-9 */
-    height: 40;
-    padding-top: 7;
+    background: #ededed;
+    height: 37px;
+	padding-top: 10px;
 }
 
 
@@ -1995,13 +1998,10 @@ del.bar{
 }
 
 .commentField{
-    font-size: 19px;
-    border-radius: 6px;
-    -o-border-radius: 6px;
-    -moz-border-radius: 6px;
-    -khtml-border-radius: 6px;
-    -webkit-border-radius: 6px;
-	margin-bottom: -1px!important;
+    font-size: 15px;
+	margin-bottom: 0px!important;
+	height: 17px!important;
+	width:85%!important;
 }
 
 .subComment{
@@ -2344,7 +2344,7 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 		top: 5px;
 		left: 5px;
 		background-position: -312px 0;
-		background-image: url("inc/img/glyphicons-halflings-white.png");display: inline-block;
+		background-image: url("../img/glyphicons-halflings-white.png");display: inline-block;
 		width: 14px;
 		height: 14px;
 		margin-top: 1px;

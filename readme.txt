@@ -28,6 +28,8 @@ Recent:
 	Privacy
 		die protectedfunktion muss zu einer undeleteablefunktion und dann muss für groupfiles und userfiles eine neue protectedfunktion geschrieben werden,
 		da sich derzeit bei protectedten ordnern keinen neuen ordner von nichtadmins erstellen lassen.
+		lsng:
+			PROTECTED funktionen bleibt bestehen und es wird extra handler für SYSTEM geschrieben, welcher manuell bei userFiles,groupFiles und den userOrdnern(function createUser()) eingefügt wird.
 		
 	Install
 		Vars
@@ -62,7 +64,9 @@ Files and the use of them
 		profile.php			//userprofile
 		group.php			//group profile
 		
-	Modules
+		
+		
+		Modules and Apps
 		modules/
 				suggestions/
 							dockSearch.php
@@ -71,7 +75,7 @@ Files and the use of them
 	
 	
 	
-	SEO/FB etc...
+		SEO/FB etc...
 		openFileFromlink.php//opens js openFile() function to open a file if universeOS.org?file=xy is called
 		out/				//in this folder is everything
 	
@@ -83,16 +87,13 @@ Files and the use of them
 		inc/style.css		//all the css stuff
 	
 	Will be deleted
-		function showActivity
-		function checkAuthorisation
+		function showActivity =>  deprecated due integration in showUserPicture()
+		function checkAuthorisation => deprecated
 		function showYoutubeVideo => no use at all
 		
 		
 		
 	Index.php
-	
-	
-	
 		if !login
 			guest.php
 			
