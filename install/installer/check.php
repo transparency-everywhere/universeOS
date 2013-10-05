@@ -3,7 +3,7 @@
 
 <body>
 <header>
-<h2 style="text-align: center; font-size: 24px; color: #000000;"><u>Checklist</u></h2>
+<h2 style="text-align: center; font-size: 24px; color: #CCC;"><u>Checklist</u></h2>
 </header>
 	
 <h1>&nbsp;</h1>

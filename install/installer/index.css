@@ -6,7 +6,7 @@
 	margin-bottom: 0;
 	margin-left: 5%
 %;
-	margin-right: 5%;
+	margin-right: 0px;
 	margin-top: 0;
 	padding-bottom: 0;
 	padding-left: 0%;
@@ -15,7 +15,7 @@
 }
 
 body {
-background-color: #FFF;
+background-color: #333;
 font-size: 0.95em;
 font-family: Arial, SunSans-Regular, Sans-Serif;
 color:#564b47;
@@ -24,43 +24,39 @@ color:#564b47;
 
 /* -------------- navigavtion------------- */
 nav {
-	font-size: 16px;
-	color: #fff;
-	width: 15%;
+	width: 100%;
 	position: fixed;
 	left: 0;
-	top: 0;
-	height: 100%;
-	border-color: #000000;
-	border-right: 1px solid #000;
-	min-height: 100%;
-	padding-right: 20px;
-	padding-top: 20px;
-	background-color: #666;
-	text-align: center;
+	top: 5%;
+	height: 15%;
+	min-height:15%;
+	background-color: #333;
 }
 
 /* ----------------- content--------------------- */
 
 
 section#content {
-	padding: 20px;
-	background-color: #CCC;
+	background-color: #333;
 	max-width: 800px;
 	min-width: 550px;
 	margin-bottom: 0;
 	margin-left: 20%;
-	margin-right: 0;
-	margin-top: 20px;
-	border-right: 1px solid #000;
-	border-left: 1px solid #000;
-	border-bottom: 1px solid #000;
-	border-top: 1px solid #000;
-	border-radius: 10px;
+	margin-right: 20%;
+	margin-top: 15%;
+	border-radius: 5px;
+	padding-bottom: 20px;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 10px;
+	border-right: 1px solid #666;
+	border-left: 1px solid #666;
+	border-bottom: 1px solid #666;
+	border-top: 1px solid #666;
 }
 
 /* -----------footer--------------------------- */
-footer { border-top: 1px solid #ccc; }
+footer { border-top: 1px solid #333; }
 
 /*------------button----------------------------*/
 .Button {
@@ -105,4 +101,11 @@ footer { border-top: 1px solid #ccc; }
 }.Button:active {
 	position:relative;
 	top:1px;
+}
+
+
+.imgcenter {
+display: block;
+width:100%;
+text-align: center;
 }
