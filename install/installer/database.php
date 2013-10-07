@@ -1,8 +1,8 @@
-
+<form action="index.php?page=check" method="post">
 <header>
 <h2>Database</h2>
 </header>
-	
+
 <table>
 		<tr>
 			<td>Host</td>
@@ -23,12 +23,10 @@
 	</table>
 <p> </p>
 <p>
-	<a href="index.php?page=check" class="btn pull-left">Back</a>
-	<a href="index.php?page=success" class="btn btn-info pull-right">Continue</a>
+	<a href="index.php" class="btn pull-left">Back</a>
+	<input type="submit" class="btn btn-info pull-right" value="Continue">
 </p>
 <p>&nbsp; </p>
-
-</body>
-</html>
+</form>
 
 
