@@ -16,12 +16,6 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
---
--- Datenbank: `universeDevelopment`
---
-CREATE DATABASE `universeDevelopment` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `universeDevelopment`;
-
 -- --------------------------------------------------------
 
 --
