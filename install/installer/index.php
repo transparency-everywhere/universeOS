@@ -76,15 +76,24 @@ error_reporting(0) ?>
 	
 	function createDbConfigFile(){
 		
-		$server = $_SESSION['server'];
-		$user = $_SESSION['user'];
+		$serverdb = $_SESSION['server'];
+		$userdb = $_SESSION['user'];
+		$passworddb = $_SESSION['password'];
+		$dbname = $_SESSION['db'];
 		
 		$Datei = "inc/config/test.php";
-		$Text = "Hallo Welt!";
+		$Text = "
+	<?php
+	$server = $serverdb;
+	$user = $userdb;
+	$password = $passworddb;
+	$db = $dbname;
+	?>
+	";
 		
-		$FilePointer = fopen($Datei, "w");
-		fwrite($FilePointer, $Text);
-		fclose($FilePointer);
+		$File = fopen($Datei, "w");
+		fwrite($File, $Text);
+		fclose($File);
 
 		
 	}
