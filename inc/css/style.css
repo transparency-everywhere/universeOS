@@ -17,10 +17,18 @@ body {
 	margin: 0;
 	padding: 0;
 	word-wrap: break-word;
-	background-image: url(../../gfx/bg/1.jpg);
+	/*background-image: url(../../gfx/bg/1.jpg);
     background-attachment: no-repeat;
     background-position:top left;
-	background-repeat:no-repeat;
+	background-repeat:no-repeat;*/
+	background:
+radial-gradient(black 15%, transparent 16%) 0 0,
+radial-gradient(black 15%, transparent 16%) 8px 8px,
+radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 0 1px,
+radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 8px 9px;
+background-color:#282828;
+background-size:16px 16px;
+/*http://lea.verou.me/css3patterns/#carbon-fibre*/
 }
 
 ul {
@@ -2274,7 +2282,7 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 }
 
 	#dashBoard{
-		width: 728px;
+		width: 960px;
 	}
 
 	.dashBox{
@@ -2286,9 +2294,6 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 		background:rgba(255,255,255,0.9);
 		margin: 10px 0px 0px 10px;
 		position: relative;
-		-webkit-border-radius: 3px;
-		-moz-border-radius: 3px;
-		border-radius: 3px;
 		float: left;
 	}
 	
@@ -2307,15 +2312,6 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 		color: #FFF;
 		padding-top: 10px;
 		background: rgb(214, 214, 214);
-		-webkit-border-top-left-radius: 3px;
-		-moz-border-top-left-radius: 3px;
-		border-top-left-radius: 3px;
-		-webkit-border-top-right-radius: 3px;
-		-moz-border-top-right-radius: 3px;
-		border-top-right-radius: 3px;
-		margin-left: -1px;
-		margin-right: -1px;
-		margin-top: -1px;
 		border-bottom: none;
 	}
 	
@@ -2336,7 +2332,7 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 	}
 	
 	.dashBox div, .dashBox ul{
-		padding: 5px;
+		padding: 3px;
 	}
 	
 	.dashBox .dashClose{
@@ -2402,8 +2398,8 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
                     margin-left: 0px;
                     color: #8f8f8f;
                     border: 0px;
-                    border-top: #1C1C1C 1px solid;
-                    border-left: #1C1C1C 1px solid;
+                    border-top: #424242 1px solid;
+                    border-left: #424242 1px solid;
                     width: 98px;
                     cursor:pointer;
                     float:left;

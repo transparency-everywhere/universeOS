@@ -96,7 +96,7 @@ function processRegistration(){
                                 
                                 $('#loginUsername').val(username);
                                 $('#loginPassword').val(password);
-					            $("#startbox").slideToggle("slow");
+					            $("#startbox").show("slow");
 					            $("#startbox").css('z-index', 9999);
 					            $("#startbox").css('position', 'absolute');
                             }else{

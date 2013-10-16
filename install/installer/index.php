@@ -82,17 +82,11 @@ error_reporting(0) ?>
 		$dbname = $_SESSION['db'];
 		
 		$Datei = "inc/config/test.php";
-		$Text = "
-	<?php
-	$server = $serverdb;
-	$user = $userdb;
-	$password = $passworddb;
-	$db = $dbname;
-	?>
-	";
+		$text .= "<?php ";
+		$text .= "?>";
 		
 		$File = fopen($Datei, "w");
-		fwrite($File, $Text);
+		fwrite($File, $text);
 		fclose($File);
 
 		

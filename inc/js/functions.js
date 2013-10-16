@@ -34,13 +34,20 @@
 						}, 500 );
 					});
                 
-                	$(document).live(function(){
-                		
-                		//replace all links with <a href=link>link</a>
-		                $('body').html($('body').html().replace("/(b(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig","<a href='$1'>$1</a>"));
-		                
-		                
+                		             	$(document).live(function(){
+                 		
+              		//replace all links with <a href=link>link</a>
+	                $('body').html($('body').html().replace("/(b(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig","<a href='$1'>$1</a>"));
+               	//replace all links with <a href=link>link</a>
+		            $('body').html($('body').html().replace("/(b(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig","<a href='$1'>$1</a>"));
+ 		                
+ 		                
                 	});
+
+		            //init dashcloses 
+					$('.dashBox .dashClose').click(function(){
+						$(this).parent('.dashBox').slideUp();
+					});	
                 
                 
                 	//old creepy way to initalize windows => in future => css media width
@@ -146,6 +153,19 @@
                                         $('html').children().enableSelection();
                                     }
                             });
+                            
+                            // $('.fenster').mouseout(function(){
+                            	// $(this).children('.titel').hide(); 
+                            	// $(this).css('padding', '0'); 
+                            	// $(this).children('.inhalt').css('margin', '0'); 
+                            	// $(this).children('.inhalt').css( "width", "+=12" );
+                            // });
+                            // $('.fenster').mouseover(function(){ 
+                            	// $(this).children('.titel').show(); 
+                            	// $(this).css('padding', '2px 0 35px'); 
+                            	// $(this).children('.inhalt').css('margin', '0 6px'); 
+                            	// $(this).children('.inhalt').css( "width", "auto" );
+                            // });
 
 
 
@@ -673,9 +693,29 @@
     	}
     }
     
+    
+function initDashClose(){
+	//init dashcloses
+	$('.dashBox .dashClose').click(function(){
+		$(this).parent('.dashBox').slideUp();
+	});	
+	
+}
+    
 //dashboard
 function updateDashbox(type){
+	$('.dashBox#'+type+'Box').load('modules/desktop/updateDashboard.php?type='+type, function(){
+		
+		initDashClose();
+	});
 	
+	
+	
+}
+
+function toggleDashboard(){
+	$('#dashboard:visible').slideUp();
+	$('#dashboard:hidden').slideDown();
 }
     
     
@@ -791,6 +831,7 @@ function groupMakeUserAdmin(groupId, userId){
 			  function removeFav(type, typeId){
 			  	if($.post("doit.php?action=removeFav", { type: type, typeId: typeId } )){
 			  		jsAlert('', 'Your favorite has been removed.');
+			  		updateDashbox('fav');
 			  	}
 			  }
 			  

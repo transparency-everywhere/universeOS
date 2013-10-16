@@ -217,7 +217,7 @@ if(isset($_GET[scoreaction])){
     <div id="profileFav" class="profileSlider" style="display: none;">
     	<table width="100%">
 	      <?
-	      showFav($user);
+	      echo showFav($user);
 	      ?>
     	</table>
     </div>

@@ -43,6 +43,8 @@ if($_GET['action'] == "scorePlus"){
                                             $title = substr($favLinkData[title], '0', '15');
             ?>
             <script>
+            
+            	parent.updateDashbox('fav');
                 parent.$('#rssFavList').append('<li><img src="./gfx/icons/rss.png" height="10">&nbsp;<a href="#" onclick="loader(\'newsContentFrame\',\'doit.php?action=showSingleRssFeed&id=<?=$favData[item];?>\');"><?=$title;?></a></li>');
             </script>
             <?
@@ -51,7 +53,6 @@ if($_GET['action'] == "scorePlus"){
         }
     }else if($_GET['action'] == "removeFav"){
     	removeFav($_POST[type], $_POST[typeId]);
-    	jsAlert("Your favorite has been removed.");
   	}
     else if($_GET['action'] == "requestpositive"){
         $value = "0";
@@ -335,8 +336,11 @@ if($_GET['action'] == "scorePlus"){
                     $privacy = exploitPrivacy("$_POST[privacyPublic]", "$_POST[privacyHidden]", $customEdit, $customShow);
                     $user = $_SESSION[userid];
                     
-             mysql_query("INSERT INTO playlist (user, title, privacy) VALUES('$user', '$_POST[title]', '$privacy')");   ?>
+             mysql_query("INSERT INTO playlist (user, title, privacy) VALUES('$user', '$_POST[title]', '$privacy')");   
+             jsAlert("Your playlist has been added.");
+             ?>
             <script>
+            parent.updateDashbox('playlist');
             parent.$('#favTab_playList').load('doit.php?action=showUserPlaylists');
             </script>
             <?
@@ -891,7 +895,6 @@ if($_GET['action'] == "scorePlus"){
 						if(addLink($_POST['folder'], $_POST['title'], $_POST['type'], $privacy, $_POST['link'])){
 						?>
 			                <script>
-			                	alert('lol');
 			                    parent.addAjaxContentToTab('<?=$_POST[tabTitle];?>', 'modules/filesystem/showElement.php?element=<?=$_POST[folder];?>&reload=1');
 			                </script>
 	                	<?
@@ -1276,6 +1279,7 @@ if($_GET['action'] == "scorePlus"){
 			
 	        echo"<script>";
 				?>
+				parent.updateDashbox('message');
 	            parent.$('.chatInput').val('');
 	            parent.$('#test_<?=str_replace(" ","_",$_GET[buddyname]);?>').load('modules/chat/chatt.php?buddy=<?=urlencode($_GET[buddyname]);?>&initter=1');
 	        	<?
@@ -1563,12 +1567,13 @@ if($_GET['action'] == "scorePlus"){
            	if(createGroup($title, $privacy, $description, $users)){
            		echo"<script>";
 				echo"parent.$('.jqPopUp').hide();";
+				echo"parent.updateDashbox('group');";
 				echo"parent.$('#favTab_Group').load('doit.php?action=showUserGroups');";
 				echo"</script>";
 				jsAlert("Your Group has been created.");
            	}
 
-        }
+        }else{
     ?>
     
          <div class="jqPopUp border-radius transparency" id="addGroup">
@@ -1654,7 +1659,7 @@ if($_GET['action'] == "scorePlus"){
 </script>
      
      <?php
-    }}else if($_GET['action'] == "showSingleComment"){
+    }}}else if($_GET['action'] == "showSingleComment"){
         if($_GET[type] == "feed"){
             showFeedComments($_GET[itemid]);
         }else{
@@ -1663,6 +1668,7 @@ if($_GET['action'] == "scorePlus"){
     }else if($_GET['action'] == "showStartMessage"){
             if(empty($_GET[step])){ ?>
             <script>
+                    $("#dashBoard").hide("slow");
                     $(".fenster").hide("slow");
             </script>
             <div class="blueModal border-radius container">
@@ -1777,9 +1783,10 @@ if($_GET['action'] == "scorePlus"){
                 $("#finalStep").click(function(){
                     $(".blueModal").hide("slow", function(){
                         
-                        $(".fenster").show("slow", function(){
-                            initDraggable();
-                        });
+                        $("#buddylist").show("slow");
+                        $("#filesystem").show("slow");
+                        $("#dashBoard").show("slow");
+                        initDraggable();
                         
                     });
                 });
@@ -2255,6 +2262,7 @@ if($_GET['action'] == "scorePlus"){
                             
                             mysql_query("UPDATE playlist SET title='$_POST[title]', privacy='$privacy'  WHERE id='$itemId'");
                             jsAlert("Saved :)");
+            				echo"parent.updateDashbox('playlist');";
 							echo"<script>parent.$('.jqPopUp').slideUp();</script>";
                         }
 
@@ -2617,6 +2625,8 @@ if($_GET['action'] == "scorePlus"){
                 $linkId = save($_GET[linkId]);
                 if(proofLogin()){
                     if(deleteLink($linkId)){
+                    		
+                    	echo"<script>parent.$('.link_$linkId').hide();</script>";
                         jsAlert("The Link has been deleted");
                     }
                 }

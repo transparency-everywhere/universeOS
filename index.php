@@ -43,11 +43,9 @@ if(!isset($_SESSION["userid"])) {
             <div id="alerter" class="container"></div><div id="loader"></div><div id="popper"></div><iframe name="submitter" style="display:none;" id="submitter"></iframe>
             <div id="suggest">
             </div>
-<?
-if($_SESSION[userid] == "1"){
- include("modules/desktop/dashboard.php");
-}
-?>
+				<?
+				 include("modules/desktop/dashboard.php");
+				?>
 
             <div id="invisiblefeed">
                 <? include("modules/feed/index.php") ?>

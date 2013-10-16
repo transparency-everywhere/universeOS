@@ -18,8 +18,8 @@ include_once("inc/config.php");
     include("register.php");
     ?>
         <div id="guestInfoBox">
-        	<a href="#" onclick="$('.guestInfoBox').close();">x</a>
-        	<h2>universeOS?</h2>
+        	<a href="#" onclick="$('#guestInfoBox').hide();">x</a>
+        	<h2>universeOS</h2>
         	<h3>Tell me more!</h3>
         	<p>The universeOS is bla lorem ipsum bla<br>something somthing intersting<br>might be in this useless texting.</p>
         </div>

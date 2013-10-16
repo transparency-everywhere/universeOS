@@ -107,7 +107,7 @@ if(isset($newMessagesOn)){
     $newMessageUserSql = mysql_query("SELECT userid, username FROM user WHERE username='$buddy'");
     $newMessageUserData = mysql_fetch_array($newMessageUserSql);
     ?>
-      //$("#chat").effect("shake", { times:3 }, 150);
+      updateDashbox('message');
       
       $('#chat').show();
       

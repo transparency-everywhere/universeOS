@@ -44,7 +44,7 @@ $k = 5;//limit
 		echo"<ul class=\"list resultList\">";
 		$userSuggestSQL = mysql_query("SELECT userid, username FROM user WHERE username LIKE '%$q%' OR realname LIKE '%$q%' OR email='$q' OR userid='$q' LIMIT $k");
 		while ($suggestData = mysql_fetch_array($userSuggestSQL)) {
-			echo"<li class=\"strippedRow\">".showUserPicture($suggestData[userid], "14")."<a href=\"#\" onclick=\"createNewTab('reader_tabView','$suggestData[username]','','./profile.php?user=$suggestData[userid]',true);return false\" style=\"margin-bottom:-10px;\">$suggestData[username]</a></li>";
+			echo"<li class=\"strippedRow\">".showUserPicture($suggestData[userid], "14")."<a href=\"#\" onclick=\"showProfile('$suggestData[userid]');\" style=\"margin-bottom:-10px;\">$suggestData[username]</a></li>";
 			}
 		echo"</ul>";
 		

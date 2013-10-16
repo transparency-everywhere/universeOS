@@ -780,7 +780,7 @@
    		$user = save($user);
    	}
    	
-	$newMessagesSql = mysql_query("SELECT * FROM  `messages` WHERE  receiver='$user' ORDER BY timestamp DESC LIMIT 0, 5");
+	$newMessagesSql = mysql_query("SELECT * FROM  `messages` WHERE  receiver='$user' OR sender='$user' ORDER BY timestamp DESC LIMIT 0, 5");
 	while($newMessagesData = mysql_fetch_array($newMessagesSql)){
 		$session .= "newMessage $newMessagesData[id]";
 		
@@ -877,26 +877,27 @@
                                 $color="e5f2ff";
                             }
                             $i++;
-                        ?>
-                                <tr bgcolor="#<?=$color;?>" onmouseup="showMenu('folder<?=$filefdata[id];?>')" height="35">
-                                    <td onmouseup="showMenu(<?=$favFolderData['id'];?>)" width="35">&nbsp;<img src="./gfx/icons/<?=$img;?>" height="20"></td>
-                                    <td onmouseup="showMenu(<?=$favFolderData['id'];?>)"><a href="#" onclick="<?=$link;?>"><?=$favFolderData['name'];?><?=$favFolderData['title'];?>/</a></td>
-                                    <?php
-                                    if($user == $_SESSION[userid]){
-                                    ?>
-                                    <td align="right"><a class="btn btn-mini" onclick="removeFav('<?=$type;?>', '<?=$item;?>')"><i class="icon-remove"></i></a></td>
-                                    <?php
+							
+							$output .= "<tr class=\"strippedRow\" onmouseup=\"showMenu('folder$filefdata[id]')\">";
+								$output .= "<td onmouseup=\"showMenu(".$favFolderData['id'].")\" width=\"35\">&nbsp;<img src=\"./gfx/icons/$img\" height=\"20\"></td>";
+								$output .= "<td onmouseup=\"showMenu(".$favFolderData['id'].")\"><a href=\"#\" onclick=\"$link\">".$favFolderData['name'].""."".$favFolderData['title']."/</a></td>";
+                                    if($user == getUser()){
+                                    	
+                                    $output .= "<td align=\"right\"><a class=\"btn btn-mini\" onclick=\"removeFav('$type', '$item')\"><i class=\"icon-remove\"></i></a></td>";
+                                    
                                     }
-                                    ?>
-                                </tr>
-                        <? }
+
+                                $output .= "</tr>";
+                         }
 						   if($i == 0){
-						   		echo"<tr>";
-							   		echo"<td colspan=\"2\">";
-									echo"You don't have any favourites so far. Add folders, elements, files, playlists or other items to your favourites and they will appear here.";
-							   		echo"</td>";
-						   		echo"</tr>";
+						   		$output .="<tr>";
+							   		$output .="<td colspan=\"2\">";
+									$output .="You don't have any favourites so far. Add folders, elements, files, playlists or other items to your favourites and they will appear here.";
+							   		$output .="</td>";
+						   		$output .="</tr>";
 						   }
+						   
+						   return $output;
         
         
     }
@@ -1179,7 +1180,6 @@ echo"</div>";
 		}else{
 		   parent.jsAlert('', '<?=addslashes($text);?>');
 		}
-		return false;
         </script> 
             <?php
     }
@@ -2601,7 +2601,6 @@ echo"</div>";
 			
             $thumbPath = "../../".$folderpath."thumbs/";
             $imgName = basename($file['name']);
-            $type = mime_content_type($file['tmp_name']);
             $elementName = "$FileElementData[title]_";
             $imgName = "$elementName$imgName";
  
@@ -2610,8 +2609,8 @@ echo"</div>";
             move_uploaded_file($file['tmp_name'], "../../".$folderpath.$file['name']);
             rename( "../../".$folderpath.$filename, "../../".$folderpath.$imgName);
         if($type == "image/jpg" || $type == "image/jpeg" || $type == "image/png"){
-                    $thumbPath= $_SERVER['DOCUMENT_ROOT']."/"."$thumbPath";
-                    $path = $_SERVER['DOCUMENT_ROOT']."/$folderpath";
+                    $thumbPath= "$thumbPath";
+                    $path = "../../$folderpath";
                     if(is_dir("$thumbPath")){
                         mkthumb("$imgName",300,300,$path,"$thumbPath");
                     } else{
@@ -2819,7 +2818,7 @@ echo"</div>";
                 $linkData = mysql_fetch_array($linkSql);
                     
                 //file can only be deleted if uploader = deleter
-                if(authorize($linkData[privacy], "edit")){
+                if(authorize($linkData[privacy], "edit", $linkData[author])){
                     
                        if(mysql_query("DELETE FROM links WHERE id='$linkId'")){
                            
@@ -2897,6 +2896,9 @@ echo"</div>";
             $fileQuery = mysql_query("SELECT * FROM files WHERE id='$fileId'");
             $fileData = mysql_fetch_array($fileQuery);
 			
+			$privacy = $fileData['privacy'];
+			$user = $fileData['owner'];
+			
 			$elementQuery = mysql_query("SELECT * FROM elements WHERE id='$fileData[folder]'");
 			$elementData = mysql_fetch_array($elementQuery);
             
@@ -2908,7 +2910,7 @@ echo"</div>";
             $path = getFullFilePath($fileId);
             
 			
-    		$score = showScore("file", $fileId, 1);
+    		$score = showScore("file", $fileId);
             
             //check type if type is undefined get type from db
             if(empty($type)){
@@ -2929,10 +2931,13 @@ echo"</div>";
 		            //get linkdata
 		            $linkQuery = mysql_query("SELECT * FROM links WHERE id='$linkId'");
 		            $linkData = mysql_fetch_array($linkQuery);
+					$privacy = $linkData['privacy'];
+					$user = $linkData['author'];
+			
 		            
 		            $title = $linkData[title];
 		            
-    				$score = showScore("link", $linkId, 1);
+    				$score = showScore("link", $linkId);
 					
 		            
 		            //define type if type is undefined
@@ -3008,178 +3013,179 @@ echo"</div>";
 			}
 		}
 		
-		
-        if($type == "image/jpeg'" || $type == "image/png'" || $type == "image" ){
-        	//add zoom buttons to header
-        	$bar = "<a href=\"javascript: zoomIn('$element');\" id=\"zoomIn\" class=\"btn btn-mini\" title=\"zoom in\"><img src=\"./gfx/icons/zoomIn.png\" height=\"10\" border=\"0\"></a>&nbsp;<a id=\"zoomOut\" href=\"javascript: zoomOut('$element');\" class=\"btn btn-mini\" style=\"\" title=\"zoom out\"><img src=\"./gfx/icons/zoomOut.png\" height=\"10\" border=\"0\"></a>";
-        }
-		
-        $icon = getFileIcon($type);
-        $icon = "<img src=\"http://universeos.org/gfx/icons/fileIcons/$icon\" height=\"20\">";
-        
-        $output .= "<header class=\"gray-gradient\">";
-        $output .= $icon;
-        $output .= "<span class=\"title\">$title</span>";
-		$output .= "<span class=\"controls\">$controls</span>";
-		$output .= "<span class=\"bar\">$bar</span>";
-		$output .= "<span class=\"score\">$score</span>";
-        $output .= "<span class=\"download\">$download</span>";
-        $output .= "</header>";
-        $output .= "<div class=\"fileWindow\" id=\"$fileWindowId\">";
-        
-        switch($type){
-            //link types
-            case youTube:
-			  
-			      
+		if(authorize($privacy, 'show', $user)){
+	        if($type == "image/jpeg'" || $type == "image/png'" || $type == "image" ){
+	        	//add zoom buttons to header
+	        	$bar = "<a href=\"javascript: zoomIn('$element');\" id=\"zoomIn\" class=\"btn btn-mini\" title=\"zoom in\"><img src=\"./gfx/icons/zoomIn.png\" height=\"10\" border=\"0\"></a>&nbsp;<a id=\"zoomOut\" href=\"javascript: zoomOut('$element');\" class=\"btn btn-mini\" style=\"\" title=\"zoom out\"><img src=\"./gfx/icons/zoomOut.png\" height=\"10\" border=\"0\"></a>";
+	        }
+			
+	        $icon = getFileIcon($type);
+	        $icon = "<img src=\"http://universeos.org/gfx/icons/fileIcons/$icon\" height=\"20\">";
+	        
+	        $output .= "<header class=\"gray-gradient\">";
+	        $output .= $icon;
+	        $output .= "<span class=\"title\">$title</span>";
+			$output .= "<span class=\"controls\">$controls</span>";
+			$output .= "<span class=\"bar\">$bar</span>";
+			$output .= "<span class=\"score\">$score</span>";
+	        $output .= "<span class=\"download\">$download</span>";
+	        $output .= "</header>";
+	        $output .= "<div class=\"fileWindow\" id=\"$fileWindowId\">";
+	        
+	        switch($type){
+	            //link types
+	            case youTube:
 				  
-				  //DISPLAY VIDEO
-				  //define content
-			      $output .= '<div class="iframeFrame" style="background: #000000;">';
-				  //show an iframe which loads the openyoutube...() function via the doit.php
-			      $output .= "<iframe src=\"doit.php?action=showYoutube&id=$vId&playList=$playlist&row=$row\" id=\"$iframeId\" name=\"playListLoaderFrame\" frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"auto\"></iframe>";
-			      $output .= '</div>';
-				
-				
-				
-                break;
-            case wiki:
-				
-	       		$title = urlencode($title);
-	            $wikiUrl = "http://en.wikipedia.org/w/index.php?title=$title&printable=yes";
-				
-				
-                $output .= "<div class=\"iframeFrame\">";
-	            $output .= "<iframe frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"auto\"  src=\"$wikiUrl\"></iframe>";
-	            $output .= "</div>";
-                break;
-            case RSS:
-				
-				
-				if(!empty($linkData[link])){
-		        	$url = $linkData[link];
-					$title = $linkData[title];
-				}else{
-					$url = $typeInfo;
-					$title = $extraInfo1;
-				}
-		        $output .= "<div class=\"rssReader windowContent\">";
-		        $output .= getRssfeed("$url","$title","auto",10,3);
-		        $output .= "</div>";
-				
-                break;
-            
-            //real file types
-            //documents
-			case UFF:
-						if(authorize($fileData[privacy], "edit", $fileData[owner])){
-						    $readOnly = "false";
-						}else{
-						    $readOnly = "true";
-						}
-						
-						$title = $fileData[title];
-						$activeUsers = explode(";", $fileData[var1]);
-						//this iframe is used to handle all the onload, onsubmit, onkeyup events, its necessary because of the fact that the dhtml-goddies tab script parses the damn js
-						//dirty solution!!!
-						$output .= "<iframe src=\"modules/reader/UFF/javascript.php?fileId=$fileId&readOnly=$readOnly\" style=\"display:none;\"></iframe>";
-						$output .= "<div class=\"uffViewerNav\">";
-							$output .= "<div style=\"margin: 10px;\">";
-								$output .= "<ul>";
-						            $output .= '<li style="font-size: 11pt; margin-bottom: 05px;"><i class="icon-user"></i>&nbsp;<strong>Active Users</strong></li>';
-						            //show active users
-						            foreach($activeUsers AS &$activeUser){
-						                if(!empty($activeUser)){
-						                $output .= "<li onclick=\"openProfile($activeUser);\" style=\"cursor: pointer;\">";
-						                //$output .= showUserPicture($activeUser, "11");
-						                $output .=  "&nbsp;";
-						                $output .=  useridToUsername($activeUser);
-						                $output .= "</li>";
-						                }
-						            }
-								$output .= "</ul>";
+				      
+					  
+					  //DISPLAY VIDEO
+					  //define content
+				      $output .= '<div class="iframeFrame" style="background: #000000;">';
+					  //show an iframe which loads the openyoutube...() function via the doit.php
+				      $output .= "<iframe src=\"doit.php?action=showYoutube&id=$vId&playList=$playlist&row=$row\" id=\"$iframeId\" name=\"playListLoaderFrame\" frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"auto\"></iframe>";
+				      $output .= '</div>';
+					
+					
+					
+	                break;
+	            case wiki:
+					
+		       		$title = urlencode($title);
+		            $wikiUrl = "http://en.wikipedia.org/w/index.php?title=$title&printable=yes";
+					
+					
+	                $output .= "<div class=\"iframeFrame\">";
+		            $output .= "<iframe frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"auto\"  src=\"$wikiUrl\"></iframe>";
+		            $output .= "</div>";
+	                break;
+	            case RSS:
+					
+					
+					if(!empty($linkData[link])){
+			        	$url = $linkData[link];
+						$title = $linkData[title];
+					}else{
+						$url = $typeInfo;
+						$title = $extraInfo1;
+					}
+			        $output .= "<div class=\"rssReader windowContent\">";
+			        $output .= getRssfeed("$url","$title","auto",10,3);
+			        $output .= "</div>";
+					
+	                break;
+	            
+	            //real file types
+	            //documents
+				case UFF:
+							if(authorize($fileData[privacy], "edit", $fileData[owner])){
+							    $readOnly = "false";
+							}else{
+							    $readOnly = "true";
+							}
+							
+							$title = $fileData[title];
+							$activeUsers = explode(";", $fileData[var1]);
+							//this iframe is used to handle all the onload, onsubmit, onkeyup events, its necessary because of the fact that the dhtml-goddies tab script parses the damn js
+							//dirty solution!!!
+							$output .= "<iframe src=\"modules/reader/UFF/javascript.php?fileId=$fileId&readOnly=$readOnly\" style=\"display:none;\"></iframe>";
+							$output .= "<div class=\"uffViewerNav\">";
+								$output .= "<div style=\"margin: 10px;\">";
+									$output .= "<ul>";
+							            $output .= '<li style="font-size: 11pt; margin-bottom: 05px;"><i class="icon-user"></i>&nbsp;<strong>Active Users</strong></li>';
+							            //show active users
+							            foreach($activeUsers AS &$activeUser){
+							                if(!empty($activeUser)){
+							                $output .= "<li onclick=\"openProfile($activeUser);\" style=\"cursor: pointer;\">";
+							                //$output .= showUserPicture($activeUser, "11");
+							                $output .=  "&nbsp;";
+							                $output .=  useridToUsername($activeUser);
+							                $output .= "</li>";
+							                }
+							            }
+									$output .= "</ul>";
+								$output .= "</div>";
 							$output .= "</div>";
-						$output .= "</div>";
-						//document frame
-						$output .= "<div class=\"uffViewerMain\">";
-							$output .= "<textarea class=\"uffViewer_$fileId WYSIWYGeditor\" id=\"editor1\">";
-							$output .= "</textarea>";
-						$output .= "</div>";
-				break;
-            case 'text/plain':
-                
-                
-                $filePath = urldecode("../../$path");
-
-                $file = fopen($filePath, 'r');
-                $output .= nl2br(htmlentities(fread($file, filesize($filePath))));
-                fclose($file);
-                
-                break;
-            
-            case 'application/pdf':
-                $output .= "<div class=\"iframeFrame\">";
-                $output .= "<iframe src=\"http://universeos.org/$path\" frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"auto\"></iframe>";
-                $output .= "</div>";
-                
-                break;
-            
-            
-            //pictures
-            case 'image':
-				
-				$output .= "<div id=\"ImageViewer_$element\" class=\"readerImageTab\">";
-				$output .= "<center>";
-				$output .= "<img src=\"$path\" width=\"100%\" id=\"viewedPicture_$element\">";
-				$output .= "</center>";
-				$output .= "</div>";
-				
-				$output .= '<div style="position: absolute; height: 120px; right:0px; bottom: 0px; left: 0px; overflow: auto; background: #000; color: #FFF;">';
-
-					$output .= '<table style="width: 100%; height: 120px;" align="center" class="blackGradient">';
+							//document frame
+							$output .= "<div class=\"uffViewerMain\">";
+								$output .= "<textarea class=\"uffViewer_$fileId WYSIWYGeditor\" id=\"editor1\">";
+								$output .= "</textarea>";
+							$output .= "</div>";
+					break;
+	            case 'text/plain':
+	                
+	                
+	                $filePath = urldecode("../../$path");
+	
+	                $file = fopen($filePath, 'r');
+	                $output .= nl2br(htmlentities(fread($file, filesize($filePath))));
+	                fclose($file);
+	                
+	                break;
+	            
+	            case 'application/pdf':
+	                $output .= "<div class=\"iframeFrame\">";
+	                $output .= "<iframe src=\"http://universeos.org/$path\" frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"auto\"></iframe>";
+	                $output .= "</div>";
+	                
+	                break;
+	            
+	            
+	            //pictures
+	            case 'image':
 					
-					$output .= '<tr>';
+					$output .= "<div id=\"ImageViewer_$element\" class=\"readerImageTab\">";
+					$output .= "<center>";
+					$output .= "<img src=\"$path\" width=\"100%\" id=\"viewedPicture_$element\">";
+					$output .= "</center>";
+					$output .= "</div>";
+					
+					$output .= '<div style="position: absolute; height: 120px; right:0px; bottom: 0px; left: 0px; overflow: auto; background: #000; color: #FFF;">';
+	
+						$output .= '<table style="width: 100%; height: 120px;" align="center" class="blackGradient">';
+						
+						$output .= '<tr>';
+						
+						
+				        $documentSQL = mysql_query("SELECT id, title, folder, privacy, owner FROM files WHERE folder='$elementData[id]' AND type IN('image/png','image/jpeg','image')");
+				        while($documentData = mysql_fetch_array($documentSQL)){
+	        				if(authorize($documentData[privacy], "show", $documentData[owner])){
+						        //$documentFolderSQL = mysql_query("SELECT path FROM folders WHERE id='$elementData[folder]'");
+						        //$documentFolderData = mysql_fetch_array($documentFolderSQL);
+						        if($elementData[title] == "profile pictures"){
+						        	$thumbPath = getFolderPath($elementData[folder]);    
+						        	$thumbPath = "$thumbPath/thumb/300/";
+						        }else{
+						        	$thumbPath = getFolderPath($elementData[folder])."thumbs/";
+						        }
+								
+								
+						        $output .= "<td onmouseup=\"showMenu('image$documentData[id]')\" oncontextmenu=\"showMenu('image$documentData[id]'); return false;\"><div id=\"viewerClick$documentData[id]\"><a href=\"#\" onclick=\"addAjaxContentToTab('Open ".substr("$elementTitle", 0, 10)."','./modules/reader/openFile.php?type=image&fileId=$documentData[id]');return false\"><img src=\"$thumbPath$documentData[title]\" height=\"100px\"></a></div></td>";   
+				       		}
+				        }
+						$output .= "</tr>";
+						$output .= "</table>";
+						$ouput .="</div>";
 					
 					
-			        $documentSQL = mysql_query("SELECT id, title, folder, privacy, owner FROM files WHERE folder='$elementData[id]' AND type IN('image/png','image/jpeg','image')");
-			        while($documentData = mysql_fetch_array($documentSQL)){
-        				if(authorize($documentData[privacy], "show", $documentData[owner])){
-					        //$documentFolderSQL = mysql_query("SELECT path FROM folders WHERE id='$elementData[folder]'");
-					        //$documentFolderData = mysql_fetch_array($documentFolderSQL);
-					        if($elementData[title] == "profile pictures"){
-					        	$folderPath = urldecode($documentFolderData[path]);    
-					        	$folderPath = "http://universeos.org/upload$folderPath/thumb/300/";
-					        }else{
-					        	$thumbPath = getFolderPath($elementData[folder])."thumbs/";
-					        }
-							
-							
-					        $output .= "<td onmouseup=\"showMenu('image$documentData[id]')\" oncontextmenu=\"showMenu('image$documentData[id]'); return false;\"><div id=\"viewerClick$documentData[id]\"><a href=\"#\" onclick=\"addAjaxContentToTab('Open ".substr("$elementTitle", 0, 10)."','./modules/reader/openFile.php?type=image&fileId=$documentData[id]');return false\"><img src=\"$thumbPath$documentData[title]\" height=\"100px\"></a></div></td>";   
-			       		}
-			        }
-					$output .= "</tr>";
-					$output .= "</table>";
-					$ouput .="</div>";
-				
-				
-				
-				
-                break;
-            
-            case 'video':
-				$output .= "<video src=\"$path\" controls>";
-                break;
-            
-            case 'image/tiff':
-                break;
-            
-            //audio
-            case 'audio/mpeg':
-				$output .= "<video src=\"$path\" controls>";
-                break;
-            
-        }
-        $output .= "</div>";
+					
+					
+	                break;
+	            
+	            case 'video':
+					$output .= "<video src=\"$path\" controls>";
+	                break;
+	            
+	            case 'image/tiff':
+	                break;
+	            
+	            //audio
+	            case 'audio/mpeg':
+					$output .= "<video src=\"$path\" controls>";
+	                break;
+	            
+	        }
+	        $output .= "</div>";
+	    	}
         
         return $output;
     }
@@ -3329,20 +3335,16 @@ echo"</div>";
             $title15 = substr("$title", 0, 25);
 
             if(authorize($fileddata[privacy], "show", $fileddata[author])){
-        ?>
-            <tr class="strippedRow" oncontextmenu="showMenu('element<?=$filefdata[id];?>'); return false;" height="30">
-                <td width="30">&nbsp;<img src="http://universeos.org/gfx/icons/filesystem/element.png" height="22"></td>
-                <td><a href="http://universeos.org/out/?element=<?=$fileddata[id];?>" onclick="openElement('<?=$fileddata[id];?>', '<?=addslashes($title10);?>'); return false;"><?=$title15;?></a></td>
-                <td width="80px">
-                	<?php
-                	if($rightClick){
-                	echo showItemSettings('element', "$fileddata[id]");
-					}
-                	?>
-                </td>
-                <td width="50px"><?=showScore("element", $fileddata[id]);?></td>
-            </tr>
-            <?php
+            echo "<tr class=\"strippedRow\" oncontextmenu=\"showMenu('element".$filefdata['id'].";'); return false;\" height=\"30\">";
+	            echo "<td width=\"30\">&nbsp;<img src=\"http://universeos.org/gfx/icons/filesystem/element.png\" height=\"22\"></td>";
+	            echo "<td><a href=\"http://universeos.org/out/?element=".$fileddata[id]."\" onclick=\"openElement('".$fileddata[id]."', '".addslashes($title10)."'); return false;\">$title15</a></td>";
+	            echo "<td width=\"80px\">";
+	                	if($rightClick){
+	                	echo showItemSettings('element', "$fileddata[id]");
+						}
+	            echo "</td>";
+	            echo "<td width=\"50px\">".showScore("element", $fileddata[id])."</td>";
+            echo "</tr>";
             if($rightClick){
             showRightClickMenu("element", $fileddata[id], $title10, $fileddata[author]);
             }}}
@@ -3453,7 +3455,7 @@ echo"</div>";
                 }
                 $image = getFileIcon($fileListData[type]);
                     ?>
-                    <tr class="strippedRow" oncontextmenu="showMenu('file<?=$fileListData[id];?>'); return false;" height="40px">
+                    <tr class="strippedRow file_<?=$fileListData[id];?>" oncontextmenu="showMenu('file<?=$fileListData[id];?>'); return false;" height="40px">
                         <td width="30px">&nbsp;<img src="http://universeos.org/gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData[type];?>" height="22"></td>
                         <td><a href="http://universeos.org/out/?file=<?=$fileListData[id];?>" onclick="<?=$link;?> return false"><?=substr($fileListData[title],0,30);?></a></td>
                         <td width="80" align="right"><a href="doit.php?action=download&fileId=<?=$fileListData[id];?>" target="submitter" class="btn btn-mini" title="download file"><i class="icon-download"></i></a>
@@ -3493,7 +3495,7 @@ echo"</div>";
                     }
                     $i++;
                 ?>
-                <tr bgcolor="#<?=$color;?>" oncontextmenu="showMenu('link<?=$linkListData[id];?>'); return false;" height="22px">
+                <tr bgcolor="#<?=$color;?>" class="strippedRow link_<?=$linkListData[id];?>" oncontextmenu="showMenu('link<?=$linkListData[id];?>'); return false;" height="22px">
                     <td width="65px">&nbsp;<img src="./gfx/icons/fileIcons/<?=$image;?>" alt="<?=$linkListData[type];?>" height="22px"></td>
                     <td><a href="#" onclick="<?=$link;?>"><?=substr($linkListData[title],0,30);?></a></td>
                     <td width="70" align="right"><?=showItemSettings('link', $linkListData[id]);?></td>
@@ -3968,8 +3970,8 @@ echo"</div>";
                 
                 //if image no info is shown. the complete first row is used to preview image
                 if($fileData['type'] == "image/jpg" || $fileData['type'] == "image/jpeg" || $fileData['type'] == "image/png"){
-                	//$elementData = mysql_fetch_array(mysql_query("SELECT folder FROM elements WHERE id='$fileData[folder]'"));
-                	//$img = "../../".getFolderPath($elementData['folder'])."thumbs/".$fileData['filename'];
+                	$elementData = mysql_fetch_array(mysql_query("SELECT folder FROM elements WHERE id='$fileData[folder]'"));
+                	$img = "../../".getFolderPath($elementData['folder'])."thumbs/".$fileData['filename'];
                 	
                 	//the column which normaly includes the icon needs to fill out the full width
                 	$imgColumnStyle = "colspan=\"2\"";
@@ -4206,7 +4208,218 @@ echo"</div>";
 	                }
 		}
 
-	class chatMessages{
+class dashBoard{
+	public $userid;
+	public $userdata;
+	
+	function __construct() {
+
+		$user = getUser();
+      	$this->userid = $user;
+		$this->userdata = mysql_fetch_array(mysql_query("SELECT username FROM user WHERE userid='$user'"));
+
+	}
+	
+	function showDashBox($title, $content, $footer=NULL, $id=NULL, $grid=true){
+		if($grid){
+			$output .= "<div class=\"dashBox\" id=\"$id"."Box\">";
+		}
+		
+			$output .= "<a class=\"dashClose\"></a>";
+			$output .= "<header>$title</header>";
+		
+			$output .= "<div class=\"content\">$content</div>";
+			
+			if(!empty($footer)){
+			$output .= "<footer>$footer</footer>";
+			}
+			
+		if($grid){
+			$output .= "</div>";
+		}
+		return $output;
+	}
+	
+	function showWelcomeBox($grid=true){
+			
+		$userData = $this->userdata;
+		
+		$title = "Welcome";
+		$content = showUserPicture($this->userid,07,false,true)." Hey <a href=\"#\" onclick=\"showProfile('$this->userid')\">$userData[username]</a>,<br>good to see you!";
+		$content .= "<div>";
+		$content .= "<div class=\"listContainer\">";
+		$content .= "<ul class=\"list messageList\" id=\"dockMenuSystemAlerts\"></ul>";
+		$content .= "<header>System</header>";
+		$content .= "</div>";
+		$content .= "<div class=\"listContainer\">";
+		$content .= "<ul class=\"list messageList\" id=\"dockMenuBuddyAlerts\"></ul>";
+		$content .= "<header>Buddies</header>";
+		$content .= "</div>";
+		$content .= "</div>";
+
+		$output = $this->showDashBox($title, $content,"", "buddy", $grid);
+		return $output;
+	}
+	
+	function showAppBox($grid=true){
+		
+		$title = "Your Apps";
+		
+		$content = "<ul class=\"appList\" style=\"width:220px;\">";
+	    	$content .= "<li onclick=\"toggleApplication('feed')\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/feed.png\" border=\"0\" height=\"16\">Feed</li>";
+			$content .= "<li onclick=\"toggleApplication('filesystem')\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/filesystem.png\" border=\"0\" height=\"16\">Filesystem</li>";
+	 		$content .= "<li onclick=\"javascript: toggleApplication('reader')\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/viewer.png\" border=\"0\" height=\"16\">Reader</li>";
+	   		$content .= "<li onclick=\"javascript: toggleApplication('buddylist')\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/buddylist.png\" border=\"0\" height=\"16\">Buddylist</li>";
+	    	$content .= "<li onclick=\"javascript: toggleApplication('chat')\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/buddylist.png\" border=\"0\" height=\"16\">Chat</li>";
+	    	$content .= "<li onclick=\"javascript: showModuleSettings();\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/settings.png\" border=\"0\" height=\"16\">Settings</li>";
+	    $content .= "</ul>";
+		
+		$output = $this->showDashBox($title, $content,"", "app", $grid);
+		
+		return $output;
 		
 	}
+	function showGroupBox($grid=true){
+		
+		//groups
+		$groups = getGroups();
+		
+		$title = "Your Groups";
+		
+		$output .= "<ul class=\"content\">";
+			$i = 0;
+			foreach($groups AS $group){
+				$output .="<li>";
+					$output .="<span class=\"marginRight\">";
+						$output .="<img src=\"./gfx/icons/group.png\" height=\"14\">";
+					$output .="</span>";
+					$output .="<span>";
+						$output .="<a href=\"#\" onclick=\"showGroup('$group');\">";
+						$output .= getGroupName($group);
+						$output .="</a>";
+					$output .="</span>";
+				$output .="</li>";
+				$i++;
+			}
+			if($i == 0){
+				$output .="<li>";
+				$output .="You don't have any messages so far. Search for friends, add them to your buddylist and open a chat dialoge to write a message.";
+				$output .="</li>";
+			}
+			
+		$output .= "</ul>";
+		
+		$footer = "<a href=\"#addGroup\" onclick=\"popper('doit.php?action=addGroup')\" title=\"Create a new Group\"><i class=\"icon icon-plus\"></i></a>";
+		
+		$output = $this->showDashBox($title, $output, $footer, "group", $grid);
+		
+		return $output;
+		
+	}
+	function showPlaylistBox($grid=true){
+		
+			//playlists
+			$playlists = getPlaylists();
+			
+			$title = "Your Playlists";
+			$i = 0;
+			$output .= "<ul class=\"content\">";
+			foreach($playlists AS $playlist){
+				$output .= "<li>";
+					$output .= "<span class=\"marginRight\">";
+						$output .= "<img src=\"./gfx/icons/playlist.png\" height=\"14\">";
+					$output .= "</span>";
+					$output .= "<span>";
+						$output .= "<a href=\"#\" onclick=\"showPlaylist('$playlist');\">";
+						$output .=  getPlaylistTitle($playlist);
+						$output .= "</a>";
+					$output .= "</span>";
+				$output .= "</li>";
+				$i++;
+			}
+			if($i == 0){
+				$output .= "<li>";
+				$output .= "You don't have any playlists so far.";
+				$output .= "<li>";
+			}
+			$output .= "</ul>";
+			
+		$footer = "<a href=\"#addPlaylist\" onclick=\"popper('doit.php?action=addPlaylist')\" title=\"Create a new Playlist\"><i class=\"icon icon-plus\"></i></a>";
+			
+		
+		$output = $this->showDashBox($title, $output, $footer, "playlist", $grid);
+		$footer = "";
+		
+		return $output;
+		
+	}
+	function showMessageBox($grid=true){
+			//unseenMessages
+			$lastMessages = getLastMessages();
+		
+			$title = "Your Messages";
+			
+			$output .= "<ul id=\"messageList\">";
+			$i = 0;
+			foreach($lastMessages AS $message){
+				
+				$class = "";
+				if($message['seen'] == "0"){
+					$class = "unseen";
+				}
+				
+				$output .= "<li class=\"$class\" style=\"clear:both;\">";
+					$output .=  "<span>";
+					$output .=  showUserPicture($message[sender],07,'',true);
+					$output .=  "</span>";
+					$output .=  "<span>";
+					$output .=  "$message[senderUsername]";
+					$output .=  "</span>";
+					//$output .=  "<span>";
+					//$output .=  universeTime($message[timestamp]);
+					//$output .=  "</span>";
+					$output .=  "<span>";
+					$output .=  "<a href=\"#\" onclick=\"openChatDialoge('$message[senderUsername]');\">";
+					$output .=  substr($message['text'], 0, 15);
+					$output .=  "</a>";
+					$output .=  "</span>";
+				$output .= "</li>";
+				$i++;
+			}
+			if($i == 0){
+				$output .= "<li>";
+				$output .= "You don't have any messages so far. Search for friends, add them to your buddylist and open a chat dialoge to write a message.";
+				$output .= "</li>";
+			}
+			
+			$output .= "</ul>";
+		
+			$output = $this->showDashBox($title, $output,"", "message", $grid);
+			
+			return $output;
+		
+	}
+
+	function showFavBox($grid=true){
+		
+			$title = "Your Favorites";
+			
+			$output .= "<div>";
+				$output .= "<table width=\"100%\">";
+					$output .= showFav();
+				$output .= "</table>";
+			$output .= "</div>";
+		
+			$output = $this->showDashBox($title, $output,"", "fav", $grid);
+			
+			return $output;
+	}
+
+	function showTaskBox($grid=true){
+		$title = "Your Tasks";
+		
+		return $this->showDashBox($title, $output,"", "task", $grid);
+	}
+}
+
        ?>
