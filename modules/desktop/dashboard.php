@@ -46,6 +46,6 @@ $dashboard = new dashBoard();
 	
 		echo $dashboard->showFavBox();
 	
-		echo $dashboard->showTaskBox();
+		//echo $dashboard->showTaskBox();
 	?>
 </div>

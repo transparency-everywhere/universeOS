@@ -13,6 +13,7 @@ body {
 	font-style: normal;
 	line-height: 1.333em;
 	font-weight: 200!important;
+	font-size: 16px;
 	font-variant: normal;
 	margin: 0;
 	padding: 0;
@@ -22,13 +23,13 @@ body {
     background-position:top left;
 	background-repeat:no-repeat;*/
 	background:
-radial-gradient(black 15%, transparent 16%) 0 0,
-radial-gradient(black 15%, transparent 16%) 8px 8px,
-radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 0 1px,
-radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 8px 9px;
-background-color:#282828;
-background-size:16px 16px;
-/*http://lea.verou.me/css3patterns/#carbon-fibre*/
+	radial-gradient(black 15%, transparent 16%) 0 0,
+	radial-gradient(black 15%, transparent 16%) 8px 8px,
+	radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 0 1px,
+	radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 8px 9px;
+	background-color:#282828;
+	background-size:16px 16px;
+	/*http://lea.verou.me/css3patterns/#carbon-fibre*/
 }
 
 ul {

@@ -34,15 +34,15 @@
 						}, 500 );
 					});
                 
-                		             	$(document).live(function(){
-                 		
-              		//replace all links with <a href=link>link</a>
-	                $('body').html($('body').html().replace("/(b(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig","<a href='$1'>$1</a>"));
-               	//replace all links with <a href=link>link</a>
-		            $('body').html($('body').html().replace("/(b(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig","<a href='$1'>$1</a>"));
- 		                
- 		                
-                	});
+                		             	// $(document).live(function(){
+//                  		
+              		// //replace all links with <a href=link>link</a>
+	                // $('body').html($('body').html().replace("/(b(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig","<a href='$1'>$1</a>"));
+               	// //replace all links with <a href=link>link</a>
+		            // $('body').html($('body').html().replace("/(b(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig","<a href='$1'>$1</a>"));
+//  		                
+//  		                
+                	// });
 
 		            //init dashcloses 
 					$('.dashBox .dashClose').click(function(){
@@ -146,11 +146,11 @@
                                     stack: { group: '.fenster', min: 1 },
                                     drag: function(){
                                         //disable textmarking
-                                        $('html').children().disableSelection();
+                                        $('*').disableSelection();
                                     },
                                     stop: function(){
                                         //enable textmarking
-                                        $('html').children().enableSelection();
+                                        $('*').enableSelection();
                                     }
                             });
                             
@@ -177,14 +177,14 @@
                                     containment: '#bodywrap',
                                     start: function(){
                                         //disable textmarking
-                                        $('html').children().disableSelection();
+                                        $('*').disableSelection();
                                         //bring window to front 
                                         $(this).css('z-index', 9999);
                                         $(this).css('position', 'absolute');
                                     },
                                     stop: function(){
                                         //enable textmarking
-                                        $('html').children().enableSelection();
+                                        $('*').enableSelection();
                                     }
                             });
                     });
@@ -637,6 +637,7 @@
             chatEncrypt(username);
             
             $('#toggleKey_'+username+' .lockIcon').addClass('locked');
+            $('#chatKeySettings__'+username).hide();
             
 		}
     }

@@ -9,19 +9,72 @@ include_once("inc/config.php");
         <div id="topThing">
             <span>&copy; 2013 <a href="http://transparency-everywhere.com" target="blank" style="color: #54545B;">Transparency Everywhere</a></span>
             
-            <span style="">&nbsp;&nbsp;<a href="#" style="color: #54545B;" onclick="showContent('1', 'Site Notice');">Site Notice</a></span>
-            <span style=""></span>
+            <span style="">
+            	&nbsp;&nbsp;<a href="#" style="color: #54545B;" onclick="showContent('1', 'Site Notice');">Site Notice</a>
+            </span>
+            <span style="">
+            	
+            </span>
         </div>
         <div id="reload"></div>
         <div id="bodywrap">
         	  <?
     include("register.php");
     ?>
+    <style>
+    	#guestInfoBox{
+    		background: #383838;
+			border: 1px solid #222222;
+			padding: 5px;
+			position: absolute;
+			top:3px;
+			left:3px;
+			width:250px;
+    	}
+    	
+		#guestInfoBox h1, #guestInfoBox h2, #guestInfoBox h3, #guestInfoBox h4{
+			margin: 0;
+			margin-top: 5px;
+			line-height: 30px;
+		}
+		
+    	#guestInfoBox a {
+			color: #FFFFFF;
+			position: absolute;
+			right: 8px;
+			top: 0px;
+		}
+    	
+    	#guestInfoBox ul{
+    		margin: 10px 0px 10px 10px;
+    	}
+    	
+    	#guestInfoBox ul li{
+    		line-height: 19px;
+    		line-height: 15px;
+			margin: 10px 0 15px 22px;
+    	}
+    	
+    	#guestInfoBox ul li img{
+    		height: 12px;
+    		margin-left: -19px;
+    		position: absolute;
+    		margin-top: 2px;
+    		
+    	}
+    </style>
         <div id="guestInfoBox">
         	<a href="#" onclick="$('#guestInfoBox').hide();">x</a>
         	<h2>universeOS</h2>
-        	<h3>Tell me more!</h3>
-        	<p>The universeOS is bla lorem ipsum bla<br>something somthing intersting<br>might be in this useless texting.</p>
+        	<h3>"The world shares a Desktop"</h3>
+        	<p>Be part of the first social webOS which shares the following amazing features:</p>
+        	<ul>
+        		<li><img src="./gfx/bulletPoint.png">organize, open and share your files</li>
+        		<li><img src="./gfx/bulletPoint.png">use public files and make your files accesible to the public</li>
+        		<li><img src="./gfx/bulletPoint.png">present yourself through your profile and form groups with your buddies</li>
+        		<li><img src="./gfx/bulletPoint.png">encrypt your data and communication to be sure that it doesn't fall into the wrong hands</li>
+        	</ul>
+        	<p>But finally the fact that we don't make profit with your data is most important<br>to us.</p>
         </div>
         <? include("modules/reader/index.php") ?>
         
