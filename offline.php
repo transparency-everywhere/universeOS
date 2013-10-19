@@ -218,9 +218,9 @@
 		    <div class="item">
 		    	<h2>We stand up for your rights.</h2>
 		    	<div class="itemContent">
-		    		<p style="margin-bottom: 20px;">We are not profit- and growth-oriented. Therefore we are not using the path of least resistance but vouch for the users privacy.</p>
+		    		<p style="margin-bottom: 20px;">We are non-profit and growth oriented organisation. Therefore we are not using the path of least resistance but vouch for the users privacy.</p>
 		    		<p style="margin-bottom: 20px;">
-		    		  We use advertisement to cover the running costs and in addition to this to try producing surpluses for charitable projects.
+		    		  We use advertisement to cover the running costs and in addition to this, try to produce surplus for charitable projects.
 		    		</p>
 				</div>
             </div>
@@ -240,7 +240,7 @@
 		    	<img style="border-style: initial; border-color: initial; cursor: default; outline-width: 1px; outline-style: solid; outline-color: black; border-width: 0px; float: left; margin-left: 15px; margin-bottom: 15px;" title="chat" src="http://www.transparency-everywhere.com/upload/chat.png" alt="chat" width="20%" />
 		    	<ul style="float:right; max-width: 75%; margin-bottom: 40px;">
 		    			<li>The instant messenger allows the user to use an encrypted writing.</li>
-		    			<li>You can write with another conversation-partner without anyone, even us seeing what you are really writing.</li>
+		    			<li>You can have conversations without anyone, even us seeing what you are really writing.</li>
 		    	</ul>
                         <p style="float: left;">
                            <ul id="offlinePageImList">

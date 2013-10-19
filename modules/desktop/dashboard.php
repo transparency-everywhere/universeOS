@@ -24,19 +24,9 @@ $dashboard = new dashBoard();
 		<a class="dashClose"></a>
 		<header>Your Files</header>
 		<div class="content">
-		<?php
-		
-			                  //show folders and elements
-			                  $folderQuery = "WHERE creator='$userid' ORDER BY timestamp DESC";
-			                  $elementQuery = "WHERE author='$userid' ORDER BY timestamp DESC";
-			                  showFileBrowser($folder, "$folderQuery", "$elementQuery");
-			                  
-			                  //show files
-			                  $fileQuery = "owner='$userid' ORDER BY timestamp DESC";
-			                  echo'<table class="fileTable">';
-			                  showFileList('', $fileQuery);
-			                  echo"</table>";
-		?>
+			<li>Upload File</li>
+			<li>Add Link</li>
+			<li>Add Link</li>
 		</div>
 		<footer>
 			<a href="#uploadFile" onclick="openUploadTab();" title="Upload a File"><i class="icon icon-plus"></i></a>

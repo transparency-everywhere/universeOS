@@ -133,7 +133,6 @@ if(isset($_GET[scoreaction])){
                 ?>
                 <?=$friendButton;?>
                 <a href="#" onclick="popper('doit.php?action=writeMessage&buddy=<?=$profiledata[userid];?>')" class="btn">Message</a>
-                <a href="#" class="btn">Kick</a>
                 <? } ?>
              </div></span>
         <span style="float: right"><a href="#" onclick="openElement('<?=$profiledata[profilepictureelement];?>', 'Userpictures'); return false;"><?=showUserPicture($profiledata[userid], "50");?></a><br>

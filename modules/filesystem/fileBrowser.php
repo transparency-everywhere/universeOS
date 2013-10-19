@@ -30,22 +30,22 @@ if(!isset($_GET[initter])){
               </ul>
           </div>
 <?
-if(isset($_GET[special])){
+if(isset($_GET['special'])){
 	
 	//special querys, like show all music, show popular files etc.
-    if($_GET[special] == "pupularity"){
+    if($_GET['special'] == "pupularity"){
         $folderQuery = "ORDER BY votes DESC LIMIT 0, 10";
         $elementQuery = "ORDER BY votes DESC LIMIT 0, 10";
     }
-    else if($_GET[special] == "audio"){
+    else if($_GET['special'] == "audio"){
         $folderQuery = NULL;
         $elementQuery = " WHERE type LIKE '%audio%'";
     }
-    else if($_GET[special] == "video"){
+    else if($_GET['special'] == "video"){
         $folderQuery = NULL;
         $elementQuery = "WHERE type LIKE '%video%'";
     }
-    else if($_GET[special] == "document"){
+    else if($_GET['special'] == "document"){
         $folderQuery = NULL;
         $elementQuery = "WHERE type LIKE '%document%'";
     }
@@ -106,10 +106,12 @@ $pathdata = mysql_fetch_array($pathsql);
 			
 				if($showFileBrowser){
                 	showFileBrowser($folder, "$folderQuery", "$elementQuery");
-				}else if($fav){
-					echo"<table>";
-					showFav();
-					echo"</table>";
+				}
+
+				if($fav){
+					echo'<table width="100%">';
+					echo showFav($_SESSION[userid]);
+					echo'</table>';
 				}
 				
 				

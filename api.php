@@ -333,6 +333,10 @@ switch($action){
 
         }
     break;
+	case useridToUsername:
+		echo useridToUsername($_POST['userid']);
+		break;
+	//checks if a username is taken
     case checkUsername:
         
     $user = save($_POST[username]);

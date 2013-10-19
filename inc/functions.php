@@ -363,8 +363,8 @@
         }
         if(!empty($privacy) || !empty($fav) || !empty($delete) || !empty($edit) || !empty($report)){
         $return = "
-        <a href=\"#\" onclick=\"showSettingsWindow('$type$itemId');\" class=\"btn btn-mini\"><i class=\"icon-cog\"></i></a>
-        <div class=\"itemSettingsWindow itemSettingsWindow$type$itemId\">
+        <a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"btn btn-mini\"><i class=\"icon-cog\"></i></a>
+        <div class=\"itemSettingsWindow\">
             <ul>
                 $privacy
                 $fav
@@ -668,7 +668,7 @@
             	$style = "background-image: url('$src');";
 			}
         }else{
-            $src = "http://universeOS.org/upload/userFiles/$userid/userPictures/thumb/$folderpath/".$picData['userPicture']."";
+            $src = "./upload/userFiles/$userid/userPictures/thumb/$folderpath/".$picData['userPicture']."";
 			if(empty($class)){
             	$style = "background-image: url('$src');";
 			}
@@ -855,6 +855,7 @@
                             }else if($type == "element"){
                                 $typeTable = "elements";
                                 $img = "filesystem/element.png";
+                                $link = "openElement($item); return false;";
                             }else if($type == "file"){
                                 $typeTable = "files";
                                 $fileType = fileIdToFileType($item);
@@ -2083,11 +2084,77 @@ echo"</div>";
 			if($protected){
 				$disabled = 'disabled="disabled"';
 			}
+        			if($protected){
+        				echo"<li style=\"font-size:16pt;\">Protected</li>";
+        			}
+			if(1 == 1){
         ?>
         	<div class="privacySettings">
-        		<h3>Privacy Settings</h3>
+        		<header>Privacy Settings</header>
         		<ul>
+        			<li>
+        				<h2><input type="checkbox" name="privacyPublic" value="true" class="privacyPublicTrigger uncheckCustom uncheckHidden" <?=$checked[privacyPublic];?> <?=$disabled;?>>Public</h2>
+        				Every user is allowed to see and edit.
+        			</li>
+        			<li>
+        				<h2><input type="checkbox" class="privacyHiddenTrigger uncheckPublic uncheckCustom" name="privacyHidden" value="true" <?=$checked[privacyHidden];?> <?=$disabled;?>>Only me</h2>
+        				You are the only one who is allowed to see and edit.
+        			</li>
+        			<li>
+        				<h2><input type="checkbox" class="privacyBuddyTrigger privacyCustomTrigger uncheckPublic uncheckHidden" <?=$disabled;?>>Friends</h2>
+        				Friends cann see or edit.
+        			</li>
+        			<li class="sub privacyShowBuddy">
+        				<div><input type="checkbox" name="privacyCustomSee[]" value="f" class="privacyCustomTrigger uncheckPublic uncheckHidden" <?=$checked[privacyCustomShowF];?> <?=$disabled;?>>See</div>
+        				<div><input type="checkbox" name="privacyCustomEdit[]" value="f" class="uncheckPublic privacyCustomTrigger uncheckHidden" <?=$disabled;?>>Edit</div>
+        			</li>
+        			<li>
+        				<h2><input type="checkbox" class="uncheckPublic privacyGroupTrigger privacyCustomTrigger uncheckHidden" <?=$disabled;?>>Groups</h2>
+        				Particular Groups can see and edit.
+        			</li>
+        			<li class="sub privacyShowGroups">
+        				<ul class="groupList">
+        					                           <?
+                                                        $attSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='$_SESSION[userid]' AND validated='1'");
+                                                        while($attData = mysql_fetch_array($attSql)){
+                                                            $i++;
+                                                            $groupSql = mysql_query("SELECT id, title FROM groups WHERE id='$attData[group]'");
+                                                            $groupData = mysql_fetch_array($groupSql);
+                                                            $title = $groupData[title];
+                                                            $title10 = substr("$title", 0, 10);
+                                                            $title15 = substr("$title", 0, 25);
+                                                            if($i%2 == 0){
+                                                                $color="000000";
+                                                            }else{
+                                                                $color="383838";
+                                                            }
+                                                            if(in_array("$groupData[id]", $customEdit)){
+                                                                $checked[editGroup] = 'checked="checked"';
+                                                            }else{
+                                                                $checked[editGroup] = '';
+                                                            }
+                                                            ?>
+                                                                <li>
+                                                                	<div><img src="./gfx/icons/group.png" height="15">&nbsp;<a href="#" onclick="createNewTab('reader_tabView','<?=$title10;?>','','group.php?id=<?=$groupData[id];?>',true);return false"><?=$title15;?></a></div>
+                                                                	<div>
+                                                                		<input type="checkbox" name="privacyCustomSee[]" value="<?=$groupData[id];?>" class="privacyCustomTrigger uncheckPublic uncheckHidden" <?=$checked[editGroup];?> <?=$disabled;?>>
+																		show
+                                                                	</div>      
+                                                                	<div>
+                                                                		<input type="checkbox" name="privacyCustomEdit[]" value="<?=$groupData[id];?>" class="privacyCustomTrigger uncheckPublic uncheckHidden" <?=$checked[editGroup];?> <?=$disabled;?>>
+																		edit
+                                                                	</div>
+                                                                </li>
+                                                        <?}
+                                                        if($i < 1){
+                                                            echo'<li style="padding-left:10px;">Your are in no group</li>';
+                                                        }?>
+        				</ul>
+        			</li>
+        			<li></li>
         			<?php
+        			}
+        			if(1 == 2){
         			if($protected){
         				echo"<li style=\"font-size:16pt;\">Protected</li>";
         			}
@@ -2155,6 +2222,7 @@ echo"</div>";
                                                         <li style="padding-left:10px;"><input type="checkbox" name="privacyCustomEdit[]" value="h" class="privacyCustomTrigger privacyOnlyMeTrigger uncheckPublic uncheckHidden" <?=$checked[privacyCustomEditH];?> <?=$disabled;?>>Only Me</li>
 	
                                         <li><input type="checkbox" class="privacyHiddenTrigger uncheckPublic uncheckCustom" name="privacyHidden" value="true" <?=$checked[privacyHidden];?> <?=$disabled;?>>Hidden:</li>
+					<? } ?>
         		</ul>
         	</div>
                                 <script>
@@ -2188,9 +2256,28 @@ echo"</div>";
                                             $('.uncheckOnlyMe').prop('checked', false);
                                         }
                                     });
+                                    
+                                    $('.privacyBuddyTrigger').click(function(){
+                                    	$('.privacyShowBuddy').show();
+                                    });
+                                    
+                                    $('.privacyGroupTrigger').click(function(){
+                                    	$('.privacyShowGroups').show();
+                                    });
+                                    
                                     $('.uncheckOnlyMe').click(function(){
                                         if($(this).is(':checked')){
                                             $('.privacyOnlyMeTrigger').prop('checked', false);
+                                        }
+                                    });
+                                    $('.privacyHiddenTrigger').click(function(){
+                                        if($(this).is(':checked')){
+                                            $('.uncheckHidden').prop('checked', false);
+                                        }
+                                    });
+                                    $('.privacyCustomTrigger').click(function(){
+                                        if($(this).is(':checked')){
+                                            $('.uncheckCustom').prop('checked', false);
                                         }
                                     });
 
@@ -2742,6 +2829,10 @@ echo"</div>";
                     $image = "txt.png";
                 
             break;
+            case "text/x-c++":
+                    $image = "txt.png";
+                
+            break;
             case "application/pdf":
                     $image = "pdf.png";
             break;
@@ -3013,14 +3104,14 @@ echo"</div>";
 			}
 		}
 		
-		if(authorize($privacy, 'show', $user)){
+		if(authorize($privacy, 'show', $user) OR $type == "youTube" OR $type == "wiki"){
 	        if($type == "image/jpeg'" || $type == "image/png'" || $type == "image" ){
 	        	//add zoom buttons to header
 	        	$bar = "<a href=\"javascript: zoomIn('$element');\" id=\"zoomIn\" class=\"btn btn-mini\" title=\"zoom in\"><img src=\"./gfx/icons/zoomIn.png\" height=\"10\" border=\"0\"></a>&nbsp;<a id=\"zoomOut\" href=\"javascript: zoomOut('$element');\" class=\"btn btn-mini\" style=\"\" title=\"zoom out\"><img src=\"./gfx/icons/zoomOut.png\" height=\"10\" border=\"0\"></a>";
 	        }
 			
 	        $icon = getFileIcon($type);
-	        $icon = "<img src=\"http://universeos.org/gfx/icons/fileIcons/$icon\" height=\"20\">";
+	        $icon = "<img src=\"./gfx/icons/fileIcons/$icon\" height=\"20\">";
 	        
 	        $output .= "<header class=\"gray-gradient\">";
 	        $output .= $icon;
@@ -3124,7 +3215,7 @@ echo"</div>";
 	            
 	            case 'application/pdf':
 	                $output .= "<div class=\"iframeFrame\">";
-	                $output .= "<iframe src=\"http://universeos.org/$path\" frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"auto\"></iframe>";
+	                $output .= "<iframe src=\"./$path\" frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"auto\"></iframe>";
 	                $output .= "</div>";
 	                
 	                break;
@@ -3290,7 +3381,7 @@ echo"</div>";
         		?>
 	            <tr class="strippedRow" height="30">
 	                <td width="30">&nbsp;<img src="gfx/icons/filesystem/folder.png" height="22"></td>
-	                <td><a href="http://universeos.org/out/?folder=<?=$parentFolderData[folder];?>" onclick="openFolder('<?=$parentFolderData[folder];?>'); return false;">...</a></td>
+	                <td><a href="./out/?folder=<?=$parentFolderData[folder];?>" onclick="openFolder('<?=$parentFolderData[folder];?>'); return false;">...</a></td>
 	                <td width="50px">
 	                </td>
 	                <td width="50px"></td>
@@ -3313,7 +3404,7 @@ echo"</div>";
             	if($rightClick){
             	showRightClickMenu("folder", $filefdata[id], $filefdata[name], $filefdata[creator]);
             	}?>&nbsp;<img src="gfx/icons/filesystem/folder.png" height="22"></td>
-                <td><a href="http://universeos.org/out/?folder=<?=$filefdata[id];?>" onclick="openFolder('<?=$filefdata[id];?>'); return false;"><?=$name;?></a></td>
+                <td><a href="./out/?folder=<?=$filefdata[id];?>" onclick="openFolder('<?=$filefdata[id];?>'); return false;"><?=$name;?></a></td>
                 <td width="50px">
                 	<?php
                 	if($rightClick){
@@ -3336,8 +3427,8 @@ echo"</div>";
 
             if(authorize($fileddata[privacy], "show", $fileddata[author])){
             echo "<tr class=\"strippedRow\" oncontextmenu=\"showMenu('element".$filefdata['id'].";'); return false;\" height=\"30\">";
-	            echo "<td width=\"30\">&nbsp;<img src=\"http://universeos.org/gfx/icons/filesystem/element.png\" height=\"22\"></td>";
-	            echo "<td><a href=\"http://universeos.org/out/?element=".$fileddata[id]."\" onclick=\"openElement('".$fileddata[id]."', '".addslashes($title10)."'); return false;\">$title15</a></td>";
+	            echo "<td width=\"30\">&nbsp;<img src=\"./gfx/icons/filesystem/element.png\" height=\"22\"></td>";
+	            echo "<td><a href=\"./out/?element=".$fileddata[id]."\" onclick=\"openElement('".$fileddata[id]."', '".addslashes($title10)."'); return false;\">$title15</a></td>";
 	            echo "<td width=\"80px\">";
 	                	if($rightClick){
 	                	echo showItemSettings('element', "$fileddata[id]");
@@ -3370,10 +3461,10 @@ echo"</div>";
                 
                 echo'<tr class="strippedRow">';
                     echo"<td>";
-                        echo"&nbsp;<img src=\"http://universeos.org/gfx/icons/filesystem/$image\" height=\"22\"><i class=\"shortcutMark\"> </i>";
+                        echo"&nbsp;<img src=\"./gfx/icons/filesystem/$image\" height=\"22\"><i class=\"shortcutMark\"> </i>";
                     echo"</td>";
                     echo"<td>";
-                        echo"<a href=\"http://universeos.org/out/?$shortCutData[type]=$shortCutData[typeId]\" onclick=\"$link\">$title</a>";
+                        echo"<a href=\"./out/?$shortCutData[type]=$shortCutData[typeId]\" onclick=\"$link\">$title</a>";
                     echo"</td>";
                     echo"<td>";
                     echo showItemSettings("internLink", "$shortCutData[id]");
@@ -3428,7 +3519,7 @@ echo"</div>";
                     //define openFile function
                     $link = "openFile('$openFileType', '$fileListData[id]', '$title10');";
                 }
-                else if($fileListData[type] == "text/plain" OR $fileListData[type] == "application/pdf"){
+                else if($fileListData[type] == "text/plain" OR $fileListData[type] == "application/pdf" OR $fileListData[type] == "text/x-c++"){
                 //standard from know on (19.02.2013)
                     
                     //define link for openFileFunction
@@ -3456,8 +3547,8 @@ echo"</div>";
                 $image = getFileIcon($fileListData[type]);
                     ?>
                     <tr class="strippedRow file_<?=$fileListData[id];?>" oncontextmenu="showMenu('file<?=$fileListData[id];?>'); return false;" height="40px">
-                        <td width="30px">&nbsp;<img src="http://universeos.org/gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData[type];?>" height="22"></td>
-                        <td><a href="http://universeos.org/out/?file=<?=$fileListData[id];?>" onclick="<?=$link;?> return false"><?=substr($fileListData[title],0,30);?></a></td>
+                        <td width="30px">&nbsp;<img src="/gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData[type];?>" height="22"></td>
+                        <td><a href="./out/?file=<?=$fileListData[id];?>" onclick="<?=$link;?> return false"><?=substr($fileListData[title],0,30);?></a></td>
                         <td width="80" align="right"><a href="doit.php?action=download&fileId=<?=$fileListData[id];?>" target="submitter" class="btn btn-mini" title="download file"><i class="icon-download"></i></a>
                                 <? if(!$git){echo showItemSettings('file', "$fileListData[id]");}?></td>
                         <td width="50"><?=showScore(file, $fileListData[id]);?></td>
@@ -3559,10 +3650,10 @@ echo"</div>";
 
                     echo'<tr class="strippedRow">';
                         echo"<td>";
-                            echo"&nbsp;<img src=\"http://universeos.org/gfx/icons/fileIcons/$image\" height=\"22\"><i class=\"shortcutMark\"> </i>";
+                            echo"&nbsp;<img src=\"./gfx/icons/fileIcons/$image\" height=\"22\"><i class=\"shortcutMark\"> </i>";
                         echo"</td>";
                         echo'<td colspan="3">';
-                            echo"<a href=\"http://universeos.org/out/?$shortCutData[type]=$shortCutData[typeId]\" onclick=\"$link return false\">$title</a>";
+                            echo"<a href=\"./out/?$shortCutData[type]=$shortCutData[typeId]\" onclick=\"$link return false\">$title</a>";
                         echo"</td>";
                     echo"</tr>";
 
@@ -3622,12 +3713,12 @@ echo"</div>";
 	        	
 		        if(authorize($filefdata[privacy], "show", $filefdata[creator])){
 				$action[folders] = "$('.folder$filefdata[id]LoadingFrame').loadOuter('doit.php?action=loadMiniBrowser&folder=$filefdata[id]&level=$level&select=$select');return false;";
-		        $trigger[folders] = "$('.miniFileBrowser .choosenItem').html('<img src=\'http://universeos.org/gfx/icons/filesystem/folder.png\' alt=\'folder\' height=\'32px\'>&nbsp;$filefdata[name]<input type=\'hidden\' name=\'type\' value=\'folder\'><input type=\'hidden\' name=\'typeId\' value=\'$filefdata[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+		        $trigger[folders] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/filesystem/folder.png\' alt=\'folder\' height=\'32px\'>&nbsp;$filefdata[name]<input type=\'hidden\' name=\'type\' value=\'folder\'><input type=\'hidden\' name=\'typeId\' value=\'$filefdata[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
 				
 					
 		        ?>
 	            <li class="strippedRow" <?=$style;?>>
-	                <span>&nbsp;<img src="http://universeos.org/gfx/icons/filesystem/folder.png" height="14"></span>
+	                <span>&nbsp;<img src="./gfx/icons/filesystem/folder.png" height="14"></span>
 	                <span><a href="#" onclick="<?=$action[folders];?>"><?=$filefdata[name];?>/</a></span>
 	            <?
 	            if($showFolderButton){
@@ -3656,11 +3747,11 @@ echo"</div>";
 		        	
 				
 				$action[elements] = "$('.element$fileddata[id]LoadingFrame').loadOuter('doit.php?action=loadMiniBrowser&element=$fileddata[id]&level=$level&select=$select');return false;";
-		        $trigger[elements] = "$('.miniFileBrowser .choosenItem').html('<img src=\'http://universeos.org/gfx/icons/filesystem/element.png\' alt=\'folder\' height=\'32px\'>&nbsp;$title<input type=\'hidden\' name=\'type\' value=\'element\'><input type=\'hidden\' name=\'typeId\' value=\'$fileddata[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+		        $trigger[elements] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/filesystem/element.png\' alt=\'folder\' height=\'32px\'>&nbsp;$title<input type=\'hidden\' name=\'type\' value=\'element\'><input type=\'hidden\' name=\'typeId\' value=\'$fileddata[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
 						
 		        ?>
 		            <li class="strippedRow" <?=$style;?>>
-		                <span>&nbsp;<img src="http://universeos.org/gfx/icons/filesystem/element.png" height="14"></span>
+		                <span>&nbsp;<img src="./gfx/icons/filesystem/element.png" height="14"></span>
 		                <span><a href="#" onclick="<?=$action[elements];?>"><?=$title15;?></a></span>
 		        		<?
 	           			 if($showElementButton){
@@ -3693,14 +3784,14 @@ echo"</div>";
 	                $title10 = substr("$fileListData[title]", 0, 10);
 	                $image = getFileIcon($fileListData[type]);
 					
-					$action[files] = "$('.miniFileBrowser .choosenItem').html('<img src=\'http://universeos.org/gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$fileListData[title]<input type=\'hidden\' name=\'type\' value=\'file\'><input type=\'hidden\' name=\'typeId\' value=\'$fileListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
-					$trigger[files] = "$('.miniFileBrowser .choosenItem').html('<img src=\'http://universeos.org/gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$fileListData[title]<input type=\'hidden\' name=\'type\' value=\'file\'><input type=\'hidden\' name=\'typeId\' value=\'$fileListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+					$action[files] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$fileListData[title]<input type=\'hidden\' name=\'type\' value=\'file\'><input type=\'hidden\' name=\'typeId\' value=\'$fileListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+					$trigger[files] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$fileListData[title]<input type=\'hidden\' name=\'type\' value=\'file\'><input type=\'hidden\' name=\'typeId\' value=\'$fileListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
 					
 					
 					
 	                    ?>
 	                    <li class="strippedRow" <?=$style;?>>
-	                        <span>&nbsp;<img src="http://universeos.org/gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData[type];?>" height="14px"></span>
+	                        <span>&nbsp;<img src="./gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData[type];?>" height="14px"></span>
 	                        <span><a href="#" onclick="<?=$action[files];?>"><?=substr($fileListData[title],0,30);?></a></span>
 	                        
 			        		<?
@@ -3724,8 +3815,8 @@ echo"</div>";
 					
 	                $image = getFileIcon($linkListData[type]);
 	                
-					$action[links] = "$('.miniFileBrowser .choosenItem').html('<img src=\'http://universeos.org/gfx/icons/fileIcons/$image\' alt=\'$linkListData[type]\' height=\'32px\'>&nbsp;$linkListData[title]<input type=\'hidden\' name=\'type\' value=\'link\'><input type=\'hidden\' name=\'typeId\' value=\'$linkListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
-					$trigger[links] = "$('.miniFileBrowser .choosenItem').html('<img src=\'http://universeos.org/gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$linkListData[title]<input type=\'hidden\' name=\'type\' value=\'link\'><input type=\'hidden\' name=\'typeId\' value=\'$linkListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+					$action[links] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$linkListData[type]\' height=\'32px\'>&nbsp;$linkListData[title]<input type=\'hidden\' name=\'type\' value=\'link\'><input type=\'hidden\' name=\'typeId\' value=\'$linkListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+					$trigger[links] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$linkListData[title]<input type=\'hidden\' name=\'type\' value=\'link\'><input type=\'hidden\' name=\'typeId\' value=\'$linkListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
 					
 					
 	                    

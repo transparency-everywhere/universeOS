@@ -535,6 +535,7 @@ if($_GET['action'] == "scorePlus"){
          ?>
                 <script>
                 parent.$('#favTab_Group').load('doit.php?action=showUserGroups');
+                parent.parent.updateDashbox('group');
                 </script>
          <?
      }else if($_GET['action'] == "declineGroup"){
@@ -1015,7 +1016,7 @@ if($_GET['action'] == "scorePlus"){
     $postCheck = 1;
     jsAlert("Worked :)");
     }
-    }         
+    }
          ?><form action="./doit.php?action=writeMessage&buddy=<?=$user;?>" method="post" target="submitter">
         <div class="jqPopUp border-radius transparency" id="writeMessage">
             <a class="jqClose" id="closeMessage">X</a>
@@ -2185,7 +2186,7 @@ if($_GET['action'] == "scorePlus"){
                 ?>
                 </div>
                 <footer>
-                	<span class="pull-right"><input type="submit" name="submit" value="save" class="btn btn-info" style="margin-top: 15px;"></span>
+                	<span class="pull-right"><input type="submit" name="submit" value="save" class="btn btn-info" style="margin-top: 15px;" id="submitPrivacy"></span>
                 </footer>
             </div>
             </form>

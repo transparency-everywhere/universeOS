@@ -95,7 +95,7 @@ unset($intWindows);?>
               
           </div>
       </div>
-      <div class="chatAdditionalSettings">
+      <div class="chatAdditionalSettings" onclick="$(this).hide(); return true;">
           <ul>
               <li><a class="smiley smiley1" onclick="addStrToChatInput('<?=$buddy;?>', ':\'(');"></a><a class="smiley smiley2" onclick="addStrToChatInput('<?=$buddy;?>', ':|');"></a><a class="smiley smiley3" onclick="addStrToChatInput('<?=$buddy;?>', ';)');"></a><a class="smiley smiley4" onclick="addStrToChatInput('<?=$buddy;?>', ':P');"></a></li>
               <li><a class="smiley smiley5" onclick="addStrToChatInput('<?=$buddy;?>', ':D');"></a><a class="smiley smiley6" onclick="addStrToChatInput('<?=$buddy;?>', ':)');"></a><a class="smiley smiley7" onclick="addStrToChatInput('<?=$buddy;?>', ':(');"></a><a class="smiley smiley8" onclick="addStrToChatInput('<?=$buddy;?>', ':-*');"></a></li>

@@ -1,4 +1,5 @@
-//initialize    
+//initialize
+var usernames = [];
                 $(document).ready(function(){
                 			
                 	//init search
@@ -34,15 +35,6 @@
 						}, 500 );
 					});
                 
-                		             	// $(document).live(function(){
-//                  		
-              		// //replace all links with <a href=link>link</a>
-	                // $('body').html($('body').html().replace("/(b(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig","<a href='$1'>$1</a>"));
-               	// //replace all links with <a href=link>link</a>
-		            // $('body').html($('body').html().replace("/(b(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig","<a href='$1'>$1</a>"));
-//  		                
-//  		                
-                	// });
 
 		            //init dashcloses 
 					$('.dashBox .dashClose').click(function(){
@@ -143,7 +135,6 @@
                                     cancel: '.inhalt',
                                     containment: '#bodywrap',
                                     scroll: false,
-                                    stack: { group: '.fenster', min: 1 },
                                     drag: function(){
                                         //disable textmarking
                                         $('*').disableSelection();
@@ -154,18 +145,7 @@
                                     }
                             });
                             
-                            // $('.fenster').mouseout(function(){
-                            	// $(this).children('.titel').hide(); 
-                            	// $(this).css('padding', '0'); 
-                            	// $(this).children('.inhalt').css('margin', '0'); 
-                            	// $(this).children('.inhalt').css( "width", "+=12" );
-                            // });
-                            // $('.fenster').mouseover(function(){ 
-                            	// $(this).children('.titel').show(); 
-                            	// $(this).css('padding', '2px 0 35px'); 
-                            	// $(this).children('.inhalt').css('margin', '0 6px'); 
-                            	// $(this).children('.inhalt').css( "width", "auto" );
-                            // });
+
 
 
 
@@ -178,9 +158,11 @@
                                     start: function(){
                                         //disable textmarking
                                         $('*').disableSelection();
-                                        //bring window to front 
-                                        $(this).css('z-index', 9999);
-                                        $(this).css('position', 'absolute');
+                                        if($(this) != undefined){
+	                                        //bring window to front 
+	                                        $(this).css('z-index', 9999);
+	                                        $(this).css('position', 'absolute');
+                                        }
                                     },
                                     stop: function(){
                                         //enable textmarking
@@ -190,12 +172,26 @@
                     });
                     $(function() {
                         $('.fenster').children().click(function(){
-
+							
+                           	if($(this) != undefined){
                             $('.fenster').css('z-index', 1);
                             $(this).parent(".fenster").css('z-index', 999); 
                             $(this).parent(".fenster").css('position', 'absolute');
+                            }
                         });
                     });
+    	                            // $('.fenster').mouseout(function(){
+                            	// $(this).children('.titel').hide(); 
+                            	// $(this).css('padding', '0'); 
+                            	// $(this).children('.inhalt').css('margin', '0'); 
+                            	// $(this).children('.inhalt').css( "width", "+=12" );
+                            // });
+                            // $('.fenster').mouseover(function(){ 
+                            	// $(this).children('.titel').show(); 
+                            	// $(this).css('padding', '2px 0 35px'); 
+                            	// $(this).children('.inhalt').css('margin', '0 6px'); 
+                            	// $(this).children('.inhalt').css( "width", "auto" );
+                            // });
               }
 
 
@@ -262,7 +258,9 @@
               	}else if(type == 'error'){
               		alertClass = 'alert-error';
               	}
-              	$('#alerter').append('<div class="alert '+alertClass+'"><button type="button" class="close" data-dismiss="alert">&times;</button>'+message+'</div>');
+              	$('#alerter').hide();
+              	
+              	$('#alerter').append('<div class="alert '+alertClass+'"><button type="button" class="close" data-dismiss="alert">&times;</button>'+message+'</div>').show().delay(5000).fadeOut();
               	
               }
               
@@ -291,17 +289,7 @@
 	  		return false;
 	  	}
 	  }
-
-	  //shows settings for opbjects (button with cog)
-      function showSettingsWindow(id){
-          
-	      //hide all itemSettingsWindows except for the selected    
-	      $(".itemSettingsWindow:not(.itemSettingsWindow"+id+")").hide();
-	      
-	      //show selected
-	      $(".itemSettingsWindow"+id+"").toggle();
-      }
-
+	  
 	  //updates 
       function updatePictureStatus(userId, borderColor){
           $('.userPicture_'+userId).css('border-color', borderColor);
@@ -386,6 +374,27 @@
                     }
                     return true;
                 }
+//api connection stuff
+	function useridToUsername(id){
+		if(usernames[id] == undefined){
+			
+		    var result="";
+		    $.ajax({
+		      url:"api.php?action=useridToUsername",
+		      async: false,  
+			  type: "POST",
+			  data: { userid : id },
+		      success:function(data) {
+		         result = data; 
+		      }
+		   });
+		   usernames[id] = result;
+		   return result;
+		}else{
+			return usernames[id];
+		}
+		
+	}
                 
 //reload
 
@@ -512,6 +521,7 @@
             alert(type);
             return false
         }
+        return false;
     }
     
     //zoom functions for pictures
@@ -694,6 +704,11 @@
     	}
     }
     
+    function replaceLinks(){
+    	
+    	$('body').html($(this).html().replaceAll("/(b(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig","<a href='#' onclick='$1'>$1</a>"));
+        
+    }
     
 function initDashClose(){
 	//init dashcloses
@@ -869,7 +884,7 @@ function groupMakeUserAdmin(groupId, userId){
               
               function showProfile(userId){
                   showApplication('reader');
-                  createNewTab('reader_tabView',"" + userId + "",'',"./profile.php?user=" + userId + "",true);
+                  createNewTab('reader_tabView',useridToUsername(userId),'',"./profile.php?user=" + userId + "",true);
                   return false
               }
                 
