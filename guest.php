@@ -64,6 +64,28 @@ include_once("inc/config.php");
     		margin-top: 2px;
     		
     	}
+    	#betaBox{
+    		background: #383838;
+			border: 1px solid #222222;
+			padding: 5px;
+			position: absolute;
+			top:3px;
+			left:272px;
+			width:250px;
+    	}
+    	
+		#betaBox h1, #betaBox h2, #betaBox h3, #betaBox h4{
+			margin: 0;
+			margin-top: 5px;
+			line-height: 30px;
+		}
+		
+    	#betaBox a {
+			color: #FFFFFF;
+			position: absolute;
+			right: 8px;
+			top: 0px;
+		}
     </style>
         <div id="guestInfoBox">
         	<a href="#" onclick="$('#guestInfoBox').hide();">x</a>
@@ -77,7 +99,12 @@ include_once("inc/config.php");
         		<li><img src="./gfx/bulletPoint.png">encrypt your data and communication to be sure that it doesn't fall into the wrong hands</li>
         	</ul>
         	<p>But finally the fact that we don't make profit with your data is most important<br>to us.</p>
-        	<p>At the moment we are still in the beta phase of this project. So you shouldn't handle highly sensitive data in the filesystem and chat and excuse if there are little issues in the workflow.</p>
+        	
+        </div>
+        <div id="betaBox">
+        	<a href="#" onclick="$('#betaBox').hide();">x</a>
+        	<h2>Beta Test Run</h2>
+        	<p>Currently we are still in the beta phase of our project. Therefore we cannot guarantee 100% of security but we are well on the way to it. So you shouldn’t handle highly sensitive data in the filesystem and chat and excuse if there are little issues in the workflow. We appreciate criticism and error reports because it helps us to improve the universeOS. So have fun with the universeOS.</p>
         </div>
         <? include("modules/reader/index.php") ?>
         
