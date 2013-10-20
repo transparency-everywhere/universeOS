@@ -1114,7 +1114,7 @@ if($_GET['action'] == "scorePlus"){
                         <tr>
                             <td align="right">Privacy:</td>
                             <td></td>
-                            <td><input type="radio" name="privacy" value="1" <?=$public;?>>Private&nbsp;&nbsp;<input type="radio" name="privacy" value="0" <?=$unpublic;?>>Public</td>
+                            <td><input type="radio" name="privacy" value="0" <?=$public;?>>Private&nbsp;&nbsp;<input type="radio" name="privacy" value="1" <?=$unpublic;?>>Public</td>
                         </tr>
                         <tr>
                             <td align="right"></td>
@@ -1597,7 +1597,7 @@ if($_GET['action'] == "scorePlus"){
 	             </tr>
 	             <tr>
 	                 <td align="right">Type:&nbsp;</td>
-	                 <td><input type="radio" name="privacy" value="0" style="margin-left:30px;">Public&nbsp;&nbsp;<input type="radio" name="privacy" value="1">Private</td>
+	                 <td><input type="radio" name="privacy" value="1" style="margin-left:30px;">Public&nbsp;&nbsp;<input type="radio" name="privacy" value="0">Private</td>
 	             </tr>
 	             <tr>
 	                 <td>&nbsp;</td>
@@ -1799,7 +1799,7 @@ if($_GET['action'] == "scorePlus"){
             	</header>
             	<div class="content">
                 <h2>
-                    Update your profile
+                    &nbsp;Update your profile
                 </h2>
                 <div>
                 	<?php
@@ -1815,33 +1815,33 @@ if($_GET['action'] == "scorePlus"){
 		                    
 		                    <div class="controls controlls-row">
 		                        <span class="span2">Name</span>
-		                        <input type="text" name="AccSetRealname" class="span3" value="<?=$AccSetData[realname];?>">
+		                        <input type="text" name="AccSetRealname" class="span3" value="<?=$AccSetData[realname];?>" placeholder="Your Name">
 		                    </div>
 		                    <div class="controls controlls-row">
 		                        <span class="span2">City</span>
-		                        <input type="text" name="place" class="span3" value="<?=$AccSetData[place];?>">
+		                        <input type="text" name="place" class="span3" value="<?=$AccSetData[place];?>" placeholder="Metropolis">
 		                    </div>
 		                    <div class="controls controlls-row">
 		                        <span class="span2">Hometown</span>
-		                        <input type="text" name="home" class="span3" value="<?=$AccSetData[home];?>">
+		                        <input type="text" name="home" class="span3" value="<?=$AccSetData[home];?>" placeholder="Los Santos">
 		                    </div>
 		                    <div class="controls controlls-row">
 		                        <span class="span2">Birthdate</span>
-		                        <input type="text" name="birth_day" class="span1" value="<?=$birth_day;?>">
-		                        <input type="text" name="birth_month" class="span1" value="<?=$birth_month;?>">
-		                        <input type="text" name="birth_year" class="span1" value="<?=$birth_year;?>">
+		                        <input type="text" name="birth_day" class="span1" value="<?=$birth_day;?>" placeholder="DD">
+		                        <input type="text" name="birth_month" class="span1" value="<?=$birth_month;?>" placeholder="MM">
+		                        <input type="text" name="birth_year" class="span1" value="<?=$birth_year;?>" placeholder="YYYY">
 		                    </div>
 		                    <div class="controls controlls-row">
 		                        <span class="span2">School</span>
-		                        <input type="text" name="school1" class="span3" value="<?=$AccSetData[school1];?>">
+		                        <input type="text" name="school1" class="span3" value="<?=$AccSetData[school1];?>" placeholder="Hogwarts">
 		                    </div>
 		                    <div class="controls controlls-row">
 		                        <span class="span2">University</span>
-		                        <input type="text" name="university1" class="span3" value="<?=$AccSetData[university1];?>">
+		                        <input type="text" name="university1" class="span3" value="<?=$AccSetData[university1];?>" placeholder="Oaksterdam University">
 		                    </div>
 		                    <div class="controls controlls-row">
 		                        <span class="span2">Work</span>
-		                        <input type="text" name="work" class="span3" value="<?=$AccSetData[employer];?>">
+		                        <input type="text" name="work" class="span3" value="<?=$AccSetData[employer];?>" placeholder="Charlie's Chocolate Factory">
 		                    </div>
 		                </div>
 	                </div>

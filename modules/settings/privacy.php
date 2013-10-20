@@ -56,28 +56,28 @@
                 <td><input type="checkbox" name="priv_showProfile" <?=$checked[priv_showProfile];?> value="1"></td>
                 <td>Show profile to foreigners</td>
             </tr>
-            <tr>
+            <tr class="hidden">
                 <td><input type="checkbox" name="priv_profileInformation" <?=$checked[priv_profileInformation];?> value="1"></td>
                 <td>Show information to foreigners</td>
             </tr>
-            <tr>
+            <tr class="hidden">
                 <td><input type="checkbox" name="priv_profileFav" <?=$checked[priv_profileFav];?> value="1"></td>
                 <td>Show favourite files to foreigners</td>
             </tr>
             <tr>
                 <td>&nbsp;</td>
             </tr>
-            <tr>
+            <tr class="hidden">
                 <td colspan="2"><h2>Buddylist</h2></td>
             </tr>
-            <tr>
+            <tr class="hidden">
                 <td>&nbsp;</td>
             </tr>
-            <tr>
+            <tr class="hidden">
                 <td><input type="checkbox" name="priv_buddyRequest" <?=$checked[priv_buddyRequest];?> value="1"></td>
                 <td>Foreigners need allowance to add you on their buddylist</td>
             </tr>
-            <tr>
+            <tr class="hidden">
                 <td>&nbsp;</td>
             </tr>
             <tr>

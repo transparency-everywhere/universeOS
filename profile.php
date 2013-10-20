@@ -9,39 +9,7 @@ include("inc/functions.php");
 $user = save("$_GET[user]");
 $profilesql = mysql_query("SELECT * FROM user WHERE userid='".mysql_real_escape_string($_GET[user])."'");
 $profiledata = mysql_fetch_array($profilesql);
-if($_GET[showFeed] == "1"){
-?>
-<table width="100%" cellspacing="0">
-    <?
-        $userFeedSql = mysql_query("SELECT * FROM userfeeds WHERE owner='$user' ORDER BY timestamp DESC LIMIT 15");
-        while($userFeedData = mysql_fetch_array($userFeedSql)) {
-                if($userFeedData[protocoll_type] == "fileUpload"){
-                $folderAddSql = mysql_query("SELECT * FROM elements WHERE id='$userFeedData[feedLink2]'");
-                $folderAddData = mysql_fetch_array($folderAddSql);
-                $text = "<a href=\"#\" onclick=\"createNewTab('fileBrowser_tabView','".$folderAddData[title]."','','modules/filesystem/showelement.php?element=".$folderAddData[id]."',true);return false\"> ".$folderAddData[title]."</a>";
-                }if($userFeedData[protocoll_type]=="elementAdd"){
-                $folderAddSql = mysql_query("SELECT * FROM folders WHERE id='$userFeedData[feedLink2]'");
-                $folderAddData = mysql_fetch_array($folderAddSql);
-                $text = "<a href=\"#\" onclick=\"addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=".$folderAddData[id]."&reload=1');return false\"> ".$folderAddData[name]."/</a>";   
-                }if($userFeedData[protocoll_type]=="folderAdd"){
-                $folderAddSql = mysql_query("SELECT * FROM folders WHERE id='$userFeedData[feedLink2]'");
-                $folderAddData = mysql_fetch_array($folderAddSql);
-                $text = "<a href=\"#\" onclick=\"addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=".$folderAddData[id]."&reload=1');return false\"> ".$folderAddData[name]."/</a>";   
-                }
-                if($i%2 == 0){
-                    $color="FFFFFF";
-                }else {
-                    $color="e5f2ff";
-                }
-                $i++
-                ;?>
-            <tr bgcolor="#<?=$color;?>" height="35">
-                <td><?=$profiledata[username];?>&nbsp;<?=nl2br(universeText(htmlspecialchars($userFeedData[feed])));?><?=$text;?></td>
-            </tr>
-<?        }
-
-    echo "</table>";
-}else{
+if($profiledata['priv_showProfile'] == 1 OR ($profiledata[priv_showProfile] == 0 && buddy($user))){
 $link = "profile.php?user=$user";
 
 if(!empty($profiledata[realname])){
@@ -130,10 +98,12 @@ if(isset($_GET[scoreaction])){
             <div style="margin-top: 15px;">
                 <?
                 if(!empty($_SESSION[userid])){
-                ?>
-                <?=$friendButton;?>
+                
+				echo $friendButton;
+				
+				if($profiledata[priv_foreignerMessages] == 1 OR ($profiledata[priv_foreignerMessages] == 0 && buddy($user))){ ?>
                 <a href="#" onclick="popper('doit.php?action=writeMessage&buddy=<?=$profiledata[userid];?>')" class="btn">Message</a>
-                <? } ?>
+				<? } } ?>
              </div></span>
         <span style="float: right"><a href="#" onclick="openElement('<?=$profiledata[profilepictureelement];?>', 'Userpictures'); return false;"><?=showUserPicture($profiledata[userid], "50");?></a><br>
         </span>
@@ -231,9 +201,9 @@ if(isset($_GET[scoreaction])){
             <center>
                     <div style="width: 90%; border:1px solid #c9c9c9;">
                     <?
-                    showComments(profile, $user, $profiledata[username], $link);
+                    showComments('profile', $user, $profiledata['username'], $link);
                     ?>
                     </div>
             </center>
     </div>
-<?} ?>
+<? } ?>

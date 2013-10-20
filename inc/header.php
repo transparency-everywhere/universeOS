@@ -33,7 +33,7 @@
         
         <link href="inc/blue.monday/jplayer.blue.monday.css" rel="stylesheet" type="text/css" />
         
-        <script type="inc/js/jquery.jplayer.min.js"></script>
+        <!-- <script type="inc/js/jquery.jplayer.min.js"></script> -->
         <script src="inc/bootstrap/js/bootstrap.min.js"></script>
         
                 <script type="text/javascript">

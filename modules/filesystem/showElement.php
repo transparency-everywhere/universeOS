@@ -16,19 +16,31 @@ $title10 = substr("$elementData[title]", 0, 10);
 if($elementData[type] == "image"){
   if($elementData[title] == "profile pictures"){
   $title = "Userpictures";
+  $bar = false;
+  if($elementData['author'] == getUser()){
+  	$changeUserPicture = true;
+  }
+  
   }else{
   $title = "$elementData[title]";
+  $bar = true;
   }
+  
+  
+  $documentSQL = mysql_query("SELECT id, title, owner FROM files WHERE folder='$elementData[id]'");
+  $fileNumbers = mysql_num_rows($documentSQL);
     ?>
         <center>
                 <h2><?=$title;?></h2>
                 <h3>by <i><a href="#" onclick="showProfile('<?=$elementAuthorData[userid];?>')"><?=$elementAuthorData[username];?></a></i></h3>
         </center>
+		<? if($fileNumbers > 0){ ?>
         <div id="showImages" class="dockMenuElement" style="margin-top: 10px; margin-right: 0px; margin-left: 0px; overflow: scroll; height: 120px; padding-left: 5px;">
+
             <table wdth="100%">
                 <tr>
         <?
-        $documentSQL = mysql_query("SELECT id, title, owner FROM files WHERE folder='$elementData[id]'");
+        
         while($documentData = mysql_fetch_array($documentSQL)){
         $documentFolderSQL = mysql_query("SELECT id, path, privacy FROM folders WHERE id='$elementData[folder]'");
         $documentFolderData = mysql_fetch_array($documentFolderSQL);
@@ -50,15 +62,22 @@ if($elementData[type] == "image"){
         </tr>
         </table>
         </div>
+        <? } ?>
         <div>
 
         </div>
 	    <center style="margin-top: 20px; margin-bottom: 20px;">
 	    	<?
-	    	if(proofLogin()){
+	    	if(proofLogin() && $bar){
 	    	?>
-	        <a href="javascript: popper('./modules/filesystem/addFile.php?element=<?=$_GET[element];?>')" class="btn btn-info"><i class="icon-file icon-white"></i>&nbsp;add File</a>&nbsp;<a href="javascript: popper('./doit.php?action=addLink&element=<?=$_GET[element];?>')" class="btn btn-info"><i class="icon-globe icon-white"></i>&nbsp;add Link</a>
-			<? } ?>
+	        <a href="javascript: popper('./modules/filesystem/addFile.php?element=<?=$_GET[element];?>')" class="btn btn-info"><i class="icon-file icon-white"></i>&nbsp;add File</a>&nbsp;
+	        <a href="javascript: popper('./doit.php?action=addLink&element=<?=$_GET[element];?>')" class="btn btn-info"><i class="icon-globe icon-white"></i>&nbsp;add Link</a>
+			<? }
+			
+			if($changeUserPicture){ ?>
+				<a href="javascript:showModuleSettings();" class="btn btn-info">&nbsp;change Userpicture&nbsp;</a>
+			<? }
+			?>
 	    </center>
         <hr>
             <div>

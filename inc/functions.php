@@ -1484,7 +1484,7 @@ echo"</div>";
    function buddyListArray($user=NULL, $request=0){
    //returns all buddies of $user
         if(empty($user)){
-            $user="$_SESSION[userid]";
+            $user= getUser();
         }
         
         
@@ -2050,6 +2050,7 @@ echo"</div>";
             //check checkbox on hidden
             $checked[privacyHidden] = 'checked="checked"';
         }else{
+			$showCustom = "notHidden";
             //handle other cases
             //   f;4;3;2//f;2;
             $custom = explode("//", $value);
@@ -2101,18 +2102,18 @@ echo"</div>";
         				You are the only one who is allowed to see and edit.
         			</li>
         			<li>
-        				<h2><input type="checkbox" class="privacyBuddyTrigger privacyCustomTrigger uncheckPublic uncheckHidden" <?=$disabled;?>>Friends</h2>
+        				<h2><input type="checkbox" class="privacyBuddyTrigger privacyCustomTrigger uncheckPublic uncheckHidden" <?=$checked[privacyCustomShowF];?> <?=$checked[privacyCustomEditF];?> <?=$disabled;?>>Friends</h2>
         				Friends cann see or edit.
         			</li>
-        			<li class="sub privacyShowBuddy">
-        				<div><input type="checkbox" name="privacyCustomSee[]" value="f" class="privacyCustomTrigger uncheckPublic uncheckHidden" <?=$checked[privacyCustomShowF];?> <?=$disabled;?>>See</div>
-        				<div><input type="checkbox" name="privacyCustomEdit[]" value="f" class="uncheckPublic privacyCustomTrigger uncheckHidden" <?=$disabled;?>>Edit</div>
+        			<li class="<?=$showCustom;?> sub privacyShowBuddy">
+        				<div><input type="checkbox" name="privacyCustomSee[]" value="f" class="privacyCustomTrigger uncheckPublic uncheckHidden privacyBuddyTrigger" <?=$checked[privacyCustomShowF];?> <?=$disabled;?>>See</div>
+        				<div><input type="checkbox" name="privacyCustomEdit[]" value="f" class="uncheckPublic privacyCustomTrigger uncheckHidden privacyBuddyTrigger" <?=$checked[privacyCustomEditF];?> <?=$disabled;?>>Edit</div>
         			</li>
         			<li>
         				<h2><input type="checkbox" class="uncheckPublic privacyGroupTrigger privacyCustomTrigger uncheckHidden" <?=$disabled;?>>Groups</h2>
         				Particular Groups can see and edit.
         			</li>
-        			<li class="sub privacyShowGroups">
+        			<li class="<?=$showCustom;?> sub privacyShowGroups <?=$showBuddy;?>">
         				<ul class="groupList">
         					                           <?
                                                         $attSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='$_SESSION[userid]' AND validated='1'");
@@ -2137,11 +2138,11 @@ echo"</div>";
                                                                 <li>
                                                                 	<div><img src="./gfx/icons/group.png" height="15">&nbsp;<a href="#" onclick="createNewTab('reader_tabView','<?=$title10;?>','','group.php?id=<?=$groupData[id];?>',true);return false"><?=$title15;?></a></div>
                                                                 	<div>
-                                                                		<input type="checkbox" name="privacyCustomSee[]" value="<?=$groupData[id];?>" class="privacyCustomTrigger uncheckPublic uncheckHidden" <?=$checked[editGroup];?> <?=$disabled;?>>
+                                                                		<input type="checkbox" name="privacyCustomSee[]" value="<?=$groupData[id];?>" class="privacyGroupTrigger privacyCustomTrigger uncheckPublic uncheckHidden" <?=$checked[editGroup];?> <?=$disabled;?>>
 																		show
                                                                 	</div>      
                                                                 	<div>
-                                                                		<input type="checkbox" name="privacyCustomEdit[]" value="<?=$groupData[id];?>" class="privacyCustomTrigger uncheckPublic uncheckHidden" <?=$checked[editGroup];?> <?=$disabled;?>>
+                                                                		<input type="checkbox" name="privacyCustomEdit[]" value="<?=$groupData[id];?>" class="privacyGroupTrigger privacyCustomTrigger uncheckPublic uncheckHidden" <?=$checked[editGroup];?> <?=$disabled;?>>
 																		edit
                                                                 	</div>
                                                                 </li>
@@ -2151,7 +2152,7 @@ echo"</div>";
                                                         }?>
         				</ul>
         			</li>
-        			<li></li>
+        			<li style="height:1px;"></li>
         			<?php
         			}
         			if(1 == 2){
@@ -2258,11 +2259,22 @@ echo"</div>";
                                     });
                                     
                                     $('.privacyBuddyTrigger').click(function(){
+                                    	
+                                        if($(this).is(':checked')){
+                                            //$('.privacyBuddyTrigger').prop('checked', true);
+                                        }else{
+                                           // $('.privacyBuddyTrigger').prop('checked', false);
+                                        }
                                     	$('.privacyShowBuddy').show();
                                     });
                                     
                                     $('.privacyGroupTrigger').click(function(){
                                     	$('.privacyShowGroups').show();
+                                        if($(this).is(':checked')){
+                                            //$('.privacyGroupTrigger').prop('checked', true);
+                                        }else{
+                                            //$('.privacyGroupTrigger').prop('checked', false);
+                                        }
                                     });
                                     
                                     $('.uncheckOnlyMe').click(function(){
@@ -2300,10 +2312,10 @@ echo"</div>";
 	            $customEdit = implode(";", $customEdit);
 	            $customShow = implode(";", $customShow);
 	            if(empty($customShow)){
-	            	$customShow = "p";
+	            	$customShow = "h";
 	            }
 	            if(empty($customEdit)){
-	            	$customEdit = "p";
+	            	$customEdit = "h";
 	            }
 	            if(empty($customEdit) OR empty($customShow)){
 	            	$privacy = "p";
@@ -2631,8 +2643,10 @@ echo"</div>";
 
             // audio/video
             'mp3' => 'audio/mpeg',
+            'wav' => 'audio/wav',
             'qt' => 'video/quicktime',
             'mov' => 'video/quicktime',
+            'mp4' => 'video/mp4',
 
             // adobe
             'pdf' => 'application/pdf',
@@ -2668,14 +2682,15 @@ echo"</div>";
         }
     }
 
-     function addFile($file, $element, $folder, $privacy, $user, $lang=NULL){
+     function addFile($file, $element, $folder, $privacy, $user, $lang=NULL, $download=true){
         
                 //upload file
         $target_path = basename( $file['tmp_name']);
         $filename = $file['name'];
         $thumbname = "$filename.thumb";
         $size = $file['size'];
-        
+        $time = time();
+		
 	    $type = getMime($filename);
         
         $filefolderSQL = mysql_query("SELECT * FROM folders WHERE id='$folder'");
@@ -2705,11 +2720,11 @@ echo"</div>";
                         mkthumb("$imgName",300,300,$path,"$thumbPath");
                     }
         }
-		if(mysql_query("INSERT INTO `files` (`id` ,`folder` ,`title` ,`size` ,`timestamp` ,`filename` ,`language` ,`type` ,`owner` ,`votes` ,`score` ,`privacy` ,`var1`) VALUES (NULL ,  '$element',  '".mysql_real_escape_string($imgName)."',  '$size',  '$time',  '".mysql_real_escape_string($imgName)."',  '$lang',  '$type',  '$user',  '0',  '0',  '$privacy',  '');")){
+		if(mysql_query("INSERT INTO `files` (`id` ,`folder` ,`title` ,`size` ,`timestamp` ,`filename` ,`language` ,`type` ,`owner` ,`votes` ,`score` ,`privacy` ,`var1` , `download`) VALUES (NULL ,  '$element',  '".mysql_real_escape_string($imgName)."',  '$size',  '$time',  '".mysql_real_escape_string($imgName)."',  '$lang',  '$type',  '$user',  '0',  '0',  '$privacy',  '', '$download');")){
         	
-        jsAlert("The file has been uploaded :)".$folderpath);
+        jsAlert("The file has been uploaded :)");
         }else{
-        	jsAlert("pabst stinkt".$folderpath);
+        	jsAlert("Opps, something went wrong.");
         }
         ?>
             <script>
@@ -2816,7 +2831,16 @@ echo"</div>";
             case "audio/mpeg":
                     $image = "mp3.png";
             break;
+            case "audio/wav":
+                    $image = "mp3.png";
+            break;
+            case "audio":
+                    $image = "mp3.png";
+            break;
             case "video/mp4":
+                    $image = "movie.png";
+            break;
+            case "video":
                     $image = "movie.png";
             break;
         
@@ -2996,7 +3020,9 @@ echo"</div>";
           	$title = $fileData[title];
 			$element = $fileData[folder];
 			$elementTitle = $elementData[title];
-			$download = "<a href=\"doit.php?action=download&fileId=$fileId\" target=\"submitter\" class=\"btn btn-mini\" title=\"download file\"><img src=\"./gfx/icons/download.png\" alt=\"download\" height=\"10\"></a>";
+			if($fileData['download']){
+				$download = "<a href=\"doit.php?action=download&fileId=$fileId\" target=\"submitter\" class=\"btn btn-mini\" title=\"download file\"><img src=\"./gfx/icons/download.png\" alt=\"download\" height=\"10\"></a>";
+			}
             $filename = $fileData[filename];
             $path = getFullFilePath($fileId);
             
@@ -3270,8 +3296,10 @@ echo"</div>";
 	                break;
 	            
 	            //audio
-	            case 'audio/mpeg':
-					$output .= "<video src=\"$path\" controls>";
+	            case 'audio':
+					$ouput .= "<audio controls>
+								  <source src=\"$path\" type=\"audio/mpeg\">
+								</audio>";
 	                break;
 	            
 	        }
@@ -3395,7 +3423,7 @@ echo"</div>";
         		$name = $filefdata['name'];
         	//special folder handlers
         	if($folder == 3){
-        		$name = getGroupName($filefdata['name']);
+        		$name = getGroupName($filefdata['name']).'´s Files';
 			}
 			
         ?>
@@ -3491,13 +3519,13 @@ echo"</div>";
             $shortCutQuery = "WHERE parentType='element' AND parentId='$element'";
         }
         
-        
+        	$i = 0;
             $fileListSQL = mysql_query("SELECT * FROM files WHERE $query");
             while($fileListData = mysql_fetch_array($fileListSQL)) {
-                
+                $i++;
                 if(authorize($fileListData[privacy], "show", $fileListData[owner])){
-                $link = "$link&id=$fileListData[id]";
                 $title10 = substr("$fileListData[title]", 0, 10);
+                $link = "openFile('$fileListData[type]', '$fileListData[id]', '$title10');";
                 if($fileListData[type] == "audio/mpeg"){
                     $rightLink = "startPlayer('file', '$fileListData[id]')";
                     $image = "../music.png";
@@ -3547,9 +3575,10 @@ echo"</div>";
                 $image = getFileIcon($fileListData[type]);
                     ?>
                     <tr class="strippedRow file_<?=$fileListData[id];?>" oncontextmenu="showMenu('file<?=$fileListData[id];?>'); return false;" height="40px">
-                        <td width="30px">&nbsp;<img src="/gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData[type];?>" height="22"></td>
+                        <td width="30px">&nbsp;<img src="./gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData[type];?>" height="22"></td>
                         <td><a href="./out/?file=<?=$fileListData[id];?>" onclick="<?=$link;?> return false"><?=substr($fileListData[title],0,30);?></a></td>
-                        <td width="80" align="right"><a href="doit.php?action=download&fileId=<?=$fileListData[id];?>" target="submitter" class="btn btn-mini" title="download file"><i class="icon-download"></i></a>
+                        <td width="80" align="right">
+                        		<? if($fileListData['download']){ ?><a href="doit.php?action=download&fileId=<?=$fileListData[id];?>" target="submitter" class="btn btn-mini" title="download file"><i class="icon-download"></i></a><? } ?>
                                 <? if(!$git){echo showItemSettings('file', "$fileListData[id]");}?></td>
                         <td width="50"><?=showScore(file, $fileListData[id]);?></td>
                     </tr>
@@ -3579,11 +3608,6 @@ echo"</div>";
                 $image = getFileIcon($linkListData[type]);
                 
                 
-                    if($i%2 == 0){
-                        $color="FFFFFF";
-                    }else {
-                        $color="e5f2ff";
-                    }
                     $i++;
                 ?>
                 <tr bgcolor="#<?=$color;?>" class="strippedRow link_<?=$linkListData[id];?>" oncontextmenu="showMenu('link<?=$linkListData[id];?>'); return false;" height="22px">
@@ -3600,7 +3624,7 @@ echo"</div>";
                 
                 $shortCutSql = mysql_query("SELECT * FROM internLinks $shortCutQuery");
                 while($shortCutData = mysql_fetch_array($shortCutSql)){
-                    
+                    $i++;
                     if($shortCutData[type] == "file"){
 
                         $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy, type FROM files WHERE id='$shortCutData[typeId]'"));
@@ -3648,18 +3672,24 @@ echo"</div>";
                     
                     $image = getFileIcon($shortCutItemData[type]);
 
-                    echo'<tr class="strippedRow">';
-                        echo"<td>";
-                            echo"&nbsp;<img src=\"./gfx/icons/fileIcons/$image\" height=\"22\"><i class=\"shortcutMark\"> </i>";
+                    echo'<tr>';
+                        echo'<td>';
+                            echo'&nbsp;<img src=\"./gfx/icons/fileIcons/$image\" height=\"22\"><i class=\"shortcutMark\"> </i>';
                         echo"</td>";
                         echo'<td colspan="3">';
                             echo"<a href=\"./out/?$shortCutData[type]=$shortCutData[typeId]\" onclick=\"$link return false\">$title</a>";
                         echo"</td>";
-                    echo"</tr>";
-
-
-
+                    echo'</tr>';
                 }
+					if($i == 0){
+						
+	                    echo'<tr class="strippedRow" style="height: 20px;">';
+	                        echo'<td colspan="3">';
+	                            echo'This Element is empty.';
+	                        echo'</td>';
+	                    echo'</tr>';
+					}
+
     }
 
 	function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true, $select=NULL){
@@ -4012,6 +4042,13 @@ echo"</div>";
 
                 $title = $folderData[name];
                 $shortTitle = $folderData[name];
+				
+				//group folders
+                if($folderData['folder'] == 3){
+                	$title = getGroupName($folderData['name']).'´s Files';
+					$shortTitle = $title;
+                }
+                
 
                 //define link
                 $link = "openFolder('$itemId')";

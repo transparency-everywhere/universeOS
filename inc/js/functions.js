@@ -76,9 +76,10 @@ var usernames = [];
                             }
                         var BuddylistOb = {
                         'top' : oneSixthHeight/6,
-                        'left' : oneSixthWidth*4.9,
-                        'width' : oneSixthWidth*1,
-                        'height' : oneSixthHeight*5
+                        'right' : oneSixthWidth*0.1,
+                        'width' : oneSixthWidth*0.5,
+                        'height' : oneSixthHeight*4
+                        
                             }
                         $("#feed").css(FeedOb);
                         $("#filesystem").css(FileOb);
@@ -258,10 +259,11 @@ var usernames = [];
               	}else if(type == 'error'){
               		alertClass = 'alert-error';
               	}
-              	$('#alerter').hide();
               	
-              	$('#alerter').append('<div class="alert '+alertClass+'"><button type="button" class="close" data-dismiss="alert">&times;</button>'+message+'</div>').show().delay(5000).fadeOut();
-              	
+              	$('#alerter').append('<div class="alert '+alertClass+'"><button type="button" class="close" data-dismiss="alert">&times;</button>'+message+'</div>');
+              	$('.alert').delay(5000).fadeOut(function(){
+              		$(this).remove();
+              	});
               }
               
        
@@ -511,6 +513,10 @@ var usernames = [];
         }
         if(type == 'video' ||type == 'video/mp4' ||type == 'video/quicktime'  ){
             createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=video&fileId='+typeId,true);
+            return false
+        }
+        if(type == 'audio' ||type == 'audio/wav' ||type == 'audio/mpeg'  ){
+            createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=audio&fileId='+typeId,true);
             return false
         }
         if(type == 'image/png' ||type == 'image/jpeg' || type == 'image'){

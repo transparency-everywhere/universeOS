@@ -128,7 +128,7 @@ $k = 5;//limit
 		echo"<ul class=\"list resultList\">";
 		
 		
-		$groupSuggestSQL = mysql_query("SELECT id, title FROM groups WHERE title LIKE '%$q%' LIMIT $k");
+		$groupSuggestSQL = mysql_query("SELECT id, title FROM groups WHERE title LIKE '%$q%' AND public='1' LIMIT $k");
 		while ($suggestData = mysql_fetch_array($groupSuggestSQL)) {
 			
     
@@ -137,7 +137,7 @@ $k = 5;//limit
 			//icon
 			echo"<img src=\"gfx/icons/group.png\" height=\"16\" style=\"margin-bottom: -8px; margin-left:5px; margin-right:5px;\">";
 			//title
-			echo"<a href=\"#\" onclick=\"createNewTab('reader_tabView','$suggestData[title]','','./group.php?id=$suggestData[id]',true);return false\">$suggestData[title]</a>";
+			echo"<a href=\"#\" onclick=\"showApplication('reader'); createNewTab('reader_tabView','$suggestData[title]','','./group.php?id=$suggestData[id]',true);return false\">$suggestData[title]</a>";
 			
 			echo"</li>";
 		}

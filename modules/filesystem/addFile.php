@@ -9,7 +9,7 @@ if($_POST[submit]) {
     if(empty($_FILES['uploadedfile']['tmp_name'])){
         $error = "please select a file";
     }
-if(empty($error)){  
+if(empty($error)){
     //set privacy
     $customShow = $_POST[privacyCustomSee];
     $customEdit = $_POST[privacyCustomEdit];
@@ -19,13 +19,18 @@ if(empty($error)){
     $element = save("$_POST[element]");
     $folder = save("$_POST[folder]");
     $file = $_FILES['uploadedfile'];
-    $lang = $_POST[lang];
+    $lang = $_POST['language'];
+	if(empty($_POST['download'])){
+		$download = false;
+	}else{
+		$download = true;
+	}
     
-    addFile($file, $element, $folder, $privacy, $user, $lang);
+    addFile($file, $element, $folder, $privacy, $user, $lang, $download);
     
 
 
-}}
+}}else{
 
 $elementsql = mysql_query("SELECT * FROM elements WHERE id='$_GET[element]'");
 $elementdata = mysql_fetch_array($elementsql);
@@ -125,4 +130,4 @@ $title10 = substr("$elementdata[title]", 0, 10);
     $('#addFile').slideUp();
     });
 </script>
-<? } ?>
+<? }} ?>

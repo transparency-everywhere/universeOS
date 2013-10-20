@@ -48,14 +48,11 @@ $time = time();
 
 
 //check if the buddylists needs to be reloaded
-$buddylistSql = mysql_query("SELECT * FROM buddylist WHERE owner='$_SESSION[userid]' && request='0'");
-while($buddylistData = mysql_fetch_array($buddylistSql)) {
-    $blUserSql = mysql_query("SELECT lastactivity FROM user WHERE userid='$buddylistData[buddy]'");
-    $blUserData = mysql_fetch_array($blUserSql);
-    $userRow = md5("$blUserData[lastactivity],$userRow");
-}
-if($userRow !== $_SESSION[reloadBuddylist] && isset($_SESSION[reloadBuddylist])){
+$buddies = buddyListArray();
+
+if(!empty($buddies) && ($_SESSION[buddyListReload] < (time()-60))){
 echo"$('#buddyListFrame').load('buddylist.php?reload=1');";
+$_SESSION['buddyListReload']  = time();
 }
 
 

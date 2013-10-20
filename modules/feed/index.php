@@ -29,7 +29,7 @@ if(!isset($_SESSION[userid])){
                     <div id="addFeedFile" class="coolGradient">
                         <form>
                         	<center style="margin-top:15px;">
-                        		Add file to <a href="#" onclick="openElement('<?=$global_userData[myFiles];?>', 'myFiles'); return false;"><img src="http://universeos.org/gfx/icons/filesystem/element.png" height="12" style="margin-top: -1px;"> myFiles</a>
+                        		Add file to <a href="#" onclick="openElement('<?=$global_userData[myFiles];?>', 'myFiles'); return false;"><img src="./gfx/icons/filesystem/element.png" height="12" style="margin-top: -1px;"> myFiles</a>
                                 <input id="file_upload" name="feedFile" type="file" multiple="true" style="margin-top: 20px;">
                         		<div id="queue"></div>
                         	</center>

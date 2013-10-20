@@ -37,10 +37,10 @@ if (!empty($memberData[itemId])) {
                         }
                         if(empty($member)){ 
                         if($groupData["public"] == "1"){?>
-                        <a href="doit.php?action=joinGroup&group=<?=$group;?>val=1" class="btn btn-info" style="margin-top: 10px;">Join</a>
+                        <a href="doit.php?action=joinGroup&group=<?=$group;?>val=1" target="submitter" class="btn btn-info" style="margin-top: 10px;">Join</a>
                         <?
                         }else{?>
-                        <a href="doit.php?action=joinGroup&group=<?=$group;?>val=1" class="btn btn-info" style="margin-top: 10px;">Send Request</a>
+                        <a href="doit.php?action=joinGroup&group=<?=$group;?>val=1" target="submitter" class="btn btn-info" style="margin-top: 10px;">Send Request</a>
                         <?}
                         }else{
                             if($groupData[membersInvite] == "1" || $admin == "1"){
@@ -49,7 +49,7 @@ if (!empty($memberData[itemId])) {
                         <?
                           }
                         ?>
-                        <a href="doit.php?action=groupLeave&id=<?=$group;?>" class="btn btn-danger" style="margin-top: 10px;" target="submitter">Leave</a>
+                        <a href="doit.php?action=groupLeave&id=<?=$group;?>" class="btn btn-danger" target="submitter" style="margin-top: 10px;" target="submitter">Leave</a>
                         <? }
                     }?>
                 </span>
@@ -59,7 +59,6 @@ if (!empty($memberData[itemId])) {
         <tr style="border-top: 1px solid #424242;">
             <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" onclick="toggleGroupTabs('groupActivity');"><img src="./gfx/icons/rss.png">&nbsp;Activity</td>
             <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" onclick="toggleGroupTabs('groupUsers');"><img src="./gfx/icons/group.png">&nbsp;Users</td>
-            <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" onclick="toggleGroupTabs('groupFiles');"><img src="./gfx/icons/folder.png">&nbsp;Files</td>
             <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" onclick="toggleGroupTabs('profilePlaylists');"><img src="./gfx/icons/playlist.png">&nbsp;Playlists</td>
         </tr>
     </table>
@@ -97,16 +96,16 @@ if (!empty($memberData[itemId])) {
     <div id="groupFiles" class="groupSlider" style="display:none">
         <table cellspacing="0" style="font-size: 9px;" width="100%">
           <?php
-          $query = "WHERE privacy LIKE '%$group;%'";
+        	$query = "WHERE INSTR(`privacy`, '{$needle}') > 0 ORDER BY timestamp DESC LIMIT 5";
           
         
-                        showFileBrowser($folder, "$query", "$query");
+                        //showFileBrowser($folder);
                         ?>
                         <table cellspacing="0" width="100%">
                         <?
                         
-                        showFileList('', $query);
-                        echo"</table>";
+                        //showFileList('', $query);
+                        echo'</table>';
                         ?>
           </table>
     </div>

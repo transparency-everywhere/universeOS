@@ -3,17 +3,19 @@ session_start();
 include_once("inc/functions.php");
 include_once("inc/config.php");
 ?>
-
 		<script type="text/javascript" src="inc/js/guest.js"></script>
         <link rel="stylesheet" type="text/css" href="inc/css/guest.css" media="all" />
         <div id="topThing">
-            <span>&copy; 2013 <a href="http://transparency-everywhere.com" target="blank" style="color: #54545B;">Transparency Everywhere</a></span>
+            <span>2013 <a href="http://transparency-everywhere.com" target="blank" style="color: #54545B;">Transparency Everywhere</a></span>
             
-            <span style="">
-            	&nbsp;&nbsp;<a href="#" style="color: #54545B;" onclick="showContent('1', 'Site Notice');">Site Notice</a>
+            <span id="socialBar">
+            	<a href="http://wiki.universeOS.org" target="_blank" title="Get your information out of the universe Wiki."><img src="gfx/startPage/wikipedia.png"></a>
+            	<a href="http://twitter.com/universeOS" target="_blank" title="Have a look at our Twitter account."><img src="gfx/startPage/twitter.png"></a>
+            	<a href="http://facebook.com/universeOS" target="_blank" title="Like us on Facebook."><img src="gfx/startPage/facebook.png"></a>
+            	<a href="#" onclick="altert('Will follow soon');" target="_blank" title="Have a look at our Source"><img src="gfx/startPage/bitbucket.png"></a>
             </span>
             <span style="">
-            	
+            	<a href="#" style="color: #54545B;" onclick="showContent('1', 'Site Notice');">Site Notice</a>
             </span>
         </div>
         <div id="reload"></div>
@@ -75,6 +77,7 @@ include_once("inc/config.php");
         		<li><img src="./gfx/bulletPoint.png">encrypt your data and communication to be sure that it doesn't fall into the wrong hands</li>
         	</ul>
         	<p>But finally the fact that we don't make profit with your data is most important<br>to us.</p>
+        	<p>At the moment we are still in the beta phase of this project. So you shouldn't handle highly sensitive data in the filesystem and chat and excuse if there are little issues in the workflow.</p>
         </div>
         <? include("modules/reader/index.php") ?>
         
@@ -87,7 +90,7 @@ include_once("inc/config.php");
         
     <div id="dockplayer" style="display: none">
 	    <?
-	    include("modules/player/dockplayer.php");
+	    //include("modules/player/dockplayer.php");
 	    ?>
     </div>
         
@@ -136,7 +139,7 @@ include_once("inc/config.php");
             <tr valign="top">
                 <td><div id="personalButton" class="module" style="margin-top: 4px;">&nbsp;&nbsp;Log In</div></td>
                 <td><div id="moduleMenu" class="module" style="font-color: #FFF;">&nbsp;&nbsp;Start</div></td>
-                <td><div id="modulePlayer" class="module">&nbsp;&nbsp;Player</div></td>
+                <!-- <td><div id="modulePlayer" class="module">&nbsp;&nbsp;Player</div></td> -->
                 <td align="right" id="clockDiv" style="color: #FFFFFF; float: right"></td>
                 <td align="right"><input type="text" name="searchField" id="searchField" class="border-radius" placeholder="search"></td>
             </tr>

@@ -17,7 +17,7 @@
             <td>
             	<a class="module" id="startButton" title="toggle Dashboard" href="#dashBoard"><?=showUserPicture($userdata['userid'], 15);?><i class="icon-retweet icon-white" style="margin-left:15px;"><span class="iconAlert" id="appAlerts"></span></i><i class="icon-user icon-white"><span class="iconAlert" id="openFriendRequests"></span></i><i class="icon-envelope icon-white"><span class="iconAlert" id="newMessages" onclick="showApplication('chat'); return false"></span></i></a><td>
 
-            <td><div id="modulePlayer" class="module">&nbsp;&nbsp;Player</div>   </td>
+            <!-- <td><div id="modulePlayer" class="module">&nbsp;&nbsp;Player</div>   </td> -->
             <td><a href="doit.php?action=logout" target="submitter" class="module" style="tex-decoration: none; color: #797979; min-width:10px;" title="logout">&nbsp;<i class="icon-white icon-off"></i>&nbsp;</a></td>
             <td align="right" id="clockDiv" style="color: #FFFFFF; float: right"></td>
             <td align="right"><input type="text" name="searchField" id="searchField" class="border-radius" placeholder="search"></td>
@@ -32,10 +32,10 @@
     
     	if($("#dashBoard:visible").length > 0 && $('.dashBox:hidden').length > 0){
     		$('.dashBox').show();
-    	}else{
-    		if($("#dashBoard:hidden").length > 0){
-    			$('#dashBoard').slideUp();
-    		}
+    	}else if($("#dashBoard:visible").length > 0 && $('.dashBox:hidden').length == 0){
+    		$('#dashBoard').slideUp();
+    	}else if($("#dashBoard:hidden").length > 0){
+    			$('#dashBoard').slideDown();
     	}
     }); 
     $("#personalButton").click(function () {
