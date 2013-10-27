@@ -424,16 +424,18 @@ CREATE TABLE IF NOT EXISTS `userGroups` (
   `showAdminPanel` tinyint(1) NOT NULL,
   `protectFileSystemItems` tinyint(1) NOT NULL,
   `editProtectedFilesystemItem` tinyint(1) NOT NULL,
+  `undeletableFilesystemItems` tinyint(1) NOT NULL DEFAULT '0',
+  `editUndeletableFilesystemItems` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
-
 --
 -- Daten für Tabelle `userGroups`
 --
 
-INSERT INTO `userGroups` (`id`, `title`, `showAdminPanel`, `protectFileSystemItems`, `editProtectedFilesystemItem`) VALUES
-(0, 'standard user', 0, 0, 0),
-(1, 'admin', 1, 1, 1);
+INSERT INTO `userGroups` (`id`, `title`, `showAdminPanel`, `protectFileSystemItems`, `editProtectedFilesystemItem`, `undeletableFilesystemItems`, `editUndeletableFilesystemItems`) VALUES
+(0, 'standard user', 0, 0, 0, 0, 0),
+(1, 'admin', 1, 1, 1, 1, 1);
+
 
 -- --------------------------------------------------------
 

@@ -132,7 +132,7 @@ h3{
 	min-width: 250px;
 	min-height: 130px;
 }
-.fenster header {
+.fenster > header {
     color:#454545;
 	cursor:move;
 	height:16px;
@@ -141,8 +141,6 @@ h3{
 	text-overflow:ellipsis;
 	font-size: 16pt;
 	white-space:nowrap;
-	text-shadow: 1px 1px 1px #e8e8e8;
-    filter: dropshadow(color=#e8e8e8, offx=1, offy=1);
 }
 .fenster .inhalt {
 	-moz-border-radius:1px;
@@ -748,10 +746,11 @@ li.notHidden{
 
 #buddySuggestions #closeSuggestions{
 	color: #FFFFFF;
-	float:right;
-	clear:right;
 	cursor:pointer;
-	margin-right:3px;
+
+	position: absolute;
+	top:0;
+	right:7px;
 }
 
 #feed {
@@ -897,6 +896,17 @@ li.notHidden{
 	text-align:right;
 }
 
+#opload h1,#opload h2,#opload h3{
+	margin: 0;
+	padding: 0;
+}
+#opload h3{
+	line-height:0px;
+}
+
+.uploadStep > div{
+	margin:10px;	
+}
 
 /* reader */
 
@@ -934,6 +944,10 @@ li.notHidden{
     margin-bottom: -19px;
 }
 
+.readerPlayListTitle{
+	margin-top: -2px;
+}
+
 .readerStartItem{
     width: 70%;
     margin-left: 15%;
@@ -941,6 +955,8 @@ li.notHidden{
 
 	.openFile header{
 		height:40px;
+		padding-top: 0px;
+		cursor: default;
 	}
 	
 	.openFile header > img{
@@ -1085,6 +1101,21 @@ top: 0px; right: 0px; bottom: 40px; left: 0px; width: 100%;
 	right: 0px; 
 	left:0px; 
 	height:20px;
+	cursor: default;
+}
+
+.chatMainFrame header span:first-of-type{
+	float: left;
+	margin-left: 0;
+}
+.chatMainFrame header span:last-of-type{
+	margin-right: 10px;
+	margin-left: 0;
+	clear: both;
+}
+.chatMainFrame header span{
+	float: right; margin-left: 10px;
+	margin-right: 10px;
 }
 #chat footer{
 	position:absolute; 
@@ -1098,6 +1129,10 @@ top: 0px; right: 0px; bottom: 40px; left: 0px; width: 100%;
 	width: 60%; 
 	margin-bottom: -1px; 
 	height: 19px;
+	-o-border-radius: 0px;
+	-moz-border-radius: 0px;
+	-khtml-border-radius: 0px;
+	-webkit-border-radius: 0px;
 }
 
 
@@ -2155,7 +2190,6 @@ font-family:"Courier New", Courier, monospace;
 
 
 
-
 [draggable=true] {
   -khtml-user-drag: element;
   -webkit-user-drag: element;
@@ -2188,6 +2222,7 @@ font-family:"Courier New", Courier, monospace;
 .lockIcon.locked{
     background: url(../../gfx/icons/locked.png) no-repeat top left;
 }
+
 
 
 /*PLUGINS/

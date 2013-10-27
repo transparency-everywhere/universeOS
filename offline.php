@@ -180,7 +180,7 @@
     <img src="gfx/logo.png" id="startPageLogo">
     <div id="offlineFooter">
         <div id="offlineFooterBox">
-            <a href="http://wiki.universeos.org" target="blank" title="universe Wiki - everything you need to know" style="float: left;"><img src="./gfx/icons/wikipedia.png" height="32"></a>
+            <a href="http://wiki.universeos.org" target="blank" title="universe Wiki - everything you need to know" style="float: left;"><img src="./gfx/icons/fileIcons/wikipedia.png" height="32"></a>
         </div>
         <div id="myCarousel" class="carousel slide">
 		  <ol class="carousel-indicators" style="position: absolute; right: 2%; top: 22px; margin-right: 50px;">

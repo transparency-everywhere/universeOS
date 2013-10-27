@@ -59,7 +59,7 @@ if (!empty($memberData[itemId])) {
         <tr style="border-top: 1px solid #424242;">
             <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" onclick="toggleGroupTabs('groupActivity');"><img src="./gfx/icons/rss.png">&nbsp;Activity</td>
             <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" onclick="toggleGroupTabs('groupUsers');"><img src="./gfx/icons/group.png">&nbsp;Users</td>
-            <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" onclick="toggleGroupTabs('profilePlaylists');"><img src="./gfx/icons/playlist.png">&nbsp;Playlists</td>
+            <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" onclick="toggleGroupTabs('groupPlaylists');"><img src="./gfx/icons/playlist.png">&nbsp;Playlists</td>
         </tr>
     </table>
     <div id="groupActivity" class="groupSlider">
@@ -96,7 +96,7 @@ if (!empty($memberData[itemId])) {
     <div id="groupFiles" class="groupSlider" style="display:none">
         <table cellspacing="0" style="font-size: 9px;" width="100%">
           <?php
-        	$query = "WHERE INSTR(`privacy`, '{$needle}') > 0 ORDER BY timestamp DESC LIMIT 5";
+        	$query = "WHERE INSTR(`privacy`, '{$group}') > 0 ORDER BY timestamp DESC LIMIT 5";
           
         
                         //showFileBrowser($folder);
@@ -110,11 +110,19 @@ if (!empty($memberData[itemId])) {
           </table>
     </div>
     <div id="groupPlaylists" class="groupSlider" style="display:none">
-        <table cellspacing="0" style="font-size: 9px;" width="100%">
-        <?
-        $query = "WHERE INSTR(`privacy`, '{$needle}') > 0 ORDER BY timestamp DESC LIMIT 5";
-        ?>
-        </table>
+	    <table cellspacing="0" width="100%">
+	        <?
+	        $needle = "$group;";
+	        $playListSql = mysql_query("SELECT `id`, `user`, `title` FROM `playlist` WHERE `privacy` LIKE %$group%");
+	        while($playListData = mysql_fetch_array($playListSql)){
+	        $i++    
+	            ?>
+	        <tr border="0" bgcolor="#<?=$color;?>" width="100%" height="35">
+	            <td width="35">&nbsp;<img src="./gfx/icons/playlist.png"></td>
+	            <td><a href="javascript: popper('doit.php?action=showPlaylist&id=<?=$playListData[id];?>')"><?=$playListData[title]?></a></td>
+	        </tr>
+	        <? } ?>
+	    </table>
     </div>
     <?
     showComments(group, $group, $GroupData[title], $link);

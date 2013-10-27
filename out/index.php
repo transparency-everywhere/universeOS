@@ -6,28 +6,32 @@ echo"<html>";
 echo"<head>";
 
 //define type and itemId
-if(!empty($_GET[folder])){
+if(!empty($_GET['folder'])){
 	$type = "Folder";
-	$itemId = $_GET[folder];
+	$itemId = $_GET['folder'];
 	
 	$query = mysql_query("SELECT name, folder FROM folders WHERE id='".mysql_real_escape_string($itemId)."'");
 	$data = mysql_fetch_array($query);
-	$title = "$data[name]";
+	$title = $data['name'];
 	
-}else if(!empty($_GET[element])){
+}else if(!empty($_GET['element'])){
 	$type = "Element";
-	$itemId = $_GET[element];
-}else if(!empty($_GET[file])){
+	$itemId = $_GET['element'];
+}else if(!empty($_GET['file'])){
 	$type = "File";
-	$itemId = $_GET[file];
-	$query = mysql_query("SELECT `title` FROM `files` WHERE id='".mysql_real_escape_string($itemId)."'");
+	$fileId = $_GET['file'];
+	$query = mysql_query("SELECT `title` FROM `files` WHERE id='".mysql_real_escape_string($fileId)."'");
 	$data = mysql_fetch_array($query);
-	$title = $data[title];
+	$title = $data['title'];
 }
 	$metaDescriptionContent = "universeOS $type $title.";
 	$metaDescriptionContent .= "Discover the social webOS. Connect with your friends, read your favourite book or RSS-Feed, watch your favourite movie, listen your favourite song and be creative...";
 	echo"<meta name=\"description\" content='$metaDescriptionContent'>";
 
+
+	
+    echo"<link rel=\"stylesheet\" type=\"text/css\" href=\"../inc/css/out.css\" />";
+    echo"<link rel=\"stylesheet\" type=\"text/css\" href=\"../inc/css/plugins.css\" />";
 
 	//page title
 	echo"<title>";
@@ -44,94 +48,37 @@ if(!empty($_GET[folder])){
 	}
 	
 	//meta information
-	echo"<meta name=\"title\" content=\"universeOS - $type $title\">";
-	echo"<meta name=\"keywords\" content=\"universeOS $type $title, $type, $title, $type $title\">";
-        echo"<meta name=\"Robots\" content=\"index,follow\">";
-        echo"<style>";
-        ?>
-
-        body{
-        background:#ffffff;
-        }
-
-		a, a:link, a:hover {
-		color: #0088cc;
-		text-decoration: none;
-		}
-
-        table {
-          max-width: 100%;
-          background-color: transparent;
-          border-collapse: collapse;
-          border-spacing: 0;
-        }
-
-        .table {
-          width: 100%;
-          margin-bottom: 20px;
-        }
-
-        .table th,
-        .table td {
-          padding: 8px;
-          line-height: 20px;
-          text-align: left;
-          vertical-align: top;
-          border-top: 1px solid #dddddd;
-        }
-
-        .table th {
-          font-weight: bold;
-        }
-
-        .table thead th {
-          vertical-align: bottom;
-        }
-        
-        body{
-            margin:0px;
-        }
-        
-        .fileTable{
-            width:100%;
-        }
-        
-        .strippedRow:first-child {background:rgb(202, 216, 230)}
-        .strippedRow:nth-child(2n+3) {background:rgb(202, 216, 230)}
-        
-        .watermark{
-        	position: fixed;
-        	bottom:0px;
-        	right:0px;
-        	height:30px;
-        	width:100px;
-        	background: rgba(0,0,0,0.8);
-        	color: #FFFFFF;
-        }
-        
-        <?
-        echo"</style>";
-        
-echo"</head>";
-echo"<body>";
-echo"<table>";
+	echo'<meta name=\"title\" content=\"universeOS - $type $title\">';
+	echo'<meta name=\"keywords\" content=\"universeOS $type $title, $type, $title, $type $title\">';
+    echo'<meta name=\"Robots\" content=\"index,follow\">';
+echo'</head>';
+echo'<body>';
+echo'<table width="100%">';
 
 switch($type){
 	case "Folder":
-                        showFileBrowser($itemId, '', '', false);
+                        showFileBrowser($itemId, '', '', false,  '../');
 		
 		break;
 	case "Element":
-                        showFileList($itemId, '', true);
+						echo'<style>';
+						echo'img{ margin-top: -16px; }';
+						echo'</style>';
+                        showFileList($itemId, '', true, '../');
 		break;
 	case "File":
-                        echo openFile($_GET[file], $_GET[link]);
+						echo"</table>";
+						echo '<div class="openFile">';
+                        echo openFile($fileId, $linkId, '', '', '', '', '', '', '', '', '../');
+						echo '</div>';
+						echo"<table>";
 		break;
 }
 echo"</table>";
 echo'<div class="watermark">';
 echo'<a href="http://universeos.org" target="_parent">universeOS</a>';
 echo"</div>";
+echo"<iframe name=\"submitter\" style=\"display:none\">";
 echo"<script>";
 // echo"window.location.href = \"http://universeos.org/index.php?openFromLink=openFromLink=$type\";";
 echo"</script>";

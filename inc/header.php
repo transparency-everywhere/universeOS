@@ -4,7 +4,7 @@
         
         <!--meta information-->
         <meta name="description" content='Discover the social webOS. Connect with your friends, read your favourite book or RSS-Feed, watch your favourite movie, listen your favourite song and be creative...'>
-        <META Name="keywords" content='universe, universeos, webdesktop, web desktop, social webdesktop, webos, youtube, youtube playlist, documentsrss,  free speech, human rights, privacy, community, social'>
+        <META Name="keywords" content='universe, universeos, universe os, webdesktop, web desktop, social webdesktop , youtube, youtube playlist, documents, rss, free speech, human rights, privacy, community, social'>
         <meta name="title" content="universeOS">
         <meta name="Robots" content="index">
         <meta name="author" content="Transparency Everywhere">
@@ -35,7 +35,6 @@
         
         <!-- <script type="inc/js/jquery.jplayer.min.js"></script> -->
         <script src="inc/bootstrap/js/bootstrap.min.js"></script>
-        
                 <script type="text/javascript">
 
 

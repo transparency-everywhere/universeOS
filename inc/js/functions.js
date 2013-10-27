@@ -436,6 +436,24 @@ var usernames = [];
         createNewTab('fileBrowser_tabView', 'Upload File','','modules/filesystem/upload.php?element='+element,true);return true
 	}
 	
+	function initUploadify(id, uploader, timestamp, token){
+		
+	    $(function() {
+	            $(id).uploadify({
+	                    'formData'     : {
+	                            'timestamp' : timestamp,
+	                            'token'     : token
+	                    },
+	                    'swf'      : 'inc/plugins/uploadify/uploadify.swf',
+	                    'uploader' : uploader,
+	                    'onUploadError' : function(file, errorCode, errorMsg, errorString) {
+	                        alert('The file ' + file.name + ' could not be uploaded: ' + errorString);
+	                    }
+	            });
+	    });
+                                
+	}
+	
     function toggleProfileTabs(id){
         $(".profileSlider").hide();
         $("#" + id + "").slideDown();

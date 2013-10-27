@@ -13,7 +13,6 @@ if($_GET['action'] == "scorePlus"){
     ?>
     <script>
         parent.$('.score<?=$type;?><?=$typeid;?>').load('doit.php?action=showScore&type=<?=$type;?>&typeid=<?=$typeid;?>');
-
     </script>
     <?
 }else if($_GET['action'] == "scoreMinus"){
@@ -104,18 +103,22 @@ if($_GET['action'] == "scorePlus"){
 		<?
      }
      else if($_GET['action'] == "download"){
-        $documentSQL = mysql_query("SELECT id, title, type, filename FROM files WHERE id='".save($_GET[fileId])."'");
+        $documentSQL = mysql_query("SELECT id, title, type, filename, privacy, owner FROM files WHERE id='".save($_GET['fileId'])."'");
         $documentData = mysql_fetch_array($documentSQL); 
-        $downloadfile = getFilePath($_GET[fileId]);
-        $downloadfile = substr($downloadfile, 1);
-        $filename = $documentData[filename];
-        $downloadfile = "upload/$downloadfile/$filename";
-        $filesize = filesize($downloadfile);
-        $filetype = end(explode('.', $filename));
-        header("Content-type: application/$filetype");
-        header("Content-Disposition: attachment; filename=".$filename."");
-        readfile("$downloadfile");
-        exit;
+		if(authorize($documentData['privacy'], "show", $documentData['owner'])){
+	        $downloadfile = getFilePath($_GET['fileId']);
+	        $downloadfile = substr($downloadfile, 1);
+	        $filename = $documentData['filename'];
+	        $downloadfile = "upload/$downloadfile/$filename";
+	        $filesize = filesize($downloadfile);
+	        $filetype = end(explode('.', $filename));
+	        header("Content-type: application/$filetype");
+	        header("Content-Disposition: attachment; filename=".$filename."");
+	        readfile("$downloadfile");
+	        exit;
+	 	}else{
+	 		jsAlert("No rights, bro.");
+	 	}
      }else if($_GET['action'] == "showPlaylist"){
         $playListId = save($_GET[id]);
         $playListSql = mysql_query("SELECT * FROM playlist WHERE id='$playListId'");
@@ -133,92 +136,9 @@ if($_GET['action'] == "scorePlus"){
                     <div class="jqContent">
                         <center>
                             <div style="overflow: auto; width: 450px; height: 200px;">
-                                <table cellspacing="0" width="100%">                
-                            <?
-                            $i = 0;
-                            $query = commaToOr("$playListData[folders]", "id");
-                            $playListFolderSql = mysql_query("SELECT * FROM folders WHERE $query");
-                            while($playListFolderData = mysql_fetch_array($playListFolderSql)){
-
-                            if(checkAuthorisation(folder, $playListFolderData[id])){;
-                            ?>
-                                    <tr class="strippedRow">
-                                        <td><img src="./modules/filesystem/icons/folder.png" width="30px"></td>
-                                        <td>&nbsp;<?=$playListFolderData[name]?></td>
-                                    </tr>
-
-                            <? 
-                            $i++;
-
-                            }}
-                            $query = commaToOr("$playListData[elements]", "id");
-                            $playListFolderSql = mysql_query("SELECT id, title FROM elements WHERE $query");
-                            while($playListFolderData = mysql_fetch_array($playListFolderSql)){
-
-                            if(checkAuthorisation($playListFolderData[privacy])){   
-                            ?>
-
-                                    <tr class="strippedRow">
-                                        <td><img src="./modules/filesystem/icons/file.png" width="30px"></td>
-                                        <td>&nbsp;e_<?=$playListFolderData[title]?></td>
-                                    </tr>
-                        <? 
-                            $i++;
-
-                            }}
-                            $query = commaToOr("$playListData[files]", "id");    
-                            $playListFolderSql = mysql_query("SELECT * FROM files WHERE $query");
-                            while($playListFolderData = mysql_fetch_array($playListFolderSql)){
-
-                            if(checkAuthorisation($playListFolderData[privacy])){
-                            if($delete){
-                                $deleteRow = "<td><a href=\"doit.php?action=deleteFromPlaylist&playlist=$playListId&type=file&itemId=$playListFolderData[id]\" target=\"submitter\"><img src=\"./gfx/icons/minus.png\" height=\"32\" border=\"0\"></a></td>";
-                            }
-                            ?>
-                                    <tr class="strippedRow playListfileNo<?=$playListFolderData[id];?>">
-                                        <td><img src="./modules/filesystem/icons/file.png" width="30px"></td>
-                                        <td>&nbsp;<?=$playListFolderData[title]?></td>
-                                        <?=$deleteRow;?>
-                                    </tr>
-                            <?
-                            $i++; }}
-                            $query = commaToOr("$playListData[links]", "id");
-                            $playListFolderSql = mysql_query("SELECT * FROM links WHERE $query");
-                            while($playListFolderData = mysql_fetch_array($playListFolderSql)){
-
-                            if(checkAuthorisation($playListFolderData[privacy])){    
-                                if($playListLinkData[type] == "youTube"){
-
-                                }
-                            if($delete){
-                                $deleteRow = "<td><a href=\"doit.php?action=deleteFromPlaylist&playlist=$playListId&type=link&itemId=$playListFolderData[id]\" target=\"submitter\"><img src=\"./gfx/icons/minus.png\" height=\"32\" border=\"0\"></a></td>";
-                            }
-
-                            ?>
-
-                                    <tr class="strippedRow playListlinkNo<?=$playListFolderData[id];?>">
-                                        <td><img src="./gfx/icons/youTube.png" width="20px" style="margin: 5px;"></td>
-                                        <td>&nbsp;<a href="javascript: nextPlaylistItem('<?=$playListData[id];?>', '<?=$i;?>')"><?=$playListFolderData[title]?></a></td>
-                                        <?=$deleteRow;?>
-                                    </tr>
-                        <?
-                            $i++; }}
-                            $videos = explode(";", $playListData[youTube], -1);
-                            foreach($videos as &$vId){
-                            if($delete){
-                                $deleteRow = "<td><a href=\"doit.php?action=deleteFromPlaylist&playlist=$playListId&type=youTube&itemId=$vId\" target=\"submitter\"><img src=\"./gfx/icons/minus.png\" height=\"32\" border=\"0\"></a></td>";
-                            }
-                            ?>
-                                    <tr class="strippedRow playListyouTubeNo<?=$vId;?> tooltipper" onmouseover="mousePop('youTube', '<?=$vId;?>', '');" onmouseout="$('.mousePop').hide();">
-                                        <td><img src="./gfx/icons/youTube.png" width="20px" style="margin: 5px;"></td>
-                                        <td>&nbsp;<a href="javascript: nextPlaylistItem('<?=$playListData[id];?>', '<?=$i;?>')">Youtube Video</a></td>
-                                        <?=$deleteRow;?>
-                                    </tr>
-                            <?
-                            $i++;
-
-                            }?>
-                                </table>
+                           		<?
+                           		showPlaylist($playListId);
+                           		?>
                             </div>
                         </center>
                     </div>
@@ -1318,8 +1238,8 @@ if($_GET['action'] == "scorePlus"){
             $limit = save("$_GET[limit]");
             $newLimit = $limit+1;
             //convert $limit to a mysql LIMIT conform string 
-            $limit = $limit*30;
-            $limit = ($limit).",".($limit+30);
+            $limit = $limit*10;
+            $limit = ($limit).",".($limit+10);
             
             
             
@@ -1495,7 +1415,7 @@ if($_GET['action'] == "scorePlus"){
             if(!empty($_GET[playList])){
                 $row = ($_GET[row]+1);?>
             function onytplayerStateChange(newState) {
-            if(newState == "0"){
+            if(newState == "0" || newState == ""){
 
                 parent.nextPlaylistItem('<?=$_GET[playList];?>','<?=$row;?>');
             }
@@ -1539,7 +1459,9 @@ if($_GET['action'] == "scorePlus"){
          $UpdateData = mysql_fetch_array($UpdateStringSql);
    
             if(!empty($vId)){
-             $items= "$vId;$UpdateData[youTube]";
+            	$array = explode(';',$UpdateData['youTube']);
+				$array[] = "$vId";
+				$items = implode(';', $array);
              if(mysql_query("UPDATE playlist SET youTube='$items' WHERE id='$playlist'")){
                  jsAlert("worked ;)");
              }
@@ -1971,7 +1893,7 @@ if($_GET['action'] == "scorePlus"){
             }else if($type == "folder"){
                 $checkFolderSql = mysql_query("SELECT  privacy, creator, folder FROM folders WHERE id='$itemId'");
                 $checkFolderData = mysql_fetch_array($checkFolderSql);
-                if(authorize($checkFolderData[privacy], "edit", $checkFolderData[creator])){
+                if(authorize($checkFolderData[privacy], "delete", $checkFolderData[creator])){
                     deleteFolder("$itemId");
 					?>
                	    <script>
@@ -2229,7 +2151,10 @@ if($_GET['action'] == "scorePlus"){
                         if($checkElementData[author] == "$_SESSION[userid]"){
                             mysql_query("UPDATE elements SET title='$_POST[title]', type='$_POST[type]', creator='$_POST[creator]', name='$_POST[name]', year='$_POST[year]' WHERE id='$itemId'");
                             jsAlert("Saved :)");
-							echo"<script>parent.$('.jqPopUp').slideUp();</script>";
+							echo"<script>";
+							echo"parent.$('.jqPopUp').slideUp();";
+							echo"parent.addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=".$checkElementData['folder']."&reload=1');";
+							echo"</script>";
                         }
                     }else if($type == "file"){
 
@@ -2570,7 +2495,7 @@ if($_GET['action'] == "scorePlus"){
                     jsAlert("Thanks dude! The bug report has been send to our admins.");
                     }
                 }?>
-                <form action="doit.php?action=reportBug&fileId=<?=$_GET[fileId];?>" method="post" target="submitter">
+                <form action="doit.php?action=reportBug&fileId=<?=$_GET[fileId];?>" onsubmit="$('.jqPopUp').slideUp();" method="post" target="submitter">
                     <div class="jqPopUp border-radius transparency" id="reportBug" style="display: block">
                         <a class="jqClose" id="closereportBug">X</a>  
                         <header>
@@ -2590,16 +2515,13 @@ if($_GET['action'] == "scorePlus"){
                         </div>
 		                <footer>
 		                	<span class="pull-left"><a class="btn" onclick="$('.jqPopUp').slideUp();">back</a></span>
-		                	<span class="pull-right"><input type="submit" value="send" name="submit" id="reportBugSubmit" class="button"></span>
+		                	<span class="pull-right"><input type="submit" value="send" name="submit" id="reportBugSubmit" class="btn btn-success"></span>
 		                </footer>
                     </div>
                 </form>
                 <script>
                     $(".jqClose").click(function () {
                     $('.jqPopUp').slideUp();
-                    });
-                    $("#closereportBug").click(function () {
-                    $('#reportBug').slideUp();
                     });
                 </script>
             <?}else if($_GET['action'] == "deleteFile"){
@@ -2632,11 +2554,21 @@ if($_GET['action'] == "scorePlus"){
                     }
                 }
             }else if($_GET['action'] == "protectFileSystemItems"){
+            	
             	protectFilesystemItem($_GET[type], $_GET[itemId]);
-				jsAlert("worked!");
+				jsAlert("This Item can not be edited anymore.");
             }else if($_GET['action'] == "removeProtectionFromFileSystemItems"){
+            	
             	removeProtectionFromFilesystemItem($_GET[type], $_GET[itemId]);
-				jsAlert("worked!");
+				jsAlert("This Item can be edited again.");
+            }else if($_GET['action'] == "makeFileSystemItemUndeletable"){
+            	
+            	makeFileSystemItemUndeletable($_GET[type], $_GET[itemId]);
+				jsAlert("This Item can not be deleted anymore.");
+            }else if($_GET['action'] == "makeFileSystemItemDeletable"){
+            	
+            	removeProtectionFromFilesystemItem($_GET[type], $_GET[itemId]);
+				jsAlert("This Item can be deleted again.");
             }
             
             
@@ -2812,12 +2744,13 @@ if($_GET['action'] == "scorePlus"){
                 $id = save($_POST[id]);
                 removeUFFcookie($id);
             }else if($_GET['action'] == "logout"){
-            	
+            	if(!empty($_SESSION['userid'])){
 				session_unset();
     			jsAlert( "good bye");
 				?>
-				<script>top.window.location.href='index.php';</script>
+				<script>top.window.location.href='http://amnesty.org';</script>
 				<?
+				}
             	
             }else if($_GET['action'] == "tester"){
             	echo "woff";

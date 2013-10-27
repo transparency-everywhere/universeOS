@@ -49,15 +49,15 @@
 
                     }
                     ?>
-                    <header>
-                            <p><a href="javascript: loader('settingsFrame', 'modules/settings/general.php');">&lt;&lt;back</a></p>  
-                            <p style="font-size: 13pt;">upload new profilepicture</p>
-                             </header>
+               <form action="modules/settings/picture.php" method="post" enctype="multipart/form-data" target="submitter" style="margin: 0 10px 0 10px">
+                    <h2>upload new profilepicture</h2>
                     <div>
-                        <form action="modules/settings/picture.php" method="post" enctype="multipart/form-data" target="submitter">
-                            <input type="file" name="uploadedfile"><br><input type="submit" name="submit" value="upload">
-                        </form>            
+                        
+                            <input type="file" name="uploadedfile"><br><br><br>
+                        <p>Please keep always in mind that everyone can see this infos till you switched it off in your <mark>privacy settings</mark>.<br>It also don't overwrites your old one and is shown beside all of your posts.</p>       
                     </div>
                     <footer>
-                        <p>Please keep always in mind that everyone can see this infos till you switched it off in your <mark>privacy settings</mark>.<br>It also don't overwrites your old one and is shown beside all of your posts.</p>
+                    	<a href="javascript: loader('settingsFrame', 'modules/settings/general.php');" class="btn pull-left">&lt;&lt;back</a>
+                        <input type="submit" name="submit" value="upload" class="btn btn-success pull-right">  
                     </footer>
+				</form>   

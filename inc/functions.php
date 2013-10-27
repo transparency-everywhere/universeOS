@@ -279,8 +279,13 @@
 	        if(proofLogin()){
 	          	$fav = "<li><a href=\"doit.php?action=addFav&type=folder&item=$itemId\" target=\"submitter\">Add to Fav</a></li>";
 	        }
+			//check if person has rights to protect filesystem items of changes
 			if(hasRight("protectFileSystemItems")){
 				$protect = "<li><a href=\"javascript: popper('doit.php?action=protectFileSystemItems&type=folder&itemId=$itemId')\">Protect</a></li>";
+			}
+			//check if person has rights to make files undeletable
+			if(hasRight("undeletableFilesystemItems")){
+				$undeletable = "<li><a href=\"javascript: popper('doit.php?action=makeFileSystemItemUndeletable&type=folder&itemId=$itemId')\">Make Undeletable</a></li>";
 			}
         }elseif($type == "element"){
             $checkElementSql = mysql_query("SELECT privacy, author FROM elements WHERE id='$itemId'");
@@ -372,6 +377,7 @@
                 $edit
                 $report
                 $protect
+                $undeletable
             </ul>
         </div>
         ";
@@ -690,7 +696,11 @@
         if($small){
         	if(empty($class)){
         		$style = " background-image: url(\\'$src\\');";
+				if($small == "unescaped"){
+        			$style = " background-image: url('$src');";
+				}
 			}
+			
             $return="<div class=\"userPicture userPicture_$userid $class\" onload=\"updatePictureStatus(\'jjj$userid\', \\'$color\\');\" onclick=\"showProfile(\\'$userid\\');\" style=\"$style width: $size; height: $size; border-color: $color;\"></div>";
 
             return $return;
@@ -1871,18 +1881,27 @@ echo"</div>";
     
     function authorize($privacy, $type, $author=NULL){
         
+		if(end(explode(";", $privacy)) == "UNDELETABLE"){
+			$undeletable = true;
+			$privacy = str_replace(";UNDELETABLE", "", $privacy);
+		}
+		
+		
         if(end(explode(";", $privacy)) == "PROTECTED"){
         	
              $show = true;
              if(hasRight("editProtectedFilesystemItem")){
              	$edit = true;
+				 $delete = true;
 			 }else{
 			 	$edit = false;
+				$delete = false;
 			 }
         	
         }else{
              $show = false;
              $edit = false;
+			 $delete = false;
         
         if($privacy == "p"){
             
@@ -1890,6 +1909,7 @@ echo"</div>";
              $show = true;
              if(proofLogin()){
              $edit = true;
+			 $delete = true;
 			 }
             
         }else if($privacy == "h"){
@@ -1898,11 +1918,13 @@ echo"</div>";
             
                 $show = true;
                 $edit = true;
+				$delete = true;
                 
             }else{
                 
                 $show = false;
                 $edit = false;
+				$delete = true;
                 
             }
             
@@ -1982,6 +2004,16 @@ echo"</div>";
             return $show;
         }else if($type == "edit"){
             return $edit;
+        }else if($type == "delete"){
+        	if($undeletable){
+        		if(hasRight("editUndeletableFilesystemItems")){
+        			return true;
+        		}else{
+        			return false;
+        		}
+        	}else{
+            	return $delete;
+        	}
         }
         
     }
@@ -2031,11 +2063,19 @@ echo"</div>";
 	
     function showPrivacySettings($value=NULL){
     	
-		if(end(explode(";", $value)) == "PROTECTED"){
+		$oldValue = $value;
+		if(end(explode(";", $oldValue)) == "PROTECTED"){
         	
 			
 			$protected = true;
 			$value = str_replace(";PROTECTED", "", $value);
+        	
+        }
+		if(end(explode(";", $oldValue)) == "UNDELETABLE"){
+        	
+			
+			$undeletable = true;
+			$value = str_replace(";UNDELETABLE", "", $value);
         	
         }
 		
@@ -2087,6 +2127,8 @@ echo"</div>";
 			}
         			if($protected){
         				echo"<li style=\"font-size:16pt;\">Protected</li>";
+        			}else if($undeletable){
+        				//echo"<li style=\"font-size:16pt;\">Undeletable</li>";
         			}
 			if(1 == 1){
         ?>
@@ -2393,7 +2435,104 @@ echo"</div>";
 		
 	}
 	
-    function showPlaylist($playListId){
+	function showPlaylist($id, $query=NULL){
+		if(empty($id))
+			$query = "id='$id'";
+		
+        $playListSql = mysql_query("SELECT * FROM playlist WHERE $query");
+        $playListData = mysql_fetch_array($playListSql);
+		?>
+		<table cellspacing="0" width="100%">                
+                            <?
+                            $i = 0;
+                            $query = commaToOr("$playListData[folders]", "id");
+                            $playListFolderSql = mysql_query("SELECT * FROM folders WHERE $query");
+                            while($playListFolderData = mysql_fetch_array($playListFolderSql)){
+
+                            if(checkAuthorisation(folder, $playListFolderData[id])){;
+                            ?>
+                                    <tr class="strippedRow">
+                                        <td><img src="./modules/filesystem/icons/folder.png" width="30px"></td>
+                                        <td>&nbsp;<?=$playListFolderData[name]?></td>
+                                    </tr>
+
+                            <? 
+                            $i++;
+
+                            }}
+                            $query = commaToOr("$playListData[elements]", "id");
+                            $playListFolderSql = mysql_query("SELECT id, title FROM elements WHERE $query");
+                            while($playListFolderData = mysql_fetch_array($playListFolderSql)){
+
+                            if(checkAuthorisation($playListFolderData[privacy])){   
+                            ?>
+
+                                    <tr class="strippedRow">
+                                        <td><img src="./modules/filesystem/icons/file.png" width="30px"></td>
+                                        <td>&nbsp;e_<?=$playListFolderData[title]?></td>
+                                    </tr>
+                        <? 
+                            $i++;
+
+                            }}
+                            $query = commaToOr("$playListData[files]", "id");    
+                            $playListFolderSql = mysql_query("SELECT * FROM files WHERE $query");
+                            while($playListFolderData = mysql_fetch_array($playListFolderSql)){
+
+                            if(checkAuthorisation($playListFolderData[privacy])){
+                            if($delete){
+                                $deleteRow = "<td><a href=\"doit.php?action=deleteFromPlaylist&playlist=$playListId&type=file&itemId=$playListFolderData[id]\" target=\"submitter\"><img src=\"./gfx/icons/minus.png\" height=\"32\" border=\"0\"></a></td>";
+                            }
+                            ?>
+                                    <tr class="strippedRow playListfileNo<?=$playListFolderData[id];?>">
+                                        <td><img src="./modules/filesystem/icons/file.png" width="30px"></td>
+                                        <td>&nbsp;<?=$playListFolderData[title]?></td>
+                                        <?=$deleteRow;?>
+                                    </tr>
+                            <?
+                            $i++; }}
+                            $query = commaToOr("$playListData[links]", "id");
+                            $playListFolderSql = mysql_query("SELECT * FROM links WHERE $query");
+                            while($playListFolderData = mysql_fetch_array($playListFolderSql)){
+
+                            if(checkAuthorisation($playListFolderData[privacy])){    
+                                if($playListLinkData[type] == "youTube"){
+
+                                }
+                            if($delete){
+                                $deleteRow = "<td><a href=\"doit.php?action=deleteFromPlaylist&playlist=$playListId&type=link&itemId=$playListFolderData[id]\" target=\"submitter\"><img src=\"./gfx/icons/minus.png\" height=\"32\" border=\"0\"></a></td>";
+                            }
+
+                            ?>
+
+                                    <tr class="strippedRow playListlinkNo<?=$playListFolderData[id];?>">
+                                        <td><img src="./gfx/icons/fileIcons/youTube.png" width="20px" style="margin: 5px;"></td>
+                                        <td>&nbsp;<a href="javascript: nextPlaylistItem('<?=$playListData[id];?>', '<?=$i;?>')"><?=$playListFolderData[title]?></a></td>
+                                        <?=$deleteRow;?>
+                                    </tr>
+                        <?
+                            $i++; }}
+                            $videos = explode(";", $playListData[youTube], -1);
+                            foreach($videos as &$vId){
+                            if($delete){
+                                $deleteRow = "<td><a href=\"doit.php?action=deleteFromPlaylist&playlist=$playListId&type=youTube&itemId=$vId\" target=\"submitter\"><img src=\"./gfx/icons/minus.png\" height=\"32\" border=\"0\"></a></td>";
+                            }
+                            ?>
+                                    <tr class="strippedRow playListyouTubeNo<?=$vId;?> tooltipper" onmouseover="mousePop('youTube', '<?=$vId;?>', '');" onmouseout="$('.mousePop').hide();">
+                                        <td><img src="./gfx/icons/fileIcons/youTube.png" width="20px" style="margin: 5px;"></td>
+                                        <td>&nbsp;<a href="javascript: nextPlaylistItem('<?=$playListData[id];?>', '<?=$i;?>')">Youtube Video</a></td>
+                                        <?=$deleteRow;?>
+                                    </tr>
+                            <?
+                            $i++;
+
+                            }?>
+                                </table>
+		<?
+	}
+	
+	
+	function showPlaylistOld($playListId){
         $playListSql = mysql_query("SELECT * FROM playlist WHERE id='$playListId'");
         $playListData = mysql_fetch_array($playListSql);
         
@@ -2419,6 +2558,7 @@ echo"</div>";
         $str = str_replace(':)', '<a class="smiley smiley6"></a>', $str);
         $str = str_replace(':(', '<a class="smiley smiley7"></a>', $str);
         $str = str_replace(':-*', '<a class="smiley smiley8"></a>', $str);
+		$str = preg_replace("#(^|[^\"=]{1})(http://|ftp://|mailto:|https://)([^\s<>]+)([\s\n<>]|$)#sm","\\1<a target=\"_blank\" href=\"\\2\\3\">\\3</a>\\4",$str);
         # Links
         $str = preg_replace_callback("#\[itemThumb type=(.*)\ typeId=(.*)\]#", 'showChatThumb' , $str);
 
@@ -2988,7 +3128,7 @@ echo"</div>";
     
     
     
-    function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo=NULL, $extraInfo1=NULL, $extraInfo2=NULL){
+    function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo=NULL, $extraInfo1=NULL, $extraInfo2=NULL,  $extraInfo3=NULL, $extraInfo4=NULL, $extraInfo5=NULL, $subpath){
         
         
         
@@ -3017,21 +3157,21 @@ echo"</div>";
 			$elementQuery = mysql_query("SELECT * FROM elements WHERE id='$fileData[folder]'");
 			$elementData = mysql_fetch_array($elementQuery);
             
-          	$title = $fileData[title];
-			$element = $fileData[folder];
-			$elementTitle = $elementData[title];
+          	$title = $fileData['title'];
+			$element = $fileData['folder'];
+			$elementTitle = $elementData['title'];
 			if($fileData['download']){
-				$download = "<a href=\"doit.php?action=download&fileId=$fileId\" target=\"submitter\" class=\"btn btn-mini\" title=\"download file\"><img src=\"./gfx/icons/download.png\" alt=\"download\" height=\"10\"></a>";
+				$download = "<a href=\"doit.php?action=download&fileId=$fileId\" target=\"submitter\" class=\"btn btn-mini\" title=\"download file\"><img src=\"$subpath"."./gfx/icons/download.png\" alt=\"download\" height=\"10\"></a>";
 			}
             $filename = $fileData[filename];
-            $path = getFullFilePath($fileId);
+            $path = $subpath.getFullFilePath($fileId);
             
 			
     		$score = showScore("file", $fileId);
             
             //check type if type is undefined get type from db
-            if(empty($type)){
-            $type = $fileData[type];
+            if($type == NULL){
+            $type = $fileData['type'];
             }
             
         }
@@ -3116,11 +3256,12 @@ echo"</div>";
 				//is already opened
 				$fileWindowId = "playListFrame_$extraInfo1";
 				$iframeId = "playListiFrame_$extraInfo1";
+				$titleClass .= "playlist_$extraInfo1";
 				
 				//title needs to contain span with playlistid, so it can
 				//be updated from the iframe, in which the youtubevideo
 				//is located(doit => showYoutube)
-	            $title .= "<span id=\"togglePlayListTitle_$extraInfo1\" class=\"readerPlayListTitle\">$title</span>";
+	            $title = "<span id=\"togglePlayListTitle_$extraInfo1\" class=\"readerPlayListTitle\">$title</span>";
 			
 			
 				$bar .= "<div id=\"togglePlayList_$extraInfo1\" class=\"readerPlayListToggle\"></div>";
@@ -3131,13 +3272,16 @@ echo"</div>";
 		}
 		
 		if(authorize($privacy, 'show', $user) OR $type == "youTube" OR $type == "wiki"){
-	        if($type == "image/jpeg'" || $type == "image/png'" || $type == "image" ){
+	        if($type == "image/jpeg" || $type == "image/png'" || $type == "image" ){
+	        	
+				$type = 'image';
+				
 	        	//add zoom buttons to header
-	        	$bar = "<a href=\"javascript: zoomIn('$element');\" id=\"zoomIn\" class=\"btn btn-mini\" title=\"zoom in\"><img src=\"./gfx/icons/zoomIn.png\" height=\"10\" border=\"0\"></a>&nbsp;<a id=\"zoomOut\" href=\"javascript: zoomOut('$element');\" class=\"btn btn-mini\" style=\"\" title=\"zoom out\"><img src=\"./gfx/icons/zoomOut.png\" height=\"10\" border=\"0\"></a>";
+	    		$bar = "<a href=\"javascript: zoomIn('$element');\" id=\"zoomIn\" class=\"btn btn-mini\" title=\"zoom in\"><img src=\"$subpath"."gfx/icons/zoomIn.png\" height=\"10\" border=\"0\"></a>&nbsp;<a id=\"zoomOut\" href=\"javascript: zoomOut('$element');\" class=\"btn btn-mini\" style=\"\" title=\"zoom out\"><img src=\"$subpath"."gfx/icons/zoomOut.png\" height=\"10\" border=\"0\"></a>";
 	        }
 			
 	        $icon = getFileIcon($type);
-	        $icon = "<img src=\"./gfx/icons/fileIcons/$icon\" height=\"20\">";
+	        $icon = "<img src=\"$subpath"."gfx/icons/fileIcons/$icon\" height=\"20\">";
 	        
 	        $output .= "<header class=\"gray-gradient\">";
 	        $output .= $icon;
@@ -3268,11 +3412,11 @@ echo"</div>";
 	        				if(authorize($documentData[privacy], "show", $documentData[owner])){
 						        //$documentFolderSQL = mysql_query("SELECT path FROM folders WHERE id='$elementData[folder]'");
 						        //$documentFolderData = mysql_fetch_array($documentFolderSQL);
-						        if($elementData[title] == "profile pictures"){
-						        	$thumbPath = getFolderPath($elementData[folder]);    
+						        if($elementData['title'] == "profile pictures"){
+						        	$thumbPath = $subpath.getFolderPath($elementData[folder]);    
 						        	$thumbPath = "$thumbPath/thumb/300/";
 						        }else{
-						        	$thumbPath = getFolderPath($elementData[folder])."thumbs/";
+						        	$thumbPath = $subpath.getFolderPath($elementData[folder])."thumbs/";
 						        }
 								
 								
@@ -3371,7 +3515,7 @@ echo"</div>";
         return $return;
     }
     
-    function showFileBrowser($folder, $folderQuery=NULL, $elementQuery=NULL, $rightClick=true){
+    function showFileBrowser($folder, $folderQuery=NULL, $elementQuery=NULL, $rightClick=true, $subpath=NULL){
         echo'<table cellspacing="0" class="filetable">';
         
         //if folder is empty => execute folder- and elementQuery
@@ -3408,8 +3552,8 @@ echo"</div>";
         		$parentFolderData = mysql_fetch_array(mysql_query("SELECT folder FROM folders WHERE id='".mysql_real_escape_string($folder)."'"));
         		?>
 	            <tr class="strippedRow" height="30">
-	                <td width="30">&nbsp;<img src="gfx/icons/filesystem/folder.png" height="22"></td>
-	                <td><a href="./out/?folder=<?=$parentFolderData[folder];?>" onclick="openFolder('<?=$parentFolderData[folder];?>'); return false;">...</a></td>
+	                <td width="30">&nbsp;<img src="<?=$subpath;?>gfx/icons/filesystem/folder.png" height="22"></td>
+	                <td><a href="<?=$subpath;?>out/?folder=<?=$parentFolderData[folder];?>" onclick="openFolder('<?=$parentFolderData[folder];?>'); return false;">...</a></td>
 	                <td width="50px">
 	                </td>
 	                <td width="50px"></td>
@@ -3431,8 +3575,8 @@ echo"</div>";
                 <td width="30"><?php
             	if($rightClick){
             	showRightClickMenu("folder", $filefdata[id], $filefdata[name], $filefdata[creator]);
-            	}?>&nbsp;<img src="gfx/icons/filesystem/folder.png" height="22"></td>
-                <td><a href="./out/?folder=<?=$filefdata[id];?>" onclick="openFolder('<?=$filefdata[id];?>'); return false;"><?=$name;?></a></td>
+            	}?>&nbsp;<img src="<?=$subpath;?>gfx/icons/filesystem/folder.png" height="22"></td>
+                <td><a href="<?=$subpath;?>out/?folder=<?=$filefdata[id];?>" onclick="openFolder('<?=$filefdata[id];?>'); return false;"><?=$name;?></a></td>
                 <td width="50px">
                 	<?php
                 	if($rightClick){
@@ -3455,8 +3599,8 @@ echo"</div>";
 
             if(authorize($fileddata[privacy], "show", $fileddata[author])){
             echo "<tr class=\"strippedRow\" oncontextmenu=\"showMenu('element".$filefdata['id'].";'); return false;\" height=\"30\">";
-	            echo "<td width=\"30\">&nbsp;<img src=\"./gfx/icons/filesystem/element.png\" height=\"22\"></td>";
-	            echo "<td><a href=\"./out/?element=".$fileddata[id]."\" onclick=\"openElement('".$fileddata[id]."', '".addslashes($title10)."'); return false;\">$title15</a></td>";
+	            echo "<td width=\"30\">&nbsp;<img src=\"$subpath"."gfx/icons/filesystem/element.png\" height=\"22\"></td>";
+	            echo "<td><a href=\"$subpath"."out/?element=".$fileddata[id]."\" onclick=\"openElement('".$fileddata[id]."', '".addslashes($title10)."'); return false;\">$title15</a></td>";
 	            echo "<td width=\"80px\">";
 	                	if($rightClick){
 	                	echo showItemSettings('element', "$fileddata[id]");
@@ -3489,10 +3633,10 @@ echo"</div>";
                 
                 echo'<tr class="strippedRow">';
                     echo"<td>";
-                        echo"&nbsp;<img src=\"./gfx/icons/filesystem/$image\" height=\"22\"><i class=\"shortcutMark\"> </i>";
+                        echo"&nbsp;<img src=\"$subpath"."/gfx/icons/filesystem/$image\" height=\"22\"><i class=\"shortcutMark\"> </i>";
                     echo"</td>";
                     echo"<td>";
-                        echo"<a href=\"./out/?$shortCutData[type]=$shortCutData[typeId]\" onclick=\"$link\">$title</a>";
+                        echo"<a href=\"$subpath"."out/?$shortCutData[type]=$shortCutData[typeId]\" onclick=\"$link\">$title</a>";
                     echo"</td>";
                     echo"<td>";
                     echo showItemSettings("internLink", "$shortCutData[id]");
@@ -3509,7 +3653,7 @@ echo"</div>";
         
     }
     
-    function showFileList($element=NULL, $fileQuery=NULL, $git=NULL){
+    function showFileList($element=NULL, $fileQuery=NULL, $git=NULL, $subpath=NULL){
         //shows list of files which are in the element $element or which meets criteria of $fileQuery
         //if git=1 => only basic information without itemsettings etc.
         if(empty($element)){
@@ -3575,8 +3719,8 @@ echo"</div>";
                 $image = getFileIcon($fileListData[type]);
                     ?>
                     <tr class="strippedRow file_<?=$fileListData[id];?>" oncontextmenu="showMenu('file<?=$fileListData[id];?>'); return false;" height="40px">
-                        <td width="30px">&nbsp;<img src="./gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData[type];?>" height="22"></td>
-                        <td><a href="./out/?file=<?=$fileListData[id];?>" onclick="<?=$link;?> return false"><?=substr($fileListData[title],0,30);?></a></td>
+                        <td width="30px">&nbsp;<img src="<?=$subpath;?>gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData[type];?>" height="22"></td>
+                        <td><a href="<?=$subpath;?>out/?file=<?=$fileListData[id];?>" onclick="<?=$link;?> return false"><?=substr($fileListData[title],0,30);?></a></td>
                         <td width="80" align="right">
                         		<? if($fileListData['download']){ ?><a href="doit.php?action=download&fileId=<?=$fileListData[id];?>" target="submitter" class="btn btn-mini" title="download file"><i class="icon-download"></i></a><? } ?>
                                 <? if(!$git){echo showItemSettings('file', "$fileListData[id]");}?></td>
@@ -3611,7 +3755,7 @@ echo"</div>";
                     $i++;
                 ?>
                 <tr bgcolor="#<?=$color;?>" class="strippedRow link_<?=$linkListData[id];?>" oncontextmenu="showMenu('link<?=$linkListData[id];?>'); return false;" height="22px">
-                    <td width="65px">&nbsp;<img src="./gfx/icons/fileIcons/<?=$image;?>" alt="<?=$linkListData[type];?>" height="22px"></td>
+                    <td width="65px">&nbsp;<img src="<?=$subpath;?>gfx/icons/fileIcons/<?=$image;?>" alt="<?=$linkListData[type];?>" height="22px"></td>
                     <td><a href="#" onclick="<?=$link;?>"><?=substr($linkListData[title],0,30);?></a></td>
                     <td width="70" align="right"><?=showItemSettings('link', $linkListData[id]);?></td>
                     <td><?=showScore(link, $linkListData[id]);?></td>
@@ -3674,7 +3818,7 @@ echo"</div>";
 
                     echo'<tr>';
                         echo'<td>';
-                            echo'&nbsp;<img src=\"./gfx/icons/fileIcons/$image\" height=\"22\"><i class=\"shortcutMark\"> </i>';
+                            echo"&nbsp;<img src=\"$subpath"."gfx/icons/fileIcons/$image\" height=\"22\"><i class=\"shortcutMark\"> </i>";
                         echo"</td>";
                         echo'<td colspan="3">';
                             echo"<a href=\"./out/?$shortCutData[type]=$shortCutData[typeId]\" onclick=\"$link return false\">$title</a>";
@@ -3884,58 +4028,192 @@ echo"</div>";
 	}
 
 	function protectFilesystemItem($type, $typeId){
-		$type = save($type);
-		$typeId = save($typeId);
-		
-		switch($type){
-			case folder:
-				
-				$folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
-				$folderData = mysql_fetch_array($folderSQL);
-				
-				$privacy = $folderData[privacy];
-				$privacy .= ";PROTECTED";
-				
-				
-				mysql_query("UPDATE `folders` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-				
-				
-				break;
-			case element:
-				
-				$elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
-				$elementData = mysql_fetch_array($elementSQL);
-				$privacy = $elementData[privacy];
-				$privacy .= ";PROTECTED";
-				
-				
-				mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-				
-				
-				break;
-			case file:
-				$fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
-				$fileData = mysql_fetch_array($fileSQL);
-				$privacy = $fileData[privacy];
-				$privacy .= ";PROTECTED";
-				
-				
-				mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-				break;
-			case link:
-				$linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
-				$linkData = mysql_fetch_array($linkSQL);
-				
-				
-				$privacy = $linkData[privacy];
-				$privacy .= ";PROTECTED";
-				
-				
-				mysql_query("UPDATE `links` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-				break;
+		if(hasRight('protectFileSystemItems')){
+			$type = save($type);
+			$typeId = save($typeId);
+			
+			switch($type){
+				case folder:
+					
+					$folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
+					$folderData = mysql_fetch_array($folderSQL);
+					
+					$privacy = $folderData[privacy];
+					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
+					$privacy .= ";PROTECTED";
+					}
+					
+					mysql_query("UPDATE `folders` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+					
+					
+					break;
+				case element:
+					
+					$elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
+					$elementData = mysql_fetch_array($elementSQL);
+					$privacy = $elementData[privacy];
+					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
+					$privacy .= ";PROTECTED";
+					}
+					
+					
+					mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+					
+					
+					break;
+				case file:
+					$fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
+					$fileData = mysql_fetch_array($fileSQL);
+					$privacy = $fileData[privacy];
+					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
+					$privacy .= ";PROTECTED";
+					}
+					
+					mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+					break;
+				case link:
+					$linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
+					$linkData = mysql_fetch_array($linkSQL);
+					
+					
+					$privacy = $linkData[privacy];
+					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
+					$privacy .= ";PROTECTED";
+					}
+					
+					
+					mysql_query("UPDATE `links` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+					break;
+			}
+		}else{
+			jsAlert("You dont have the rights to protect an Item.");
 		}
 	}
 	function removeProtectionFromFilesystemItem($type, $typeId){
+		
+		if(hasRight('editProtectedFilesystemItem')){
+			$type = save($type);
+			$typeId = save($typeId);
+			
+			switch($type){
+				case folder:
+					
+					$folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
+					$folderData = mysql_fetch_array($folderSQL);
+					
+					$privacy = $folderData[privacy];
+					$privacy = str_replace(";PROTECTED", "", $privacy);
+					
+					
+					mysql_query("UPDATE `folders` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+					
+					
+					break;
+				case element:
+					
+					$elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
+					$elementData = mysql_fetch_array($elementSQL);
+					
+					$privacy = $elementData[privacy];
+					$privacy .= ";PROTECTED";
+					
+					
+					mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+					
+					
+					break;
+				case file:
+					$fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
+					$fileData = mysql_fetch_array($fileSQL);
+					$privacy = $fileData[privacy];
+					$privacy .= ";PROTECTED";
+					
+					
+					mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+					break;
+				case link:
+					$linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
+					$linkData = mysql_fetch_array($linkSQL);
+					
+					
+					$privacy = $linkData[privacy];
+					$privacy .= ";PROTECTED";
+					
+					
+					mysql_query("UPDATE `links` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+					break;
+			}
+		}else{
+			jsAlert("You do not have the rights to edit protected files.");
+		}
+	}
+
+	function makeFilesystemItemUndeletable($type, $typeId){
+		
+		if(hasRight('undeletableFilesystemItems')){
+			$type = save($type);
+			$typeId = save($typeId);
+			switch($type){
+				case folder:
+					
+					$folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
+					$folderData = mysql_fetch_array($folderSQL);
+					
+					$privacy = $folderData['privacy'];
+					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
+						$privacy .= ";UNDELETABLE";
+					}
+					
+					
+					mysql_query("UPDATE `folders` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+					
+					
+					break;
+				case element:
+					
+					$elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
+					$elementData = mysql_fetch_array($elementSQL);
+					$privacy = $elementData[privacy];
+					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
+						$privacy .= ";UNDELETABLE";
+					}
+					
+					
+					mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+					
+					
+					break;
+				case file:
+					$fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
+					$fileData = mysql_fetch_array($fileSQL);
+					$privacy = $fileData[privacy];
+					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
+						$privacy .= ";UNDELETABLE";
+					}
+					
+					
+					mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+					break;
+				case link:
+					$linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
+					$linkData = mysql_fetch_array($linkSQL);
+					
+					
+					$privacy = $linkData[privacy];
+					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
+						$privacy .= ";UNDELETABLE";
+					}
+					
+					
+					mysql_query("UPDATE `links` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+					break;
+			}
+		}else{
+			jsAlert("You do not have the right to make Items undeletable.");
+		}
+	}
+	function makeFilesystemItemDeletable($type, $typeId){
+		if(hasRight("editUndeletableFilesystemItems")){
 		$type = save($type);
 		$typeId = save($typeId);
 		
@@ -3946,7 +4224,7 @@ echo"</div>";
 				$folderData = mysql_fetch_array($folderSQL);
 				
 				$privacy = $folderData[privacy];
-				$privacy = str_replace(";PROTECTED", "", $privacy);
+				$privacy = str_replace(";UNDELETABLE", "", $privacy);
 				
 				
 				mysql_query("UPDATE `folders` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
@@ -3959,7 +4237,7 @@ echo"</div>";
 				$elementData = mysql_fetch_array($elementSQL);
 				
 				$privacy = $elementData[privacy];
-				$privacy .= ";PROTECTED";
+				$privacy = str_replace(";UNDELETABLE", "", $privacy);
 				
 				
 				mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
@@ -3970,7 +4248,7 @@ echo"</div>";
 				$fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
 				$fileData = mysql_fetch_array($fileSQL);
 				$privacy = $fileData[privacy];
-				$privacy .= ";PROTECTED";
+				$privacy = str_replace(";UNDELETABLE", "", $privacy);
 				
 				
 				mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
@@ -3981,15 +4259,19 @@ echo"</div>";
 				
 				
 				$privacy = $linkData[privacy];
-				$privacy .= ";PROTECTED";
+				$privacy = str_replace(";UNDELETABLE", "", $privacy);
 				
 				
 				mysql_query("UPDATE `links` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
 				break;
 		}
+		}else{
+			jsAlert("You dont have the right to edit undeletable Items.");
+		}
 	}
+	
     //shows a picture of element or folder if available
-  	function showThumb($type, $itemId){
+	function showThumb($type, $itemId){
         switch($type){
             case 'folder':
                 $elementSQL = mysql_query("SELECT id FROM elements WHERE folder='$itemId' ORDER BY RAND() LIMIT 0,1");
