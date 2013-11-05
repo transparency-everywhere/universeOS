@@ -1,7 +1,3 @@
-<?php
-
-session_start();
-error_reporting(0) ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -21,7 +17,6 @@ error_reporting(0) ?>
 
 <!-- navigation -->
 <nav><span class="imgcenter"><img src="Unbenannt-2.png" width="303" height="117"  alt=""/></span></nav>
-
 <!-- contentbox -->
 <section id="content">
   
@@ -82,11 +77,17 @@ error_reporting(0) ?>
 		$dbname = $_SESSION['db'];
 		
 		$Datei = "inc/config/test.php";
-		$text .= "<?php ";
-		$text .= "?>";
+		$Text = "
+	<?php
+	$server = $serverdb;
+	$user = $userdb;
+	$password = $passworddb;
+	$db = $dbname;
+	?>
+	";
 		
 		$File = fopen($Datei, "w");
-		fwrite($File, $text);
+		fwrite($File, $Text);
 		fclose($File);
 
 		
@@ -192,5 +193,6 @@ error_reporting(0) ?>
 </footer>
 
 </section>
+<dock></dock>
 </body>
 </html>
