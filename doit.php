@@ -1,4 +1,4 @@
-<?PHP
+   <?PHP
 session_start();
 include("inc/config.php");
 include("inc/functions.php");
@@ -99,10 +99,19 @@ if($_GET['action'] == "scorePlus"){
 		<script>
 			parent.$('.friendButton_<?=$buddy;?>').html('request sent');
 			parent.$('.friendButton_<?=$buddy;?>').addClass("disabled");
+			parent.$('#buddySuggestions').load('doit.php?action=showBuddySuggestList');
 		</script>
 		<?
-     }
-     else if($_GET['action'] == "download"){
+     }else if($_GET['action'] == "addToNotSuggestList"){
+     	
+		 addToNotSuggestList($_GET['user']);
+		 echo"<script>parent.$('#buddySuggestions').load('doit.php?action=showBuddySuggestList');</script>";
+		 
+     }else if($_GET['action'] == "showBuddySuggestList"){
+     	$false = false;
+		showBuddySuggestions($false);
+     }else if($_GET['action'] == "download"){
+     	
         $documentSQL = mysql_query("SELECT id, title, type, filename, privacy, owner FROM files WHERE id='".save($_GET['fileId'])."'");
         $documentData = mysql_fetch_array($documentSQL); 
 		if(authorize($documentData['privacy'], "show", $documentData['owner'])){
@@ -1227,6 +1236,19 @@ if($_GET['action'] == "scorePlus"){
 	            }
 	            
 	        }
+        }else if($_GET['action'] == "chatReload"){
+        	
+		  $buddyName = $_GET['buddyName'];
+		  $buddy = usernameToUserid($buddyName);
+			
+			
+          echo'<script>';
+		   	echo"chatEncrypt('$buddyName');";
+		  echo'</script>';
+          echo"<div class=\"chatMainFrame_<?=$buddyName;?>\">";
+			  showMessages(getUser(), $buddy, "0,10");
+          echo"<div onclick=\"chatLoadMore('<?=$buddyName;?>', '1');\">...load more</div>";
+          echo'</div>';
         }else if($_GET['action'] == "chatLoadMore"){
             
             $userid = getUser();
@@ -1242,46 +1264,12 @@ if($_GET['action'] == "scorePlus"){
             $limit = ($limit).",".($limit+10);
             
             
-            
-            $chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' && receiver='$buddy' OR sender='$buddy' && receiver='$userid' ORDER BY timestamp DESC LIMIT $limit");
-                while($chatData = mysql_fetch_array($chatSQL)) {
-
-                    if($chatData[receiver] == $_SESSION[userid] && $chatData[read] == "0"){
-                    mysql_query("UPDATE `messages` SET  `read`='1' WHERE  id='$chatData[id]'");
-                    }
-                    if($chatData[sender] == $_SESSION[userid] && $chatData[seen] == "0"){
-                    mysql_query("UPDATE `messages` SET  `seen`='1' WHERE  id='$chatData[id]'");
-                    }
-
-                    $sender = $chatData[sender];
-                    $whileid = $_SESSION[userid];
-                    if($sender == $whileid){
-                    $authorid =  $userData[userid];
-                    $authorName = $userData[username];
-                    $authorImage = $userData[userPicture];
-                    $reverse = NULL;
-                    $css = 'messageOut'; 
-                    $css = 'margin-right: 15px; margin-left: 5px;';
-                    } else {
-
-                    $authorid =  $buddyData[userid];
-                    $authorName = $buddyData[username];
-                    $authorImage = $buddyData[userPicture]; 
-                    $css = 'margin-left: 15px; margin-right: 5px;';
-                    $reverse = "1";   
-                    }
-                    if($chatData[crypt] == "1"){
-                        if(isset($_SESSION[$intWindows])){
-                        $message = universeDecode("$chatData[text]", "$_SESSION[$intWindows]");
-                    }else{
-                        $message = "[s]crypted[/s]";
-                    }} else{
-                        $message = $chatData[text];
-                    }
-                    $message = universeText($message);
-                    ?>
-                              <div class="box-shadow space-top border-radius chatText" style="<?=$css;?> padding: 10px;"><span style="position: absolute; margin-top: -20px; color: #c0c0c0;"><?=showUserPicture($authorid, "15");?><?=$authorName;?></span><?=$message;?></div>
-                <? }
+	
+	
+           		showMessages($userid, $buddy, $limit);
+				
+				
+				
                 echo "<div onclick=\"chatLoadMore('$buddyName', '$newLimit'); $(this).hide();\">...load more</div>";
             
                 
@@ -2417,6 +2405,64 @@ if($_GET['action'] == "scorePlus"){
                         </div>
                 </div>
             <?    
+            }else if($_GET['action'] == "validateTempFile"){
+				 if(validateTempFile($_POST['fileid'], $privacy))
+				 	echo'true';
+				 else
+				 	echo'false';
+				
+            }else if($_GET['action'] == "submitUploader"){
+			//handler for form submit in upload.php
+			//adds privacy and removes temp status
+			//from temp files
+			
+            	 
+				 
+			    //set privacy
+			    $customShow = $_POST['privacyCustomSee'];
+			    $customEdit = $_POST['privacyCustomEdit'];
+			    
+			    $privacy = exploitPrivacy("$_POST[privacyPublic]", "$_POST[privacyHidden]", $customEdit, $customShow);
+				
+				$files = $_POST['uploadedFiles'];
+				$successfullUploadedFiles = 0;
+				foreach($files AS $file){
+					$woff .= $file;
+					if(validateTempFile($file, $privacy)){
+						$successfullUploadedFiles++;
+					}else
+						$filesWithError[] = $file; //add fileid to error list
+				}
+				echo'<script>parent.deleteTab("Upload File");</script>';
+				jsAlert("The files have successfully been added to the Element. $woff $files");
+			
+				
+			
+				
+            }else if($_GET['action'] == "manageUpload"){
+            	
+            	switch($_GET['type']){
+            		
+					
+					case 'uploadTemp':
+						
+						//upload temp_file
+            			$file = $_FILES['Filedata'];
+						
+						
+						$id = uploadTempfile($file, $_POST['element'], '', $privacy, $user);
+						$li = "<li data-fileid=\"$id\">     <img src=\"gfx/icons/fileIcons/".getFileIcon(getMime($file['name']))."\" height=\"16\">     ".$file['name']."      <input type=\"hidden\" name=\"uploadedFiles[]\" value=\"$id\">    <i class=\"icon-remove pointer pull-right\" onclick=\"$(this).parent(\\'li\\').remove()\"></i></li>";
+						
+						//add file to filelist in the uploader
+						echo'$(".tempFilelist").append(\''.$li.'\');';
+						
+						//echo'</script>';
+						break;
+					case 'validateUpload':
+						
+						break;
+            		
+            	}
             }else if($_GET['action'] == "feedUpload"){
             if(proofLogin()){
             if(empty($_FILES['feedFile']['tmp_name'])){
@@ -2753,8 +2799,9 @@ if($_GET['action'] == "scorePlus"){
 				}
             	
             }else if($_GET['action'] == "tester"){
-            	echo "woff";
-echo getMime('dings.pdf') . "\n";
-echo mime_content_type('test.pdf');
+            	addToNotSuggestList(12122);
+
+            	$lists = getNotSuggestList();
+				var_dump($lists);
             }
 ?>

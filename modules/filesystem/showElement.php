@@ -70,7 +70,7 @@ if($elementData[type] == "image"){
 	    	<?
 	    	if(proofLogin() && $bar){
 	    	?>
-	        <a href="javascript: popper('./modules/filesystem/addFile.php?element=<?=$_GET[element];?>')" class="btn btn-info"><i class="icon-file icon-white"></i>&nbsp;add File</a>&nbsp;
+	        <a href="javascript: openUploadTab('<?=$_GET[element];?>');" class="btn btn-info"><i class="icon-file icon-white"></i>&nbsp;add File</a>&nbsp;
 	        <a href="javascript: popper('./doit.php?action=addLink&element=<?=$_GET[element];?>')" class="btn btn-info"><i class="icon-globe icon-white"></i>&nbsp;add Link</a>
 			<? }
 			
@@ -142,7 +142,7 @@ if($elementData[type] == "image"){
     	if(proofLogin()){
     	?>
     	<a class="btn btn-info" href="#" onclick="loader('loader', 'doit.php?action=createNewUFF&element=<?=$element;?>'); " target="submitter"><i class="icon-file icon-white"></i> Create Document</a>
-        <a href="javascript: popper('./modules/filesystem/addFile.php?element=<?=$_GET['element'];?>')" class="btn btn-info"><i class="icon-file icon-white"></i>&nbsp;Upload File</a>
+        <a href="javascript: openUploadTab('<?=$_GET[element];?>');" class="btn btn-info"><i class="icon-file icon-white"></i>&nbsp;Upload File</a>
         &nbsp;<a href="javascript: popper('./doit.php?action=addLink&element=<?=$_GET['element'];?>')" class="btn btn-info"><i class="icon-globe icon-white"></i>&nbsp;Add Link</a>
         <a href="#" onclick="popper('doit.php?action=addInternLink&parentElement=<?=$_GET['element'];?>&reload=1');return false" class="btn btn-info"><i class="icon-share-alt icon-white"></i>&nbsp;Add Shortcut</a>
 		<? } ?>

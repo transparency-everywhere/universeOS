@@ -8,15 +8,50 @@ $action = $_GET[action];
 
 
 switch($action){
+    case login:
+		//new version
+		if(empty($_POST['username']))
+			$username = save($_GET['username']);
+		else 
+			$username = save($_POST['username']);
+		
+        $loginSQL = mysql_query("SELECT username, password FROM user WHERE username='$username'");
+        $loginData = mysql_fetch_array($loginSQL);
+        
+        
+        $dbPassword = $loginData['password'];
+        $dbPassword = hash('sha1', $dbPassword);
+		
+		if(empty($_POST['signature']))
+			$password = $_GET['signature'];
+		else 
+			$password = $_POST['signature'];
+		
+        if($password == $dbPassword){
+        echo"true";
+        }else{
+            echo"false";
+        }
+    break;
     case messengerLogin:
-        $username = save($_POST[username]);
+		if(empty($_POST[username]))
+			$username = save($_GET[username]);
+		else 
+			$username = save($_POST[username]);
+		
         $loginSQL = mysql_query("SELECT username, password FROM user WHERE username='$username'");
         $loginData = mysql_fetch_array($loginSQL);
         
         
         $dbPassword = $loginData[password];
         $dbPassword = hash('sha1', $dbPassword);
-        if($_POST[password] == $dbPassword){
+		
+		if(empty($_POST[password]))
+			$password = $_GET[password];
+		else 
+			$password = $_POST[password];
+		
+        if($password == $dbPassword){
         echo"true";
         }else{
             echo"false";

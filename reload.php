@@ -108,10 +108,10 @@ if(isset($newMessagesOn)){
       
       $('#chat').show();
       
-      $("#test_<?=str_replace(" ","_",$newMessageUserData[username]);?>").load("modules/chat/chatt.php?buddy=<?=str_replace(" ","_",$buddy);?>&reload=1&initter=1");
+      $("#test_<?=str_replace(" ","_",$newMessageUserData[username]);?>").load("modules/chat/chatreload.php?buddy=<?=str_replace(" ","_",$buddy);?>&reload=1&initter=1");
         
         if($("#test_<?=str_replace(" ","_",$newMessageUserData[username]);?>").length == 0){
-            createNewTab('chat_tabView1','<?=$newMessageUserData[username];?>','','modules/chat/chatt.php?buddy=<?=str_replace(" ","_",$newMessageUserData[username]);?>',true);
+            createNewTab('chat_tabView1','<?=$newMessageUserData[username];?>','','modules/chat/chatreload.php?buddy=<?=str_replace(" ","_",$newMessageUserData[username]);?>',true);
             return false
         }
        $("#chatInput_<?=$newMessageUserData[userid];?>").click( function(){

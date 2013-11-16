@@ -24,13 +24,13 @@ if(empty($_GET[reload])){
     ?>
                 <tr class="strippedRow height60">
 	                 <td style="padding-left: 3px; width: 35px;"><?=showUserPicture($buddy, "30");?></td>
-	                 <td><a href="#" onclick="openChatDialoge('<?=$username;?>');"><?=$username;?></a></td>
-	                 <td align="right">
+	                 <td><a href="#" onclick="openChatDialoge('<?=$username;?>');"><?=$username;?></a><br><a href="#" onclick="openChatDialoge('<?=$username;?>');" class="realname"><?=useridToRealname($buddy);?></a></td>
+	                 <td align="right" style="padding-right: 3px;">
 	                 	
 	                 	<div class="btn-toolbar">
 						  <div class="btn-group">
-						    <a class="btn btn-mini" href="#" onclick="showProfile('<?=$buddy;?>')"><i class="icon-user"></i></a>
-						    <a class="btn btn-mini" href="#" onclick="popper('doit.php?action=writeMessage&buddy=<?=$buddy;?>')"><i class="icon-envelope"></i></a>
+						    <a class="btn btn-mini" href="#" onclick="showProfile('<?=$buddy;?>')" title="open Profile"><i class="icon-user"></i></a>
+						    <a class="btn btn-mini" href="#" onclick="popper('doit.php?action=writeMessage&buddy=<?=$buddy;?>')" title="write Message"><i class="icon-envelope"></i></a>
 						  </div>
 						</div>
 					 </td>
@@ -52,25 +52,9 @@ if(empty($i)){
 }?>
         </div>
    </div>
-   <?
-$mayKnow = friendsYouMayKnow();
-if(!empty($mayKnow)){
-	
-	echo"<div id=\"buddySuggestions\">";
-	echo"<header>";
-	echo"&nbsp;you may know";
-	echo"<a id=\"closeSuggestions\" onclick=\"$('#buddySuggestions').hide();\">x</a>";
-	echo"</header>";
-	echo"&nbsp<a href=\"#\" onclick=\"showProfile('$mayKnow')\">";
-	echo"&nbsp;";
-	echo"<span>";
-	echo showUserPicture($mayKnow, 11);
-	echo"</span>";
-	echo useridToUsername($mayKnow);
-	echo"</a>";
-	echo"</div>";
-	
-}
-?>
+   
+   	<?
+	showBuddySuggestions();
+	?>
 </div>
 <? } ?>
