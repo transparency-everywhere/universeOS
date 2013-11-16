@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `comments` (
   `score` varchar(255) NOT NULL DEFAULT '0',
   `privacy` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `elements` (
   `votes` int(11) NOT NULL DEFAULT '0',
   `score` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 
 --
 -- Daten für Tabelle `elements`
@@ -137,7 +137,7 @@ CREATE TABLE IF NOT EXISTS `feed` (
   `votes` int(11) NOT NULL,
   `score` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -159,9 +159,11 @@ CREATE TABLE IF NOT EXISTS `files` (
   `score` int(11) NOT NULL DEFAULT '0',
   `privacy` varchar(255) NOT NULL DEFAULT 'p',
   `download` tinyint(1) NOT NULL,
+  `temp` tinyint(1) NOT NULL,
   `var1` text NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -181,7 +183,7 @@ CREATE TABLE IF NOT EXISTS `folders` (
   `votes` int(11) NOT NULL DEFAULT '0',
   `score` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Daten für Tabelle `folders`
@@ -209,7 +211,7 @@ CREATE TABLE IF NOT EXISTS `groupAttachments` (
   `timestamp` int(11) NOT NULL,
   `validated` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -227,7 +229,7 @@ CREATE TABLE IF NOT EXISTS `groups` (
   `homeFolder` int(11) NOT NULL,
   `homeElement` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -281,7 +283,7 @@ CREATE TABLE IF NOT EXISTS `messages` (
   `crypt` int(11) NOT NULL DEFAULT '0',
   `seen` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -299,7 +301,7 @@ CREATE TABLE IF NOT EXISTS `personalEvents` (
   `timestamp` int(11) NOT NULL,
   `seen` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -319,7 +321,7 @@ CREATE TABLE IF NOT EXISTS `playlist` (
   `privacy` varchar(255) NOT NULL,
   `played` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -364,6 +366,7 @@ INSERT INTO `staticContents` (`id`, `title`, `content`, `comment`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `user` (
+ CREATE TABLE IF NOT EXISTS `user` (
   `userid` int(11) NOT NULL AUTO_INCREMENT,
   `usergroup` int(11) NOT NULL DEFAULT '0',
   `username` varchar(255) NOT NULL,
@@ -402,8 +405,9 @@ CREATE TABLE IF NOT EXISTS `user` (
   `hash` varchar(255) NOT NULL,
   `backgroundImg` text NOT NULL,
   `startLink` varchar(255) NOT NULL DEFAULT 'doit.php?action=showStartMessage',
+  `buddySuggestions` text NOT NULL COMMENT 'is used to save already suggested users',
   PRIMARY KEY (`userid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Daten für Tabelle `user`
