@@ -1,11 +1,9 @@
 
 <header>
-<h2>Congratulions!</h2>
+<h2>Congratulations!</h2>
 </header>
-	
-<h1>&nbsp;</h1>
+<div class="content">
 <p>You successfully installed the UniverseOS.</p>
 <p></p>
-<p>Enjoy it!</p>
-<p></p>
-<p>&nbsp; </p>
+<p>Use it wise!</p>
+</div>
