@@ -20,7 +20,7 @@ if(!empty($_GET['folder'])){
 }else if(!empty($_GET['file'])){
 	$type = "File";
 	$fileId = $_GET['file'];
-	$query = mysql_query("SELECT `title` FROM `files` WHERE id='".mysql_real_escape_string($fileId)."'");
+	$query = mysql_query("SELECT `title`, `type` FROM `files` WHERE id='".mysql_real_escape_string($fileId)."'");
 	$data = mysql_fetch_array($query);
 	$title = $data['title'];
 }
@@ -69,7 +69,7 @@ switch($type){
 	case "File":
 						echo"</table>";
 						echo '<div class="openFile">';
-                        echo openFile($fileId, $linkId, '', '', '', '', '', '', '', '', '../');
+                        echo openFile($fileId, '', $data['type'], '', '', '', '', '', '', '', '../');
 						echo '</div>';
 						echo"<table>";
 		break;
