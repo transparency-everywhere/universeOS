@@ -365,7 +365,6 @@ INSERT INTO `staticContents` (`id`, `title`, `content`, `comment`) VALUES
 -- Tabellenstruktur für Tabelle `user`
 --
 
-CREATE TABLE IF NOT EXISTS `user` (
  CREATE TABLE IF NOT EXISTS `user` (
   `userid` int(11) NOT NULL AUTO_INCREMENT,
   `usergroup` int(11) NOT NULL DEFAULT '0',
