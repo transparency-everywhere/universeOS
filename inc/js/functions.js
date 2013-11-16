@@ -1,5 +1,7 @@
 //initialize
 var usernames = [];
+var focus = true;
+
                 $(document).ready(function(){
                 			
                 	//init search
@@ -436,16 +438,23 @@ var usernames = [];
         createNewTab('fileBrowser_tabView', 'Upload File','','modules/filesystem/upload.php?element='+element,true);return true
 	}
 	
-	function initUploadify(id, uploader, timestamp, token){
+	function initUploadify(id, uploader, element, timestamp, token){
 		
 	    $(function() {
 	            $(id).uploadify({
 	                    'formData'     : {
 	                            'timestamp' : timestamp,
-	                            'token'     : token
+	                            'token'     : token,
+	                            'element'     : element
 	                    },
 	                    'swf'      : 'inc/plugins/uploadify/uploadify.swf',
 	                    'uploader' : uploader,
+				        'onUploadSuccess' : function(file, data, response) {
+				        	
+				        	if(response){
+				        		eval(data);
+				        	}
+				        },
 	                    'onUploadError' : function(file, errorCode, errorMsg, errorString) {
 	                        alert('The file ' + file.name + ' could not be uploaded: ' + errorString);
 	                    }
@@ -636,7 +645,7 @@ var usernames = [];
             
             	//check if dialoge allready exists
                 if($("#test_"+ username +"").length == 0){
-                    createNewTab('chat_tabView1',username,'',"modules/chat/chatt.php?buddy="+username+"",true);
+                    createNewTab('chat_tabView1',username,'',"modules/chat/chatreload.php?buddy="+username+"",true);
                     
                 }else{
                 	//if dialoge doesnt exists => bring dialoge to front..
@@ -701,7 +710,7 @@ var usernames = [];
     }
     
     function chatSubmit(username){
-        $("#chatWindow_" + username + "").load("modules/chat/chatt.php?buddy=" + username + "&reload=1");
+        $("#chatWindow_" + username + "").load("modules/chat/chatreload.php?buddy=" + username + "&reload=1");
     }
     
     function chatMessageSubmit(username, userid){

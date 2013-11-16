@@ -281,7 +281,11 @@
 	        }
 			//check if person has rights to protect filesystem items of changes
 			if(hasRight("protectFileSystemItems")){
-				$protect = "<li><a href=\"javascript: popper('doit.php?action=protectFileSystemItems&type=folder&itemId=$itemId')\">Protect</a></li>";
+				if(!isProtected($checkFolderData[privacy]))
+					$protect = "<li><a href=\"javascript: popper('doit.php?action=protectFileSystemItems&type=folder&itemId=$itemId')\">Protect</a></li>";
+				else
+					$protect = "<li><a href=\"javascript: popper('doit.php?action=protectFileSystemItems&type=folder&itemId=$itemId')\">Unprotect</a></li>";
+					
 			}
 			//check if person has rights to make files undeletable
 			if(hasRight("undeletableFilesystemItems")){
@@ -290,7 +294,7 @@
         }elseif($type == "element"){
             $checkElementSql = mysql_query("SELECT privacy, author FROM elements WHERE id='$itemId'");
             $checkElementData = mysql_fetch_array($checkElementSql);
-            if(authorize($checkElementData[privacy], "edit", $checkElementData[author])){
+            if(authorize($checkElementData['privacy'], "edit", $checkElementData[author])){
                 $privacy = "<li><a href=\"javascript: popper('doit.php?action=changePrivacy&type=element&itemId=$itemId')\">Privacy</a></li>";
                 $edit = "<li><a href=\"#\" onclick=\"popper('doit.php?action=editItem&type=element&itemId=$itemId')\" target=\"submitter\">Edit</a></li>";
                 $delete = "<li><a href=\"#\" onclick=\"popper('doit.php?action=deleteItem&type=element&itemId=$itemId')\" target=\"submitter\">Delete</a></li>";
@@ -299,12 +303,13 @@
 	          	$fav = "<li><a href=\"doit.php?action=addFav&type=element&item=$itemId\" target=\"submitter\">Add to Fav</a></li>";
 	        }
 			if(hasRight("protectFileSystemItems")){
-				$protect = "<li><a href=\"javascript: popper('doit.php?action=protectFileSystemItems&type=element&itemId=$itemId')\">Protect</a></li>";
+				if(!isProtected($checkElementData['privacy']))
+					$protect = "<li><a href=\"javascript: popper('doit.php?action=protectFileSystemItems&type=element&itemId=$itemId')\">Protect</a></li>";
 			}
         }elseif($type == "file"){
             $checkFileSql = mysql_query("SELECT privacy, owner FROM files WHERE id='$itemId'");
             $checkFileData = mysql_fetch_array($checkFileSql);
-            if(authorize($checkFileData[privacy], "edit", $checkFileData[owner])){
+            if(authorize($checkFileData['privacy'], "edit", $checkFileData[owner])){
                 $privacy = "<li><a href=\"javascript: popper('doit.php?action=changePrivacy&type=file&itemId=$itemId')\">Privacy</a></li>";
                 $delete = "<li><a href=\"doit.php?action=deleteItem&type=file&itemId=$itemId\" target=\"submitter\">Delete</a></li>";  
                 
@@ -314,12 +319,13 @@
 			}
             $report = "<li><a href=\"javascript: popper('doit.php?action=reportFile&fileId=$itemId')\">Report</a></li>";
 			if(hasRight("protectFileSystemItems")){
-				$protect = "<li><a href=\"javascript: popper('doit.php?action=protectFileSystemItems&type=file&itemId=$itemId')\">Protect</a></li>";
+				if(!isProtected($checkFileData['privacy']))
+					$protect = "<li><a href=\"javascript: popper('doit.php?action=protectFileSystemItems&type=file&itemId=$itemId')\">Protect</a></li>";
 			}
         }elseif($type == "link"){
             $checkLinkSql = mysql_query("SELECT privacy, author FROM links WHERE id='$itemId'");
             $checkLinkData = mysql_fetch_array($checkLinkSql);
-            if(authorize($checkLinkData[privacy], "edit", $checkLinkData[author])){
+            if(authorize($checkLinkData['privacy'], "edit", $checkLinkData[author])){
                 $privacy = "<li><a href=\"javascript: popper('doit.php?action=changePrivacy&type=link&itemId=$itemId')\">Privacy</a></li>";
 				$edit = "<li><a href=\"#\" onclick=\"popper('doit.php?action=editItem&type=link&itemId=$itemId')\" target=\"submitter\">Edit</a></li>";
                 
@@ -330,6 +336,7 @@
 			} 
                             $report = "<li><a href=\"javascript: popper('doit.php?action=reportFile&fileId=$itemId')\">Report</a></li>";
 			if(hasRight("protectFileSystemItems")){
+				if(!isProtected($checkLinkData['privacy']))
                             $protect = "<li><a href=\"javascript: popper('doit.php?action=protectFileSystemItems&type=link&itemId=$itemId')\">Protect</a></li>";
 			}
         }else if($type == "internLink"){
@@ -416,7 +423,7 @@
           $open = "<li><a href=\"#\" onclick=\"openFile('$info1', '$itemId', '$title');\">Open</a>";
           $fav = "<li><a href=\"doit.php?action=addFav&type=file&item=$itemId\" target=\"submitter\">Add to Fav</a></li>";
           $playList = "<li><a href=\"javascript: popper('doit.php?action=addFileToPlaylist&file=$itemId')\">Add to Playlist</a></li>";
-          $download = "<li><a href=\"doit.php?action=download&fileId=$itemId\">download</a></li>";
+          $download = "<li><a href=\"./out/download/?fileId=$itemId\">download</a></li>";
       }
         if($type == "image"){
           $checkFileSql = mysql_query("SELECT privacy, owner FROM files WHERE id='$itemId'");
@@ -424,7 +431,7 @@
 	          $open = "<li><a href=\"#\" onclick=\"openFile('image', '$itemId', '$title');\">Open</a>";
 	          $background = "<li><a href=\"doit.php?action=changeBackgroundImage&type=file&id=$itemId\" target=\"submitter\">set as background</a></li>";
 	          $fav = "<li><a href=\"doit.php?action=addFav&type=file&item=$itemId\" target=\"submitter\">Add to Fav</a></li>";
-	          $download = "<li><a href=\"doit.php?action=download&fileId=$itemId\">download</a></li>";
+	          $download = "<li><a href=\"./out/download/?fileId=$itemId\">download</a></li>";
 	      if(authorize($checkFileData[privacy], "edit", $checkFileData[owner])){
           	  $delete = "<li><a href=\"doit.php?action=deleteItem&type=file&itemId=$itemId\" target=\"submitter\">Delete</a></li>";
           }
@@ -577,10 +584,10 @@
   	
   }
   
-  function hasLies($type){
-	  return $global_userGroupData["protectFileSystemItems"];
-  	
-  }
+  // function hasLies($type){
+	  // return $global_userGroupData["protectFileSystemItems"];
+//   	
+  // }
   
   function checkMobileAuthentification($username, $hash){
       
@@ -597,16 +604,23 @@
   }
   
   function usernameToUserid($username){
-        $loginSQL = mysql_query("SELECT userid, username FROM user WHERE username='$username'");
+        $loginSQL = mysql_query("SELECT userid, username FROM user WHERE username='".save($username)."'");
         $loginData = mysql_fetch_array($loginSQL);
-        return $loginData[userid];
+        return $loginData['userid'];
   }
   
   function useridToUsername($userid){
-        $loginSQL = mysql_query("SELECT userid, username FROM user WHERE userid='$userid'");
+        $loginSQL = mysql_query("SELECT userid, username FROM user WHERE userid='".save($userid)."'");
         $loginData = mysql_fetch_array($loginSQL);
-        return $loginData[username];
+        return $loginData['username'];
   }
+  function useridToRealname($userid){
+        $loginSQL = mysql_query("SELECT realname FROM user WHERE userid='".save($userid)."'");
+        $loginData = mysql_fetch_array($loginSQL);
+        return "Nic Zemke";
+  }
+  
+  
   
   function getUserData($userid=NULL){
   	if(empty($userid)){
@@ -780,6 +794,70 @@
 		}
 		
 		
+	}
+	
+	
+	
+	
+	
+	
+	function showMessages($userid, $buddyId, $limit){
+		
+		$buddyData = getUserData($buddyId);
+		$userData = getUserData($userid);
+		
+				
+				
+		$userName = str_replace("_"," ",$userData['username']); //get username of receiver
+		$buddyName = str_replace(" ","_",$buddyData['username']);
+		
+		$chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' && receiver='$buddyId' OR sender='$buddyId' && receiver='$userid' ORDER BY timestamp DESC LIMIT $limit");
+		while($chatData = mysql_fetch_array($chatSQL)) {
+	    
+		    if($chatData['receiver'] == getUser() && $chatData['read'] == "0"){
+		    mysql_query("UPDATE `messages` SET  `read`='1' WHERE  id='$chatData[id]'");
+		    }
+		    if($chatData[sender] == $_SESSION[userid] && $chatData['seen'] == "0"){
+		    mysql_query("UPDATE `messages` SET  `seen`='1' WHERE  id='$chatData[id]'");
+		    }
+		    
+		    $sender = $chatData['sender'];
+		    $whileid = $_SESSION['userid'];
+		    if($sender == $whileid){
+		    $authorid =  $userData['userid'];
+		    $authorName = $userData['username'];
+		    $authorImage = $userData['userPicture'];
+		    $reverse = NULL;
+		    $css = 'messageOut'; 
+		    $css = 'margin-right: 15px; margin-left: 5px;';
+		    } else {
+		    
+		    $authorid =  $buddyData['userid'];
+		    $authorName = $buddyData['username'];
+		    $authorImage = $buddyData['userPicture']; 
+		    $css = 'margin-left: 15px; margin-right: 5px;';
+		    $reverse = "1";   
+		    }
+			//check if message is crypted
+		    if($chatData[crypt] == "1"){
+		    	
+				$messageClasses = "cryptedChatMessage_$buddyName";
+		        $message = $chatData[text];
+			} else{
+				
+				$messageClasses = "";
+		        $message = $chatData[text];
+		    }
+		    $message = universeText($message);
+		    ?>
+		              <div class="box-shadow space-top chatText" style="<?=$css;?> padding: 10px; padding-bottom: 10px;">
+		              	<span style="position: absolute; margin-top: -20px; color: #c0c0c0;">
+		              		<?=showUserPicture($authorid, "15");?><?=$authorName;?>
+		              	</span>
+		              	<span class="<?=$messageClasses;?>"><?=$message;?></span>
+		              </div>
+			<? }
+	
 	}
 
    //gets all unseen messages for receiver=user
@@ -1527,6 +1605,7 @@ echo"</div>";
        //request
        $buddies = buddyListArray('', "1' OR request='0");
        
+	   $notSuggest = getNotSuggestList(); //get array of users that will not be suggested
        
        //return every single buddy
        foreach($buddies AS &$buddy){
@@ -1543,7 +1622,7 @@ echo"</div>";
                //
                //all buddies which are allready in the users
                //buddylist also need to be removed
-               if($buddyOfBuddy != $_SESSION[userid] && !in_array($buddyOfBuddy, $buddies) && $buddyOfBuddy != 0){
+               if($buddyOfBuddy != getUser() && !in_array($buddyOfBuddy, $buddies) && $buddyOfBuddy != 0 && !in_array($buddyOfBuddy, $notSuggest)){
                     $finalArray[] = $buddyOfBuddy;
                }
            }
@@ -1558,6 +1637,81 @@ echo"</div>";
        return $return;
        
    }
+
+	function getNotSuggestList(){
+         $userSql = mysql_query("SELECT buddySuggestions FROM user WHERE userid='".getUser()."'");
+         $userData = mysql_fetch_array($userSql);
+		 $buddySuggestions = $userData['buddySuggestions'];
+		 
+		 if(!empty($buddySuggestions)){
+		 	
+		 	$buddySuggestions = json_decode($buddySuggestions, true);
+		 
+			foreach($buddySuggestions AS $buddySuggestion){
+				$return[] = $buddySuggestion['user'];
+			}
+			
+			return $return;
+			
+		 }
+	}
+
+	function addToNotSuggestList($user){
+		
+		$user = save(intval($user));
+		
+		$notSuggest = getNotSuggestList();
+		
+			if(!in_array($user, $notSuggest)){
+				
+				//script needs to access db again, to parse also timestamp
+				//into the json string. the timestamp will be used to delete
+				//old suggestions after a while
+				
+		        $userSql = mysql_query("SELECT buddySuggestions FROM user WHERE userid='".getUser()."'");
+		        $userData = mysql_fetch_array($userSql);
+				
+				$notSuggest = json_decode($userData['buddySuggestions'],true);
+			
+				$userObj['user'] = $user;
+				$userObj['timestamp'] = time();
+				
+				$notSuggest[] = $userObj;
+				
+		        if(mysql_query("UPDATE user SET buddySuggestions='".json_encode($notSuggest)."' WHERE userid='".getUser()."'")){
+		        	return true;
+		       	}
+			}
+	}
+	
+	function showBuddySuggestions($frame=true){
+		
+		$mayKnow = friendsYouMayKnow();
+		if(!empty($mayKnow)){
+			if($frame){
+				echo"<div id=\"buddySuggestions\">";
+			}
+			echo"<header>";
+				echo"you may know";
+				echo"<a id=\"closeSuggestions\" onclick=\"$('#buddySuggestions').hide();\">x</a>";
+			echo"</header>";
+			echo'<div>';
+				echo"<a href=\"#\" onclick=\"showProfile('$mayKnow')\">";
+				echo"";
+				echo"<span>&nbsp;";
+				echo showUserPicture($mayKnow, 16);
+				echo"</span>";
+				echo useridToUsername($mayKnow);
+				echo'<a href="doit.php?action=addbuddy&buddy='.$mayKnow.'" class="btn btn-success btn-mini pull-right" target="submitter">add</a>';
+				echo'<a href="doit.php?action=addToNotSuggestList&user='.$mayKnow.'" class="btn btn-mini pull-right" style="margin-right:5px;" target="submitter">later</a>';
+				echo"</a>";
+			echo'</div>';
+			if($frame){
+			echo"</div>";
+			}
+			
+		}
+	}
 
 //feed
 //feed
@@ -1845,15 +1999,7 @@ echo"</div>";
         }
         return $return;
     }
-    function getFilePath($fileId){
-        $documentSQL = mysql_query("SELECT id, folder FROM files WHERE id='$fileId'");
-        $documentData = mysql_fetch_array($documentSQL);
-            $documentElementSQL = mysql_query("SELECT id, folder FROM elements WHERE id='$documentData[folder]'");
-            $documentElementData = mysql_fetch_array($documentElementSQL);
-                $documentFolderSQL = mysql_query("SELECT id, path FROM folders WHERE id='$documentElementData[folder]'");
-                $documentFolderData = mysql_fetch_array($documentFolderSQL);
-                return $documentFolderData[path];
-    }
+	
     function commaToOr($string, $type){
         //converts Strings with Values, which are separeted with commas into SQL conform STRINGS
         $string = explode(";", $string);
@@ -2060,7 +2206,16 @@ echo"</div>";
 			return false;
 		}
 	}
+	//finds out whether or not a privacies value is "undeletable"
+	function isUndeletable($value){
+		if(end(explode(";", $value)) == "UNDELETABLE"){
+			return true;
+		}else{
+			return false;
+		}
+	}
 	
+	//show the privacysettings box 
     function showPrivacySettings($value=NULL){
     	
 		$oldValue = $value;
@@ -2662,6 +2817,25 @@ echo"</div>";
 		return $return;
 	}
 	
+	function getFiles($element){
+		
+		$fileSQL = mysql_query("SELECT id FROM files WHERE folder='".mysql_real_escape_string($elementId)."'");
+		while($fileData = mysql_fetch_array($fileSQL)){
+			//identifier to distinguish the output between files and links
+			$fileData['returnType'] = 'file';
+			$return[] = $fileData;
+		}
+		
+		$linkSQL = mysql_query("SELECT id FROM links WHERE folder='".mysql_real_escape_string($elementId)."'");
+		while($linkData = mysql_fetch_array($linkSQL)){
+			//identifier to distinguish the output between files and links
+			$fileData['returnType'] = 'link';
+			$return[] = $linkData;
+		}
+		
+		return $return;
+	}
+	
 	function getLinksInElement($elementId){
 		$linkSQL = mysql_query("SELECT id FROM links WHERE folder='".mysql_real_escape_string($elementId)."'");
 		while($linkData = mysql_fetch_array($linkSQL)){
@@ -2670,6 +2844,25 @@ echo"</div>";
 		
 		return $return;
 	}
+	
+	function getElementName($elementId){
+            $checkElementSql = mysql_query("SELECT title FROM elements WHERE id='".mysql_real_escape_string($elementId)."'");
+            $checkElementData = mysql_fetch_array($checkElementSql);
+			
+			return $checkElementData['title'];
+	}
+	
+    function getFilePath($fileId){
+        $documentSQL = mysql_query("SELECT id, folder, filename FROM files WHERE id='$fileId'");
+        $documentData = mysql_fetch_array($documentSQL);
+            $documentElementSQL = mysql_query("SELECT id, title, folder FROM elements WHERE id='$documentData[folder]'");
+            $documentElementData = mysql_fetch_array($documentElementSQL);
+			
+			$path = getFolderPath($documentElementData['folder']);
+			$path .= $documentData['filename'];
+			
+            return $path;
+    }
 	
 	function getFolderPath($folderId){
 		
@@ -2822,9 +3015,82 @@ echo"</div>";
         }
     }
 
+
+	 function uploadTempfile($file, $element, $folder, $privacy, $user, $lang=NULL, $download=true){
+	 	
+	 	//upload file
+        $target_path = basename( $file['tmp_name']);
+        $filename = $file['name'];
+        $thumbname = "$filename.thumb";
+        $size = $file['size'];
+        $time = time();
+		
+	    $type = getMime($filename);
+        
+		
+        $FileElementSQL = mysql_query("SELECT title, folder FROM elements WHERE id='$element'");
+        $FileElementData = mysql_fetch_array($FileElementSQL);
+		
+		if(empty($folder)){
+			$folder = $FileElementData['folder'];
+		}
+		
+        $filefolderSQL = mysql_query("SELECT * FROM folders WHERE id='".$FileElementData['folder']."'");
+        $fileFolderData = mysql_fetch_array($filefolderSQL);
+
+            $folderpath = getFolderPath($folder);
+			
+			
+            $thumbPath = $folderpath."thumbs/";
+            $imgName = basename($FileElementData['title']."_".$file['name']);
+            $elementName = "$FileElementData[title]_";
+            $finalName = $FileElementData['title']."_".$file['name'];
+ 
+			
+			//move uploaded file to choosen folder and add .temp 
+            move_uploaded_file($file['tmp_name'], "./".$folderpath.$file['name']);
+            rename( "./".$folderpath.$file['name'], "./".$folderpath.$finalName);
+			
+			//if type is image => create thumbnail before .temp suffix is added
+	        if($type == "image/jpg" || $type == "image/jpeg" || $type == "image/png"){
+	                    $thumbPath= "$thumbPath";
+	                    $path = "$folderpath";
+	                    if(is_dir("$thumbPath")){
+	                        mkthumb("$finalName",300,300,$path,"$thumbPath");
+	                    } else{
+	                        mkdir("$thumbPath");
+	                        mkthumb("$finalName",300,300,$path,"$thumbPath");
+	                    }
+	        }
+            rename( "./".$folderpath.$finalName, "./".$folderpath.$finalName.".temp");
+			//add db entry and add temp value
+			if(mysql_query("INSERT INTO `files` (`id` ,`folder` ,`title` ,`size` ,`timestamp` ,`filename` ,`language` ,`type` ,`owner` ,`votes` ,`score` ,`privacy` ,`var1` , `download`, `status`) VALUES (NULL ,  '$element',  '".mysql_real_escape_string($imgName)."',  '$size',  '$time',  '".mysql_real_escape_string($imgName)."',  '$lang',  '$type',  '$user',  '0',  '0',  '$privacy',  '', '$download', 'true');")){
+	        	$insertid = mysql_insert_id();
+	        	return $insertid;
+	        }else{
+	        	return false;
+	        }
+	 }
+	 
+	 function validateTempFile($fileId, $privacy){
+	 	$path = getFilePath($fileId);
+		$oldpath = $path.'.temp';
+		if(rename($oldpath, $path)){
+		 	if(mysql_query("UPDATE `files` SET `temp`='0', `status`='1', `privacy`='$privacy' WHERE id='".save($fileId)."'")){
+		 		return true;
+		 	}else{
+		 		return false;
+		 	}
+		}
+	 }
+	 
+	 function tidyTempFiles(){
+	 	mysql_query("DELETE FROM `files` WHERE temp='true' AND timestamp<'".(time()-86400)."'");
+	 }
+
      function addFile($file, $element, $folder, $privacy, $user, $lang=NULL, $download=true){
         
-                //upload file
+        //upload file
         $target_path = basename( $file['tmp_name']);
         $filename = $file['name'];
         $thumbname = "$filename.thumb";
@@ -2964,7 +3230,7 @@ echo"</div>";
         return $fileData[type];
     }
     
-    function getFileIcon($fileType, $size=NULL){
+    function getFileIcon($fileType, $full=false){
         //turns filetype into src of icon
         //used in showFileList(); showItemThum();
         switch($fileType){
@@ -3040,6 +3306,9 @@ echo"</div>";
             default:
                     $image = "unknown.png";
         }
+
+		if($full)
+			$image = "<img src=\"gfx/icons/fileIcons/$image\">";
         
         return $image;
     }
@@ -3161,10 +3430,10 @@ echo"</div>";
 			$element = $fileData['folder'];
 			$elementTitle = $elementData['title'];
 			if($fileData['download']){
-				$download = "<a href=\"doit.php?action=download&fileId=$fileId\" target=\"submitter\" class=\"btn btn-mini\" title=\"download file\"><img src=\"$subpath"."./gfx/icons/download.png\" alt=\"download\" height=\"10\"></a>";
+				$download = "<a href=\"./out/download/?fileId=$fileId\" target=\"submitter\" class=\"btn btn-mini\" title=\"download file\"><img src=\"$subpath"."./gfx/icons/download.png\" alt=\"download\" height=\"10\"></a>";
 			}
             $filename = $fileData[filename];
-            $path = $subpath.getFullFilePath($fileId);
+            $path = $subpath.getFilePath($fileId);
             
 			
     		$score = showScore("file", $fileId);
@@ -3272,7 +3541,7 @@ echo"</div>";
 		}
 		
 		if(authorize($privacy, 'show', $user) OR $type == "youTube" OR $type == "wiki"){
-	        if($type == "image/jpeg" || $type == "image/png'" || $type == "image" ){
+	        if($type == "image/jpeg" || $type == "image/png" || $type == "image" ){
 	        	
 				$type = 'image';
 				
@@ -3280,12 +3549,15 @@ echo"</div>";
 	    		$bar = "<a href=\"javascript: zoomIn('$element');\" id=\"zoomIn\" class=\"btn btn-mini\" title=\"zoom in\"><img src=\"$subpath"."gfx/icons/zoomIn.png\" height=\"10\" border=\"0\"></a>&nbsp;<a id=\"zoomOut\" href=\"javascript: zoomOut('$element');\" class=\"btn btn-mini\" style=\"\" title=\"zoom out\"><img src=\"$subpath"."gfx/icons/zoomOut.png\" height=\"10\" border=\"0\"></a>";
 	        }
 			
+			if($type == "audio/mpeg")
+				$type = 'audio';
+			
 	        $icon = getFileIcon($type);
 	        $icon = "<img src=\"$subpath"."gfx/icons/fileIcons/$icon\" height=\"20\">";
 	        
 	        $output .= "<header class=\"gray-gradient\">";
 	        $output .= $icon;
-	        $output .= "<span class=\"title\">$title</span>";
+	        $output .= "<span class=\"title\">$title $type</span>";
 			$output .= "<span class=\"controls\">$controls</span>";
 			$output .= "<span class=\"bar\">$bar</span>";
 			$output .= "<span class=\"score\">$score</span>";
@@ -3374,8 +3646,10 @@ echo"</div>";
 					break;
 	            case 'text/plain':
 	                
-	                
-	                $filePath = urldecode("../../$path");
+	                if($subpath == '../')
+	                	$filePath = urldecode("$path");
+					else
+						$filePath = urldecode("../../$path");
 	
 	                $file = fopen($filePath, 'r');
 	                $output .= nl2br(htmlentities(fread($file, filesize($filePath))));
@@ -3441,7 +3715,7 @@ echo"</div>";
 	            
 	            //audio
 	            case 'audio':
-					$ouput .= "<audio controls>
+					$output .= "<audio controls>
 								  <source src=\"$path\" type=\"audio/mpeg\">
 								</audio>";
 	                break;
@@ -3722,7 +3996,7 @@ echo"</div>";
                         <td width="30px">&nbsp;<img src="<?=$subpath;?>gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData[type];?>" height="22"></td>
                         <td><a href="<?=$subpath;?>out/?file=<?=$fileListData[id];?>" onclick="<?=$link;?> return false"><?=substr($fileListData[title],0,30);?></a></td>
                         <td width="80" align="right">
-                        		<? if($fileListData['download']){ ?><a href="doit.php?action=download&fileId=<?=$fileListData[id];?>" target="submitter" class="btn btn-mini" title="download file"><i class="icon-download"></i></a><? } ?>
+                        		<? if($fileListData['download']){ ?><a href="./out/download/?fileId=<?=$fileListData[id];?>" target="submitter" class="btn btn-mini" title="download file"><i class="icon-download"></i></a><? } ?>
                                 <? if(!$git){echo showItemSettings('file', "$fileListData[id]");}?></td>
                         <td width="50"><?=showScore(file, $fileListData[id]);?></td>
                     </tr>
@@ -3887,7 +4161,7 @@ echo"</div>";
 	        	
 		        if(authorize($filefdata[privacy], "show", $filefdata[creator])){
 				$action[folders] = "$('.folder$filefdata[id]LoadingFrame').loadOuter('doit.php?action=loadMiniBrowser&folder=$filefdata[id]&level=$level&select=$select');return false;";
-		        $trigger[folders] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/filesystem/folder.png\' alt=\'folder\' height=\'32px\'>&nbsp;$filefdata[name]<input type=\'hidden\' name=\'type\' value=\'folder\'><input type=\'hidden\' name=\'typeId\' value=\'$filefdata[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+		        $trigger[folders] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/filesystem/folder.png\' alt=\'folder\' height=\'32px\'>&nbsp;$filefdata[name]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'folder\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$filefdata[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
 				
 					
 		        ?>
@@ -3921,7 +4195,7 @@ echo"</div>";
 		        	
 				
 				$action[elements] = "$('.element$fileddata[id]LoadingFrame').loadOuter('doit.php?action=loadMiniBrowser&element=$fileddata[id]&level=$level&select=$select');return false;";
-		        $trigger[elements] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/filesystem/element.png\' alt=\'folder\' height=\'32px\'>&nbsp;$title<input type=\'hidden\' name=\'type\' value=\'element\'><input type=\'hidden\' name=\'typeId\' value=\'$fileddata[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+		        $trigger[elements] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/filesystem/element.png\' alt=\'folder\' height=\'32px\'>&nbsp;$title<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'element\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$fileddata[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
 						
 		        ?>
 		            <li class="strippedRow" <?=$style;?>>
@@ -3958,8 +4232,8 @@ echo"</div>";
 	                $title10 = substr("$fileListData[title]", 0, 10);
 	                $image = getFileIcon($fileListData[type]);
 					
-					$action[files] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$fileListData[title]<input type=\'hidden\' name=\'type\' value=\'file\'><input type=\'hidden\' name=\'typeId\' value=\'$fileListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
-					$trigger[files] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$fileListData[title]<input type=\'hidden\' name=\'type\' value=\'file\'><input type=\'hidden\' name=\'typeId\' value=\'$fileListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+					$action[files] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$fileListData[title]<input type=\'hidden\' class=\'choosenType\' name=\'type\' value=\'file\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$fileListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+					$trigger[files] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$fileListData[title]<input type=\'hidden\' class=\'choosenType\' name=\'type\' value=\'file\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$fileListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
 					
 					
 					
@@ -3989,8 +4263,8 @@ echo"</div>";
 					
 	                $image = getFileIcon($linkListData[type]);
 	                
-					$action[links] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$linkListData[type]\' height=\'32px\'>&nbsp;$linkListData[title]<input type=\'hidden\' name=\'type\' value=\'link\'><input type=\'hidden\' name=\'typeId\' value=\'$linkListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
-					$trigger[links] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$linkListData[title]<input type=\'hidden\' name=\'type\' value=\'link\'><input type=\'hidden\' name=\'typeId\' value=\'$linkListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+					$action[links] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$linkListData[type]\' height=\'32px\'>&nbsp;$linkListData[title]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'link\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$linkListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+					$trigger[links] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$linkListData[title]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'link\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$linkListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
 					
 					
 	                    
@@ -4829,6 +5103,21 @@ class dashBoard{
 		$title = "Your Tasks";
 		
 		return $this->showDashBox($title, $output,"", "task", $grid);
+	}
+}
+
+class sec{
+	
+	function passwordCypher($val){
+		return hash('sha515', md5($val));
+	}
+	
+	function validateUserSignature($userid, $signature){
+		$userData = getUserData($password);
+		if($signature == $userData['password'])
+			return true;
+		else
+			return false;
 	}
 }
 

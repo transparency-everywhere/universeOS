@@ -2,6 +2,7 @@
 	margin:0;
 	padding:0;
 }
+
 html {
 	height:100%;
 	width:100%;
@@ -39,78 +40,9 @@ ul {
 li {
 }
 
-/*@media (min-width: 240px) {
-	body{
-    	background-image: url('../../gfx/bg/universeos_240x320.jpg');
-	}
-}
-@media (min-width: 320px){
-	body{
-    	background-image: url('../../gfx/bg/universeos_320x568.jpg');
-	}
-}
-}@media (min-width: 380px) {
-	body{
-    	background-image: url('../../gfx/bg/universeos_380x685.jpg');
-	}
-}
-@media (min-width: 480px) {
-	body{
-    	background-image: url('../../gfx/bg/universeos_480x320.jpg');
-	}
-}
-@media (min-width: 568px) {
-	body{
-    	background-image: url('../../gfx/bg/universeos_568x320.jpg');
-	}
-}
-@media (min-width: 600px) {
-	body{
-    	background-image: url('../../gfx/bg/universeos_600x1024.jpg');
-	}
-}
-@media (min-width: 768px) {
-	body{
-    	background-image: url('../../gfx/bg/universeos_768x1024.jpg');
-	}
-}
-@media (min-width: 1024px) {
-	body{
-    	background-image: url('../../gfx/bg/universeos_1024x768.jpg');
-    }
-}
-@media (min-width: 1280px) {
-	body{
-    	background-image: url('../../gfx/bg/universeos_1280x800.jpg');
-	}
-}
-@media (min-width: 1281px) {
-	body{
-    	background-image: url('../../gfx/bg/universeos_1920x1080.jpg');
-	}
-}*/
-/*.strippedRow:first-child {background:rgb(223, 236, 250)}
-.strippedRow:nth-child(2n+3) {background:rgb(223, 236, 250)}*/
-
 .strippedRow{
 	border-bottom:1px solid #e9e9e9;
 }
-
-/*h1{
-    font-size: 16pt;
-    font-family: verdana;
-}
-
-h2{
-    font-size: 14pt;
-    font-family: verdana;
-}
-
-h3{
-    font-size: 12pt;
-    font-family: courier;
-}
-*/
 h3{
     font-size: 13pt;
     line-height: none;
@@ -337,21 +269,8 @@ li.notHidden{
     top:0px;
 }
 
-.path {
-    height: 40px;
-    padding-top: 9px;
-    font-size: 12px;
-    background-color: #ddd;
-    border-color: #fefefe;
-    border: 2px, solid;
-}
-
-.folder {
-    list-style-image:url(icons/folder.png);
-}
-
-.folder {
-    list-style-image:url(icons/file.png);
+.pointer{
+	cursor:pointer;
 }
 
 .padding10{
@@ -380,15 +299,6 @@ li.notHidden{
 
 .height60 {
     height: 40px;
-}
-
-/* hehe */
-.transparency{
-    	/*-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=85)";
-	filter: alpha(opacity=85);
-	-moz-opacity:0.85;
-	-khtml-opacity: 0.85;
-	opacity: 0.85;*/
 }
 
 
@@ -686,6 +596,35 @@ li.notHidden{
     background-color: rgb(255, 255, 255);
 }
 
+.step{
+	position:absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+}
+
+.step > div{
+	
+	position:absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 40px;
+    left: 0px;
+    overflow:auto;
+    padding:10px;
+    padding-bottom:none;
+}
+
+.step > footer{
+	height:30px;
+	position:absolute;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    padding:5px;
+}
+
 #settings{
     width: 600px;
     height: 400px;
@@ -721,15 +660,18 @@ li.notHidden{
     right: 0;
     left: 0;
     overflow: hidden;
+    font-size: 25px;
+	line-height: 15px;
 }
 
+
+#buddyListFrame .realname{
+	font-size: 8px;
+	line-height: 8px;
+}
 
 #buddyListTable { 
     overflow: none;
-}
-
-#buddyListfooter > center { 
-    padding-top: 5%;
 }
     
 #buddySuggestions{
@@ -742,6 +684,16 @@ li.notHidden{
     margin-left:7px;
     margin-right:7px;
     color: #FFFFFF;
+}
+
+#buddySuggestions header {
+	padding: 0 5px;
+}
+
+#buddySuggestions > div{
+	padding: 0 5px;
+	font-size: 22px;
+	line-height: 27px;
 }
 
 #buddySuggestions #closeSuggestions{
@@ -896,16 +848,9 @@ li.notHidden{
 	text-align:right;
 }
 
-#opload h1,#opload h2,#opload h3{
+#upload h1,#upload h2,#upload h3{
 	margin: 0;
 	padding: 0;
-}
-#opload h3{
-	line-height:0px;
-}
-
-.uploadStep > div{
-	margin:10px;	
 }
 
 /* reader */
@@ -1116,6 +1061,10 @@ top: 0px; right: 0px; bottom: 40px; left: 0px; width: 100%;
 .chatMainFrame header span{
 	float: right; margin-left: 10px;
 	margin-right: 10px;
+}
+
+.chatMainFrame .dialog{
+	position: absolute; top: 30px; right: 0px; bottom:40px; left: 0px; overflow: auto;
 }
 #chat footer{
 	position:absolute; 
@@ -2256,12 +2205,9 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 	);
 	background-position: center top;
 	background-repeat: no-repeat;
-	-webkit-border-radius: 30px;
-	-moz-border-radius: 30px;
-	border-radius: 30px;
 	border: 2px solid #808080;
 	color: #FFF;
-	font: bold 12px Arial, Helvetica, sans-serif;
+	font: normal 12px Arial, Helvetica, sans-serif;
 	text-align: center;
 	text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
 	width: 100%;
@@ -2298,7 +2244,6 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 	border-radius: 3px;
 	font: 11px Verdana, Geneva, sans-serif;
 	margin-top: 5px;
-	max-width: 350px;
 	padding: 10px;
 }
 .uploadify-error {
