@@ -77,7 +77,7 @@ if($_GET[action] == "add"){
                                </tr>
                        <?}
                        if($i < 1){
-                           echo"<tr><td>You are in no group</td></tr>";
+                           echo'<tr><td colspan="3">You are in no group</td></tr>';
                        }
                        ?>
                      </table>

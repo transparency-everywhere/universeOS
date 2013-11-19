@@ -19,20 +19,26 @@
 	                mysql_query("DELETE FROM buddylist WHERE owner='".mysql_real_escape_string($_GET[buddy])."' && buddy='$_SESSION[userid]' LIMIT 1");
 	                jsAlert("worked :(");
 	            }
-			 echo"<table>";
+			 echo"<ul>";
 			 $buddies = buddyListArray();
+			 	$i = 0;
 	         	foreach($buddies AS $buddy){
 	            $blUserSql = mysql_query("SELECT username FROM user WHERE userid='$buddy'");
 	            $blUserData = mysql_fetch_array($blUserSql);
 	         ?>
-	             <tr>
-	                <td><?=showUserPicture($buddyEditData[buddy], 30);?></td>
-	                <td><?=$userpicture;?><input type="hidden" name="buddy" value="<?=$buddyEditData[buddy];?>"></td>
-	                <td><?=$blUserData[username];?><a href="#" onclick="confirmation(<?=$buddyEditData[buddy];?>);"><img src="./gfx/delete_2.png" width="16"></a>
-	                </td>
-	             </tr>
-	         <? }
-			 echo"</table>"; ?>
+	             <li style="font-size: 20px;vertical-align: bottom; margin: 0 5px;">
+	                <?=showUserPicture($buddyEditData[buddy], 22);?>
+	                <input type="hidden" name="buddy" value="<?=$buddyEditData[buddy];?>">
+	                	<?=$blUserData[username];?>
+	                	<a href="#" onclick="confirmation(<?=$buddyEditData[buddy];?>);" title="delete user form Buddylist" class="btn btn-small" style="margin-left: 15px;">
+	                		<i class="icon-remove"></i>
+	                	</a>
+	               </li>
+	         <?$i++; }
+				if($i == 0){
+					echo"<li>You need to add users to your Buddylist.</li>";
+				}
+			 echo"</ul>"; ?>
          </div>
          <script type="text/javascript">
 function confirmation(id) {

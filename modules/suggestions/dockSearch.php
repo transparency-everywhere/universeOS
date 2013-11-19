@@ -68,7 +68,7 @@ $k = 5;//limit
 			echo"<li class=\"strippedRow\">";
 			
 			//icon
-			echo"<img src=\"./gfx/icons/filesystem/folder.png\" height=\"16\" style=\"margin-bottom: -8px; margin-left:5px; margin-right:5px;\">";
+			echo"<img src=\"./gfx/icons/filesystem/folder.png\" height=\"16\" style=\"\">";
 			//title
 			echo"<a href=\"#\" onclick=\"openFolder('$suggestData[id]');\">$suggestData[name]</a>";
 			
@@ -84,7 +84,7 @@ $k = 5;//limit
 			echo"<li class=\"strippedRow\">";
 			
 			//icon
-			echo"<img src=\"./gfx/icons/filesystem/element.png\" height=\"16\" style=\"margin-bottom: -8px; margin-left:5px; margin-right:5px;\">";
+			echo"<img src=\"./gfx/icons/filesystem/element.png\" height=\"16\" style=\"\">";
 
 			//title
 			echo"<a href=\"#\" onclick=\"openElement('$suggestData[id]');\">$suggestData[title]</a>";
@@ -104,7 +104,7 @@ $k = 5;//limit
 			echo"<li class=\"strippedRow\">";
 			
 			//icon
-			echo"<img src=\"gfx/icons/fileIcons/$image\" height=\"16\" style=\"margin-bottom: -8px; margin-left:5px; margin-right:5px;\">";
+			echo"<img src=\"gfx/icons/fileIcons/$image\" height=\"16\" style=\"\">";
 
 			//title
 			echo"<a href=\"#\" onclick=\"openFile('$suggestData[type]', '$suggestData[id]', '$suggestData[title]');\">$suggestData[title]</a>";
@@ -135,7 +135,7 @@ $k = 5;//limit
 			echo"<li class=\"strippedRow\">";
 			
 			//icon
-			echo"<img src=\"gfx/icons/group.png\" height=\"16\" style=\"margin-bottom: -8px; margin-left:5px; margin-right:5px;\">";
+			echo"<img src=\"gfx/icons/group.png\" height=\"16\" style=\"\">";
 			//title
 			echo"<a href=\"#\" onclick=\"showApplication('reader'); createNewTab('reader_tabView','$suggestData[title]','','./group.php?id=$suggestData[id]',true);return false\">$suggestData[title]</a>";
 			
@@ -164,7 +164,7 @@ $k = 5;//limit
 			echo"<li class=\"strippedRow\">";
 			
 			//icon
-			echo"<img src=\"gfx/icons/fileIcons/wikipedia.png\" height=\"16\" style=\"margin-bottom: -8px; margin-left:5px; margin-right:5px;\">";
+			echo"<img src=\"gfx/icons/fileIcons/wikipedia.png\" height=\"16\" style=\"\">";
 			//title
 			echo"<a href=\"#\" onclick=\"openFile('wikipedia', '".urlencode($item->Text)."', '".urlencode(substr("$item->Text", 0, 10))."');\">$item->Text</a>";
 			
@@ -180,7 +180,7 @@ $k = 5;//limit
             $vId = youTubeURLs($item2->id);
 			echo"<li class=\"strippedRow tooltipper\" data-popType=\"youTube\" data-typeId=\"$vId\" >";
 			//icon
-			echo"<img src=\"gfx/icons/fileIcons/youTube.png\" height=\"16\" style=\"margin-bottom: -8px; margin-left:5px; margin-right:5px;\">";
+			echo"<img src=\"gfx/icons/fileIcons/youTube.png\" height=\"16\" style=\"\">";
 			//title
 			echo"<a href=\"#\" onclick=\"openFile('youTube', '', '".urlencode(substr("$item2->title", 0, 10))."', '$vId');\">".substr("$item2->title", 0, 40)."</a>";
 			echo"</li>";
@@ -198,7 +198,7 @@ $k = 5;//limit
 			echo"<li class=\"strippedRow\">";
 			
 			//icon
-			echo"<img src=\"gfx/icons/fileIcons/spotify.png\" height=\"16\" style=\"margin-bottom: -8px; margin-left:5px; margin-right:5px;\">";
+			echo"<img src=\"gfx/icons/fileIcons/spotify.png\" height=\"16\" style=\"\">";
 			//title
 			echo"<a href=\"$item3[href]\">".substr("$item3->name", 0, 40)."</a>";
 			

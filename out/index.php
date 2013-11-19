@@ -15,8 +15,12 @@ if(!empty($_GET['folder'])){
 	$title = $data['name'];
 	
 }else if(!empty($_GET['element'])){
+	
 	$type = "Element";
 	$itemId = $_GET['element'];
+	$query = mysql_query("SELECT `folder` FROM `files` WHERE id='".mysql_real_escape_string($itemId)."'");
+	$data = mysql_fetch_array($query);
+	
 }else if(!empty($_GET['file'])){
 	$type = "File";
 	$fileId = $_GET['file'];
@@ -58,12 +62,13 @@ echo'<table width="100%">';
 switch($type){
 	case "Folder":
                         showFileBrowser($itemId, '', '', false,  '../');
-		
 		break;
 	case "Element":
 						echo'<style>';
 						echo'img{ margin-top: -16px; }';
 						echo'</style>';
+						echo'<div>&nbsp;<img src="../gfx/icons/filesystem/folder.png" height="22" style="margin-top:0px;">';
+						echo'<a href="../out/?folder=1" onclick="openFolder(\''.$data['folder'].'\'); return false;">&nbsp;&nbsp;...</a></td></div>';
                         showFileList($itemId, '', true, '../');
 		break;
 	case "File":

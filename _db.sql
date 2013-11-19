@@ -224,7 +224,7 @@ CREATE TABLE IF NOT EXISTS `groups` (
   `title` text NOT NULL,
   `description` text NOT NULL,
   `public` text NOT NULL,
-  `admin` int(11) NOT NULL,
+  `admin` text NOT NULL,
   `membersInvite` int(11) NOT NULL COMMENT 'allow all members not just admins to invite users',
   `homeFolder` int(11) NOT NULL,
   `homeElement` int(11) NOT NULL,

@@ -2,8 +2,6 @@
   $userid = getUser();
   $time = time();
 
-  require_once('config.php');
-
   // Thumbnails: [url]www.codeschnipsel.net[/url]
   function mkthumb($img_src,     // Dateiname
                    $img_width,       // max. Größe in x-Richtung
@@ -61,10 +59,17 @@
       return false;
     }
   }
- 
+ /**
+  * Validates if SESSION of last generated Captcha is equal to the submitted value
+  *
+  * @param string $value      Contains a user-provided query.
+  *
+  * @return bool Contains the returned rows from the query.
+  */
  function validateCapatcha($value){
      
      $sessionValue = $_SESSION['lastCaptcha'];
+	 
         //define crypt
         $value = sha1($value);
         $value = sha1("$value deine mutter lutscht riesengrosse schwaenze");
@@ -93,6 +98,13 @@
 	<?php
  }
  
+ /**
+  * Opens an URL with curl and outputs xml
+  *
+  * @param string $url      Contains URL
+  *
+  * @return array Contains the returned xm.
+  */
  function curler($url){
  	
         //umgehen des HTTP Verbots
@@ -279,18 +291,24 @@
 	        if(proofLogin()){
 	          	$fav = "<li><a href=\"doit.php?action=addFav&type=folder&item=$itemId\" target=\"submitter\">Add to Fav</a></li>";
 	        }
+			
 			//check if person has rights to protect filesystem items of changes
 			if(hasRight("protectFileSystemItems")){
-				if(!isProtected($checkFolderData[privacy]))
+				if(!isProtected($checkFolderData['privacy']))
 					$protect = "<li><a href=\"javascript: popper('doit.php?action=protectFileSystemItems&type=folder&itemId=$itemId')\">Protect</a></li>";
 				else
-					$protect = "<li><a href=\"javascript: popper('doit.php?action=protectFileSystemItems&type=folder&itemId=$itemId')\">Unprotect</a></li>";
+					$protect = "<li><a href=\"javascript: popper('doit.php?action=removeProtectionFromFileSystemItems&type=folder&itemId=$itemId')\">Unprotect</a></li>";
 					
 			}
+
 			//check if person has rights to make files undeletable
 			if(hasRight("undeletableFilesystemItems")){
-				$undeletable = "<li><a href=\"javascript: popper('doit.php?action=makeFileSystemItemUndeletable&type=folder&itemId=$itemId')\">Make Undeletable</a></li>";
+				if(!isUndeletable($checkFolderData['privacy']))
+					$undeletable = "<li><a href=\"javascript: popper('doit.php?action=makeFileSystemItemUndeletable&type=folder&itemId=$itemId')\">Make Undeletable</a></li>";
+				else
+					$undeletable = "<li><a href=\"javascript: popper('doit.php?action=makeFileSystemItemDeletable&type=folder&itemId=$itemId')\">Make Deletable</a></li>";
 			}
+			
         }elseif($type == "element"){
             $checkElementSql = mysql_query("SELECT privacy, author FROM elements WHERE id='$itemId'");
             $checkElementData = mysql_fetch_array($checkElementSql);
@@ -302,10 +320,22 @@
 	        if(proofLogin()){
 	          	$fav = "<li><a href=\"doit.php?action=addFav&type=element&item=$itemId\" target=\"submitter\">Add to Fav</a></li>";
 	        }
+			
 			if(hasRight("protectFileSystemItems")){
 				if(!isProtected($checkElementData['privacy']))
 					$protect = "<li><a href=\"javascript: popper('doit.php?action=protectFileSystemItems&type=element&itemId=$itemId')\">Protect</a></li>";
+				else
+					$protect = "<li><a href=\"javascript: popper('doit.php?action=removeProtectionFromFileSystemItems&type=element&itemId=$itemId')\">Unprotect</a></li>";
+					
 			}
+			
+			if(hasRight("undeletableFilesystemItems")){
+				if(!isUndeletable($checkElementData['privacy']))
+					$undeletable = "<li><a href=\"javascript: popper('doit.php?action=makeFileSystemItemUndeletable&type=element&itemId=$itemId')\">Make Undeletable</a></li>";
+				else
+					$undeletable = "<li><a href=\"javascript: popper('doit.php?action=makeFileSystemItemDeletable&type=element&itemId=$itemId')\">Make Deletable</a></li>";
+			}
+			
         }elseif($type == "file"){
             $checkFileSql = mysql_query("SELECT privacy, owner FROM files WHERE id='$itemId'");
             $checkFileData = mysql_fetch_array($checkFileSql);
@@ -321,7 +351,18 @@
 			if(hasRight("protectFileSystemItems")){
 				if(!isProtected($checkFileData['privacy']))
 					$protect = "<li><a href=\"javascript: popper('doit.php?action=protectFileSystemItems&type=file&itemId=$itemId')\">Protect</a></li>";
+				else
+					$protect = "<li><a href=\"javascript: popper('doit.php?action=removeProtectionFromFileSystemItems&type=file&itemId=$itemId')\">Unprotect</a></li>";
+					
 			}
+			
+			if(hasRight("undeletableFilesystemItems")){
+				if(!isUndeletable($checkFileData['privacy']))
+					$undeletable = "<li><a href=\"javascript: popper('doit.php?action=makeFileSystemItemUndeletable&type=file&itemId=$itemId')\">Make Undeletable</a></li>";
+				else
+					$undeletable = "<li><a href=\"javascript: popper('doit.php?action=makeFileSystemItemDeletable&type=file&itemId=$itemId')\">Make Deletable</a></li>";
+			}
+			
         }elseif($type == "link"){
             $checkLinkSql = mysql_query("SELECT privacy, author FROM links WHERE id='$itemId'");
             $checkLinkData = mysql_fetch_array($checkLinkSql);
@@ -332,13 +373,23 @@
                 $delete = "<li><a href=\"doit.php?action=deleteLink&linkId=$itemId\" target=\"submitter\">Delete</a></li>";
             }
 			if(proofLogin()){
-                            $fav = "<li><a href=\"doit.php?action=addFav&type=link&item=$itemId\" target=\"submitter\">Add to Fav</a></li>"; 
+                $fav = "<li><a href=\"doit.php?action=addFav&type=link&item=$itemId\" target=\"submitter\">Add to Fav</a></li>"; 
 			} 
-                            $report = "<li><a href=\"javascript: popper('doit.php?action=reportFile&fileId=$itemId')\">Report</a></li>";
+            	$report = "<li><a href=\"javascript: popper('doit.php?action=reportFile&fileId=$itemId')\">Report</a></li>";
 			if(hasRight("protectFileSystemItems")){
 				if(!isProtected($checkLinkData['privacy']))
-                            $protect = "<li><a href=\"javascript: popper('doit.php?action=protectFileSystemItems&type=link&itemId=$itemId')\">Protect</a></li>";
+                	$protect = "<li><a href=\"javascript: popper('doit.php?action=protectFileSystemItems&type=link&itemId=$itemId')\">Protect</a></li>";
+				else
+					$protect = "<li><a href=\"javascript: popper('doit.php?action=removeProtectionFromFileSystemItems&type=link&itemId=$itemId')\">Unprotect</a></li>";
 			}
+			
+			if(hasRight("undeletableFilesystemItems")){
+				if(!isUndeletable($checkLinkData['privacy']))
+					$undeletable = "<li><a href=\"javascript: popper('doit.php?action=makeFileSystemItemUndeletable&type=link&itemId=$itemId')\">Make Undeletable</a></li>";
+				else
+					$undeletable = "<li><a href=\"javascript: popper('doit.php?action=makeFileSystemItemDeletable&type=link&itemId=$itemId')\">Make Deletable</a></li>";
+			}
+			
         }else if($type == "internLink"){
             $checkInternLinkData = mysql_fetch_array(mysql_query("SELECT * FROM internLinks WHERE id='$itemId'"));
             
@@ -617,7 +668,7 @@
   function useridToRealname($userid){
         $loginSQL = mysql_query("SELECT realname FROM user WHERE userid='".save($userid)."'");
         $loginData = mysql_fetch_array($loginSQL);
-        return "Nic Zemke";
+        return $loginData['realname'];
   }
   
   
@@ -672,7 +723,7 @@
         }
 		$size.="px";
     
-    if(empty($picData[userPicture])){
+    if(empty($picData['userPicture'])){
         
         
     	$class = "standardUser";
@@ -708,10 +759,10 @@
       
       
         if($small){
-        	if(empty($class)){
+        	if(!empty($picData['userPicture'])){
         		$style = " background-image: url(\\'$src\\');";
-				if($small == "unescaped"){
-        			$style = " background-image: url('$src');";
+				if($small == 'unescaped'){
+        			$style = " background-image: url(\\'$src\\');";
 				}
 			}
 			
@@ -863,11 +914,11 @@
    //gets all unseen messages for receiver=user
    function getLastMessages($user=NULL){
    	if($user == NULL){
-   		$user = $_SESSION['userid'];
+   		$user = getUser();
    	}else{
    		$user = save($user);
    	}
-   	
+   	$listedUsers[] = $user;
 	$newMessagesSql = mysql_query("SELECT * FROM  `messages` WHERE  receiver='$user' OR sender='$user' ORDER BY timestamp DESC LIMIT 0, 5");
 	while($newMessagesData = mysql_fetch_array($newMessagesSql)){
 		$session .= "newMessage $newMessagesData[id]";
@@ -875,7 +926,7 @@
 		
 		//each sender is only listed once
 		if(!in_array($newMessagesData['sender'], $listedUsers)){
-	    $text = substr($newMessagesData[text], 0, 100);
+	    $text = substr($newMessagesData['text'], 0, 100);
 
 		//define everything that is important	    
 		$return['messageId'] = $newMessagesData['id'];
@@ -1219,6 +1270,13 @@ echo"</div>";
             }
   	
   }
+
+  function deleteUserFromGroup($userid, $groupid){
+		
+	if(mysql_query("DELETE FROM groupAttachments WHERE `group`='".save($groupid)."' AND `item`='user' AND `itemId`='".save($userid)."'")){
+		return true;
+	}
+  }
   
   function updateGroup($groupId, $privacy, $description, $membersInvite){
   	
@@ -1232,11 +1290,11 @@ echo"</div>";
   	
 		$groupData = getGroupData($groupId);
 		
-		$adminString = $groupData[admin];
+		$adminString = $groupData['admin'];
 		
 		//proof if user is allready admin
 		$admins = explode($adminString, ";");
-		if(!in_array("$userId", $$admins)){
+		if(!in_array("$userId", $admins)){
 			$adminString = "$adminString;$userId";
 			
 			if(mysql_query("UPDATE `groups` SET `admin`='$adminString' WHERE id='".save($groupId)."'")){
@@ -2424,74 +2482,7 @@ echo"</div>";
         		</ul>
         	</div>
                                 <script>
-
-
-                                    $('.privacyPublicTrigger').click(function(){
-
-                                        if($(this).is(':checked')){
-
-                                            $('.uncheckPublic').prop('checked', false);
-
-                                        }
-
-                                    });
-
-                                    $('.privacyCustomTrigger').click(function(){
-                                        if($(this).is(':checked')){
-                                            $('.uncheckCustom').prop('checked', false);
-                                        }
-                                    });
-
-
-                                    $('.privacyHiddenTrigger').click(function(){
-                                        if($(this).is(':checked')){
-                                            $('.uncheckHidden').prop('checked', false);
-                                        }
-                                    });
-                                    
-                                    $('.privacyOnlyMeTrigger').click(function(){
-                                        if($(this).is(':checked')){
-                                            $('.uncheckOnlyMe').prop('checked', false);
-                                        }
-                                    });
-                                    
-                                    $('.privacyBuddyTrigger').click(function(){
-                                    	
-                                        if($(this).is(':checked')){
-                                            //$('.privacyBuddyTrigger').prop('checked', true);
-                                        }else{
-                                           // $('.privacyBuddyTrigger').prop('checked', false);
-                                        }
-                                    	$('.privacyShowBuddy').show();
-                                    });
-                                    
-                                    $('.privacyGroupTrigger').click(function(){
-                                    	$('.privacyShowGroups').show();
-                                        if($(this).is(':checked')){
-                                            //$('.privacyGroupTrigger').prop('checked', true);
-                                        }else{
-                                            //$('.privacyGroupTrigger').prop('checked', false);
-                                        }
-                                    });
-                                    
-                                    $('.uncheckOnlyMe').click(function(){
-                                        if($(this).is(':checked')){
-                                            $('.privacyOnlyMeTrigger').prop('checked', false);
-                                        }
-                                    });
-                                    $('.privacyHiddenTrigger').click(function(){
-                                        if($(this).is(':checked')){
-                                            $('.uncheckHidden').prop('checked', false);
-                                        }
-                                    });
-                                    $('.privacyCustomTrigger').click(function(){
-                                        if($(this).is(':checked')){
-                                            $('.uncheckCustom').prop('checked', false);
-                                        }
-                                    });
-
-
-
+									initPrivacy();
                                 </script>
        <?php
        }
@@ -2591,7 +2582,7 @@ echo"</div>";
 	}
 	
 	function showPlaylist($id, $query=NULL){
-		if(empty($id))
+		if(!empty($id))
 			$query = "id='$id'";
 		
         $playListSql = mysql_query("SELECT * FROM playlist WHERE $query");
@@ -3043,7 +3034,7 @@ echo"</div>";
 			
             $thumbPath = $folderpath."thumbs/";
             $imgName = basename($FileElementData['title']."_".$file['name']);
-            $elementName = "$FileElementData[title]_";
+            $elementName = rawurlencode($FileElementData['title'].'_');
             $finalName = $FileElementData['title']."_".$file['name'];
  
 			
@@ -4028,14 +4019,22 @@ echo"</div>";
                 
                     $i++;
                 ?>
-                <tr bgcolor="#<?=$color;?>" class="strippedRow link_<?=$linkListData[id];?>" oncontextmenu="showMenu('link<?=$linkListData[id];?>'); return false;" height="22px">
+                <tr class="strippedRow link_<?=$linkListData[id];?>" oncontextmenu="showMenu('link<?=$linkListData[id];?>'); return false;" height="40px">
                     <td width="65px">&nbsp;<img src="<?=$subpath;?>gfx/icons/fileIcons/<?=$image;?>" alt="<?=$linkListData[type];?>" height="22px"></td>
                     <td><a href="#" onclick="<?=$link;?>"><?=substr($linkListData[title],0,30);?></a></td>
-                    <td width="70" align="right"><?=showItemSettings('link', $linkListData[id]);?></td>
+                    <td width="70" align="right">
+                    	<?php
+                    	if(!$git){
+                    		showItemSettings('link', $linkListData[id]);
+                    	}
+                    	?>
+                    	</td>
                     <td><?=showScore(link, $linkListData[id]);?></td>
                 </tr>
                 <?php
+                    if(!$git){
                 showRightClickMenu("link", $linkListData[id], $title10, $linkListData[type]);
+					}
                 }
                 
                 
@@ -4307,7 +4306,7 @@ echo"</div>";
 			$typeId = save($typeId);
 			
 			switch($type){
-				case folder:
+				case 'folder':
 					
 					$folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
 					$folderData = mysql_fetch_array($folderSQL);
@@ -4321,7 +4320,7 @@ echo"</div>";
 					
 					
 					break;
-				case element:
+				case 'element':
 					
 					$elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
 					$elementData = mysql_fetch_array($elementSQL);
@@ -4335,7 +4334,7 @@ echo"</div>";
 					
 					
 					break;
-				case file:
+				case 'file':
 					$fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
 					$fileData = mysql_fetch_array($fileSQL);
 					$privacy = $fileData[privacy];
@@ -4343,9 +4342,9 @@ echo"</div>";
 					$privacy .= ";PROTECTED";
 					}
 					
-					mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+					mysql_query("UPDATE `files` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
 					break;
-				case link:
+				case 'link':
 					$linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
 					$linkData = mysql_fetch_array($linkSQL);
 					
@@ -4370,7 +4369,7 @@ echo"</div>";
 			$typeId = save($typeId);
 			
 			switch($type){
-				case folder:
+				case 'folder':
 					
 					$folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
 					$folderData = mysql_fetch_array($folderSQL);
@@ -4383,35 +4382,35 @@ echo"</div>";
 					
 					
 					break;
-				case element:
+				case 'element':
 					
 					$elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
 					$elementData = mysql_fetch_array($elementSQL);
 					
 					$privacy = $elementData[privacy];
-					$privacy .= ";PROTECTED";
+					$privacy = str_replace(";PROTECTED", "", $privacy);
 					
 					
 					mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
 					
 					
 					break;
-				case file:
+				case 'file':
 					$fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
 					$fileData = mysql_fetch_array($fileSQL);
 					$privacy = $fileData[privacy];
-					$privacy .= ";PROTECTED";
+					$privacy = str_replace(";PROTECTED", "", $privacy);
 					
 					
-					mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+					mysql_query("UPDATE `files` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
 					break;
-				case link:
+				case 'link':
 					$linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
 					$linkData = mysql_fetch_array($linkSQL);
 					
 					
 					$privacy = $linkData[privacy];
-					$privacy .= ";PROTECTED";
+					$privacy = str_replace(";PROTECTED", "", $privacy);
 					
 					
 					mysql_query("UPDATE `links` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
@@ -4466,7 +4465,7 @@ echo"</div>";
 					}
 					
 					
-					mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+					mysql_query("UPDATE `files` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
 					break;
 				case link:
 					$linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
@@ -4525,7 +4524,7 @@ echo"</div>";
 				$privacy = str_replace(";UNDELETABLE", "", $privacy);
 				
 				
-				mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+				mysql_query("UPDATE `files` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
 				break;
 			case link:
 				$linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
@@ -4929,7 +4928,7 @@ class dashBoard{
 		$userData = $this->userdata;
 		
 		$title = "Welcome";
-		$content = showUserPicture($this->userid,07,false,true)." Hey <a href=\"#\" onclick=\"showProfile('$this->userid')\">$userData[username]</a>,<br>good to see you!";
+		$content = showUserPicture($this->userid,13,false,true)." Hey <a href=\"#\" onclick=\"showProfile('$this->userid')\">$userData[username]</a>,<br>good to see you!";
 		$content .= "<div>";
 		$content .= "<div class=\"listContainer\">";
 		$content .= "<ul class=\"list messageList\" id=\"dockMenuSystemAlerts\"></ul>";
@@ -5054,10 +5053,8 @@ class dashBoard{
 				
 				$output .= "<li class=\"$class\" style=\"clear:both;\">";
 					$output .=  "<span>";
-					$output .=  showUserPicture($message[sender],07,'',true);
-					$output .=  "</span>";
-					$output .=  "<span>";
-					$output .=  "$message[senderUsername]";
+					$output .=  showUserPicture($message[sender],13,'',true);
+					$output .=  "$message[senderUsername]:";
 					$output .=  "</span>";
 					//$output .=  "<span>";
 					//$output .=  universeTime($message[timestamp]);

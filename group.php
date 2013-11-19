@@ -113,15 +113,16 @@ if (!empty($memberData[itemId])) {
 	    <table cellspacing="0" width="100%">
 	        <?
 	        $needle = "$group;";
-	        $playListSql = mysql_query("SELECT `id`, `user`, `title` FROM `playlist` WHERE `privacy` LIKE %$group%");
+	        $playListSql = mysql_query("SELECT * FROM `playlist` WHERE `privacy` LIKE %$group%");
 	        while($playListData = mysql_fetch_array($playListSql)){
+	        if(authorize($playListData['privacy'], 'show', $playListData['user'])){
 	        $i++    
 	            ?>
 	        <tr border="0" bgcolor="#<?=$color;?>" width="100%" height="35">
 	            <td width="35">&nbsp;<img src="./gfx/icons/playlist.png"></td>
-	            <td><a href="javascript: popper('doit.php?action=showPlaylist&id=<?=$playListData[id];?>')"><?=$playListData[title]?></a></td>
+	            <td><a href="javascript: popper('doit.php?action=showPlaylist&id=<?=$playListData['id'];?>')"><?=$playListData['title']?></a></td>
 	        </tr>
-	        <? } ?>
+	        <? }} ?>
 	    </table>
     </div>
     <?

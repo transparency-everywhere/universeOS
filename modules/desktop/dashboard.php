@@ -29,8 +29,8 @@ $userData = mysql_fetch_array($userSql);
 			<center style="margin: 15px;">
     			<a class="btn btn-info" href="#" onclick="loader('loader', 'doit.php?action=createNewUFF&element=<?=$userData['myFiles'];?>'); " target="submitter"><i class="icon-file icon-white"></i> Create Document</a>
     			<br /><br />
-				<a href="javascript: popper('./modules/filesystem/addFile.php?element=<?=$userData['myFiles'];?>')" class="btn btn-info"><i class="icon-file icon-white"></i>&nbsp;add File</a>
-				<a href="javascript: popper('./doit.php?action=addLink&element=<?=$userData['myFiles'];?>')" class="btn btn-info"><i class="icon-globe icon-white"></i>&nbsp;add Link</a>
+				<a href="#" onclick="openUploadTab();" class="btn btn-info"><i class="icon-file icon-white"></i>&nbsp;add File</a>
+				<a href="#" onclick="popper('./doit.php?action=addLink&element=<?=$userData['myFiles'];?>')" class="btn btn-info"><i class="icon-globe icon-white"></i>&nbsp;add Link</a>
 			</center>
 		</div>
 		<footer>

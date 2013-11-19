@@ -1,4 +1,7 @@
 <?php
+class entropy
+
+
 switch($action){
 	case 'authentificate':
 		break;

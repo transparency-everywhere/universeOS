@@ -132,7 +132,7 @@ if($_GET['action'] == "scorePlus"){
         $playListId = save($_GET[id]);
         $playListSql = mysql_query("SELECT * FROM playlist WHERE id='$playListId'");
         $playListData = mysql_fetch_array($playListSql);
-        if($playListData[user] == "$_SESSION[userid]"){
+        if($playListData['user'] == "$_SESSION[userid]"){
             $delete = TRUE;
         }
             ?>
@@ -140,7 +140,7 @@ if($_GET['action'] == "scorePlus"){
                     
                     <header>
                     		<a class="jqClose">X</a>
-                            <img src="./gfx/icons/playlist.png">&nbsp;<?=$playListData[title];?>
+                            <img src="./gfx/icons/playlist.png">&nbsp;<?=$playListData['title'];?>
                     </header>
                     <div class="jqContent">
                         <center>
@@ -152,11 +152,15 @@ if($_GET['action'] == "scorePlus"){
                         </center>
                     </div>
                             <footer>
-                                <a href="javascript: nextPlaylistItem('<?=$playListData[id];?>', '0')" class="btn btn-success"><i class="icon-play icon-white"></i>&nbsp;Play</a>&nbsp;
-                                <? if(proofLogin()){ ?>
-                                <a href="#" onclick="popper('doit.php?action=copyPlaylist&playlist=<?=$playListData[id];?>')" class="btn btn-info" style="color: #FFFFFF"><i class="icon-share icon-white"></i>&nbsp;Copy</a>&nbsp;
-                                <a href="#" onclick="popper('doit.php?action=editItem&type=playlist&itemId=<?=$playListData[id];?>')" class=" btn btn-warning" style="color: #FFFFFF"><i class="icon-edit icon-white"></i>&nbsp;Edit</a>
-                                <? } ?>
+                                <a href="javascript: nextPlaylistItem('<?=$playListData['id'];?>', '0')" class="btn btn-success"><i class="icon-play icon-white"></i>&nbsp;Play</a>&nbsp;
+                                <? 
+                                if(proofLogin()){ ?>
+                                <a href="#" onclick="popper('doit.php?action=copyPlaylist&playlist=<?=$playListData['id'];?>')" class="btn btn-info" style="color: #FFFFFF"><i class="icon-share icon-white"></i>&nbsp;Copy</a>&nbsp;
+                                <?
+                                	if(authorize($playListData['privacy'], "edit", $playListData['user'])){?>
+                                <a href="#" onclick="popper('doit.php?action=editItem&type=playlist&itemId=<?=$playListData['id'];?>')" class=" btn btn-warning" style="color: #FFFFFF"><i class="icon-edit icon-white"></i>&nbsp;Edit</a>
+                                <? 	}
+								} ?>
                             </footer>
             	<script>	
 				$('.jqClose').click(function(){
@@ -1022,9 +1026,9 @@ if($_GET['action'] == "scorePlus"){
              $membersInvite = "checked=\"checked\"";
          }
          if($groupData["public"] == "1"){
-             $public = "checked";
-         }else{
              $unpublic = "checked";
+         }else{
+             $public = "checked";
          }
          ?>
         <form action="doit.php?action=groupAdmin&id=<?=$group;?>" method="post" target="submitter">
@@ -1070,7 +1074,7 @@ if($_GET['action'] == "scorePlus"){
                                         $groupUserSql = mysql_query("SELECT username FROM user WHERE userid='$groupUseData[itemId]'");
                                         $groupUserData = mysql_fetch_array($groupUserSql);
                                         ?>
-                                        <tr class="strippedRow" valign="top">
+                                        <tr class="strippedRow groupMember_<?=$group."_".$groupUseData['itemId'];?>" valign="top">
                                             <td style="padding: 3px;"><?=showUserPicture($groupUseData, 15);?></td>
                                             <td><?=$groupUserData[username];?></td>
                                             <td align="right">
@@ -1080,8 +1084,8 @@ if($_GET['action'] == "scorePlus"){
 												    <span class="caret"></span>
 												  </button>
 												  <ul class="dropdown-menu">
-												    <li>&nbsp;<a href="#">delete</a></li>
-												    <li>&nbsp;<a href="#" onclick="groupMakeUserAdmin('<?=$group;?>', '<?=$groupUseData[itemId];?>'); return false">make Admin</li>
+												    <li>&nbsp;<a href="doit.php?action=deleteUserFromGroup&groupid=<?=$group;?>&userid=<?=$groupUseData['itemId'];?>" target="submitter">delete</a></li>
+												    <li>&nbsp;<a href="#" onclick="groupMakeUserAdmin('<?=$group;?>', '<?=$groupUseData[itemId];?>'); return false">make Admin</a></li>
 												  </ul>
 												</div>
 												&nbsp;
@@ -1192,9 +1196,15 @@ if($_GET['action'] == "scorePlus"){
      }else if($_GET['action'] == "groupremoveAdmin"){
      	
      }else if($_GET['action'] == "groupLeave"){
-         $group = "$_GET[id]";
-         mysql_query("DELETE FROM groupAttachments WHERE `group`='$group' AND `item`='user' AND `itemId`='$_SESSION[userid]'");
-         jsAlert("You left the group");   
+         $group = $_GET['id'];
+     	if(deleteUserFromGroup(getUser(), $group)){
+         jsAlert("You left the group");
+		}
+     }else if($_GET['action'] == "deleteUserFromGroup"){
+     	if(deleteUserFromGroup($_GET['userid'], $_GET['groupid'])){
+			echo'<script>parent.$(".groupMember_'.$_GET['groupid'].'_'.$_GET['userid'].'").hide();</script>';
+     		jsAlert('The user left the group.');
+     	}
      }
      
      
@@ -1211,7 +1221,7 @@ if($_GET['action'] == "scorePlus"){
 				?>
 				parent.updateDashbox('message');
 	            parent.$('.chatInput').val('');
-	            parent.$('#test_<?=str_replace(" ","_",$_GET[buddyname]);?>').load('modules/chat/chatt.php?buddy=<?=urlencode($_GET[buddyname]);?>&initter=1');
+	            parent.$('#test_<?=str_replace(" ","_",$_GET[buddyname]);?>').load('modules/chat/chatreload.php?buddy=<?=urlencode($_GET[buddyname]);?>&initter=1');
 	        	<?
 	        echo"</script>";
 		}
@@ -1440,16 +1450,14 @@ if($_GET['action'] == "scorePlus"){
          <?}
          
      }else if($_GET['action'] == "addYouTubeItemToPlaylistVeryLongName"){
-         $playlist = save($_POST[playlistId]);
-         $vId = save($_GET[vId]);
+         $playlist = save($_POST['playlistId']);
+         $vId = save($_GET['vId']);
          
          $UpdateStringSql = mysql_query("SELECT id, youTube FROM playlist WHERE id='$playlist'");
          $UpdateData = mysql_fetch_array($UpdateStringSql);
    
             if(!empty($vId)){
-            	$array = explode(';',$UpdateData['youTube']);
-				$array[] = "$vId";
-				$items = implode(';', $array);
+             $items= "$vId;$UpdateData[youTube]";
              if(mysql_query("UPDATE playlist SET youTube='$items' WHERE id='$playlist'")){
                  jsAlert("worked ;)");
              }
@@ -2601,7 +2609,7 @@ if($_GET['action'] == "scorePlus"){
                 }
             }else if($_GET['action'] == "protectFileSystemItems"){
             	
-            	protectFilesystemItem($_GET[type], $_GET[itemId]);
+            	protectFilesystemItem($_GET['type'], $_GET['itemId']);
 				jsAlert("This Item can not be edited anymore.");
             }else if($_GET['action'] == "removeProtectionFromFileSystemItems"){
             	
@@ -2609,11 +2617,11 @@ if($_GET['action'] == "scorePlus"){
 				jsAlert("This Item can be edited again.");
             }else if($_GET['action'] == "makeFileSystemItemUndeletable"){
             	
-            	makeFileSystemItemUndeletable($_GET[type], $_GET[itemId]);
+            	makeFilesystemItemUndeletable($_GET[type], $_GET[itemId]);
 				jsAlert("This Item can not be deleted anymore.");
             }else if($_GET['action'] == "makeFileSystemItemDeletable"){
             	
-            	removeProtectionFromFilesystemItem($_GET[type], $_GET[itemId]);
+            	makeFilesystemItemDeletable($_GET[type], $_GET[itemId]);
 				jsAlert("This Item can be deleted again.");
             }
             
@@ -2791,6 +2799,8 @@ if($_GET['action'] == "scorePlus"){
                 removeUFFcookie($id);
             }else if($_GET['action'] == "logout"){
             	if(!empty($_SESSION['userid'])){
+            		
+            	unset($_SESSION['userid']);
 				session_unset();
     			jsAlert( "good bye");
 				?>

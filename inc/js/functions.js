@@ -126,7 +126,77 @@ var focus = true;
                 }).mouseleave(function(){
                     $('.mousePop').hide();
                 });
+//privacy
 
+
+	function initPrivacy(){
+		
+
+                                    $('.privacyPublicTrigger').click(function(){
+
+                                        if($(this).is(':checked')){
+
+                                            $('.uncheckPublic').prop('checked', false);
+
+                                        }
+
+                                    });
+
+                                    $('.privacyCustomTrigger').click(function(){
+                                        if($(this).is(':checked')){
+                                            $('.uncheckCustom').prop('checked', false);
+                                        }
+                                    });
+
+
+                                    $('.privacyHiddenTrigger').click(function(){
+                                        if($(this).is(':checked')){
+                                            $('.uncheckHidden').prop('checked', false);
+                                        }
+                                    });
+                                    
+                                    $('.privacyOnlyMeTrigger').click(function(){
+                                        if($(this).is(':checked')){
+                                            $('.uncheckOnlyMe').prop('checked', false);
+                                        }
+                                    });
+                                    
+                                    $('.privacyBuddyTrigger').click(function(){
+                                    	
+                                        if($(this).is(':checked')){
+                                            //$('.privacyBuddyTrigger').prop('checked', true);
+                                        }else{
+                                           // $('.privacyBuddyTrigger').prop('checked', false);
+                                        }
+                                    	$('.privacyShowBuddy').show();
+                                    });
+                                    
+                                    $('.privacyGroupTrigger').click(function(){
+                                    	$('.privacyShowGroups').show();
+                                        if($(this).is(':checked')){
+                                            //$('.privacyGroupTrigger').prop('checked', true);
+                                        }else{
+                                            //$('.privacyGroupTrigger').prop('checked', false);
+                                        }
+                                    });
+                                    
+                                    $('.uncheckOnlyMe').click(function(){
+                                        if($(this).is(':checked')){
+                                            $('.privacyOnlyMeTrigger').prop('checked', false);
+                                        }
+                                    });
+                                    $('.privacyHiddenTrigger').click(function(){
+                                        if($(this).is(':checked')){
+                                            $('.uncheckHidden').prop('checked', false);
+                                        }
+                                    });
+                                    $('.privacyCustomTrigger').click(function(){
+                                        if($(this).is(':checked')){
+                                            $('.uncheckCustom').prop('checked', false);
+                                        }
+                                    });
+
+	}
     
               
 //window functions

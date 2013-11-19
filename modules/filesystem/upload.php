@@ -19,21 +19,22 @@ $folder = $_GET[folder];
 		margin: 5px;
 		border: 1px solid #c9c9c9;
 		max-width:500px;
+		padding-bottom: 3px;
 	}
 	
 	.tempFilelist li{
 		font-size: 20px;
-		line-height: 10px;
-		height: 20px;
-		margin: 1px 0;
+		line-height: 36px;
+		height: 28px;
+		margin: 0px 6px 0px 7px;
 	}
 	
 	.tempFilelist li img{
-		margin-bottom: -6px;
+		margin-bottom: -1px;
 	}
 	
 	.tempFilelist li i{
-		margin-top: 2px;
+		margin-top: 14px;
 		float: right;
 	}
 </style>
@@ -42,19 +43,24 @@ $folder = $_GET[folder];
 	<div id="uploadStepOne" class="uploadStep step">
 		<div>
 		<h1>Upload File</h1>
-		<h3>Choose Element</h3>
 			<?php
 			if(empty($_GET['element']) OR $_GET['element'] == "undefined"){
+				echo '<h3>Choose Element</h3>';
 				echo showMiniFileBrowser("1", '', '', true, "element");
 			}else{
+				echo '<h3>You will add the files to this element:<br>';
 				echo '<img src="gfx/icons/filesystem/element.png">&nbsp;';
 				echo getElementName($_GET['element']);
+				echo '</h3>';
 				echo '<input type="hidden" name="typeId" value="'.$_GET['element'].'" class="choosenTypeId">';
+				echo '<p>';
+				echo 'Please klick next to continue.';
+				echo '</p>';
 			}
 			?>
 		</div>
 		<footer>
-			<a href="#" onclick="$('#uploadStepOne').hide(); $('#uploadStepTwo').show(); initUploadify('#uploader_file', 'doit.php?action=manageUpload&type=uploadTemp', $('.choosenTypeId').val(), '<?=$timeStamp;?>', '<?=$salt;?>');" class="btn pull-right">Next</a>
+			<a href="#" onclick="$('#uploadStepOne').hide(); $('#uploadStepTwo').show(); initUploadify('#uploader_file', 'doit.php?action=manageUpload&type=uploadTemp', $('.choosenTypeId').val(), '<?=$timeStamp;?>', '<?=$salt;?>');" class="btn btn-mini pull-right">Next</a>
 		</footer>
 	</div>
 	<div id="uploadStepTwo" class="hidden uploadStep step">
@@ -66,8 +72,8 @@ $folder = $_GET[folder];
 			?>
 		</div>
 		<footer>
-			<a href="#" onclick="$('#uploadStepTwo').hide(); $('#uploadStepOne').show();" class="btn pull-Left">Back</a>
-			<a href="#" onclick="$('#uploadStepTwo').hide(); $('#uploadStepThree').show();" class="btn pull-right">Next</a>
+			<a href="#" onclick="$('#uploadStepTwo').hide(); $('#uploadStepOne').show();" class="btn btn-mini pull-Left">Back</a>
+			<a href="#" onclick="$('#uploadStepTwo').hide(); $('#uploadStepThree').show();" class="btn btn-mini pull-right">Next</a>
 		</footer>
 	</div>
 	<div id="uploadStepThree" class="hidden uploadStep step">
@@ -83,8 +89,8 @@ $folder = $_GET[folder];
 		    </div>
 		</div>
 		<footer>
-			<a href="#" onclick="$('#uploadStepThree').hide(); $('#uploadStepTwo').show();" class="btn pull-left">Back</a>
-			<input type="submit" value="Add Files to the Filesystem" class="btn btn-success pull-right">
+			<a href="#" onclick="$('#uploadStepThree').hide(); $('#uploadStepTwo').show();" class="btn btn-mini pull-left">Back</a>
+			<input type="submit" value="Add Files to the Filesystem" class="btn btn-mini btn-success pull-right">
 		</footer>
 	</div>
 </div>

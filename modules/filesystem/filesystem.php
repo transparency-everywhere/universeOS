@@ -1,9 +1,10 @@
 <?
 if(empty($_SESSION[userid])) {
 session_start();
-include("../../inc/config.php");
-include("../../inc/functions.php");
 }
+
+include_once("../../inc/config.php");
+include_once("../../inc/functions.php");
 if(!isset($_GET[reload])){
     ?>
 <div id="filesystem" class="fenster" style="display: none;">

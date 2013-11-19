@@ -1,18 +1,18 @@
 <?
-if(empty($_SESSION[userid])){
+if(empty($_SESSION['userid'])){
 session_start();
-}
-if($_SESSION[userid]){
 require_once("inc/config.php");
 require_once("inc/functions.php");
+}
+$userid = getUser();
+if($userid){
 echo"<script>";
-$userid = $_SESSION['userid'];
 updateActivity($userid);
 $time = time();
 
 //UFF Viewer
-        if(!empty($_SESSION[openUffs])){
-            $openUffs = $_SESSION[openUffs];
+        if(!empty($_SESSION['openUffs'])){
+            $openUffs = $_SESSION['openUffs'];
             $openUffs = explode(";", $_SESSION["openUffs"]);
             foreach($openUffs AS &$file){
                 $caller = "UFFsum_$file";
@@ -50,7 +50,7 @@ $time = time();
 //check if the buddylists needs to be reloaded
 $buddies = buddyListArray();
 
-if(!empty($buddies) && ($_SESSION[buddyListReload] < (time()-60))){
+if(!empty($buddies) && ($_SESSION['buddyListReload'] < (time()-60))){
 echo"$('#buddyListFrame').load('buddylist.php?reload=1');";
 $_SESSION['buddyListReload']  = time();
 }
@@ -58,11 +58,11 @@ $_SESSION['buddyListReload']  = time();
 
 
 //check for new msg
-$newMessagesSql = mysql_query("SELECT sender FROM  `messages` WHERE  receiver='$_SESSION[userid]' AND  `read`='0'  ORDER BY timestamp DESC LIMIT 0, 3");
+$newMessagesSql = mysql_query("SELECT sender FROM  `messages` WHERE  receiver='".$_SESSION['userid']."' AND  `read`='0'  ORDER BY timestamp DESC LIMIT 0, 3");
 $newMessagesData = mysql_fetch_array($newMessagesSql);
 
 
-$newMessagesSql2 = mysql_query("SELECT receiver FROM  `messages` WHERE  sender='$_SESSION[userid]' AND  `seen`='0'  ORDER BY timestamp DESC LIMIT 0, 3");
+$newMessagesSql2 = mysql_query("SELECT receiver FROM  `messages` WHERE  sender='".$_SESSION['userid']."' AND  `seen`='0'  ORDER BY timestamp DESC LIMIT 0, 3");
 $newMessagesData2 = mysql_fetch_array($newMessagesSql2);
     if(isset($newMessagesData2[sender])){
         $UserSql = mysql_query("SELECT * FROM user WHERE userid='$newMessagesData2[receiver]'");
@@ -86,7 +86,7 @@ $newMessagesData2 = mysql_fetch_array($newMessagesSql2);
         unset($newMessagesOn);
     }
 //check for friend request
-$friendRequestSql = mysql_query("SELECT * FROM buddylist WHERE buddy='$_SESSION[userid]' && request='1' LIMIT 0, 3");
+$friendRequestSql = mysql_query("SELECT * FROM buddylist WHERE buddy='".$_SESSION['userid']."' && request='1' LIMIT 0, 3");
 $friendRequestData = mysql_fetch_array($friendRequestSql);
  $newFriends = $friendRequestData[buddy];
  

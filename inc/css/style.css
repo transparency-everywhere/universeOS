@@ -262,6 +262,14 @@ li.notHidden{
 	overflow: auto;
 }
 
+.resultList li {
+font-size: 19px;
+}
+
+.resultList li img{
+	margin-bottom: -3px; margin-left:5px; margin-right:5px;
+}
+
 .windowHeader {
     position:absolute;
     left:0px;
@@ -572,16 +580,15 @@ li.notHidden{
     list-style: none;
     margin: 0px;
     padding: 5px;
-    cursor:pointer;
-    
-}
-.leftNav > ul > li:hover{
-    
+    cursor:pointer;font-size: 20px;
 }
 
-.leftNav > ul > li > a{
-	/*color: #FFFFFF;
-	font-color: #FFFFFF;*/
+.leftNav > ul > li:hover {
+background: #383838;
+}
+
+.leftNav > ul > li img{
+    
 }
 
 .frameRight{
@@ -609,7 +616,7 @@ li.notHidden{
 	position:absolute;
     top: 0px;
     right: 0px;
-    bottom: 40px;
+    bottom: 28px;
     left: 0px;
     overflow:auto;
     padding:10px;
@@ -617,12 +624,14 @@ li.notHidden{
 }
 
 .step > footer{
-	height:30px;
-	position:absolute;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
-    padding:5px;
+	height: 20px;
+	position: absolute;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+	padding: 3px;
+	background: #3E3E3E;
+	padding-bottom: 5px;
 }
 
 #settings{
@@ -666,7 +675,7 @@ li.notHidden{
 
 
 #buddyListFrame .realname{
-	font-size: 8px;
+	font-size: 12px;
 	line-height: 8px;
 }
 
@@ -795,7 +804,7 @@ li.notHidden{
 
 
 #filesystem .leftNav li img{
-	height: 20px;
+	height: 16px;
 	margin-bottom: -2px;
 }
 
@@ -907,17 +916,19 @@ li.notHidden{
 	.openFile header > img{
 		float: left;
 		margin-top: 10px;
+		margin-left: 5px;
 	}
 	
 	.openFile header .title{
-		float:left;
+		float: left;
 		font-size: 16pt;
-		margin-top: 10px;
+		margin-top: 7px;
 		margin-left: 5px;
-		overflow:hidden;
+		overflow: hidden;
 		max-width: 30%;
 		line-height: 30px;
 		height: 30px;
+		vertical-align: bottom;
 	}
 	.openFile header span{
 		float:right;
@@ -1013,7 +1024,7 @@ li.notHidden{
 }
 
 	#chatWelcomeList li{
-		border-top:1px solid #ADADAD;
+		border-bottom: 1px solid #ADADAD;
 		height: auto;
 		padding: 5px;
 	}
@@ -2273,22 +2284,32 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 	#dashBoard{
 		width: 960px;
 	}
+	
+	.dashBox:hover .content{
+		display: block;
+	}
+	
+	.dashBox:hover{
+		width: 233px;
+	}
+	.dashBox:hover footer{
+		display: block;
+	}
 
 	.dashBox{
 		color: #474747;
 		font-size: 15pt;
-		width: 233px;
-		height: 180px;
+		width: 160px;
 		border-radius: 1px;
-		background:rgba(255,255,255,0.9);
+		background: #fff9f0;
 		margin: 10px 0px 0px 10px;
 		position: relative;
-		float: left;
 	}
 	
 	.dashBox .content{
 		overflow: auto;
 		max-height: 141px;
+		display:none;
 	}
 	
 	.dashBox header{
@@ -2300,7 +2321,7 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 		border-bottom: 2px solid #3a3a3a;
 		color: #FFF;
 		padding-top: 10px;
-		background: rgb(214, 214, 214);
+		background: #3f72a6;
 		border-bottom: none;
 	}
 	
@@ -2310,6 +2331,9 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 		left: 0px;
 		right: 0px;
 		height: 15px;
+		display:none;
+		background: #f6f1ea;
+		border-top: 1px solid #ede3d5;
 	}
 	
 	.dashBox footer a:first-of-type{
@@ -2320,7 +2344,7 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 		float:right;
 	}
 	
-	.dashBox div, .dashBox ul{
+	.dashBox > div, .dashBox > ul {
 		padding: 3px;
 	}
 	
@@ -2343,11 +2367,17 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 		margin-right:5px;
 		margin-bottom:5px;
 	}
+	#dockMenuBuddyAlerts{
+		margin-top: 35px;
+	}
 	
 	.dashBox #messageList .unseen{
 		font-weight: bold;
 	}
 	
+	.dashBox #messageList span:first-of-type{
+		margin-left:0px;
+	}
 	.dashBox #messageList span{
 		margin-left:5px;
 	}

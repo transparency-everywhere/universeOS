@@ -10,14 +10,13 @@
 
 @font-face {
     font-family: 'print';
-    src: url('http://universeos.org/inc/fonts/printclearly-webfont.eot');
-    src: url('http://universeos.org/inc/fonts/printclearly-webfont.eot?#iefix') format('embedded-opentype'),
-         url('http://universeos.org/inc/fonts/printclearly-webfont.woff') format('woff'),
-         url('http://universeos.org/inc/fonts/printclearly-webfont.ttf') format('truetype'),
-         url('http://universeos.org/inc/fonts/printclearly-webfont.svg#print_clearlyregular') format('svg');
+    src: url('../fonts/printclearly-webfont.eot');
+    src: url('../fonts/printclearly-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/printclearly-webfont.woff') format('woff'),
+         url('../fonts/printclearly-webfont.ttf') format('truetype'),
+         url('../fonts/printclearly-webfont.svg#print_clearlyregular') format('svg');
     font-weight: normal;
     font-style: normal;
-
 }
 
 
