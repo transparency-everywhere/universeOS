@@ -7,8 +7,8 @@ if($_GET['action'] == "showScore"){
     echo showScore($_GET['type'], $_GET['typeid'], 1);
 } 
 if($_GET['action'] == "scorePlus"){
-    $type = $_GET[type];
-    $typeid = $_GET[typeid];
+    $type = $_GET['type'];
+    $typeid = $_GET['typeid'];
     plusOne($type, $typeid);
     ?>
     <script>
@@ -1585,7 +1585,7 @@ if($_GET['action'] == "scorePlus"){
             showComments($_GET[type], $_GET[itemid]);
         }
     }else if($_GET['action'] == "showStartMessage"){
-            if(empty($_GET[step])){ ?>
+            if(empty($_GET['step'])){ ?>
             <script>
                     $("#dashBoard").hide("slow");
                     $(".fenster").hide("slow");
@@ -1606,7 +1606,7 @@ if($_GET['action'] == "scorePlus"){
 	            </footer>
             </div>
             <?php
-            }else if($_GET[step] == "1"){?>
+            }else if($_GET['step'] == "1"){?>
             
             <div class="blueModal border-radius container">
             	<header>
@@ -1639,7 +1639,7 @@ if($_GET['action'] == "scorePlus"){
 	                </footer>
 	               </div>
             
-            <?}else if($_GET[step] == "2"){?>
+            <?}else if($_GET['step'] == "2"){?>
             <div class="blueModal border-radius">
             	<header>
             		Welcome
@@ -1671,7 +1671,7 @@ if($_GET['action'] == "scorePlus"){
                 	<a href="#" onclick="popper('doit.php?action=showStartMessage&step=3&noJq=true'); return false" class="btn btn-primary pull-right" style="">&nbsp;&nbsp;Next&nbsp;&nbsp;<a>
                 </footer>
             </div>  
-            <?}else if($_GET[step] == "3"){
+            <?}else if($_GET['step'] == "3"){
 			?>
             <div class="blueModal border-radius">
             	<header>
@@ -1696,8 +1696,8 @@ if($_GET['action'] == "scorePlus"){
                 	<a href="#" onclick="popper('doit.php?action=showStartMessage&step=4&noJq=true'); return false" class="btn btn-primary pull-right" style="">&nbsp;&nbsp;Next&nbsp;&nbsp;<a>
                 </footer>
             </div>
-            <?}else if($_GET[step] == "4"){
-                mysql_query("UPDATE user SET startLink='' WHERE userid='$_SESSION[userid]'");?>
+            <?}else if($_GET['step'] == "4"){
+                mysql_query("UPDATE user SET startLink='' WHERE userid='".getUser()."'");?>
             <script>
                 $("#finalStep").click(function(){
                     $(".blueModal").hide("slow", function(){
@@ -1721,27 +1721,27 @@ if($_GET['action'] == "scorePlus"){
                 </h2>
                 <div>
                 	<?php
-                    $AccSetSql = mysql_query("SELECT * FROM user WHERE userid='$_SESSION[userid]'");
+                    $AccSetSql = mysql_query("SELECT * FROM user WHERE userid='".getUser()."'");
                     $AccSetData = mysql_fetch_array($AccSetSql);
-                    if($AccSetData[birthdate]){
-                    $birth_day = date("d", $AccSetData[birthdate]);
-                    $birth_month = date("m", $AccSetData[birthdate]);
-                    $birth_year = date("Y", $AccSetData[birthdate]);
+                    if($AccSetData['birthdate']){
+                    $birth_day = date("d", $AccSetData['birthdate']);
+                    $birth_month = date("m", $AccSetData['birthdate']);
+                    $birth_year = date("Y", $AccSetData['birthdate']);
                     }
                  ?>
 		                <div class="controls">
 		                    
 		                    <div class="controls controlls-row">
 		                        <span class="span2">Name</span>
-		                        <input type="text" name="AccSetRealname" class="span3" value="<?=$AccSetData[realname];?>" placeholder="Your Name">
+		                        <input type="text" name="AccSetRealname" class="span3" value="<?=$AccSetData['realname'];?>" placeholder="Your Name">
 		                    </div>
 		                    <div class="controls controlls-row">
 		                        <span class="span2">City</span>
-		                        <input type="text" name="place" class="span3" value="<?=$AccSetData[place];?>" placeholder="Metropolis">
+		                        <input type="text" name="place" class="span3" value="<?=$AccSetData['place'];?>" placeholder="Metropolis">
 		                    </div>
 		                    <div class="controls controlls-row">
 		                        <span class="span2">Hometown</span>
-		                        <input type="text" name="home" class="span3" value="<?=$AccSetData[home];?>" placeholder="Los Santos">
+		                        <input type="text" name="home" class="span3" value="<?=$AccSetData['home'];?>" placeholder="Los Santos">
 		                    </div>
 		                    <div class="controls controlls-row">
 		                        <span class="span2">Birthdate</span>
@@ -1751,15 +1751,15 @@ if($_GET['action'] == "scorePlus"){
 		                    </div>
 		                    <div class="controls controlls-row">
 		                        <span class="span2">School</span>
-		                        <input type="text" name="school1" class="span3" value="<?=$AccSetData[school1];?>" placeholder="Hogwarts">
+		                        <input type="text" name="school1" class="span3" value="<?=$AccSetData['school1'];?>" placeholder="Hogwarts">
 		                    </div>
 		                    <div class="controls controlls-row">
 		                        <span class="span2">University</span>
-		                        <input type="text" name="university1" class="span3" value="<?=$AccSetData[university1];?>" placeholder="Oaksterdam University">
+		                        <input type="text" name="university1" class="span3" value="<?=$AccSetData['university1'];?>" placeholder="Oaksterdam University">
 		                    </div>
 		                    <div class="controls controlls-row">
 		                        <span class="span2">Work</span>
-		                        <input type="text" name="work" class="span3" value="<?=$AccSetData[employer];?>" placeholder="Charlie's Chocolate Factory">
+		                        <input type="text" name="work" class="span3" value="<?=$AccSetData['employer'];?>" placeholder="Charlie's Chocolate Factory">
 		                    </div>
 		                </div>
 	                </div>
@@ -1772,7 +1772,7 @@ if($_GET['action'] == "scorePlus"){
 		       </form>
             <?}
         }else if($_GET['action'] == "showSingleRssFeed"){
-            $rssSql = mysql_query("SELECT link FROM links WHERE id='".mysql_real_escape_string($_GET[id])."'");
+            $rssSql = mysql_query("SELECT link FROM links WHERE id='".mysql_real_escape_string($_GET['id'])."'");
             $rssData = mysql_fetch_array($rssSql);
             
             echo"<div style=\"padding: 20px;\">";
