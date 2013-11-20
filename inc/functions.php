@@ -603,7 +603,7 @@
   }
   
   function proofLogin(){
-      if(isset($_SESSION[userid])){
+      if(isset($_SESSION['userid'])){
           return true;
       }else{
           return false;
@@ -687,7 +687,7 @@
     $picData = mysql_fetch_array($picSQL);
     $time = time();
     
-    $difference = ($time - $picData[lastactivity]);
+    $difference = ($time - $picData['lastactivity']);
      if($difference < 90){
         $color = "#B1FFAD";
      }else if($difference > 90 && $difference < 600) {
@@ -707,7 +707,7 @@
     }
       
         
-        
+        $style = '';
         //there are three different thumb sizes which are created when
         //the userpicture is uploaded, depending on the requested size
         //a different thumb needs to be choosen to minimize traffic
@@ -1096,7 +1096,7 @@ function showComments($type, $itemid) {
       <form action="showComment.php" method="post" id="addComment" target="submitter">
           <table>
               <tr>
-                  <td><?=showUserPicture($_SESSION[userid], "25");?></td>
+                  <td><?=showUserPicture(getUser(), "25");?></td>
                   <td><input type="text" name="comment" placeholder="write commenta.." class="commentField" style="width: 100%; height:17px;"></td>
                   <td><input type="submit" value="send" class="btn btn-small" name="submitComment" style="margin-left:13px;"></td>
               </tr>
@@ -1649,7 +1649,7 @@ echo"</div>";
    	
    	$buddies = buddyListArray($userid);
 	
-	if(in_array($_SESSION[userid], $buddies) OR $userid == $_SESSION[userid]){
+	if(in_array($_SESSION['userid'], $buddies) OR $userid == $_SESSION['userid']){
 		return true;
 	}
    }

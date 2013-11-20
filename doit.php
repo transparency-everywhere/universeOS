@@ -2631,14 +2631,14 @@ if($_GET['action'] == "scorePlus"){
 // ajax stuff
             
           	else if($_GET['action'] == "mousePop"){
-                $type = $_POST[type];
-                $id = $_POST[id];
-                $html = $_POST[html];
+                $type = $_POST['type'];
+                $id = $_POST['id'];
+                $html = $_POST["html"];
                 switch($type){
-                    case none:
+                    case 'none':
                         $text = $html;
                     break;
-                    case youTube:
+                    case 'youTube':
                         $title = youTubeIdToTitle($id);
                         if(!empty($title)){
                         $text = "

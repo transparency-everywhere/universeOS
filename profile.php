@@ -1,5 +1,5 @@
 <?
-if(empty($_GET[user])){
+if(empty($_GET['user'])){
     die("error: no user selected");
 }
 session_start();
@@ -7,21 +7,21 @@ include("inc/config.php");
 include("inc/functions.php");
 
 $user = save("$_GET[user]");
-$profilesql = mysql_query("SELECT * FROM user WHERE userid='".mysql_real_escape_string($_GET[user])."'");
+$profilesql = mysql_query("SELECT * FROM user WHERE userid='".mysql_real_escape_string($_GET['user'])."'");
 $profiledata = mysql_fetch_array($profilesql);
-if($profiledata['priv_showProfile'] == 1 OR ($profiledata[priv_showProfile] == 0 && buddy($user))){
+if($profiledata['priv_showProfile'] == 1 OR ($profiledata['priv_showProfile'] == 0 && buddy($user))){
 $link = "profile.php?user=$user";
 
-if(!empty($profiledata[realname])){
+if(!empty($profiledata['realname'])){
 $name = "$profiledata[realname]";
 }
-if($profiledata[birthdate]){
-$birth_day = date("dS", $profiledata[birthdate]);
-$birth_month = date("F", $profiledata[birthdate]);
+if($profiledata['birthdate']){
+$birth_day = date("dS", $profiledata['birthdate']);
+$birth_month = date("F", $profiledata['birthdate']);
 if(isset($birth_day) AND isset($bith_month)){
 $birthtext .= "Born on the $birth_day of $birth_month";    
 }
-$birth_year = date("Y", $profiledata[birthdate]);
+$birth_year = date("Y", $profiledata['birthdate']);
 if(!empty($birth_year) && !empty($birthtext)){
 $birthtext .= " $birth_year";
 }
@@ -29,17 +29,17 @@ if(isset($birthtext)){
     $birthtext .= ".";
 }
 }
-if(isset($profiledata[home])){
+if(isset($profiledata['home'])){
 $profileText = "From $profiledata[home]";
 }
-if(isset($profiledata[place])){
+if(isset($profiledata['place'])){
     if(isset($profileText)){
     $profileText .= ", lives in $profiledata[place]";
     }else{
     $profileText .= "Lives in $profiledata[place]";
     }
 }
-if(isset($profiledata[school1])){
+if(isset($profiledata['school1'])){
     if(isset($profileText)){
     $profileText .= ", went to $profiledata[school1]";
     }else{
@@ -54,13 +54,13 @@ if(isset($profileText)){
 $checkSql = mysql_query("SELECT * FROM buddylist WHERE owner='$_SESSION[userid]' AND buddy='$user'");
 $checkData = mysql_fetch_array($checkSql);
 if(!empty($checkData)){
-    if($checkData[request] == "1"){
+    if($checkData['request'] == "1"){
         $friendButton = "<a href=\"#\" class=\"btn disabled friendButton_$user\">request sent</a>";
     }else{
         $friendButton = "";
     }
 }else{
-    if($user !== $_SESSION[userid]){
+    if($user !== $_SESSION['userid']){
     $friendButton = "<a href=\"./doit.php?action=addbuddy&buddy=$user\" target=\"submitter\" class=\"btn friendButton_$user\">Add to Buddylist</a>";
     }
     
@@ -69,14 +69,14 @@ if(empty($friendButton)){
     $checkSql1 = mysql_query("SELECT * FROM buddylist WHERE buddy='$user' AND owner='$_SESSION[userid]'");
     $checkData1 = mysql_fetch_array($checkSql1);
     if(!empty($checkData1)){
-        if($checkData1[request] == "1"){
+        if($checkData1['request'] == "1"){
             $friendButton = "<a href=\"#\" class=\"btn friendButton_$user\">Accept Request</a>";
         }else{
             $friendButton = "";
 
         }
     }else{
-        if($user !== $_SESSION[userid]){
+        if($user !== $_SESSION['userid']){
         $friendButton = "<a href=\"./doit.php?action=addbuddy&buddy=$user\" target=\"submitter\" class=\"btn friendButton_<?=$user;?>\">Add to Buddylist</a>";
     
         }
@@ -87,25 +87,25 @@ if(empty($friendButton)){
 }
 
 
-if(isset($_GET[scoreaction])){
-    if($_GET[scoreaction] == voteplus){
-        plusOne($_SESSION[userid], comments, $_GET[typeid]);
+if(isset($_GET['scoreaction'])){
+    if($_GET['scoreaction'] == 'voteplus'){
+        plusOne(getUser(), 'comments', $_GET['typeid']);
     }
 }
 ?>   
     <div class="signatureGradient" style="height: 80px; padding: 15px; font-size: 17pt;">
-        <span style="float: left;"><a href="#" onclick="showProfile(<?=$profiledata[userid];?>)"><?=$profiledata[username];?></a><span style="float: right"><?=$name;?></span><br><p style="font-size: 13pt;"><?=$birthtext;?> <?=$profileText;?></p>
+        <span style="float: left;"><a href="#" onclick="showProfile(<?=$profiledata['userid'];?>)"><?=$profiledata['username'];?></a><span style="float: right"><?=$name;?></span><br><p style="font-size: 13pt;"><?=$birthtext;?> <?=$profileText;?></p>
             <div style="margin-top: 15px;">
                 <?
-                if(!empty($_SESSION[userid])){
+                if(!empty($_SESSION['userid'])){
                 
 				echo $friendButton;
 				
-				if($profiledata[priv_foreignerMessages] == 1 OR ($profiledata[priv_foreignerMessages] == 0 && buddy($user))){ ?>
-                <a href="#" onclick="popper('doit.php?action=writeMessage&buddy=<?=$profiledata[userid];?>')" class="btn">Message</a>
+				if($profiledata['priv_foreignerMessages'] == 1 OR ($profiledata['priv_foreignerMessages'] == 0 && buddy($user))){ ?>
+                <a href="#" onclick="popper('doit.php?action=writeMessage&buddy=<?=$profiledata['userid'];?>')" class="btn">Message</a>
 				<? } } ?>
              </div></span>
-        <span style="float: right"><a href="#" onclick="openElement('<?=$profiledata[profilepictureelement];?>', 'Userpictures'); return false;"><?=showUserPicture($profiledata[userid], "50");?></a><br>
+        <span style="float: right"><a href="#" onclick="openElement('<?=$profiledata['profilepictureelement'];?>', 'Userpictures'); return false;"><?=showUserPicture($profiledata['userid'], "50");?></a><br>
         </span>
     </div>
     <div id="profileWrap">
@@ -142,7 +142,7 @@ if(isset($_GET[scoreaction])){
                                 ?>
                             <tr border="0" bgcolor="#<?=$color;?>" width="100%" height="35">
                                 <td width="35">&nbsp;<img src="./gfx/icons/playlist.png"></td>
-                                <td><a href="javascript: popper('doit.php?action=showPlaylist&id=<?=$playListData[id];?>')"><?=$playListData[title]?></a></td>
+                                <td><a href="javascript: popper('doit.php?action=showPlaylist&id=<?=$playListData['id'];?>')"><?=$playListData[title]?></a></td>
                             </tr>
                             <? }} ?>
                         </table>
@@ -173,12 +173,12 @@ if(isset($_GET[scoreaction])){
             }else {
                 $color="e5f2ff";
             }
-            $usernameSql = mysql_query("SELECT username FROM user WHERE userid='$friendData[buddy]'");
+            $usernameSql = mysql_query("SELECT username FROM user WHERE userid='".$friendData['buddy']."'");
             $usernameData = mysql_fetch_array($usernameSql);
             ?>
             <tr bgcolor="#<?=$color;?>" height="35">
-                <td width="40">&nbsp;<?=showUserPicture($friendData[buddy], "20");?></td>
-                <td><a href="#" onclick="javascript: showProfile('<?=$friendData[buddy];?>');"><?=$usernameData[username];?></a></td>
+                <td width="40">&nbsp;<?=showUserPicture($friendData['buddy'], "20");?></td>
+                <td><a href="#" onclick="javascript: showProfile('<?=$friendData['buddy'];?>');"><?=$usernameData['username'];?></a></td>
             </tr>
             <?
         $i++;}?>

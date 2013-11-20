@@ -3,12 +3,12 @@ session_start();
 include_once("inc/config.php");
 include_once("inc/functions.php");
 
-$action = $_GET[action];
+$action = $_GET['action'];
 
 
 
 switch($action){
-    case login:
+    case 'login':
 		//new version
 		if(empty($_POST['username']))
 			$username = save($_GET['username']);
@@ -33,23 +33,23 @@ switch($action){
             echo"false";
         }
     break;
-    case messengerLogin:
-		if(empty($_POST[username]))
-			$username = save($_GET[username]);
+    case 'messengerLogin':
+		if(empty($_POST['username']))
+			$username = save($_GET['username']);
 		else 
-			$username = save($_POST[username]);
+			$username = save($_POST['username']);
 		
         $loginSQL = mysql_query("SELECT username, password FROM user WHERE username='$username'");
         $loginData = mysql_fetch_array($loginSQL);
         
         
-        $dbPassword = $loginData[password];
+        $dbPassword = $loginData['password'];
         $dbPassword = hash('sha1', $dbPassword);
 		
-		if(empty($_POST[password]))
-			$password = $_GET[password];
+		if(empty($_POST['password']))
+			$password = $_GET['password'];
 		else 
-			$password = $_POST[password];
+			$password = $_POST['password'];
 		
         if($password == $dbPassword){
         echo"true";
@@ -57,14 +57,14 @@ switch($action){
             echo"false";
         }
     break;
-    case loadBuddyList:
-        $username = save($_POST[username]);
+    case 'loadBuddyList':
+        $username = save($_POST['username']);
         $hash = $_POST[hash];
         
         $loginSQL = mysql_query("SELECT userid, username, password FROM user WHERE username='$username'");
         $loginData = mysql_fetch_array($loginSQL);
-        $userid = $loginData[userid];
-        $dbPassword = $loginData[password];
+        $userid = $loginData['userid'];
+        $dbPassword = $loginData['password'];
         $dbPassword = hash('sha1', $dbPassword);
         if($hash == $dbPassword){?>
             <table width="100%" cellspacing="0">
@@ -76,8 +76,8 @@ switch($action){
 
                 //sets a hasttag for this 
                 $userRow = md5("$blUserData[lastactivity],$userRow");
-                if(!empty($buddylistData[alias])){
-                    $username = $buddylistData[alias];
+                if(!empty($buddylistData['alias'])){
+                    $username = $buddylistData['alias'];
                 } else{
                 $username = htmlspecialchars($blUserData[username]);
                     }
@@ -101,14 +101,14 @@ switch($action){
             </table>
         <?}
     break;
-    case loadChatPreview:
+    case 'loadChatPreview':
     ?>
     <div class="chatPreview" id="chatPreview_<?=$_GET[buddy];?>" onclick="showChatDialoge('<?=$_GET[buddy];?>')">
         <?=$_GET[buddy];?>
     </div>
     <?
     break;
-    case loadChatDialoge:
+    case 'loadChatDialoge':
         $buddy = save($_GET[buddy]);
         $user = save($_GET[user]);
         $hash = save($_GET[hash]);
@@ -202,32 +202,32 @@ switch($action){
     <?
     }
     break;
-    case getBuddyFromMessageId:
+    case 'getBuddyFromMessageId':
         //get request data
-        $user = save($_POST[username]); 
-        $messageId = save($_POST[message]);
-        $hash = save($_POST[password]);
+        $user = save($_POST['username']); 
+        $messageId = save($_POST['message']);
+        $hash = save($_POST['password']);
         //get the login data
         $loginSQL = mysql_query("SELECT userid, username, password FROM user WHERE username='$user'");
         $loginData = mysql_fetch_array($loginSQL);
-        $userid = $loginData[userid];
+        $userid = $loginData['userid'];
         
         //get messageData
         $messageSQL = mysql_query("SELECT sender, receiver FROM messages WHERE id='$messageId'");
         $messageData = mysql_fetch_array($messageSQL);
         //check if buddy is sender or receiver
-        if($messageData[sender] == $userid){
-            $buddyId = $messageData[receiver];
-        }else if($messageData[receiver] == $userid){
-            $buddyId = $messageData[sender];
+        if($messageData['sender'] == $userid){
+            $buddyId = $messageData['receiver'];
+        }else if($messageData['receiver'] == $userid){
+            $buddyId = $messageData['sender'];
         }
         
         //getting the userdata of the buddy
         $userSQL = mysql_query("SELECT username FROM user WHERE userid='$buddyId'");
         $userData = mysql_fetch_array($userSQL);
-        echo"$userData[username]";
+        echo $userData['username'];
     break;
-    case checkForMessages:
+    case 'checkForMessages':
         //get request data
         $user = save($_POST[username]);
         $hash = save($_POST[password]);
@@ -258,7 +258,7 @@ switch($action){
     break;
     
     //returns the javascript functions to load/reload the dialoges on client
-    case loadNewChatDialoges:
+    case 'loadNewChatDialoges':
            //get request data
            $user = save($_POST[username]);
            $hash = save($_POST[password]);
@@ -292,7 +292,7 @@ switch($action){
            echo"$buddyName";
             }
     break;
-    case reloadChatDialoge:
+    case 'reloadChatDialoge':
         $buddy = save($_GET[buddy]);
         $user = save($_GET[user]);
         $hash = save($_GET[hash]);
@@ -347,7 +347,7 @@ switch($action){
         <? }
         }
     break;
-    case sendMessage:
+    case 'sendMessage':
         $user = save($_GET[user]); 
         $message = save($_POST[msg]);
         $hash = save($_POST[pwd]);
@@ -368,11 +368,11 @@ switch($action){
 
         }
     break;
-	case useridToUsername:
+	case 'useridToUsername':
 		echo useridToUsername($_POST['userid']);
 		break;
 	//checks if a username is taken
-    case checkUsername:
+    case 'checkUsername':
         
     $user = save($_POST[username]);
     $sql = mysql_query("SELECT username FROM user WHERE username='$user'");
@@ -387,7 +387,7 @@ switch($action){
         
     break;
     //is used for mobile app => no captcha!
-    case processRegistration:
+    case 'processRegistration':
     $user = save($_POST[username]);
     $sql = mysql_query("SELECT username FROM user WHERE username='$user'");
     $data = mysql_fetch_array($sql);
@@ -434,7 +434,7 @@ switch($action){
         
     break;
     //is used for universeOS registration form
-    case processSiteRegistration:
+    case 'processSiteRegistration':
     $user = save($_POST[username]);
     $sql = mysql_query("SELECT username FROM user WHERE username='$user'");
     $data = mysql_fetch_array($sql);
@@ -484,7 +484,7 @@ switch($action){
     }
         
     break;
-    case checkForFeeds:
+    case 'checkForFeeds':
         
         $user = mysql_real_escape_string($_GET[user]);
         if(empty($user)){
@@ -561,14 +561,14 @@ switch($action){
         }
         
         break;
-    case showFeed:
+    case 'showFeed':
         $username = save($_POST[username]);
         $hash = $_POST[hash];
         if(checkMobileAuthentification($username, $hash)){
         showFeed('','','1');
         }
     break;
-    case submitFeedEntry:
+    case 'submitFeedEntry':
         $username = save($_POST[user]); 
         $message = save($_POST[msg]);
         $hash = save($_POST[pwd]);
@@ -579,7 +579,7 @@ switch($action){
         }
         
     break;
-    case showFeedComments:
+    case 'showFeedComments':
         $username = save($_POST[username]);
         $hash = $_POST[hash];
         if(checkMobileAuthentification($username, $hash)){
