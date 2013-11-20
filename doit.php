@@ -16,7 +16,7 @@ if($_GET['action'] == "scorePlus"){
     </script>
     <?
 }else if($_GET['action'] == "scoreMinus"){
-        $type = $_GET[type];
+        $type = $_GET['type'];
         $typeid = $_GET[typeid];
         minusOne($type, $typeid);
         ?>
@@ -25,10 +25,10 @@ if($_GET['action'] == "scorePlus"){
         </script>
         <?
 }else if($_GET['action'] == "addFav"){
-        $type = $_GET[type];
+        $type = $_GET['type'];
         $check = mysql_query("SELECT type,item FROM fav WHERE type='$_GET[type]' && item='$_GET[item]' && user='$_SESSION[userid]'");
         $checkData = mysql_fetch_array($check);
-        if(isset($checkData[type])){
+        if(isset($checkData['type'])){
             jsAlert("allready your favourite :/");
         } else {
             $time = time();
@@ -51,7 +51,7 @@ if($_GET['action'] == "scorePlus"){
             }
         }
     }else if($_GET['action'] == "removeFav"){
-    	removeFav($_POST[type], $_POST[typeId]);
+    	removeFav($_POST['type'], $_POST[typeId]);
   	}
     else if($_GET['action'] == "requestpositive"){
         $value = "0";
@@ -623,7 +623,7 @@ if($_GET['action'] == "scorePlus"){
         $feed = "has created an element";
         createFeed($user, $feed, "", "showThumb", $privacy, "element", $elementId);
     
-        if($_POST[type] == "image"){
+        if($_POST['type'] == "image"){
             $filefolderSQL = mysql_query("SELECT * FROM folders WHERE id='$_POST[folder]'");
             $fileFolderData = mysql_fetch_array($filefolderSQL);
             //here could be a fail but Its workin right o0
@@ -721,7 +721,7 @@ if($_GET['action'] == "scorePlus"){
      		
      		if(isset($_POST[submit])){
      			
-				if(createInternLink($_POST[parentType], $_POST[parentId], $_POST[type], $_POST[typeId], $_POST[title])){
+				if(createInternLink($_POST[parentType], $_POST[parentId], $_POST['type'], $_POST[typeId], $_POST[title])){
 					jsAlert("The shortcut has been added :)");
 				}
                                 
@@ -922,7 +922,7 @@ if($_GET['action'] == "scorePlus"){
          }
      }else if($_GET['action'] == "changeBackgroundImage"){
         if(proofLogin()){
-        if($_GET[type] == "file"){
+        if($_GET['type'] == "file"){
             $fileSql = mysql_query("SELECT * FROM files WHERE id='$_GET[id]'");
             $fileData = mysql_fetch_array($fileSql);
                 $documentElementSQL = mysql_query("SELECT id, folder FROM elements WHERE id='$documentData[folder]'");
@@ -1287,7 +1287,7 @@ if($_GET['action'] == "scorePlus"){
         	if(isset($_POST[submit])){
         		
 				
-					$message = "[itemThumb type=".$_POST[type]." typeId=".$_POST[typeId]."]";
+					$message = "[itemThumb type=".$_POST['type']." typeId=".$_POST[typeId]."]";
 					if(sendMessage($_POST[buddy], $message, $_POST[cryption])){
 						jsAlert("message");
 				        echo"<script>";
@@ -1370,13 +1370,12 @@ if($_GET['action'] == "scorePlus"){
                 
             
         }else if($_GET['action'] == "feedLoadMore"){
-            $type = save("$_GET[type]");
-            $user = save($_GET[user]);
-            $limit = save($_GET[limit]);
+            $type = save($_GET['type']);
+            $user = save($_GET['user']);
+            $limit = save($_GET['limit']);
             
             //when chatframe is loaded $limit = 0, when load more is clicked the first time $limit=1 etc.
             //it always adds thirty messages
-            $limit = save("$_GET[limit]");
             $newLimit = $limit+1;
             //convert $limit to a mysql LIMIT conform string 
             $limit = $limit*30;
@@ -1384,9 +1383,8 @@ if($_GET['action'] == "scorePlus"){
             showFeedNew("$type", "$user","$limit");
             
             
-        }else if($_GET['action'] == "showYoutube"){?>
-         <?php
-         if(isset($_GET[start])){?>
+        }else if($_GET['action'] == "showYoutube"){
+         if(isset($_GET['start'])){?>
                     <div id="playListReaderTab" style="background: #000000;">
                     <?}?>
                     <center>
@@ -1401,7 +1399,7 @@ if($_GET['action'] == "scorePlus"){
                 var height = document.height;
                 var params = { allowScriptAccess: "always" };
                 var atts = { id: "myytplayer" };
-                swfobject.embedSWF("http://www.youtube.com/v/<?=$_GET[id];?>?enablejsapi=1&playerapiid=ytplayer&version=3&autoplay=1",
+                swfobject.embedSWF("http://www.youtube.com/v/<?=$_GET['id'];?>?enablejsapi=1&playerapiid=ytplayer&version=3&autoplay=1",
                                 "ytapiplayer", "1000", "600", "8", null, null, params, atts);
 
 
@@ -1410,12 +1408,12 @@ if($_GET['action'] == "scorePlus"){
             ytplayer.addEventListener("onStateChange", "onytplayerStateChange");
             }
             <?php
-            if(!empty($_GET[playList])){
-                $row = ($_GET[row]+1);?>
+            if(!empty($_GET['playList'])){
+                $row = ($_GET['row']+1);?>
             function onytplayerStateChange(newState) {
             if(newState == "0" || newState == ""){
 
-                parent.nextPlaylistItem('<?=$_GET[playList];?>','<?=$row;?>');
+                parent.nextPlaylistItem('<?=$_GET['playList'];?>','<?=$row;?>');
             }
             }
             <? } ?>
@@ -1428,16 +1426,16 @@ if($_GET['action'] == "scorePlus"){
             </script>
                     </center>
         <?php
-        if(isset($_GET[playList])){
+        if(isset($_GET['playList'])){
             //load new next and start button
             ?>
                         <script> 
-                        parent.$('#togglePlayListTitle_<?=$_GET[playList];?>').text('<?=youTubeIdToTitle($_GET[id]);?>');
-                        parent.$('#togglePlayList_<?=$_GET[playList];?>').html( function(){
+                        parent.$('#togglePlayListTitle_<?=$_GET['playList'];?>').text('<?=youTubeIdToTitle($_GET[id]);?>');
+                        parent.$('#togglePlayList_<?=$_GET['playList'];?>').html( function(){
                             
                
                             
-                            var playListToggleLink = '<a href="#" onclick="nextPlaylistItem(\'<?=$_GET[playList];?>\',\'<?=($row-2);?>\');" title="last Track" class="btn btn-mini"><i class=\"icon-backward\"></i></a>&nbsp;<a href="#" onclick="nextPlaylistItem(\'<?=$_GET[playList];?>\',\'<?=($row);?>\');" title="next Track" class="btn btn-mini"><i class=\"icon-forward\"></i></a>';
+                            var playListToggleLink = '<a href="#" onclick="nextPlaylistItem(\'<?=$_GET['playList'];?>\',\'<?=($row-2);?>\');" title="last Track" class="btn btn-mini"><i class=\"icon-backward\"></i></a>&nbsp;<a href="#" onclick="nextPlaylistItem(\'<?=$_GET[playList];?>\',\'<?=($row);?>\');" title="next Track" class="btn btn-mini"><i class=\"icon-forward\"></i></a>';
 
                             $(this).html(playListToggleLink);
                         });
@@ -1445,7 +1443,7 @@ if($_GET['action'] == "scorePlus"){
             <?php
             
             }
-        if(isset($_GET[start])){?>
+        if(isset($_GET['start'])){?>
                     </div>
          <?}
          
@@ -1477,11 +1475,11 @@ if($_GET['action'] == "scorePlus"){
     <? }else if($_GET['action'] == "addGroup"){
         if(proofLogin()){
             
-        if(isset($_POST[submit])){
-            $description = $_POST[description];
-            $title = $_POST[title];
-            $privacy = $_POST[privacy];
-            $users = $_POST[users];
+        if(isset($_POST['submit'])){
+            $description = $_POST['description'];
+            $title = $_POST['title'];
+            $privacy = $_POST['privacy'];
+            $users = $_POST['users'];
 
            	if(createGroup($title, $privacy, $description, $users)){
            		echo"<script>";
@@ -1579,10 +1577,10 @@ if($_GET['action'] == "scorePlus"){
      
      <?php
     }}}else if($_GET['action'] == "showSingleComment"){
-        if($_GET[type] == "feed"){
+        if($_GET['type'] == "feed"){
             showFeedComments($_GET[itemid]);
         }else{
-            showComments($_GET[type], $_GET[itemid]);
+            showComments($_GET['type'], $_GET[itemid]);
         }
     }else if($_GET['action'] == "showStartMessage"){
             if(empty($_GET['step'])){ ?>
@@ -1786,7 +1784,7 @@ if($_GET['action'] == "scorePlus"){
             }
         }else if($_GET['action'] == "deleteFromPlaylist"){
              //deletes a single file, link or youtube icon from a playlist
-             $type = save($_GET[type]);
+             $type = save($_GET['type']);
              $itemId = $_GET[itemId];
              $playlist = save($_GET[playlist]);
              jsAlert("$type-$itemId-$playlist");
@@ -1839,7 +1837,7 @@ if($_GET['action'] == "scorePlus"){
              }
         }else if($_GET['action'] == "deleteItem"){
             if(proofLogin()){
-            $type = $_GET[type];
+            $type = $_GET['type'];
             $itemId = $_GET[itemId];
             
             if($type == "feed"){
@@ -1864,7 +1862,7 @@ if($_GET['action'] == "scorePlus"){
                     </script>
                     <?
                 }
-                if($commentData[type] == "profile" AND $commentData[typeid] == "$_SESSION[userid]"){
+                if($commentData['type'] == "profile" AND $commentData[typeid] == "$_SESSION[userid]"){
                     mysql_query("DELETE FROM comments WHERE id='$itemId'");
                     ?>
                     <script>
@@ -1935,22 +1933,22 @@ if($_GET['action'] == "scorePlus"){
             }else if($type == "internLink"){
                 $checkInternLinkData = mysql_fetch_array(mysql_query("SELECT * FROM internLinks WHERE id='$itemId'"));
                 
-                    if($checkInternLinkData[type] == "folder"){
+                    if($checkInternLinkData['type'] == "folder"){
 
                         $shortCutItemData = mysql_fetch_array(mysql_query("SELECT name, privacy, creator FROM folders WHERE id='$checkInternLinkData[typeId]'"));
 
                         $user = $shortCutItemData[creator];
 
-                    }else if($checkInternLinkData[type] == "element"){
+                    }else if($checkInternLinkData['type'] == "element"){
 
                         $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy, creator FROM elements WHERE id='$checkInternLinkData[typeId]'"));
                         $user = $shortCutItemData[creator];
-                    }else if($checkInternLinkData[type] == "file"){
+                    }else if($checkInternLinkData['type'] == "file"){
 
                         $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy, type, owner FROM files WHERE id='$checkInternLinkData[typeId]'"));
                         $user = $shortCutItemData[owner];
 
-                    }else if($checkInternLinkData[type] == "link"){
+                    }else if($checkInternLinkData['type'] == "link"){
 
                         $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, link, privacy, type, author FROM links WHERE id='$checkInternLinkData[typeId]'"));
                         $user = $shortCutItemData[author];
@@ -2014,36 +2012,36 @@ if($_GET['action'] == "scorePlus"){
                     if(isset($_POST[publ])){
                         $Groups = "p";
                     }
-                    if($_GET[type] == "folder"){
+                    if($_GET['type'] == "folder"){
                         mysql_query("UPDATE folders SET privacy='$privacy' WHERE id='$_GET[itemId]'");
                         if(!empty($_POST[hidden])){
                             mysql_query("UPDATE folders SET creator='$user' WHERE id='$_GET[itemId]'");   
                         }
                         jsAlert("Saved :)");
                     }
-                    else if($_GET[type] == "element"){
+                    else if($_GET['type'] == "element"){
                         mysql_query("UPDATE elements SET privacy='$privacy' WHERE id='".save($_GET[itemId])."'");
                         if(!empty($_POST[hidden])){
                             mysql_query("UPDATE elements SET author='$user' WHERE id='".save($_GET[itemId])."'");   
                         }
                         jsAlert("Saved :)");
                     }
-                    else if($_GET[type] == "comment"){
+                    else if($_GET['type'] == "comment"){
                         mysql_query("UPDATE comments SET privacy='$privacy' WHERE id='".save($_GET[itemId])."'");
                         if(!empty($_POST[hidden])){
                             mysql_query("UPDATE commments SET author='$user' WHERE id='".save($_GET[itemId])."'");   
                         }
                         jsAlert("Saved :)");
                     }
-                    else if($_GET[type] == "feed"){
+                    else if($_GET['type'] == "feed"){
                         mysql_query("UPDATE feed SET privacy='$privacy' WHERE id='".save($_GET[itemId])."'");
                         jsAlert("Saved :) $_GET[itemId] $privacy");
                     }
-                    else if($_GET[type] == "file"){
+                    else if($_GET['type'] == "file"){
                         mysql_query("UPDATE files SET privacy='$privacy' WHERE id='".save($_GET[itemId])."'");
                         jsAlert("Saved :)");
                     }
-                    else if($_GET[type] == "link"){
+                    else if($_GET['type'] == "link"){
                         mysql_query("UPDATE links SET privacy='$privacy' WHERE id='".save($_GET[itemId])."'");
                         jsAlert("Saved :)");
                     }
@@ -2053,33 +2051,33 @@ if($_GET['action'] == "scorePlus"){
             
             
             //get type
-            if($_GET[type] == "folder"){
+            if($_GET['type'] == "folder"){
                 $privacySql = mysql_query("SELECT name, privacy FROM folders WHERE id='".save($_GET[itemId])."'");
                 $privacyData = mysql_fetch_array($privacySql);
                 $title = "folder $privacyData[name]";
             }
-            if($_GET[type] == "element"){
+            if($_GET['type'] == "element"){
                 $privacySql = mysql_query("SELECT title, privacy FROM elements WHERE id='".save($_GET[itemId])."'");
                 $privacyData = mysql_fetch_array($privacySql);
                 $title = "element $privacyData[title]";
             }
             
-            if($_GET[type] == "comment"){
+            if($_GET['type'] == "comment"){
                 $privacySql = mysql_query("SELECT privacy FROM comments WHERE id='".save($_GET[itemId])."'");
                 $privacyData = mysql_fetch_array($privacySql);
                 $title = "one of your comments";
             }
-            if($_GET[type] == "feed"){
+            if($_GET['type'] == "feed"){
                 $privacySql = mysql_query("SELECT privacy FROM feed WHERE id='".save($_GET[itemId])."'");
                 $privacyData = mysql_fetch_array($privacySql);
                 $title = "one of your feeds";
             }
-            if($_GET[type] == "file"){
+            if($_GET['type'] == "file"){
                 $privacySql = mysql_query("SELECT privacy FROM files WHERE id='".save($_GET[itemId])."'");
                 $privacyData = mysql_fetch_array($privacySql);
                 $title = "one of your files";
             }
-            if($_GET[type] == "link"){
+            if($_GET['type'] == "link"){
                 $privacySql = mysql_query("SELECT privacy FROM links WHERE id='".save($_GET[itemId])."'");
                 $privacyData = mysql_fetch_array($privacySql);
                 $title = "one of your links";
@@ -2094,7 +2092,7 @@ if($_GET['action'] == "scorePlus"){
                 $groupsArray = explode(";", $privacyData[privacy]);
             }
             ?>
-            <form action="doit.php?action=changePrivacy&type=<?=$_GET[type];?>&itemId=<?=$_GET[itemId];?>" target="submitter" method="post">
+            <form action="doit.php?action=changePrivacy&type=<?=$_GET['type'];?>&itemId=<?=$_GET[itemId];?>" target="submitter" method="post">
             <div class="jqPopUp border-radius transparency" id="editPrivacy">
                 
                 <header>Set privacy of <?=$title;?><a class="jqClose" id="closePrivacy">X</a></header>
@@ -2120,7 +2118,7 @@ if($_GET['action'] == "scorePlus"){
             }else if($_GET['action'] == "editItem"){
                 if(proofLogin()){
                 $itemId = $_GET[itemId];
-                $type = $_GET[type];
+                $type = $_GET['type'];
                 if(isset($_POST[submit])){
                     if($type == "folder"){
                         $checkFolderSql = mysql_query("SELECT * FROM folders WHERE id='$itemId'");
@@ -2249,29 +2247,29 @@ if($_GET['action'] == "scorePlus"){
                 }else if($type == "link"){
                     $editSQL = mysql_query("SELECT type, title, link, privacy FROM links WHERE id='$itemId'");
                     $editData = mysql_fetch_array($editSQL);
-                    $title = $editData[title];
+                    $title = $editData['title'];
                     $headTitle = "link $title";
 					
 					//the type select needs to show the value
 					//whis is defined in the db
-					switch($editData[type]){
+					switch($editData['type']){
 						case 'link':
 							$selected['link'] = 'selected="selected"';
 							break;
 						case 'RSS':
-							$selected[RSS] = 'selected="selected"';
+							$selected['RSS'] = 'selected="selected"';
 							break;
 						case 'youTube':
-							$selected[youTube] = 'selected="selected"';
+							$selected['youTube'] = 'selected="selected"';
 							break;
 						case 'soundcloud':
-							$selected[soundcloud] = 'selected="selected"';
+							$selected['soundcloud'] = 'selected="selected"';
 							break;
 						case 'file':
 							$selected['file'] = 'selected="selected"';
 							break;
 						case 'other':
-							$selected[other] = 'selected="selected"';
+							$selected['other'] = 'selected="selected"';
 							break;
 					}
                     $edit = "
