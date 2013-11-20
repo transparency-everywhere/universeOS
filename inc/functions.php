@@ -1434,13 +1434,16 @@ echo"</div>";
                $scoreData = mysql_fetch_array($scoreSql); 
                }
                if(!isset($reload)){
-                   $output .=  "<div class=\"score$type$typeid\">";
+                   $output =  "<div class=\"score$type$typeid\">";
                }
 			   
-			   if($scoreData[score] > 0){
+			   
+			   if($scoreData['score'] > 0){
 			   	$class = "btn-success";
-			   }else if($scoreData[score] < 0){
+			   }else if($scoreData['score'] < 0){
 			   	$class = "btn-warning";
+			   }else{
+			   	$class = '';
 			   }
 			   
 			   $output .= '<div class="btn-toolbar" style="margin: 0px;">';
@@ -3827,7 +3830,7 @@ echo"</div>";
         	}
         $filefsql = mysql_query("SELECT * FROM folders $query");
         while($filefdata = mysql_fetch_array($filefsql)) {
-        if(authorize($filefdata[privacy], "show", $filefdata[creator])){
+        if(authorize($filefdata['privacy'], "show", $filefdata['creator'])){
         	
         		$name = $filefdata['name'];
         	//special folder handlers
@@ -3836,20 +3839,20 @@ echo"</div>";
 			}
 			
         ?>
-            <tr class="strippedRow" oncontextmenu="showMenu('folder<?=$filefdata[id];?>'); return false;" height="30">
+            <tr class="strippedRow" oncontextmenu="showMenu('folder<?=$filefdata['id'];?>'); return false;" height="30">
                 <td width="30"><?php
             	if($rightClick){
-            	showRightClickMenu("folder", $filefdata[id], $filefdata[name], $filefdata[creator]);
+            	showRightClickMenu("folder", $filefdata['id'], $filefdata['name'], $filefdata['creator']);
             	}?>&nbsp;<img src="<?=$subpath;?>gfx/icons/filesystem/folder.png" height="22"></td>
-                <td><a href="<?=$subpath;?>out/?folder=<?=$filefdata[id];?>" onclick="openFolder('<?=$filefdata[id];?>'); return false;"><?=$name;?></a></td>
+                <td><a href="<?=$subpath;?>out/?folder=<?=$filefdata[id];?>" onclick="openFolder('<?=$filefdata['id'];?>'); return false;"><?=$name;?></a></td>
                 <td width="50px">
                 	<?php
                 	if($rightClick){
-                	echo showItemSettings('folder', "$filefdata[id]");
+                	echo showItemSettings('folder', $filefdata['id']);
 					}
                 	?>
                 </td>
-                <td width="50px"><?=showScore("folder", $filefdata[id]);?></td>
+                <td width="50px"><?=showScore("folder", $filefdata['id']);?></td>
             </tr>
             <?php
             }}}
@@ -3858,42 +3861,42 @@ echo"</div>";
 
             $filefolderSQL = mysql_query("SELECT * FROM folders WHERE id='$folder'");
             $fileFolderData = mysql_fetch_array($filefolderSQL);
-            $title = $fileddata[title];
+            $title = $fileddata['title'];
             $title10 = substr("$title", 0, 10);
             $title15 = substr("$title", 0, 25);
 
-            if(authorize($fileddata[privacy], "show", $fileddata[author])){
+            if(authorize($fileddata['privacy'], "show", $fileddata['author'])){
             echo "<tr class=\"strippedRow\" oncontextmenu=\"showMenu('element".$filefdata['id'].";'); return false;\" height=\"30\">";
 	            echo "<td width=\"30\">&nbsp;<img src=\"$subpath"."gfx/icons/filesystem/element.png\" height=\"22\"></td>";
-	            echo "<td><a href=\"$subpath"."out/?element=".$fileddata[id]."\" onclick=\"openElement('".$fileddata[id]."', '".addslashes($title10)."'); return false;\">$title15</a></td>";
+	            echo "<td><a href=\"$subpath"."out/?element=".$fileddata['id']."\" onclick=\"openElement('".$fileddata['id']."', '".addslashes($title10)."'); return false;\">$title15</a></td>";
 	            echo "<td width=\"80px\">";
 	                	if($rightClick){
-	                	echo showItemSettings('element', "$fileddata[id]");
+	                	echo showItemSettings('element', $fileddata['id']);
 						}
 	            echo "</td>";
-	            echo "<td width=\"50px\">".showScore("element", $fileddata[id])."</td>";
+	            echo "<td width=\"50px\">".showScore("element", $fileddata['id'])."</td>";
             echo "</tr>";
             if($rightClick){
-            showRightClickMenu("element", $fileddata[id], $title10, $fileddata[author]);
+            showRightClickMenu("element", $fileddata[id], $title10, $fileddata['author']);
             }}}
             
             $shortCutSql = mysql_query("SELECT * FROM internLinks $shortCutQuery");
             while($shortCutData = mysql_fetch_array($shortCutSql)){
-                if($shortCutData[type] == "folder"){
+                if($shortCutData['type'] == "folder"){
                     
-                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT name, privacy FROM folders WHERE id='$shortCutData[typeId]'"));
+                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT name, privacy FROM folders WHERE id='".$shortCutData['typeId']."'"));
                     
-                    $title = $shortCutItemData[name];
+                    $title = $shortCutItemData['name'];
                     $image = "folder.png";
-                    $link = "openFolder('$shortCutData[typeId]'); return false;";
+                    $link = "openFolder('".$shortCutData['typeId']."'); return false;";
                     
-                }else if($shortCutData[type] == "element"){
+                }else if($shortCutData['type'] == "element"){
                     
-                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy FROM elements WHERE id='$shortCutData[typeId]'"));
+                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy FROM elements WHERE id='".save($shortCutData[typeId])."'"));
                     
-                    $title = $shortCutItemData[title];
+                    $title = $shortCutItemData['title'];
                     $image = "element.png";
-                    $link = "openElement('$shortCutData[typeId]', '".addslashes(substr($shortCutItemData[title],0,10))."'); return false;";
+                    $link = "openElement('".$shortCutData['typeId']."', '".addslashes(substr($shortCutItemData['title'],0,10))."'); return false;";
                 }
                 
                 echo'<tr class="strippedRow">';
@@ -3904,7 +3907,7 @@ echo"</div>";
                         echo"<a href=\"$subpath"."out/?$shortCutData[type]=$shortCutData[typeId]\" onclick=\"$link\">$title</a>";
                     echo"</td>";
                     echo"<td>";
-                    echo showItemSettings("internLink", "$shortCutData[id]");
+                    echo showItemSettings("internLink", $shortCutData['id']);
                     echo"</td>";
                     
                 echo"</tr>";

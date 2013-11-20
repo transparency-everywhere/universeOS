@@ -20,6 +20,7 @@ if(!empty($_GET['folder'])){
 	$itemId = $_GET['element'];
 	$query = mysql_query("SELECT `folder` FROM `files` WHERE id='".mysql_real_escape_string($itemId)."'");
 	$data = mysql_fetch_array($query);
+	$title = $data['title'];
 	
 }else if(!empty($_GET['file'])){
 	$type = "File";
@@ -53,7 +54,7 @@ if(!empty($_GET['folder'])){
 	
 	//meta information
 	echo'<meta name=\"title\" content=\"universeOS - $type $title\">';
-	echo'<meta name=\"keywords\" content=\"universeOS $type $title, $type, $title, $type $title\">';
+	echo"<meta name=\"keywords\" content=\"universeOS $type $title, $type, $title, $type $title\">";
     echo'<meta name=\"Robots\" content=\"index,follow\">';
 echo'</head>';
 echo'<body>';
