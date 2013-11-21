@@ -7,9 +7,8 @@ include_once("../../inc/functions.php");
         $documentData = mysql_fetch_array($documentSQL); 
 		if(authorize($documentData['privacy'], "show", $documentData['owner'])){
 	        $downloadfile = getFilePath($_GET['fileId']);
-	        $downloadfile = substr($downloadfile, 1);
 	        $filename = $documentData['filename'];
-	        $downloadfile = "../../upload/$downloadfile/$filename";
+	        $downloadfile = "../../$downloadfile";
 	        $filesize = filesize($downloadfile);
 	        $filetype = end(explode('.', $filename));
 	        header("Content-type: application/$filetype");
