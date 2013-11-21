@@ -23,17 +23,17 @@
 			</div>
 		      
 		                <?
-		                    if(isset($_POST[AccSetSubmit])) {
+		                    if(isset($_POST['AccSetSubmit'])) {
 		                        $birthdate = gmmktime("0", "0", "0", "$_POST[birth_month]", "$_POST[birth_day]", "$_POST[birth_year]");
 		                        mysql_query("UPDATE user SET realname='$_POST[AccSetRealname]', email='$_POST[AccSetMail]', place='$_POST[place]', home='$_POST[home]', birthdate='$birthdate', school1='$_POST[school1]', university1='$_POST[university1]', employer='$_POST[work]' WHERE userid='$_SESSION[userid]'");
 		                        jsAlert("Your changes have been saved");
 		                        }
 		                    $AccSetSql = mysql_query("SELECT * FROM user WHERE userid='$_SESSION[userid]'");
 		                    $AccSetData = mysql_fetch_array($AccSetSql);
-		                    if($AccSetData[birthdate]){
-		                    $birth_day = date("d", $AccSetData[birthdate]);
-		                    $birth_month = date("m", $AccSetData[birthdate]);
-		                    $birth_year = date("Y", $AccSetData[birthdate]);
+		                    if($AccSetData['birthdate']){
+		                    $birth_day = date("d", $AccSetData['birthdate']);
+		                    $birth_month = date("m", $AccSetData['birthdate']);
+		                    $birth_year = date("Y", $AccSetData['birthdate']);
 		                    }
 		                 ?>
 		        

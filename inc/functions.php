@@ -762,7 +762,7 @@
         	if(!empty($picData['userPicture'])){
         		$style = " background-image: url(\\'$src\\');";
 				if($small == 'unescaped'){
-        			$style = " background-image: url(\\'$src\\');";
+        			$style = " background-image: url('$src');";
 				}
 			}
 			
@@ -1630,6 +1630,16 @@ echo"</div>";
 //buddylist
 //buddylist
 
+   function deleteBuddy($buddy, $user=false){
+   		if(!$user){
+   			$user = getUser();
+   		}
+		
+		mysql_query("DELETE FROM `buddylist` WHERE owner='".save($user)."' AND buddy='".save($buddy)."'");
+		mysql_query("DELETE FROM `buddylist` WHERE buddy='".save($user)."' AND owner='".save($buddy)."'");
+	
+   }
+
    function buddyListArray($user=NULL, $request=0){
    //returns all buddies of $user
         if(empty($user)){
@@ -1771,6 +1781,8 @@ echo"</div>";
 			echo"</div>";
 			}
 			
+		}else{
+			echo"<script>$('#buddySuggestions').hide();</script>";
 		}
 	}
 
@@ -2554,7 +2566,7 @@ echo"</div>";
 	
 	function getUserPlaylistArray($userId=null){
 		if($userId == null){
-			$userId = $_SESSION[userid];
+			$userId = getUser();
 		}
 		
 		//get all the groups in which the current user is
@@ -2569,11 +2581,12 @@ echo"</div>";
         }
         
             //get playlists for user and groups
-            $playListsSql = mysql_query("SELECT id, title FROM playlist WHERE user='$_SESSION[userid]' $query");
+            $playListsSql = mysql_query("SELECT id, title, privacy, user FROM playlist WHERE user='$_SESSION[userid]' $query");
             while($playListsData = mysql_fetch_array($playListsSql)){
-                
-                $ids[] = $playListsData[id];
-                $titles[] = $playListsData[title];
+                if(authorize($playListsData['privacy'], 'show', $playListsData['user'])){
+                $ids[] = $playListsData['id'];
+                $titles[] = $playListsData['title'];
+				}
             }
 			
 			$return[ids] = $ids;
@@ -4931,7 +4944,7 @@ class dashBoard{
 		$userData = $this->userdata;
 		
 		$title = "Welcome";
-		$content = showUserPicture($this->userid,13,false,true)." Hey <a href=\"#\" onclick=\"showProfile('$this->userid')\">$userData[username]</a>,<br>good to see you!";
+		$content = showUserPicture($this->userid,13,false,unescaped)." Hey <a href=\"#\" onclick=\"showProfile('$this->userid')\">$userData[username]</a>,<br>good to see you!";
 		$content .= "<div>";
 		$content .= "<div class=\"listContainer\">";
 		$content .= "<ul class=\"list messageList\" id=\"dockMenuSystemAlerts\"></ul>";
@@ -4951,7 +4964,7 @@ class dashBoard{
 		
 		$title = "Your Apps";
 		
-		$content = "<ul class=\"appList\" style=\"width:220px;\">";
+		$content = "<ul class=\"appList\" style=\"width:230px;\">";
 	    	$content .= "<li onclick=\"toggleApplication('feed')\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/feed.png\" border=\"0\" height=\"16\">Feed</li>";
 			$content .= "<li onclick=\"toggleApplication('filesystem')\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/filesystem.png\" border=\"0\" height=\"16\">Filesystem</li>";
 	 		$content .= "<li onclick=\"javascript: toggleApplication('reader')\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/viewer.png\" border=\"0\" height=\"16\">Reader</li>";

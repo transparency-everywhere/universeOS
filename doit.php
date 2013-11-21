@@ -55,8 +55,10 @@ if($_GET['action'] == "scorePlus"){
   	}
     else if($_GET['action'] == "requestpositive"){
         $value = "0";
-        mysql_query("UPDATE buddylist SET request='$value' WHERE owner='".mysql_real_escape_string($_GET[buddy])."' && buddy='$_SESSION[userid]'");
+		$buddy = $_GET['buddy'];
+     	mysql_query("UPDATE buddylist SET request='$value' WHERE owner='".mysql_real_escape_string($_GET[buddy])."' && buddy='$_SESSION[userid]'");
  		mysql_query("INSERT INTO `buddylist` (`owner`, `buddy`,`timestamp`,`request`) VALUES('$_SESSION[userid]', '".mysql_real_escape_string($_GET[buddy])."', '$timestamp', '0');");
+		echo"<script>parent.$('#friendRequest_$buddy').hide()</script>";
         jsAlert("worked :)");
     }
     else if($_GET['action'] == "requestnegative"){
@@ -110,6 +112,11 @@ if($_GET['action'] == "scorePlus"){
      }else if($_GET['action'] == "showBuddySuggestList"){
      	$false = false;
 		showBuddySuggestions($false);
+     }else if($_GET['action'] == "deleteBuddy"){
+     	$buddy = $_GET['buddy'];
+     	deleteBuddy($buddy);
+		jsAlert("The Buddy was removed from your Buddylist.");
+		echo "<script>parent.$('.buddy_$buddy').hide()</script>";
      }else if($_GET['action'] == "download"){
      	
         $documentSQL = mysql_query("SELECT id, title, type, filename, privacy, owner FROM files WHERE id='".save($_GET['fileId'])."'");
