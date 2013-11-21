@@ -637,6 +637,8 @@ background: #383838;
 #settings{
     width: 600px;
     height: 400px;
+	top: 20px;
+	left: 20px;
 }
 
 #mailList {
@@ -2282,15 +2284,17 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 }
 
 	#dashBoard{
-		width: 960px;
+		margin-left: -45px;
 	}
 	
 	.dashBox:hover .content{
 		display: block;
+		min-height: 60px;
 	}
 	
 	.dashBox:hover{
 		width: 233px;
+		margin-left: 45px;
 	}
 	.dashBox:hover footer{
 		display: block;
@@ -2302,7 +2306,7 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 		width: 160px;
 		border-radius: 1px;
 		background: #fff9f0;
-		margin: 10px 0px 0px 10px;
+		margin: 10px 0px 30px 10px;
 		position: relative;
 	}
 	
@@ -2419,7 +2423,7 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
                     border: 0px;
                     border-top: #424242 1px solid;
                     border-left: #424242 1px solid;
-                    width: 98px;
+                    width: 102.5px;
                     cursor:pointer;
                     float:left;
                 }
