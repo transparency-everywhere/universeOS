@@ -1339,11 +1339,11 @@ if($_GET['action'] == "scorePlus"){
         }else if($_GET['action'] == "createFeed"){
             
             
-            if(!empty($_POST[feedInput]) || !empty($_POST[feed1])){
+            if(!empty($_POST['feedInput']) || !empty($_POST['feed1'])){
             
                     //set privacy
-                    $customShow = $_POST[privacyCustomSee];
-                    $customEdit = $_POST[privacyCustomEdit];
+                    $customShow = $_POST['privacyCustomSee'];
+                    $customEdit = $_POST['privacyCustomEdit'];
                     
                     $privacy = exploitPrivacy("$_POST[privacyPublic]", "$_POST[privacyHidden]", $customEdit, $customShow);
                     $user = $_SESSION[userid];
@@ -1356,8 +1356,8 @@ if($_GET['action'] == "scorePlus"){
 
             <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
             <script>
-            $('.addFeed', parent.document).load('../../doit.php?action=showSingleFeed&feedId=<?=$id;?>'); 
-            $('#feedInput', parent.document).val('');
+            parent.reloadFeed('friends');
+            parent.$('#feedInput').val('');
             </script>
             <?php
                 }
@@ -1437,7 +1437,7 @@ if($_GET['action'] == "scorePlus"){
             //load new next and start button
             ?>
                         <script> 
-                        parent.$('#togglePlayListTitle_<?=$_GET['playList'];?>').text('<?=youTubeIdToTitle($_GET[id]);?>');
+                        parent.$('#togglePlayListTitle_<?=$_GET['playList'];?>').text('<?=addslashes(youTubeIdToTitle($_GET['id']));?>');
                         parent.$('#togglePlayList_<?=$_GET['playList'];?>').html( function(){
                             
                

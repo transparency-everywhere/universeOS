@@ -25,12 +25,6 @@ Recent:
 	Bugs
 		Session login prob
 		
-	Privacy
-		die protectedfunktion muss zu einer undeleteablefunktion und dann muss für groupfiles und userfiles eine neue protectedfunktion geschrieben werden,
-		da sich derzeit bei protectedten ordnern keinen neuen ordner von nichtadmins erstellen lassen.
-		lsng:
-			PROTECTED funktionen bleibt bestehen und es wird extra handler für SYSTEM geschrieben, welcher manuell bei userFiles,groupFiles und den userOrdnern(function createUser()) eingefügt wird.
-		
 	Install
 		Vars
 				URL

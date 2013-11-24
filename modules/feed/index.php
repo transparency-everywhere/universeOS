@@ -1,5 +1,5 @@
 <?php
-if(!isset($_SESSION[userid])){
+if(!isset($_SESSION['userid'])){
     session_start();
 }
 ?>  
@@ -16,7 +16,6 @@ if(!isset($_SESSION[userid])){
                                 <div class="btn-toolbar" style="float: left;">
                                     <div class="btn-group">
                                         <a class="btn btn-mini" href="#" onclick="$('#feedInput').focus(); $('#addFeedFile').hide('slow'); $('#addFeedPrivacy').slideToggle(500);" title="privacy"><i class="icon-eye-open"></i></a>
-                                        <a class="btn btn-mini" href="#" title="Add file to your library" onclick="$('#feedInput').focus();$('#addFeedPrivacy').hide('slow'); $('#addFeedFile').slideToggle(500);"><i class="icon-file"></i></a>
                                     </div>
                                 </div>
                                 <input type="submit" style="float:right; margin-top: 10px; margin-right:-13px;" value="submit" class="btn btn-success btn-mini">
@@ -26,31 +25,6 @@ if(!isset($_SESSION[userid])){
                         <?=showPrivacySettings("h//f");?>
                     </div>
                     </form>
-                    <div id="addFeedFile" class="coolGradient">
-                        <form>
-                        	<center style="margin-top:15px;">
-                        		Add file to <a href="#" onclick="openElement('<?=$global_userData[myFiles];?>', 'myFiles'); return false;"><img src="./gfx/icons/filesystem/element.png" height="12" style="margin-top: -1px;"> myFiles</a>
-                                <input id="file_upload" name="feedFile" type="file" multiple="true" style="margin-top: 20px;">
-                        		<div id="queue"></div>
-                        	</center>
-                        </form>
-                        <script type="text/javascript">
-                                <?php $timestamp = time();?>
-                                $(function() {
-                                        $('#file_upload').uploadify({
-                                                'formData'     : {
-                                                        'timestamp' : '<?php echo $timestamp;?>',
-                                                        'token'     : '<?php echo md5('ichWeissEsNicht' . $timestamp*2);?>'
-                                                },
-                                                'swf'      : 'inc/plugins/uploadify/uploadify.swf',
-                                                'uploader' : 'doit.php?action=feedUpload',
-                                                'onUploadError' : function(file, errorCode, errorMsg, errorString) {
-                                                    alert('The file ' + file.name + ' could not be uploaded: ' + errorString);
-                                                }
-                                        });
-                                });
-                        </script>
-                    </div>
                     </div>
 
         <div id="feedFrame">

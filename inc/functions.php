@@ -762,7 +762,7 @@
         	if(!empty($picData['userPicture'])){
         		$style = " background-image: url(\\'$src\\');";
 				if($small == 'unescaped'){
-        			$style = " background-image: url('$src');";
+        			$style = " background-image: url(\\'$src\\');";
 				}
 			}
 			
@@ -1770,7 +1770,7 @@ echo"</div>";
 				echo"<a href=\"#\" onclick=\"showProfile('$mayKnow')\">";
 				echo"";
 				echo"<span>&nbsp;";
-				echo showUserPicture($mayKnow, 16);
+				echo showUserPicture($mayKnow, 16, NULL, true);
 				echo"</span>";
 				echo useridToUsername($mayKnow);
 				echo'<a href="doit.php?action=addbuddy&buddy='.$mayKnow.'" class="btn btn-success btn-mini pull-right" target="submitter">add</a>';
@@ -3537,7 +3537,7 @@ echo"</div>";
 				//title needs to contain span with playlistid, so it can
 				//be updated from the iframe, in which the youtubevideo
 				//is located(doit => showYoutube)
-	            $title = "<span id=\"togglePlayListTitle_$extraInfo1\" class=\"readerPlayListTitle\">$title</span>";
+	            $title = "<span id=\"togglePlayListTitle_$extraInfo1\" class=\"readerPlayListTitle\">".addslashes($title)."</span>";
 			
 			
 				$bar .= "<div id=\"togglePlayList_$extraInfo1\" class=\"readerPlayListToggle\"></div>";
@@ -4944,7 +4944,7 @@ class dashBoard{
 		$userData = $this->userdata;
 		
 		$title = "Welcome";
-		$content = showUserPicture($this->userid,13,false,unescaped)." Hey <a href=\"#\" onclick=\"showProfile('$this->userid')\">$userData[username]</a>,<br>good to see you!";
+		$content = str_replace('\\', '' , showUserPicture($this->userid,13,false,true))." Hey <a href=\"#\" onclick=\"showProfile('$this->userid')\">$userData[username]</a>,<br>good to see you!";
 		$content .= "<div>";
 		$content .= "<div class=\"listContainer\">";
 		$content .= "<ul class=\"list messageList\" id=\"dockMenuSystemAlerts\"></ul>";
@@ -5022,7 +5022,7 @@ class dashBoard{
 			
 			$title = "Your Playlists";
 			$i = 0;
-			$output .= "<ul class=\"content\">";
+			$output .= "<ul>";
 			foreach($playlists AS $playlist){
 				$output .= "<li>";
 					$output .= "<span class=\"marginRight\">";

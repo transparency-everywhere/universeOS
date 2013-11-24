@@ -2289,7 +2289,8 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 	
 	.dashBox:hover .content{
 		display: block;
-		min-height: 60px;
+		height: 90px;
+		overflow: auto;
 	}
 	
 	.dashBox:hover{
@@ -2314,6 +2315,7 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 		overflow: auto;
 		max-height: 141px;
 		display:none;
+		padding-bottom: 15px;
 	}
 	
 	.dashBox header{

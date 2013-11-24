@@ -4,8 +4,8 @@ require_once("inc/functions.php");
 
 //place of the playlist we are right now, useless if shuffle=1
 
-$playList = save($_GET[playList]);
-$row = "$_GET[row]";
+$playList = save($_GET['playList']);
+$row = $_GET['row'];
 if($row == 0){
     mysql_query("UPDATE playlist SET played = played + 1 WHERE id='$playList'");
 }
@@ -51,7 +51,7 @@ $i = "0";
                         $vId = "$value";
                         $link = "./modules/reader/showfile.php?type=youTube&vId=$vId&playList=$playList&row=$_GET[row]";
                         $link2 = "doit.php?action=showYoutube&id=$vId&playList=$playList&row=$_GET[row]";
-                        $title = addslashes($playListData[title]);
+                        $title = addslashes($playListData['title']);
                         $rightLink[] = "
                         if($('#playListFrame_$playList').length == 0){
                         	openFile('youTube', '', '$title', '$vId', '$playList', '$row');
