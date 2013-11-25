@@ -17,7 +17,7 @@ if($_GET['action'] == "scorePlus"){
     <?
 }else if($_GET['action'] == "scoreMinus"){
         $type = $_GET['type'];
-        $typeid = $_GET[typeid];
+        $typeid = $_GET['typeid'];
         minusOne($type, $typeid);
         ?>
         <script>
@@ -26,20 +26,20 @@ if($_GET['action'] == "scorePlus"){
         <?
 }else if($_GET['action'] == "addFav"){
         $type = $_GET['type'];
-        $check = mysql_query("SELECT type,item FROM fav WHERE type='$_GET[type]' && item='$_GET[item]' && user='$_SESSION[userid]'");
+        $check = mysql_query("SELECT type,item FROM fav WHERE type='".$_GET['type']."' && item='".$_GET['item']."' && user='".$_SESSION['userid'].'");
         $checkData = mysql_fetch_array($check);
-        if(isset($checkData['type'])){
+        if(isset($checkData[type])){
             jsAlert("allready your favourite :/");
         } else {
             $time = time();
-            if(mysql_query("INSERT INTO fav (`type` ,`item` ,`user` ,`timestamp`) VALUES('$_GET[type]', '$_GET[item]', '$_SESSION[userid]', '$time');")){ 
+            if(mysql_query("INSERT INTO fav (`type` ,`item` ,`user` ,`timestamp`) VALUES('.$_GET['type']."', '".$_GET['item']."', '".$_SESSION['userid']."', '$time');")){ 
             jsAlert("worked :)");
             $insertId = mysql_insert_id();
             $favSQL = mysql_query("SELECT item FROM fav WHERE id='$insertId'");
             $favData = mysql_fetch_array($favSQL);
-                            $favLinkSql = mysql_query("SELECT id, title, link FROM links WHERE id='$favData[item]'");
+                            $favLinkSql = mysql_query("SELECT id, title, link FROM links WHERE id='".$favData['item']."'");
                             $favLinkData = mysql_fetch_array($favLinkSql);
-                                            $title = substr($favLinkData[title], '0', '15');
+                                            $title = substr($favLinkData['title'], '0', '15');
             ?>
             <script>
             
@@ -50,44 +50,44 @@ if($_GET['action'] == "scorePlus"){
             
             }
         }
-    }else if($_GET['action'] == "removeFav"){
-    	removeFav($_POST['type'], $_POST[typeId]);
+    else if($_GET['action'] == "removeFav"){
+    	removeFav($_POST['type'], $_POST['typeId']);
   	}
     else if($_GET['action'] == "requestpositive"){
         $value = "0";
 		$buddy = $_GET['buddy'];
-     	mysql_query("UPDATE buddylist SET request='$value' WHERE owner='".mysql_real_escape_string($_GET[buddy])."' && buddy='$_SESSION[userid]'");
- 		mysql_query("INSERT INTO `buddylist` (`owner`, `buddy`,`timestamp`,`request`) VALUES('$_SESSION[userid]', '".mysql_real_escape_string($_GET[buddy])."', '$timestamp', '0');");
+     	mysql_query("UPDATE buddylist SET request='$value' WHERE owner='".mysql_real_escape_string($_GET['buddy'])."' && buddy='".$_SESSION['userid']."'");
+ 		mysql_query("INSERT INTO `buddylist` (`owner`, `buddy`,`timestamp`,`request`) VALUES('".$_SESSION['userid']."', '".mysql_real_escape_string($_GET['buddy'])."', '$timestamp', '0');");
 		echo"<script>parent.$('#friendRequest_$buddy').hide()</script>";
         jsAlert("worked :)");
     }
     else if($_GET['action'] == "requestnegative"){
-        mysql_query("DELETE FROM buddylist WHERE owner='".mysql_real_escape_string($_GET[buddy])."' && buddy='$_SESSION[userid]'");
+        mysql_query("DELETE FROM buddylist WHERE owner='".mysql_real_escape_string($_GET['buddy'])."' && buddy='".$_SESSION['userid']."'");
         jsAlert("worked :)");
     }
     else if($_GET['action'] == "addbuddy"){
         $timestamp = time();
-        $buddy = save($_GET[buddy]);
-        $check = mysql_query("SELECT * FROM buddylist WHERE owner='$_SESSION[userid]' && buddy='$buddy' OR buddy='$_SESSION[userid]' && owner='$buddy'");
+        $buddy = save($_GET['buddy']);
+        $check = mysql_query("SELECT * FROM buddylist WHERE owner='".$_SESSION['userid']."' && buddy='$buddy' OR buddy='".$_SESSION['userid']."' && owner='$buddy'");
 		$checkData = mysql_fetch_array($check);
-        if(!isset($checkData[owner])){
-            if($buddy == $_SESSION[userid]){
+        if(!isset($checkData['owner'])){
+            if($buddy == $_SESSION['userid']){
                 $message = "that is you;) $buddy";
             }
             $requestSQL = mysql_query("SELECT * FROM user WHERE userid='$buddy'");
             $requestData = mysql_fetch_array($requestSQL);
-            if($requestData[priv_buddyRequest] == "1"){
+            if($requestData['priv_buddyRequest'] == "1"){
                 $request = "1";
             } else{
                 $request = "0";
             }
        if(empty($message)){
-        mysql_query("INSERT INTO `buddylist` (`owner`, `buddy`,`timestamp`,`request`) VALUES('$_SESSION[userid]', '$buddy', '$timestamp', '$request');");
+        mysql_query("INSERT INTO `buddylist` (`owner`, `buddy`,`timestamp`,`request`) VALUES('".$_SESSION['userid']."', '$buddy', '$timestamp', '$request');");
 
         
         //if privacy settings dont need allowance, the user needs to be added on the buddies buddylist
         if($request == "0"){
-        	mysql_query("INSERT INTO `buddylist` (`owner`, `buddy`,`timestamp`,`request`) VALUES('$buddy', '$_SESSION[userid]', '$timestamp', '$request');");
+        	mysql_query("INSERT INTO `buddylist` (`owner`, `buddy`,`timestamp`,`request`) VALUES('$buddy', '".$_SESSION['userid']."', '$timestamp', '$request');");
         }
         
         $message = "worked ;)";
@@ -136,10 +136,10 @@ if($_GET['action'] == "scorePlus"){
 	 		jsAlert("No rights, bro.");
 	 	}
      }else if($_GET['action'] == "showPlaylist"){
-        $playListId = save($_GET[id]);
+        $playListId = save($_GET['id']);
         $playListSql = mysql_query("SELECT * FROM playlist WHERE id='$playListId'");
         $playListData = mysql_fetch_array($playListSql);
-        if($playListData['user'] == "$_SESSION[userid]"){
+        if($playListData['user'] == "getUser()"){
             $delete = TRUE;
         }
             ?>
@@ -179,8 +179,8 @@ if($_GET['action'] == "scorePlus"){
      }
     else if($_GET['action'] == "addFileToPlaylist"){
          
-         $playlist = $_POST[playlistId];
-         $newPlaylist = $_POST[playlistName];
+         $playlist = $_POST['playlistId'];
+         $newPlaylist = $_POST['playlistName'];
          $file = "$_GET[file]";
          $folder = "$_GET[folder]";
          $element = "$_GET[element]";
@@ -191,7 +191,7 @@ if($_GET['action'] == "scorePlus"){
                     $UpdateStringSql = mysql_query("SELECT id, files, folders, links FROM playlist WHERE id='$playlist'");
                     $UpdateData = mysql_fetch_array($UpdateStringSql);
                     if(!empty($newPlaylist)){
-                        mysql_query("INSERT INTO playlist (user, title) VALUES('$_SESSION[userid]', '$newPlaylist')");
+                        mysql_query("INSERT INTO playlist (user, title) VALUES('".$_SESSION['userid']."', '$newPlaylist')");
                         $playlist = mysql_insert_id();
                     }
                         if(!empty($file)){
@@ -237,17 +237,17 @@ if($_GET['action'] == "scorePlus"){
                 <div class="jqPopUp border-radius transparency">
                     <a class="jqClose" id="closePlaylist">X</a>
                     <header>
-                        <?=$fileData[title];?>
+                        <?=$fileData['title'];?>
                     </header>
                     <div class="jqContent">
                         <p>Please choose a playlist:</p>
                         <select name="playlistId">
                             <option value=""></option>
                             <?
-                            $playListsSql = mysql_query("SELECT id, title FROM playlist WHERE user='$_SESSION[userid]'");
+                            $playListsSql = mysql_query("SELECT id, title FROM playlist WHERE user='".$_SESSION['userid']."'");
                             while($playListsData = mysql_fetch_array($playListsSql)){
                             ?>
-                            <option value="<?=$playListsData[id];?>"><?=$playListsData[title];?></option>
+                            <option value="<?=$playListsData['id'];?>"><?=$playListsData['title'];?></option>
                             <? } ?>
                         </select>
                         <p>Add to new Playlist:</p>
@@ -267,16 +267,16 @@ if($_GET['action'] == "scorePlus"){
      <?}
      
      }else if($_GET['action'] == "addPlaylist"){
-         if(isset($_POST[submit])){
+         if(isset($_POST['submit'])){
                         
                     //set privacy
-                    $customShow = $_POST[privacyCustomSee];
-                    $customEdit = $_POST[privacyCustomEdit];
+                    $customShow = $_POST['privacyCustomSee'];
+                    $customEdit = $_POST['privacyCustomEdit'];
                     
-                    $privacy = exploitPrivacy("$_POST[privacyPublic]", "$_POST[privacyHidden]", $customEdit, $customShow);
-                    $user = $_SESSION[userid];
+                    $privacy = exploitPrivacy("".$_POST['privacyPublic']."", "".$_POST['privacyHidden']."", $customEdit, $customShow);
+                    $user = $_SESSION['userid'];
                     
-             mysql_query("INSERT INTO playlist (user, title, privacy) VALUES('$user', '$_POST[title]', '$privacy')");   
+             mysql_query("INSERT INTO playlist (user, title, privacy) VALUES('$user', '".$_POST['title']."', '$privacy')");   
              jsAlert("Your playlist has been added.");
              ?>
             <script>
@@ -326,20 +326,20 @@ if($_GET['action'] == "scorePlus"){
         </form>
      <?
      }else if($_GET['action'] == "copyPlaylist"){
-         $playList = save($_GET[playlist]);
+         $playList = save($_GET['playlist']);
          $playlistData = mysql_query("SELECT * FROM playlist WHERE id='$playList'");
          $playlistData = mysql_fetch_array($playlistData);
          
-         if(isset($_POST[submit])){
+         if(isset($_POST['submit'])){
                         
                     //set privacy
-                    $customShow = $_POST[privacyCustomSee];
-                    $customEdit = $_POST[privacyCustomEdit];
+                    $customShow = $_POST['privacyCustomSee'];
+                    $customEdit = $_POST['privacyCustomEdit'];
                     
-                    $privacy = exploitPrivacy("$_POST[privacyPublic]", "$_POST[privacyHidden]", $customEdit, $customShow);
-                    $user = $_SESSION[userid];
+                    $privacy = exploitPrivacy("".$_POST['privacyPublic']."", "".$_POST['privacyHidden']."", $customEdit, $customShow);
+                    $user = $_SESSION['userid'];
 					
-                mysql_query("INSERT INTO playlist (user, title, privacy, links, files, youTube) VALUES('$user', '$_POST[title]', '$privacy', '$playlistData[links]', '$playlistData[files]', '$playlistData[youTube]')");
+                mysql_query("INSERT INTO playlist (user, title, privacy, links, files, youTube) VALUES('$user', '".$_POST['title']."', '$privacy', '".$playlistData['links']."', '".$playlistData['files']."', '".$playlistData['youTube']."')");
  				jsAlert("The playlist has been added");
                 ?>
             <script>
@@ -352,13 +352,13 @@ if($_GET['action'] == "scorePlus"){
         <div class="jqPopUp border-radius transparency" id="addPlaylist">
             <a class="jqClose" id="closePlaylist">X</a>
             <header>
-                Copy Playlist <?=$playlistData[title];?>
+                Copy Playlist <?=$playlistData['title'];?>
             </header>
             <div class="jqContent">
                 <table width="100%">
                     <tr>
                         <td width="180">Title:</td>
-                        <td><input type="text" name="title" style="width:300px;" value="<?=$playlistData[title];?>"></td>
+                        <td><input type="text" name="title" style="width:300px;" value="<?=$playlistData['title'];?>"></td>
                     </tr>
                     <tr>
                         <td valign="top">Privacy</td>
@@ -401,7 +401,7 @@ if($_GET['action'] == "scorePlus"){
                             
                             
                             
-                                $userGroupsSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='$_SESSION[userid]'");
+                                $userGroupsSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='".$_SESSION['userid']."'");
                                 while($userGroupsData = mysql_fetch_array($userGroupsSql)){
                                     $userGroups[] = "$userGroupsData[group]";
                                 }
