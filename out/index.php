@@ -69,7 +69,7 @@ switch($type){
 						echo'img{ margin-top: -16px; }';
 						echo'</style>';
 						echo'<div>&nbsp;<img src="../gfx/icons/filesystem/folder.png" height="22" style="margin-top:0px;">';
-						echo'<a href="../out/?folder=1" onclick="openFolder(\''.$data['folder'].'\'); return false;">&nbsp;&nbsp;...</a></td></div>';
+						echo'<a href="../out/?folder='.$data['folder'].'" onclick="openFolder(\''.$data['folder'].'\'); return false;">&nbsp;&nbsp;...</a></td></div>';
                         showFileList($itemId, '', true, '../');
 		break;
 	case "File":

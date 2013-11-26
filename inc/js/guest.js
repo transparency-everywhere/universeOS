@@ -82,10 +82,32 @@ function processRegistration(){
     var username = $("#regUsername").val();
     var password = $("#registration #password").val();
     var captcha = $("#captcha").val();
+    
+	//cypher password into two hashes
+	//passwordHash is used to cypher the password for db
+	//keyHash is used to encrypt the pricate Key
+	//
+	//salt is always the username just the position is switched
+	
+    var shaPass = CryptoJS.SHA512(username+password);
+    var passwordHash = shaPass.toString(CryptoJS.enc.Hex); //parse cypher object to string
+    
+    var shaKey = CryptoJS.SHA512(password+username);
+    var keyHash = shaKey.toString(CryptoJS.enc.Hex);
+    
+    			//generate Keypair
+    			var keyPair = generateAsymKeyPair(); //generate Asymetric Keypair
+    			var publicKey = keyPair['publicKey']; 
+    			var privateKey = symEncrypt(keyHash, keyPair['privateKey']); //encrypt private Key using password
+    			
+   
+    
                 //submit registration
-                $.post("api.php?action=processSiteRegistration", {
+                $.post("../../api.php?action=processSiteRegistration", {
                        username:username,
-                       password:password,
+                       password:passwordHash,
+                       publicKey:publicKey,
+                       privateKey:privateKey,
                        captcha:captcha
                        }, function(result){
                             var res = result;
@@ -95,7 +117,7 @@ function processRegistration(){
                                 $('#registration').slideUp('');
                                 
                                 $('#loginUsername').val(username);
-                                $('#loginPassword').val(password);
+                                $('#loginPassword').val($("#registration #password").val());
 					            $("#startbox").show("slow");
 					            $("#startbox").css('z-index', 9999);
 					            $("#startbox").css('position', 'absolute');

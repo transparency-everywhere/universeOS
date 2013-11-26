@@ -435,53 +435,13 @@ switch($action){
     break;
     //is used for universeOS registration form
     case 'processSiteRegistration':
-    $user = save($_POST[username]);
-    $sql = mysql_query("SELECT username FROM user WHERE username='$user'");
-    $data = mysql_fetch_array($sql);
     
-    if(empty($data[username]) && validateCapatcha("$_POST[captcha]")){
-          
-        $password = md5($_POST[password]);
-        $time = time();
-        mysql_query("INSERT INTO `user` (`password`, `username`, `email`, `regdate`, `lastactivity`) VALUES ('$password', '$_POST[username]', '', '$time', '$time')");
-
-        $userid = mysql_insert_id();
-        
-        
-        //create user folder(name=userid) in folder userFiles
-        $userFolder = createFolder("2", $userid, $userid, "h");
-        
-        //create folder for userpics in user folder
-        $pictureFolder = createFolder($userFolder, "userPictures", $userid, "h");
-        
-        //create thumb folders || NOT LISTED IN DB!
-        $path3 = ".//upload//userFiles//$userid//userPictures//thumb";
-        $path4 = ".//upload//userFiles//$userid//userPictures//thumb//25";
-        $path5 = ".//upload//userFiles//$userid//userPictures//thumb//40";
-        $path6 = ".//upload//userFiles//$userid//userPictures//thumb//300";
-        mkdir($path3);  //Creates Thumbnail Folder
-        mkdir($path4); //Creates Thumbnail Folder
-        mkdir($path5); //Creates Thumbnail Folder
-        mkdir($path6); //Creates Thumbnail Folder
-        
-        
-        //create Element "myFiles" in userFolder
-        $myFiles = createElement($userFolder, "myFiles", "myFiles", $userid, "h");
-        
-        //create Element "user pictures" to collect profile pictures
-        $pictureElement = createElement($pictureFolder, "profile pictures", "image", $userid, "p");
-
-
-        mysql_query("UPDATE user SET homefolder='$userFolder', myFiles='$myFiles', profilepictureelement='$pictureElement' WHERE userid='$userid'");
-
-        echo"1";
-    }else{
-        if(!validateCapatcha("$_POST[captcha]")){
-            echo"The captcha was wrong.";
-        }else{
-            echo"Ooops.. Something went wrong.";  
-        }
-    }
+	    if(validateCapatcha($_POST['captcha'])){
+	        createUser($_POST['username'], $_POST['password'], $_POST['privateKey'], $_POST['publicKey']);
+			echo "1";
+	   	}else{
+	    	echo "The Captcha was wrong";
+	   	}
         
     break;
     case 'checkForFeeds':
@@ -580,15 +540,23 @@ switch($action){
         
     break;
     case 'showFeedComments':
-        $username = save($_POST[username]);
+        $username = save($_POST['username']);
         $hash = $_POST[hash];
         if(checkMobileAuthentification($username, $hash)){
             
-            $commentid = $_GET[feedid];
+            $commentid = $_GET['feedid'];
             showFeedComments($commentid);
             
         }
         
     break;
+	case 'getPublicKey':
+		$type = $_POST['type'];
+		$itemId = $_POST['itemId'];
+		
+		$signature = new signatures();
+		$data = $signature->get($type, $itemId);
+		echo $data['publicKey'];
+		break;
         
 }

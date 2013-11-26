@@ -2814,9 +2814,9 @@ if($_GET['action'] == "scorePlus"){
 				}
             	
             }else if($_GET['action'] == "tester"){
-            	addToNotSuggestList(12122);
-
-            	$lists = getNotSuggestList();
-				var_dump($lists);
+            	
+				
+	     		$username = new signatures();
+				$username->create('$type', '$itemId', '$privateKey', '$publicKey');
             }
 ?>

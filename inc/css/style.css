@@ -937,6 +937,12 @@ background: #383838;
 		margin-top: 9px;
 		margin-right:5px;
 	}
+	
+	.openFile header span>span{
+		float:none;
+		margin-top: 0;
+		margin-right:0;
+	}
 
             .uffViewerMain{
                 position: absolute;

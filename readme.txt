@@ -70,8 +70,12 @@ Files and the use of them
 	
 	
 		SEO/FB etc...
-		openFileFromlink.php//opens js openFile() function to open a file if universeOS.org?file=xy is called
-		out/				//in this folder is everything
+		openFileFromlink.php		//opens js openFile() function to open a file if universeOS.org?file=xy is called
+
+		out/						//this folder contains all handlers for sharing files from the universe
+		out/index.php				//contains universeFileBrowser
+		out/download/index.php		//download handler
+		
 	
 	
 	JavaScript

@@ -510,21 +510,58 @@
 		
 		echo $output;
   }
+
+  function userLogin($username, $password){
+  	
+	     $username = mysql_real_escape_string($username);
+	     $sql = mysql_query("SELECT userid, password, hash, cypher FROM user WHERE username='$username'");
+	     $data = mysql_fetch_array($sql);
+		 $userid = $data['userid'];
+		 
+	     $timestamp = time();
+	     $timestamp = ($timestamp / 2);
+	     $hash = md5($timestamp);
+		 
+		 //old version
+		 if($data['cypher'] == 'md5'){
+	     	$password = md5($password);
+		 }
+		 if($data['cypher'] == 'sha512'){
+	     	$password = hash('sha512', $username.$password); //username is salt
+		 }
+		 
+	     if($password == $data['password']) {
+	     	
+			 //set cookies
+	         $_SESSION['userid'] = $data['userid'];
+	         $_SESSION['userhash'] = $hash;
+			 
+			 //update db
+	         mysql_query("UPDATE user SET hash='$hash' WHERE userid='$_SESSION[userid]'");
+	         
+	         createFeed("$_SESSION[userid]", "is logged in", "60", "feed", "p");
+	         
+			 return true;
+	     }else{
+	     	return false;
+	     }
+  }
   
-  function createUser($username, $password){
-    $user = save($username);
-    $sql = mysql_query("SELECT username FROM user WHERE username='$user'");
+  function createUser($username, $password, $privateKey, $publicKey){
+    
+    $username = save($_POST['username']);
+    $sql = mysql_query("SELECT username FROM user WHERE username='$username'");
     $data = mysql_fetch_array($sql);
     
-    if(empty($data[username]) && validateCapatcha("$_POST[captcha]")){
-          
-        $password = md5($password);
+    if(empty($data['username'])){
         $time = time();
-        mysql_query("INSERT INTO `user` (`password`, `username`, `email`, `regdate`, `lastactivity`) VALUES ('$password', '$_POST[username]', '', '$time', '$time')");
-
+        mysql_query("INSERT INTO `user` (`password`, `cypher`, `username`, `email`, `regdate`, `lastactivity`) VALUES ('$password', 'sha512', '$username', '', '$time', '$time')");
         $userid = mysql_insert_id();
         
-        
+		//create signature
+		$sig = new signatures();
+		$sig->create('user', $userid, $privateKey, $publicKey);
+		
         //create user folder(name=userid) in folder userFiles
         $userFolder = createFolder("2", $userid, $userid, "h");
         
@@ -551,7 +588,7 @@
 
         mysql_query("UPDATE user SET homefolder='$userFolder', myFiles='$myFiles', profilepictureelement='$pictureElement' WHERE userid='$userid'");
 
-        echo"1";
+        return true;
     }
       
   }
@@ -5116,6 +5153,26 @@ class dashBoard{
 		$title = "Your Tasks";
 		
 		return $this->showDashBox($title, $output,"", "task", $grid);
+	}
+}
+
+class signatures{
+	
+	function create($type, $itemId, $privateKey, $publicKey){
+		mysql_query("INSERT INTO `signatures` (`type`, `itemId`, `privateKey`, `publicKey`, `timestamp`) VALUES ('$type', '$itemId', '$privateKey', '$publicKey', '".time()."')");
+	}
+	
+	function update($type, $itemId, $privateKey, $publicKey){
+		
+	}
+	
+	function get($type, $itemId){
+		$data = mysql_query("SELECT * FROM `signatures` WHERE `type`='$type' AND `itemId`='$itemId'");
+		return $data;
+	}
+	
+	function delete($type, $itemId){
+		mysql_query("DELETE FROM `signatures` WHERE `type`='$type' AND `itemId`='$itemId'");
 	}
 }
 

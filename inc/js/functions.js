@@ -340,7 +340,53 @@ var focus = true;
               
        
        
-       
+//encryption functions
+
+	function symEncrypt(key, message){
+		var msg
+		var output;
+	    msg = CryptoJS.AES.encrypt(message, key);
+	    return String(msg);
+	}
+	
+	function symDecrypt(key, message){
+		var msg
+	    msg = CryptoJS.AES.decrypt(message, key);
+	    var output = CryptoJS.enc.Utf8.stringify(msg);
+	    return String(output);
+	}
+	
+	function generateAsymKeyPair(){
+      var keySize = 1024;
+      var crypt;
+      var ret = [];
+      crypt = new JSEncrypt({default_key_size: keySize});
+      crypt.getKey();
+      ret['privateKey'] = crypt.getPrivateKey();
+      ret['publicKey'] = crypt.getPublicKey();
+      
+      return ret;
+	}
+	
+	function asymEncrypt(publicKey, message){
+		
+		  var encrypt = new JSEncrypt();
+		  
+          encrypt.setPublicKey(publicKey);
+          
+          return encrypt.encrypt(message);
+          
+	}
+	
+	function asymDecrypt(privateKey, encryptedMessage){
+		
+          var decrypt = new JSEncrypt();
+          
+          decrypt.setPrivateKey(privateKey);
+          
+          return decrypt.decrypt(encryptedMessage);
+		
+	}
               
 //general functions
         
@@ -1036,6 +1082,9 @@ function groupMakeUserAdmin(groupId, userId){
                 setTimeout('clock()',1000);
               }
               
+              
+              
+             
 
 
 //PLUGINS

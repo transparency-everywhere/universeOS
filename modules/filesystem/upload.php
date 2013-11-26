@@ -65,7 +65,12 @@ $folder = $_GET[folder];
 	</div>
 	<div id="uploadStepTwo" class="hidden uploadStep step">
 		<div>
-			<h3>Choose Privacy</h3>
+			<h3>Choose Settings</h3>
+			<p>Please choose a language:</p>
+			<?php
+			showLanguageDropdown();
+			?>
+			<h3>Privacy</h3>
 			<p>Please justify the privacy of the files you want to upload</p>
 			<?php
 			showPrivacySettings();
