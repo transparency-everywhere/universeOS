@@ -195,19 +195,19 @@ if($_GET['action'] == "scorePlus"){
                         $playlist = mysql_insert_id();
                     }
                         if(!empty($file)){
-                        $files= $file;$UpdateData['files'];
+                        $files= "$file;".$UpdateData['files'];
                         mysql_query("UPDATE playlist SET files='$files' WHERE id='$playlist'");
                         }
                         if(!empty($folder)){
-                        $folders = $folder;$UpdateData['folders'];
+                        $folders = "$folder;".$UpdateData['folders'];
                         mysql_query("UPDATE playlist SET folders='$folders' WHERE id='$playlist'");
                         }
                         if(!empty($element)){
-                        $elements = $element;$UpdateData['elements'];
+                        $elements = "$element;".$UpdateData['elements'];
                         mysql_query("UPDATE playlist SET elements='$elements' WHERE id='$playlist'");
                         }
                         if(!empty($link)){
-                        $links = $link;$UpdateData['links'];
+                        $links = "$link;".$UpdateData['links'];
                         mysql_query("UPDATE playlist SET links='$links' WHERE id='$playlist'");
                         }
 						
