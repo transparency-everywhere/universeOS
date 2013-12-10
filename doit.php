@@ -409,14 +409,14 @@ if($_GET['action'] == "scorePlus"){
                                 }
                             
                             
-                            $playListSql = mysql_query("SELECT id, user, title, played FROM playlist WHERE user='$_SESSION[userid]' $query");
+                            $playListSql = mysql_query("SELECT id, user, title, played FROM playlist WHERE user='".$_SESSION['userid']."' $query");
                             while($playListData = mysql_fetch_array($playListSql)){
                             $i++;
                             ?>
                             <tr border="0" class="strippedRow" width="100%" height="30">
                                 <td width="27">&nbsp;<img src="./gfx/icons/playlist.png"></td>
-                                <td width="150"><a href="javascript: popper('doit.php?action=showPlaylist&id=<?=$playListData[id];?>')"><?=$playListData[title]?></a></td>
-                                <td><?=$playListData[played];?></td>
+                                <td width="150"><a href="javascript: popper('doit.php?action=showPlaylist&id=<?=$playListData['id'];?>')"><?=$playListData['title']?></a></td>
+                                <td><?=$playListData['played'];?></td>
                             </tr>
                             <?PHP
                             } 
@@ -441,18 +441,18 @@ if($_GET['action'] == "scorePlus"){
                        $attSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='$userid' AND validated='1'");
                        while($attData = mysql_fetch_array($attSql)){
                            $i++;
-                           $groupSql = mysql_query("SELECT id, title FROM groups WHERE id='$attData[group]'");
+                           $groupSql = mysql_query("SELECT id, title FROM groups WHERE id='".$attData['group']."'");
                            $groupData = mysql_fetch_array($groupSql);
                        $result = mysql_query("SELECT * FROM groupAttachments WHERE group='2'");
                        $num_rows = mysql_num_rows($result);
-                           $title = $groupData[title];
+                           $title = $groupData['title'];
                            $title10 = substr("$title", 0, 10);
                            $title15 = substr("$title", 0, 25);
                            ?>
                                <tr height="30" class="strippedRow">
                                    <td width="27">&nbsp;<img src="./gfx/icons/group.png" height="15"></td>
-                                   <td width="300">&nbsp;<a href="#" onclick="createNewTab('reader_tabView','<?=$title10;?>','','group.php?id=<?=$groupData[id];?>',true);return false"><?=$title15;?></a></td>
-                                   <td><?=countGroupMembers($groupData[id]);?></td>
+                                   <td width="300">&nbsp;<a href="#" onclick="createNewTab('reader_tabView','<?=$title10;?>','','group.php?id=<?=$groupData['id'];?>',true);return false"><?=$title15;?></a></td>
+                                   <td><?=countGroupMembers($groupData['id']);?></td>
                                </tr>
                        <?}
                        if($i < 1){
@@ -465,11 +465,11 @@ if($_GET['action'] == "scorePlus"){
      }
      else if($_GET['action'] == "requestGroup"){
          $time = time();
-         $val = $_GET[val];
-         mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`, `validated`) VALUES ('$_GET[group]', 'user', '$_SESSION[userid]', '$time', '$_SESSION[userid]', '$val');");
+         $val = $_GET['val'];
+         mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`, `validated`) VALUES ('".$_GET['group']."', 'user', '".$_SESSION['userid']."', '$time', '".$_SESSION['userid']."', '$val');");
      }
      else if($_GET['action'] == "joinGroup"){
-         mysql_query("UPDATE groupAttachments SET validated='1' WHERE id='$_GET[id]'");
+         mysql_query("UPDATE groupAttachments SET validated='1' WHERE id='".$_GET['id']."'");
          jsAlert("Joined :)"); 
          ?>
                 <script>
@@ -479,15 +479,15 @@ if($_GET['action'] == "scorePlus"){
          <?
      }else if($_GET['action'] == "declineGroup"){
          
-         mysql_query("DELETE FROM groupAttachments WHERE id='$_GET[id]'");
+         mysql_query("DELETE FROM groupAttachments WHERE id='".$_GET['id']."'");
          jsAlert("Declined..");
      }else if($_GET['action'] == "loadPersonalFileFrame"){
          //is used to load filelists into the reader home view
-         $query = save($_GET[query]);
+         $query = save($_GET['query']);
          switch($query){
              case allFiles:
                   
-                  $user = $_SESSION[userid];
+                  $user = $_SESSION['userid'];
                  
                   //show folders and elements
                   $folderQuery = "WHERE creator='$user' ORDER BY timestamp DESC";
@@ -501,10 +501,10 @@ if($_GET['action'] == "scorePlus"){
                   echo"</table>";
              break;
              case myFiles:
-                  $userData = mysql_query("SELECT myFiles FROM user WHERE userid='$_SESSION[userid]'");
+                  $userData = mysql_query("SELECT myFiles FROM user WHERE userid='".$_SESSION['userid']."'");
                   $userData = mysql_fetch_array($userData);
                   //show files
-                  $fileQuery = "id='$userData[myFiles]'";
+                  $fileQuery = "id='".$userData['myFiles']."'";
                   echo'<table width="100%">';
                   showFileList('', $fileQuery);
                   echo"</table>";
@@ -513,23 +513,24 @@ if($_GET['action'] == "scorePlus"){
          
      }else if($_GET['action'] == "loadMiniBrowser"){
      	
-		showMiniFileBrowser("$_GET[folder]", "$_GET[element]", "$_GET[level]", false, $_GET[select]);
+		showMiniFileBrowser("".$_GET['folder']."", "".$_GET['element']."", "".$_GET['level']."", false, $_GET['select']);
      	
      }else if($_GET['action'] == "addFolder"){
          if(proofLogin()){
-         if($_POST[submit]) {
-             $checkSQL = mysql_query("SELECT privacy, creator FROM folders WHERE id='".mysql_real_escape_string($_POST[folder])."'");
+         if($_POST['submit]') {
+             $checkSQL = mysql_query("SELECT privacy, creator FROM folders WHERE id='".mysql_real_escape_string($_POST['folder'])."'");
              $checkData = mysql_fetch_array($checkSQL);
-			 if(authorize($checkData[privacy], "edit", $checkData[creator])){
+			 if(authorize($checkData['privacy'], "edit", $checkData['creator'])){
              
                     //set privacy
-                   	$customShow = $_POST[privacyCustomSee];
-                    $customEdit = $_POST[privacyCustomEdit];
+                   	$customShow = $_POST['privacyCustomSee'];
+                    $customEdit = $_POST['privacyCustomEdit'];
+					
                     
-                    $privacy = exploitPrivacy("$_POST[privacyPublic]", "$_POST[privacyHidden]", $customEdit, $customShow);
-                    $user = $_SESSION[userid];
-                if(!empty($_POST[folder]) AND !empty($_POST[name])){
-                $answer = createFolder($_POST[folder], $_POST[name], $user, $privacy);
+                    $privacy = exploitPrivacy("".$_POST['privacyPublic']."", "".$_POST['privacyHidden']."", $customEdit, $customShow);
+                    $user = $_SESSION['userid'];
+                if(!empty($_POST['folder']) AND !empty($_POST['name'])){
+                $answer = createFolder($_POST['folder'], $_POST['name'], $user, $privacy);
 				}
                 
                 if(!empty($answer)){
@@ -537,13 +538,13 @@ if($_GET['action'] == "scorePlus"){
                 jsAlert($message);
                 ?>
                 <script>
-                    parent.addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=<?=$_POST[folder];?>&reload=1');
+                    parent.addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=<?=$_POST['folder'];?>&reload=1');
                 </script>
                 <?
 				}
                 }
                 }
-                $selectsql = mysql_query("SELECT id, name, privacy FROM folders WHERE id='$_GET[folder]'");
+                $selectsql = mysql_query("SELECT id, name, privacy FROM folders WHERE id='".$_GET['folder']."'");
                 $selectdata = mysql_fetch_array($selectsql);
                 ?>
                 <form action="./doit.php?action=addFolder" method="post" target="submitter"> 
@@ -564,7 +565,7 @@ if($_GET['action'] == "scorePlus"){
                                         </tr>
                                         <tr height="50">
                                             <td align="right">Folder:&nbsp;</td>
-                                            <td><?=$selectdata[name];?>/<input type="hidden" name="folder" value="<?=$_GET[folder];?>"></td>
+                                            <td><?=$selectdata['name'];?>/<input type="hidden" name="folder" value="<?=$_GET['folder'];?>"></td>
                                         </tr>
                                         <tr>
                                             <td colspan="2">
@@ -608,21 +609,21 @@ if($_GET['action'] == "scorePlus"){
          if(proofLogin()){
             $selectsql = mysql_query("SELECT * FROM folders WHERE id='$_GET[folder]'");
             $selectdata = mysql_fetch_array($selectsql);
-            if($_POST[submit]) {
+            if($_POST['submit']) {
     
                  
     
                     //set privacy
-                    $customShow = $_POST[privacyCustomSee];
-                    $customEdit = $_POST[privacyCustomEdit];
+                    $customShow = $_POST['privacyCustomSee'];
+                    $customEdit = $_POST['privacyCustomEdit'];
                     
-                    $privacy = exploitPrivacy("$_POST[privacyPublic]", "$_POST[privacyHidden]", $customEdit, $customShow);
-                    $user = $_SESSION[userid];
+                    $privacy = exploitPrivacy("".$_POST['privacyPublic']."", "".$_POST['privacyHidden']."", $customEdit, $customShow);
+                    $user = $_SESSION['userid'];
 
         $time = time();
-        $title = save($_POST[elementName]);
-        $name = save($_POST[name]);
-        mysql_query("INSERT INTO `elements` (`title`, `folder`, `creator`, `name`, `year`, `type`, `author`, `timestamp`, `privacy`) VALUES('$title', '$_POST[folder]', '$_POST[creator]', '$name', '$_POST[year]', '$_POST[type]', '$user', '$time', '$privacy');");
+        $title = save($_POST['elementName']);
+        $name = save($_POST['name']);
+        mysql_query("INSERT INTO `elements` (`title`, `folder`, `creator`, `name`, `year`, `type`, `author`, `timestamp`, `privacy`) VALUES('$title', '".$_POST['folder']."', '".$_POST['creator']."', '$name', '".$_POST['year']."', '".$_POST['type']."', '$user', '$time', '$privacy');");
 
         //add feed
         $elementId = mysql_insert_id();
@@ -630,15 +631,15 @@ if($_GET['action'] == "scorePlus"){
         createFeed($user, $feed, "", "showThumb", $privacy, "element", $elementId);
     
         if($_POST['type'] == "image"){
-            $filefolderSQL = mysql_query("SELECT * FROM folders WHERE id='$_POST[folder]'");
+            $filefolderSQL = mysql_query("SELECT * FROM folders WHERE id='".$_POST['folder']."'");
             $fileFolderData = mysql_fetch_array($filefolderSQL);
             //here could be a fail but Its workin right o0
-            $folderpath = "$folderData[path]";
+            $folderpath = "$folderData['path']";
             mkdir("./upload$folderpath/thumbs");
         }
         ?>
         <script>
-            parent.addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=<?=$_POST[folder];?>&reload=1');
+            parent.addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=<?=$_POST['folder'];?>&reload=1');
         </script>
         <?
         echo jsAlert("you just added an element :)");
@@ -654,7 +655,7 @@ if($_GET['action'] == "scorePlus"){
             <table>
                 <tr>
                     <td align="right">Name:&nbsp;</td>
-                    <td><input type="text" name="elementName" style="width:300px;"><input type="hidden" name="folder" value="<?=$_GET[folder];?>"></td>
+                    <td><input type="text" name="elementName" style="width:300px;"><input type="hidden" name="folder" value="<?=$_GET['folder'];?>"></td>
                 </tr>
                 <tr>
                     <td align="right">Type:&nbsp;</td>
@@ -686,7 +687,7 @@ if($_GET['action'] == "scorePlus"){
                 </tr>
                 <tr>
                     <td align="right">Folder:&nbsp;</td>
-                    <td><?=$selectdata[name];?></td>
+                    <td><?=$selectdata['name'];?></td>
                 </tr>
                     <tr>
                         <td colspan="2">
@@ -725,41 +726,41 @@ if($_GET['action'] == "scorePlus"){
      }else if($_GET['action'] == "addInternLink"){
      	if(proofLogin()){
      		
-     		if(isset($_POST[submit])){
+     		if(isset($_POST['submit'])){
      			
-				if(createInternLink($_POST[parentType], $_POST[parentId], $_POST['type'], $_POST[typeId], $_POST[title])){
+				if(createInternLink($_POST['parentType'], $_POST['parentId'], $_POST['type'], $_POST['typeId'], $_POST['title'])){
 					jsAlert("The shortcut has been added :)");
 				}
                                 
                                 //
-                                if($_POST[parentType] == "folder"){
+                                if($_POST['parentType'] == "folder"){
                                 ?>
                                 <script>
-                                    parent.addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=<?=$_POST[parentId];?>&reload=1');
+                                    parent.addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=<?=$_POST['parentId'];?>&reload=1');
                                 </script>
                                 <?
-                                }else if($_POST[parentType] == "element"){
-                                    $parentData = mysql_fetch_array(mysql_query("SELECT title FROM elements WHERE id='".mysq_real_escape_string("$_POST[parentId]")."'"));
+                                }else if($_POST['parentType'] == "element"){
+                                    $parentData = mysql_fetch_array(mysql_query("SELECT title FROM elements WHERE id='".mysq_real_escape_string("".$_POST['parentId']."")."'"));
                                     ?>
                                     <script>
-                                        parent.addAjaxContentToTab('<?=substr($parentData[title], 0, 10);?>', 'modules/filesystem/showElement.php?element=<?=$_POST[parentId];?>&reload=1');
+                                        parent.addAjaxContentToTab('<?=substr($parentData['title'], 0, 10);?>', 'modules/filesystem/showElement.php?element=<?=$_POST['parentId'];?>&reload=1');
                                     </script>
                                     <?
                                 }
      			
      		}else{
 												
-                    if(!empty($_GET[parentFolder])){
-                            $parentData = mysql_fetch_array(mysql_query("SELECT name FROM folders WHERE id='".mysql_real_escape_string($_GET[parentFolder])."'"));
-                            $titleText = "folder $parentData[name]";
+                    if(!empty($_GET['parentFolder'])){
+                            $parentData = mysql_fetch_array(mysql_query("SELECT name FROM folders WHERE id='".mysql_real_escape_string($_GET['parentFolder'])."'"));
+                            $titleText = "folder ".$parentData['name']."";
                             $hiddenInput .= "<input type=\"hidden\" name=\"parentType\" value=\"folder\">";
-                            $hiddenInput .= "<input type=\"hidden\" name=\"parentId\" value=\"$_GET[parentFolder]\">";
+                            $hiddenInput .= "<input type=\"hidden\" name=\"parentId\" value=\"".$_GET['parentFolder']."\">";
                     }
-                    if(!empty($_GET[parentElement])){
-                            $parentData = mysql_fetch_array(mysql_query("SELECT title FROM elements WHERE id='".mysql_real_escape_string($_GET[parentElement])."'"));
-                            $titleText = "element $parentData[title]";
+                    if(!empty($_GET['parentElement'])){
+                            $parentData = mysql_fetch_array(mysql_query("SELECT title FROM elements WHERE id='".mysql_real_escape_string($_GET['parentElement'])."'"));
+                            $titleText = "element ".$parentData['title']."";
                             $hiddenInput .= "<input type=\"hidden\" name=\"parentType\" value=\"element\">";
-                            $hiddenInput .= "<input type=\"hidden\" name=\"parentId\" value=\"$_GET[parentElement]\">";
+                            $hiddenInput .= "<input type=\"hidden\" name=\"parentId\" value=\"".$_GET['parentElement']."\">";
                     }
      			?>
                 <form action="./doit.php?action=addInternLink" method="post" target="submitter"> 
@@ -824,25 +825,25 @@ if($_GET['action'] == "scorePlus"){
      	}
      }else if($_GET['action'] == "addLink"){
          if(proofLogin()){
-                  if($_POST[submit]) {
+                  if($_POST['submit']) {
              
              
     
 	                    //set privacy
-	                    $customShow = $_POST[privacyCustomSee];
-	                    $customEdit = $_POST[privacyCustomEdit];
-	                    $privacy = exploitPrivacy("$_POST[privacyPublic]", "$_POST[privacyHidden]", $customEdit, $customShow);
+	                    $customShow = $_POST['privacyCustomSee'];
+	                    $customEdit = $_POST['privacyCustomEdit'];
+	                    $privacy = exploitPrivacy("".$_POST['privacyPublic']."", "".$_POST['privacyHidden']."", $customEdit, $customShow);
 						if(addLink($_POST['folder'], $_POST['title'], $_POST['type'], $privacy, $_POST['link'])){
 						?>
 			                <script>
-			                    parent.addAjaxContentToTab('<?=$_POST[tabTitle];?>', 'modules/filesystem/showElement.php?element=<?=$_POST[folder];?>&reload=1');
+			                    parent.addAjaxContentToTab('<?=$_POST['tabTitle'];?>', 'modules/filesystem/showElement.php?element=<?=$_POST['folder'];?>&reload=1');
 			                </script>
 	                	<?
 						}
                 }
-                $selectsql = mysql_query("SELECT title, privacy FROM elements WHERE id='$_GET[element]'");
+                $selectsql = mysql_query("SELECT title, privacy FROM elements WHERE id='".$_GET['element']."'");
                 $selectdata = mysql_fetch_array($selectsql);
-                $title = $selectdata[title];
+                $title = $selectdata['title'];
                 $title10 = substr("$title", 0, 10);
                 ?>
 
