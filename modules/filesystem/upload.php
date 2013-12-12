@@ -60,7 +60,7 @@ $folder = $_GET[folder];
 			?>
 		</div>
 		<footer>
-			<a href="#" onclick="$('#uploadStepOne').hide(); $('#uploadStepTwo').show(); initUploadify('#uploader_file', 'doit.php?action=manageUpload&type=uploadTemp', $('.choosenTypeId').val(), '<?=$timeStamp;?>', '<?=$salt;?>');" class="btn btn-mini pull-right">Next</a>
+			<a href="#" onclick="$('#uploadStepOne').hide(); $('#uploadStepTwo').show(); initUploadify('#uploader_file', 'doit.php?action=manageUpload&type=uploadTemp', $('.choosenTypeId').val(), '<?=$timeStamp;?>', '<?=$salt;?>'); initPrivacy();" class="btn btn-mini pull-right">Next</a>
 		</footer>
 	</div>
 	<div id="uploadStepTwo" class="hidden uploadStep step">

@@ -5,14 +5,17 @@ require_once("../../inc/functions.php");
 $buddy = $_GET[buddy];
 if(proofLogin()){
 	
+	
+	
+	
 $userid = getUser();
 $buddyName = str_replace("_"," ",$buddy); //get username of receiver
 $buddyData = getUserData(usernameToUserid($buddyName));
 
 //get userdata of 
 $userData = getUserData($userid);
-$buddy = $buddyData[userid];
-$buddyName = str_replace(" ","_",$buddyData[username]);
+$buddy = $buddyData['userid'];
+$buddyName = str_replace(" ","_",$buddyData['username']);
 $intWindows = "$buddy.key";
 if(isset($_SESSION[$intWindows])){
     $lockIcon = "locked.png";
@@ -21,7 +24,8 @@ if(isset($_SESSION[$intWindows])){
     $lockIcon = "lock.png";
 }
 
-if(empty($_GET[initter])){
+markMessageAsRead($buddy, $userid);
+if(empty($_GET['initter'])){
  ?>
       <div class="chatMainFrame">
           <header class="grayBar">

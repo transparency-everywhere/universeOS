@@ -13,8 +13,8 @@ $title10 = substr("$elementData[title]", 0, 10);
             $link = "./modules/reader/showfile.php?type=$elementData[type]";
 
             
-if($elementData[type] == "image"){
-  if($elementData[title] == "profile pictures"){
+if($elementData['type'] == "image"){
+  if($elementData['title'] == "profile pictures"){
   $title = "Userpictures";
   $bar = false;
   if($elementData['author'] == getUser()){
@@ -22,7 +22,7 @@ if($elementData[type] == "image"){
   }
   
   }else{
-  $title = "$elementData[title]";
+  $title = $elementData['title'];
   $bar = true;
   }
   
@@ -44,20 +44,20 @@ if($elementData[type] == "image"){
         while($documentData = mysql_fetch_array($documentSQL)){
         $documentFolderSQL = mysql_query("SELECT id, path, privacy FROM folders WHERE id='$elementData[folder]'");
         $documentFolderData = mysql_fetch_array($documentFolderSQL);
-        $folderPath = urldecode($documentFolderData[path]);
-        if($elementData[title] == "profile pictures"){
+        $folderPath = urldecode($documentFolderData['path']);
+        if($elementData['title'] == "profile pictures"){
         $folderPath = "/userPictures";
         $folderPath = "upload$folderPath/thumb/300";
         }else{
         $folderPath = "upload$folderPath/thumbs/";
         }
-        if(authorize("p", "show", $documentData[owner])){
+        if(authorize("p", "show", $documentData['owner'])){
             ?>
-            <td onclick="openFile('image', '<?=$documentData[id];?>', '<?=$elementData[title];?>');" oncontextmenu="showMenu('image<?=$documentData[id];?>'); return false;"><img src="<?=getFullFilePath("$documentData[id]");?>" height="100px"></td>   
+            <td onclick="openFile('image', '<?=$documentData['id'];?>', '<?=$elementData['title'];?>');" oncontextmenu="showMenu('image<?=$documentData['id'];?>'); return false;"><img src="<?=getFullFilePath($documentData['id']);?>" height="100px"></td>   
                 
         <? 
         
-        showRightClickMenu("image", $documentData[id], $elementData[title] , $documentData[owner]);
+        showRightClickMenu("image", $documentData['id'], $elementData['title'] , $documentData['owner']);
         }} ?>
         </tr>
         </table>
@@ -70,12 +70,12 @@ if($elementData[type] == "image"){
 	    	<?
 	    	if(proofLogin() && $bar){
 	    	?>
-	        <a href="javascript: openUploadTab('<?=$_GET[element];?>');" class="btn btn-info"><i class="icon-file icon-white"></i>&nbsp;add File</a>&nbsp;
-	        <a href="javascript: popper('./doit.php?action=addLink&element=<?=$_GET[element];?>')" class="btn btn-info"><i class="icon-globe icon-white"></i>&nbsp;add Link</a>
+	        <a href="#" onclick="openUploadTab('<?=$_GET[element];?>');" class="btn btn-info"><i class="icon-file icon-white"></i>&nbsp;add File</a>&nbsp;
+	        <a href="#" onclick="popper('./doit.php?action=addLink&element=<?=$_GET[element];?>')" class="btn btn-info"><i class="icon-globe icon-white"></i>&nbsp;add Link</a>
 			<? }
 			
 			if($changeUserPicture){ ?>
-				<a href="javascript:showModuleSettings();" class="btn btn-info">&nbsp;change Userpicture&nbsp;</a>
+				<a href="#" onclick="showModuleSettings();" class="btn btn-info">&nbsp;change Userpicture&nbsp;</a>
 			<? }
 			?>
 	    </center>

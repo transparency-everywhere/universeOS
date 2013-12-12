@@ -1,7 +1,15 @@
 Recent:
 
-	JS
-		updateDashbox(type)
+	Update from running version:
+		DB
+			user
+				cypher
+		
+		UPDATE userpw cypher sha512(md5(pass)+username)
+		
+		Add standard rsa private and public key? 
+		
+	
 
 	OO/Functions
 		
@@ -23,24 +31,8 @@ Recent:
 	security
 	
 	Bugs
-		Session login prob
 		
-	Install
-		Vars
-				URL
-				db
-				dbUser
-				dbPass
 		
-	
-	Welcome message
-		Add sentence with calender after calender has been added to "the dock"
-		
-		klieines s schriftart scvheiße
-		
-		"An Element contains files and links which are connected with each other. They are listed in the filesystem to folders.<br><i><b>For example</b> you could create the image-element "My Nice Holiday In Nepal" and upload all your holiday pictures in it."
-	
-
 Files and the use of them
 
 	PHP

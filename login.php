@@ -1,7 +1,7 @@
 <?PHP
-session_start();
 include("inc/config.php");
 include("inc/functions.php");
+session_start();
 if(isset($_POST['submit']) && !empty($_POST['username'])) {
 	if(userLogin($_POST['username'], $_POST['password'])){
      ?>

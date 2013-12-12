@@ -526,28 +526,48 @@
 		 if($data['cypher'] == 'md5'){
 	     	$password = md5($password);
 		 }
-		 if($data['cypher'] == 'sha512'){
-	     	$password = hash('sha512', $username.$password); //username is salt
-		 }
 		 
 	     if($password == $data['password']) {
-	     	
 			 //set cookies
-	         $_SESSION['userid'] = $data['userid'];
+	       	 $_SESSION['userid'] = $data['userid'];
 	         $_SESSION['userhash'] = $hash;
 			 
 			 //update db
-	         mysql_query("UPDATE user SET hash='$hash' WHERE userid='$_SESSION[userid]'");
+	         mysql_query("UPDATE user SET hash='$hash' WHERE userid='".$_SESSION['userid']."'");
 	         
-	         createFeed("$_SESSION[userid]", "is logged in", "60", "feed", "p");
-	         
+	         createFeed($_SESSION['userid'], "is logged in", "60", "feed", "p");
+	         updateActivity($_SESSION['userid']);
+			 
+			 
 			 return true;
 	     }else{
 	     	return false;
 	     }
   }
   
-  function createUser($username, $password, $privateKey, $publicKey){
+  function createSalt($type, $itemId, $receiverType, $receiverId, $salt){
+  	//stores encrypted salt in db
+  	
+  	//delete all old salts
+	mysql_fetch_array(mysql_query("DELETE FROM `salts` WHERE `type`='$type' AND itemId='$itemId'"));
+	
+	
+  		if(mysql_query("INSERT INTO `salts` (`type`, `itemId`, `receiverType`, `receiverId`, `salt`) VALUES ('$type', '$itemId', '$receiverType', '$receiverId', '$salt')"))
+			return true;
+		else 
+			return false;
+
+  }
+  
+  function getSalt($type, $itemId){
+  	$type = save($type);
+	$itemId = save($itemId);
+	
+  	$data = mysql_fetch_array(mysql_query("SELECT * FROM `salts` WHERE `type`='$type' AND itemId='$itemId' LIMIT 1"));
+  	return $data['salt'];
+  }
+  
+  function createUser($username, $password, $salt, $privateKey, $publicKey){
     
     $username = save($_POST['username']);
     $sql = mysql_query("SELECT username FROM user WHERE username='$username'");
@@ -557,6 +577,9 @@
         $time = time();
         mysql_query("INSERT INTO `user` (`password`, `cypher`, `username`, `email`, `regdate`, `lastactivity`) VALUES ('$password', 'sha512', '$username', '', '$time', '$time')");
         $userid = mysql_insert_id();
+		
+		//store salt
+		createSalt('auth', $userid, 'user', $userid, $salt);
         
 		//create signature
 		$sig = new signatures();
@@ -647,6 +670,16 @@
       }
   }
   
+  function proofLoginMobile($user, $hash){
+  	
+	$userData = getUserData($user);
+	
+	if($userData['password'] == $hash)
+		return true;
+	else
+		return false; 
+  }
+  
   function getUser(){
   	
   	if(isset($_SESSION['userid'])){
@@ -708,6 +741,26 @@
         return $loginData['realname'];
   }
   
+  function searchUserByString($string, $limit){
+  		$q = save($string);
+		$k = save($limit);
+		$userSuggestSQL = mysql_query("SELECT userid, username, realname FROM user WHERE username LIKE '%$q%' OR realname LIKE '%$q%' OR email='$q' OR userid='$q' LIMIT $k");
+		while ($suggestData = mysql_fetch_array($userSuggestSQL)) {
+			
+			
+			if(!isset($return[$userid])){		//only return every user once
+				
+				$userid = $suggestData['userid'];
+				$array[] = $suggestData['username'];
+				$array[] = $suggestData['realname'];
+				
+				$return[$userid] = $array;		//add user data tu return array
+				
+			}
+		}
+		
+		return $return;
+  }
   
   
   function getUserData($userid=NULL){
@@ -727,9 +780,7 @@
     $difference = ($time - $picData['lastactivity']);
      if($difference < 90){
         $color = "#B1FFAD";
-     }else if($difference > 90 && $difference < 600) {
-        $color = "#F9FFD3";
-     } elseif($difference > 600) {
+     }else{
         $color = "#FD5E48";
      }
      
@@ -885,8 +936,50 @@
 	}
 	
 	
+	function markMessageAsRead($buddy, $user){
+			
+		$user = save($user);
+		$buddy = save($buddy);
+		
+	        mysql_query("UPDATE `messages` SET `read`='1' WHERE `sender` ='$buddy' AND `receiver` ='$user';");
+	}
 	
+		
+	function getLastMessage($userid){
+		$userid = save($userid);
+		$chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' OR receiver='$userid' ORDER BY timestamp DESC LIMIT 1");
+		$chatData =  mysql_fetch_array($chatSQL);
+		
+		
+		if($chatData['read'] == 0){
+			return $chatData['id'];
+		}
+		
+	}
 	
+	function getUnseenMessageAuthors($userid){;
+		$chatSQL = mysql_query("SELECT * FROM `messages` WHERE (`sender`='$userid' AND `seen`='0') OR (`read`='0' AND `receiver`='$userid')");
+		while($chatData =  mysql_fetch_array($chatSQL)){
+			if($chatData['sender'] == $userid){
+				if(!in_array($chatData['receiver'], $return))
+					$return[] = $chatData['receiver'];
+			}else if($chatData['receiver'] == $userid){
+				
+				if(!in_array($chatData['sender'], $return))
+					$return[] = $chatData['sender'];
+			}
+		}
+		return $return;
+	}
+	
+	function getMessages($userid, $buddyId, $limit){
+		$chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' && receiver='$buddyId' OR sender='$buddyId' && receiver='$userid' ORDER BY timestamp DESC LIMIT $limit");
+		while($chatData =  mysql_fetch_array($chatSQL)){
+			$id = $chatData['id'];
+			$return[$id] = $chatData;
+		}
+		return $return;
+	}
 	
 	
 	function showMessages($userid, $buddyId, $limit){
@@ -895,9 +988,7 @@
 		$userData = getUserData($userid);
 		
 				
-				
-		$userName = str_replace("_"," ",$userData['username']); //get username of receiver
-		$buddyName = str_replace(" ","_",$buddyData['username']);
+		
 		
 		$chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' && receiver='$buddyId' OR sender='$buddyId' && receiver='$userid' ORDER BY timestamp DESC LIMIT $limit");
 		while($chatData = mysql_fetch_array($chatSQL)) {
@@ -905,46 +996,50 @@
 		    if($chatData['receiver'] == getUser() && $chatData['read'] == "0"){
 		    mysql_query("UPDATE `messages` SET  `read`='1' WHERE  id='$chatData[id]'");
 		    }
-		    if($chatData[sender] == $_SESSION[userid] && $chatData['seen'] == "0"){
+		    if($chatData['sender'] == $_SESSION['userid'] && $chatData['seen'] == "0"){
 		    mysql_query("UPDATE `messages` SET  `seen`='1' WHERE  id='$chatData[id]'");
 		    }
 		    
 		    $sender = $chatData['sender'];
-		    $whileid = $_SESSION['userid'];
-		    if($sender == $whileid){
+		    $whileid = getUser();
+		    if($sender == $userid){
+		    $receiver = $buddyId;
 		    $authorid =  $userData['userid'];
-		    $authorName = $userData['username'];
-		    $authorImage = $userData['userPicture'];
 		    $reverse = NULL;
 		    $css = 'messageOut'; 
 		    $css = 'margin-right: 15px; margin-left: 5px;';
 		    } else {
-		    
 		    $authorid =  $buddyData['userid'];
-		    $authorName = $buddyData['username'];
-		    $authorImage = $buddyData['userPicture']; 
+		    $receiver = $userid;
 		    $css = 'margin-left: 15px; margin-right: 5px;';
 		    $reverse = "1";   
 		    }
+		    
+			$authorName = useridToUsername($authorid);
+			$buddyName = str_replace(" ","_",$buddyData['username']); //replace spaces with _ to get classname
+			
+			
 			//check if message is crypted
 		    if($chatData[crypt] == "1"){
 		    	
 				$messageClasses = "cryptedChatMessage_$buddyName";
-		        $message = $chatData[text];
+		        $message = $chatData['text'];
 			} else{
 				
 				$messageClasses = "";
-		        $message = $chatData[text];
+		        $message = $chatData['text'];
 		    }
 		    $message = universeText($message);
 		    ?>
 		              <div class="box-shadow space-top chatText" style="<?=$css;?> padding: 10px; padding-bottom: 10px;">
 		              	<span style="position: absolute; margin-top: -20px; color: #c0c0c0;">
-		              		<?=showUserPicture($authorid, "15");?><?=$authorName;?>
+		              		<?=showUserPicture($authorid, "15");?><?=$authorName;?> 
 		              	</span>
-		              	<span class="<?=$messageClasses;?>"><?=$message;?></span>
-		              </div>
-			<? }
+		              	<?
+		              	echo'<span class="pull-right" style="position: absolute;right: 20px;margin-top: -20px;">'.universeTime($chatData['timestamp']).'</span>';
+		              	echo'<span class="chatMessage_'.$buddyName.' '.$messageClasses.'" data-sender="'.$authorid.'" data-receiver="'.$receiver.'" data-decrypted="false">'.$message.'</span>';
+		              echo'</div>';
+			}
 	
 	}
 
@@ -1667,6 +1762,84 @@ echo"</div>";
 //buddylist
 //buddylist
 
+	function addBuddy($buddyid, $user=false){
+   		if(!$user){
+   			$user = getUser();
+   		}
+		
+		$user = save($user);
+		$buddy = save($buddyid);
+		$timestamp = time();
+        $check = mysql_query("SELECT * FROM buddylist WHERE (owner='".$user."' && buddy='$buddy') OR (buddy='".$user."' && owner='$buddy')");
+		$checkData = mysql_fetch_array($check);
+		
+        if(!isset($checkData['owner'])){
+        	$message = true;
+            if($buddy == $user){
+				//buddy = user
+                $message = false;
+            }
+            $requestSQL = mysql_query("SELECT * FROM user WHERE userid='$buddy'");
+            $requestData = mysql_fetch_array($requestSQL);
+			
+            if($requestData['priv_buddyRequest'] == "1"){
+                $request = "1";
+            } else{
+                $request = "0";
+            }
+			
+	       if($message){
+	        mysql_query("INSERT INTO `buddylist` (`owner`, `buddy`,`timestamp`,`request`) VALUES('".$user."', '$buddy', '$timestamp', '$request');");
+	
+	        
+	        //if privacy settings dont need allowance, the user needs to be added on the buddies buddylist
+	        if($request == "0"){
+	        	mysql_query("INSERT INTO `buddylist` (`owner`, `buddy`,`timestamp`,`request`) VALUES('$buddy', '".$user."', '$timestamp', '$request');");
+	        }
+	        
+	        $message = true;
+	       }
+
+        } else {
+        	///already there
+            $message = false;
+        }
+		return $message;
+		
+	}
+
+	function replyRequest($buddy, $user=false){
+		
+   		if(!$user){
+   			$user = getUser();
+   		}
+		
+		$user = save($user);
+		$buddy = save($buddy);
+		
+		
+        $value = "0";
+		$timestamp = time();
+		
+     	mysql_query("UPDATE buddylist SET request='$value' WHERE owner='".mysql_real_escape_string($buddy)."' && buddy='".$user."'");
+ 		mysql_query("INSERT INTO `buddylist` (`owner`, `buddy`,`timestamp`,`request`) VALUES('".$user."', '".mysql_real_escape_string($buddy)."', '$timestamp', '0');");
+		return true;
+	}
+
+	function denyRequest($buddy, $user=false){
+   		if(!$user){
+   			$user = getUser();
+   		}
+		
+		$user = save($user);
+		$buddy = save($buddy);
+		
+        mysql_query("DELETE FROM buddylist WHERE owner='".$buddy."' && buddy='".$user."'");
+        mysql_query("DELETE FROM buddylist WHERE owner='".$user."' && buddy='".$buddy."'");
+        return true;
+	}
+
+
    function deleteBuddy($buddy, $user=false){
    		if(!$user){
    			$user = getUser();
@@ -1675,6 +1848,20 @@ echo"</div>";
 		mysql_query("DELETE FROM `buddylist` WHERE owner='".save($user)."' AND buddy='".save($buddy)."'");
 		mysql_query("DELETE FROM `buddylist` WHERE buddy='".save($user)."' AND owner='".save($buddy)."'");
 	
+   }
+   
+   function getOpenRequests($user=NULL){
+        if(empty($user)){
+            $user= getUser();
+        }
+		
+		$friendRequestSql = mysql_query("SELECT owner FROM buddylist WHERE buddy='".$user."' && request='1'");
+		while($friendRequestData = mysql_fetch_array($friendRequestSql)){
+			$userid = $friendRequestData['owner'];
+			$return[$userid] = useridToUsername($userid);
+		}
+		
+		return $return; 
    }
 
    function buddyListArray($user=NULL, $request=0){
@@ -1807,7 +1994,7 @@ echo"</div>";
 				echo"<a href=\"#\" onclick=\"showProfile('$mayKnow')\">";
 				echo"";
 				echo"<span>&nbsp;";
-				echo showUserPicture($mayKnow, 16, NULL, true);
+				echo stripslashes(showUserPicture($mayKnow, 16, NULL, true));
 				echo"</span>";
 				echo useridToUsername($mayKnow);
 				echo'<a href="doit.php?action=addbuddy&buddy='.$mayKnow.'" class="btn btn-success btn-mini pull-right" target="submitter">add</a>';
@@ -4921,27 +5108,24 @@ echo"</div>";
 	
 	
 		
-		function sendMessage($receiver, $text, $crypted){
+		function sendMessage($receiver, $text, $crypted, $sender=NULL){
 			
-	        if(proofLogin()){
-	        $sender = getUser();
-	      	$buddy = $receiver;
-	                if($crypted == "true"){
-	                    $crypt = "1";
-	                }else{
-	                    $crypt = "0";
-	                }
-					
-					$message = addslashes($text);
-	                if(mysql_query("INSERT INTO `messages` (`sender`,`receiver`,`timestamp`,`text`,`read`,`crypt`) VALUES('$sender', '$buddy', '".time()."', '$text', '0', '$crypt');")){
-	                	return true;
-						jsAlert("dings");
-	                }
-	                $postCheck = 1;
-					
-					
-					
-	                }
+	        if($sender == NULL)
+	        	$sender = getUser();
+			
+			updateActivity($sender);
+	     	$buddy = $receiver;
+	        if($crypted == "true"){
+	            $crypt = "1";
+	        }else{
+	            $crypt = "0";
+	        }
+			
+			$message = addslashes($text);
+	        if(mysql_query("INSERT INTO `messages` (`sender`,`receiver`,`timestamp`,`text`,`read`,`crypt`) VALUES('$sender', '$buddy', '".time()."', '$text', '0', '$crypt');")){
+	        	return mysql_insert_id();
+	        }
+	        $postCheck = 1;
 		}
 
 class dashBoard{
@@ -5106,12 +5290,9 @@ class dashBoard{
 				
 				$output .= "<li class=\"$class\" style=\"clear:both;\">";
 					$output .=  "<span>";
-					$output .=  showUserPicture($message[sender],13,'',true);
+					$output .=  stripslashes(showUserPicture($message[sender],13,'', true));
 					$output .=  "$message[senderUsername]:";
 					$output .=  "</span>";
-					//$output .=  "<span>";
-					//$output .=  universeTime($message[timestamp]);
-					//$output .=  "</span>";
 					$output .=  "<span>";
 					$output .=  "<a href=\"#\" onclick=\"openChatDialoge('$message[senderUsername]');\">";
 					$output .=  substr($message['text'], 0, 15);
@@ -5159,15 +5340,12 @@ class dashBoard{
 class signatures{
 	
 	function create($type, $itemId, $privateKey, $publicKey){
+		mysql_query("DELETE FROM `salts` WHERE type='".save($type)."' AND itemId='".save($itemId)."'");
 		mysql_query("INSERT INTO `signatures` (`type`, `itemId`, `privateKey`, `publicKey`, `timestamp`) VALUES ('$type', '$itemId', '$privateKey', '$publicKey', '".time()."')");
 	}
 	
-	function update($type, $itemId, $privateKey, $publicKey){
-		
-	}
-	
 	function get($type, $itemId){
-		$data = mysql_query("SELECT * FROM `signatures` WHERE `type`='$type' AND `itemId`='$itemId'");
+		$data = mysql_fetch_array(mysql_query("SELECT * FROM `signatures` WHERE `type`='$type' AND `itemId`='$itemId'"));
 		return $data;
 	}
 	

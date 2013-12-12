@@ -2,14 +2,68 @@
 session_start();
 include_once("inc/config.php");
 include_once("inc/functions.php");
+header('Access-Control-Allow-Origin: *');
 
 $action = $_GET['action'];
 
 
 
 switch($action){
+	case 'authentificate':
+		echo userLogin($_POST['username'], $_POST['password']);
+		break;
+	case 'getUserCypher':
+			if(empty($_POST['userid'])){
+				$userid = usernameToUserid($_POST['username']);
+			}else{
+				$userid = $_POST['userid'];
+			}
+				
+				$userData = getUserData($userid);
+			
+				echo $userData['cypher'];
+			
+		break;
+	case 'getUserSalt':
+			if(empty($_POST['userid'])){
+				$userid = usernameToUserid($_POST['username']);
+			}else{
+				$userid = $_POST['userid'];
+			}
+				
+				$userData = getUserData($userid);
+			
+				echo $userData['salt'];
+			
+		break;
+	case 'updatePasswordAndCreateSignatures':
+		
+		$userid = save($_POST['userid']);
+		$userData = getUserData($userid);
+		$password = save($_POST['password']);
+		$oldPassword = save($_POST['oldPassword']);
+		$salt = save($_POST['salt']);
+		
+		$privateKey = save($_POST['privateKey']);
+		$publicKey = save($_POST['publicKey']);
+		
+		//check if current cypher is md5 and if password is correct
+		if($userData['cypher'] == 'md5' && $oldPassword == $userData['password']){
+			
+			//store salt
+			createSalt('auth', $userid, 'user', $userid, $salt);
+	        
+			//create signature
+			$sig = new signatures();
+			$sig->create('user', $userid, $privateKey, $publicKey);
+			mysql_query("UPDATE user SET password='$password', cypher='sha512' WHERE userid='$userid'");
+			echo "wouh";
+		}
+		
+			echo "$userid . $password . $oldPassword . $salt . $privateKey . $publicKey";
+		break;
     case 'login':
-		//new version
+		//old version
 		if(empty($_POST['username']))
 			$username = save($_GET['username']);
 		else 
@@ -57,6 +111,47 @@ switch($action){
             echo"false";
         }
     break;
+	case 'getBuddylist':
+		if(proofLoginMobile($_POST['userid'], $_POST['hash'])){
+			echo json_encode(buddyListArray($_POST['userid']));
+		}
+		break;
+	case 'getOpenRequests':
+		$user = $_POST['userid'];
+		if(proofLoginMobile($_POST['userid'], $_POST['hash'])){
+			echo json_encode(getOpenRequests($user));
+		}
+		break;
+	case 'replyFriendRequest':
+		
+			$user = $_POST['userid'];
+			$buddy = $_POST['buddy'];
+			if(proofLoginMobile($_POST['userid'], $_POST['hash'])){
+				replyRequest($buddy, $user);
+			}
+			
+		break;
+	case 'denyFriendRequest':
+	
+			
+			$user = $_POST['userid'];
+			$buddy = $_POST['buddy'];
+			if(proofLoginMobile($_POST['userid'], $_POST['hash'])){
+				denyRequest($buddy, $user);
+			}
+				
+	
+		break;
+	case 'addBuddy':
+		if(proofLoginMobile($_POST['userid'], $_POST['hash'])){
+			
+			if(addBuddy($_POST['buddy'], $_POST['userid'])){
+				echo true;
+			}else{
+				echo false;
+			}
+		}
+		break;
     case 'loadBuddyList':
         $username = save($_POST['username']);
         $hash = $_POST[hash];
@@ -202,6 +297,57 @@ switch($action){
     <?
     }
     break;
+	case 'chatGetMessages':
+		
+		$receiver = $_POST['receiver'];
+		$userid = $_POST['userid'];
+		$limit = $_POST['limit'];
+		
+		
+		if(proofLoginMobile($_POST['userid'], $_POST['hash'])){
+			echo json_encode(getMessages($userid, $receiver, $limit));
+		}
+		break;
+	case 'markMessageAsRead':
+		
+		
+		if(proofLoginMobile($_POST['userid'], $_POST['hash'])){
+			
+			echo $_POST['buddy'].$_POST['userid'];
+			markMessageAsRead($_POST['buddy'], $_POST['userid']);
+			
+		}
+		
+		break;
+	case 'getLastMessage':
+		// This action is used to synchronize the chat which uses a locally saved variable
+		// to store the last message which is received. If this var is not equal to the
+		// value which is echoed by this action the chat can reload.
+		if(proofLoginMobile($_POST['userid'], $_POST['hash'])){
+			echo getLastMessage($_POST['userid']);
+		}
+		
+		break;
+	case 'getUnseenMessageAuthors':
+		
+		if(proofLoginMobile($_POST['userid'], $_POST['hash'])){
+			echo json_encode(getUnseenMessageAuthors($_POST['userid']));
+		}
+		
+		break;
+	case 'chatSendMessage':
+		$receiver = $_POST['receiver'];
+		$sender = $_POST['userid'];
+		$message = $_POST['message'];
+		
+		
+		if(proofLoginMobile($_POST['userid'], $_POST['hash'])){
+			$message = sendMessage($receiver, $message, '0', $sender);
+			if($message)
+				echo $message;
+		}
+		
+		break;
     case 'getBuddyFromMessageId':
         //get request data
         $user = save($_POST['username']); 
@@ -368,8 +514,52 @@ switch($action){
 
         }
     break;
+	case 'getUserPicture':
+		
+		$userid = save($_POST['userid']);
+		
+		$userData = getUserData($userid);
+		
+		//check if user is standard user
+		if(empty($userData['userPicture'])){
+			$src = 'gfx/standardusersm.png';
+		}else{
+			$src = 'upload/userFiles/'.$userid.'/userPictures/thumb/40/'.$userData['userPicture'];
+		}
+		$mime = mime_content_type($src);
+		
+	    $file = fopen($src, 'r');
+	    $output = base64_encode(fread($file, filesize($src)));
+					
+		echo 'data:'.$mime.';base64,'.$output;
+		
+		break;
 	case 'useridToUsername':
 		echo useridToUsername($_POST['userid']);
+		break;
+	case 'searchUserByString':
+		echo json_encode(searchUserByString($_POST['string'], $_POST['limit']));
+		break;
+	case 'useridToRealname':
+		echo useridToRealname($_POST['userid']);
+		break;
+	case 'usernameToUserid':
+		echo usernameToUserid($_POST['username']);
+		break;
+	case 'getLastActivity':
+	
+	
+        $userid = save($_POST['userid']);
+		
+        $data = mysql_fetch_array(mysql_query("SELECT lastactivity FROM user WHERE userid='$userid'"));
+		
+		$diff = time() - $data['lastactivity'];
+		if($diff < 90){
+			echo 1;
+		}else{
+			echo 0;
+		}
+		
 		break;
 	//checks if a username is taken
     case 'checkUsername':
@@ -386,63 +576,23 @@ switch($action){
         
         
     break;
-    //is used for mobile app => no captcha!
-    case 'processRegistration':
-    $user = save($_POST[username]);
-    $sql = mysql_query("SELECT username FROM user WHERE username='$user'");
-    $data = mysql_fetch_array($sql);
-    
-    if(empty($data[username])){
-          
-        $password = md5($_POST[password]);
-        $time = time();
-        mysql_query("INSERT INTO `user` (`password`, `username`, `email`, `regdate`, `lastactivity`) VALUES ('$password', '$_POST[username]', '', '$time', '$time')");
-
-        $userid = mysql_insert_id();
- 
-        
-        //create user folder(name=userid) in folder userFiles
-        $userFolder = createFolder("2", $userid, $userid, "h");
-        
-        //create folder for userpics in user folder
-        $pictureFolder = createFolder($userFolder, "userPictures", $userid, "h");
-        
-        //create thumb folders || NOT LISTED IN DB!
-        $path3 = ".//upload//userFiles//$userid//userPictures//thumb";
-        $path4 = ".//upload//userFiles//$userid//userPictures//thumb//25";
-        $path5 = ".//upload//userFiles//$userid//userPictures//thumb//40";
-        $path6 = ".//upload//userFiles//$userid//userPictures//thumb//300";
-        mkdir($path3);  //Creates Thumbnail Folder
-        mkdir($path4); //Creates Thumbnail Folder
-        mkdir($path5); //Creates Thumbnail Folder
-        mkdir($path6); //Creates Thumbnail Folder
-        
-        
-        //create Element "myFiles" in userFolder
-        $myFiles = createElement($userFolder, "myFiles", "myFiles", $userid, "h");
-        
-        //create Element "user pictures" to collect profile pictures
-        $pictureElement = createElement($userFolder, "profile pictures", "image", $userid, "p");
-
-
-        mysql_query("UPDATE user SET homefolder='$userFolder', myFiles='$myFiles', profilepictureelement='$pictureElement' WHERE userid='$userid'");
-
-        echo"1";
-    }else{
-        echo"Ooops.. Something went wrong.";
-    }
-        
-    break;
     //is used for universeOS registration form
     case 'processSiteRegistration':
     
 	    if(validateCapatcha($_POST['captcha'])){
-	        createUser($_POST['username'], $_POST['password'], $_POST['privateKey'], $_POST['publicKey']);
+	        createUser($_POST['username'], $_POST['password'], $_POST['salt'], $_POST['privateKey'], $_POST['publicKey']);
 			echo "1";
 	   	}else{
 	    	echo "The Captcha was wrong";
 	   	}
         
+    break;
+    //is used for universeOS registration form
+    case 'processSiteRegistrationMobile':
+    
+	        createUser($_POST['username'], $_POST['password'], $_POST['salt'], $_POST['privateKey'], $_POST['publicKey']);
+			echo "1";
+			
     break;
     case 'checkForFeeds':
         
@@ -522,7 +672,7 @@ switch($action){
         
         break;
     case 'showFeed':
-        $username = save($_POST[username]);
+        $username = save($_POST['username']);
         $hash = $_POST[hash];
         if(checkMobileAuthentification($username, $hash)){
         showFeed('','','1');
@@ -550,6 +700,12 @@ switch($action){
         }
         
     break;
+	case 'getSalt':
+		
+		echo getSalt($_POST['type'], $_POST['itemId']);
+		
+		
+		break;
 	case 'getPublicKey':
 		$type = $_POST['type'];
 		$itemId = $_POST['itemId'];
@@ -557,6 +713,22 @@ switch($action){
 		$signature = new signatures();
 		$data = $signature->get($type, $itemId);
 		echo $data['publicKey'];
+		break;
+	case 'getPrivateKey':
+		$type = $_POST['type'];
+		$itemId = $_POST['itemId'];
+		
+		$signature = new signatures();
+		$data = $signature->get($type, $itemId);
+		echo $data['privateKey'];
+		break;
+	case 'getPublicKey':
+		$type = $_POST['type'];
+		$itemId = $_POST['itemId'];
+		
+		$signature = new signatures();
+		$data = $signature->get($type, $itemId);
+		echo $data['privateKey'];
 		break;
         
 }

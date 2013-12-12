@@ -64,22 +64,22 @@ $newMessagesData = mysql_fetch_array($newMessagesSql);
 
 $newMessagesSql2 = mysql_query("SELECT receiver FROM  `messages` WHERE  sender='".$_SESSION['userid']."' AND  `seen`='0'  ORDER BY timestamp DESC LIMIT 0, 3");
 $newMessagesData2 = mysql_fetch_array($newMessagesSql2);
-    if(isset($newMessagesData2[sender])){
+    if(isset($newMessagesData2['sender'])){
         $UserSql = mysql_query("SELECT * FROM user WHERE userid='$newMessagesData2[receiver]'");
         $UserData = mysql_fetch_array($UserSql);
-        $user = $UserData[username];
-        $newMessageOn = $newMessagesData2[receiver];
+        $user = $UserData['username'];
+        $newMessageOn = $newMessagesData2['receiver'];
     }
     
-    if(isset($newMessagesData[sender])){
-    $checkUserSql = mysql_query("SELECT username, lastactivity FROM user WHERE userid='$newMessagesData[sender]'");
-    $checkUserData = mysql_fetch_array($checkUserSql);
-    $buddy = $checkUserData[username];
+    if(isset($newMessagesData['sender'])){
+	    $checkUserSql = mysql_query("SELECT username, lastactivity FROM user WHERE userid='$newMessagesData[sender]'");
+	    $checkUserData = mysql_fetch_array($checkUserSql);
+	    $buddy = $checkUserData['username'];
     }
     
     //see if the sender is still active or not
-    if(($time - $checkUserData[lastactivity]) < 60){
-        $newMessagesOn = $newMessagesData[sender];
+    if(($time - $checkUserData['lastactivity']) < 60){
+        $newMessagesOn = $newMessagesData['sender'];
         unset($newMessages);
     }else{
         $newMessages = "$newMessagesData[sender]";
@@ -88,12 +88,12 @@ $newMessagesData2 = mysql_fetch_array($newMessagesSql2);
 //check for friend request
 $friendRequestSql = mysql_query("SELECT * FROM buddylist WHERE buddy='".$_SESSION['userid']."' && request='1' LIMIT 0, 3");
 $friendRequestData = mysql_fetch_array($friendRequestSql);
- $newFriends = $friendRequestData[buddy];
+ $newFriends = $friendRequestData['buddy'];
  
 //check for group invitation
 $newGroupSql = mysql_query("SELECT * FROM  `groupAttachments` WHERE  item='user' AND  `validated`='0' AND itemId='$userid' ORDER BY timestamp DESC LIMIT 0, 3");
 $newGroupData = mysql_fetch_array($newGroupSql);
- $newGroup = $newGroupData[item];
+ $newGroup = $newGroupData['item'];
  
  
         echo "$(document).ready(function(){";
@@ -108,19 +108,19 @@ if(isset($newMessagesOn)){
       
       $('#chat').show();
       
-      $("#test_<?=str_replace(" ","_",$newMessageUserData[username]);?>").load("modules/chat/chatreload.php?buddy=<?=str_replace(" ","_",$buddy);?>&reload=1&initter=1");
+      $("#test_<?=str_replace(" ","_",$newMessageUserData['username']);?>").load("modules/chat/chatreload.php?buddy=<?=str_replace(" ","_",$buddy);?>&reload=1&initter=1");
         
-        if($("#test_<?=str_replace(" ","_",$newMessageUserData[username]);?>").length == 0){
-            createNewTab('chat_tabView1','<?=$newMessageUserData[username];?>','','modules/chat/chatreload.php?buddy=<?=str_replace(" ","_",$newMessageUserData[username]);?>',true);
+        if($("#test_<?=str_replace(" ","_",$newMessageUserData['username']);?>").length == 0){
+            createNewTab('chat_tabView1','<?=$newMessageUserData['username'];?>','','modules/chat/chatreload.php?buddy=<?=str_replace(" ","_",$newMessageUserData['username']);?>',true);
             return false
         }
-       $("#chatInput_<?=$newMessageUserData[userid];?>").click( function(){
-           $('#loader').load("doit.php?action=updateMessageStatus&buddy=<?=$newMessageUserData[userid];?>");
+       $("#chatInput_<?=$newMessageUserData['userid'];?>").click( function(){
+           $('#loader').load("doit.php?action=updateMessageStatus&buddy=<?=$newMessageUserData['userid'];?>");
        });
        
         var isOldTitle = true;
         var oldTitle = "universeOS";
-        var newTitle = "<?=$newMessageUserData[username];?> wrote you";
+        var newTitle = "<?=$newMessageUserData['username'];?> wrote you";
         var titleInterval = null;
         function changeTitle() {
             document.title = isOldTitle ? oldTitle : newTitle;
@@ -131,7 +131,7 @@ if(isset($newMessagesOn)){
         $(window).focus(function () {
             clearInterval(titleInterval);
             $("title").text(oldTitle);
-           $('#loader').load("doit.php?action=updateMessageStatus&buddy=<?=$newMessageUserData[userid];?>");
+           $('#loader').load("doit.php?action=updateMessageStatus&buddy=<?=$newMessageUserData['userid'];?>");
         });
 <? }
 

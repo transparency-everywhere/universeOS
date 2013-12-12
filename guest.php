@@ -128,7 +128,7 @@ include_once("inc/config.php");
                 <span style="font-size:19pt;font-weight: 1; font-weight: 100; margin-left:5px;">Please Log In</span>
             </div>
         <hgroup>
-            <form action="login.php" method="post" target="submitter" id="loginForm">
+            <form method="post" target="submitter" id="loginForm" onsubmit="login(); return false;">
             <table width="100%" valign="center">
                 <tr height="10">
                     <td></td>

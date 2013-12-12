@@ -28,8 +28,9 @@
 		if you set the session in some configuration or initialization file with
 		session id, delete session_start and make a require('init_file.php');
 	*/
-	session_start();
-	
+	if(session_id() == '') {
+    	session_start();
+	}
 	/*===============================================================
 		General captcha settings
 	  ===============================================================*/

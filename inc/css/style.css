@@ -1695,7 +1695,6 @@ color:#FFFFFF;
     padding: 2px;
     position: absolute;
     color: #FFFFFF;
-	position: absolute;
 }
 
 .iconAlert:empty{
@@ -2290,7 +2289,9 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 }
 
 	#dashBoard{
-		margin-left: -45px;
+		top: 0;
+		z-index: 99999;
+		position: absolute;
 	}
 	
 	.dashBox:hover .content{
@@ -2299,10 +2300,6 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 		overflow: auto;
 	}
 	
-	.dashBox:hover{
-		width: 233px;
-		margin-left: 45px;
-	}
 	.dashBox:hover footer{
 		display: block;
 	}
@@ -2310,11 +2307,12 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 	.dashBox{
 		color: #474747;
 		font-size: 15pt;
-		width: 160px;
+		width: 170px;
 		border-radius: 1px;
 		background: #fff9f0;
-		margin: 10px 0px 30px 10px;
+		margin: 0px 0px 30px 10px;
 		position: relative;
+		float:left;
 	}
 	
 	.dashBox .content{

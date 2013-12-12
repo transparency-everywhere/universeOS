@@ -361,11 +361,13 @@ var focus = true;
       var crypt;
       var ret = [];
       crypt = new JSEncrypt({default_key_size: keySize});
-      crypt.getKey();
-      ret['privateKey'] = crypt.getPrivateKey();
-      ret['publicKey'] = crypt.getPublicKey();
+
+        crypt.getKey(function () {
+      		ret['privateKey'] = crypt.getPrivateKey();
+      		ret['publicKey'] = crypt.getPublicKey();
+        });
       
-      return ret;
+      
 	}
 	
 	function asymEncrypt(publicKey, message){
@@ -386,6 +388,61 @@ var focus = true;
           
           return decrypt.decrypt(encryptedMessage);
 		
+	}
+
+	function getSalt(type, itemId, key){
+			var encryptedSalt = '';
+			$.ajax({
+			  url:"api.php?action=getSalt",
+			  async: false,  
+			  type: "POST",
+			  data: { type : type, itemId : itemId },
+			  success:function(data) {
+			     encryptedSalt = data; 
+			  }
+			});
+	    	var salt = symDecrypt(key, encryptedSalt); //encrypt salt using key
+	    	return salt;
+		
+	}
+	
+	function getPrivateKey(type, itemId, salt){
+			var encryptedKey = '';
+			$.ajax({
+			  url:"api.php?action=getPrivateKey",
+			  async: false,  
+			  type: "POST",
+			  data: { type : type, itemId : itemId },
+			  success:function(data) {
+			     encryptedKey = data; 
+			  }
+			});
+		
+			var password = prompt("Please enter your password","Password");
+			
+			var md = CryptoJS.MD5(password);
+			password = md.toString(CryptoJS.enc.Hex);
+			
+		    var shaKey = CryptoJS.SHA512(password+salt);
+		    var keyHash = shaKey.toString(CryptoJS.enc.Hex);
+			
+	    	var privateKey;
+	    	privateKey = symDecrypt(keyHash, encryptedKey); //encrypt private Key using password
+	    	return privateKey;
+	}
+	
+	function getPublicKey(type, itemId){
+			var key = '';
+			$.ajax({
+			  url:"api.php?action=getPublicKey",
+			  async: false,  
+			  type: "POST",
+			  data: { type : type, itemId : itemId },
+			  success:function(data) {
+			     key = data; 
+			  }
+			});
+	    	return key;
 	}
               
 //general functions
@@ -514,6 +571,56 @@ var focus = true;
 			return usernames[id];
 		}
 		
+	}
+	
+	function usernameToUserid(username){
+			
+		    var result="";
+		    $.ajax({
+		      url:"api.php?action=usernameToUserid",
+		      async: false,  
+			  type: "POST",
+			  data: { username : username },
+		      success:function(data) {
+		         result = data; 
+		      }
+		   });
+		   usernames[result] = username;
+		   return result;
+		
+	}
+	
+	function getUserCypher(id){
+		var result="";
+		    $.ajax({
+		      url:"api.php?action=getUserCypher",
+		      async: false, 
+			  type: "POST",
+			  data: { userid : id },
+		      success:function(data) {
+		         result = data; 
+		      }
+		   });
+		   
+		   return result;
+	}
+	
+	function getUserSalt(id){
+		//returns user salt (aes encrypted with pw hash)
+		
+		
+		var result="";
+		    $.ajax({
+		      url:"api.php?action=getUserSalt",
+		      async: false, 
+			  type: "POST",
+			  data: { userid : id },
+		      success:function(data) {
+		         result = data; 
+		      }
+		   });
+		   
+		   return result;
 	}
                 
 //reload
@@ -793,10 +900,10 @@ var focus = true;
 			
 	  		jsAlert('', 'The key for your buddy '+username+' has been set.');
 			
-            chatEncrypt(username);
+            chatDecrypt(username);
             
             $('#toggleKey_'+username+' .lockIcon').addClass('locked');
-            $('#chatKeySettings__'+username).hide();
+            $('#chatKeySettings_'+username).hide();
             
 		}
     }
@@ -830,9 +937,19 @@ var focus = true;
     }
     
     function chatMessageSubmit(username, userid){
+    	
+    	var publicKey = getPublicKey('user', userid); //get public key of receiver
+    	var symKey = Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2); //generate random key
+    	var message = symEncrypt(symKey, $('#chatInput_'+userid).val()); //encrypt message semitrically
+    	var symKey = asymEncrypt(publicKey, symKey); //random generated key for symetric encryption
+    	var message = symKey+'////message////'+message; //message = symetric Key + sym encoded message with key = symKey
+
+    	$('#chatInput_'+userid).val(message);
+    	
+    	
     	if(localStorage.key[username]){
     		
-    		 $('#chatInput_'+userid).val(CryptoJS.AES.encrypt($('#chatInput_'+userid).val(), localStorage.key[username]));
+    		 $('#chatInput_'+userid).val(CryptoJS.AES.encrypt(message, localStorage.key[username]));
  		     //set cryption marker true so the php script could mark the message as crypted
     		 $('#chatCryptionMarker_'+username).val('true'); 
     		 
@@ -841,7 +958,16 @@ var focus = true;
     	}
     }
     
-    function chatEncrypt(username){
+    function chatDecrypt(username){
+    	
+    	
+	    // $('.chatMessage_'+username).each(function(){
+	    	// var content = $(this).html();
+	    	// content = CryptoJS.AES.decrypt(content, localStorage.key[username]);
+	    	// content = content.toString(CryptoJS.enc.Utf8);
+	    	// $(this).html(content);
+	    // });
+	    	
     	if(localStorage.key[username]){
 	    	$('.cryptedChatMessage_'+username).each(function(){
 	    		var content = $(this).html();
