@@ -991,7 +991,7 @@ if($_GET['action'] == "scorePlus"){
                 $documentElementData = mysql_fetch_array($documentElementSQL);
                 $documentFolderSQL = mysql_query("SELECT id, path FROM folders WHERE id='$documentElementData[folder]'");
                 $documentFolderData = mysql_fetch_array($documentFolderSQL);
-                $folderPath = urldecode($documentFolderData[path]);
+                $folderPath = urldecode($documentFolderData['path']);
                 $img = "upload$folderPath/$fileData[title]";
                     }
         else if($type == "link"){
@@ -1000,11 +1000,11 @@ if($_GET['action'] == "scorePlus"){
         mysql_query("UPDATE user SET backgroundImg='$img' WHERE userid='$_SESSION[userid]'");
      }}else if($_GET['action'] == "writeMessage"){
         if(proofLogin()){
-        $user = save($_GET[buddy]);
-        if(isset($_POST[feed])) {
+        $user = save($_GET['buddy']);
+        if(isset($_POST['feed'])) {
         if(!isset($postCheck)) {
         $time = time();
-        $message = $_POST[feed];
+        $message = $_POST['feed'];
         $crypt = "0";
         
     mysql_query("INSERT INTO messages (`sender`,`receiver`,`timestamp`,`text`,`read`,`crypt`) VALUES('$_SESSION[userid]', '$user', '$time', '$message', '0', '$crypt');");
@@ -1027,10 +1027,10 @@ if($_GET['action'] == "scorePlus"){
                     <td>To:</td>
                     <td>
          <?
-         if(isset($_GET[buddy])){
-             $userSql = mysql_query("SELECT username FROM user WHERE userid='$_GET[buddy]'");
+         if(isset($_GET['buddy'])){
+             $userSql = mysql_query("SELECT username FROM user WHERE userid='".$_GET['buddy']."'");
              $userData = mysql_fetch_array($userSql);
-             echo $userData[username];
+             echo $userData['username'];
          }else{?>
              <input type="text" name="reveiver">
          <? } ?>
@@ -1078,16 +1078,16 @@ if($_GET['action'] == "scorePlus"){
 		
          
          $group = $_GET['id'];
-         if($_POST[submit]){
-             mysql_query("UPDATE groups SET public='$_POST[privacy]', description='$_POST[description]', membersInvite='$_POST[membersInvite]' WHERE id='$group'");
+         if($_POST['submit']){
+             mysql_query("UPDATE groups SET public='".$_POST['privacy']."', description='".$_POST['description']."', membersInvite='".$_POST['membersInvite']."' WHERE id='$group'");
          jsAlert("Saved :)");
          }
          $groupSql = mysql_query("SELECT * FROM groups WHERE id='$group'");
          $groupData = mysql_fetch_array($groupSql);
-         if($groupData[membersInvite] == "1"){
+         if($groupData['membersInvite'] == "1"){
              $membersInvite = "checked=\"checked\"";
          }
-         if($groupData["public"] == "1"){
+         if($groupData['public'] == "1"){
              $unpublic = "checked";
          }else{
              $public = "checked";
@@ -1097,14 +1097,14 @@ if($_GET['action'] == "scorePlus"){
         <div class="jqPopUp border-radius transparency" id="groupAdmin">
             <header>
             <a class="jqClose" id="closeAdmin">X</a>
-            Admin - <?=$groupData[title];?>
+            Admin - <?=$groupData['title'];?>
             </header>
             <div class="jqContent">
                     <table height="200" width="400" style="margin: 20px; line-height:22pt;">
                         <tr>
                             <td style="vertical-align: top;" align="right">Description:</td>
                             <td width="20"></td>
-                            <td><textarea name="description" cols="30" rows="2"><?=$groupData[description];?></textarea></td>
+                            <td><textarea name="description" cols="30" rows="2"><?=$groupData['description'];?></textarea></td>
                         </tr>
                         <tr>
                             <td align="right">Privacy:</td>
@@ -1133,12 +1133,12 @@ if($_GET['action'] == "scorePlus"){
                                             $color="e5f2ff";
                                         }
                                         $i++;
-                                        $groupUserSql = mysql_query("SELECT username FROM user WHERE userid='$groupUseData[itemId]'");
+                                        $groupUserSql = mysql_query("SELECT username FROM user WHERE userid='".$groupUseData['itemId']."'");
                                         $groupUserData = mysql_fetch_array($groupUserSql);
                                         ?>
                                         <tr class="strippedRow groupMember_<?=$group."_".$groupUseData['itemId'];?>" valign="top">
                                             <td style="padding: 3px;"><?=showUserPicture($groupUseData, 15);?></td>
-                                            <td><?=$groupUserData[username];?></td>
+                                            <td><?=$groupUserData['username'];?></td>
                                             <td align="right">
                                             	<div class="btn-group" style="text-align:left;">
 												  <button class="btn btn-mini"><i class="icon icon-pencil"></i></button>
@@ -1147,7 +1147,7 @@ if($_GET['action'] == "scorePlus"){
 												  </button>
 												  <ul class="dropdown-menu">
 												    <li>&nbsp;<a href="doit.php?action=deleteUserFromGroup&groupid=<?=$group;?>&userid=<?=$groupUseData['itemId'];?>" target="submitter">delete</a></li>
-												    <li>&nbsp;<a href="#" onclick="groupMakeUserAdmin('<?=$group;?>', '<?=$groupUseData[itemId];?>'); return false">make Admin</a></li>
+												    <li>&nbsp;<a href="#" onclick="groupMakeUserAdmin('<?=$group;?>', '<?=$groupUseData['itemId'];?>'); return false">make Admin</a></li>
 												  </ul>
 												</div>
 												&nbsp;
@@ -1180,10 +1180,10 @@ if($_GET['action'] == "scorePlus"){
         <?
      }else if($_GET['action'] == "groupInviteUsers"){
          if(proofLogin()){
-         $group = $_GET[id];
+         $group = $_GET['id'];
          $time = time();
-         if($_POST[submit]){
-         $userlist = $_POST[users];
+         if($_POST['submit']){
+         $userlist = $_POST['users'];
          if(isset($userlist)){
 	         foreach ($userlist as &$value) {
 	         	userJoinGroup($group, $value);
@@ -1198,7 +1198,7 @@ if($_GET['action'] == "scorePlus"){
 		 //query to slow needs to be replaced
 		 $userAttachmentsSQL = mysql_query("SELECT itemId FROM groupAttachments WHERE `group`='".mysql_real_escape_string($group)."' AND `item`='user'");
 		 while($userAttachmentsData = mysql_fetch_assoc($userAttachmentsSQL)){
-		 	$users[] = $userAttachmentsData[itemId];
+		 	$users[] = $userAttachmentsData['itemId'];
 		 }
 		 ?>
 	<form action="doit.php?action=groupInviteUsers&id=<?=$group;?>" method="post" target="submitter" id="groupInviteForm">
@@ -1252,7 +1252,7 @@ if($_GET['action'] == "scorePlus"){
      }else if($_GET['action'] == "groupMakeUserAdmin"){
      	
 		
-     	echo groupMakeUserAdmin($_GET[groupId], $_GET[userId]);
+     	echo groupMakeUserAdmin($_GET['groupId'], $_GET['userId']);
 		
 		
      }else if($_GET['action'] == "groupremoveAdmin"){
@@ -1277,13 +1277,13 @@ if($_GET['action'] == "scorePlus"){
      
      else if($_GET['action'] == "chatSendMessage"){
      	
-		if(sendMessage($_GET[buddy], $_POST[message], $_POST[cryption])){
+		if(sendMessage($_GET['buddy'], $_POST['message'], $_POST['cryption'])){
 			
 	        echo"<script>";
 				?>
 				parent.updateDashbox('message');
 	            parent.$('.chatInput').val('');
-	            parent.$('#test_<?=str_replace(" ","_",$_GET[buddyname]);?>').load('modules/chat/chatreload.php?buddy=<?=urlencode($_GET[buddyname]);?>&initter=1');
+	            parent.$('#test_<?=str_replace(" ","_",$_GET['buddyname']);?>').load('modules/chat/chatreload.php?buddy=<?=urlencode($_GET['buddyname']);?>&initter=1');
 	        	<?
 	        echo"</script>";
 		}
@@ -1334,16 +1334,16 @@ if($_GET['action'] == "scorePlus"){
             
                 
         }else if($_GET['action'] == "chatSendItem"){
-        	if(isset($_POST[submit])){
+        	if(isset($_POST['submit'])){
         		
 				
-					$message = "[itemThumb type=".$_POST['type']." typeId=".$_POST[typeId]."]";
-					if(sendMessage($_POST[buddy], $message, $_POST[cryption])){
+					$message = "[itemThumb type=".$_POST['type']." typeId=".$_POST['typeId']."]";
+					if(sendMessage($_POST['buddy'], $message, $_POST['cryption'])){
 						jsAlert("message");
 				        echo"<script>";
 							?>
 				            parent.$('.chatInput').val('');
-				            parent.$('#test_<?=str_replace(" ","_",$_POST[buddyName]);?>').load('modules/chat/chatt.php?buddy=<?=urlencode($_POST[buddyName]);?>&initter=1');
+				            parent.$('#test_<?=str_replace(" ","_",$_POST['buddyName']);?>').load('modules/chat/chatt.php?buddy=<?=urlencode($_POST['buddyName']);?>&initter=1');
 				        	<?
 				        echo"</script>";
 					}
