@@ -175,14 +175,14 @@ function login(){
 		
 		//cypher password
 		var md = CryptoJS.MD5(password);
-		var passwordHash  = md.toString(CryptoJS.enc.Hex);
+		var passwordHashMD5  = md.toString(CryptoJS.enc.Hex);
 		
-		var salt = getSalt('auth', userid, passwordHash); //get auth salt, using md5 hash as key
+		var salt = getSalt('auth', userid, passwordHashMD5); //get auth salt, using md5 hash as key
 		
 		//old passwords(<0.2) are only using md5, new passwords use (sha512(md5(password)+salt))
-		if(getUserCypher(userid) != 'md5'){
-	    	var shaPass = CryptoJS.SHA512(salt+passwordHash);
-	    	passwordHash = shaPass.toString(CryptoJS.enc.Hex);
+		if(getUserCypher(userid) == 'sha512'){
+	    	var shaPass = CryptoJS.SHA512(salt+passwordHashMD5);
+	    	var passwordHash = shaPass.toString(CryptoJS.enc.Hex);
 		}
 		
 	                $.post("../../api.php?action=authentificate", {
@@ -193,7 +193,7 @@ function login(){
 	                            if(res == 1){
 	    							localStorage.currentUser_userid = userid;
 	    							localStorage.currentUser_username = username;
-	    							
+	    							localStorage.currentUser_passwordHashMD5 = passwordHashMD5;
 	                                //load checked message
 	                                $('#bodywrap').slideUp();
 	                                window.location.href='index.php';
@@ -228,6 +228,8 @@ function updatePasswordAndCreateSignatures(userid, password){
     
     var shaKey = CryptoJS.SHA512(password+salt);
     var keyHash = shaKey.toString(CryptoJS.enc.Hex);
+    
+    
     var salt = symEncrypt(password, salt.toString(CryptoJS.enc.Hex));				  //encrypt salt, using md5-pw hash
     console.log('salt encrypted:'+salt);
     console.log('keyHash:'+keyHash);
@@ -235,15 +237,17 @@ function updatePasswordAndCreateSignatures(userid, password){
     			//generate Keypair
 			      var crypt;
 			      var publicKey;
-			      var privateKey;
 			      crypt = new JSEncrypt({default_key_size: 1024});
 				  jsAlert('', 'The universe creates now your asymetric keypair, this may take some seconds..');
 			      crypt.getKey(function () {
-			      	privateKey = symEncrypt(keyHash, crypt.getPrivateKey()); //encrypt privatestring, usering the password hash
+			      	var temp = crypt.getPrivateKey();
+			      	
+			      	console.log('P:::'+temp+':::P');
+			      	
+			      	var privateKey = symEncrypt(keyHash, temp); //encrypt privatestring, usering the password hash
+			      	
 			      	console.log('encrypted privateKey:'+privateKey);
-			      	console.log('publicKey'+publicKey);
 			      	publicKey = crypt.getPublicKey();
-			      	console.log(privateKey);
 			      	console.log(publicKey);
 	                $.post("../../api.php?action=updatePasswordAndCreateSignatures", {
 	                       userid:userid,

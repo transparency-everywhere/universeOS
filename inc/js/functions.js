@@ -1,5 +1,8 @@
 //initialize
 var usernames = [];
+var privateKeys = [];
+var messageKeys = [];
+
 var focus = true;
 
                 $(document).ready(function(){
@@ -45,54 +48,72 @@ var focus = true;
                 
                 
                 	//old creepy way to initalize windows => in future => css media width
-                    var docWidth;
-                    var oneSixthWidth;
-                    var oneSixthHeight;
-                        docWidth = $(document).width();
-                    var docHeight = $(document).height();
-                        oneSixthWidth = docWidth/6;
-                        oneSixthHeight = docHeight/6;
-                        var FeedOb = {
-                        'top' : oneSixthHeight/6,
-                        'left' : oneSixthWidth/5,
-                        'width' : oneSixthWidth,
-                        'height' : oneSixthHeight*2.75
-                            }
-                        var FileOb = {
-                        'top' : oneSixthHeight*3.4-100,
-                        'left' : oneSixthWidth/5,
-                        'width' : oneSixthWidth*2.5,
-                        'height' : oneSixthHeight*1.8
-                            }
-                        var ReaderOb = {
-                        'top' : oneSixthHeight/6,
-                        'left' : oneSixthWidth*1.3,
-                        'width' : oneSixthWidth*3.5,
-                        'height' : oneSixthHeight*2.75
-                            }
-                        var ChatOb = {
-                        'top' : oneSixthHeight*3.4,
-                        'left' : oneSixthWidth*2.8,
-                        'width' : oneSixthWidth*2,
-                        'height' : oneSixthHeight*1.8
-                            }
-                        var BuddylistOb = {
-                        'top' : oneSixthHeight/6,
-                        'right' : oneSixthWidth*0.1,
-                        'width' : oneSixthWidth*0.5,
-                        'height' : oneSixthHeight*4
+                	
+                	
+                    var oneSixthWidth = ($(document).width())/6;
+                    var oneSixthHeight = $(document).height()/6;
+                    
+                    var offsetTop = oneSixthHeight/2;
+                    var offsetRight = oneSixthWidth/2;
+                    var offsetLeft = offsetRight;
+                    
+                    var widthSm = oneSixthWidth;
+                    var heightSm = oneSixthHeight*4;
+                    
+                    var widthBig = oneSixthWidth*3;
+                    var heightBig = heightSm;
+                    
+                    
+                    
+                            
+                        $("#buddylist").css({
+                        'top' : offsetTop,
+                        'right' : offsetRight+20,
+                        'width' : widthSm,
+                        'height' : heightBig,
+                        'z-index' : '9999'
+                            });
                         
-                            }
-                        $("#feed").css(FeedOb);
-                        $("#filesystem").css(FileOb);
-                        $("#reader").css(ReaderOb);
-                        $("#chat").css(ChatOb);
-                        $("#buddylist").css(BuddylistOb);
-                        //$("#feed:hidden").fadeIn(3000);
+                        $("#feed").css({
+                        'top' : offsetTop+20,
+                        'right' : offsetRight,
+                        'width' : widthSm,
+                        'height' : heightBig,
+                        'z-index' : '9998'
+                            });
+                            
+                            
+                        $("#chat").css({
+                        'top' : offsetTop,
+                        'left' : offsetLeft,
+                        'width' : widthBig,
+                        'height' : heightBig,
+                        'z-index' : '9997'
+                            });
+                            
+                        $("#filesystem").css({
+                        'top' : offsetTop+20,
+                        'left' : offsetLeft+20,
+                        'width' : widthBig,
+                        'height' : heightBig,
+                        'z-index' : '9998'
+                            });
+                            
+                        $("#reader").css({
+                        'top' : offsetTop+40,
+                        'left' : offsetLeft+40,
+                        'width' : widthBig,
+                        'height' : heightBig,
+                        'z-index' : '9999'
+                            });
+                        
+                        
                         $("#filesystem:hidden").fadeIn(3000);
-                        //$("#chat:hidden").fadeIn(3000);
                         $("#buddylist:hidden").fadeIn(3000);
                         
+                        $("#feed:hidden").fadeIn(3000);
+                        $("#chat:hidden").fadeIn(3000);
+                        $("#reader:hidden").fadeIn(3000);
                         
                         
                         //init draggable windows
@@ -348,9 +369,9 @@ var focus = true;
 	    msg = CryptoJS.AES.encrypt(message, key);
 	    return String(msg);
 	}
-	
+
 	function symDecrypt(key, message){
-		var msg
+            var msg;
 	    msg = CryptoJS.AES.decrypt(message, key);
 	    var output = CryptoJS.enc.Utf8.stringify(msg);
 	    return String(output);
@@ -381,15 +402,13 @@ var focus = true;
 	}
 	
 	function asymDecrypt(privateKey, encryptedMessage){
-		
-          var decrypt = new JSEncrypt();
-          
-          decrypt.setPrivateKey(privateKey);
-          
-          return decrypt.decrypt(encryptedMessage);
-		
+            var message;
+            var decrypt = new JSEncrypt();
+            decrypt.setPrivateKey(privateKey);
+            message = decrypt.decrypt(encryptedMessage);
+            return message;
 	}
-
+	
 	function getSalt(type, itemId, key){
 			var encryptedSalt = '';
 			$.ajax({
@@ -406,8 +425,13 @@ var focus = true;
 		
 	}
 	
-	function getPrivateKey(type, itemId, salt){
-			var encryptedKey = '';
+    function getPrivateKey(type, itemId, salt){
+            
+	    var privateKey;
+            var index = type+'_'+itemId;
+            if(typeof privateKeys[index] === 'undefined'){
+                console.log(index);
+                    var encryptedKey = '';
 			$.ajax({
 			  url:"api.php?action=getPrivateKey",
 			  async: false,  
@@ -418,7 +442,7 @@ var focus = true;
 			  }
 			});
 		
-			var password = prompt("Please enter your password","Password");
+			var password = 'abcabc';
 			
 			var md = CryptoJS.MD5(password);
 			password = md.toString(CryptoJS.enc.Hex);
@@ -426,9 +450,14 @@ var focus = true;
 		    var shaKey = CryptoJS.SHA512(password+salt);
 		    var keyHash = shaKey.toString(CryptoJS.enc.Hex);
 			
-	    	var privateKey;
 	    	privateKey = symDecrypt(keyHash, encryptedKey); //encrypt private Key using password
-	    	return privateKey;
+                privateKeys[index] = privateKey;
+            }else{
+                
+                privateKey = privateKeys[index];
+                
+            }
+	    return privateKey;
 	}
 	
 	function getPublicKey(type, itemId){
@@ -444,6 +473,23 @@ var focus = true;
 			});
 	    	return key;
 	}
+	
+	
+    function storeMessageKey(messageId, key){
+        messageKeys[messageId] = key;
+    }
+    
+    function getStoredKey(messageId){
+        return messageKeys[messageId];
+    }
+    
+    function isStored(messageId){
+        if(messageKeys[messageId] !== undefined){
+            return true;
+        }else{
+            return false;
+        }
+    }
               
 //general functions
         
@@ -889,31 +935,31 @@ var focus = true;
         $('#chatInput_'+buddy).val($('#chatInput_'+buddy).val() + string);
     }
               
-    function chatSetKey(username){
+    function chatSetKey(userid){
 
-		if(localStorage.key[username]){
+		if(localStorage.key[userid]){
 	  		jsAlert('', 'The key already has been set.');
 		}else{
-			localStorage.key[username] = $('#chatKeyInput_'+username).val();
-			$('#chatCryptionMarker_'+username).val('true');
-		  	$('#chatKeySettings_'+username).html('<a href="#" onclick="chatDeactivateKey(\''+username+'\'); return false;">deactivate key</a>');
+			localStorage.key[userid] = $('#chatKeyInput_'+userid).val();
+			$('#chatCryptionMarker_'+userid).val('true');
+		  	$('#chatKeySettings_'+userid).html('<a href="#" onclick="chatDeactivateKey(\''+userid+'\'); return false;">deactivate key</a>');
 			
-	  		jsAlert('', 'The key for your buddy '+username+' has been set.');
+	  		jsAlert('', 'The key for your buddy '+userid+' has been set.');
 			
-            chatDecrypt(username);
+            chatDecrypt(userid);
             
-            $('#toggleKey_'+username+' .lockIcon').addClass('locked');
-            $('#chatKeySettings_'+username).hide();
+            $('#toggleKey_'+userid+' .lockIcon').addClass('locked');
+            $('#chatKeySettings_'+userid).hide();
             
 		}
     }
     
-    function chatDeactivateKey(username){
-    	localStorage.key[username] = '';
-			$('#chatCryptionMarker_'+username).val('false');
-		$('#chatKeySettings_'+username).html('<form action="" method="post" target="submitter" onsubmit="chatSetKey(\''+username+'\'); return false;"><input type="password" name="key" placeholder="type key" id="chatKeyInput_'+username+'"></form>');
+    function chatDeactivateKey(userid){
+    	localStorage.key[userid] = '';
+			$('#chatCryptionMarker_'+userid).val('false');
+		$('#chatKeySettings_'+userid).html('<form action="" method="post" target="submitter" onsubmit="chatSetKey(\''+userid+'\'); return false;"><input type="password" name="key" placeholder="type key" id="chatKeyInput_'+userid+'"></form>');
 	    jsAlert('', 'The key has been removed');
-        $('#toggleKey_'+username+' .lockIcon').removeClass('locked');
+        $('#toggleKey_'+userid+' .lockIcon').removeClass('locked');
     }
     
     function toggleKey(username){
@@ -936,29 +982,57 @@ var focus = true;
         $("#chatWindow_" + username + "").load("modules/chat/chatreload.php?buddy=" + username + "&reload=1");
     }
     
-    function chatMessageSubmit(username, userid){
+    function chatMessageSubmit(userid){
     	
+    	console.log('getPublicKey');
     	var publicKey = getPublicKey('user', userid); //get public key of receiver
-    	var symKey = Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2); //generate random key
-    	var message = symEncrypt(symKey, $('#chatInput_'+userid).val()); //encrypt message semitrically
-    	var symKey = asymEncrypt(publicKey, symKey); //random generated key for symetric encryption
+    	console.log('getRandKey');
+    	var randKey = Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2); //generate random key
+   	
+    	console.log('symEncrypt:'+randKey);
+    	var message = symEncrypt(randKey, $('#chatInput_'+userid).val()); //encrypt message semitrically
+
+    	console.log('symkey'+publicKey+randKey);
+    	var symKey = asymEncrypt(publicKey, randKey); //random generated key for symetric encryption
+
+    	console.log('messsage');    	
     	var message = symKey+'////message////'+message; //message = symetric Key + sym encoded message with key = symKey
 
     	$('#chatInput_'+userid).val(message);
+    	alert('dude!');
     	
     	
-    	if(localStorage.key[username]){
-    		
-    		 $('#chatInput_'+userid).val(CryptoJS.AES.encrypt(message, localStorage.key[username]));
+    	if(localStorage.key[userid]){
+    		console.log(localStorage.key[userid]);
+    		 $('#chatInput_'+userid).val(CryptoJS.AES.encrypt($('#chatInput_'+userid).val(), localStorage.key[userid]));
  		     //set cryption marker true so the php script could mark the message as crypted
-    		 $('#chatCryptionMarker_'+username).val('true'); 
+    		 $('#chatCryptionMarker_'+userid).val('true'); 
     		 
     	}else{
-    		 $('#chatCryptionMarker_'+username).val('false'); 
+    		 $('#chatCryptionMarker_'+userid).val('false'); 
     	}
+    	
+    	var message = $('#chatInput_'+userid).val();
+    	$.post("api.php?action=chatSendMessage", {
+           userid:localStorage.currentUser_userid,
+           receiver: userid,
+           message: message
+           }, 
+           function(result){
+                var res = result;
+                if(res.length !== 0){
+                    
+                    storeMessageKey(res, randKey);
+                    
+           			$('#chatInput_'+userid).val(message);
+                    
+                }else{
+                    alert('There was an error sending the message.');
+                }
+           }, "html");
     }
     
-    function chatDecrypt(username){
+    function chatDecrypt(userid){
     	
     	
 	    // $('.chatMessage_'+username).each(function(){
@@ -968,15 +1042,50 @@ var focus = true;
 	    	// $(this).html(content);
 	    // });
 	    	
-    	if(localStorage.key[username]){
-	    	$('.cryptedChatMessage_'+username).each(function(){
+    	
+	    	$('.chatMessage_'+userid).each(function(){
 	    		var content = $(this).html();
-	    		content = CryptoJS.AES.decrypt(content, localStorage.key[username]);
-	    		content = content.toString(CryptoJS.enc.Utf8);
+	    		var id = $(this).data('id');
+	    		
+	    		
+	    		
+	    		if(localStorage.key[userid]){
+		    		content = CryptoJS.AES.decrypt(content, localStorage.key[userid]);
+		    		content = content.toString(CryptoJS.enc.Utf8);
+	    			$(this).removeClass('.cryptedChatMessage_'+userid);
+	    		}
+	    		
+	    		
+		    	//split content into key and message
+		    	var message = content.split("////message////");
+	    		
+	    		
+	    		if(isStored(id)){
+	    			randKey = getStoredKey(id);
+	    		}else{
+	    			
+	    		
+		    		var salt = getSalt('auth', localStorage.currentUser_userid, localStorage.currentUser_passwordHashMD5);
+	                var privateKey = getPrivateKey('user', localStorage.currentUser_userid, salt);
+		    		
+		    		
+	                //encrypt random key with privateKey
+	                var randKey = asymDecrypt(privateKey, message[0]);
+	                
+	                
+	    		}
+	    		
+	    		
+                if(randKey !== null){
+                    //encrypt message with random key
+	    			console.log('sym');
+                    var content = symDecrypt(randKey, message[1]);
+	    		
+	    		}
+	    		
+	    		
 	    		$(this).html(content);
-	    		$(this).removeClass('.cryptedChatMessage_'+username);
 	    	});
-    	}
     }
     
     function replaceLinks(){
