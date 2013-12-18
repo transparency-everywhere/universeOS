@@ -14,7 +14,7 @@ $dashboard = new dashBoard();
 	
 	echo $dashboard->showPlaylistBox();
 	
-	echo $dashboard->showMessageBox();
+	//echo $dashboard->showMessageBox();
 	
 	
 $userid = getUser();
@@ -39,7 +39,7 @@ $userData = mysql_fetch_array($userSql);
 	</div>
 	<?php
 	
-		echo $dashboard->showFavBox();
+		//echo $dashboard->showFavBox();
 	
 		//echo $dashboard->showTaskBox();
 	?>

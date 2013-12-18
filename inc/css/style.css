@@ -1082,9 +1082,41 @@ top: 0px; right: 0px; bottom: 40px; left: 0px; width: 100%;
 	margin-right: 10px;
 }
 
-.chatMainFrame .dialog{
-	position: absolute; top: 30px; right: 0px; bottom:40px; left: 0px; overflow: auto;
+.chatMainFrame .dialoge{
+	position: absolute; top: 30px; right: 0px; bottom:40px; left: 0px; overflow: auto; padding-top: 15px;
 }
+
+.dialoge .chatMessage{
+    margin-top: 25px; 
+    padding: 10px; 
+    padding-bottom: 10px;
+}
+
+.dialoge .chatMessage .username,.dialoge .chatMessage .timestamp{
+	position:absolute;
+	margin-top: -28px;
+	color: #424242; 
+	line-height: 17px;
+}
+
+.dialoge .chatMessage .timestamp{
+	right:20px;
+	display:none;
+}
+
+.dialoge .chatMessage:hover .timestamp{
+	display:block;
+}
+
+.chatMessage.outgoing{
+	margin-right: 15px; margin-left: 5px;
+}
+
+.chatMessage.incoming{
+	margin-left: 15px; margin-right: 5px;
+}
+
+
 #chat footer{
 	position:absolute; 
 	right: 0px; 
@@ -1234,9 +1266,7 @@ color:#FFFFFF;
 .seperate {
     clear: both;
 }
-.space-top {
-    margin-top: 15px;
-}
+
 .gray-border {
     border: 1px solid hsl(0,0%,70%);
 }
@@ -2292,11 +2322,11 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 		top: 0;
 		z-index: 99999;
 		position: absolute;
+		height: 10px;
 	}
 	
 	.dashBox:hover .content{
 		display: block;
-		height: 90px;
 		overflow: auto;
 	}
 	
@@ -2317,7 +2347,7 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 	
 	.dashBox .content{
 		overflow: auto;
-		max-height: 141px;
+		max-height: 100%;
 		display:none;
 		padding-bottom: 15px;
 	}
@@ -2429,13 +2459,20 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
                     border: 0px;
                     border-top: #424242 1px solid;
                     border-left: #424242 1px solid;
-                    width: 102.5px;
+                   	width: 150px;
                     cursor:pointer;
                     float:left;
+                    font-weight:bold;
+                    font-size: 25px;
                 }
                 
+                #dashBoard .appList > li > img{
+                    margin-right:5px;
+                    margin-left:5px;
+                    width:15px;
+                }
                 #dashBoard .appList > li:hover{
-                    background: #303030; /* Old browsers */
+                    background: #303030;
                 }
                 .privacySettings{
                 	background: #3E3E3E;

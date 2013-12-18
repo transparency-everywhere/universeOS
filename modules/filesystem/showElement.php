@@ -96,23 +96,33 @@ if($elementData['type'] == "image"){
     <table width="100%" class="fileBox" cellspacing="0">
         <tr bgcolor="#FFFFFF" height="35px">
             <td width="110px">Element-Type:</td>
-            <td><?=$elementData[type];?></td>
+            <td><?=$elementData['type'];?></td>
         </tr>
         <tr bgcolor="#e5f2ff" height="35px">
             <td width="110px">Author:</td>
-            <td><?=$elementData[creator];?></td>
+            <td><?=$elementData['creator'];?></td>
         </tr>
         <tr bgcolor="#FFFFFF" height="35px">
             <td>Title:</td>
-            <td><?=$elementData[name];?></td>
+            <td><?=$elementData['name'];?></td>
         </tr>
         <tr bgcolor="#e5f2ff" height="35px">
             <td>Year:</td>
-            <td><?=$elementData[year];?></td>
+            <td><?=$elementData['year'];?></td>
+        </tr>
+        <tr bgcolor="#FFFFFF" height="35px">
+            <td>Original Title:</td>
+            <td><?=$elementData['originalTitle'];?></td>
+        </tr>
+        <tr bgcolor="#e5f2ff" height="35px">
+            <td>Language:</td>
+            <td>
+            	<?php echo $elementData['language'];?>
+            </td>
         </tr>
         <tr bgcolor="#FFFFFF" height="35px">
             <td>License:</td>
-            <td><?=$elementData[license];?></td>
+            <td><?=$elementData['license'];?></td>
         </tr>
     </table>
     <div style="display:none; float:left; width:40%; margin-top: 3%; background: #c9c9c9; height: 250px;">

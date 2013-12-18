@@ -59,8 +59,6 @@ switch($action){
 			mysql_query("UPDATE user SET password='$password', cypher='sha512' WHERE userid='$userid'");
 			echo "wouh";
 		}
-		
-			echo "$userid . $password . $oldPassword . $salt . $privateKey . $publicKey";
 		break;
     case 'login':
 		//old version

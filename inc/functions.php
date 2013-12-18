@@ -623,28 +623,28 @@
           //delete all files
           $fileSQL = mysql_query("SELECT id FROM files WHERE owner='$userid'");
           while($fileData = mysql_fetch_array($fileSQL)){
-              deleteFile($fileData[id]);
+              deleteFile($fileData['id']);
               
           }
           
           //delete all links
           $linkSQL = mysql_query("SELECT id FROM links WHERE author='$userid'");
           while($linkData = mysql_fetch_array($linkSQL)){
-              deleteLink($linkData[userid]);
+              deleteLink($linkData['userid']);
           }
           
           
           //elements
           $elementSQL = mysql_query("SELECT id FROM elements WHERE author='$userid'");
           while($elementData = mysql_fetch_array($elementSQL)){
-              deleteElement($elementData[id]);
+              deleteElement($elementData['id']);
           }
           
           
           //folders
           $folderSQL = mysql_query("SELECT id FROM folders creator='$userid'");
           while($folderData = mysql_fetch_array($folderSQL)){
-              deleteFolder($folderData[id]);
+              deleteFolder($folderData['id']);
           }
           
           //comments
@@ -674,10 +674,15 @@
   	
 	$userData = getUserData($user);
 	
-	if($userData['password'] == $hash)
+	if($userData['password'] == $hash){
 		return true;
-	else
-		return false; 
+	}else{
+		if(proofLogin()){
+			return true;
+		}else{
+			return false;
+		}
+	}
   }
   
   function getUser(){
@@ -717,7 +722,7 @@
         
         $loginSQL = mysql_query("SELECT userid, username, password FROM user WHERE username='$username'");
         $loginData = mysql_fetch_array($loginSQL);
-        $dbPassword = $loginData[password];
+        $dbPassword = $loginData['password'];
         $dbPassword = hash('sha1', $dbPassword);
         if($hash == $dbPassword){
             return true;
@@ -887,20 +892,20 @@
             <td>
                 <table>
                     <tr>
-                        <td style="font-size: 10pt;">&nbsp;<a href="#" onclick="showProfile(<?=$feedUserData[userid];?>);"><?=$feedUserData[username];?></a></td>
+                        <td style="font-size: 10pt;">&nbsp;<a href="#" onclick="showProfile(<?=$feedUserData['userid'];?>);"><?=$feedUserData['username'];?></a></td>
                     </tr>             
                     <tr>
                         <td style="font-size: 08pt;">&nbsp;<i><?=universeTime($timestamp);?></i></td>
                     </tr>
                 </table>
             </td>
-            <td align="right"><span class="pictureInSignature"><?=showUserPicture($feedUserData[userid], "30", $subpath);?></span></td>
+            <td align="right"><span class="pictureInSignature"><?=showUserPicture($feedUserData['userid'], "30", $subpath);?></span></td>
             <?}else{?>
-            <td><?=showUserPicture($feedUserData[userid], "30", $subpath);?></td>
+            <td><?=showUserPicture($feedUserData['userid'], "30", $subpath);?></td>
             <td>
                 <table>
                     <tr>
-                        <td style="font-size: 10pt;">&nbsp;<?=$feedUserData[username];?></td>
+                        <td style="font-size: 10pt;">&nbsp;<?=$feedUserData['username'];?></td>
                     </tr>             
                     <tr>
                         <td style="font-size: 08pt;">&nbsp;<i><?=universeTime($timestamp);?></i></td>
@@ -917,7 +922,7 @@
 
   function getUserFavs($userid=NULL){
   	if(empty($userid)){
-  		$userid=$_SESSION[userid];
+  		$userid=$_SESSION['userid'];
   	}
   	$favSQL = mysql_query("SELECT * FROM fav WHERE user='$userid'");
 		while($favData = mysql_fetch_array($favSQL)){
@@ -1003,16 +1008,13 @@
 		    $sender = $chatData['sender'];
 		    $whileid = getUser();
 		    if($sender == $userid){
-		    $receiver = $buddyId;
-		    $authorid =  $userData['userid'];
-		    $reverse = NULL;
-		    $css = 'messageOut'; 
-		    $css = 'margin-right: 15px; margin-left: 5px;';
+			    $receiver = $buddyId;
+			    $authorid =  $userData['userid'];
+			    $class = 'incoming';
 		    } else {
-		    $authorid =  $buddyData['userid'];
-		    $receiver = $userid;
-		    $css = 'margin-left: 15px; margin-right: 5px;';
-		    $reverse = "1";   
+			    $authorid =  $buddyData['userid'];
+			    $receiver = $userid;
+			    $class = 'outgoing';
 		    }
 		    
 			$authorName = useridToUsername($authorid);
@@ -1020,9 +1022,9 @@
 			
 			
 			//check if message is crypted
-		    if($chatData[crypt] == "1"){
+		    if($chatData['crypt'] == "1"){
 		    	
-				$messageClasses = "cryptedChatMessage_$buddyName";
+				$messageClasses = "cryptedChatMessage_$buddyId";
 		        $message = $chatData['text'];
 			} else{
 				
@@ -1030,14 +1032,15 @@
 		        $message = $chatData['text'];
 		    }
 		    $message = universeText($message);
-		    ?>
-		              <div class="box-shadow space-top chatText" style="<?=$css;?> padding: 10px; padding-bottom: 10px;">
-		              	<span style="position: absolute; margin-top: -20px; color: #c0c0c0;">
-		              		<?=showUserPicture($authorid, "15");?><?=$authorName;?> 
-		              	</span>
-		              	<?
-		              	echo'<span class="pull-right" style="position: absolute;right: 20px;margin-top: -20px;">'.universeTime($chatData['timestamp']).'</span>';
-		              	echo'<span class="chatMessage_'.$buddyName.' '.$messageClasses.'" data-sender="'.$authorid.'" data-receiver="'.$receiver.'" data-decrypted="false">'.$message.'</span>';
+			
+			//show message
+		              echo '<div class="box-shadow chatMessage '.$class.'">';
+		              	echo '<span class="username">';
+						echo showUserPicture($authorid, "15");
+						echo $authorName;
+		              	echo "</span>";
+		              	echo'<span class="timestamp pull-right">'.universeTime($chatData['timestamp']).'</span>';
+		              	echo'<span class="chatMessage_'.$buddyId.' '.$messageClasses.'" data-sender="'.$authorid.'" data-receiver="'.$receiver.'" data-id="'.$chatData['id'].'" data-decrypted="false">'.$message.'</span>';
 		              echo'</div>';
 			}
 	
@@ -1094,7 +1097,7 @@
 //fav
 
   function addFav($type, $typeid, $userid){
-      $type = $_GET[type];
+      $type = $_GET['type'];
       $check = mysql_query("SELECT type,item FROM fav WHERE type='$_GET[type]' && item='$_GET[item]'");
       $checkData = mysql_fetch_array($check);
       if(isset($checkData[type])){
@@ -1194,7 +1197,7 @@
          //fügt Benachrichtigung für den Author des Feeds hinzu, falls ein anderer User einen Kommentar erstellt
          $feedSql = mysql_query("SELECT owner FROM userfeeds WHERE feedid='$itemid'");
          $feedData = mysql_fetch_array($feedSql);
-         if($_SESSION[userid] !== "$feedData[owner]"){
+         if($_SESSION['userid'] !== "$feedData[owner]"){
          mysql_query("INSERT INTO personalEvents (`owner`,`user`,`event`,`info`,`eventId`,`timestamp`) VALUES('$feedData[owner]','$_SESSION[userid]', 'comment','feed','$itemid','$time');");
          }
 	   }
@@ -1245,11 +1248,11 @@ function showComments($type, $itemid) {
     if($type == "comment"){
         $comment_sql = mysql_query("SELECT * FROM comments WHERE type='$type' && typeid='$itemid' ORDER BY timestamp DESC");
         while($comment_data = mysql_fetch_array($comment_sql)) {?>
-            <div class="shadow subComment commentBox<?=$comment_data[id];?>" id="<?=$type;?>Comment" style="background-color: #FFF;">
-            <?=userSignature($comment_data[author], $comment_data[timestamp]);?>
-            <br><?=$comment_data[text];?><br><br>
+            <div class="shadow subComment commentBox<?=$comment_data['id'];?>" id="<?=$type;?>Comment" style="background-color: #FFF;">
+            <?=userSignature($comment_data['author'], $comment_data['timestamp']);?>
+            <br><?=$comment_data['text'];?><br><br>
 
-            <div style="padding: 15px; "><div><span style="float:left;"><?=showScore(comment, $comment_data[id]);?></span><span style="float:left;"><?=showItemSettings('comment', "$comment_data[id]");?></span></div></div>
+            <div style="padding: 15px; "><div><span style="float:left;"><?=showScore(comment, $comment_data[id]);?></span><span style="float:left;"><?=showItemSettings('comment', $comment_data['id']);?></span></div></div>
             </div>
             <?php
             }
@@ -1257,14 +1260,14 @@ function showComments($type, $itemid) {
     }else{
     $comment_sql = mysql_query("SELECT * FROM comments WHERE type='$type' && typeid='$itemid' ORDER BY timestamp DESC");
     while($comment_data = mysql_fetch_array($comment_sql)) { 
-    $jsId = $comment_data[id];
+    $jsId = $comment_data['id'];
     ?>
-    <div class="shadow subComment commentBox<?=$comment_data[id];?>" id="<?=$type;?>Comment">
-    <?=userSignature($comment_data[author], $comment_data[timestamp]);?>
-    <br><?=$comment_data[text];?><br><br>
+    <div class="shadow subComment commentBox<?=$comment_data['id'];?>" id="<?=$type;?>Comment">
+    <?=userSignature($comment_data['author'], $comment_data['timestamp']);?>
+    <br><?=$comment_data['text'];?><br><br>
 
-    <div style="padding: 15px; margin-bottom: 20px;"><div><div style="float:left;"><?=showScore(comment, $comment_data[id]);?></div><div style="float:left; margin-left: 10px;"><?=showItemSettings('comment', "$comment_data[id]");?></div></div>
-                <a href="javascript:showSubComment(<?=$jsId;?>);" class="btn btn-mini" style="float: right; margin-right: 30px; color: #606060;"><i class="icon-comment"></i>&nbsp;(<?=countComment("comment", $comment_data[id]);?>)</a></div>
+    <div style="padding: 15px; margin-bottom: 20px;"><div><div style="float:left;"><?=showScore('comment', $comment_data['id']);?></div><div style="float:left; margin-left: 10px;"><?=showItemSettings('comment', $comment_data['id']);?></div></div>
+				<a href="javascript:showSubComment(<?=$jsId;?>);" class="btn btn-mini" style="float: right; margin-right: 30px; color: #606060;"><i class="icon-comment"></i>&nbsp;(<?=countComment("comment", $comment_data['id']);?>)</a></div>
                 <div class="shadow subComment" id="comment<?=$jsId;?>" style="display: none;"></div>
     </div>
 <?php
@@ -1285,12 +1288,12 @@ echo"</div>";
               <table>
                   <tr>
                       <td width="10"></td>
-                      <td><?=showUserPicture($_SESSION[userid], "25");?></td>
+                      <td><?=showUserPicture($_SESSION['userid'], "25");?></td>
                       <td style="vertical-align:middle;"><input type="text" name="comment" placeholder="write commenta.." class="commentField" style="width: 100%;"></td>
                       <td><input type="submit" value="send" class="btn btn-small" name="submitComment" style=""></td>
                       <td width="10"></td>
 
-                  </tr><input type="hidden" name="itemid" value="<?=$feedid;?>"><input type="hidden" name="user" value="<?=$_SESSION[userid];?>"><input type="hidden" name="type" value="feed">
+                  </tr><input type="hidden" name="itemid" value="<?=$feedid;?>"><input type="hidden" name="user" value="<?=$_SESSION['userid'];?>"><input type="hidden" name="type" value="feed">
               </table>
           </form>
       </center>
@@ -1304,12 +1307,12 @@ echo"</div>";
     $comment_sql = mysql_query("SELECT * FROM comments WHERE type='feed' && typeid='$feedid' ORDER BY timestamp DESC");
     while($comment_data = mysql_fetch_array($comment_sql)) { 
     ?>
-    <div class="shadow subComment commentBox<?=$comment_data[id];?>" id="feedComment">
-    <?=userSignature($comment_data[author], $comment_data[timestamp]);?>
+    <div class="shadow subComment commentBox<?=$comment_data['id'];?>" id="feedComment">
+    <?=userSignature($comment_data['author'], $comment_data['timestamp']);?>
         <div style="margin: 7px;">
             <br>
-            <?=$comment_data[text];?><br><br>
-            <div style="padding: 15px;"><div style="margin-bottom:15px;"><span style="float:left;margin-right:15px;"><?=showScore(comment, $comment_data[id]);?></span><span style="float:left;"><?=showItemSettings('comment', "$comment_data[id]");?></span></div></div>
+            <?=$comment_data['text'];?><br><br>
+            <div style="padding: 15px;"><div style="margin-bottom:15px;"><span style="float:left;margin-right:15px;"><?=showScore('comment', $comment_data['id']);?></span><span style="float:left;"><?=showItemSettings('comment', $comment_data['id']);?></span></div></div>
         </div>
     </div>
     <?php
@@ -1359,7 +1362,7 @@ echo"</div>";
 
 	function getGroupName($groupId){
 		$data = mysql_fetch_array(mysql_query("SELECT title FROM groups WHERE id='".mysql_real_escape_string($groupId)."'"));
-		return $data[title];
+		return $data['title'];
 	}
 	
     function countGroupMembers($groupId){
@@ -1440,7 +1443,7 @@ echo"</div>";
   	
 		$groupData = getGroupData($groupId);
 		
-		$adminString = $groupData[admin];
+		$adminString = $groupData['admin'];
 		
 		//proof if user is allready admin
 		$admins = explode($adminString, ";");
@@ -1738,7 +1741,7 @@ echo"</div>";
 			
 			
 			
-			echo"<select name=\"language\">";
+			$return .= "<select name=\"language\">";
 			
 			
 			foreach($languages AS $language){
@@ -1749,10 +1752,13 @@ echo"</div>";
 						$selected = '';
 					}
 				}
-				echo"<option $selected>$language</option>";
+				$return .= "<option $selected>$language</option>";
 				
 			}
-			echo"</select>";
+			
+			$return .= "</select>";
+			
+			return $return;
 		}
     
 
@@ -1873,7 +1879,7 @@ echo"</div>";
         
         $buddylistSql = mysql_query("SELECT buddy FROM buddylist WHERE owner='$user' && (request='$request')");
         while($buddylistData = mysql_fetch_array($buddylistSql)) {
-            $buddies[] = $buddylistData[buddy];
+            $buddies[] = $buddylistData['buddy'];
         }
         
         return $buddies;
@@ -2025,7 +2031,7 @@ echo"</div>";
         }
         $feedSql = mysql_query("SELECT * FROM userfeeds $where");
         while($feedData = mysql_fetch_array($feedSql)) {
-            if($feedData[owner] == "$_SESSION[userid]"){
+            if($feedData['owner'] == "$_SESSION[userid]"){
                 $ownerLink = "<a href=\"doit.php?action=deleteFeed&feedId=$feedData[feedid]\" target=\"submitter\"><img src=\"gfx/trash.gif\" alt=\"delete\" style=\"position: absolute; margin-left: 60px; margin-top: -20px;\"></a>";
             }else{
                 unset($ownerLink);
@@ -2034,15 +2040,15 @@ echo"</div>";
             
             
             // in the table elements the elements have a "title", in the table folders the folders have a "name" that realy sucks!
-            if($feedData[protocoll_type] == "fileUpload"){
+            if($feedData['protocoll_type'] == "fileUpload"){
                 $folderAddSql = mysql_query("SELECT id, title FROM elements WHERE id='$feedData[feedLink2]'");
                 $folderAddData = mysql_fetch_array($folderAddSql);
-                $text = "<a href=\"#\" onclick=\"createNewTab('fileBrowser_tabView','".$folderAddData[title]."','','modules/filesystem/showelement.php?element=".$folderAddData[id]."',true);return false\"> ".$folderAddData[title]."</a>";
-                }if($feedData[protocoll_type]=="elementAdd"){
+                $text = "<a href=\"#\" onclick=\"createNewTab('fileBrowser_tabView','".$folderAddData['title']."','','modules/filesystem/showelement.php?element=".$folderAddData['id']."',true);return false\"> ".$folderAddData[title]."</a>";
+                }if($feedData['protocoll_type']=="elementAdd"){
                 $folderAddSql = mysql_query("SELECT id, name FROM folders WHERE id='$feedData[feedLink2]'");
                 $folderAddData = mysql_fetch_array($folderAddSql);
-                $text = "<a href=\"#\" onclick=\"addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=".$folderAddData[id]."&reload=1');return false\"> ".$folderAddData[name]."/</a>";   
-                }if($feedData[protocoll_type]=="folderAdd"){
+                $text = "<a href=\"#\" onclick=\"addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=".$folderAddData['id']."&reload=1');return false\"> ".$folderAddData['name']."/</a>";   
+                }if($feedData['protocoll_type']=="folderAdd"){
                 $folderAddSql = mysql_query("SELECT id, name FROM folders WHERE id='$feedData[feedLink2]'");
                 $folderAddData = mysql_fetch_array($folderAddSql);
                 $text = "<a href=\"#\" onclick=\"addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=".$folderAddData[id]."&reload=1');return false\"> ".$folderAddData[name]."/</a>";   
@@ -2051,17 +2057,17 @@ echo"</div>";
 
 ?>
     <? if($needStructure == "1"){ ?><div id="add"></div><? } ?>
-    <div id="realFeed" class="feedNo<?=$feedData[feedid];?>">
-        <?=userSignature($feedData[owner], $feedData[timestamp]);?>
-        <div style="padding: 10px;"><?=nl2br(htmlspecialchars($feedData[feed]));?><?=$text;?></div><br>
-        <div style="padding: 15px;"><div><?=showScore("feed", $feedData[feedid]);?><div style=" width: 150px; float:right; margin-top: -22px;"><?=showItemSettings('feed', "$feedData[feedid]");?></div></div></div>
-                <a href="javascript:showfeedComment(<?=$feedData[feedid];?>);" class="btn btn-mini" style="float: right; margin-top: -29px; margin-right: 5px; color: #606060">comments&nbsp;(<?=countComment("feed", $feedData[feedid]);?>)</a><div class="shadow" id="feed<?=$feedData[feedid];?>" style="padding:15px; display:none;"></div><hr style="margin: 0px;">
+    <div id="realFeed" class="feedNo<?=$feedData['feedid'];?>">
+        <?=userSignature($feedData['owner'], $feedData['timestamp']);?>
+        <div style="padding: 10px;"><?=nl2br(htmlspecialchars($feedData['feed']));?><?=$text;?></div><br>
+        <div style="padding: 15px;"><div><?=showScore("feed", $feedData['feedid']);?><div style=" width: 150px; float:right; margin-top: -22px;"><?=showItemSettings('feed', "$feedData[feedid]");?></div></div></div>
+                <a href="javascript:showfeedComment(<?=$feedData['feedid'];?>);" class="btn btn-mini" style="float: right; margin-top: -29px; margin-right: 5px; color: #606060">comments&nbsp;(<?=countComment("feed", $feedData[feedid]);?>)</a><div class="shadow" id="feed<?=$feedData[feedid];?>" style="padding:15px; display:none;"></div><hr style="margin: 0px;">
     </div>
     <?php
                 //feeds like the login feed are deleted after the validity passed
-                if($feedData[validity] == TRUE) {
+                if($feedData['validity'] == TRUE) {
                 $time = time();
-                if($feedData[validity] < $time){
+                if($feedData['validity'] < $time){
                     mysql_query("DELETE FROM userfeeds WHERE feedid='$feedData[feedid]'");
                 }}
                 unset($text);
@@ -2180,16 +2186,16 @@ echo"</div>";
         $feedSql = mysql_query("SELECT * FROM feed $where");
         while($feedData = mysql_fetch_array($feedSql)) {
             
-            if(!in_array($feedData[id], $allreadyLoaded)){
-                $token[] = $feedData[id];
+            if(!in_array($feedData['id'], $allreadyLoaded)){
+                $token[] = $feedData['id'];
             }
             
             unset($attachment);
             
-            switch($feedData[type]){
-                case showThumb:
+            switch($feedData['type']){
+                case 'showThumb':
                 
-                $attachment = showItemThumb($feedData[attachedItem], $feedData[attachedItemId]);
+                $attachment = showItemThumb($feedData['attachedItem'], $feedData['attachedItemId']);
                 break;
             }
             
@@ -2199,27 +2205,27 @@ echo"</div>";
                 
 
         if($needStructure == "1"){ ?><div id="add"></div><? } ?>
-        <div id="realFeed" class="feedNo<?=$feedData[id];?>">
-            <?=userSignature($feedData[author], $feedData[timestamp]);?>
-            <div style="padding: 10px;"><?=nl2br(universeText(htmlspecialchars($feedData[feed])));?><?=$text;?></div><br>
+        <div id="realFeed" class="feedNo<?=$feedData['id'];?>">
+            <?=userSignature($feedData['author'], $feedData['timestamp']);?>
+            <div style="padding: 10px;"><?=nl2br(universeText(htmlspecialchars($feedData['feed'])));?><?=$text;?></div><br>
             <div style="padding: 15px;">
                 <?=$attachment;?>
             </div>
             <div style="padding: 15px;">
                 <div>
-                    <?=showScore("feed", $feedData[id]);?>
+                    <?=showScore("feed", $feedData['id']);?>
                     <div style="float:right; position: absolute; margin-top: -22px; margin-left: 108px;"><?=showItemSettings('feed', "$feedData[id]");?></div>
                 </div>
             </div>
-            <a href="javascript:showfeedComment(<?=$feedData[id];?>);" class="btn btn-mini" style="float: right; margin-top: -38px; margin-right: 15px; color: #606060"><i class="icon-comment"></i>&nbsp;(<?=countComment("feed", $feedData[id]);?>)</a>
-            <div class="shadow" id="feed<?=$feedData[id];?>" style="display:none;"></div>
+            <a href="javascript:showfeedComment(<?=$feedData['id'];?>);" class="btn btn-mini" style="float: right; margin-top: -38px; margin-right: 15px; color: #606060"><i class="icon-comment"></i>&nbsp;(<?=countComment("feed", $feedData[id]);?>)</a>
+            <div class="shadow" id="feed<?=$feedData['id'];?>" style="display:none;"></div>
             <hr style="margin: 0px;">
         </div>
                 <?php
                 //feeds like the login feed are deleted after the validity passed
-                if($feedData[validity] == TRUE) {
+                if($feedData['validity'] == TRUE) {
                 $time = time();
-                if($feedData[validity] < $time){
+                if($feedData['validity'] < $time){
                     mysql_query("DELETE FROM feed WHERE id='$feedData[id]'");
                 }}
                 unset($text);
@@ -2357,7 +2363,7 @@ echo"</div>";
             
         }else if($privacy == "h"){
             
-            if($author == $_SESSION[userid] && proofLogin()){
+            if($author == $_SESSION['userid'] && proofLogin()){
             
                 $show = true;
                 $edit = true;
@@ -2387,7 +2393,7 @@ echo"</div>";
                 
                 //check if friends are allowed to see or edit this
                 if((in_array("f", $customShow) || in_array("f", $customEdit)) && proofLogin()){
-                    if($author == $_SESSION[userid]){
+                    if($author == $_SESSION['userid']){
                             //if friends are allowed to see => show = true
                             if(in_array("f", $customShow)){
                                 $show = true;
@@ -2537,10 +2543,10 @@ echo"</div>";
 		
         if($value == "p"){
             //check checkbox on public
-            $checked[privacyPublic] = 'checked="checked"';
+            $checked['privacyPublic'] = 'checked="checked"';
         }else if($value == "h"){
             //check checkbox on hidden
-            $checked[privacyHidden] = 'checked="checked"';
+            $checked['privacyHidden'] = 'checked="checked"';
         }else{
 			$showCustom = "notHidden";
             //handle other cases
@@ -2552,7 +2558,7 @@ echo"</div>";
             
             if(in_array("f", $customShow)){
                 //check checkbox on show friends
-                $checked[privacyCustomShowF] = 'checked="checked"';
+                $checked['privacyCustomShowF'] = 'checked="checked"';
             }
             
             
@@ -2563,11 +2569,11 @@ echo"</div>";
             
             if(in_array("f", $customEdit)){
                 //check checkbox on allow friends to edit
-                $checked[privacyCustomEditF] = 'checked="checked"';
+                $checked['privacyCustomEditF'] = 'checked="checked"';
             }
             if(in_array("h", $customEdit)){
                 //only authour is allow to edit
-                $checked[privacyCustomEditH] = 'checked="checked"';
+                $checked['privacyCustomEditH'] = 'checked="checked"';
             }
             
             
@@ -2803,18 +2809,24 @@ echo"</div>";
         foreach($userGroups AS &$userGroup){
                 $query = "$query OR INSTR(`privacy`, '{$userGroup}') > 0";
         }
+		
+		
+			//get playlists from friends
+				$buddies = buddyListArray();
+                $buddies = join(',',$buddies);
+                $query .= "OR INSTR(`user`, '{$buddies}') > 0";
         
             //get playlists for user and groups
-            $playListsSql = mysql_query("SELECT id, title, privacy, user FROM playlist WHERE user='$_SESSION[userid]' $query");
+            $playListsSql = mysql_query("SELECT id, title, privacy, user FROM playlist WHERE user='".getUser()."' $query");
             while($playListsData = mysql_fetch_array($playListsSql)){
                 if(authorize($playListsData['privacy'], 'show', $playListsData['user'])){
-                $ids[] = $playListsData['id'];
-                $titles[] = $playListsData['title'];
+	                $ids[] = $playListsData['id'];
+	                $titles[] = $playListsData['title'];
 				}
             }
 			
-			$return[ids] = $ids;
-			$return[titles] = $titles;
+			$return['ids'] = $ids;
+			$return['titles'] = $titles;
 			
 			return $return;
         
@@ -3841,14 +3853,14 @@ echo"</div>";
 	            //real file types
 	            //documents
 				case UFF:
-							if(authorize($fileData[privacy], "edit", $fileData[owner])){
+							if(authorize($fileData['privacy'], "edit", $fileData['owner'])){
 							    $readOnly = "false";
 							}else{
 							    $readOnly = "true";
 							}
 							
-							$title = $fileData[title];
-							$activeUsers = explode(";", $fileData[var1]);
+							$title = $fileData['title'];
+							$activeUsers = explode(";", $fileData['var1']);
 							//this iframe is used to handle all the onload, onsubmit, onkeyup events, its necessary because of the fact that the dhtml-goddies tab script parses the damn js
 							//dirty solution!!!
 							$output .= "<iframe src=\"modules/reader/UFF/javascript.php?fileId=$fileId&readOnly=$readOnly\" style=\"display:none;\"></iframe>";
@@ -5185,7 +5197,7 @@ class dashBoard{
 		
 		$title = "Your Apps";
 		
-		$content = "<ul class=\"appList\" style=\"width:230px;\">";
+		$content = "<ul class=\"appList\">";
 	    	$content .= "<li onclick=\"toggleApplication('feed')\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/feed.png\" border=\"0\" height=\"16\">Feed</li>";
 			$content .= "<li onclick=\"toggleApplication('filesystem')\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/filesystem.png\" border=\"0\" height=\"16\">Filesystem</li>";
 	 		$content .= "<li onclick=\"javascript: toggleApplication('reader')\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/viewer.png\" border=\"0\" height=\"16\">Reader</li>";
@@ -5340,7 +5352,7 @@ class dashBoard{
 class signatures{
 	
 	function create($type, $itemId, $privateKey, $publicKey){
-		mysql_query("DELETE FROM `salts` WHERE type='".save($type)."' AND itemId='".save($itemId)."'");
+		mysql_query("DELETE FROM `signatures` WHERE type='".save($type)."' AND itemId='".save($itemId)."'");
 		mysql_query("INSERT INTO `signatures` (`type`, `itemId`, `privateKey`, `publicKey`, `timestamp`) VALUES ('$type', '$itemId', '$privateKey', '$publicKey', '".time()."')");
 	}
 	

@@ -45,6 +45,7 @@ if(!isset($_SESSION['userid'])){
                     $( "#feedFrame" ).animate({ top: "81px" }, 500 );
                     $('#feedInputBar').slideDown(500);
                     $( "#addFeedPrivacy" ).animate({ top: "81px" }, 500 );
+                    initPrivacy();
                 });
                     $(this).focusout(function(){
                         

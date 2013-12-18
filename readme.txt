@@ -3,7 +3,15 @@ Recent:
 	Update from running version:
 		DB
 			user
-				cypher
+				+cypher
+				
+			elements
+				+originalTitle
+				+language
+				
+			+signatures
+			+salts
+			
 		
 		UPDATE userpw cypher sha512(md5(pass)+username)
 		
@@ -11,15 +19,6 @@ Recent:
 		
 	
 
-	OO/Functions
-		
-		in work
-			createGroup, addLink
-	
-		group
-			createGroup etc.
-			
-		chat
 
 	caching
 		buddylist

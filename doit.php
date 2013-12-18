@@ -491,11 +491,24 @@ if($_GET['action'] == "scorePlus"){
      }
      else if($_GET['action'] == "requestGroup"){
          $time = time();
-         $val = $_GET['val'];
-         mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`, `validated`) VALUES ('".$_GET['group']."', 'user', '".$_SESSION['userid']."', '$time', '".$_SESSION['userid']."', '$val');");
+		 $group = save($_GET['group']);
+         mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`, `validated`) VALUES ('".$group."', 'user', '".getUser()."', '$time', '".getUser()."', '0');");
      }
      else if($_GET['action'] == "joinGroup"){
-         mysql_query("UPDATE groupAttachments SET validated='1' WHERE id='".$_GET['id']."'");
+     	
+		
+		$group = save($_GET['group']);
+		$groupData = getGroupData($group);
+		if($groupData["public"] == "1"){
+			//if group is public add group attachment
+         	$time = time();
+         	mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`, `validated`) VALUES ('".$group."', 'user', '".getUser()."', '$time', '".getUser()."', '1');");
+     
+		}else{
+			
+			//update entry which has been added in request group
+         	mysql_query("UPDATE groupAttachments SET validated='1' WHERE id='".$_GET['id']."'");
+		}
          jsAlert("Joined :)"); 
          ?>
                 <script>
@@ -543,7 +556,7 @@ if($_GET['action'] == "scorePlus"){
      	
      }else if($_GET['action'] == "addFolder"){
          if(proofLogin()){
-         if($_POST['submit]') {
+         if($_POST['submit']) {
              $checkSQL = mysql_query("SELECT privacy, creator FROM folders WHERE id='".mysql_real_escape_string($_POST['folder'])."'");
              $checkData = mysql_fetch_array($checkSQL);
 			 if(authorize($checkData['privacy'], "edit", $checkData['creator'])){
@@ -649,8 +662,12 @@ if($_GET['action'] == "scorePlus"){
         $time = time();
         $title = save($_POST['elementName']);
         $name = save($_POST['name']);
-        mysql_query("INSERT INTO `elements` (`title`, `folder`, `creator`, `name`, `year`, `type`, `author`, `timestamp`, `privacy`) VALUES('$title', '".$_POST['folder']."', '".$_POST['creator']."', '$name', '".$_POST['year']."', '".$_POST['type']."', '$user', '$time', '$privacy');");
-
+		
+		$originalTitle = save($_POST['originalTitle']);
+		$language = save($_POST['language']);
+		
+        mysql_query("INSERT INTO `elements` (`title`, `folder`, `creator`, `name`, `year`, `originalTitle`, `language`, `type`, `author`, `timestamp`, `privacy`) VALUES('$title', '".$_POST['folder']."', '".$_POST['creator']."', '$name', '".save($_POST['year'])."', '$originalTitle', '$language', '".save($_POST['type'])."', '$user', '$time', '$privacy');");
+		
         //add feed
         $elementId = mysql_insert_id();
         $feed = "has created an element";
@@ -660,7 +677,7 @@ if($_GET['action'] == "scorePlus"){
             $filefolderSQL = mysql_query("SELECT * FROM folders WHERE id='".$_POST['folder']."'");
             $fileFolderData = mysql_fetch_array($filefolderSQL);
             //here could be a fail but Its workin right o0
-            $folderpath = "$folderData['path']";
+            $folderpath = $folderData['path'];
             mkdir("./upload$folderpath/thumbs");
         }
         ?>
@@ -712,12 +729,24 @@ if($_GET['action'] == "scorePlus"){
                     <td><input type="text" name="year"></td>
                 </tr>
                 <tr>
+                    <td align="right">Original Title:&nbsp;</td>
+                    <td><input type="text" name="originalTitle"></td>
+                </tr>
+                <tr>
+                    <td align="right">Language:&nbsp;</td>
+                    <td>
+                    	<?php
+                    	showLanguageDropdown();
+						?>
+                    </td>
+                </tr>
+                <tr>
                     <td align="right">Folder:&nbsp;</td>
                     <td><?=$selectdata['name'];?></td>
                 </tr>
                     <tr>
                         <td colspan="2">
-                            <?
+                            <?php
                                                 if(isProtected($selectdata['privacy'])){
                                                 	if(hasRight("protectFileSystemItems")){
                                                 		
@@ -1367,8 +1396,6 @@ if($_GET['action'] == "scorePlus"){
                     $id = createFeed("$_SESSION[userid]", $feed, "", "feed", "p");
                     // $Groups is privacy right now and not used => "p" is used instead
             ?>
-
-            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
             <script>
             parent.reloadFeed('friends');
             parent.$('#feedInput').val('');
@@ -1882,7 +1909,7 @@ if($_GET['action'] == "scorePlus"){
             }else if($type == "comment"){
                 $commentCheck = mysql_query("SELECT privacy, author, type, typeid FROM comments WHERE id='$itemId'");
                 $commentData = mysql_fetch_array($commentCheck);
-                if(authorize($commentData[privacy], "edit", $commentData['author'])){
+                if(authorize($commentData['privacy'], "edit", $commentData['author'])){
                     mysql_query("DELETE FROM comments WHERE id='$itemId'");
                     ?>
                     <script>
@@ -2042,21 +2069,21 @@ if($_GET['action'] == "scorePlus"){
                     }
                     if($_GET['type'] == "folder"){
                         mysql_query("UPDATE folders SET privacy='$privacy' WHERE id='".save($_GET['itemId'])."'");
-                        if(!empty($_POST[hidden])){
+                        if(!empty($_POST['hidden'])){
                             mysql_query("UPDATE folders SET creator='$user' WHERE id='".save($_GET['itemId'])."'");   
                         }
                         jsAlert("Saved :)");
                     }
                     else if($_GET['type'] == "element"){
                         mysql_query("UPDATE elements SET privacy='$privacy' WHERE id='".save($_GET['itemId'])."'");
-                        if(!empty($_POST[hidden])){
+                        if(!empty($_POST['hidden'])){
                             mysql_query("UPDATE elements SET author='$user' WHERE id='".save($_GET['itemId'])."'");   
                         }
                         jsAlert("Saved :)");
                     }
                     else if($_GET['type'] == "comment"){
                         mysql_query("UPDATE comments SET privacy='$privacy' WHERE id='".save($_GET['itemId'])."'");
-                        if(!empty($_POST[hidden])){
+                        if(!empty($_POST['hidden'])){
                             mysql_query("UPDATE commments SET author='$user' WHERE id='".save($_GET['itemId'])."'");   
                         }
                         jsAlert("Saved :)");
@@ -2171,7 +2198,7 @@ if($_GET['action'] == "scorePlus"){
                         $checkElementSql = mysql_query("SELECT * FROM elements WHERE id='$itemId'");
                         $checkElementData = mysql_fetch_array($checkElementSql);
                         if($checkElementData['author'] == getUser()){
-                            mysql_query("UPDATE elements SET title='$_POST[title]', type='$_POST[type]', creator='$_POST[creator]', name='$_POST[name]', year='$_POST[year]' WHERE id='$itemId'");
+                            mysql_query("UPDATE elements SET title='".save($_POST['title'])."', type='".save($_POST['type'])."', creator='".save($_POST['creator'])."', name='".save($_POST['name'])."', year='".save($_POST['year'])."', originalTitle='".save($_POST['originalTitle'])."' WHERE id='$itemId'");
                             jsAlert("Saved :)");
 							echo"<script>";
 							echo"parent.$('.jqPopUp').slideUp();";
@@ -2231,7 +2258,7 @@ if($_GET['action'] == "scorePlus"){
                         ";
                     
                 }else if($type == "element"){
-                    $editSQL = mysql_query("SELECT name, type, creator, title, year  FROM elements WHERE id='$itemId'");
+                    $editSQL = mysql_query("SELECT *  FROM elements WHERE id='$itemId'");
                     $editData = mysql_fetch_array($editSQL);
                     $title = $editData['title'];
                     $headTitle = "element $title";
@@ -2257,16 +2284,26 @@ if($_GET['action'] == "scorePlus"){
                     </tr>
                     <tr>
                         <td>author:</td>
-                        <td><input type=\"text\" name=\"creator\" value=\"$editData[creator]\"></td>
+                        <td><input type=\"text\" name=\"creator\" value=\"".$editData['creator']."\"></td>
                     </tr>
                     <tr>
                         <td>title:</td>
-                        <td><input type=\"text\" name=\"name\" value=\"$editData[name]\"></td>
+                        <td><input type=\"text\" name=\"name\" value=\"".$editData['name']."\"></td>
                     </tr>
                     <tr>
                         <td>year:</td>
-                        <td><input type=\"text\" name=\"year\" value=\"$editData[year]\"></td>
+                        <td><input type=\"text\" name=\"year\" value=\"".$editData['year']."\"></td>
                     </tr>
+	                <tr>
+	                    <td>Original Title:&nbsp;</td>
+	                    <td><input type=\"text\" name=\"originalTitle\" value=\"".$editData['originalTitle']."\"></td>
+	                </tr>
+	                <tr>
+	                    <td>Language:</td>
+	                    <td>
+	                    	".showLanguageDropdown($editData['language'])."
+	                    </td>
+	                </tr>
                         ";
                 }else if($type == "file"){
                     $editSQL = mysql_query("SELECT title FROM files WHERE id='$itemId'");

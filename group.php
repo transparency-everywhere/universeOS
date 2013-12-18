@@ -18,7 +18,7 @@ if (in_array("$_SESSION[userid]", $admins)) {
 //check if user is member
 $memberSql = mysql_query("SELECT * FROM groupAttachments WHERE `group`='$group' AND item='user' AND itemId='$userid'");
 $memberData = mysql_fetch_array($memberSql);
-if (!empty($memberData[itemId])) {
+if (!empty($memberData['itemId'])) {
    $member = "1";
 }
 ?>
@@ -30,7 +30,7 @@ if (!empty($memberData[itemId])) {
         <p style="float: right; margin-top: 5px; margin-left: 20px; margin-right: 10px; font-size:18px; text-align: right;"><b><?=$groupData[title];?></b><br>
                 <span style="position: absolute;  width: 300px; height: 40px; margin-top: 20px; right: 20px;">
                     <?
-                    if(isset($_SESSION[userid])){
+                    if(proofLogin()){
                         if(!empty($admin)){?>
                         <a href="#" onclick="javascript: popper('doit.php?action=groupAdmin&id=<?=$group;?>')" class="btn btn-info" style="margin-top: 10px;">Admin</a>
                         <?
@@ -43,7 +43,7 @@ if (!empty($memberData[itemId])) {
                         <a href="doit.php?action=joinGroup&group=<?=$group;?>&val=1" target="submitter" class="btn btn-info" style="margin-top: 10px;">Send Request</a>
                         <?}
                         }else{
-                            if($groupData[membersInvite] == "1" || $admin == "1"){
+                            if($groupData['membersInvite'] == "1" || $admin == "1"){
                         ?>
                         <a href="#" onclick="javascript: popper('doit.php?action=groupInviteUsers&id=<?=$group;?>')" class="btn btn-info" style="margin-top: 10px;">Invite Friends</a>
                         <?
