@@ -29,8 +29,8 @@ if(empty($_GET[reload])){
 	                 	
 	                 	<div class="btn-toolbar">
 						  <div class="btn-group">
-						    <a class="btn btn-mini" href="#" onclick="showProfile('<?=$buddy;?>')" title="open Profile"><i class="icon-user"></i></a>
-						    <a class="btn btn-mini" href="#" onclick="openChatDialoge('<?=$username;?>');" title="write Message"><i class="icon-envelope"></i></a>
+						    <a class="btn btn-mini" href="#" onclick="showProfile('<?=$buddy;?>'); return false" title="open Profile"><i class="icon-user"></i></a>
+						    <a class="btn btn-mini" href="#" onclick="openChatDialoge('<?=$username;?>'); return false" title="write Message"><i class="icon-envelope"></i></a>
 						  </div>
 						</div>
 					 </td>

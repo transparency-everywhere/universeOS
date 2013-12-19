@@ -527,7 +527,7 @@
 	     	$password = md5($password);
 		 }
 		 
-	     if($password == $data['password']) {
+	     if(!empty($userid) && $password == $data['password']) {
 			 //set cookies
 	       	 $_SESSION['userid'] = $data['userid'];
 	         $_SESSION['userhash'] = $hash;
@@ -539,9 +539,9 @@
 	         updateActivity($_SESSION['userid']);
 			 
 			 
-			 return true;
+			 return 1;
 	     }else{
-	     	return false;
+	     	return 0;
 	     }
   }
   
@@ -2638,11 +2638,11 @@ echo"</div>";
                                                                 <li>
                                                                 	<div><img src="./gfx/icons/group.png" height="15">&nbsp;<a href="#" onclick="createNewTab('reader_tabView','<?=$title10;?>','','group.php?id=<?=$groupData[id];?>',true);return false"><?=$title15;?></a></div>
                                                                 	<div>
-                                                                		<input type="checkbox" name="privacyCustomSee[]" value="<?=$groupData[id];?>" class="privacyGroupTrigger privacyCustomTrigger uncheckPublic uncheckHidden" <?=$checked[editGroup];?> <?=$disabled;?>>
+                                                                		<input type="checkbox" name="privacyCustomSee[]" value="<?=$groupData[id];?>" class="privacyGroupTrigger privacyCustomTrigger uncheckPublic privacySee uncheckHidden" <?=$checked[editGroup];?> <?=$disabled;?>>
 																		show
                                                                 	</div>      
                                                                 	<div>
-                                                                		<input type="checkbox" name="privacyCustomEdit[]" value="<?=$groupData[id];?>" class="privacyGroupTrigger privacyCustomTrigger uncheckPublic uncheckHidden" <?=$checked[editGroup];?> <?=$disabled;?>>
+                                                                		<input type="checkbox" name="privacyCustomEdit[]" value="<?=$groupData[id];?>" class="privacyGroupTrigger privacyCustomTrigger uncheckPublic checkPrev uncheckHidden" <?=$checked[editGroup];?> <?=$disabled;?>>
 																		edit
                                                                 	</div>
                                                                 </li>
@@ -2807,14 +2807,14 @@ echo"</div>";
         
         //add them to the query
         foreach($userGroups AS &$userGroup){
-                $query = "$query OR INSTR(`privacy`, '{$userGroup}') > 0";
+                $query = "$query OR (INSTR(`privacy`, '{$userGroup}') > 0)";
         }
 		
 		
 			//get playlists from friends
 				$buddies = buddyListArray();
                 $buddies = join(',',$buddies);
-                $query .= "OR INSTR(`user`, '{$buddies}') > 0";
+                $query .= "OR (INSTR(`user`, '{$buddies}') > 0)";
         
             //get playlists for user and groups
             $playListsSql = mysql_query("SELECT id, title, privacy, user FROM playlist WHERE user='".getUser()."' $query");
@@ -4170,6 +4170,14 @@ echo"</div>";
         
     }
     
+	
+	function getElementData($elementId){
+		$query = mysql_query("SELECT * FROM `elements` WHERE id='".save($elementId)."'");
+		$data = mysql_real_escape_string($query);
+		
+		return $data;
+	}
+	
     function showFileList($element=NULL, $fileQuery=NULL, $git=NULL, $subpath=NULL){
         //shows list of files which are in the element $element or which meets criteria of $fileQuery
         //if git=1 => only basic information without itemsettings etc.
@@ -4184,14 +4192,14 @@ echo"</div>";
             $fileListSQL = mysql_query("SELECT * FROM files WHERE $query");
             while($fileListData = mysql_fetch_array($fileListSQL)) {
                 $i++;
-                if(authorize($fileListData[privacy], "show", $fileListData[owner])){
+                if(authorize($fileListData['privacy'], "show", $fileListData['owner'])){
                 $title10 = substr("$fileListData[title]", 0, 10);
                 $link = "openFile('$fileListData[type]', '$fileListData[id]', '$title10');";
-                if($fileListData[type] == "audio/mpeg"){
+                if($fileListData['type'] == "audio/mpeg"){
                     $rightLink = "startPlayer('file', '$fileListData[id]')";
                     $image = "../music.png";
                 }
-                else if($fileListData[type] == "video/mp4"){
+                else if($fileListData['type'] == "video/mp4"){
                     //define link for openFileFunction
                     $openFileType = "video";
                     
@@ -4199,7 +4207,7 @@ echo"</div>";
                     $link = "openFile('$openFileType', '$fileListData[id]', '$title10');";
                     $rightLink = "createNewTab('reader_tabView','See $title10','','./modules/reader/player.php?id=$fileListData[id]',true);return false";
                 }
-                else if($fileListData[type] == "UFF"){
+                else if($fileListData['type'] == "UFF"){
                 //standard from know on (19.02.2013)
                     
                     //define link for openFileFunction

@@ -22,7 +22,7 @@ $userSql = mysql_query("SELECT username, myFiles FROM user WHERE userid='$_SESSI
 $userData = mysql_fetch_array($userSql);
 	?>
 	
-	<div class="dashBox" id="fileBox">
+	<!-- <div class="dashBox" id="fileBox">
 		<a class="dashClose"></a>
 		<header>Your Files</header>
 		<div class="content">
@@ -34,12 +34,12 @@ $userData = mysql_fetch_array($userSql);
 			</center>
 		</div>
 		<footer>
-			<!-- <a href="#uploadFile" onclick="openUploadTab();" title="Upload a File"><i class="icon icon-plus"></i></a> -->
+			<!-- <a href="#uploadFile" onclick="openUploadTab();" title="Upload a File"><i class="icon icon-plus"></i></a>
 		</footer>
-	</div>
+	</div> -->
 	<?php
 	
-		//echo $dashboard->showFavBox();
+		echo $dashboard->showFavBox();
 	
 		//echo $dashboard->showTaskBox();
 	?>

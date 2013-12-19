@@ -3,6 +3,8 @@ var usernames = [];
 var privateKeys = [];
 var messageKeys = [];
 
+var openDialogueInterval;
+
 var focus = true;
 
                 $(document).ready(function(){
@@ -71,7 +73,7 @@ var focus = true;
                         'right' : offsetRight+20,
                         'width' : widthSm,
                         'height' : heightBig,
-                        'z-index' : '9999'
+                        'z-index' : '9998'
                             });
                         
                         $("#feed").css({
@@ -79,7 +81,7 @@ var focus = true;
                         'right' : offsetRight,
                         'width' : widthSm,
                         'height' : heightBig,
-                        'z-index' : '9998'
+                        'z-index' : '9997'
                             });
                             
                             
@@ -88,7 +90,7 @@ var focus = true;
                         'left' : offsetLeft,
                         'width' : widthBig,
                         'height' : heightBig,
-                        'z-index' : '9997'
+                        'z-index' : '997'
                             });
                             
                         $("#filesystem").css({
@@ -96,7 +98,7 @@ var focus = true;
                         'left' : offsetLeft+20,
                         'width' : widthBig,
                         'height' : heightBig,
-                        'z-index' : '9998'
+                        'z-index' : '998'
                             });
                             
                         $("#reader").css({
@@ -104,7 +106,7 @@ var focus = true;
                         'left' : offsetLeft+40,
                         'width' : widthBig,
                         'height' : heightBig,
-                        'z-index' : '9999'
+                        'z-index' : '999'
                             });
                         
                         
@@ -113,7 +115,6 @@ var focus = true;
                         
                         $("#feed:hidden").fadeIn(3000);
                         $("#chat:hidden").fadeIn(3000);
-                        $("#reader:hidden").fadeIn(3000);
                         
                         
                         //init draggable windows
@@ -216,6 +217,10 @@ var focus = true;
                                             $('.uncheckCustom').prop('checked', false);
                                         }
                                     });
+                                    
+                                    $('.checkPrev').click(function(){
+                                        //prev see check
+                                    });
 
 	}
     
@@ -265,11 +270,12 @@ var focus = true;
                             });
                     });
                     $(function() {
-                        $('.fenster').children().click(function(){
+                        $('.fenster').children().mousedown(function(){
 							
                            	if($(this) != undefined){
-                            $('.fenster').css('z-index', 1);
-                            $(this).parent(".fenster").css('z-index', 999); 
+                           		
+                  			$(".fenster").css('z-index', 999);
+                            $(this).parent(".fenster").css('z-index', 9999); 
                             $(this).parent(".fenster").css('position', 'absolute');
                             }
                         });
@@ -290,8 +296,8 @@ var focus = true;
 
 
               function applicationOnTop(id){
-                  $('.fenster').css('z-index', 1);
-                  $("#"+id+"").css('z-index', 999);
+                  $(".fenster").css('z-index', 999);
+                  $("#"+id+"").css('z-index', 9999);
                   $("#"+id+"").css('position', 'absolute');
               }
 
@@ -914,8 +920,11 @@ var focus = true;
             
             	//check if dialoge allready exists
                 if($("#test_"+ username +"").length == 0){
+                	
+                	userid = usernameToUserid(username);
                     createNewTab('chat_tabView1',username,'',"modules/chat/chatreload.php?buddy="+username+"",true);
                     
+                    openDialogueInterval = window.setInterval("chatDecrypt(userid)", 500);
                 }else{
                 	//if dialoge doesnt exists => bring dialoge to front..
                 	
@@ -962,6 +971,70 @@ var focus = true;
         $('#toggleKey_'+userid+' .lockIcon').removeClass('locked');
     }
     
+    function updatePassword(oldPassword, newPassword){
+    	
+    	 	// var username = $("#regUsername").val();
+		    // var password = $("#registration #password").val();
+		    // var captcha = $("#captcha").val();
+// 		    
+// 		    
+			// //cypher password into two hashes
+			// //passwordHash is used to cypher the password for db
+			// //keyHash is used to encrypt the pricate Key
+			// var md = CryptoJS.MD5(password);
+			// password = md.toString(CryptoJS.enc.Hex);
+// 			
+// 			
+		    // var salt = CryptoJS.SHA512(randomString(64, '#aA'));  //generate salt and hash it.
+// 		    
+		    // var shaPass = CryptoJS.SHA512(salt+password);
+		    // var passwordHash = shaPass.toString(CryptoJS.enc.Hex); //parse cypher object to string
+// 		    
+// 		    
+		    // var shaKey = CryptoJS.SHA512(password+salt);
+		    // var keyHash = shaKey.toString(CryptoJS.enc.Hex);
+		    // var salt = symEncrypt(password, salt.toString(CryptoJS.enc.Hex));				  //encrypt salt, using md5-pw hash
+// 		    
+// 		    
+		    			// //generate Keypair
+					      // var crypt;
+					      // var publicKey;
+					      // var privateKey;
+					      // crypt = new JSEncrypt({default_key_size: 1024});
+						  // jsAlert('', 'The universe creates now your keypair, this may take some seconds..');
+					      // crypt.getKey(function () {
+					      	// privateKey = symEncrypt(keyHash, crypt.getPrivateKey()); //encrypt privatestring, usering the password hash
+					      	// publicKey = crypt.getPublicKey();
+// 		    
+		                // //submit registration
+		                // $.post("../../api.php?action=processSiteRegistration", {
+		                       // username:username,
+		                       // password:passwordHash,
+		                       // salt:salt,
+		                       // publicKey:publicKey,
+		                       // privateKey:privateKey,
+		                       // captcha:captcha
+		                       // }, function(result){
+		                            // var res = result;
+		                            // if(res == 1){
+		                                // //load checked message
+		                                // jsAlert('','You just joined the universeOS');
+		                                // $('#registration').slideUp('');
+// 		                                
+		                                // $('#loginUsername').val(username);
+		                                // $('#loginPassword').val($("#registration #password").val());
+							            // $("#startbox").show("slow");
+							            // $("#startbox").css('z-index', 9999);
+							            // $("#startbox").css('position', 'absolute');
+		                            // }else{
+		                                // alert(res);
+		                            // }
+		                       // }, "html");
+// 		
+					      // });
+// 					      
+    }
+    
     function toggleKey(username){
     	
     	if(localStorage.key[username]){
@@ -999,7 +1072,6 @@ var focus = true;
     	var message = symKey+'////message////'+message; //message = symetric Key + sym encoded message with key = symKey
 
     	$('#chatInput_'+userid).val(message);
-    	alert('dude!');
     	
     	
     	if(localStorage.key[userid]){
@@ -1025,6 +1097,10 @@ var focus = true;
                     storeMessageKey(res, randKey);
                     
            			$('#chatInput_'+userid).val(message);
+           			var buddyName = useridToUsername(userid);
+           			
+           			$('#test_'+buddyName).load('modules/chat/chatreload.php?buddy='+buddyName+'&initter=1');
+           			$('#chatInput_'+userid).val('');
                     
                 }else{
                     alert('There was an error sending the message.');
@@ -1033,17 +1109,20 @@ var focus = true;
     }
     
     function chatDecrypt(userid){
-    	
-    	
 	    // $('.chatMessage_'+username).each(function(){
 	    	// var content = $(this).html();
 	    	// content = CryptoJS.AES.decrypt(content, localStorage.key[username]);
 	    	// content = content.toString(CryptoJS.enc.Utf8);
 	    	// $(this).html(content);
 	    // });
-	    	
-    	
+	    console.log('works');
 	    	$('.chatMessage_'+userid).each(function(){
+	    		if($('.chatMessage_'+userid).length !== 0){
+	    			
+	    			window.clearInterval(openDialogueInterval);
+	    			
+	    		}
+	    	
 	    		var content = $(this).html();
 	    		var id = $(this).data('id');
 	    		
@@ -1079,13 +1158,14 @@ var focus = true;
                 if(randKey !== null){
                     //encrypt message with random key
 	    			console.log('sym');
-                    var content = symDecrypt(randKey, message[1]);
+                    var content = htmlentities(symDecrypt(randKey, message[1]));
 	    		
 	    		}
 	    		
 	    		
 	    		$(this).html(content);
 	    	});
+	    	return true;
     }
     
     function replaceLinks(){

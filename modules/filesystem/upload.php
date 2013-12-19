@@ -1,6 +1,7 @@
 <?php
 //this file will always be loaded with 
 //ajax so include  is used not include_once
+session_start();
 include("../../inc/functions.php");
 include("../../inc/config.php");
 
@@ -48,6 +49,9 @@ $folder = $_GET[folder];
 				echo '<h3>Choose Element</h3>';
 				echo showMiniFileBrowser("1", '', '', true, "element");
 			}else{
+				
+				$elementData = getElementData($_GET['element']);
+				
 				echo '<h3>You will add the files to this element:<br>';
 				echo '<img src="gfx/icons/filesystem/element.png">&nbsp;';
 				echo getElementName($_GET['element']);
@@ -73,7 +77,7 @@ $folder = $_GET[folder];
 			<h3>Privacy</h3>
 			<p>Please justify the privacy of the files you want to upload</p>
 			<?php
-			showPrivacySettings();
+			showPrivacySettings($elementData['privacy']);
 			?>
 		</div>
 		<footer>

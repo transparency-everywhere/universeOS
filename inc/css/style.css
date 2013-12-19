@@ -342,7 +342,7 @@ font-size: 19px;
 .blueModal {
 	
     position: absolute;
-    z-index: 9999;
+    z-index: 99999;
     overflow: auto;
     top: 50%;
     left: 50%;
@@ -387,7 +387,7 @@ font-size: 19px;
     height: 300px;
     padding: 20px;
     background-color: #000000;
-    z-index: 9999;
+    z-index: 99999;
     overflow: auto;
     color: #FFFFFF;
 }

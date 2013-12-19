@@ -36,6 +36,7 @@ if(!isset($_SESSION["userid"])) {
     die();
        
 } ?>
+		<script>$('#reader').show();</script>
         <div id="reload"></div>
         <div id="bodywrap">
         	

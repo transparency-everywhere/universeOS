@@ -28,15 +28,6 @@ while($friendRequestData = mysql_fetch_array($friendRequestSql)){
     $friendRequestSql2 = mysql_query("SELECT * FROM user WHERE userid='".$friendRequestData['owner']."'");
     $friendRequestData2 = mysql_fetch_array($friendRequestSql2);
 ?>
-<?
-if("1" == "2"){
-?>
-
-    
-    $("#box<?=$i;?>").click(function () {
-      createNewTab('reader_tabView','<?=$friendRequestData2['username'];?>','','./profile.php?user=<?=$friendRequestData2['userid'];?>',true);
-    });
-    <? } ?>
     <script>
         if($("#friendRequest_<?=$friendRequestData['owner'];?>").length == '0'){
             $('#dockMenuBuddyAlerts').append('<li id="friendRequest_<?=$friendRequestData['owner'];?>"><?=showUserPicture("$friendRequestData2[userid]", '15', '', unescaped);?><div class="messageMain"><a href="#" onclick="showProfile(\'<?=$friendRequestData2[userid];?>\');"><?=$friendRequestData2[username];?></a> wants to be your friend</div><div class="messageButton"><a href="doit.php?action=requestpositive&buddy=<?=$friendRequestData2[userid];?>" target="submitter" class="btn btn-info btn-mini" style="margin-right:25px;" onclick="$(\'#friendRequest_<?=$newGroupData[id];?>\').remove();">Add to Buddylist</a><a href="doit.php?action=requestnegative&buddy=<?=$friendRequestData2[userid];?>" class="btn btn-mini" target="submitter" onclick="$(\'#friendRequest_<?=$friendRequestData2[id];?>\').remove();">Decline</a></div></li>');

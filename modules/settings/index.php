@@ -18,6 +18,7 @@
 		        <li><a href="javascript: loader('settingsFrame', 'modules/settings/general.php');">General</a></li>
 		        <li><a href="javascript: loader('settingsFrame', 'modules/settings/privacy.php');">Privacy</a></li>
 		        <li><a href="javascript: loader('settingsFrame', 'modules/settings/buddylist.php');">Buddylist</a></li>
+		        <!-- <li><a href="javascript: loader('settingsFrame', 'modules/settings/security.php');">Security</a></li> -->
 		        <!-- <li><a href="javascript: loader('settingsFrame', 'modules/settings/services.php');">Services</a></li> -->
 		    </ul>
 			</div>

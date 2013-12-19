@@ -64,7 +64,7 @@ if(empty($_GET['initter'])){
       </div>
       <footer class="blackGradient">
           <center style="margin-top: 6px;">
-              <form action="doit.php?action=chatSendMessage&buddy=<?=$buddy;?>&buddyname=<?=$buddyName;?>" method="post" target="submitter"  autocomplete="off" onsubmit="chatMessageSubmit('<?=$buddy;?>');">
+              <form action="#" method="post" target="submitter"  autocomplete="off" onsubmit="chatMessageSubmit('<?=$buddy;?>');">
                   <a class="btn" onclick="$('.chatAdditionalSettings').toggle();">
                       <i class="icon-plus"></i>
                   </a>
