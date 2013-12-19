@@ -107,7 +107,7 @@ if(isset($newMessagesOn)){
       updateDashbox('message');
       
       $('#chat').show();
-      
+      applicationOnTop('chat');
       $("#test_<?=str_replace(" ","_",$newMessageUserData['username']);?>").load("modules/chat/chatreload.php?buddy=<?=str_replace(" ","_",$buddy);?>&reload=1&initter=1");
         
         if($("#test_<?=str_replace(" ","_",$newMessageUserData['username']);?>").length == 0){
