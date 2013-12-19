@@ -80,6 +80,8 @@ CREATE TABLE IF NOT EXISTS `elements` (
   `creator` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
   `year` varchar(255) NOT NULL,
+  `originalTitle` text NOT NULL,
+  `language` varchar(255) NOT NULL,
   `type` varchar(255) NOT NULL,
   `author` int(11) NOT NULL,
   `license` varchar(255) NOT NULL DEFAULT 'Creative Commons Attribution/Share Alike',
@@ -98,9 +100,9 @@ CREATE TABLE IF NOT EXISTS `elements` (
 -- Daten für Tabelle `elements`
 --
 
-INSERT INTO `elements` (`id`, `title`, `folder`, `creator`, `name`, `year`, `type`, `author`, `license`, `timestamp`, `info1`, `info2`, `info3`, `privacy`, `hidden`, `votes`, `score`) VALUES
-(1, 'myFiles', 4, '', '', '', 'myFiles', 1, 'Creative Commons Attribution/Share Alike', 1379628108, '', '', '', 'h', 0, 0, 0),
-(2, 'profile pictures', 5, '', '', '', 'image', 1, 'Creative Commons Attribution/Share Alike', 1379628108, '', '', '', 'p', 0, 0, 0);
+INSERT INTO `elements` (`id`, `title`, `folder`, `creator`, `name`, `year`,`originalTitle`,`language`, `type`, `author`, `license`, `timestamp`, `info1`, `info2`, `info3`, `privacy`, `hidden`, `votes`, `score`) VALUES
+(1, 'myFiles', 4, '', '', '', '', '','myFiles', 1, 'Creative Commons Attribution/Share Alike', 1379628108, '', '', '', 'h', 0, 0, 0),
+(2, 'profile pictures', 5, '', '', '', '', '', 'image', 1, 'Creative Commons Attribution/Share Alike', 1379628108, '', '', '', 'p', 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -326,19 +328,33 @@ CREATE TABLE IF NOT EXISTS `playlist` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `protocoll_type`
+-- Tabellenstruktur für Tabelle `salts`
 --
 
-CREATE TABLE IF NOT EXISTS `protocoll_type` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `text` text NOT NULL,
-  `user` int(11) NOT NULL,
-  `link` text NOT NULL,
-  `space` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+CREATE TABLE IF NOT EXISTS `salts` (
+  `type` varchar(255) NOT NULL,
+  `itemId` int(11) NOT NULL,
+  `receiverType` varchar(255) NOT NULL,
+  `receiverId` int(11) NOT NULL,
+  `salt` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `signatures`
+--
+
+CREATE TABLE IF NOT EXISTS `signatures` (
+  `type` varchar(255) NOT NULL,
+  `itemId` int(11) NOT NULL,
+  `privateKey` text NOT NULL,
+  `publicKey` text NOT NULL,
+  `timestamp` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
 
 --
 -- Tabellenstruktur für Tabelle `staticContents`
@@ -370,6 +386,7 @@ INSERT INTO `staticContents` (`id`, `title`, `content`, `comment`) VALUES
   `usergroup` int(11) NOT NULL DEFAULT '0',
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `cypher` varchar(255) NOT NULL DEFAULT 'md5',
   `homefolder` int(11) NOT NULL,
   `myFiles` int(11) NOT NULL,
   `profilepictureelement` int(11) NOT NULL COMMENT 'the element wich contains the profilepictures',
@@ -412,8 +429,8 @@ INSERT INTO `staticContents` (`id`, `title`, `content`, `comment`) VALUES
 -- Daten für Tabelle `user`
 --
 
-INSERT INTO `user` (`userid`, `usergroup`, `username`, `password`, `homefolder`, `myFiles`, `profilepictureelement`, `userPicture`, `email`, `regdate`, `lastactivity`, `birthdate`, `realname`, `home`, `place`, `gender`, `school1`, `school2`, `school3`, `university1`, `university2`, `employer`, `typeofwork`, `status`, `openChatWindows`, `priv_activateProfile`, `priv_showProfile`, `priv_profileInformation`, `priv_profilePicture`, `priv_profileFav`, `priv_profileLog`, `priv_activateFeed`, `priv_buddyRequest`, `priv_foreignerMessages`, `priv_foreignerFeeds`, `hash`, `backgroundImg`, `startLink`) VALUES
-(1, 1, 'admin', '440ac85892ca43ad26d44c7ad9d47d3e', 4, 1, 2, '', '', 1379628108, 1379628318, '', '', '', '', '', '', '', '', '', '', '', '', '', '', 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, '9daac2a5464b45fa16ae355469622277', '', 'doit.php?action=showStartMessage');
+INSERT INTO `user` (`userid`, `usergroup`, `username`, `password`, `cypher`, `homefolder`, `myFiles`, `profilepictureelement`, `userPicture`, `email`, `regdate`, `lastactivity`, `birthdate`, `realname`, `home`, `place`, `gender`, `school1`, `school2`, `school3`, `university1`, `university2`, `employer`, `typeofwork`, `status`, `openChatWindows`, `priv_activateProfile`, `priv_showProfile`, `priv_profileInformation`, `priv_profilePicture`, `priv_profileFav`, `priv_profileLog`, `priv_activateFeed`, `priv_buddyRequest`, `priv_foreignerMessages`, `priv_foreignerFeeds`, `hash`, `backgroundImg`, `startLink`, `buddySuggestions`) VALUES
+(1, 1, 'admin', '440ac85892ca43ad26d44c7ad9d47d3e', '', 4, 1, 2, '', 1379628108, 1379628318, '', '', '', '',  '', '', '', '', '', '', '', '', '', '', '', 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, '9daac2a5464b45fa16ae355469622277', '', 'doit.php?action=showStartMessage', '');
 
 -- --------------------------------------------------------
 
@@ -431,6 +448,7 @@ CREATE TABLE IF NOT EXISTS `userGroups` (
   `editUndeletableFilesystemItems` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
 --
 -- Daten für Tabelle `userGroups`
 --
@@ -439,27 +457,6 @@ INSERT INTO `userGroups` (`id`, `title`, `showAdminPanel`, `protectFileSystemIte
 (0, 'standard user', 0, 0, 0, 0, 0),
 (1, 'admin', 1, 1, 1, 1, 1);
 
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `userfeeds`
---
-
-CREATE TABLE IF NOT EXISTS `userfeeds` (
-  `feedid` int(11) NOT NULL AUTO_INCREMENT,
-  `owner` int(11) NOT NULL,
-  `timestamp` int(11) NOT NULL,
-  `validity` int(11) NOT NULL,
-  `privacy` text NOT NULL,
-  `feed` text NOT NULL,
-  `protocoll_type` varchar(255) NOT NULL COMMENT 'LINK TO protocol_types',
-  `feedLink1` varchar(255) NOT NULL,
-  `feedLink2` varchar(255) NOT NULL,
-  `votes` int(11) NOT NULL DEFAULT '0',
-  `score` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`feedid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
