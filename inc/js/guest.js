@@ -129,7 +129,7 @@ function processRegistration(){
 			      var crypt;
 			      var publicKey;
 			      var privateKey;
-			      crypt = new JSEncrypt({default_key_size: 1024});
+			      crypt = new JSEncrypt({default_key_size: 4096});
 				  jsAlert('', 'The universe creates now your keypair, this may take some seconds..');
 			      crypt.getKey(function () {
 			      	privateKey = symEncrypt(keyHash, crypt.getPrivateKey()); //encrypt privatestring, usering the password hash
@@ -198,8 +198,9 @@ function login(){
 	                                $('#bodywrap').slideUp();
 	                                window.location.href='index.php';
 	                            }else{
-	                                alert(res);
+	                                jsAlert('', 'Wrong username and password combination.');
 	                            }
+	                            return false;
 	                       }, "html");
 		
 		
@@ -258,7 +259,7 @@ function updatePasswordAndCreateSignatures(userid, password){
 	                       oldPassword: oldPassword
 	                       }, function(result){
 	                            var res = result;
-	                            if(res == 1){
+	                            if(res == '1'){
 	                                //load checked message
 	                                jsAlert('','The update worked, you can sign in now with your default userdata.');
 	                                

@@ -57,7 +57,7 @@ switch($action){
 			$sig = new signatures();
 			$sig->create('user', $userid, $privateKey, $publicKey);
 			mysql_query("UPDATE user SET password='$password', cypher='sha512' WHERE userid='$userid'");
-			echo "wouh";
+			echo "1";
 		}
 		break;
     case 'login':
