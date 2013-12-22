@@ -448,10 +448,7 @@ var focus = true;
 			  }
 			});
 		
-			var password = 'abcabc';
-			
-			var md = CryptoJS.MD5(password);
-			password = md.toString(CryptoJS.enc.Hex);
+			var password = localStorage.currentUser_passwordHashMD5;
 			
 		    var shaKey = CryptoJS.SHA512(password+salt);
 		    var keyHash = shaKey.toString(CryptoJS.enc.Hex);
