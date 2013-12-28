@@ -952,6 +952,7 @@
 		
 	function getLastMessage($userid){
 		$userid = save($userid);
+		updateActivity($userid);
 		$chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' OR receiver='$userid' ORDER BY timestamp DESC LIMIT 1");
 		$chatData =  mysql_fetch_array($chatSQL);
 		

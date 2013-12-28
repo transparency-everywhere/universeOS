@@ -136,7 +136,7 @@ function processRegistration(){
 			      	publicKey = crypt.getPublicKey();
     
                 //submit registration
-                $.post("../../api.php?action=processSiteRegistration", {
+                $.post("api.php?action=processSiteRegistration", {
                        username:username,
                        password:passwordHash,
                        salt:salt,
@@ -185,7 +185,7 @@ function login(){
 	    	var passwordHash = shaPass.toString(CryptoJS.enc.Hex);
 		}
 		
-	                $.post("../../api.php?action=authentificate", {
+	                $.post("api.php?action=authentificate", {
 	                       username:username,
 	                       password:passwordHash,
 	                       }, function(result){
@@ -250,7 +250,7 @@ function updatePasswordAndCreateSignatures(userid, password){
 			      	console.log('encrypted privateKey:'+privateKey);
 			      	publicKey = crypt.getPublicKey();
 			      	console.log(publicKey);
-	                $.post("../../api.php?action=updatePasswordAndCreateSignatures", {
+	                $.post("api.php?action=updatePasswordAndCreateSignatures", {
 	                       userid:userid,
 	                       password:passwordHash,
 	                       salt:salt,
