@@ -2774,7 +2774,7 @@ if($_GET['action'] == "scorePlus"){
                     $customShow = $_POST['privacyCustomSee'];
                     $customEdit = $_POST['privacyCustomEdit'];
                     
-                    $privacy = exploitPrivacy("$_POST[privacyPublic]", "$_POST[privacyHidden]", $customEdit, $customShow);
+                    $privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
                             $user = getUser();
 
 
@@ -2783,7 +2783,7 @@ if($_GET['action'] == "scorePlus"){
                     $elementData = mysql_fetch_array($elementSQL);
 					
 					    
-            			$title10 = addslashes(substr("$elementData[title]", 0, 10));
+            			$title10 = addslashes(substr($elementData['title'], 0, 10));
                         
                         $path = getFolderPath($elementData['folder']);
                         $filename = "$filename.UFF";

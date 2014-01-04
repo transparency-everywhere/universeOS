@@ -2387,8 +2387,8 @@ echo"</div>";
                 $customShow = explode(";", $customShow);
                 $customEdit = $custom[0];
 				
-				if($customEdit == "h" && $author == $_SESSION[userid]){
-                $edit = true;
+				if($customEdit == "h" && $author == getUser()){
+                	$edit = true;
 				}
                 $customEdit = explode(";", $customEdit);
                 
@@ -2411,7 +2411,7 @@ echo"</div>";
                     while($buddylistData = mysql_fetch_array($buddylistSql)) {
                         
                         //check if user is buddy of $author
-                        if($buddylistData[buddy] == $_SESSION[userid] && proofLogin()){
+                        if($buddylistData['buddy'] == getUser() && proofLogin()){
                             //if friends are allowed to see => show = true
                             if(in_array("f", $customShow)){
                                 $show = true;
@@ -2430,13 +2430,13 @@ echo"</div>";
                 
                 if(proofLogin()){
                 //check if user is in group which is allowed to see this item
-	                $groupAtSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='$_SESSION[userid]' and validated='1'");
+	                $groupAtSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='".getUser()."' and validated='1'");
 	                while($groupAtData = mysql_fetch_array($groupAtSql)){
 	
-	                    if(in_array("$groupAtData[group]", $customShow) && proofLogin()){
+	                    if(in_array($groupAtData['group'], $customShow) && proofLogin()){
 	                        $show = true;  
 	                    }
-	                    if(in_array("$groupAtData[group]", $customEdit) && proofLogin()){
+	                    if(in_array($groupAtData['group'], $customEdit) && proofLogin()){
 	                        $edit = true;  
 	                    }
 	                }
@@ -2481,16 +2481,16 @@ echo"</div>";
                     $allowance = "1";
             }else if($code == "u"){
                 //just user
-                if($author == "$_SESSION[userid]"){
+                if($author == getUser()){
                     $allowance = "1";
                 }
             }else{
-            $groupAtSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='$_SESSION[userid]' and validated='1'");
+            $groupAtSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='".getUser()."' and validated='1'");
             while($groupAtData = mysql_fetch_array($groupAtSql)){
                 
                  $string = explode(";", $code);
                  foreach($string as &$value){
-                     if($value == "$groupAtData[group]"){
+                     if($value == $groupAtData['group']){
                          $allowance = "1";
                      }
                  }
@@ -2603,12 +2603,12 @@ echo"</div>";
         				You are the only one who is allowed to see and edit.
         			</li>
         			<li>
-        				<h2><input type="checkbox" class="privacyBuddyTrigger privacyCustomTrigger uncheckPublic uncheckHidden" <?=$checked[privacyCustomShowF];?> <?=$checked[privacyCustomEditF];?> <?=$disabled;?>>Friends</h2>
+        				<h2><input type="checkbox" class="privacyBuddyTrigger privacyCustomTrigger uncheckPublic uncheckHidden" <?=$checked['privacyCustomShowF'];?> <?=$checked['privacyCustomEditF'];?> <?=$disabled;?>>Friends</h2>
         				Friends cann see or edit.
         			</li>
         			<li class="<?=$showCustom;?> sub privacyShowBuddy">
-        				<div><input type="checkbox" name="privacyCustomSee[]" value="f" class="privacyCustomTrigger uncheckPublic uncheckHidden privacyBuddyTrigger" <?=$checked[privacyCustomShowF];?> <?=$disabled;?>>See</div>
-        				<div><input type="checkbox" name="privacyCustomEdit[]" value="f" class="uncheckPublic privacyCustomTrigger uncheckHidden privacyBuddyTrigger" <?=$checked[privacyCustomEditF];?> <?=$disabled;?>>Edit</div>
+        				<div><input type="checkbox" name="privacyCustomSee[]" value="f" class="privacyCustomTrigger uncheckPublic uncheckHidden privacyBuddyTrigger" <?=$checked['privacyCustomShowF'];?> <?=$disabled;?>>See</div>
+        				<div><input type="checkbox" name="privacyCustomEdit[]" value="f" class="uncheckPublic privacyCustomTrigger uncheckHidden privacyBuddyTrigger" <?=$checked['privacyCustomEditF'];?> <?=$disabled;?>>Edit</div>
         			</li>
         			<li>
         				<h2><input type="checkbox" class="uncheckPublic privacyGroupTrigger privacyCustomTrigger uncheckHidden" <?=$disabled;?>>Groups</h2>
@@ -2617,12 +2617,12 @@ echo"</div>";
         			<li class="<?=$showCustom;?> sub privacyShowGroups <?=$showBuddy;?>">
         				<ul class="groupList">
         					                           <?
-                                                        $attSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='$_SESSION[userid]' AND validated='1'");
+                                                        $attSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='".getUser()."' AND validated='1'");
                                                         while($attData = mysql_fetch_array($attSql)){
                                                             $i++;
                                                             $groupSql = mysql_query("SELECT id, title FROM groups WHERE id='$attData[group]'");
                                                             $groupData = mysql_fetch_array($groupSql);
-                                                            $title = $groupData[title];
+                                                            $title = $groupData['title'];
                                                             $title10 = substr("$title", 0, 10);
                                                             $title15 = substr("$title", 0, 25);
                                                             if($i%2 == 0){
@@ -2681,10 +2681,10 @@ echo"</div>";
                                                                 $color="383838";
                                                             }
                                                             
-                                                            if(in_array("$groupData[id]", $customShow)){
-                                                                $checked[showGroup] = 'checked="checked"';
+                                                            if(in_array($groupData['id'], $customShow)){
+                                                                $checked['showGroup'] = 'checked="checked"';
                                                             }else{
-                                                                $checked[showGroup] = '';
+                                                                $checked['showGroup'] = '';
                                                             }
                                                             ?>
                                                             <li style="padding-left:10px;"><input type="checkbox" name="privacyCustomSee[]" value="<?=$groupData[id];?>" class="privacyCustomTrigger uncheckPublic uncheckHidden" <?=$checked[showGroup];?> <?=$disabled;?>><img src="./gfx/icons/group.png" height="15">&nbsp;<a href="#" onclick="createNewTab('reader_tabView','<?=$title10;?>','','group.php?id=<?=$groupData[id];?>',true);return false"><?=$title15;?></a></li>
@@ -2702,7 +2702,7 @@ echo"</div>";
                                                             $i++;
                                                             $groupSql = mysql_query("SELECT id, title FROM groups WHERE id='$attData[group]'");
                                                             $groupData = mysql_fetch_array($groupSql);
-                                                            $title = $groupData[title];
+                                                            $title = $groupData['title'];
                                                             $title10 = substr("$title", 0, 10);
                                                             $title15 = substr("$title", 0, 25);
                                                             if($i%2 == 0){
@@ -2710,10 +2710,10 @@ echo"</div>";
                                                             }else{
                                                                 $color="383838";
                                                             }
-                                                            if(in_array("$groupData[id]", $customEdit)){
-                                                                $checked[editGroup] = 'checked="checked"';
+                                                            if(in_array($groupData['id'], $customEdit)){
+                                                                $checked['editGroup'] = 'checked="checked"';
                                                             }else{
-                                                                $checked[editGroup] = '';
+                                                                $checked['editGroup'] = '';
                                                             }
                                                             ?>
                                                                 <li style="padding-left:10px;"><input type="checkbox" name="privacyCustomEdit[]" value="<?=$groupData[id];?>" class="privacyCustomTrigger uncheckOnlyMe uncheckPublic uncheckHidden" <?=$checked[editGroup];?> <?=$disabled;?>><img src="./gfx/icons/group.png" height="15">&nbsp;<a href="#" onclick="createNewTab('reader_tabView','<?=$title10;?>','','group.php?id=<?=$groupData[id];?>',true);return false"><?=$title15;?></a></li>
@@ -2788,7 +2788,7 @@ echo"</div>";
 	function getPlaylistTitle($playlistId){
 		$sql = mysql_query("SELECT `title` FROM playlist WHERE id='".mysql_real_escape_string($playlistId)."'");
 		$data = mysql_fetch_array($sql);
-		return $data[title];
+		return $data['title'];
 		
 		
 		
@@ -2848,27 +2848,27 @@ echo"</div>";
                             $playListFolderSql = mysql_query("SELECT * FROM folders WHERE $query");
                             while($playListFolderData = mysql_fetch_array($playListFolderSql)){
 
-                            if(checkAuthorisation(folder, $playListFolderData[id])){;
+                            if(checkAuthorisation(folder, $playListFolderData['id'])){;
                             ?>
                                     <tr class="strippedRow">
                                         <td><img src="./modules/filesystem/icons/folder.png" width="30px"></td>
-                                        <td>&nbsp;<?=$playListFolderData[name]?></td>
+                                        <td>&nbsp;<?=$playListFolderData['name']?></td>
                                     </tr>
 
                             <? 
                             $i++;
 
                             }}
-                            $query = commaToOr("$playListData[elements]", "id");
+                            $query = commaToOr($playListData['elements'], "id");
                             $playListFolderSql = mysql_query("SELECT id, title FROM elements WHERE $query");
                             while($playListFolderData = mysql_fetch_array($playListFolderSql)){
 
-                            if(checkAuthorisation($playListFolderData[privacy])){   
+                            if(checkAuthorisation($playListFolderData['privacy'])){   
                             ?>
 
                                     <tr class="strippedRow">
                                         <td><img src="./modules/filesystem/icons/file.png" width="30px"></td>
-                                        <td>&nbsp;e_<?=$playListFolderData[title]?></td>
+                                        <td>&nbsp;e_<?=$playListFolderData['title']?></td>
                                     </tr>
                         <? 
                             $i++;
@@ -2878,24 +2878,24 @@ echo"</div>";
                             $playListFolderSql = mysql_query("SELECT * FROM files WHERE $query");
                             while($playListFolderData = mysql_fetch_array($playListFolderSql)){
 
-                            if(checkAuthorisation($playListFolderData[privacy])){
+                            if(checkAuthorisation($playListFolderData['privacy'])){
                             if($delete){
                                 $deleteRow = "<td><a href=\"doit.php?action=deleteFromPlaylist&playlist=$playListId&type=file&itemId=$playListFolderData[id]\" target=\"submitter\"><img src=\"./gfx/icons/minus.png\" height=\"32\" border=\"0\"></a></td>";
                             }
                             ?>
-                                    <tr class="strippedRow playListfileNo<?=$playListFolderData[id];?>">
+                                    <tr class="strippedRow playListfileNo<?=$playListFolderData['id'];?>">
                                         <td><img src="./modules/filesystem/icons/file.png" width="30px"></td>
-                                        <td>&nbsp;<?=$playListFolderData[title]?></td>
+                                        <td>&nbsp;<?=$playListFolderData['title']?></td>
                                         <?=$deleteRow;?>
                                     </tr>
                             <?
                             $i++; }}
-                            $query = commaToOr("$playListData[links]", "id");
+                            $query = commaToOr($playListData['links'], "id");
                             $playListFolderSql = mysql_query("SELECT * FROM links WHERE $query");
                             while($playListFolderData = mysql_fetch_array($playListFolderSql)){
 
-                            if(checkAuthorisation($playListFolderData[privacy])){    
-                                if($playListLinkData[type] == "youTube"){
+                            if(checkAuthorisation($playListFolderData['privacy'])){    
+                                if($playListLinkData['type'] == "youTube"){
 
                                 }
                             if($delete){
@@ -2911,7 +2911,7 @@ echo"</div>";
                                     </tr>
                         <?
                             $i++; }}
-                            $videos = explode(";", $playListData[youTube], -1);
+                            $videos = explode(";", $playListData['youTube'], -1);
                             foreach($videos as &$vId){
                             if($delete){
                                 $deleteRow = "<td><a href=\"doit.php?action=deleteFromPlaylist&playlist=$playListId&type=youTube&itemId=$vId\" target=\"submitter\"><img src=\"./gfx/icons/minus.png\" height=\"32\" border=\"0\"></a></td>";
@@ -2939,7 +2939,7 @@ echo"</div>";
         $playListFileSql = mysql_query("SELECT title, id FROM files WHERE $query");
         $num = mysql_num_rows($playListFileSql);
         while($playListFileData = mysql_fetch_array($playListFileSql)){
-            jPlayerFormat($playListFileData[title], $playListFileData[id], "mp3");
+            jPlayerFormat($playListFileData['title'], $playListFileData['id'], "mp3");
         if($i < $num){
             echo",";
         }
@@ -3112,7 +3112,7 @@ echo"</div>";
 		
             $path = "upload/";
             $folderArray = loadFolderArray("path", $folderId);
-            $folderArray = array_reverse($folderArray[names], true);
+            $folderArray = array_reverse($folderArray['names'], true);
             foreach($folderArray as &$folder){
                 $folder = urldecode($folder);
                 $path .= "$folder/";
@@ -3378,7 +3378,7 @@ echo"</div>";
         }
         ?>
             <script>
-                parent.addAjaxContentToTab('<?=substr($FileElementData[title], 0, 10);?>', 'modules/filesystem/showElement.php?element=<?=$element;?>&reload=1');
+                parent.addAjaxContentToTab('<?=substr($FileElementData['title'], 0, 10);?>', 'modules/filesystem/showElement.php?element=<?=$element;?>&reload=1');
             </script>
         <?php
         $time = time();
@@ -3398,17 +3398,17 @@ echo"</div>";
                     $fileElementSql = mysql_query("SELECT id, title, folder FROM elements WHERE id='$fileData[folder]'");
                     $fileElementData = mysql_fetch_array($fileElementSql);
                     
-                    $type = $fileData[type];
+                    $type = $fileData['type'];
                     
                     //for all standard files
-                    $title = $fileData[filename];
+                    $title = $fileData['filename'];
                     
                     
                    
                     
                 //file can only be deleted if uploader = deleter
-               	if(authorize($fileData[privacy], "edit")){
-                    $folderPath = getFolderPath($fileElementData[folder]);
+               	if(authorize($fileData['privacy'], "edit")){
+                    $folderPath = getFolderPath($fileElementData['folder']);
                     $filePath = getFullFilePath($fileId);
                     $thumbPath = "$folderPath"."thumbs/$title";
                     if(unlink("$filePath")){
@@ -3446,8 +3446,8 @@ echo"</div>";
             $documentElementSQL = mysql_query("SELECT folder FROM elements WHERE id='$documentData[folder]'");
             $documentElementData = mysql_fetch_array($documentElementSQL);
             $path = "upload/";
-            $folderArray = loadFolderArray("path", $documentElementData[folder]);
-            $folderArray = array_reverse($folderArray[names], true);
+            $folderArray = loadFolderArray("path", $documentElementData['folder']);
+            $folderArray = array_reverse($folderArray['names'], true);
             foreach($folderArray as &$folder){
                 
                 $path .= "$folder/";
@@ -3465,13 +3465,13 @@ echo"</div>";
     
     function fileIdToFileType($fileId){
         $fileData = mysql_fetch_array(mysql_query("SELECT type FROM files WHERE id='$fileId'"));
-        return $fileData[type];
+        return $fileData['type'];
     }
     
     function linkIdToFileType($fileId){
         
         $fileData = mysql_fetch_array(mysql_query("SELECT type FROM links WHERE id='$fileId'"));
-        return $fileData[type];
+        return $fileData['type'];
     }
     
     function getFileIcon($fileType, $full=false){
@@ -3586,7 +3586,7 @@ echo"</div>";
                 $linkData = mysql_fetch_array($linkSql);
                     
                 //file can only be deleted if uploader = deleter
-                if(authorize($linkData[privacy], "edit", $linkData[author])){
+                if(authorize($linkData['privacy'], "edit", $linkData['author'])){
                     
                        if(mysql_query("DELETE FROM links WHERE id='$linkId'")){
                            
@@ -3676,7 +3676,7 @@ echo"</div>";
 			if($fileData['download']){
 				$download = "<a href=\"./out/download/?fileId=$fileId\" target=\"submitter\" class=\"btn btn-mini\" title=\"download file\"><img src=\"$subpath"."./gfx/icons/download.png\" alt=\"download\" height=\"10\"></a>";
 			}
-            $filename = $fileData[filename];
+            $filename = $fileData['filename'];
             $path = $subpath.getFilePath($fileId);
             
 			
@@ -3705,14 +3705,14 @@ echo"</div>";
 					$user = $linkData['author'];
 			
 		            
-		            $title = $linkData[title];
+		            $title = $linkData['title'];
 		            
     				$score = showScore("link", $linkId);
 					
 		            
 		            //define type if type is undefined
 		            if(empty($type)){
-		            $type = $linkData[type];
+		            $type = $linkData['type'];
 		            }
 					if($type == "youTube"){
 						//generate link out of youtubelink
@@ -3750,11 +3750,11 @@ echo"</div>";
 			$playlists = getUserPlaylistArray();
 			//init form and select
 			$options = "<form action=\"doit.php?action=addYouTubeItemToPlaylistVeryLongName&vId=$vId\" target=\"submitter\" method=\"post\"><select name=\"playlistId\">";
-			foreach ($playlists[ids] as $key => $id){
+			foreach ($playlists['ids'] as $key => $id){
 				
 				
                     //add options to dropdown
-                    $options .= "<option value=\"$id\">".$playlists[titles][$key]."</option>";
+                    $options .= "<option value=\"$id\">".$playlists['titles'][$key]."</option>";
 				
 			}
 			//close select, form and and submit button
@@ -3927,14 +3927,14 @@ echo"</div>";
 						
 				        $documentSQL = mysql_query("SELECT id, title, folder, privacy, owner FROM files WHERE folder='$elementData[id]' AND type IN('image/png','image/jpeg','image')");
 				        while($documentData = mysql_fetch_array($documentSQL)){
-	        				if(authorize($documentData[privacy], "show", $documentData[owner])){
+	        				if(authorize($documentData['privacy'], "show", $documentData['owner'])){
 						        //$documentFolderSQL = mysql_query("SELECT path FROM folders WHERE id='$elementData[folder]'");
 						        //$documentFolderData = mysql_fetch_array($documentFolderSQL);
 						        if($elementData['title'] == "profile pictures"){
-						        	$thumbPath = $subpath.getFolderPath($elementData[folder]);    
+						        	$thumbPath = $subpath.getFolderPath($elementData['folder']);    
 						        	$thumbPath = "$thumbPath/thumb/300/";
 						        }else{
-						        	$thumbPath = $subpath.getFolderPath($elementData[folder])."thumbs/";
+						        	$thumbPath = $subpath.getFolderPath($elementData['folder'])."thumbs/";
 						        }
 								
 								
@@ -3981,7 +3981,7 @@ echo"</div>";
                 
                 $folderSQL = mysql_query("SELECT id FROM folders WHERE folder='".mysql_real_escape_string($folder)."'");
                 while($folderData = mysql_fetch_array($folderSQL)){
-                    $return[] = $folderData[id];
+                    $return[] = $folderData['id'];
                 }
                 break;
                 
@@ -3997,10 +3997,10 @@ echo"</div>";
 		                $folderData = mysql_fetch_array($folderSQL);
 		
 		                
-		                $folder = $folderData[folder];
+		                $folder = $folderData['folder'];
 		                if($folder!=0){
 		                $returnFolder[] = $folder;
-		                $returnName[] = $folderData[name];
+		                $returnName[] = $folderData['name'];
 		                }
 		                
 		                    
@@ -4008,8 +4008,8 @@ echo"</div>";
 					}
                 }
                 
-                $return[ids] = $returnFolder;
-                $return[names] = $returnName;
+                $return['ids'] = $returnFolder;
+                $return['names'] = $returnName;
                 break;
         }
         
@@ -4022,8 +4022,8 @@ echo"</div>";
         
         $return .= "<ul>";
         $i = 0;
-        $folderNames = $folders[names];
-        foreach($folders[ids] AS &$folder){
+        $folderNames = $folders['names'];
+        foreach($folders['ids'] AS &$folder){
             $return .= "<li>$folderNames[$i]</li>";
             $i++;
         }
@@ -4071,7 +4071,7 @@ echo"</div>";
         		?>
 	            <tr class="strippedRow" height="30">
 	                <td width="30">&nbsp;<img src="<?=$subpath;?>gfx/icons/filesystem/folder.png" height="22"></td>
-	                <td><a href="<?=$subpath;?>out/?folder=<?=$parentFolderData[folder];?>" onclick="openFolder('<?=$parentFolderData[folder];?>'); return false;">...</a></td>
+	                <td><a href="<?=$subpath;?>out/?folder=<?=$parentFolderData['folder'];?>" onclick="openFolder('<?=$parentFolderData['folder'];?>'); return false;">...</a></td>
 	                <td width="50px">
 	                </td>
 	                <td width="50px"></td>
@@ -4217,7 +4217,7 @@ echo"</div>";
                     //define openFile function
                     $link = "openFile('$openFileType', '$fileListData[id]', '$title10');";
                 }
-                else if($fileListData[type] == "text/plain" OR $fileListData[type] == "application/pdf" OR $fileListData[type] == "text/x-c++"){
+                else if($fileListData['type'] == "text/plain" OR $fileListData['type'] == "application/pdf" OR $fileListData['type'] == "text/x-c++"){
                 //standard from know on (19.02.2013)
                     
                     //define link for openFileFunction
@@ -4226,7 +4226,7 @@ echo"</div>";
                     //define openFile function
                     $link = "openFile('$openFileType', '$fileListData[id]', '$title10');";
                 }
-                else if($fileListData[type] == "image/jpeg" OR $fileListData[type] == "image/png" OR $fileListData[type] == "image/gif"){
+                else if($fileListData['type'] == "image/jpeg" OR $fileListData['type'] == "image/png" OR $fileListData['type'] == "image/gif"){
                 //if a image is opened the tab is not named after the file
                 //it is named after the parent element, because images are
                 //shown in a gallery with all the images listed in the parent
@@ -4242,59 +4242,59 @@ echo"</div>";
                     //define openFile function
                     $link = "openFile('$openFileType', '$fileListData[id]', '$elementTitle10');";
                 }
-                $image = getFileIcon($fileListData[type]);
+                $image = getFileIcon($fileListData['type']);
                     ?>
-                    <tr class="strippedRow file_<?=$fileListData[id];?>" oncontextmenu="showMenu('file<?=$fileListData[id];?>'); return false;" height="40px">
-                        <td width="30px">&nbsp;<img src="<?=$subpath;?>gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData[type];?>" height="22"></td>
+                    <tr class="strippedRow file_<?=$fileListData[id];?>" oncontextmenu="showMenu('file<?=$fileListData['id'];?>'); return false;" height="40px">
+                        <td width="30px">&nbsp;<img src="<?=$subpath;?>gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData['type'];?>" height="22"></td>
                         <td><a href="<?=$subpath;?>out/?file=<?=$fileListData[id];?>" onclick="<?=$link;?> return false"><?=substr($fileListData[title],0,30);?></a></td>
                         <td width="80" align="right">
-                        		<? if($fileListData['download']){ ?><a href="./out/download/?fileId=<?=$fileListData[id];?>" target="submitter" class="btn btn-mini" title="download file"><i class="icon-download"></i></a><? } ?>
+                        		<? if($fileListData['download']){ ?><a href="./out/download/?fileId=<?=$fileListData['id'];?>" target="submitter" class="btn btn-mini" title="download file"><i class="icon-download"></i></a><? } ?>
                                 <? if(!$git){echo showItemSettings('file', "$fileListData[id]");}?></td>
-                        <td width="50"><?=showScore(file, $fileListData[id]);?></td>
+                        <td width="50"><?=showScore(file, $fileListData['id']);?></td>
                     </tr>
                     <?php
                     if(!$git){
-                    showRightClickMenu("file", $fileListData[id], $title10, $openFileType);
+                    showRightClickMenu("file", $fileListData['id'], $title10, $openFileType);
                     }
 
             }}
             $linkListSQL = mysql_query("SELECT * FROM links WHERE $query");
             while($linkListData = mysql_fetch_array($linkListSQL)) {
-                $title10 = substr("$linkListData[title]", 0, 10);
+                $title10 = substr($linkListData['title'], 0, 10);
                 
                 $link = "$link&id=$linkListData[id]";
-                if($linkListData[type] == "youTube"){
+                if($linkListData['type'] == "youTube"){
                     $vId = youTubeURLs($linkListData[link]);
                     $link = "openFile('youTube', '$linkListData[id]', '$title10', '$vId');";
                 }
                 
-                if($linkListData[type] == "audio/mp3"){
+                if($linkListData['type'] == "audio/mp3"){
                     $rightLink = "startPlayer('file', '$fileListData[id]')";
                 }
                 
-                if($linkListData[type] == "RSS"){
+                if($linkListData['type'] == "RSS"){
                     $link = "openFile('RSS', '$linkListData[id]', '$title10');";
                 }
-                $image = getFileIcon($linkListData[type]);
+                $image = getFileIcon($linkListData['type']);
                 
                 
                     $i++;
                 ?>
-                <tr class="strippedRow link_<?=$linkListData[id];?>" oncontextmenu="showMenu('link<?=$linkListData[id];?>'); return false;" height="40px">
-                    <td width="65px">&nbsp;<img src="<?=$subpath;?>gfx/icons/fileIcons/<?=$image;?>" alt="<?=$linkListData[type];?>" height="22px"></td>
-                    <td><a href="#" onclick="<?=$link;?>"><?=substr($linkListData[title],0,30);?></a></td>
+                <tr class="strippedRow link_<?=$linkListData['id'];?>" oncontextmenu="showMenu('link<?=$linkListData['id'];?>'); return false;" height="40px">
+                    <td width="65px">&nbsp;<img src="<?=$subpath;?>gfx/icons/fileIcons/<?=$image;?>" alt="<?=$linkListData['type'];?>" height="22px"></td>
+                    <td><a href="#" onclick="<?=$link;?>"><?=substr($linkListData['title'],0,30);?></a></td>
                     <td width="70" align="right">
                     	<?php
                     	if(!$git){
-                    		showItemSettings('link', $linkListData[id]);
+                    		showItemSettings('link', $linkListData['id']);
                     	}
                     	?>
                     	</td>
-                    <td><?=showScore(link, $linkListData[id]);?></td>
+                    <td><?=showScore(link, $linkListData['id']);?></td>
                 </tr>
                 <?php
                     if(!$git){
-                showRightClickMenu("link", $linkListData[id], $title10, $linkListData[type]);
+                showRightClickMenu("link", $linkListData['id'], $title10, $linkListData['type']);
 					}
                 }
                 
@@ -4303,12 +4303,12 @@ echo"</div>";
                 $shortCutSql = mysql_query("SELECT * FROM internLinks $shortCutQuery");
                 while($shortCutData = mysql_fetch_array($shortCutSql)){
                     $i++;
-                    if($shortCutData[type] == "file"){
+                    if($shortCutData['type'] == "file"){
 
                         $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy, type FROM files WHERE id='$shortCutData[typeId]'"));
-                        $title10 = substr($shortCutItemData[title], 0,10);
-                        $title = $shortCutItemData[title];
-                        if($shortCutItemData[type] == "UFF"){
+                        $title10 = substr($shortCutItemData['title'], 0,10);
+                        $title = $shortCutItemData['title'];
+                        if($shortCutItemData['type'] == "UFF"){
                         //standard from know on (19.02.2013)
 
                             //define link for openFileFunction
@@ -4317,14 +4317,14 @@ echo"</div>";
                             //define openFile function
                             $link = "openFile('$openFileType', '$shortCutItemData[typeId]', '$title10');";
                         }
-                        else if($shortCutItemData[type] == "text/plain" OR $shortCutItemData[type] == "application/pdf"){
+                        else if($shortCutItemData['type'] == "text/plain" OR $shortCutItemData['type'] == "application/pdf"){
                         //standard from know on (19.02.2013)
 
                             //define link for openFileFunction
                             $openFileType = "document";
 
                             //define openFile function
-                            $link = "openFile('$openFileType', '$shortCutItemData[typeId]]', '$title10');";
+                            $link = "openFile('$openFileType', '$shortCutItemData[typeId]', '$title10');";
                         }
                         
                         
@@ -4332,23 +4332,23 @@ echo"</div>";
                         
                         
 
-                    }else if($shortCutData[type] == "link"){
+                    }else if($shortCutData['type'] == "link"){
 
                         $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, link, privacy, type FROM links WHERE id='$shortCutData[typeId]'"));
-                        $title10 = substr($shortCutItemData[title], 0,10);
-                        $title = $shortCutItemData[title];
-                        if($shortCutItemData[type] == "youTube"){
+                        $title10 = substr($shortCutItemData['title'], 0,10);
+                        $title = $shortCutItemData['title'];
+                        if($shortCutItemData['type'] == "youTube"){
                             $vId = youTubeURLs($shortCutItemData[link]);
                             $link = "openFile('youTube', '$vId', '$title10');";
                         }
 
-                        if($shortCutItemData[type] == "RSS"){
+                        if($shortCutItemData['type'] == "RSS"){
                             $link = "openFile('RSS', '$shortCutData[typeId]', '$title10');";
                         }
                     }
                     
                     
-                    $image = getFileIcon($shortCutItemData[type]);
+                    $image = getFileIcon($shortCutItemData['type']);
 
                     echo'<tr>';
                         echo'<td>';
@@ -4419,19 +4419,19 @@ echo"</div>";
 	        $filefsql = mysql_query("SELECT * FROM folders $query");
 	        while($filefdata = mysql_fetch_array($filefsql)) {
 	        	
-		        if(authorize($filefdata[privacy], "show", $filefdata[creator])){
-				$action[folders] = "$('.folder$filefdata[id]LoadingFrame').loadOuter('doit.php?action=loadMiniBrowser&folder=$filefdata[id]&level=$level&select=$select');return false;";
-		        $trigger[folders] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/filesystem/folder.png\' alt=\'folder\' height=\'32px\'>&nbsp;$filefdata[name]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'folder\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$filefdata[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+		        if(authorize($filefdata['privacy'], "show", $filefdata['creator'])){
+				$action['folders'] = "$('.folder$filefdata[id]LoadingFrame').loadOuter('doit.php?action=loadMiniBrowser&folder=$filefdata[id]&level=$level&select=$select');return false;";
+		        $trigger['folders'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/filesystem/folder.png\' alt=\'folder\' height=\'32px\'>&nbsp;$filefdata[name]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'folder\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$filefdata[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
 				
 					
 		        ?>
 	            <li class="strippedRow" <?=$style;?>>
 	                <span>&nbsp;<img src="./gfx/icons/filesystem/folder.png" height="14"></span>
-	                <span><a href="#" onclick="<?=$action[folders];?>"><?=$filefdata[name];?>/</a></span>
+	                <span><a href="#" onclick="<?=$action['folders'];?>"><?=$filefdata['name'];?>/</a></span>
 	            <?
 	            if($showFolderButton){
 	            ?>
-	                <span class="trigger"><a href="#" onclick="<?=$trigger[folders];?>" class="btn btn-mini"><i class="icon-ok"></i></a>&nbsp;</span>
+	                <span class="trigger"><a href="#" onclick="<?=$trigger['folders'];?>" class="btn btn-mini"><i class="icon-ok"></i></a>&nbsp;</span>
 				<? } ?>
 	            </li>
 	            <!-- frame in which the folder data is loaded, if loadFolderDataIntoMiniBrowser() is called -->
@@ -4447,24 +4447,24 @@ echo"</div>";
 	
 	        $filefolderSQL = mysql_query("SELECT * FROM folders WHERE id='$folder'");
 	        $fileFolderData = mysql_fetch_array($filefolderSQL);
-	        $title = $fileddata[title];
+	        $title = $fileddata['title'];
 	        $title10 = substr("$title", 0, 10);
 	        $title15 = substr("$title", 0, 25);
 	
 		        if(authorize($fileddata[privacy], "show", $fileddata[author])){
 		        	
 				
-				$action[elements] = "$('.element$fileddata[id]LoadingFrame').loadOuter('doit.php?action=loadMiniBrowser&element=$fileddata[id]&level=$level&select=$select');return false;";
-		        $trigger[elements] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/filesystem/element.png\' alt=\'folder\' height=\'32px\'>&nbsp;$title<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'element\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$fileddata[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+				$action['elements'] = "$('.element$fileddata[id]LoadingFrame').loadOuter('doit.php?action=loadMiniBrowser&element=$fileddata[id]&level=$level&select=$select');return false;";
+		        $trigger['elements'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/filesystem/element.png\' alt=\'folder\' height=\'32px\'>&nbsp;$title<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'element\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$fileddata[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
 						
 		        ?>
 		            <li class="strippedRow" <?=$style;?>>
 		                <span>&nbsp;<img src="./gfx/icons/filesystem/element.png" height="14"></span>
-		                <span><a href="#" onclick="<?=$action[elements];?>"><?=$title15;?></a></span>
+		                <span><a href="#" onclick="<?=$action['elements'];?>"><?=$title15;?></a></span>
 		        		<?
 	           			 if($showElementButton){
 	            		?>
-	                    <span class="trigger"><a href="#" onclick="<?=$trigger[elements];?>" class="btn btn-mini"><i class="icon-ok"></i></a>&nbsp;</span>
+	                    <span class="trigger"><a href="#" onclick="<?=$trigger['elements'];?>" class="btn btn-mini"><i class="icon-ok"></i></a>&nbsp;</span>
 	                    <? } ?>
 		            </li>
 		            <!-- frame in which the element data is loaded, if loadElementDataIntoMiniBrowser() is called -->
@@ -4486,26 +4486,26 @@ echo"</div>";
 	            $fileListSQL = mysql_query("SELECT * FROM files WHERE $query");
 	            while($fileListData = mysql_fetch_array($fileListSQL)) {
 	                
-	                if(authorize($fileListData[privacy], "show", $fileListData[owner])){
+	                if(authorize($fileListData['privacy'], "show", $fileListData['owner'])){
 	                	
 	                	
-	                $title10 = substr("$fileListData[title]", 0, 10);
-	                $image = getFileIcon($fileListData[type]);
+	                $title10 = substr($fileListData['title'], 0, 10);
+	                $image = getFileIcon($fileListData['type']);
 					
-					$action[files] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$fileListData[title]<input type=\'hidden\' class=\'choosenType\' name=\'type\' value=\'file\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$fileListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
-					$trigger[files] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$fileListData[title]<input type=\'hidden\' class=\'choosenType\' name=\'type\' value=\'file\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$fileListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+					$action['files'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$fileListData[title]<input type=\'hidden\' class=\'choosenType\' name=\'type\' value=\'file\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$fileListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+					$trigger['files'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$fileListData[title]<input type=\'hidden\' class=\'choosenType\' name=\'type\' value=\'file\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$fileListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
 					
 					
 					
 	                    ?>
 	                    <li class="strippedRow" <?=$style;?>>
-	                        <span>&nbsp;<img src="./gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData[type];?>" height="14px"></span>
-	                        <span><a href="#" onclick="<?=$action[files];?>"><?=substr($fileListData[title],0,30);?></a></span>
+	                        <span>&nbsp;<img src="./gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData['type'];?>" height="14px"></span>
+	                        <span><a href="#" onclick="<?=$action['files'];?>"><?=substr($fileListData['title'],0,30);?></a></span>
 	                        
 			        		<?
 		           			 if($showFileButton){
 		            		?>
-	                        <span class="trigger"><a href="#" onclick="<?=$trigger[files];?>" class="btn btn-mini"><i class="icon-ok"></i></a>&nbsp;</span>
+	                        <span class="trigger"><a href="#" onclick="<?=$trigger['files'];?>" class="btn btn-mini"><i class="icon-ok"></i></a>&nbsp;</span>
 	                        <? } ?>
 	                    </li>
 	                    
@@ -4519,23 +4519,23 @@ echo"</div>";
 					
 	                $title10 = substr("$linkListData[title]", 0, 10);
 					
-					$action[links] = "alert('lol'); return false";
+					$action['links'] = "alert('lol'); return false";
 					
-	                $image = getFileIcon($linkListData[type]);
+	                $image = getFileIcon($linkListData['type']);
 	                
-					$action[links] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$linkListData[type]\' height=\'32px\'>&nbsp;$linkListData[title]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'link\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$linkListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
-					$trigger[links] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$linkListData[title]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'link\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$linkListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+					$action['links'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$linkListData[type]\' height=\'32px\'>&nbsp;$linkListData[title]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'link\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$linkListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+					$trigger['links'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$linkListData[title]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'link\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$linkListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
 					
 					
 	                    
 	                ?>
 	                <li class="strippedRow" <?=$style;?>>
-	                    <span>&nbsp;<img src="./gfx/icons/fileIcons/<?=$image;?>" alt="<?=$linkListData[type];?>" height="14px"></span>
-	                    <span><a href="#" onclick="<?=$action[links];?>"><?=substr($linkListData[title],0,30);?></a></span>
+	                    <span>&nbsp;<img src="./gfx/icons/fileIcons/<?=$image;?>" alt="<?=$linkListData['type'];?>" height="14px"></span>
+	                    <span><a href="#" onclick="<?=$action['links'];?>"><?=substr($linkListData['title'],0,30);?></a></span>
 			        	<?
 		           			 if($showFileButton){
 		            	?>
-	                    <span class="trigger"><a href="#" onclick="<?=$trigger[files];?>" class="btn btn-mini"><i class="icon-ok icon-white"></i></a></span>
+	                    <span class="trigger"><a href="#" onclick="<?=$trigger['files'];?>" class="btn btn-mini"><i class="icon-ok icon-white"></i></a></span>
 	                    <? } ?>
 	                </li>
 	                <?php
@@ -4572,7 +4572,7 @@ echo"</div>";
 					$folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
 					$folderData = mysql_fetch_array($folderSQL);
 					
-					$privacy = $folderData[privacy];
+					$privacy = $folderData['privacy'];
 					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
 					$privacy .= ";PROTECTED";
 					}
@@ -4585,7 +4585,7 @@ echo"</div>";
 					
 					$elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
 					$elementData = mysql_fetch_array($elementSQL);
-					$privacy = $elementData[privacy];
+					$privacy = $elementData['privacy'];
 					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
 					$privacy .= ";PROTECTED";
 					}
@@ -4598,7 +4598,7 @@ echo"</div>";
 				case 'file':
 					$fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
 					$fileData = mysql_fetch_array($fileSQL);
-					$privacy = $fileData[privacy];
+					$privacy = $fileData['privacy'];
 					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
 					$privacy .= ";PROTECTED";
 					}
@@ -4610,7 +4610,7 @@ echo"</div>";
 					$linkData = mysql_fetch_array($linkSQL);
 					
 					
-					$privacy = $linkData[privacy];
+					$privacy = $linkData['privacy'];
 					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
 					$privacy .= ";PROTECTED";
 					}
@@ -4635,7 +4635,7 @@ echo"</div>";
 					$folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
 					$folderData = mysql_fetch_array($folderSQL);
 					
-					$privacy = $folderData[privacy];
+					$privacy = $folderData['privacy'];
 					$privacy = str_replace(";PROTECTED", "", $privacy);
 					
 					
@@ -4648,7 +4648,7 @@ echo"</div>";
 					$elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
 					$elementData = mysql_fetch_array($elementSQL);
 					
-					$privacy = $elementData[privacy];
+					$privacy = $elementData['privacy'];
 					$privacy = str_replace(";PROTECTED", "", $privacy);
 					
 					
@@ -4659,7 +4659,7 @@ echo"</div>";
 				case 'file':
 					$fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
 					$fileData = mysql_fetch_array($fileSQL);
-					$privacy = $fileData[privacy];
+					$privacy = $fileData['privacy'];
 					$privacy = str_replace(";PROTECTED", "", $privacy);
 					
 					
@@ -4670,7 +4670,7 @@ echo"</div>";
 					$linkData = mysql_fetch_array($linkSQL);
 					
 					
-					$privacy = $linkData[privacy];
+					$privacy = $linkData['privacy'];
 					$privacy = str_replace(";PROTECTED", "", $privacy);
 					
 					
@@ -4707,7 +4707,7 @@ echo"</div>";
 					
 					$elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
 					$elementData = mysql_fetch_array($elementSQL);
-					$privacy = $elementData[privacy];
+					$privacy = $elementData['privacy'];
 					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
 						$privacy .= ";UNDELETABLE";
 					}
@@ -4720,7 +4720,7 @@ echo"</div>";
 				case file:
 					$fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
 					$fileData = mysql_fetch_array($fileSQL);
-					$privacy = $fileData[privacy];
+					$privacy = $fileData['privacy'];
 					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
 						$privacy .= ";UNDELETABLE";
 					}
@@ -4733,7 +4733,7 @@ echo"</div>";
 					$linkData = mysql_fetch_array($linkSQL);
 					
 					
-					$privacy = $linkData[privacy];
+					$privacy = $linkData['privacy'];
 					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
 						$privacy .= ";UNDELETABLE";
 					}
@@ -4752,7 +4752,7 @@ echo"</div>";
 		$typeId = save($typeId);
 		
 		switch($type){
-			case folder:
+			case 'folder':
 				
 				$folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
 				$folderData = mysql_fetch_array($folderSQL);
@@ -4765,12 +4765,12 @@ echo"</div>";
 				
 				
 				break;
-			case element:
+			case 'element':
 				
 				$elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
 				$elementData = mysql_fetch_array($elementSQL);
 				
-				$privacy = $elementData[privacy];
+				$privacy = $elementData['privacy'];
 				$privacy = str_replace(";UNDELETABLE", "", $privacy);
 				
 				
@@ -4778,21 +4778,21 @@ echo"</div>";
 				
 				
 				break;
-			case file:
+			case 'file':
 				$fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
 				$fileData = mysql_fetch_array($fileSQL);
-				$privacy = $fileData[privacy];
+				$privacy = $fileData['privacy'];
 				$privacy = str_replace(";UNDELETABLE", "", $privacy);
 				
 				
 				mysql_query("UPDATE `files` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
 				break;
-			case link:
+			case 'link':
 				$linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
 				$linkData = mysql_fetch_array($linkSQL);
 				
 				
-				$privacy = $linkData[privacy];
+				$privacy = $linkData['privacy'];
 				$privacy = str_replace(";UNDELETABLE", "", $privacy);
 				
 				
@@ -4811,7 +4811,7 @@ echo"</div>";
                 $elementSQL = mysql_query("SELECT id FROM elements WHERE folder='$itemId' ORDER BY RAND() LIMIT 0,1");
                 $elementData = mysql_fetch_array($elementSQL);
                 
-                $path = showThumb("element", $elementData[id]);
+                $path = showThumb("element", $elementData['id']);
                 
                 
             break;
@@ -4825,7 +4825,7 @@ echo"</div>";
                     $fileSQL = mysql_query("SELECT * FROM files WHERE type IN ('image/jpeg', 'image/png') AND title LIKE '%thumb%' AND folder='$itemId' ORDER BY RAND() LIMIT 0,1");
                     $fileData = mysql_fetch_array($fileSQL);
                     if($fileData){
-                        $path = "upload".getFilePath($fileData[id]);
+                        $path = "upload".getFilePath($fileData['id']);
                         $path = "$path/$fileData[title]";
                     }
                 }
@@ -4856,8 +4856,8 @@ echo"</div>";
                 $folderSQL = mysql_query("SELECT * FROM folders WHERE id='$itemId'");
                 $folderData = mysql_fetch_array($folderSQL);
 
-                $title = $folderData[name];
-                $shortTitle = $folderData[name];
+                $title = $folderData['name'];
+                $shortTitle = $folderData['name'];
 				
 				//group folders
                 if($folderData['folder'] == 3){
@@ -4874,15 +4874,15 @@ echo"</div>";
 
                 //define info 1
                 $info[0] = "path";
-                $info[1] = $folderData[path];
+                $info[1] = $folderData['path'];
         
             break;
             case 'element':
                 $elementSQL = mysql_query("SELECT title, type FROM elements WHERE id='$itemId'");
                 $elementData = mysql_fetch_array($elementSQL);
 
-                $title = $elementData[title];
-                $shortTitle = $elementData[title];
+                $title = $elementData['title'];
+                $shortTitle = $elementData['title'];
 
                 //define link
                 $link = "openElement('$itemId')";
@@ -4892,7 +4892,7 @@ echo"</div>";
 
                 //define info 1
                 $info[0] = "type";
-                $info[1] = $elementData[type];
+                $info[1] = $elementData['type'];
             break;
             case 'file':
             
@@ -4900,8 +4900,8 @@ echo"</div>";
                 $fileData = mysql_fetch_array($fileSQL);
 
 
-                $title = $fileData[title];
-                $shortTitle = $fileData[title];
+                $title = $fileData['title'];
+                $shortTitle = $fileData['title'];
                 //shorten filename
                 if(strlen($title) > 15){
                     $shortTitle = substr("$title", 0, 8)."(...)".substr("$title", -4);
@@ -4921,10 +4921,10 @@ echo"</div>";
                 	$imgColumnStyle = "colspan=\"2\"";
                 }else{
                 $img = "fileIcons/";
-                $img .= getFileIcon($fileData[type]);
+                $img .= getFileIcon($fileData['type']);
                 //define info 1
                 $info[0] = "size";
-                $info[1] = round($fileData[size]/(1024*1024), 2)." MB";
+                $info[1] = round($fileData['size']/(1024*1024), 2)." MB";
 				}
 
             break;
@@ -4932,8 +4932,8 @@ echo"</div>";
                 $linkSQL = mysql_query("SELECT * FROM links WHERE id='$itemId'");
                 $linkData = mysql_fetch_array($linkSQL);
 
-                $title = $linkData[title];
-                $shortTitle = $linkData[title];
+                $title = $linkData['title'];
+                $shortTitle = $linkData['title'];
 
                 //define link
                 $link = "openFile('$linkData[type]', '$linkData[typeId]', '$shortTitle')";
@@ -4944,7 +4944,7 @@ echo"</div>";
 
                 //define info 1
                 $info[0] = "type";
-                $info[1] = $linkData[type];
+                $info[1] = $linkData['type'];
             break;
             case 'group':
             break;
@@ -5006,15 +5006,15 @@ echo"</div>";
                 
                 $userid = getUser();
                 
-                if(!empty($_SESSION[openUffs])){
+                if(!empty($_SESSION['openUffs'])){
                     
                     //parse SESSION
-                    $sessionArray = explode(";", $_SESSION[openUffs]);
+                    $sessionArray = explode(";", $_SESSION['openUffs']);
                     
                     //check if there is a cookie set for the fileId
                     if (!in_array("$fileId", $sessionArray)) {
                         //set cookie
-                        $_SESSION[openUffs] = "$fileId;$_SESSION[openUffs]";
+                        $_SESSION['openUffs'] = "$fileId;".$_SESSION['openUffs'];
                     }
                     
                     //check if checksum needs to be updated
@@ -5023,7 +5023,7 @@ echo"</div>";
                         $_SESSION["UFFsum_$fileId"] = $checksum;
                     }
                 }else{
-                    $_SESSION[openUffs] = "$fileId";
+                    $_SESSION['openUffs'] = "$fileId";
                     $_SESSION["UFFsum_$fileId"] = $checksum;
                 }
                 //add user to active users list
@@ -5033,7 +5033,7 @@ echo"</div>";
                 $fileData = mysql_fetch_array($fileData);
                 
                 //var1 with UFFs is used to 
-                $activeUserArray = explode(";", $fileData[var1]);
+                $activeUserArray = explode(";", $fileData['var1']);
                 //check if user is allready in list
                 if (!in_array("$userid", $activeUserArray)) {
                     //add user to array
@@ -5054,10 +5054,10 @@ echo"</div>";
                 	$userid = getUser();
                     
                     if(empty($fileId)){
-                        unset($_SESSION[openUffs]);
+                        unset($_SESSION['openUffs']);
                     }
                     //parse SESSION
-                    $sessionArray = explode(";", $_SESSION[openUffs]);
+                    $sessionArray = explode(";", $_SESSION['openUffs']);
                     
                     //check if there is a cookie set for the fileId
                     if (in_array("$fileId", $sessionArray)) {
@@ -5065,7 +5065,7 @@ echo"</div>";
                         foreach (array_keys($sessionArray, $fileId) as $key) {
                             unset($sessionArray[$key]);
                         }
-                        $_SESSION[openUffs] = implode(";", $sessionArray);
+                        $_SESSION['openUffs'] = implode(";", $sessionArray);
                         
                         
                         
@@ -5076,7 +5076,7 @@ echo"</div>";
                         $fileData = mysql_fetch_array($fileData);
 
                         //var1 with UFFs is used to 
-                        $activeUserArray = explode(";", $fileData[var1]);
+                        $activeUserArray = explode(";", $fileData['var1']);
                         //get user out of array
                         foreach($activeUserArray AS &$user){
                             if($user != $userid){
@@ -5311,8 +5311,8 @@ class dashBoard{
 				
 				$output .= "<li class=\"$class\" style=\"clear:both;\">";
 					$output .=  "<span>";
-					$output .=  stripslashes(showUserPicture($message[sender],13,'', true));
-					$output .=  "$message[senderUsername]:";
+					$output .=  stripslashes(showUserPicture($message['sender'],13,'', true));
+					$output .=  $message['senderUsername'].':';
 					$output .=  "</span>";
 					$output .=  "<span>";
 					$output .=  "<a href=\"#\" onclick=\"openChatDialoge('$message[senderUsername]');\">";
