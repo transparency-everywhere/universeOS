@@ -430,7 +430,7 @@ INSERT INTO `staticContents` (`id`, `title`, `content`, `comment`) VALUES
 --
 
 INSERT INTO `user` (`userid`, `usergroup`, `username`, `password`, `cypher`, `homefolder`, `myFiles`, `profilepictureelement`, `userPicture`, `email`, `regdate`, `lastactivity`, `birthdate`, `realname`, `home`, `place`, `gender`, `school1`, `school2`, `school3`, `university1`, `university2`, `employer`, `typeofwork`, `status`, `openChatWindows`, `priv_activateProfile`, `priv_showProfile`, `priv_profileInformation`, `priv_profilePicture`, `priv_profileFav`, `priv_profileLog`, `priv_activateFeed`, `priv_buddyRequest`, `priv_foreignerMessages`, `priv_foreignerFeeds`, `hash`, `backgroundImg`, `startLink`, `buddySuggestions`) VALUES
-(1, 1, 'admin', '440ac85892ca43ad26d44c7ad9d47d3e', '', 4, 1, 2, '', 1379628108, 1379628318, '', '', '', '',  '', '', '', '', '', '', '', '', '', '', '', 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, '9daac2a5464b45fa16ae355469622277', '', 'doit.php?action=showStartMessage', '');
+(1, 1, 'admin', '440ac85892ca43ad26d44c7ad9d47d3e', 'md5', 4, 1, 2, '', 1379628108, 1379628318, '', '', '', '',  '', '', '', '', '', '', '', '', '', '', '', 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, '9daac2a5464b45fa16ae355469622277', '', 'doit.php?action=showStartMessage', '');
 
 -- --------------------------------------------------------
 
