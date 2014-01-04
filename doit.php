@@ -44,7 +44,7 @@ if($_GET['action'] == "scorePlus"){
             <script>
             
             	parent.updateDashbox('fav');
-                parent.$('#rssFavList').append('<li><img src="./gfx/icons/rss.png" height="10">&nbsp;<a href="#" onclick="loader(\'newsContentFrame\',\'doit.php?action=showSingleRssFeed&id=<?=$favData[item];?>\');"><?=$title;?></a></li>');
+                parent.$('#rssFavList').append('<li><img src="./gfx/icons/rss.png" height="10">&nbsp;<a href="#" onclick="loader(\'newsContentFrame\',\'doit.php?action=showSingleRssFeed&id=<?=$favData['item'];?>\');"><?=$title;?></a></li>');
             </script>
             <?
             }
@@ -166,12 +166,12 @@ if($_GET['action'] == "scorePlus"){
      }
     else if($_GET['action'] == "addFileToPlaylist"){
          
-         $playlist = $_POST['playlistId'];
-         $newPlaylist = $_POST['playlistName'];
-         $file = "$_GET[file]";
-         $folder = "$_GET[folder]";
-         $element = "$_GET[element]";
-         $link = "$_GET[link]";
+         $playlist = save($_POST['playlistId']);
+         $newPlaylist = save($_POST['playlistName']);
+         $file = save($_GET['file']);
+         $folder = save($_GET['folder']);
+         $element = save($_GET['element']);
+         $link = save($_GET['link']);
          
          
                     if((!empty($playlist))OR(!empty($newPlaylist))){
@@ -206,7 +206,7 @@ if($_GET['action'] == "scorePlus"){
                     if(!empty($folder)){
                     $fileSql = mysql_query("SELECT id, name FROM folders WHERE id='$folder'");
                     $fileData = mysql_fetch_array($fileSql);
-                    $fileData[title] = $fileData[name];
+                    $fileData['title'] = $fileData['name'];
                     }
                     if(!empty($element)){
                     $fileSql = mysql_query("SELECT id, title FROM elements WHERE id='$element'");
@@ -389,21 +389,21 @@ if($_GET['action'] == "scorePlus"){
                             
                                 $userGroupsSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='".$_SESSION['userid']."'");
                                 while($userGroupsData = mysql_fetch_array($userGroupsSql)){
-                                    $userGroups[] = "$userGroupsData[group]";
+                                    $userGroups[] = $userGroupsData['group'];
                                 }
                                 foreach($userGroups AS &$userGroup){
                                     $query = "$query OR INSTR(`privacy`, '{$userGroup}') > 0";
                                 }
                             
                             
-                            $playListSql = mysql_query("SELECT id, user, title, played FROM playlist WHERE user='$_SESSION[userid]' $query");
+                            $playListSql = mysql_query("SELECT id, user, title, played FROM playlist WHERE user='".getUser()."' $query");
                             while($playListData = mysql_fetch_array($playListSql)){
                             $i++;
                             ?>
                             <tr border="0" class="strippedRow" width="100%" height="30">
                                 <td width="27">&nbsp;<img src="./gfx/icons/playlist.png"></td>
-                                <td width="150"><a href="javascript: popper('doit.php?action=showPlaylist&id=<?=$playListData[id];?>')"><?=$playListData[title]?></a></td>
-                                <td><?=$playListData[played];?></td>
+                                <td width="150"><a href="javascript: popper('doit.php?action=showPlaylist&id=<?=$playListData['id'];?>')"><?=$playListData['title']?></a></td>
+                                <td><?=$playListData['played'];?></td>
                             </tr>
                             <?PHP
                             } 
@@ -412,7 +412,7 @@ if($_GET['action'] == "scorePlus"){
                             }
 ?>
                         </table><br><br>
-     <?    
+     <?PHP
      }else if($_GET['action'] == "showUserGroups"){ ?>
                  
                      <h3 class="readerStartItem">
@@ -425,21 +425,22 @@ if($_GET['action'] == "scorePlus"){
                            <td align="right">members&nbsp;&nbsp;</td>
                        </tr>
                        <?
+                       $userid = getUser();
                        $attSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='$userid' AND validated='1'");
                        while($attData = mysql_fetch_array($attSql)){
                            $i++;
-                           $groupSql = mysql_query("SELECT id, title FROM groups WHERE id='$attData[group]'");
+                           $groupSql = mysql_query("SELECT id, title FROM groups WHERE id='".$attData['group']."'");
                            $groupData = mysql_fetch_array($groupSql);
                        $result = mysql_query("SELECT * FROM groupAttachments WHERE group='2'");
                        $num_rows = mysql_num_rows($result);
-                           $title = $groupData[title];
+                           $title = $groupData['title'];
                            $title10 = substr("$title", 0, 10);
                            $title15 = substr("$title", 0, 25);
                            ?>
                                <tr height="30" class="strippedRow">
                                    <td width="27">&nbsp;<img src="./gfx/icons/group.png" height="15"></td>
-                                   <td width="300">&nbsp;<a href="#" onclick="createNewTab('reader_tabView','<?=$title10;?>','','group.php?id=<?=$groupData[id];?>',true);return false"><?=$title15;?></a></td>
-                                   <td align="right"><?=countGroupMembers($groupData[id]);?>&nbsp;&nbsp;</td>
+                                   <td width="300">&nbsp;<a href="#" onclick="createNewTab('reader_tabView','<?=$title10;?>','','group.php?id=<?=$groupData['id'];?>',true);return false"><?=$title15;?></a></td>
+                                   <td align="right"><?=countGroupMembers($groupData['id']);?>&nbsp;&nbsp;</td>
                                </tr>
                        <?}
                        if($i < 1){
@@ -996,14 +997,14 @@ if($_GET['action'] == "scorePlus"){
         mysql_query("UPDATE user SET backgroundImg='$img' WHERE userid='$_SESSION[userid]'");
      }}else if($_GET['action'] == "writeMessage"){
         if(proofLogin()){
-        $user = save($_GET[buddy]);
-        if(isset($_POST[feed])) {
+        $user = save($_GET['buddy']);
+        if(isset($_POST['feed'])) {
         if(!isset($postCheck)) {
         $time = time();
-        $message = $_POST[feed];
+        $message = $_POST['feed'];
         $crypt = "0";
         
-    mysql_query("INSERT INTO messages (`sender`,`receiver`,`timestamp`,`text`,`read`,`crypt`) VALUES('$_SESSION[userid]', '$user', '$time', '$message', '0', '$crypt');");
+    mysql_query("INSERT INTO messages (`sender`,`receiver`,`timestamp`,`text`,`read`,`crypt`) VALUES('".getUser()."', '$user', '$time', '$message', '0', '$crypt');");
     $postCheck = 1;
     jsAlert("Worked :)");
     }
@@ -1023,10 +1024,8 @@ if($_GET['action'] == "scorePlus"){
                     <td>To:</td>
                     <td>
          <?
-         if(isset($_GET[buddy])){
-             $userSql = mysql_query("SELECT username FROM user WHERE userid='$_GET[buddy]'");
-             $userData = mysql_fetch_array($userSql);
-             echo $userData[username];
+         if(isset($_GET['buddy'])){
+			 useridToUsername(save($_GET['buddy']));
          }else{?>
              <input type="text" name="reveiver">
          <? } ?>
@@ -1073,14 +1072,14 @@ if($_GET['action'] == "scorePlus"){
 		
 		
          
-         $group = $_GET['id'];
-         if($_POST[submit]){
-             mysql_query("UPDATE groups SET public='$_POST[privacy]', description='$_POST[description]', membersInvite='$_POST[membersInvite]' WHERE id='$group'");
+         $group = save($_GET['id']);
+         if($_POST['submit']){
+             mysql_query("UPDATE groups SET public='".save($_POST['privacy'])."', description='".save($_POST['description'])."', membersInvite='".save($_POST['membersInvite'])."' WHERE id='$group'");
          jsAlert("Saved :)");
          }
          $groupSql = mysql_query("SELECT * FROM groups WHERE id='$group'");
          $groupData = mysql_fetch_array($groupSql);
-         if($groupData[membersInvite] == "1"){
+         if($groupData['membersInvite'] == "1"){
              $membersInvite = "checked=\"checked\"";
          }
          if($groupData["public"] == "1"){
@@ -1093,14 +1092,14 @@ if($_GET['action'] == "scorePlus"){
         <div class="jqPopUp border-radius transparency" id="groupAdmin">
             <header>
             <a class="jqClose" id="closeAdmin">X</a>
-            Admin - <?=$groupData[title];?>
+            Admin - <?=$groupData['title'];?>
             </header>
             <div class="jqContent">
                     <table height="200" width="400" style="margin: 20px; line-height:22pt;">
                         <tr>
                             <td style="vertical-align: top;" align="right">Description:</td>
                             <td width="20"></td>
-                            <td><textarea name="description" cols="30" rows="2"><?=$groupData[description];?></textarea></td>
+                            <td><textarea name="description" cols="30" rows="2"><?=$groupData['description'];?></textarea></td>
                         </tr>
                         <tr>
                             <td align="right">Privacy:</td>
@@ -1129,12 +1128,12 @@ if($_GET['action'] == "scorePlus"){
                                             $color="e5f2ff";
                                         }
                                         $i++;
-                                        $groupUserSql = mysql_query("SELECT username FROM user WHERE userid='$groupUseData[itemId]'");
+                                        $groupUserSql = mysql_query("SELECT username FROM user WHERE userid='".save($groupUseData['itemId'])."'");
                                         $groupUserData = mysql_fetch_array($groupUserSql);
                                         ?>
                                         <tr class="strippedRow groupMember_<?=$group."_".$groupUseData['itemId'];?>" valign="top">
                                             <td style="padding: 3px;"><?=showUserPicture($groupUseData, 15);?></td>
-                                            <td><?=$groupUserData[username];?></td>
+                                            <td><?=$groupUserData['username'];?></td>
                                             <td align="right">
                                             	<div class="btn-group" style="text-align:left;">
 												  <button class="btn btn-mini"><i class="icon icon-pencil"></i></button>
@@ -1143,7 +1142,7 @@ if($_GET['action'] == "scorePlus"){
 												  </button>
 												  <ul class="dropdown-menu">
 												    <li>&nbsp;<a href="doit.php?action=deleteUserFromGroup&groupid=<?=$group;?>&userid=<?=$groupUseData['itemId'];?>" target="submitter">delete</a></li>
-												    <li>&nbsp;<a href="#" onclick="groupMakeUserAdmin('<?=$group;?>', '<?=$groupUseData[itemId];?>'); return false">make Admin</a></li>
+												    <li>&nbsp;<a href="#" onclick="groupMakeUserAdmin('<?=$group;?>', '<?=$groupUseData['itemId'];?>'); return false">make Admin</a></li>
 												  </ul>
 												</div>
 												&nbsp;
@@ -1176,10 +1175,10 @@ if($_GET['action'] == "scorePlus"){
         <?
      }else if($_GET['action'] == "groupInviteUsers"){
          if(proofLogin()){
-         $group = $_GET[id];
+         $group = save($_GET['id']);
          $time = time();
-         if($_POST[submit]){
-         $userlist = $_POST[users];
+         if($_POST['submit']){
+         $userlist = $_POST['users'];
          if(isset($userlist)){
 	         foreach ($userlist as &$value) {
 	         	userJoinGroup($group, $value);
@@ -1192,16 +1191,16 @@ if($_GET['action'] == "scorePlus"){
 		 
 		 
 		 //query to slow needs to be replaced
-		 $userAttachmentsSQL = mysql_query("SELECT itemId FROM groupAttachments WHERE `group`='".mysql_real_escape_string($group)."' AND `item`='user'");
+		 $userAttachmentsSQL = mysql_query("SELECT itemId FROM groupAttachments WHERE `group`='".save($group)."' AND `item`='user'");
 		 while($userAttachmentsData = mysql_fetch_assoc($userAttachmentsSQL)){
-		 	$users[] = $userAttachmentsData[itemId];
+		 	$users[] = $userAttachmentsData['itemId'];
 		 }
 		 ?>
 	<form action="doit.php?action=groupInviteUsers&id=<?=$group;?>" method="post" target="submitter" id="groupInviteForm">
        <div class="jqPopUp border-radius transparency" id="groupInvite">
             <header>
             <a class="jqClose" id="closeInvite" onclick="$('.jqPopUp').slideUp();">X</a>
-            Invite Users - <?=$groupData[title];?>
+            Invite Users - <?=$groupData['title'];?>
             </header>
             <div class="jqContent">
 	            <table height="250">
@@ -1248,7 +1247,7 @@ if($_GET['action'] == "scorePlus"){
      }else if($_GET['action'] == "groupMakeUserAdmin"){
      	
 		
-     	echo groupMakeUserAdmin($_GET[groupId], $_GET[userId]);
+     	echo groupMakeUserAdmin($_GET['groupId'], $_GET['userId']);
 		
 		
      }else if($_GET['action'] == "groupremoveAdmin"){
@@ -1273,13 +1272,13 @@ if($_GET['action'] == "scorePlus"){
      
      else if($_GET['action'] == "chatSendMessage"){
      	
-		if(sendMessage($_GET[buddy], $_POST[message], $_POST[cryption])){
+		if(sendMessage($_GET['buddy'], $_POST['message'], $_POST['cryption'])){
 			
 	        echo"<script>";
 				?>
 				parent.updateDashbox('message');
 	            parent.$('.chatInput').val('');
-	            parent.$('#test_<?=str_replace(" ","_",$_GET[buddyname]);?>').load('modules/chat/chatreload.php?buddy=<?=urlencode($_GET[buddyname]);?>&initter=1');
+	            parent.$('#test_<?=str_replace(" ","_",$_GET['buddyname']);?>').load('modules/chat/chatreload.php?buddy=<?=urlencode($_GET['buddyname']);?>&initter=1');
 	        	<?
 	        echo"</script>";
 		}
@@ -1308,12 +1307,12 @@ if($_GET['action'] == "scorePlus"){
         }else if($_GET['action'] == "chatLoadMore"){
             
             $userid = getUser();
-            $buddyName = save("$_GET[buddy]");
+            $buddyName = save($_GET['buddy']);
             $buddy = usernameToUserid($buddyName);
             
             //when chatframe is loaded $limit = 0, when load more is clicked the first time $limit=1 etc.
             //it always adds thirty messages
-            $limit = save("$_GET[limit]");
+            $limit = save($_GET['limit']);
             $newLimit = $limit+1;
             //convert $limit to a mysql LIMIT conform string 
             $limit = $limit*10;
@@ -1330,16 +1329,16 @@ if($_GET['action'] == "scorePlus"){
             
                 
         }else if($_GET['action'] == "chatSendItem"){
-        	if(isset($_POST[submit])){
+        	if(isset($_POST['submit'])){
         		
 				
-					$message = "[itemThumb type=".$_POST['type']." typeId=".$_POST[typeId]."]";
-					if(sendMessage($_POST[buddy], $message, $_POST[cryption])){
+					$message = "[itemThumb type=".$_POST['type']." typeId=".$_POST['typeId']."]";
+					if(sendMessage($_POST['buddy'], $message, $_POST['cryption'])){
 						jsAlert("message");
 				        echo"<script>";
 							?>
 				            parent.$('.chatInput').val('');
-				            parent.$('#test_<?=str_replace(" ","_",$_POST[buddyName]);?>').load('modules/chat/chatt.php?buddy=<?=urlencode($_POST[buddyName]);?>&initter=1');
+				            parent.$('#test_<?=str_replace(" ","_",$_POST['buddyName']);?>').load('modules/chat/chatt.php?buddy=<?=urlencode($_POST['buddyName']);?>&initter=1');
 				        	<?
 				        echo"</script>";
 					}
@@ -1384,12 +1383,12 @@ if($_GET['action'] == "scorePlus"){
                     $customShow = $_POST['privacyCustomSee'];
                     $customEdit = $_POST['privacyCustomEdit'];
                     
-                    $privacy = exploitPrivacy("$_POST[privacyPublic]", "$_POST[privacyHidden]", $customEdit, $customShow);
+                    $privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
                     $user = getUser();
-                    $feed = "$_POST[feedInput]$_POST[feed1]";
+                    $feed = $_POST['feedInput'].$_POST['feed1'];
                     
                     //create feed
-                    $id = createFeed("$_SESSION[userid]", $feed, "", "feed", "p");
+                    $id = createFeed($_SESSION['userid'], $feed, "", "feed", "p");
                     // $Groups is privacy right now and not used => "p" is used instead
             ?>
             <script>
@@ -1401,7 +1400,7 @@ if($_GET['action'] == "scorePlus"){
             
         }
         else if($_GET['action'] == "showSingleFeed"){
-        $feedId = save("$_GET[feedId]");
+        $feedId = save($_GET['feedId']);
         echo'<div id="addFeed"></div>';
         showFeedNew("singleEntry", "", "", "$feedId");
         
@@ -1593,9 +1592,9 @@ if($_GET['action'] == "scorePlus"){
 	            $i++;
 	            ?>
 	                             <tr bgcolor="#<?=$bgcolor;?>" width="399" height="30">
-	                                 <td width="20"><input type="checkbox" name="users[]" value="<?=$blUserData[userid];?>"></td>
-	                                 <td width="40"><?=showUserPicture($blUserData[userid], 20);?></td>
-	                                 <td><?=$blUserData[username];?></td>
+	                                 <td width="20"><input type="checkbox" name="users[]" value="<?=$blUserData['userid'];?>"></td>
+	                                 <td width="40"><?=showUserPicture($blUserData['userid'], 20);?></td>
+	                                 <td><?=$blUserData['username'];?></td>
 	                             </tr>
 	            <?}?> 
 	                         </table>
@@ -2171,28 +2170,39 @@ if($_GET['action'] == "scorePlus"){
             <?}
             }else if($_GET['action'] == "editItem"){
                 if(proofLogin()){
-                $itemId = $_GET['itemId'];
-                $type = $_GET['type'];
+                $itemId = save($_GET['itemId']);
+                $type = save($_GET['type']);
                 if(isset($_POST['submit'])){
+                	
+					
+					//folders
                     if($type == "folder"){
                         $checkFolderSql = mysql_query("SELECT * FROM folders WHERE id='$itemId'");
                         $checkFolderData = mysql_fetch_array($checkFolderSql);
-                        if(authorize($checkFolderData['privacy'], "edit", $checkFolderData[creator])){
-                            $parentFolderPath = getFolderPath($checkFolderData[folder]);
+                        if(authorize($checkFolderData['privacy'], "edit", $checkFolderData['creator'])){
+                            $parentFolderPath = getFolderPath($checkFolderData['folder']);
 							
-							if (!file_exists("$parentFolderPath".urldecode($_POST[name]))) {
-                            if(rename("$parentFolderPath$checkFolderData[name]", "$parentFolderPath".urldecode($_POST[name]))){
-                            mysql_query("UPDATE folders SET name='$_POST[name]' WHERE id='$itemId'");
-                            jsAlert("Saved :)");
-							echo"<script>";
-							echo"parent.$('.jqPopUp').slideUp();";
-							echo"parent.addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=".$checkFolderData['folder']."&reload=1');";
-							echo"</script>";
-							
-							}}else{
+							//check if folder exists
+							if (!file_exists("$parentFolderPath".urldecode($_POST['name']))) {
+								//rename folder
+	                            if(rename("$parentFolderPath$checkFolderData[name]", "$parentFolderPath".urldecode(save($_POST['name'])))){
+	                            	//update db
+	                            	mysql_query("UPDATE folders SET name='".save($_POST['name'])."' WHERE id='".$itemId."'");
+		                            jsAlert("Saved :)");
+									
+									//close modal, updatefilebrowser.
+									echo"<script>";
+									echo"parent.$('.jqPopUp').slideUp();";
+									echo"parent.addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=".$checkFolderData['folder']."&reload=1');";
+									echo"</script>";
+								
+								}
+							}else{
 								jsAlert("A folder with this title already exists");
 							}
                         }
+						
+					//elements
                     }else if($type == "element"){
                         $checkElementSql = mysql_query("SELECT * FROM elements WHERE id='$itemId'");
                         $checkElementData = mysql_fetch_array($checkElementSql);
@@ -2206,6 +2216,8 @@ if($_GET['action'] == "scorePlus"){
                         }
                     }else if($type == "file"){
 
+
+					//links
                     }else if($type == "link"){
                     	$checkLinkData = mysql_fetch_array(mysql_query("SELECT * FROM links WHERE id='$itemId'"));
                     	
@@ -2213,7 +2225,7 @@ if($_GET['action'] == "scorePlus"){
                         			
                             	$privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
                         		
-                        		mysql_query("UPDATE links SET title='$_POST[title]', link='$_POST[link]', type='$_POST[type]', privacy='$privacy' WHERE id='$itemId'");
+                        		mysql_query("UPDATE links SET title='".save($_POST['title'])."', link='".save($_POST['link'])."', type='".save($_POST['type'])."', privacy='$privacy' WHERE id='$itemId'");
 								jsAlert("Saved :)");
 								echo"<script>parent.$('.jqPopUp').slideUp();</script>";
                         	
@@ -2221,6 +2233,8 @@ if($_GET['action'] == "scorePlus"){
                          	
                         		jsAlert("not authorized");
                          }
+						 
+					//playlist
                     }else if($type == "playlist"){
                         $checkPlaylistSql = mysql_query("SELECT user FROM playlist WHERE id='$itemId'");
                         $checkPlaylistData = mysql_fetch_array($checkPlaylistSql);
@@ -2234,7 +2248,7 @@ if($_GET['action'] == "scorePlus"){
 
                             $privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
                             
-                            mysql_query("UPDATE playlist SET title='$_POST[title]', privacy='$privacy'  WHERE id='$itemId'");
+                            mysql_query("UPDATE playlist SET title='".save($_POST['title'])."', privacy='$privacy'  WHERE id='$itemId'");
                             jsAlert("Saved :)");
             				echo"parent.updateDashbox('playlist');";
 							echo"<script>parent.$('.jqPopUp').slideUp();</script>";
@@ -2243,6 +2257,8 @@ if($_GET['action'] == "scorePlus"){
                     }
                     
                 }
+                
+                //folder
                 if($type == "folder"){
                     $editSQL = mysql_query("SELECT name FROM folders WHERE id='$itemId'");
                     $editData = mysql_fetch_array($editSQL);
@@ -2270,7 +2286,7 @@ if($_GET['action'] == "scorePlus"){
                         <td>Type:</td>
                         <td>
                         <select name=\"type\">
-                            <option value=\"$editData[type]\">$editData[type]</option>
+                            <option value=\"".$editData['type']."\">".$editData['type']."</option>
                             <option value=\"other\">other<option>
                             <option value=\"document\">document</option>
                             <option value=\"link\">link</option>
@@ -2376,7 +2392,7 @@ if($_GET['action'] == "scorePlus"){
                         <td><input type=\"text\" name=\"title\" value=\"$title\"></td>
                     </tr>
                         ";
-                    $privacy = "$editData[privacy]";
+                    $privacy = $editData['privacy'];
                     
 					$back = "";
                     
@@ -2443,8 +2459,8 @@ if($_GET['action'] == "scorePlus"){
          
 		<?
             }else if($_GET['action'] == "showItemThumb"){ 
-                $type = $_GET[type];
-                $itemId = $_GET[itemId];
+                $type = $_GET['type'];
+                $itemId = $_GET['itemId'];
                 ?>
                 <style>
                     .itemThumb{
@@ -2873,7 +2889,7 @@ if($_GET['action'] == "scorePlus"){
             	
             }else if($_GET['action'] == "tester"){
             	
-				mysql_query("DELETE FROM messages WHERE 1=1");
+				//mysql_query("DELETE FROM messages WHERE 1=1");
 				
 	     		
             }
