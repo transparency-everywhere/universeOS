@@ -662,6 +662,31 @@
       }
   }
   
+  function updateUserPassword($oldPassword, $newPassword, $newSalt, $privateKey, $userid=NULL){
+  	if($userid == NULL){
+  		$userid = getUser();
+  	}
+	
+	
+	$userData = getUserData($userid);
+	if($userData['password'] == $oldPassword){
+		
+		//store salt
+		createSalt('auth', $userid, 'user', $userid, $newSalt);
+        
+		//create signature
+		$sig = new signatures();
+		$sig->updatePrivateKey('user', $userid, $privateKey); //store encrypted private key
+		
+		mysql_query("UPDATE `user` SET  `password`='".$newPassword."' WHERE userid='$userid'");
+	
+  		return true;
+	}else{
+		echo $userData['password'].'//////////////////////'.$oldPassword;
+		return false;
+	}
+  }
+  
   function proofLogin(){
       if(isset($_SESSION['userid'])){
           return true;
@@ -892,10 +917,10 @@
             <td>
                 <table>
                     <tr>
-                        <td style="font-size: 10pt;">&nbsp;<a href="#" onclick="showProfile(<?=$feedUserData['userid'];?>);"><?=$feedUserData['username'];?></a></td>
+                        <td style="font-size: 10pt;line-height: 17px;">&nbsp;<a href="#" onclick="showProfile(<?=$feedUserData['userid'];?>);"><?=$feedUserData['username'];?></a></td>
                     </tr>             
                     <tr>
-                        <td style="font-size: 08pt;">&nbsp;<i><?=universeTime($timestamp);?></i></td>
+                        <td style="font-size: 15pt;line-height: 23px;">&nbsp;<i><?=universeTime($timestamp);?></i></td>
                     </tr>
                 </table>
             </td>
@@ -1279,11 +1304,11 @@ echo"</div>";
     function showFeedComments($feedid) 
     { ?>
     <div id="feedComment_<?=$feedid;?>">
-    <div class="shadow subcomment">
+    <div class="shadow comments">
     <?php
     if(proofLogin()){
         ?>
-    <div class="shadow commentRow" id="feedfeed">
+    <div class="shadow commentRow" id="feedfeed" style="margin:5px;">
       <center> 
           <form action="showComment.php" method="post" id="addComment" target="submitter">
               <table>
@@ -2061,8 +2086,8 @@ echo"</div>";
     <div id="realFeed" class="feedNo<?=$feedData['feedid'];?>">
         <?=userSignature($feedData['owner'], $feedData['timestamp']);?>
         <div style="padding: 10px;"><?=nl2br(htmlspecialchars($feedData['feed']));?><?=$text;?></div><br>
-        <div style="padding: 15px;"><div><?=showScore("feed", $feedData['feedid']);?><div style=" width: 150px; float:right; margin-top: -22px;"><?=showItemSettings('feed', "$feedData[feedid]");?></div></div></div>
-                <a href="javascript:showfeedComment(<?=$feedData['feedid'];?>);" class="btn btn-mini" style="float: right; margin-top: -29px; margin-right: 5px; color: #606060">comments&nbsp;(<?=countComment("feed", $feedData[feedid]);?>)</a><div class="shadow" id="feed<?=$feedData[feedid];?>" style="padding:15px; display:none;"></div><hr style="margin: 0px;">
+        <div style="padding: 15px;"><div><?=showScore("feed", $feedData['feedid']);?><div style=" width: 150px; float:right; margin-top: -24px;"><?=showItemSettings('feed', "$feedData[feedid]");?></div></div></div>
+                <a href="javascript:showfeedComment(<?=$feedData['feedid'];?>);" class="btn btn-mini" style="float: right; margin-top: -29px; margin-right: 5px; color: #606060">comments&nbsp;(<?=countComment("feed", $feedData[feedid]);?>)</a><div class="shadow" id="feed<?=$feedData[feedid];?>" style="padding:15px; display:none;"></div>
     </div>
     <?php
                 //feeds like the login feed are deleted after the validity passed
@@ -2215,12 +2240,12 @@ echo"</div>";
             <div style="padding: 15px;">
                 <div>
                     <?=showScore("feed", $feedData['id']);?>
-                    <div style="float:right; position: absolute; margin-top: -22px; margin-left: 108px;"><?=showItemSettings('feed', "$feedData[id]");?></div>
+                    <div style="float:right; position: absolute; margin-top: -24px; margin-left: 108px;"><?=showItemSettings('feed', "$feedData[id]");?></div>
                 </div>
             </div>
             <a href="javascript:showfeedComment(<?=$feedData['id'];?>);" class="btn btn-mini" style="float: right; margin-top: -38px; margin-right: 15px; color: #606060"><i class="icon-comment"></i>&nbsp;(<?=countComment("feed", $feedData[id]);?>)</a>
             <div class="shadow" id="feed<?=$feedData['id'];?>" style="display:none;"></div>
-            <hr style="margin: 0px;">
+            
         </div>
                 <?php
                 //feeds like the login feed are deleted after the validity passed
@@ -3441,9 +3466,9 @@ echo"</div>";
     }
     
     function getFullFilePath($fileId){
-        $documentSQL = mysql_query("SELECT folder, filename FROM  `files` WHERE id='$fileId'");
+        $documentSQL = mysql_query("SELECT folder, filename FROM  `files` WHERE id='".save($fileId)."'");
         $documentData = mysql_fetch_array($documentSQL);
-            $documentElementSQL = mysql_query("SELECT folder FROM elements WHERE id='$documentData[folder]'");
+            $documentElementSQL = mysql_query("SELECT folder FROM elements WHERE id='".save($documentData['folder'])."'");
             $documentElementData = mysql_fetch_array($documentElementSQL);
             $path = "upload/";
             $folderArray = loadFolderArray("path", $documentElementData['folder']);
@@ -3454,23 +3479,32 @@ echo"</div>";
             }
             
             
-                $documentFolderSQL = mysql_query("SELECT * FROM folders WHERE id='$documentElementData[folder]'");
+                $documentFolderSQL = mysql_query("SELECT * FROM folders WHERE id='".save($documentElementData['folder'])."'");
                 $documentFolderData = mysql_fetch_array($documentFolderSQL);
 
                 $path = urldecode($path);
-                $filePath = "$path$documentData[filename]";
+                $filePath = $path.$documentData['filename'];
                 return $filePath;
     }
+
+	function getFileData($fileId){
+		$fileData = mysql_fetch_array(mysql_query("SELECT * FROM files WHERE id='".save($fileId)."'"));
+		return $fileData;
+	}
     
+	function fileIdToFileTitle($fileId){
+		$fileData = getFileData($fileId);
+		return $fileData['title'];
+	}
     
     function fileIdToFileType($fileId){
-        $fileData = mysql_fetch_array(mysql_query("SELECT type FROM files WHERE id='$fileId'"));
+        $fileData = mysql_fetch_array(mysql_query("SELECT type FROM files WHERE id='".save($fileId)."'"));
         return $fileData['type'];
     }
     
     function linkIdToFileType($fileId){
         
-        $fileData = mysql_fetch_array(mysql_query("SELECT type FROM links WHERE id='$fileId'"));
+        $fileData = mysql_fetch_array(mysql_query("SELECT type FROM links WHERE id='".save($fileId)."'"));
         return $fileData['type'];
     }
     
@@ -5368,6 +5402,12 @@ class signatures{
 	function get($type, $itemId){
 		$data = mysql_fetch_array(mysql_query("SELECT * FROM `signatures` WHERE `type`='$type' AND `itemId`='$itemId'"));
 		return $data;
+	}
+	
+	function updatePrivateKey($type, $itemId, $privateKey){
+		if(!empty($privateKey)){
+			mysql_query("UPDATE `signatures` SET privateKey='".save($privateKey)."' WHERE `type`='".save($type)."', `itemId`='".save($itemId)."'");
+		}
 	}
 	
 	function delete($type, $itemId){
