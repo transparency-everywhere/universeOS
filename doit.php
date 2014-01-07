@@ -2880,10 +2880,15 @@ if($_GET['action'] == "scorePlus"){
             	if(!empty($_SESSION['userid'])){
             		
             	unset($_SESSION['userid']);
+            	unset($_SESSION['personalFeed']);
 				session_unset();
     			jsAlert( "good bye");
 				?>
-				<script>top.window.location.href='http://amnesty.org';</script>
+				<script>
+	    							parent.localStorage.currentUser_userid = 'userid';
+	    							parent.localStorage.currentUser_username = '';
+	    							parent.localStorage.currentUser_passwordHashMD5 = '';
+	    							top.window.location.href='http://amnesty.org';</script>
 				<?
 				}
             	
