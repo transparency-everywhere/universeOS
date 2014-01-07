@@ -1,4 +1,7 @@
 //initialize
+var sourceURL = 'http://universeos.org';
+
+
 var usernames = [];
 var privateKeys = [];
 var messageKeys = [];
@@ -8,117 +11,10 @@ var openDialogueInterval;
 var focus = true;
 
                 $(document).ready(function(){
-                			
-                	//init search
-					$("#searchField").keyup(function()
-					{
-						
-						delay(function(){
-							var search;
-							
-							search = $("#searchField").val();
-							if (search.length > 1)
-							{
-								$.ajax(
-								{
-									type: "POST",
-									url: "modules/suggestions/dockSearch.php",
-									data: "search=" + search,
-									success: function(message)
-									{
-										$("#suggest").empty();
-								  		if (message.length > 1)
-										{						
-											$("#suggest").append(message);
-										}
-									}
-								});
-							}
-							else
-							{
-								$("#suggest").empty();
-							}
-							
-						}, 500 );
-					});
-                
-
-		            //init dashcloses 
-					$('.dashBox .dashClose').click(function(){
-						$(this).parent('.dashBox').slideUp();
-					});	
-                
-                
-                	//old creepy way to initalize windows => in future => css media width
-                	
-                	
-                    var oneSixthWidth = ($(document).width())/6;
-                    var oneSixthHeight = $(document).height()/6;
-                    
-                    var offsetTop = oneSixthHeight/2;
-                    var offsetRight = oneSixthWidth/2;
-                    var offsetLeft = offsetRight;
-                    
-                    var widthSm = oneSixthWidth;
-                    var heightSm = oneSixthHeight*4;
-                    
-                    var widthBig = oneSixthWidth*3;
-                    var heightBig = heightSm;
-                    
-                    
-                    
-                            
-                        $("#buddylist").css({
-                        'top' : offsetTop,
-                        'right' : offsetRight+20,
-                        'width' : widthSm,
-                        'height' : heightBig,
-                        'z-index' : '9998'
-                            });
-                        
-                        $("#feed").css({
-                        'top' : offsetTop+20,
-                        'right' : offsetRight,
-                        'width' : widthSm,
-                        'height' : heightBig,
-                        'z-index' : '9997'
-                            });
-                            
-                            
-                        $("#chat").css({
-                        'top' : offsetTop,
-                        'left' : offsetLeft,
-                        'width' : widthBig,
-                        'height' : heightBig,
-                        'z-index' : '997'
-                            });
-                            
-                        $("#filesystem").css({
-                        'top' : offsetTop+20,
-                        'left' : offsetLeft+20,
-                        'width' : widthBig,
-                        'height' : heightBig,
-                        'z-index' : '998'
-                            });
-                            
-                        $("#reader").css({
-                        'top' : offsetTop+40,
-                        'left' : offsetLeft+40,
-                        'width' : widthBig,
-                        'height' : heightBig,
-                        'z-index' : '999'
-                            });
-                        
-                        
-                        $("#filesystem:hidden").fadeIn(3000);
-                        $("#buddylist:hidden").fadeIn(3000);
-                        
-                        $("#feed:hidden").fadeIn(3000);
-                        $("#chat:hidden").fadeIn(3000);
                         
                         
                         //init draggable windows
-                        initDraggable();
+                        init.GUI();
                         
                         //init bootstrap popover
                         $('.bsPopOver').popover();
@@ -126,27 +22,6 @@ var focus = true;
                         //init bootstrap alert
                         $(".alert").alert();
                     
-                });
-                
-                
-
-                $(document).mousemove(function(event){
-                    window.mouseX = event.pageX;
-                    window.mouseY = event.pageY;
-                    $('.mousePop').hide();
-                });
-                
-                
-                
-                //initialize mousePop(tooltip)
-                $('.tooltipper').mouseenter(function(){
-                    
-                    var type = $(this).attr("data-popType");
-                    var id = $(this).attr("data-typeId");
-                    var text = $(this).attr("data-text");
-                    mousePop(type, id, text);
-                }).mouseleave(function(){
-                    $('.mousePop').hide();
                 });
 //privacy
 
@@ -226,11 +101,12 @@ var focus = true;
     
               
 //window functions
-
-              function initDraggable(){
-                    //Draggable Window
-                    $(function() {
-                            $(".fenster").draggable({ 
+              var init = new function(){
+              	
+              	
+              	this.draggableApplications = function(){
+              		
+                            $(".fenster").draggable({
                                     cancel: '.inhalt',
                                     containment: '#bodywrap',
                                     scroll: false,
@@ -243,14 +119,8 @@ var focus = true;
                                         $('*').enableSelection();
                                     }
                             });
-                            
-
-
-
-
-                    });
-                    //Resizeable window
-                    $(function() {
+              	}
+              	this.resizableApplications = function(){
                             $(".fenster").resizable({
                                     handles: 'n, e, s, w, ne, se, sw, nw',
                                     containment: '#bodywrap',
@@ -268,8 +138,8 @@ var focus = true;
                                         $('*').enableSelection();
                                     }
                             });
-                    });
-                    $(function() {
+              	}
+              	this.applicationOnTop = function(){
                         $('.fenster').children().mousedown(function(){
 							
                            	if($(this) != undefined){
@@ -279,20 +149,231 @@ var focus = true;
                             $(this).parent(".fenster").css('position', 'absolute');
                             }
                         });
-                    });
-    	                            // $('.fenster').mouseout(function(){
-                            	// $(this).children('.titel').hide(); 
-                            	// $(this).css('padding', '0'); 
-                            	// $(this).children('.inhalt').css('margin', '0'); 
-                            	// $(this).children('.inhalt').css( "width", "+=12" );
-                            // });
-                            // $('.fenster').mouseover(function(){ 
-                            	// $(this).children('.titel').show(); 
-                            	// $(this).css('padding', '2px 0 35px'); 
-                            	// $(this).children('.inhalt').css('margin', '0 6px'); 
-                            	// $(this).children('.inhalt').css( "width", "auto" );
-                            // });
+              	}
+              	this.setApplicationsToStartupSizes = function(){
+              		//old creepy way to initalize windows => in future => css media width
+                	
+                	
+                    var oneSixthWidth = ($(document).width())/6;
+                    var oneSixthHeight = $(document).height()/6;
+                    
+                    var offsetTop = oneSixthHeight/2;
+                    var offsetRight = oneSixthWidth/2;
+                    var offsetLeft = offsetRight;
+                    
+                    var widthSm = oneSixthWidth;
+                    var heightSm = oneSixthHeight*4;
+                    
+                    var widthBig = oneSixthWidth*3;
+                    var heightBig = heightSm;
+                    
+                    
+                    
+                            
+                        $("#buddylist").css({
+                        'top' : offsetTop,
+                        'right' : offsetRight+20,
+                        'width' : widthSm,
+                        'height' : heightBig,
+                        'z-index' : '9998'
+                            });
+                        
+                        $("#feed").css({
+                        'top' : offsetTop+20,
+                        'right' : offsetRight,
+                        'width' : widthSm,
+                        'height' : heightBig,
+                        'z-index' : '9997'
+                            });
+                            
+                            
+                        $("#chat").css({
+                        'top' : offsetTop,
+                        'left' : offsetLeft,
+                        'width' : widthBig,
+                        'height' : heightBig,
+                        'z-index' : '997'
+                            });
+                            
+                        $("#filesystem").css({
+                        'top' : offsetTop+20,
+                        'left' : offsetLeft+20,
+                        'width' : widthBig,
+                        'height' : heightBig,
+                        'z-index' : '998'
+                            });
+                            
+                        $("#reader").css({
+                        'top' : offsetTop+40,
+                        'left' : offsetLeft+40,
+                        'width' : widthBig,
+                        'height' : heightBig,
+                        'z-index' : '999'
+                            });
+              	}
+              	
+              	this.dashBox = function(){
+		            //init dashcloses 
+					$('.dashBox .dashClose').click(function(){
+						$(this).parent('.dashBox').slideUp();
+					});	
+              	}
+              	
+              	this.toolTipper = function(){
+                
+                
+
+	                $(document).mousemove(function(event){
+	                    window.mouseX = event.pageX;
+	                    window.mouseY = event.pageY;
+	                    $('.mousePop').hide();
+	                });
+	                
+	                
+	                
+	                //initialize mousePop(tooltip)
+	                $('.tooltipper').mouseenter(function(){
+	                    
+	                    var type = $(this).attr("data-popType");
+	                    var id = $(this).attr("data-typeId");
+	                    var text = $(this).attr("data-text");
+	                    mousePop(type, id, text);
+	                }).mouseleave(function(){
+	                    $('.mousePop').hide();
+	                });
+              		
+              	}
+              	this.search = function(){
+              		//init search
+					$("#searchField").keyup(function()
+					{
+						
+						delay(function(){
+							var search;
+							
+							search = $("#searchField").val();
+							if (search.length > 1)
+							{
+								$.ajax(
+								{
+									type: "POST",
+									url: "modules/suggestions/dockSearch.php",
+									data: "search=" + search,
+									success: function(message)
+									{
+										$("#suggest").empty();
+								  		if (message.length > 1)
+										{						
+											$("#suggest").append(message);
+										}
+									}
+								});
+							}
+							else
+							{
+								$("#suggest").empty();
+							}
+							
+						}, 500 );
+					});
+              	}
+              	
+              	//this function is called to initialzie GUI
+              	//all needed functions are collected here
+              	this.GUI = function(){
+              		this.draggableApplications();
+              		this.resizableApplications();
+              		this.applicationOnTop();
+              		this.setApplicationsToStartupSizes();
+              		
+              		this.dashBox();
+              		
+              		this.toolTipper();
+              		this.search();
+              		
+              		
+              		//fade in applications
+                    $("#filesystem:hidden").fadeIn(3000);
+                    $("#buddylist:hidden").fadeIn(3000);
+                    
+                    $("#feed:hidden").fadeIn(3000);
+                    $("#chat:hidden").fadeIn(3000);
+                        
+              	};
+              	
               }
+              // function Rabbit(adjective) {
+				  // this.adjective = adjective;
+				  // this.speak = function(line) {
+				    // print("The ", this.adjective, " rabbit says '", line, "'");
+				  // };
+			  // }
+			  // var killerRabbit = new Rabbit("killer");
+			  // killerRabbit.speak("GRAAAAAAAAAH!");
+              function Tab(parentId) {
+				  this.parentId = parentId; //id in which tabs are loaded
+				  this.index = 1;
+				  this.init = function(firstTitle, firstType, firstContent) {
+				  
+				  	var content =  '<div class="tabs">';
+				  			content += '<ul class="tabBar">';
+				  				content += '<li class="active" id="1">'+firstTitle+'</li>';
+				  			content += '</ul>';
+				  		
+				  			content += '<div class="tab active" id="1">';
+				  			content += '</div>';
+				  		content += '</div>';
+				  
+				  }
+				  
+				  this.addTab = function(title, type, content){
+				  	this.index++;
+				  	$(this.parentSelector).children('.tabs .tabBar').append('<li class="active" id="1">'+firstTitle+'</li>');
+				  	$(this.parentSelector).children('.tabs').append('<div class="tab active" id="'+this.index+'"></div>');
+				  }
+				  
+				  this.updateTab = function(id, title, type, content){
+				  	
+				  }
+				  this.deleteTab = function(id){
+				  	
+				  }
+			  }
+              
+			  var application = new function(){
+			  	this.onTop = new function(id){
+			  		
+                  $(".fenster").css('z-index', 998);
+                  $("#"+id+"").css('z-index', 999);
+                  $("#"+id+"").css('position', 'absolute');
+			  		
+			  	};
+			  	
+			  	this.show = new function(id){
+                  applicationOnTop(id);
+                  $("#" + id +"").show();
+			  	};
+			  	
+			  	this.hide = new function(id){
+                  $("#" + id +"").hide();
+			  	};
+			  	
+			  	this.fullscreen = new function(id){
+                  $("#" + id +"").toggle();
+			  	};
+			  	
+			  	this.returnFromFullScreen = new function(id){
+              	$('#'+id+' .fullScreenIcon').attr("onClick","moduleFullscreen('"+id+"')");
+                  var returnFullScreenCSS = {
+                        'position' : 'absolute',
+                        'top' : window.fullScreenOldMarginY,
+                        'left' : window.fullScreenOldMarginX,
+                        'width' : window.fullScreenOldX,
+                        'height' : window.fullScreenOldY
+                        }
+                  $("#" + id + "").css(returnFullScreenCSS);
+			  	};
+			  }
 
 
               function applicationOnTop(id){
@@ -350,21 +431,102 @@ var focus = true;
               }
               
               function jsAlert(type, message){
-              	var alertClass;
-              	if(empty(type)){
-              		alertClass = 'alert-info';
-              	}else if(type == 'success'){
-              		alertClass = 'alert-success';
-              	}else if(type == 'error'){
-              		alertClass = 'alert-error';
+	              	var alertClass;
+	              	if(empty(type)){
+	              		alertClass = 'alert-info';
+	              	}else if(type == 'success'){
+	              		alertClass = 'alert-success';
+	              	}else if(type == 'error'){
+	              		alertClass = 'alert-error';
+	              	}
+	              	
+	              	$('#alerter').append('<div class="alert '+alertClass+'"><button type="button" class="close" data-dismiss="alert">&times;</button>'+message+'</div>');
+	              	$('.alert').delay(5000).fadeOut(function(){
+	              		$(this).remove();
+	              	});
+              }
+              var files = new function(){
+              	
+              	this.fileIdToFileTitle = function(fileId){
+				    var result="";
+				    
+				    $.ajax({
+				      url:"api.php?action=fileIdToFileTitle",
+				      async: false,  
+					  type: "POST",
+					  data: { fileId : fileId },
+				      success:function(data) {
+				         result = data; 
+				      }
+				   });
+				   return result;
               	}
               	
-              	$('#alerter').append('<div class="alert '+alertClass+'"><button type="button" class="close" data-dismiss="alert">&times;</button>'+message+'</div>');
-              	$('.alert').delay(5000).fadeOut(function(){
-              		$(this).remove();
-              	});
               }
               
+              var filesystem =  new function() {
+              	
+              	this.openShareModal = function(type, typeId){
+              		
+              		var title;
+              		var content;
+              		var universeFileBrowserURL;
+              		switch(type){
+              			case 'file':
+              				var fileTitle = files.fileIdToFileTitle(typeId);
+              				title = 'Share "'+fileTitle+'"';
+              				universeFileBrowserURL = '?file='+typeId;
+              				universeKickStarterURL = '?file='+typeId; //should be the same like fileBrowserURL 
+              			break;
+              			case 'elemement':
+              			break;
+              		}
+              		universeFileBrowserURL = sourceURL+'/out/'+universeFileBrowserURL;
+              		
+              		content = '<ul class="shareList">';
+	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #facebook\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">Facebook <img src="gfx/startPage/facebook.png"></li>';
+	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #twitter\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">Twitter <img src="gfx/startPage/twitter.png"></li>';
+	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #embed\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">Embed Code <img src="gfx/startPage/wikipedia.png"></li>';
+              		content += '</ul>';
+              		
+              		content += '<ul class="shareBox">';
+              			content += '<li id="facebook"><center><a target="_blank" href="http://www.facebook.com/sharer/sharer.php?u='+universeFileBrowserURL+'" class="btn btn-success"><img src="gfx/startPage/facebook.png" height="20"> Click Here To Share</a></center></li>'
+              			content += '<li id="embed"><center><textarea><iframe src="'+universeFileBrowserURL+'"></iframe></textarea></center>Just place the HTML code for your Filebrowser wherever<br> you want the Browser to appear on your site.</li>';
+              			content += '<li id="twitter"><center><a target="_blank" href="https://twitter.com/share?url='+universeFileBrowserURL+'" class="btn btn-success"><img src="gfx/startPage/twitter.png" height="20"> Click Here To Share</a></center></li>';
+              		content += '</ul>';
+              		
+              		
+              		modal.create(title, content);
+              	}
+              	
+              }
+              
+              
+              var modal =  new function() {
+			    this.title = localStorage.currentUser_userid;
+			    this.html = '';
+			    this.create = function (title, content, action) {
+			    	this.html += '<div class="blueModal border-radius container">';
+	            		this.html += '<header>';
+	            			this.html += title;
+	            		this.html += '</header>';
+	            		this.html += '<div class="content">';
+	            		this.html += content;
+	            		this.html += '</div>';
+	            		this.html += '<footer>';
+	            		
+	                 		this.html += '<a href="#" onclick="$(\'.blueModal\').hide(); return false;" class="btn pull-left">Close</a>';
+	                 		if(typeof action !== 'undefined'){
+	                			this.html += '<a href="#" onclick="'+action+'" class="btn btn-primary pull-right">&nbsp;&nbsp;Next&nbsp;&nbsp;</a>';
+	                 		}
+	            		
+	            		this.html += '</footer>';
+	            		
+	            	this.html += '</div>';
+            		
+            		$('#popper').append(this.html);
+			    };
+			}
        
        
 //encryption functions
@@ -431,7 +593,60 @@ var focus = true;
 		
 	}
 	
-    function getPrivateKey(type, itemId, salt){
+	function createSalt(type, itemId, receiverType, receiverId, salt){
+			var ret;
+			$.ajax({
+			  url:"api.php?action=createSalt",
+			  async: false,  
+			  type: "POST",
+			  data: { type: type, itemId: itemId, receiverType: receiverType, receiverId: receiverId, salt: salt },
+			  success:function(data) {
+			     ret = data; 
+			  }
+			});
+			
+			return ret;
+	}
+	
+	var hash = new function(){
+		this.MD5 = function(string){
+			var hash = CryptoJS.MD5(password);
+			return hash.toString(CryptoJS.enc.Hex);
+		}
+		this.SHA512 = function(string){
+			var hash = CryptoJS.SHA512(salt+passwordHashMD5);
+			return hash.toString(CryptoJS.enc.Hex);
+		}
+	}
+	
+	
+	var sec =  new function() {
+		
+				//standard password cypher used in processRegistration(), login() and updatePassword();
+			    this.passwordCypher = function (password, type, itemId, salt) {
+			    	
+			    	//md5 has to be replaced with more secure hashing function
+					var passwordHashMD5  = hash.MD5(password);
+					
+					if(type.length > 0){
+						var salt = getSalt(type, itemId, passwordHashMD5); //get auth salt, using md5 hash as key
+					}
+					
+				   	
+				   	var passwordHash = hash.SHA512(salt+passwordHashMD5);;
+				   	
+    				var keyHash =  hash.SHA512(passwordHashMD5+salt);
+				    
+				    return [passwordHash, passwordHashMD5, keyHash];
+			    }
+			    
+			    this.randomString = function(){
+			    	return hash.SHA512(randomString(64, '#aA'));  //generate salt and hash it.
+			    	
+			    }
+			}
+	
+    function getPrivateKey(type, itemId, salt, password){
             
 	    var privateKey;
             var index = type+'_'+itemId;
@@ -448,10 +663,12 @@ var focus = true;
 			  }
 			});
 		
-			var password = localStorage.currentUser_passwordHashMD5;
-			
-		    var shaKey = CryptoJS.SHA512(password+salt);
-		    var keyHash = shaKey.toString(CryptoJS.enc.Hex);
+			if(typeof password === 'undefined'){
+				var password = localStorage.currentUser_passwordHashMD5;
+			}
+				console.log(password);
+
+		    var keyHash = hash.SHA512(password+salt);
 			
 	    	privateKey = symDecrypt(keyHash, encryptedKey); //encrypt private Key using password
                 privateKeys[index] = privateKey;
@@ -493,6 +710,8 @@ var focus = true;
             return false;
         }
     }
+    
+    
               
 //general functions
         
@@ -702,8 +921,8 @@ var focus = true;
             });
         }
     }
-       
-//reader
+
+//filesystem
 	function openUploadTab(element){
 	
         showApplication('filesystem');
@@ -735,6 +954,7 @@ var focus = true;
                                 
 	}
 	
+//reader
     function toggleProfileTabs(id){
         $(".profileSlider").hide();
         $("#" + id + "").slideDown();
@@ -937,6 +1157,29 @@ var focus = true;
             },'html');
        }
        
+    function universeText(str){
+    	//http://growingtech.blogspot.de/2012/06/replace-smiley-code-with-images-in-chat.html
+    	var replacement = { 
+    		":(": "<a class=\"smiley smiley1\"></a>",
+    		":|": '<a class="smiley smiley2"></a>',
+    		";)": '<a class="smiley smiley3"></a>',
+    		":P": '<a class="smiley smiley4"></a>',
+    		":D": '<a class="smiley smiley5"></a>',
+    		":)": '<a class="smiley smiley6"></a>',
+    		":(": '<a class="smiley smiley7"></a>',
+    		":-*": '<a class="smiley smiley8"></a>',
+    		
+    	};
+    	var string = str;
+	    string = escape(string);
+	    for (var val in replacement)
+	        string = string.replace(new RegExp(escape(val), "g"), replacement[val]);
+	        string.replace(/\[itemthumb type=(\S*) typeId=(\S*)]/g, '<a href="$1">$2<\/a>');
+	    string = unescape(string);
+	    return string
+    }
+    
+       
     function addStrToChatInput(buddy, string){
         $('#chatInput_'+buddy).val($('#chatInput_'+buddy).val() + string);
     }
@@ -968,68 +1211,57 @@ var focus = true;
         $('#toggleKey_'+userid+' .lockIcon').removeClass('locked');
     }
     
-    function updatePassword(oldPassword, newPassword){
+    function updatePassword(oldPassword, newPassword, userid){
     	
-    	 	// var username = $("#regUsername").val();
-		    // var password = $("#registration #password").val();
-		    // var captcha = $("#captcha").val();
-// 		    
-// 		    
-			// //cypher password into two hashes
-			// //passwordHash is used to cypher the password for db
-			// //keyHash is used to encrypt the pricate Key
-			// var md = CryptoJS.MD5(password);
-			// password = md.toString(CryptoJS.enc.Hex);
-// 			
-// 			
-		    // var salt = CryptoJS.SHA512(randomString(64, '#aA'));  //generate salt and hash it.
-// 		    
-		    // var shaPass = CryptoJS.SHA512(salt+password);
-		    // var passwordHash = shaPass.toString(CryptoJS.enc.Hex); //parse cypher object to string
-// 		    
-// 		    
-		    // var shaKey = CryptoJS.SHA512(password+salt);
-		    // var keyHash = shaKey.toString(CryptoJS.enc.Hex);
-		    // var salt = symEncrypt(password, salt.toString(CryptoJS.enc.Hex));				  //encrypt salt, using md5-pw hash
-// 		    
-// 		    
-		    			// //generate Keypair
-					      // var crypt;
-					      // var publicKey;
-					      // var privateKey;
-					      // crypt = new JSEncrypt({default_key_size: 1024});
-						  // jsAlert('', 'The universe creates now your keypair, this may take some seconds..');
-					      // crypt.getKey(function () {
-					      	// privateKey = symEncrypt(keyHash, crypt.getPrivateKey()); //encrypt privatestring, usering the password hash
-					      	// publicKey = crypt.getPublicKey();
-// 		    
-		                // //submit registration
-		                // $.post("../../api.php?action=processSiteRegistration", {
-		                       // username:username,
-		                       // password:passwordHash,
-		                       // salt:salt,
-		                       // publicKey:publicKey,
-		                       // privateKey:privateKey,
-		                       // captcha:captcha
-		                       // }, function(result){
-		                            // var res = result;
-		                            // if(res == 1){
-		                                // //load checked message
-		                                // jsAlert('','You just joined the universeOS');
-		                                // $('#registration').slideUp('');
-// 		                                
-		                                // $('#loginUsername').val(username);
-		                                // $('#loginPassword').val($("#registration #password").val());
-							            // $("#startbox").show("slow");
-							            // $("#startbox").css('z-index', 9999);
-							            // $("#startbox").css('position', 'absolute');
-		                            // }else{
-		                                // alert(res);
-		                            // }
-		                       // }, "html");
-// 		
-					      // });
-// 					      
+		//cypher old password
+		var mdOld = CryptoJS.MD5(oldPassword);
+		var passwordHashMD5Old  = mdOld.toString(CryptoJS.enc.Hex);
+		
+		var saltOld = getSalt('auth', userid, passwordHashMD5Old); //get auth salt, using md5 hash as key
+		console.log(saltOld);
+		
+	    var shaPassOld = CryptoJS.SHA512(saltOld+passwordHashMD5Old);
+	    var passwordHashOld = shaPassOld.toString(CryptoJS.enc.Hex);
+		
+		//cypher new password
+		var mdNew = CryptoJS.MD5(newPassword);
+		var passwordHashMD5New  = mdNew.toString(CryptoJS.enc.Hex);
+		console.log(passwordHashMD5New);
+		
+		
+    	var saltNew = saltOld;
+		console.log(salt);
+	    var shaPassNew = CryptoJS.SHA512(saltNew+passwordHashMD5New);
+    	var salt = symEncrypt(passwordHashMD5New, saltNew); //encrypt the new salt with md5password
+	    var passwordHashNew = shaPassNew.toString(CryptoJS.enc.Hex);
+	    
+	    console.log(passwordHashNew);
+	    
+	    var shaKeyNew = CryptoJS.SHA512(passwordHashMD5New+salt);
+	    var keyHashNew = shaKeyNew.toString(CryptoJS.enc.Hex);
+	    
+	    console.log('dsa');
+	    var privateKey = getPrivateKey('user', userid, saltOld, passwordHashMD5Old); //get the old private key, using the old salt
+	    console.log(privateKey);
+	    var newPrivateKey = symEncrypt(passwordHashMD5New, privateKey);
+		    		
+	    
+	                $.post("api.php?action=updatePassword", {
+	                       oldPassword:passwordHashOld,
+	                       newPassword:passwordHashNew,
+	                       newPrivateKey: newPrivateKey,
+	                       newSalt: salt
+	                       }, function(result){
+		                       	if(result == 1){
+		                       		
+	    							parent.localStorage.currentUser_passwordHashMD5 = passwordHashMD5New;
+		                       		jsAlert('', 'Your password has been changed');
+		                       	}else{
+		                       		jsAlert('', result);
+		                       	}
+	                       }, "html");
+
+  
     }
     
     function toggleKey(username){
@@ -1106,14 +1338,11 @@ var focus = true;
     }
     
     function chatDecrypt(userid){
-	    // $('.chatMessage_'+username).each(function(){
-	    	// var content = $(this).html();
-	    	// content = CryptoJS.AES.decrypt(content, localStorage.key[username]);
-	    	// content = content.toString(CryptoJS.enc.Utf8);
-	    	// $(this).html(content);
-	    // });
-	    console.log('works');
+    	
+    	
 	    	$('.chatMessage_'+userid).each(function(){
+	    		
+	    		//clear intervall which calls this function
 	    		if($('.chatMessage_'+userid).length !== 0){
 	    			
 	    			window.clearInterval(openDialogueInterval);
@@ -1135,7 +1364,7 @@ var focus = true;
 		    	//split content into key and message
 		    	var message = content.split("////message////");
 	    		
-	    		
+	    		//check if randKey is stored, if not get randKey from message, using the asym privateKey
 	    		if(isStored(id)){
 	    			randKey = getStoredKey(id);
 	    		}else{
@@ -1157,10 +1386,13 @@ var focus = true;
 	    			console.log('sym');
                     var content = htmlentities(symDecrypt(randKey, message[1]));
 	    		
+	    		}else{
+	    			content = 'The key is not stored anymore';
 	    		}
 	    		
 	    		
 	    		$(this).html(content);
+	    		$(this).removeClass('chatMessage_'+userid);
 	    	});
 	    	return true;
     }
@@ -1394,6 +1626,20 @@ function groupMakeUserAdmin(groupId, userId){
                 setTimeout('clock()',1000);
               }
               
+              var settings =  new function() {
+			    this.userid = localStorage.currentUser_userid;
+			    
+			    this.submitPassword = function () {
+			    	if($('#newPassword').val() === $('#newPasswordRepeat').val() && $('#newPassword').val().length > 0){ 
+			    		updatePassword($('#oldPassword').val(), $('#newPassword').val(), this.userid);
+			    		$('.changePassword').slideUp();
+			    	}else if($('#newPassword').val().length === 0){
+			    		jsAlert('', 'The password is to short');
+			    	}else{
+			    		jsAlert('The passwords dont match');
+			    	}
+			    };
+			}
               
               
              

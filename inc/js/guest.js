@@ -110,19 +110,18 @@ function processRegistration(){
 	//cypher password into two hashes
 	//passwordHash is used to cypher the password for db
 	//keyHash is used to encrypt the pricate Key
-	var md = CryptoJS.MD5(password);
-	password = md.toString(CryptoJS.enc.Hex);
-	
 	
     var salt = CryptoJS.SHA512(randomString(64, '#aA'));  //generate salt and hash it.
     
-    var shaPass = CryptoJS.SHA512(salt+password);
-    var passwordHash = shaPass.toString(CryptoJS.enc.Hex); //parse cypher object to string
+    var shaPass = CryptoJS.SHA512(salt+passwordMD5);
+    var cypher = sec.passwordCypher(password, 'auth', userid);
+    var passwordMD5 = cypher[1]
+    var passwordHash = cypher[0];
     
     
-    var shaKey = CryptoJS.SHA512(password+salt);
-    var keyHash = shaKey.toString(CryptoJS.enc.Hex);
-    var salt = symEncrypt(password, salt.toString(CryptoJS.enc.Hex));				  //encrypt salt, using md5-pw hash
+    var shaKey = CryptoJS.SHA512(passwordMD5+salt);
+    var keyHash = cypher[2];
+    var salt = symEncrypt(passwordMD5, salt.toString(CryptoJS.enc.Hex)); //encrypt salt, using sha51-pw hash
     
     
     			//generate Keypair
@@ -130,7 +129,9 @@ function processRegistration(){
 			      var publicKey;
 			      var privateKey;
 			      crypt = new JSEncrypt({default_key_size: 4096});
-				  jsAlert('', 'The universe creates now your keypair, this may take some seconds..');
+			      $('#regForm').slideUp();
+				  jsAlert('', 'The universe is creating your keypair now, this may take some seconds..');
+			      $('#regLoad').show();
 			      crypt.getKey(function () {
 			      	privateKey = symEncrypt(keyHash, crypt.getPrivateKey()); //encrypt privatestring, usering the password hash
 			      	publicKey = crypt.getPublicKey();
@@ -148,7 +149,7 @@ function processRegistration(){
                             if(res == 1){
                                 //load checked message
                                 jsAlert('','You just joined the universeOS');
-                                $('#registration').slideUp('');
+                                $('#regLoad').slideUp('');
                                 
                                 $('#loginUsername').val(username);
                                 $('#loginPassword').val($("#registration #password").val());
@@ -157,6 +158,8 @@ function processRegistration(){
 					            $("#startbox").css('position', 'absolute');
                             }else{
                                 alert(res);
+                                $('#regLoad').slideUp('');
+                                $('#regForm').show();
                             }
                        }, "html");
 
@@ -173,16 +176,11 @@ function login(){
 		updatePasswordAndCreateSignatures(userid, password);
 	}else{
 		
-		//cypher password
-		var md = CryptoJS.MD5(password);
-		var passwordHashMD5  = md.toString(CryptoJS.enc.Hex);
-		
-		var salt = getSalt('auth', userid, passwordHashMD5); //get auth salt, using md5 hash as key
 		
 		//old passwords(<0.2) are only using md5, new passwords use (sha512(md5(password)+salt))
 		if(getUserCypher(userid) == 'sha512'){
-	    	var shaPass = CryptoJS.SHA512(salt+passwordHashMD5);
-	    	var passwordHash = shaPass.toString(CryptoJS.enc.Hex);
+	    	var cypher = sec.passwordCypher(password, 'auth', userid);
+	    	var passwordHash = cypher[0];
 		}
 		
 	                $.post("api.php?action=authentificate", {
@@ -191,9 +189,13 @@ function login(){
 	                       }, function(result){
 	                            var res = result;
 	                            if(res == 1){
+	                            	
+	                            	//store needed values in localStorage
 	    							localStorage.currentUser_userid = userid;
 	    							localStorage.currentUser_username = username;
-	    							localStorage.currentUser_passwordHashMD5 = passwordHashMD5;
+	    							localStorage.currentUser_passwordHashMD5 = cypher[1];
+	    							
+	    							
 	                                //load checked message
 	                                $('#bodywrap').slideUp();
 	                                window.location.href='index.php';
