@@ -124,7 +124,6 @@
 	}
 
 	.openFile .fileWindow{
-		position: absolute;
 		top: 39px;
 		bottom: 0px;
 		overflow: auto;
@@ -171,4 +170,17 @@
                 top: 0px;
                 right: 150px;
                 bottom: 0px;
+            }
+            
+            .readerImageTab{top: 39px;
+				right: 0;
+				margin-bottom: 121px;
+				left: 0;
+				position: absolute;
+				overflow: auto;
+				bottom: 0;
+            }
+            
+            .fileWindow{
+            	/*position:absolute;*/
             }
