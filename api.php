@@ -59,8 +59,19 @@ switch($action){
 			mysql_query("UPDATE user SET password='$password', cypher='sha512' WHERE userid='$userid'");
 			echo "1";
 		}
-		break;
-    case 'login':
+	break;
+		
+		
+		
+	case 'updatePassword':
+		
+		echo updateUserPassword($_POST['oldPassword'], $_POST['newPassword'], $_POST['newSalt'], $_POST['newPrivateKey']);
+		
+	break;
+		
+		
+		
+   	case 'login':
 		//old version
 		if(empty($_POST['username']))
 			$username = save($_GET['username']);
@@ -150,151 +161,6 @@ switch($action){
 			}
 		}
 		break;
-    case 'loadBuddyList':
-        $username = save($_POST['username']);
-        $hash = $_POST[hash];
-        
-        $loginSQL = mysql_query("SELECT userid, username, password FROM user WHERE username='$username'");
-        $loginData = mysql_fetch_array($loginSQL);
-        $userid = $loginData['userid'];
-        $dbPassword = $loginData['password'];
-        $dbPassword = hash('sha1', $dbPassword);
-        if($hash == $dbPassword){?>
-            <table width="100%" cellspacing="0">
-            <?
-            $buddylistSql = mysql_query("SELECT * FROM buddylist WHERE owner='$userid' && request='0'");
-            while($buddylistData = mysql_fetch_array($buddylistSql)) {
-                $blUserSql = mysql_query("SELECT * FROM user WHERE userid='$buddylistData[buddy]'");
-                $blUserData = mysql_fetch_array($blUserSql);
-
-                //sets a hasttag for this 
-                $userRow = md5("$blUserData[lastactivity],$userRow");
-                if(!empty($buddylistData['alias'])){
-                    $username = $buddylistData['alias'];
-                } else{
-                $username = htmlspecialchars($blUserData[username]);
-                    }
-                if($i%2 == 0) {
-                    $bgClass="rowDark";
-
-                } else {
-                    $bgClass="rowBright";
-                }
-                ?>
-                            <tr class="<?=$bgClass;?>" height="45" valign="center" onclick="openChat('<?=$username;?>');">
-                                <td>&nbsp;<?=showUserPicture($blUserData['userid'], "30", "total");?></td>
-                                <td><?=$username;?></td>
-                                <td>&nbsp;a</td>        
-                            </tr>
-            <?
-            $i++;
-            }
-            $_SESSION[reloadBuddylist] = "$userRow";
-            ?>
-            </table>
-        <?}
-    break;
-    case 'loadChatPreview':
-    ?>
-    <div class="chatPreview" id="chatPreview_<?=$_GET[buddy];?>" onclick="showChatDialoge('<?=$_GET[buddy];?>')">
-        <?=$_GET[buddy];?>
-    </div>
-    <?
-    break;
-    case 'loadChatDialoge':
-        $buddy = save($_GET[buddy]);
-        $user = save($_GET[user]);
-        $hash = save($_GET[hash]);
-        $loginSQL = mysql_query("SELECT userid, username, password FROM user WHERE username='$user'");
-        $loginData = mysql_fetch_array($loginSQL);
-        $userid = $loginData[userid];
-        $dbPassword = $loginData[password];
-        $dbPassword = hash('sha1', $dbPassword);
-        if($hash == $dbPassword){
-        
-        
-        
-    ?>
-    <div class="chatWindow" id="chatWindow_<?=$buddy;?>">
-        <div class="header">
-           <span style="position: absolute; margin-top: 1em; margin-left: 0.5em; color:#A8A8A8;" onclick="togglePage('chatIntro');">back</span>
-            <center> <?=$buddy;?></center>
-        </div>
-        <div class="chatDialoge_<?=$buddy;?> content">
-        <?
-        $buddySql = mysql_query("SELECT userid, username FROM user WHERE username='$buddy'");
-        $buddyData = mysql_fetch_array($buddySql);
-        $buddy = $buddyData[userid];
-        $chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' && receiver='$buddy' OR sender='$buddy' && receiver='$userid' ORDER BY timestamp DESC LIMIT 0, 30");
-        while($chatData = mysql_fetch_array($chatSQL)) {
-
-            if($chatData[receiver] == $userid && $chatData[read] == "0"){
-            mysql_query("UPDATE `messages` SET  `read`='1' WHERE  id='$chatData[id]'");
-            }
-            if($chatData[sender] == $userid && $chatData[seen] == "0"){
-            mysql_query("UPDATE `messages` SET  `seen`='1' WHERE  id='$chatData[id]'");
-            }
-
-            $sender = $chatData[sender];
-            $whileid = $userid;
-            if($sender == $whileid){
-            $authorid =  $userData[userid];
-            $authorName = $userData[username];
-            $reverse = NULL;
-            $css = 'outcome';
-            $signatureCss = 'signatureOutcome';
-            } else {
-
-            $authorid =  $buddyData[userid];
-            $authorName = $buddyData[username]; 
-            $css = 'income'; 
-            $signatureCss = 'signatureIncome';
-            $reverse = "1";
-            }
-            if($chatData[crypt] == "1"){
-                if(isset($_SESSION[$intWindows])){
-                $message = universeDecode("$chatData[text]", "$_SESSION[$intWindows]");
-            }else{
-                $message = "<s>crypted</s>";
-            }} else{
-                $message = $chatData[text];
-            } ?>
-            <div class="chatMessage <?=$css;?>">
-                <div class="chatSignature">
-                <?=showUserPicture($authorid, "15", "total");?><?=$authorName;?>
-                </div>
-                <div class="messageContainer">
-                <?=$message;?>
-                </div>
-            </div>
-        <? }?>
-        </div>
-        <form id="messageForm_<?=$buddy;?>">
-        <div class="footer systemGray">
-            <center><input type="text" id="message_<?=$buddy;?>" style="width: 70%; margin-top: 0.5em; font-size: 13pt;" placeholder="write a message"></center>
-        </div>
-        </form>
-    </div>
-    <script>
-        function handle<?=$buddy;?>_submit(){
-            //get value from input[type=text]
-            var message = $("#message_<?=$buddy;?>").val();
-            if(message.length > 0){
-                sendMessage('<?=$buddyData[username];?>', message);
-                //reload 
-                reloadDialoge('<?=$buddyData[username];?>');
-                $("#message_<?=$buddy;?>").val('');
-                
-            }else{
-                alert("you have to type a message ;)");
-            } 
-            return false;
-        }
-        $("#messageForm_<?=$buddy;?>").on("submit",handle<?=$buddy;?>_submit);
-    </script>
-    <?
-    }
-    break;
 	case 'chatGetMessages':
 		
 		$receiver = $_POST['receiver'];
@@ -327,7 +193,7 @@ switch($action){
 		
 		break;
 	case 'getUnseenMessageAuthors':
-		
+		// To load dialoges with unseen messages the authorid's of those messages are needed
 		if(proofLoginMobile($_POST['userid'], $_POST['hash'])){
 			echo json_encode(getUnseenMessageAuthors($_POST['userid']));
 		}
@@ -371,35 +237,7 @@ switch($action){
         $userData = mysql_fetch_array($userSQL);
         echo $userData['username'];
     break;
-    case 'checkForMessages':
-        //get request data
-        $user = save($_POST[username]);
-        $hash = save($_POST[password]);
-        //get the login data
-        $loginSQL = mysql_query("SELECT userid, username, password FROM user WHERE username='$user'");
-        $loginData = mysql_fetch_array($loginSQL);
-        $userid = $loginData[userid];
-        
-        //secret password stuff
-        $dbPassword = $loginData[password];
-        $dbPassword = hash('sha1', $dbPassword);
-        
-        //uservalidation
-        if($hash == $dbPassword){
-            
-            $chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' OR receiver='$userid'ORDER BY id DESC LIMIT 1");
-            $chatData = mysql_fetch_array($chatSQL);
-            
-            if($chatData[receiver] == $userid && $chatData[read] == "0"){
-                $return = 1;
-            }
-            if($chatData[sender] == $userid && $chatData[seen] == "0"){
-                $return = 1;
-            }
-            
-        }
-    echo $return;
-    break;
+    
     
     //returns the javascript functions to load/reload the dialoges on client
     case 'loadNewChatDialoges':
@@ -436,82 +274,8 @@ switch($action){
            echo"$buddyName";
             }
     break;
-    case 'reloadChatDialoge':
-        $buddy = save($_GET[buddy]);
-        $user = save($_GET[user]);
-        $hash = save($_GET[hash]);
-        $loginSQL = mysql_query("SELECT userid, username, password FROM user WHERE username='$user'");
-        $loginData = mysql_fetch_array($loginSQL);
-        $userid = $loginData[userid];
-        $dbPassword = $loginData[password];
-        $dbPassword = hash('sha1', $dbPassword);
-        if($hash == $dbPassword){
-        $buddySql = mysql_query("SELECT userid, username FROM user WHERE username='$buddy'");
-        $buddyData = mysql_fetch_array($buddySql);
-        $buddy = $buddyData[userid];
-        $chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' && receiver='$buddy' OR sender='$buddy' && receiver='$userid' ORDER BY timestamp DESC LIMIT 0, 30");
-        while($chatData = mysql_fetch_array($chatSQL)) {
-
-            if($chatData[receiver] == $userid && $chatData[read] == "0"){
-            mysql_query("UPDATE `messages` SET  `read`='1' WHERE  id='$chatData[id]'");
-            }
-            if($chatData[sender] == $userid && $chatData[seen] == "0"){
-            mysql_query("UPDATE `messages` SET  `seen`='1' WHERE  id='$chatData[id]'");
-            }
-
-            $sender = $chatData[sender];
-            $whileid = $userid;
-            if($sender == $whileid){
-            $authorid =  $userData[userid];
-            $authorName = $userData[username];
-            $reverse = NULL;
-            $css = 'outcome';
-            $signatureCss = 'signatureOutcome';
-            } else {
-
-            $authorid =  $buddyData[userid];
-            $authorName = $buddyData[username]; 
-            $css = 'income'; 
-            $signatureCss = 'signatureIncome';
-            $reverse = "1";
-            }
-            if($chatData[crypt] == "1"){
-                $message = "<s>crypted</s>";
-            } else{
-                $message = $chatData[text];
-            } ?>
-            <div class="chatMessage <?=$css;?>">
-                <div class="chatSignature">
-                <?=showUserPicture($authorid, "15", "total");?><?=$authorName;?>
-                </div>
-                <div class="messageContainer">
-                <?=$message;?>
-                </div>
-            </div>
-        <? }
-        }
-    break;
-    case 'sendMessage':
-        $user = save($_GET[user]); 
-        $message = save($_POST[msg]);
-        $hash = save($_POST[pwd]);
-        $buddy = save($_GET[buddy]);
-        $loginSQL = mysql_query("SELECT userid, username, password FROM user WHERE username='$user'");
-        $loginData = mysql_fetch_array($loginSQL);
-        $userid = $loginData[userid];
-        $dbPassword = $loginData[password];
-        $dbPassword = hash('sha1', $dbPassword);
-        if($dbPassword == $hash){
-        $buddySql = mysql_query("SELECT userid FROM user WHERE username='$buddy'");
-        $buddyData = mysql_fetch_array($buddySql);
-        $buddyId = $buddyData[userid];
-        $time = time();
-        if(mysql_query("INSERT INTO messages (`sender`,`receiver`,`timestamp`,`text`,`read`,`crypt`) VALUES('$userid', '$buddyId', '$time', '$message', '0', '');")){
-            echo$buddyId;
-        }
-
-        }
-    break;
+	
+	
 	case 'getUserPicture':
 		
 		$userid = save($_POST['userid']);
@@ -532,18 +296,28 @@ switch($action){
 		echo 'data:'.$mime.';base64,'.$output;
 		
 		break;
+		
+		
 	case 'useridToUsername':
 		echo useridToUsername($_POST['userid']);
 		break;
+		
+		
 	case 'searchUserByString':
 		echo json_encode(searchUserByString($_POST['string'], $_POST['limit']));
 		break;
+		
+		
 	case 'useridToRealname':
 		echo useridToRealname($_POST['userid']);
 		break;
+		
+		
 	case 'usernameToUserid':
 		echo usernameToUserid($_POST['username']);
 		break;
+		
+		
 	case 'getLastActivity':
 	
 	
@@ -559,6 +333,8 @@ switch($action){
 		}
 		
 		break;
+		
+		
 	//checks if a username is taken
     case 'checkUsername':
         
@@ -574,6 +350,7 @@ switch($action){
         
         
     break;
+	
     //is used for universeOS registration form
     case 'processSiteRegistration':
     
@@ -585,13 +362,15 @@ switch($action){
 	   	}
         
     break;
-    //is used for universeOS registration form
+	
+    //is used for universeIM registration form
     case 'processSiteRegistrationMobile':
     
 	        createUser($_POST['username'], $_POST['password'], $_POST['salt'], $_POST['privateKey'], $_POST['publicKey']);
 			echo "1";
 			
     break;
+	
     case 'checkForFeeds':
         
         $user = mysql_real_escape_string($_GET[user]);
@@ -620,7 +399,7 @@ switch($action){
 
                     //get all users which are in the buddylist
                     $buddies = buddyListArray();
-                    $buddies[] = $_SESSION[userid];
+                    $buddies[] = $_SESSION['userid'];
                     $buddies = join(',',$buddies);  
                     //push array with the user, which is logged in
 
@@ -657,7 +436,7 @@ switch($action){
             $feedSql = mysql_query("SELECT id FROM feed $where");
             while($feedData = mysql_fetch_array($feedSql)) {
                 //if new id occurs
-                if(!in_array($feedData[id], $token)){
+                if(!in_array($feedData['id'], $token)){
                     if(empty($return)){
                     $return = true;
                     }
@@ -669,6 +448,7 @@ switch($action){
         }
         
         break;
+		
     case 'showFeed':
         $username = save($_POST['username']);
         $hash = $_POST[hash];
@@ -676,6 +456,7 @@ switch($action){
         showFeed('','','1');
         }
     break;
+	
     case 'submitFeedEntry':
         $username = save($_POST[user]); 
         $message = save($_POST[msg]);
@@ -687,6 +468,7 @@ switch($action){
         }
         
     break;
+	
     case 'showFeedComments':
         $username = save($_POST['username']);
         $hash = $_POST[hash];
@@ -698,12 +480,29 @@ switch($action){
         }
         
     break;
+
+
+//salts and signatures
+	case 'createSalt':
+		$type = $_POST['type'];
+		$itemId = $_POST['itemId'];
+		$receiverType = $_POST['type'];
+		$receiverId = $_POST['receiverId'];
+		$salt = $_POST['salt'];
+		
+		//store salt
+		echo createSalt($type, $itemId, $receiverType, $receiverId, $salt);
+		
+		break;
+		
+		
 	case 'getSalt':
 		
 		echo getSalt($_POST['type'], $_POST['itemId']);
 		
-		
 		break;
+		
+		
 	case 'getPublicKey':
 		$type = $_POST['type'];
 		$itemId = $_POST['itemId'];
@@ -712,6 +511,8 @@ switch($action){
 		$data = $signature->get($type, $itemId);
 		echo $data['publicKey'];
 		break;
+		
+		
 	case 'getPrivateKey':
 		$type = $_POST['type'];
 		$itemId = $_POST['itemId'];
@@ -720,6 +521,8 @@ switch($action){
 		$data = $signature->get($type, $itemId);
 		echo $data['privateKey'];
 		break;
+		
+		
 	case 'getPublicKey':
 		$type = $_POST['type'];
 		$itemId = $_POST['itemId'];
@@ -728,5 +531,10 @@ switch($action){
 		$data = $signature->get($type, $itemId);
 		echo $data['privateKey'];
 		break;
-        
+		
+		
+//filesystem
+	case 'fileIdToFileTitle':
+		echo fileIdToFileTitle($_POST['fileId']);
+		break;
 }
