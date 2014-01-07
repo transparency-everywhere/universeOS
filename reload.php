@@ -82,7 +82,7 @@ $newMessagesData2 = mysql_fetch_array($newMessagesSql2);
         $newMessagesOn = $newMessagesData['sender'];
         unset($newMessages);
     }else{
-        $newMessages = "$newMessagesData[sender]";
+        $newMessages = $newMessagesData['sender'];
         unset($newMessagesOn);
     }
 //check for friend request
@@ -110,9 +110,11 @@ if(isset($newMessagesOn)){
       applicationOnTop('chat');
       $("#test_<?=str_replace(" ","_",$newMessageUserData['username']);?>").load("modules/chat/chatreload.php?buddy=<?=str_replace(" ","_",$buddy);?>&reload=1&initter=1");
         
+        
+        //check if dialoge exists
         if($("#test_<?=str_replace(" ","_",$newMessageUserData['username']);?>").length == 0){
-            createNewTab('chat_tabView1','<?=$newMessageUserData['username'];?>','','modules/chat/chatreload.php?buddy=<?=str_replace(" ","_",$newMessageUserData['username']);?>',true);
-            return false
+        	
+        	openChatDialoge('<?=str_replace(" ","_",$newMessageUserData['username']);?>')	
         }
        $("#chatInput_<?=$newMessageUserData['userid'];?>").click( function(){
            $('#loader').load("doit.php?action=updateMessageStatus&buddy=<?=$newMessageUserData['userid'];?>");

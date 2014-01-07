@@ -10,28 +10,28 @@
     <div class="inhalt" style="overflow: hidden;">
         <div id="chat_tabView1">
             <div class="dhtmlgoodies_aTab">
-                <div class="grayBar">Your last conversations:</div>
-                <div style="position: absolute; top: 29px; right: 0px; bottom: 0px; left: 0px; overflow: auto;">
+                <div style="position: absolute; top: 0; right: 0px; bottom: 0px; left: 0px; overflow: auto;">
                    <ul id="chatWelcomeList">
 <?
             $userArray[0] = 0;
             $i = "0";
             $mailSQL = mysql_query("SELECT * FROM messages WHERE receiver='$_SESSION[userid]' OR sender='$_SESSION[userid]' ORDER BY timestamp DESC");
             while($mailData = mysql_fetch_array($mailSQL)) {
-                if(!in_array("$mailData[sender]",$userArray)){
+                if(!in_array($mailData['sender'],$userArray) && $mailData['sender'] !== getUser()){
                 $userArray[$i] = "$mailData[sender]";
                 $mailUserSql = mysql_query("SELECT * FROM user WHERE userid='$mailData[sender]'");
                 $mailUserData = mysql_fetch_array($mailUserSql);
                         ?>
-                        <li onclick="createNewTab('chat_tabView1','<?=$mailUserData[username];?>','','modules/chat/chatt.php?buddy=<?=$mailUserData[username];?>',true);return false">
+                        <li onclick="openChatDialoge('<?=$mailUserData['username'];?>');">
                         	<div>
-	                        	<header>
-	                        		<?=universeTime($mailData[timestamp]);?>
-	                        		<div class="pull-right"><?=showUserPicture($mailUserData[userid], "15",1);?></div>
-	                        		<span class="pull-right"><?=$mailUserData[username];?>&nbsp;</span>
-	                        	</header>
 	                        	<div class="content">
-	                        		<a href="?action=show&reload=1&messageId=<?=$mailUserData[userid];?>" style="margin-top:5px;"><?=universeText(substr($mailData[text], 0, 255));?></a>
+	                        		<table width="100%">
+	                        			<tr>
+	                        				<td width="40" valign="bottom"><?=showUserPicture($mailUserData['userid'], "30",1);?></td>
+	                        				<td width="150" valign="bottom" style="font-size: 23px;"><?=$mailUserData['username'];?></td>
+	                        				<td valign="bottom" align="right"><a href="#" style="margin-top:5px;"><?=universeTime($mailData['timestamp']);?></a></td>
+	                        			</tr>
+	                        		</table>
 	                        	</div>
                         	</div>
                         </li>

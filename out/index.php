@@ -18,7 +18,7 @@ if(!empty($_GET['folder'])){
 	
 	$type = "Element";
 	$itemId = $_GET['element'];
-	$query = mysql_query("SELECT `folder` FROM `files` WHERE id='".mysql_real_escape_string($itemId)."'");
+	$query = mysql_query("SELECT `folder` FROM `elements` WHERE id='".mysql_real_escape_string($itemId)."'");
 	$data = mysql_fetch_array($query);
 	$title = $data['title'];
 	
