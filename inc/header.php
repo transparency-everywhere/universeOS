@@ -57,18 +57,18 @@
         <?
         
         //define bg-image
-        if(!empty($userdata[backgroundImg])){ 
+        if(!empty($userdata['backgroundImg'])){ 
             ?>
         <style type="text/css">
             body{
-                background-image: url(<?=$userdata[backgroundImg];?>);
+                background-image: url(<?=$userdata['backgroundImg'];?>);
                 background-attachment: no-repeat;
             }
         </style>
         <? }
         
         //look for startmessages
-        if(!empty($userdata[startLink])){
+        if(!empty($userdata['startLink'])){
         $startLink = ", popper('$userdata[startLink]');";
         }?>
         <title>universeOS</title>

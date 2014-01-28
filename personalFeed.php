@@ -21,7 +21,7 @@ require_once("inc/functions.php");
 </style>
 <?
 $i = "1";
-$friendRequestSql = mysql_query("SELECT * FROM buddylist WHERE buddy='".$_SESSION['userid']."' && request='1' LIMIT 0, 3");
+$friendRequestSql = mysql_query("SELECT * FROM buddylist WHERE buddy='".$_SESSION['userid']."' && request='1'");
 while($friendRequestData = mysql_fetch_array($friendRequestSql)){
 	$session .= "buddyRequest $friendRequestData[id]";
 	
@@ -40,15 +40,15 @@ $newMessagesSql = mysql_query("SELECT * FROM  `messages` WHERE  receiver='$_SESS
 while($newMessagesData = mysql_fetch_array($newMessagesSql)){
 	$session .= "newMessage $newMessagesData[id]";
     
-        $text = substr($newMessagesData[text], 0, 100);
+        $text = substr($newMessagesData['text'], 0, 100);
 
     $newMessagesSql2 = mysql_query("SELECT userid, username FROM user WHERE userid='$newMessagesData[sender]'");
     $newMessagesData2 = mysql_fetch_array($newMessagesSql2);
 ?>
     
     <script>
-        if($("#message_<?=$newMessagesData[sender];?>").length == 0){
-            $('#dockMenuBuddyAlerts').append('<li id="message_<?=$newMessagesData[sender];?>"><?=showUserPicture("$newMessagesData[sender]", '15', '', true);?><div class="messageMain"><a href="#" onclick="showProfile(\'<?=$newMessagesData2[username];?>\');"><?=$newMessagesData2[username];?></a> <?=$text;?></div><div class="messageButton"><a onclick="openChatDialoge(\'<?=$newMessagesData2[username];?>\'); $(\'#message_<?=$newMessagesData[sender];?>\').remove();" class="btn btn-info btn-mini" style="margin-right:25px;"><i class="icon-envelope icon-white"> </i> Show</a><a class="btn btn-mini" href="doit.php?action=updateMessageStatus&buddy=<?=$newMessagesData2[userid];?>" target="submitter" onclick="$(\'#message_<?=$newMessagesData[sender];?>\').remove();">Ignore</a></div></li>');
+        if($("#message_<?=$newMessagesData['sender'];?>").length == 0){
+            $('#dockMenuBuddyAlerts').append('<li id="message_<?=$newMessagesData['sender'];?>"><?=showUserPicture("$newMessagesData[sender]", '15', '', true);?><div class="messageMain"><a href="#" onclick="showProfile(\'<?=$newMessagesData2[username];?>\');"><?=$newMessagesData2[username];?></a> <?=$text;?></div><div class="messageButton"><a onclick="openChatDialoge(\'<?=$newMessagesData2[username];?>\'); $(\'#message_<?=$newMessagesData[sender];?>\').remove();" class="btn btn-info btn-mini" style="margin-right:25px;"><i class="icon-envelope icon-white"> </i> Show</a><a class="btn btn-mini" href="doit.php?action=updateMessageStatus&buddy=<?=$newMessagesData2[userid];?>" target="submitter" onclick="$(\'#message_<?=$newMessagesData[sender];?>\').remove();">Ignore</a></div></li>');
         }
     </script>
 <? 
@@ -64,7 +64,7 @@ while($newGroupData = mysql_fetch_array($newGroupSql)){
         $newGroupData3 = mysql_fetch_array($newGroupSql3);
 ?>
     <script>
-        if($("#groupRequest_<?=$newGroupData[id];?>").length == 0){
+        if($("#groupRequest_<?=$newGroupData['id'];?>").length == 0){
             $('#dockMenuSystemAlerts').append('<li id="groupRequest_<?=$newGroupData[id];?>"><?=showUserPicture("$newGroupData3[userid]", '15', '', true);?><div class="messageMain"><a href="#" onclick="showProfile(\'<?=$newGroupData3[userid];?>\');"><?=$newGroupData3[username];?></a> Invited you into the  group <a href="#" onclick="createNewTab(\'reader_tabView\',\'<?=$newGroupData2[title];?>\',\'\',\'group.php?id=<?=$newGroupData2[id];?>\',true);return false"><?=$newGroupData2[title];?></a></div><div class="messageButton"><a href="doit.php?action=joinGroup&id=<?=$newGroupData[id];?>" class="btn btn-info btn-mini" target="submitter" style="margin-right:25px;" onclick="$(\'#groupRequest_<?=$newGroupData[id];?>\').remove();">Join</a><a href="doit.php?action=declineGroup&id=<?=$newGroupData[id];?>" class="btn btn-mini" target="submitter" onclick="$(\'#groupRequest_<?=$newGroupData[id];?>\').remove();">Decline</a></div></li>');
         }
     </script>
@@ -78,19 +78,19 @@ while($personalEventData = mysql_fetch_array($personalEventSql)){
     $newEventData2 = mysql_fetch_array($newEventSql2);
     $countEvents++;
 
-    if($personalEventData[event] == "comment"){
-        if($personalEventData[info] == "feed"){
+    if($personalEventData['event'] == "comment"){
+        if($personalEventData['info'] == "feed"){
             $description = "Has commented your post.";
             $link = "createNewTab(\'reader_tabView\',\'Comment\','\',\'modules/reader/showComment.php?type=$personalEventData[info]&itemid=$personalEventData[eventId]\',true);";
-        }else if($personalEventData[info] == "profile"){
+        }else if($personalEventData['info'] == "profile"){
             $description = "Has commented in your profile.";
             $link = "showProfile(\'$_SESSION[userid]\');";
         }
     }
     ?>
     <script>
-        if($("#personalEvent_<?=$personalEventData[event];?>_<?=$personalEventData[info];?>_<?=$personalEventData[eventId];?>").length == 0){
-            $('#dockMenuBuddyAlerts').append('<li id="personalEvent_<?=$personalEventData[event];?>_<?=$personalEventData[info];?>_<?=$personalEventData[eventId];?>"><?=showUserPicture("$personalEventData[user]", '15', '', true);?><div class="messageMain"><a href="#" onclick="showProfile(\'<?=$personalEventData[user];?>\');"><?=$newEventData2[username];?></a> <?=$description;?></div><div class="messageButton"><a class="btn btn-info btn-mini" target="submitter" style="margin-right:25px;" onclick="deleteFromPersonals(\'<?=$personalEventData[id];?>\');<?=$link;?>$(\'#personalEvent_<?=$personalEventData[event];?>_<?=$personalEventData[info];?>_<?=$personalEventData[eventId];?>\').remove();">Show</a><a href="#" class="btn btn-mini" target="submitter" onclick="deleteFromPersonals(\'<?=$personalEventData[id];?>\');$(\'#personalEvent_<?=$personalEventData[event];?>_<?=$personalEventData[info];?>_<?=$personalEventData[eventId];?>\').remove();">Ignore</a></div></li>');
+        if($("#personalEvent_<?=$personalEventData['event'];?>_<?=$personalEventData['info'];?>_<?=$personalEventData['eventId'];?>").length == 0){
+            $('#dockMenuBuddyAlerts').append('<li id="personalEvent_<?=$personalEventData['event'];?>_<?=$personalEventData['info'];?>_<?=$personalEventData['eventId'];?>"><?=showUserPicture("$personalEventData[user]", '15', '', true);?><div class="messageMain"><a href="#" onclick="showProfile(\'<?=$personalEventData[user];?>\');"><?=$newEventData2[username];?></a> <?=$description;?></div><div class="messageButton"><a class="btn btn-info btn-mini" target="submitter" style="margin-right:25px;" onclick="deleteFromPersonals(\'<?=$personalEventData[id];?>\');<?=$link;?>$(\'#personalEvent_<?=$personalEventData[event];?>_<?=$personalEventData[info];?>_<?=$personalEventData[eventId];?>\').remove();">Show</a><a href="#" class="btn btn-mini" target="submitter" onclick="deleteFromPersonals(\'<?=$personalEventData[id];?>\');$(\'#personalEvent_<?=$personalEventData[event];?>_<?=$personalEventData[info];?>_<?=$personalEventData[eventId];?>\').remove();">Ignore</a></div></li>');
         }
     </script>
 <?
@@ -110,7 +110,7 @@ $countgroup = mysql_num_rows($newGroupSql);
 $amount = ($countFriendRequests + $countMessages + $countgroup + $countEvents);
 
 if($i > 1){
-	$_SESSION[personalFeed] = time();
+	$_SESSION['personalFeed'] = time();
 }
 
     echo"<script>";
