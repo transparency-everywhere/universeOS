@@ -22,9 +22,9 @@ if(!isset($_GET[reload])){
  
         
     <?
-if(!$_GET[action]) {
-if($_GET[folder]) {
-$folder = $_GET[folder];
+if(!$_GET['action']) {
+if($_GET['folder']) {
+$folder = $_GET['folder'];
 } else {
 $folder = "1";
 }
@@ -52,5 +52,5 @@ initTabs('fileBrowser_tabView',Array('Universe'),0,"","",Array(false,true));
 </div>
 <?
 } 
-if(!isset($_GET[reload])){
+if(!isset($_GET['reload'])){
  } ?>

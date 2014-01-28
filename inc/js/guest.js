@@ -114,7 +114,7 @@ function processRegistration(){
     var salt = CryptoJS.SHA512(randomString(64, '#aA'));  //generate salt and hash it.
     
     var shaPass = CryptoJS.SHA512(salt+passwordMD5);
-    var cypher = sec.passwordCypher(password, 'auth', userid);
+    var cypher = sec.passwordCypher(password, '', '', salt);
     var passwordMD5 = cypher[1]
     var passwordHash = cypher[0];
     
@@ -130,7 +130,7 @@ function processRegistration(){
 			      var privateKey;
 			      crypt = new JSEncrypt({default_key_size: 4096});
 			      $('#regForm').slideUp();
-				  jsAlert('', 'The universe is creating your keypair now, this may take some seconds..');
+				  jsAlert('', 'The universe is creating your keypair now, this may take some minutes..');
 			      $('#regLoad').show();
 			      crypt.getKey(function () {
 			      	privateKey = symEncrypt(keyHash, crypt.getPrivateKey()); //encrypt privatestring, usering the password hash

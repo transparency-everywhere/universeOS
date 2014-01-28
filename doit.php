@@ -1,4 +1,4 @@
-   <?PHP
+<?PHP
 session_start();
 include("inc/config.php");
 include("inc/functions.php");
@@ -1380,8 +1380,8 @@ if($_GET['action'] == "scorePlus"){
             if(!empty($_POST['feedInput']) || !empty($_POST['feed1'])){
             
                     //set privacy
-                    $customShow = $_POST['privacyCustomSee'];
-                    $customEdit = $_POST['privacyCustomEdit'];
+                    $customShow = 'f';
+                    $customEdit = 'f';
                     
                     $privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
                     $user = getUser();
@@ -2034,7 +2034,13 @@ if($_GET['action'] == "scorePlus"){
             }
                 
             }
-        }else if($_GET['action'] == "changePrivacy"){
+        }else if($_GET['action'] == "loadPrivacySettings"){
+        	//is used bei js privacy.load to load privacy selection with privacy = $_POST['val'] into DOM
+        	
+        	showPrivacySettings($_POST['val']);
+        	
+        }
+        else if($_GET['action'] == "changePrivacy"){
             if(proofLogin()){
             if(isset($_POST['submit'])){
                 

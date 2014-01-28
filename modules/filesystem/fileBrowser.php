@@ -78,7 +78,7 @@ $pathdata = mysql_fetch_array($pathsql);
     <div class="underFrame" style="overflow: none;">
         <div class="grayBar" style="top: 0px; left:0px; right: 0px; height: 20px; overflow: none;">
             	<? if($folder !== "1") {?>
-            	<a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=<?=$pathdata[folder];?>&reload=1');return false" title="parent folder" class="btn btn-mini" style="margin-right:3px;"><i class="icon-arrow-up"></i></a>
+            	<a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=<?=$pathdata['folder'];?>&reload=1');return false" title="parent folder" class="btn btn-mini" style="margin-right:3px;"><i class="icon-arrow-up"></i></a>
                 <? }
                 if(proofLogin() && !empty($folder)){ 
             		echo"<a href=\"#\" onclick=\"$('.fileBrowserSettings$folder').slideToggle('slow'); return false\" title=\"more...\" class=\"btn btn-mini\"><i class=\"icon-cog\"></i></a>";
@@ -95,7 +95,7 @@ $pathdata = mysql_fetch_array($pathsql);
         			<li><a href="#" onclick="javascript: popper('doit.php?action=addFav&type=folder&item=<?=$folder;?>&reload=1');return false">Fav</a></li>
         		<?
         		}
-        		if(authorize("$pathdata[privacy]", "edit", $pathdata[creator])){ ?>
+        		if(authorize($pathdata['privacy'], "edit", $pathdata['creator'])){ ?>
         		<li><a href="#" onclick="javascript: popper('doit.php?action=addElement&folder=<?=$folder;?>&reload=1');return false">Add Element</a></li>
         		<li><a href="#" onclick="javascript: popper('doit.php?action=addFolder&folder=<?=$folder;?>&reload=1');return false">Add Folder</a></li>
         		<li><a href="#" onclick="javascript: popper('doit.php?action=addInternLink&parentFolder=<?=$folder;?>&reload=1');return false">Add Shortcut</a></li>
@@ -105,12 +105,12 @@ $pathdata = mysql_fetch_array($pathsql);
 			
 			
 				if($showFileBrowser){
-                	showFileBrowser($folder, "$folderQuery", "$elementQuery");
+                	showFileBrowser($folder, $folderQuery, $elementQuery);
 				}
 
 				if($fav){
 					echo'<table width="100%">';
-					echo showFav($_SESSION[userid]);
+					echo showFav(getUser());
 					echo'</table>';
 				}
 				

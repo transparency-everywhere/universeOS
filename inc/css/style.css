@@ -19,10 +19,6 @@ body {
 	margin: 0;
 	padding: 0;
 	word-wrap: break-word;
-	/*background-image: url(../../gfx/bg/1.jpg);
-    background-attachment: no-repeat;
-    background-position:top left;
-	background-repeat:no-repeat;*/
 	background:
 	radial-gradient(black 15%, transparent 16%) 0 0,
 	radial-gradient(black 15%, transparent 16%) 8px 8px,
@@ -339,6 +335,28 @@ font-size: 19px;
     
 }
 
+.formTable{
+	margin-top: 20px;
+}
+
+.formTable tr td:first-of-type{
+	text-align: right;
+	vertical-align: top;
+	width: 85px;
+	padding-right: 10px;
+	font-size: 21px;
+}
+
+.formTable tr{
+	height: 35px;
+}
+
+.formTable input[type=text]{
+	font-size: 14px;
+	height: 14px;
+	margin-top: -4px;
+}
+
 .blueModal {
 	
     position: absolute;
@@ -361,6 +379,15 @@ font-size: 19px;
 	margin: 10px;
 	margin-bottom: 0px;
 }
+    
+    .blueModal > header .modalClose{
+        cursor: pointer;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        color: #FFF;
+		z-index: 1;
+    }
 
 .blueModal > .content{
 	height: 270px;
@@ -585,6 +612,18 @@ font-size: 19px;
 
 .leftNav > ul > li:hover {
 background: #383838;
+}
+
+.leftNav > ul > li.header{
+background: #303030; /* Old browsers */
+background: -moz-linear-gradient(top, #303030 0%, #2b2b2b 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#303030), color-stop(100%,#2b2b2b)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, #303030 0%,#2b2b2b 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, #303030 0%,#2b2b2b 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, #303030 0%,#2b2b2b 100%); /* IE10+ */
+background: linear-gradient(to bottom, #303030 0%,#2b2b2b 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#303030', endColorstr='#2b2b2b',GradientType=0 ); /* IE6-9 */
+border-bottom: 1px solid #292929;
 }
 
 .leftNav > ul > li img{
@@ -2545,10 +2584,15 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 					line-height:15px;
 				}
 				
+				.privacySettings h2{
+					line-height: 23px;
+					font-size: 20px;
+				}
+				
 				.privacySettings > header{
-					position:relative;
-					font-size:22px;
-					line-height: 22px;
+					position: relative;
+					font-size: 27px;
+					line-height: 30px;
 					padding: 5px;
 					padding-bottom: 0px;
 	    			border-bottom:1px solid #3a3a3a;
@@ -2567,18 +2611,18 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
  				.privacySettings li{
  					margin-top: 5px;
  					padding: 5px;
- 					padding-left: 15px;
+ 					padding-left: 20px;
  					border-top: 1px solid #313131;
  					clear:both;
  					
  				}
  				.privacySettings li:first-of-type{
  					margin-top: 0px;
- 					
+ 					border-top: none;
  				}
  				
  				.privacySettings input[type=checkbox]{
- 					margin: -5px 3px 0 -13px;
+ 					margin: -1.5px 1px 0 -13px;
  				}
  				
  				.privacySettings .sub{
@@ -2590,7 +2634,10 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
  				.privacySettings .sub > div{
  					float:left;
  					margin-left: 20px;
+ 					height: 25px;
+					font-size: 18px;
  				}
+ 				
  				.privacySettings .sub > div:first-of-type{
  					margin-left: 0;
  				}
@@ -2613,6 +2660,242 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
  				.privacySettings .groupList li > div:last-of-type{
  					
  				}
+/*calendar*/
+
+			#calendarFenster .inhalt{
+				background-color: #3E3E3E;
+			}
+
+			#calendar{
+				position: relative;
+				background-color:#FFFFFF;
+				width: 100%;
+				height: 100%;
+			}
+			
+			#calendar>header{
+				height: 30px;
+				padding: 5px;
+				position:absolute;
+				top:0;
+				right:0;
+				left:0;background: #eeeeee; /* Old browsers */
+				background: -moz-linear-gradient(top, #eeeeee 0%, #cccccc 100%); /* FF3.6+ */
+				background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#cccccc)); /* Chrome,Safari4+ */
+				background: -webkit-linear-gradient(top, #eeeeee 0%,#cccccc 100%); /* Chrome10+,Safari5.1+ */
+				background: -o-linear-gradient(top, #eeeeee 0%,#cccccc 100%); /* Opera 11.10+ */
+				background: -ms-linear-gradient(top, #eeeeee 0%,#cccccc 100%); /* IE10+ */
+				background: linear-gradient(to bottom, #eeeeee 0%,#cccccc 100%); /* W3C */
+				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6-9 */
+			}
+			
+			#calendarViewDetail #text{
+				width: 65px;
+			}
+			
+			#calendar #main:hover header{
+				display:block;
+			}
+			
+			#calendar #main>header{
+				display:none;
+				height: 25px;
+				background: rgba(75, 73, 73,0.3);
+				color:#FFFFFF;
+				position: absolute;
+				top: 0;
+				right: 0;
+				left: 0;
+				z-index: 1;
+			}
+			
+			#calendar #main>header span{
+				width: 14.2857%;
+				float:left;
+				padding-left: 1px;
+				box-sizing: border-box;
+			}
+			
+			#calendar #main{
+				position: absolute;
+				top: 40px;
+				left: 150px;
+				bottom: 0px;
+				right: 0px;
+			}
+			
+			#calendar #side{
+				position: relative;
+				top: 40px;
+				left: 0px;
+				bottom: 0px;
+				background: #3E3E3E;
+				position: absolute;
+				top: 40px;
+				left: 0px;
+				bottom: 0;
+				background: #3E3E3E;
+			}
+			
+			#calendar #side #months{
+				list-style: none;
+				padding: 0px;
+				border-bottom: #313131;
+			}
+			
+			#calendar #side #months .current{
+				font-size: 15pt;
+			}
+			
+			#calendar #side ul li.header .icon-plus{
+				float:right;
+				display:none;
+			}
+			
+			#calendar #side ul li.header:hover .icon-plus{
+				display:block;
+			}
+			
+			.day ul{
+				margin:0px;
+				padding:0px;
+				list-style:none;
+				font-size: 11px;
+				
+			}
+		
+			.calendarFrame{
+				position: absolute;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				overflow: auto;
+			}
+			
+			.calendarFrame.weekView.boxes .day{
+				height: 100%;
+			}
+			
+			.calendarFrame.weekView.list .day{
+				min-height: 50px;
+			}
+			
+			.calendarFrame.boxes .day header{
+				text-align: right;
+			}
+			
+			.calendarFrame.list .day header{
+				text-align: left;
+			}
+			
+			.calendarFrame.boxes .day header .dropdown{
+				float:left;
+			}
+			
+			.calendarFrame.list .day header .dropdown{
+				float:right;
+			}
+			
+			.calendarFrame.boxes .day{
+				width: 14.2857%;
+				float: left;
+				border-right: 1px solid #c9c9c9;
+				border-bottom: 1px solid #c9c9c9;
+				box-sizing: border-box;
+				background: #FFFFFF;
+			}
+			
+			.calendarFrame .day header{
+				padding: 2px;
+				font-size: 14pt;
+				background-color: rgba(200,200,200,0.4);
+			}
+			
+			.calendarFrame .day:hover .dropdown{
+				display:block;
+			}
+			
+			.calendarFrame .day header .dropdown{
+				display:none;
+			}
+			
+			.calendarFrame .day.today header{
+				padding: 2px;
+				background-color: #D1D1D1;
+			}
+			
+			.calendarFrame .day.weekend header{
+				background-color: rgba(200,200,200,0.2);
+			}
+
+			.calendarFrame .day:first-child {
+				/*background-color: #4f85bb;
+				color: #FFFFFF;*/
+			}
+				
+			.calendarFrame .day:nth-child(2n+3) {
+				/*background-color: #4f85bb;
+				color: #FFFFFF;*/
+			}
+			
+			.calendarFrame.monthView .day{
+				height: 100px;
+			}
+			
+			.calendarFrame.monthView .day .eventList{
+				max-height:70px; overflow:auto;
+			}
+			
+			
+			.calendarFrame.dayView .eventList li{
+				height: 30px;
+				border-bottom: 1px solid #c9c9c9;
+				margin: 0px 5px;
+				font-size: 20px;
+				padding-top: 7px;
+				box-sizing: border-box;
+			}
+			
+			.calendarFrame.dayView .eventList .event{
+				position: absolute;
+				color: #FFFFFF;
+				font-size: 17px;
+				background: #8AD361;
+				cursor: pointer;
+				right: 10px;
+				left: 20px;
+				border: none;
+				border-radius: 3px;
+				padding: 5px;
+			}
+			
+			.calendarFrame.dayView .eventList .event .eventDetail{
+				display:none;
+			}
+			
+			.calendarFrame .day .eventList li{
+				background-color: #6ac00e;
+				border-radius: 5px;
+				margin: 2px;
+				padding: 2px;
+				color: #FFFFFF;
+				font-size: 17px;
+				background: #8AD361;
+				cursor:pointer;
+			}
+			
+			.calendarFrame .day .eventList li.eventDetail{
+				display:none;
+				margin: 0px 10px;
+				margin-top: -3px;
+				border-top-left-radius: 0px;
+				border-top-right-radius: 0px;
+				line-height: 15px;
+				padding: 4px;
+				padding-top: 6px;
+			}
+/*calendar end*/
 
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen 
@@ -2808,3 +3091,5 @@ and (min-width : 321px) {
 and (max-width : 320px) {
 /* Styles */
 }
+
+

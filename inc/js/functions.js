@@ -1,4 +1,4 @@
-//initialize
+//initializeeader
 var sourceURL = 'http://universeos.org';
 
 
@@ -341,6 +341,30 @@ var focus = true;
 			  }
               
 			  var application = new function(){
+			  	this.create = function(id, title, type, content){
+			  		if(type === 'html'){
+			  			content = content;
+			  		}
+			  		
+			  		
+			  		var output = '<div class="fenster" id="'+id+'">';
+			  			output += '<header class="titel">';
+	        				output += '<p>'+title+'&nbsp;</p>';
+	        				output += '<p class="windowMenu">';
+	        					output += '<a href="javascript:hideApplication(\''+id+'\');"><img src="./gfx/icons/close.png" width="16"></a>';
+	        					output += '<a href="#" onclick="moduleFullscreen(\''+id+'\');" class="fullScreenIcon"><img src="./gfx/icons/fullScreen.png" width="16"></a>';
+	        				output += '</p>';
+        				output += '</header>';
+        				output += '<div class="inhalt autoflow" id="'+id+'Main">'+content+'</div>';
+    
+			  		
+			  		$('#bodywrap').append(output);
+			  		
+              		init.draggableApplications();
+              		init.resizableApplications();
+              		init.applicationOnTop();
+			  	}
+			  	
 			  	this.onTop = new function(id){
 			  		
                   $(".fenster").css('z-index', 998);
@@ -373,6 +397,843 @@ var focus = true;
                         }
                   $("#" + id + "").css(returnFullScreenCSS);
 			  	};
+			  }
+			  
+			  
+			  
+			  var calendar = new function(){
+			  	
+			  	this.todayTimeObject = new Date();
+			  	this.ShownDay; //defines the starttime of shown intervall(first day of month, first day of week, day)
+				this.view = 'month'; //defines type of view(month, week or day)
+				this.listType = 'boxes';
+			  	this.shownTimeObject;
+			  	this.loader;
+			  	
+			  	this.init = function(){
+			  		
+			  		var html = '<div id="calendar">';
+			  				html += '<header>';
+			  					html += '<div class="btn-group pull-right" id="calendarViewDetail">';
+			  						html += '<a href="#" class="btn" id="prev">&lt;&lt;</a>';
+			  						html += '<a href="#" class="btn" id="text"></a>';
+			  						html += '<a href="#" class="btn" id="next">>></a>';
+			  					html += '</div>';
+			  					html += '<div class="btn-group pull-left" id="calendarView">';
+			  						html += '<a href="#" class="btn" id="day">Day</a>';
+			  						html += '<a href="#" class="btn" id="week">Week</a>';
+			  						html += '<a href="#" class="btn" id="month">Month</a>';
+			  					html += '</div>';
+			  					html += '<div class="btn-group pull-left" id="calendarListType" style="margin-left:30px;">';
+			  						html += '<a href="#" class="btn active" id="boxes"><i class="icon-th"></i></a>';
+			  						html += '<a href="#" class="btn" id="list"><i class="icon-th-list"></i></a>';
+			  					html += '</div>';
+			  					html += '<div class="btn pull-right" id="headerToday" style="margin-right:30px;">Today</div>';
+			  				html += '</header>';
+				  			html += '<div id="main">';
+								html += '<header>';
+									html += '<span>Monday</span>';
+									html += '<span>Tuesday</span>';
+									html += '<span>Wednesday</span>';
+									html += '<span>Thursday</span>';
+									html += '<span>Friday</span>';
+									html += '<span>Saturday</span>';
+									html += '<span>Sunday</span>';
+								html += '</header>';
+								html += '<div class="calendarFrame">';
+						
+								html += '</div>';
+							html += '</div>';
+							html += '<div id="side" class="leftNav">';
+							
+								html += '<ul id="calendars">';
+									html += '<li class="header">Calendars</li>';
+									
+									html += '<li><input type="checkbox" data-value="h" checked>&nbsp;Me</li>';
+									html += '<li><input type="checkbox" data-value="p">&nbsp;Public</li>';
+									html += '<li><input type="checkbox" data-value="f" checked>&nbsp;Friends</li>';
+									
+									//load groups into calendar list
+									var userGroups = groups.get();
+									if(userGroups){
+										$.each(groups.get(), function( index, value ) {
+											html += '<li><input type="checkbox" data-value="'+value+'">&nbsp;<img src="./gfx/icons/group.png" height="14">'+groups.getTitle(value)+'</li>';
+										});
+									}
+								html += '</ul>';
+								
+								html += '<ul id="events">';
+									html += '<li class="header">Events<a href="#" class="pull-right" onclick="events.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon-plus icon-white"></i></a></li>';
+									//events will apend to this list
+								html += '</ul>';
+								
+							html += '</div>';
+						html += '</div>';
+						
+			  			application.create('calendarFenster', 'Calendar', 'html', html);
+			  			
+			  			
+						$('#calendars .header').click(function(){
+							$('#side #calendars li').not('.header').slideToggle();
+						});
+			  			
+			  			$('#calendars input[type=checkbox]').click(function(){
+			  				console.log(calendar.getPrivacy());
+			  			});
+			  			
+			  			$('#calendarListType #boxes').click(function(){
+			  				calendar.toggleListType('boxes');
+			  			});
+			  			
+			  			$('#calendarListType #list').click(function(){
+			  				calendar.toggleListType('list');
+			  			});
+			  			this.loadMonth();
+			  	}
+			  	
+			  	this.toggleListType = function(type){
+			  		
+			  		//show days as boxes
+			  		if(type == 'boxes'){
+			  			
+			  			$('#main').mouseenter(function(){
+			  				$(this).children('header').slideDown();
+			  			});
+			  			
+			  			$('#main').mouseleave(function(){
+			  				$(this).children('header').slideUp();
+			  			});
+			  			
+			  			
+			  			$('.calendarFrame').removeClass('list');
+			  			$('#calendarListType #list').removeClass('active');
+			  			
+			  			$('.calendarFrame').addClass('boxes');
+			  			$('#calendarListType #boxes').addClass('active');
+			  			this.listType = 'boxes';
+			  			
+			  		//show days in list
+			  		}else if(type == 'list'){
+			  			
+			  			$('#main').unbind('mouseenter mouseleave');
+			  			
+			  			$('#main>header').hide();
+			  			
+			  			$('.calendarFrame').removeClass('boxes');
+			  			$('#calendarListType #boxes').removeClass('active');
+			  			
+			  			$('.calendarFrame').addClass('list');
+			  			$('#calendarListType #list').addClass('active');
+			  			this.listType = 'list';
+			  		}else if(type == 'day'){
+			  			
+			  			$('#main').unbind('mouseenter mouseleave');
+			  			$('#main>header').hide();
+			  			
+			  			$('.calendarFrame').removeClass('boxes');
+			  			$('.calendarFrame').removeClass('list');
+			  			$('#calendarListType #boxes').removeClass('active');
+			  			$('#calendarListType #list').removeClass('active');
+			  			
+			  			$('.calendarFrame').addClass('day');
+			  			//$('#calendarListType #list').addClass('active');
+			  			
+			  			
+			  		}
+			  	}
+			  	
+			  	this.getPrivacy = function(){
+			  		var privacy = [];
+			  		$('#calendars input[type=checkbox]:checked').each(function(){
+			  			 privacy.push($(this).data('value'));
+			  		});
+			  		
+			  		return privacy.join(';');
+			  	}
+			  	
+			  	this.loadEvents = function(){
+			  		$('.calendarFrame .day').each(function(){
+			  			var startstamp = $(this).data("timestamp");
+			  			
+			  			var appointments = events.get(startstamp, startstamp+86400, calendar.getPrivacy());
+						var list = '';
+					
+							if(appointments){
+								$.each( appointments, function( key, value ) {
+								  if($('#eventDetail_'+value.id).length === 0){
+								  	
+									  var startDate = new Date(value.startStamp*1000);
+									  var endDate = new Date(value.stopStamp*1000);
+									  list += '<li data-eventId="'+value.id+'" onclick="$(\'#eventDetail_'+value.id+'\').toggle();">'+startDate.getHours()+':'+startDate.getMinutes()+'&nbsp;'+value.title+'</li>'
+									  list += '<li class="eventDetail" id="eventDetail_'+value.id+'">'+startDate.getHours()+':'+startDate.getMinutes()+' - '+endDate.getHours()+':'+endDate.getMinutes()+'<br>'+value.place+'</li>';
+									
+								  }
+								 });
+							}
+							
+						$(this).children('.eventList').append(list);
+			  			
+			  			
+			  			
+			  		});
+			  		
+			  		console.log('main');
+			  	}
+			  	
+				this.appendDayToCalender = function(time){
+				
+					var selection;
+					var dayDateObject = new Date(time * 1000);
+					
+					var today = new Date();
+						today.setHours(0,0,0,0);
+						
+					var month = this.beautifyDate(dayDateObject.getMonth()+1);
+					var date = this.beautifyDate(dayDateObject.getDate());
+					
+					var dayClass = ''; //css class that is added to .day
+					
+					
+						if(today.getTime()/1000 == time){
+							dayClass = 'today';
+						}else{
+							dayClass = '';
+						}
+						
+						if(dayDateObject.getDay() == 0 || dayDateObject.getDay() == 6){
+							dayClass += ' weekend';
+						}
+						
+					var day  = '<div class="day '+dayClass+'" data-timestamp="'+dayDateObject.getTime()/1000+'">';
+							day += '<header>';
+								day += date+'.'+month;
+								day += '<div class="dropdown">';
+									day += '<a class="dropdown-toggle" data-toggle="dropdown" href="#">';
+										day += '<i class=\"icon-cog\"></i>';
+										day += '<span class="caret"></span>';
+									day += '</a>';
+									day += '<ul class="dropdown-menu">';
+										day += '<li>Options</li>';
+										day += '<li><a href="#" title="Add Event" onclick="events.addForm('+time+')">Add Event</a></li>';
+									day += '</ul>';
+								day += '</div>';
+							day += '</header>';
+						day += '<ul class="eventList"></ul>';
+						day += '</div>';
+					
+					$('.calendarFrame').append(day);
+				}
+				 
+				this.loadMonth = function(date){
+					
+			  		//tidy up calendar
+					$('.calendarFrame').html('');
+					$('.calendarFrame').removeClass('dayView');
+					$('.calendarFrame').removeClass('weekView');
+					
+					//add class for monthview
+					$('.calendarFrame').addClass('monthView');
+					
+					//add class for boxes
+					$('.calendarFrame').addClass('boxes');
+					
+					
+					
+					
+					if(!date){
+						var d = new Date()
+					}else if(typeof date == 'object'){
+						var d = date;
+					}else{
+						var d = new Date(date);
+					}
+					this.shownTimeObject = d;
+					
+					var firstDayOfMonth = new Date(d.getFullYear(), d.getMonth(), 1, 0, 0, 0);
+					var lastSecondOfMonth = new Date(d.getFullYear(), d.getMonth() + 1, 0, 0, 0, 0);
+					var month = lastSecondOfMonth.getMonth();
+					clearTimeout(this.loader);
+					this.loader = setTimeout(function(){calendar.loadEventsIntoSide(firstDayOfMonth)}, 1000);
+					this.updateViewDetail('month', this.getMonthName(d.getMonth()));
+					
+					var firstDayOfMonthWeekday = firstDayOfMonth.getDay();
+					
+						firstSecondOfMonth = (firstDayOfMonth.getTime()/1000);
+						lastSecondOfMonth = (lastSecondOfMonth.getTime()/1000);
+						this.shownDay = firstSecondOfMonth;
+					//get unixtime of today, 0:00
+					var today = new Date(d.getFullYear(),d.getMonth(), d.getDate(),0,0,0);
+					var unixTimeToday = today.getTime()/1000;
+					var daysInMonth = (lastSecondOfMonth-firstSecondOfMonth)/86400;
+					
+					//define offset of days of the last month
+					var offset = new Array("6", "0", "1", "2", "3", "4", "5");
+					
+					var loadedDays = 0;
+					var offSetStartTime = firstSecondOfMonth-(offset[firstDayOfMonthWeekday]*86400); //get starttime for first offset day
+					
+					
+					//append offset
+					while(loadedDays < offset[firstDayOfMonthWeekday]){
+						this.appendDayToCalender(offSetStartTime);
+						loadedDays++;
+						offSetStartTime = offSetStartTime+86400;
+					}
+					
+					daysInCalender = 30; //forgets day offset if first of month is not a monday
+					loadedDays = 0;
+					var whileTime = firstSecondOfMonth;
+					while(loadedDays < daysInCalender){
+						
+						
+						this.appendDayToCalender(whileTime);
+						whileTime = whileTime+86400;
+						loadedDays++;
+					}
+					$('.dropdown-toggle').dropdown();//init day dropdowns
+					this.loader = setTimeout(calendar.loadEvents, 1000);
+			  	}
+			  	
+			  	this.loadWeek = function(startStamp){
+			  		//tidy up calendar
+					$('.calendarFrame').html('');
+					$('.calendarFrame').removeClass('dayView');
+					$('.calendarFrame').removeClass('monthView');
+					
+					//add class for weekview
+					$('.calendarFrame').addClass('weekView');
+					
+					
+					
+					if(startStamp == undefined){
+						var d = new Date(); //now
+					}else{
+						var d = new Date(startStamp*1000);
+					}
+					
+					this.shownTimeObject = d;
+			  		this.updateViewDetail('week', d);
+			  		
+					var firstSecondOfWeek = this.getMonday(d);
+					var lastSecondOfWeek = new Date(((firstSecondOfWeek.getTime()/1000)+604799)*1000);
+					
+			  		
+					
+					var loadTime = firstSecondOfWeek.getTime()/1000;
+					
+					
+					var html = '';
+					for(var daysLoaded = 0; daysLoaded < 7; daysLoaded++){
+						
+						this.appendDayToCalender(loadTime);
+						loadTime = loadTime+86400;
+					}
+					this.loader = setTimeout(function() {calendar.loadEvents();}, 1000);
+			  		
+			  	}
+			  	
+			  	this.loadDay = function(date){
+			  		//tidy up calendar
+					$('.calendarFrame').html('');
+					$('.calendarFrame').removeClass('weeView');
+					$('.calendarFrame').removeClass('monthView');
+					
+					//add class for dayview
+					$('.calendarFrame').addClass('dayView');
+					
+					calendar.toggleListType('day');
+					
+			  		date.setHours(0);
+			  		date.setMinutes(0);
+			  		date.setSeconds(0);
+			  		date.setMilliseconds(0);
+					
+					var startStamp = date.getTime()/1000;
+					var stopStamp = date.getTime()/1000;
+					
+					var html = '';
+					
+					html += '<ul class="eventList">';
+					for (var i=0;i<=23;i++){
+						html += '<li>'+i+'</li>';
+					}
+					
+					
+					
+					
+			  			var appointments = events.get(startStamp, startStamp+86400);
+						var list = '';
+					
+							if(appointments){
+								$.each( appointments, function( key, value ) {
+								  if($('#eventDetailDay_'+value.id).length === 0){
+								  	
+									  var startDate = new Date(value.startStamp*1000);
+									  var endDate = new Date(value.stopStamp*1000);
+									  
+									  
+									  var top = ((value.startStamp-startStamp)/3600)*30;
+									  
+									  var height = ((value.stopStamp-value.startStamp)/3600)*30;
+									  
+									  
+									  
+									  list += '<li class="event" data-eventId="'+value.id+'" onclick="$(\'#eventDetail_'+value.id+'\').toggle();" style="top: '+top+'px; height: '+height+'">'+startDate.getHours()+':'+startDate.getMinutes()+'&nbsp;'+value.title+'</li>'
+									  
+								  }
+								 });
+							}
+							
+							html += list;
+							
+					
+					
+					html += '</ul>';
+					
+					$('.calendarFrame').html(html);
+					
+					
+					this.loader = setTimeout(function() {calendar.loadEvents();}, 1000);
+					this.updateViewDetail('day', this.shownTimeObject);
+			  	}
+			  	
+			  	this.updateViewDetail = function(type, dateObj){
+			  		
+			  		if(type == 'month'){
+			  			
+			  			
+				  		$('#calendarView .btn').removeClass('active');
+				  		$('#month').addClass('active');
+			  			
+			  			
+			  			$('#calendarViewDetail .btn').unbind('click');
+			  			
+						$('#calendarViewDetail #prev').click(function(){
+							calendar.shownTimeObject.setMonth(calendar.shownTimeObject.getMonth()-1);
+			  				calendar.loadMonth(calendar.shownTimeObject);
+						});
+						
+						$('#calendarViewDetail #next').click(function(){
+							calendar.shownTimeObject.setMonth(calendar.shownTimeObject.getMonth()+1);
+			  				calendar.loadMonth(calendar.shownTimeObject);
+							
+						});
+			  			
+						$('#calendarViewDetail #text').text(this.getMonthName(calendar.shownTimeObject.getMonth()));
+						
+						
+			  		}else if(type == 'week'){
+			  			
+				  		$('#calendarView .btn').removeClass('active');
+				  		$('#week').addClass('active');
+				  		
+						$('#calendarViewDetail #text').html('&nbsp;');
+						
+						
+						
+			  			$('#calendarViewDetail .btn').unbind('click');
+			  			
+						$('#calendarViewDetail #prev').click(function(){
+							calendar.shownTimeObject.setSeconds(-(7*86400));
+			  				calendar.loadWeek(calendar.shownTimeObject.getTime()/1000);
+						});
+						
+						$('#calendarViewDetail #next').click(function(){
+							calendar.shownTimeObject.setSeconds(+(7*86400));
+			  				calendar.loadWeek(calendar.shownTimeObject.getTime()/1000);
+							
+						});
+			  		}else if(type == 'day'){
+			  			
+				  		$('#calendarView .btn').removeClass('active');
+				  		$('#day').addClass('active');
+				  		
+						$('#calendarViewDetail #text').html(calendar.shownTimeObject.getDate()+'.'+calendar.shownTimeObject.getMonth()+1);
+						
+						
+						
+			  			$('#calendarViewDetail .btn').unbind('click');
+			  			
+						$('#calendarViewDetail #prev').click(function(){
+							calendar.shownTimeObject.setSeconds(-86400);
+			  				calendar.loadDay(calendar.shownTimeObject);
+						});
+						
+						$('#calendarViewDetail #next').click(function(){
+							calendar.shownTimeObject.setSeconds(+86400);
+			  				calendar.loadDay(calendar.shownTimeObject);
+						});
+						
+			  		}
+			  		
+			  		$('#headerAdd').click(function(){
+			  			events.addForm(calendar.shownTimeObject.getTime()/1000);
+			  		});
+			  		
+					$('#headerToday').click(function(){
+						var d = new Date();
+						
+						if(calendar.view == 'month'){
+							calendar.loadMonth(d);
+						}else if(calendar.view == 'week'){
+			  				calendar.loadWeek(d.getTime()/1000);
+						}else if(calendar.view == 'day'){
+							
+						}
+					});
+					
+					
+			  		$('#calendarView .btn').unbind('click');
+			  		
+			  		
+			  		$('#calendarView #month').click(function(){
+			  				calendar.loadMonth(calendar.shownTimeObject);
+			  				
+			  		});
+			  		
+			  		$('#calendarView #week').click(function(){
+			  			
+			  			calendar.loadWeek(calendar.shownTimeObject.getTime()/1000);
+			  			
+			  		});
+			  		
+			  		$('#calendarView #day').click(function(){
+			  			
+			  			calendar.loadDay(calendar.shownTimeObject);
+			  			
+			  		});
+			  		
+			  	}
+			  	
+			  	this.getMonthName = function(month){
+					var monthName = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+					return monthName[month];
+					
+			  	}
+			  	
+			  	this.loadMonthsIntoSide = function(date){
+			  		var d = new Date(date);
+			  		d.setMonth(0);
+			  		d.setDate(1);
+			  		d.setHours(0);
+			  		d.setMinutes(0);
+			  		d.setSeconds(0);
+			  		d.setMilliseconds(0);
+			  		
+					var monthHTML = '<li class="header">Events</header>';
+					
+					
+					for(var monthCounter=0; monthCounter < 12; monthCounter++){
+						var monthClass = '';
+						if(monthCounter === month){
+							monthClass = 'current';
+						}
+						monthHTML += '<li class="'+monthClass+'" onclick="calendar.loadMonth('+d.getTime()+');">'+this.getMonthName(monthCounter)+'</li>';
+						
+						d.setMonth( d.getMonth( ) + 1 );
+					}
+					
+					//apend month and trigger to load month into sidebar
+					$('#side #events').html(monthHTML);
+					
+					$('#months .header').click(function(){
+						$('#side #events li').not('.header').slideToggle();
+					});
+			  		
+			  		
+			  	}
+			  	
+			  	this.loadEventsIntoSide = function(date){
+			  		console.log('side');
+			  		var d = new Date(date);
+			  		d.setMonth(0);
+			  		d.setDate(1);
+			  		d.setHours(0);
+			  		d.setMinutes(0);
+			  		d.setSeconds(0);
+			  		d.setMilliseconds(0);
+			  		
+			  		//first sec of year
+			  		var startStamp = d.getTime()/1000;
+			  		
+			  		
+			  		//last sec of year
+			  		d.setFullYear(d.getFullYear()+1);
+			  		d.setSeconds(-1);
+			  		var stopStamp = d.getTime()/1000;
+			  		
+			  		
+			  			var appointments = events.get(startStamp, stopStamp);
+						var list = '';
+					
+							if(appointments){
+								$.each( appointments, function( key, value ) {
+								  if($('#sideEvent_'+value.id).length === 0){
+								  	
+									  var startDate = new Date(value.startStamp*1000);
+									  var endDate = new Date(value.stopStamp*1000);
+									  list += '<li data-eventId="'+value.id+'" onclick="$(\'#eventDetail_'+value.id+'\').toggle();" id="sideEvent_'+value.id+'">'+calendar.beautifyDate(startDate.getDate())+'.'+calendar.beautifyDate(startDate.getMonth()+1)+'&nbsp;'+value.title+'</li>'
+									  list += '<li class="eventDetail" style="display:none;">'+startDate.getHours()+':'+startDate.getMinutes()+' - '+endDate.getHours()+':'+endDate.getMinutes()+'<br>'+value.place+'</li>';
+									
+								  }
+								 });
+							}
+					//apend month and trigger to load month into sidebar
+					$('#side #events').append(list);
+					
+					$('#events .header').click(function(){
+						$('#side #events li').not('.header').not('.eventDetail').slideToggle();
+					});
+			  		
+			  		
+			  	}
+			  	
+			  	this.beautifyDate =function(value){
+			  		if(value < 10){
+			  			value = '0'+value;
+			  		}
+			  		return value;
+				}
+				
+				this.getAppointmentsForDay = function(time){
+					var array = [];
+					array[0] = 'startStamp';
+					
+					return array;
+				}
+				
+				
+				this.getNextMonth = function(month){
+					var ret;
+					switch(month){
+						default: 
+							ret = month+1;
+						break;
+						case 11:
+							ret = 0;
+						break;
+							
+					}
+					return ret;
+				}
+				
+				this.getLastMonth = function(month){
+					var ret;
+					switch(month){
+						default: 
+							ret = month-1;
+						break;
+						case 0:
+							ret = 11;
+						break;
+							
+					}
+					return ret;
+				}
+				this.getMonday = function(d){
+				  d = new Date(d);
+				  var d = new Date(d.setHours(0));
+				  var d = new Date(d.setMinutes(0));
+				  var d = new Date(d.setSeconds(0));
+				  var d = new Date(d.setMilliseconds(0));
+				  var day = d.getDay(),
+				      diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+				  return new Date(d.setDate(diff));
+				}
+				
+				
+			  }
+			  
+			  var events = new function(){
+			  	
+			  	this.create = function(startStamp, stopStamp, title, place, privacyShow, privacyEdit){
+			  		
+				    $.ajax({
+				      url:"doit.php?action=loadPrivacySettings",
+				      async: false,  
+					  type: "POST",
+					  data: { 
+					  	startStamp : startStamp,
+					  	stopStamp : stopStamp,
+					  	title : title,
+					  	place : place,
+					  	privacyShow : privacyShow,
+					  	privacyEdit : privacyEdit
+					  	 },
+				      success:function(data) {
+				         result = data; 
+				      }
+				   });
+				   
+			  	}
+			  	this.addForm = function(startstamp){
+			  		var d = new Date(startstamp*1000);
+			  		
+			  		var content  = '<table class="formTable">';
+			  				content += '<form id="createEvent" method="post">';
+					  		    content += '<tr>';
+					  		    	content += '<td>';
+					  		    	content += 'Title:';
+					  		    	content += '</td>';
+					  		    	content += '<td>';
+					  		    	content += '<input type="text" name="title" id="eventTitle">';
+					  		    	content += '</td>';
+					  		    content += '</tr>';
+					  		    content += '<tr>';
+					  		    	content += '<td>';
+					  		    	content += 'Place:';
+					  		    	content += '</td>';
+					  		    	content += '<td>';
+					  		    	content += '<input type="text" name="place" id="eventPlace">';
+					  		    	content += '</td>';
+					  		    content += '</tr>';
+					  		    content += '<tr>';
+					  		    	content += '<td>';
+					  		    	content += 'Day:';
+					  		    	content += '</td>';
+					  		    	content += '<td>';
+					  		    	content += '<input type="text" name="startDate" id="startDate" class="startDate" value="'+d.getMonth()+1+'/'+d.getDate()+'/'+d.getFullYear()+'" style="width: 72px;">';
+					  		    	content += '&nbsp;<input type="text" name="startTime" id="startTime" class="startTime eventTime" value="15:30" style="width: 37px;">&nbsp;to&nbsp;';
+					  		    	content += '<input type="text" name="endDate" id="endDate" class="endDate" value="'+d.getMonth()+1+'/'+d.getDate()+'/'+d.getFullYear()+'" style="width: 72px;">';
+					  		    	content += '&nbsp;<input type="text" name="endTime" id="endTime" class="endTime eventTime" value="16:30" style="width: 37px;">';
+					  		    	content += '</td>';
+					  		    content += '</tr>';
+					  		    content += '<tr>';
+					  		    	content += '<td>';
+					  		    	content += 'All-Day:';
+					  		    	content += '</td>';
+					  		    	content += '<td>';
+					  		    	content += '<input type="checkbox" name="allDay" id="eventAllDay" value="true" onclick="$(\'.eventTime\').toggle();">';
+					  		    	content += '</td>';
+					  		    content += '</tr>';
+					  		    content += '<tr>';
+					  		    	content += '<td>';
+					  		    	content += 'Privacy:';
+					  		    	content += '</td>';
+					  		    	content += '<td>';
+					  		    	content += privacy.show('f//f');
+					  		    	content += '</td>';
+					  		    content += '</tr>';
+			  		    	content += '</form>';
+			  		    content += '</table>';
+			  		var onSubmit = function() {
+			  			$('#createEvent').submit();
+  					}
+  					
+  					//create modal
+              		modal.create('Create New Event', content, [onSubmit, 'Save']);
+              		
+              		//init datepicker in modal
+              		$('.startDate').datepicker();
+              		
+              		$('#createEvent').submit(function(e){
+              			e.preventDefault();
+              			console.log($(this).serialize());
+              			if($('#eventTitle').val().length > 0 && $('#startDate').val().length > 0 && $('#endDate').val().length > 0){
+              				
+	              			$.post("api.php?action=createEvent",$(this).serialize(),function(data){
+					            alert(data); //post check to show that the mysql string is the same as submit                        
+					        });
+
+              			}else{
+              				jsAlert('', 'You need to fill out all the fields.');
+              			}
+              			
+              			
+              			return false;
+              		});
+			  	}
+			  	
+			  	this.get = function(startStamp, stopStamp, privacy){
+			  		var result;
+				    $.ajax({
+				      url:"api.php?action=getEvents",
+				      async: false,  
+					  type: "POST",
+					  data: { 
+					  	 startStamp: startStamp,
+					  	 stopStamp: stopStamp,
+					  	 privacy: privacy
+					  	 },
+				      success:function(data) {
+				      	if(data){
+				        	result = $.parseJSON(data); 
+				      	}
+				      }
+				   });
+				   
+				   return result;
+			  	}
+			  }
+			  
+			  var privacy = new function(){
+			  	
+			  	this.load = function(selector, val){
+			  		
+			  		
+			  		$.post("doit.php?action=loadPrivacySettings", {
+	                       val:val
+	                       }, function(result){
+		                   		$(selector).html(result);
+	                       }, "html");
+			  		
+			  		
+			  	}
+			  	this.show = function(val){
+				    var result="";
+				    
+				    $.ajax({
+				      url:"doit.php?action=loadPrivacySettings",
+				      async: false,  
+					  type: "POST",
+					  data: { val : val },
+				      success:function(data) {
+				         result = data; 
+				      }
+				   	});
+				   return result;
+			  	}
+			  	
+			  }
+			  var groups = new function(){
+			  	
+			  	this.get = function(){
+			  		
+				    var result="";
+				    
+				    $.ajax({
+				      url:"api.php?action=getGroups",
+				      async: false,  
+					  type: "POST",
+					  data: { val : 'val' },
+				      success:function(data) {
+				         result = data; 
+				      }
+				   	});
+				   	console.log(typeof result);
+				   	if(result != null){
+				   		return $.parseJSON(result);
+				   	}
+			  	}
+			  	this.getTitle = function(groupId){
+			  		
+				    var result="";
+				    
+				    $.ajax({
+				      url:"api.php?action=getGroupTitle",
+				      async: false,  
+					  type: "POST",
+					  data: { groupId : groupId },
+				      success:function(data) {
+				         result = data; 
+				      }
+				   	});
+				   	if(result){
+				   		return result;
+				   	}
+			  		
+			  	}
+			  	
 			  }
 
 
@@ -441,10 +1302,11 @@ var focus = true;
 	              	}
 	              	
 	              	$('#alerter').append('<div class="alert '+alertClass+'"><button type="button" class="close" data-dismiss="alert">&times;</button>'+message+'</div>');
-	              	$('.alert').delay(5000).fadeOut(function(){
+	              	$('.alert').delay(8000).fadeOut(function(){
 	              		$(this).remove();
 	              	});
               }
+              
               var files = new function(){
               	
               	this.fileIdToFileTitle = function(fileId){
@@ -503,21 +1365,21 @@ var focus = true;
               
               
               var modal =  new function() {
-			    this.title = localStorage.currentUser_userid;
 			    this.html = '';
 			    this.create = function (title, content, action) {
 			    	this.html += '<div class="blueModal border-radius container">';
 	            		this.html += '<header>';
 	            			this.html += title;
+	            			this.html += '<a class="modalClose" onclick="$(\'.blueModal\').remove();">X</a>';
 	            		this.html += '</header>';
 	            		this.html += '<div class="content">';
 	            		this.html += content;
 	            		this.html += '</div>';
 	            		this.html += '<footer>';
 	            		
-	                 		this.html += '<a href="#" onclick="$(\'.blueModal\').hide(); return false;" class="btn pull-left">Close</a>';
+	                 		this.html += '<a href="#" onclick="$(\'.blueModal\').remove(); return false;" class="btn pull-left">Close</a>';
 	                 		if(typeof action !== 'undefined'){
-	                			this.html += '<a href="#" onclick="'+action+'" class="btn btn-primary pull-right">&nbsp;&nbsp;Next&nbsp;&nbsp;</a>';
+	                			this.html += '<a href="#" id="action" class="btn btn-primary pull-right">&nbsp;&nbsp;'+action[1]+'&nbsp;&nbsp;</a>';
 	                 		}
 	            		
 	            		this.html += '</footer>';
@@ -525,6 +1387,12 @@ var focus = true;
 	            	this.html += '</div>';
             		
             		$('#popper').append(this.html);
+            		
+            		if(typeof action !== 'undefined'){
+	            		$('.blueModal #action').click(function(){
+	            			action[0]();
+	            		});
+            		}
 			    };
 			}
        
@@ -610,11 +1478,11 @@ var focus = true;
 	
 	var hash = new function(){
 		this.MD5 = function(string){
-			var hash = CryptoJS.MD5(password);
+			var hash = CryptoJS.MD5(string);
 			return hash.toString(CryptoJS.enc.Hex);
 		}
 		this.SHA512 = function(string){
-			var hash = CryptoJS.SHA512(salt+passwordHashMD5);
+			var hash = CryptoJS.SHA512(string);
 			return hash.toString(CryptoJS.enc.Hex);
 		}
 	}

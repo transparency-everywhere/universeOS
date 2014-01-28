@@ -393,29 +393,29 @@
         }else if($type == "internLink"){
             $checkInternLinkData = mysql_fetch_array(mysql_query("SELECT * FROM internLinks WHERE id='$itemId'"));
             
-                if($checkInternLinkData[type] == "folder"){
+                if($checkInternLinkData['type'] == "folder"){
                     
                     $shortCutItemData = mysql_fetch_array(mysql_query("SELECT name, privacy, creator FROM folders WHERE id='$checkInternLinkData[typeId]'"));
                     
-                    $user = $shortCutItemData[creator];
+                    $user = $shortCutItemData['creator'];
                     
-                }else if($checkInternLinkData[type] == "element"){
+                }else if($checkInternLinkData['type'] == "element"){
                     
                     $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy, creator FROM elements WHERE id='$checkInternLinkData[typeId]'"));
-                    $user = $shortCutItemData[creator];
-                }else if($checkInternLinkData[type] == "file"){
+                    $user = $shortCutItemData['creator'];
+                }else if($checkInternLinkData['type'] == "file"){
 
                     $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy, type, owner FROM files WHERE id='$checkInternLinkData[typeId]'"));
-                    $user = $shortCutItemData[owner];
+                    $user = $shortCutItemData['owner'];
   
-                }else if($checkInternLinkData[type] == "link"){
+                }else if($checkInternLinkData['type'] == "link"){
 
                     $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, link, privacy, type, author FROM links WHERE id='$checkInternLinkData[typeId]'"));
-                    $user = $shortCutItemData[author];
+                    $user = $shortCutItemData['author'];
                   
                 }
                 
-                if(authorize($shortCutItemData[privacy], "edit", $user)){
+                if(authorize($shortCutItemData['privacy'], "edit", $user)){
                     
                     $delete = "<li><a href=\"doit.php?action=deleteItem&type=internLink&itemId=$itemId\" target=\"submitter\">Delete</a></li>";  
                     
@@ -774,7 +774,7 @@
   function searchUserByString($string, $limit){
   		$q = save($string);
 		$k = save($limit);
-		$userSuggestSQL = mysql_query("SELECT userid, username, realname FROM user WHERE username LIKE '%$q%' OR realname LIKE '%$q%' OR email='$q' OR userid='$q' LIMIT $k");
+		$userSuggestSQL = mysql_query("SELECT userid, username, realname FROM user WHERE username LIKE '%$q%' OR realname LIKE '%$q%' OR email='$q' OR userid='$q' LIMIT 0,10");
 		while ($suggestData = mysql_fetch_array($userSuggestSQL)) {
 			
 			
@@ -1370,14 +1370,9 @@ echo"</div>";
 	}
 
 	function getGroups($userid=NULL){
-		if(empty($userid))
-			$userid = getUser();
-		
-		$sql = mysql_query("SELECT `group` FROM `groupAttachments` WHERE `item`='user' AND `validated`='1' AND `itemId`='".mysql_real_escape_string($userid)."'");
-		while($data = mysql_fetch_array($sql)){
-			$groups[] = $data['group'];
-		}
-		return $groups;
+		//moved to class groups->get();
+		$groups = new Groups();
+		return $groups->get($userid);
 		
 	}
 	
@@ -5430,4 +5425,42 @@ class sec{
 	}
 }
 
-       ?>
+class groups{
+	function get($userid=NULL){
+		if(empty($userid))
+			$userid = getUser();
+		
+		$sql = mysql_query("SELECT `group` FROM `groupAttachments` WHERE `item`='user' AND `validated`='1' AND `itemId`='".mysql_real_escape_string($userid)."'");
+		while($data = mysql_fetch_array($sql)){
+			$groups[] = $data['group'];
+		}
+		return $groups;
+	}
+	function getTitle($groupId){
+		$data = mysql_fetch_array(mysql_query("SELECT `title` FROM `groups` WHERE id='".save($groupId)."'"));
+		return $data['title'];
+	}
+}
+
+class events{
+	
+	function create($user, $startStamp, $stopStamp, $title, $place, $privacy){
+		mysql_query("INSERT INTO `events` (`user`, `startStamp`, `stopStamp`, `title`, `place`, `privacy`) VALUES ('$user', '$startStamp', '$stopStamp', '$title', '$place', '$privacy');");
+	}
+	
+	function get($user=NULL, $startStamp, $stopStamp, $privacy=NULL){
+		
+		if($privacy != NULL){
+			$privacy = explode(';', $privacy);
+			$privacy = implode('|', $privacy);
+			$privacyQuery = "AND privacy REGEXP '$privacy'";
+		}
+		
+		$sql = mysql_query("SELECT * FROM `events` WHERE `startStamp`>'".save($startStamp)."' AND `stopStamp`<'".save($stopStamp)."' AND `user`='".save($user)."' $privacyQuery");
+		while($data = mysql_fetch_array($sql)){
+			$arr[] = $data;
+		}
+		return $arr;
+	}
+
+}?>

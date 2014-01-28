@@ -33,6 +33,6 @@
 			<div id="circularG_8" class="circularG">
 			</div>
 		</div> <!-- - See more at: http://cssload.net/#sthash.DdGahpKm.dpuf -->
-		<h3 style="line-height:23px;">The universe is creating your keypair now, this may take some seconds</h3>
+		<h3 style="line-height:23px;">The universe is creating your keypair now, this may take some minutes</h3>
 	</div>
 </div>

@@ -531,10 +531,55 @@ switch($action){
 		$data = $signature->get($type, $itemId);
 		echo $data['privateKey'];
 		break;
+//events
+	case 'createEvent':
+		
+		
+		if($_POST['allDay'] == "true"){
+		
+			$startTime = strtotime($_POST['startDate']."-00:00");
+			$stopTime = strtotime($_POST['endDate']."-23:59:60");	
+			
+		}else{
+			
+			$startTime = strtotime($_POST['startDate']."-".$_POST['startTime']);
+			$stopTime = strtotime($_POST['endDate']."-".$_POST['endTime']);
+		}
+		
+        //set privacy
+      	$customShow = $_POST['privacyCustomSee'];
+        $customEdit = $_POST['privacyCustomEdit'];
+        
+        $privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
+		
+		
+		$events = new events();
+		$events->create(getUser(), $startTime, $stopTime, $_POST['title'], $_POST['place'], $privacy);
+		break;
+	case 'getEvents':
+		
+		$events = new events();
+		echo json_encode($events->get(getUser(), $_POST['startStamp'], $_POST['stopStamp'], $_POST['privacy']));
+		
+		break;
 		
 		
 //filesystem
 	case 'fileIdToFileTitle':
 		echo fileIdToFileTitle($_POST['fileId']);
+		break;
+		
+//groups
+	case 'getGroups':
+		
+		$groups = new groups();
+		echo json_encode($groups->get());
+		
+		break;
+	case 'getGroupTitle':
+	
+		$groups = new groups();
+		echo $groups->getTitle($_POST['groupId']);
+	
 		break;
 }

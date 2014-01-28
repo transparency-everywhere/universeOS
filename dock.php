@@ -6,10 +6,6 @@
     //include("modules/player/dockplayer.php");
     ?>
 </div>
-<!--    <p>Buddies</p>
-    <ul class="messageList" id="dockMenuBuddyAlerts">
-        
-    </ul>-->
 </div>
 <div id="dock">
     <table>
@@ -26,7 +22,7 @@
 </div>
 <script>
     $("#modulePlayer").click(function () {
-    $("#dockplayer").toggle("slow");
+    	$("#dockplayer").toggle("slow");
     });
     $("#startButton").click(function () {
     
@@ -39,6 +35,6 @@
     	}
     }); 
     $("#personalButton").click(function () {
-    $("#personalFeed").toggle("slow");
+    	$("#personalFeed").toggle("slow");
     });
 </script>
