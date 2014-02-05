@@ -1,5 +1,5 @@
 //initializeeader
-var sourceURL = 'http://universeos.org';
+var sourceURL = 'http://staging.universeos.org';
 
 
 var usernames = [];
@@ -106,7 +106,7 @@ var focus = true;
               	
               	this.draggableApplications = function(){
               		
-                            $(".fenster").draggable({
+                            $(".fenster").not('.ui-draggable').draggable({
                                     cancel: '.inhalt',
                                     containment: '#bodywrap',
                                     scroll: false,
@@ -121,7 +121,7 @@ var focus = true;
                             });
               	}
               	this.resizableApplications = function(){
-                            $(".fenster").resizable({
+                            $(".fenster").not('.ui-resizable').resizable({
                                     handles: 'n, e, s, w, ne, se, sw, nw',
                                     containment: '#bodywrap',
                                     start: function(){
@@ -399,7 +399,209 @@ var focus = true;
 			  	};
 			  }
 			  
-			  
+			  var tasks = new function(){
+			  	
+			  	this.getData = function(taskId){
+			  		var res;
+			  		$.ajax({
+				      url:"api.php?action=getTaskData",
+				      async: false,  
+					  type: "POST",
+					  data: { 
+					  	taskId : taskId
+					  	 },
+				      success:function(data) {
+				         res = $.parseJSON(data); 
+				      }
+				   });
+				   return res;
+			  	}
+			  	
+			  	this.addForm = function(startstamp){
+			  		if(typeof startstamp === undefined)
+			  			var d = new Date(startstamp*1000);
+			  		else
+			  			var d = new Date();
+			  			
+			  		var content  = '<table class="formTable">';
+			  				content += '<form id="createTask" method="post">';
+					  		    content += '<tr>';
+					  		    	content += '<td>';
+					  		    	content += 'Title:';
+					  		    	content += '</td>';
+					  		    	content += '<td>';
+					  		    	content += '<input type="text" name="title" id="taskTitle">';
+					  		    	content += '</td>';
+					  		    content += '</tr>';
+					  		    content += '<tr>';
+					  		    	content += '<td>';
+					  		    	content += 'Description:';
+					  		    	content += '</td>';
+					  		    	content += '<td>';
+					  		    	content += '<textarea name="description" id="taskDescription"></textarea>';
+					  		    	content += '</td>';
+					  		    content += '</tr>';
+					  		    content += '<tr>';
+					  		    	content += '<td>';
+					  		    	content += 'Day:';
+					  		    	content += '</td>';
+					  		    	content += '<td>';
+					  		    	content += '<input type="text" name="date" id="date" class="date" value="'+d.getMonth()+1+'/'+d.getDate()+'/'+d.getFullYear()+'" style="width: 72px;">';
+					  		    	content += '&nbsp;<input type="text" name="time" id="time" class="time eventTime" value="15:30" style="width: 37px;">';
+					  		    	content += '</td>';
+					  		    content += '</tr>';
+					  		    content += '<tr>';
+					  		    	content += '<td>';
+					  		    	content += 'Privacy:';
+					  		    	content += '</td>';
+					  		    	content += '<td>';
+					  		    	content += privacy.show('f//f', true);
+					  		    	content += '</td>';
+					  		    content += '</tr>';
+			  		    	content += '</form>';
+			  		    content += '</table>';
+			  		var onSubmit = function() {
+			  			$('#createTask').submit();
+  					}
+  					
+  					//create modal
+              		modal.create('Create New Task', content, [onSubmit, 'Save']);
+              		
+              		//init datepicker in modal
+              		$('.date').datepicker();
+              		
+              		$('#createTask').submit(function(e){
+              			e.preventDefault();
+              			console.log($(this).serialize());
+              			if($('#taskTitle').val().length > 0 && $('#date').val().length > 0 && $('#time').val().length > 0){
+              				
+	              			$.post("api.php?action=createTask",$(this).serialize(),function(data){
+					            alert(data); //post check to show that the mysql string is the same as submit                        
+					        });
+
+              			}else{
+              				jsAlert('', 'You need to fill out all the fields.');
+              			}
+              			
+              			
+              			return false;
+              		});
+			  	}
+			  	this.show = function(taskId, editable){
+			  		
+			  		var taskData = tasks.getData(taskId);
+			  		
+			  		var date = new Date(taskData.timestamp*1000);
+			  		
+			  		
+			  		var editableToken
+			  		
+			  		//generate formstuff from eventdata
+			  		if(editable){
+			  			editableToken = 'contentEditable';
+			  			var checked
+			  			if(editable == 'true')
+			  				checked = 'checked="checked"';
+			  			
+			  		}
+			  		
+			  		var time = calendar.beautifyDate(date.getHours())+':'+calendar.beautifyDate(date.getMinutes());
+			  		
+			  		
+			  		
+			  		
+			  		var content  = '<table class="formTable">';
+			  				content += '<form id="updateTask" method="post">';
+					  		    content += '<tr>';
+					  		    	content += '<td>';
+					  		    	content += 'Title:';
+					  		    	content += '</td>';
+					  		    	content += '<td '+editableToken+' id="title">';
+					  		    	content += taskData.title;
+					  		    	content += '</td>';
+					  		    content += '</tr>';
+					  		    content += '<tr>';
+					  		    	content += '<td>';
+					  		    	content += 'Description:';
+					  		    	content += '</td>';
+					  		    	content += '<td '+editableToken+' id="description">';
+					  		    	content += taskData.description;
+					  		    	content += '</td>';
+					  		    content += '</tr>';
+					  		    content += '<tr>';
+					  		    	content += '<td>';
+					  		    	content += 'Day:';
+					  		    	content += '</td>';
+					  		    	content += '<td><span id="date" '+editableToken+'>';
+					  		    	content += date.getMonth()+1+'/'+date.getDate()+'/'+date.getFullYear();
+					  		    	content += '</span>&nbsp;<span id="time" '+editableToken+'>'+time+'</span>';
+					  		    	content += '</td>';
+					  		    content += '</tr>';
+					  		    content += '<tr>';
+					  		    	content += '<td>';
+					  		    	content += 'Privacy:';
+					  		    	content += '</td>';
+					  		    	content += '<td>';
+					  		    	content += privacy.show(taskData.privacy, editable);
+					  		    	content += '</td>';
+					  		    content += '</tr>';
+			  		    	content += '</form>';
+			  		    content += '</table>';
+			  		
+			  		var onSubmit = function() {
+			  			$('#updateTask').submit();
+  					}
+  					
+  					//create modal
+              		modal.create('Task '+taskData.title, content, [onSubmit, 'Save']);
+              		
+              		//init datepicker in modal
+              		$('.startDate').datepicker();
+              		
+              		$('#updateTask').submit(function(e){
+              			e.preventDefault();
+              			if($('#title').text().length > 0 && $('#date').text().length > 0 && $('#time').text().length > 0){
+              				
+              				var privacy = $('.blueModal .privacySettings  :input').serialize();
+              				
+              				var searchString  = 'taskId='+encodeURIComponent(taskId);
+              					searchString += '&title='+encodeURIComponent($('.blueModal #title').text());
+              					searchString += '&description='+encodeURIComponent($('.blueModal #description').text());
+              					searchString += '&data='+encodeURIComponent($('.blueModal #date').text());
+              					searchString += '&time='+encodeURIComponent($('.blueModal #time').text());
+              					searchString += '&'+privacy;
+              					
+	              			$.post("api.php?action=updateTask",searchString,function(data){
+					            alert(data); //post check to show that the mysql string is the same as submit                        
+					        });
+
+              			}else{
+              				jsAlert('', 'You need to fill out all the fields.');
+              			}
+              			
+              			
+              			return false;
+              		});
+			  	}
+			  	this.create = function(user, timestamp, title, description, privacy){
+			  		
+				    $.ajax({
+				      url:"api.php?action=createTask",
+				      async: false,  
+					  type: "POST",
+					  data: { 
+					  	user : user,
+					  	timestamp : timestamp,
+					  	title : title,
+					  	description : description,
+					  	privacy : privacy
+					  	 },
+				      success:function(data) {
+				         result = data; 
+				      }
+				   });
+			  	}
+			  }
 			  
 			  var calendar = new function(){
 			  	
@@ -409,6 +611,13 @@ var focus = true;
 				this.listType = 'boxes';
 			  	this.shownTimeObject;
 			  	this.loader;
+			  	
+			  	this.show = function(){
+			  		if($('#calendar').length > 0)
+			  			$('#calendar').show();
+			  		else
+			  			this.init();
+			  	}
 			  	
 			  	this.init = function(){
 			  		
@@ -792,7 +1001,7 @@ var focus = true;
 					
 					$('.calendarFrame').html(html);
 					
-					
+					clearTimeout(this.loader);
 					this.loader = setTimeout(function() {calendar.loadEvents();}, 1000);
 					this.updateViewDetail('day', this.shownTimeObject);
 			  	}
@@ -827,14 +1036,13 @@ var focus = true;
 				  		$('#calendarView .btn').removeClass('active');
 				  		$('#week').addClass('active');
 				  		
-						$('#calendarViewDetail #text').html('&nbsp;');
-						
 						
 						
 			  			$('#calendarViewDetail .btn').unbind('click');
 			  			
 						$('#calendarViewDetail #prev').click(function(){
 							calendar.shownTimeObject.setSeconds(-(7*86400));
+							console.log('prev');
 			  				calendar.loadWeek(calendar.shownTimeObject.getTime()/1000);
 						});
 						
@@ -843,6 +1051,11 @@ var focus = true;
 			  				calendar.loadWeek(calendar.shownTimeObject.getTime()/1000);
 							
 						});
+						console.log(calendar.shownTimeObject)
+						var nextWeek = new Date(calendar.shownTimeObject.getTime()+(7*86400000));
+						
+						$('#calendarViewDetail #text').html(calendar.shownTimeObject.getDate()+'.'+calendar.shownTimeObject.getMonth()+1+' - '+nextWeek.getDate()+'.'+nextWeek.getMonth()+1);
+						
 			  		}else if(type == 'day'){
 			  			
 				  		$('#calendarView .btn').removeClass('active');
@@ -972,15 +1185,14 @@ var focus = true;
 								  	
 									  var startDate = new Date(value.startStamp*1000);
 									  var endDate = new Date(value.stopStamp*1000);
-									  list += '<li data-eventId="'+value.id+'" onclick="$(\'#eventDetail_'+value.id+'\').toggle();" id="sideEvent_'+value.id+'">'+calendar.beautifyDate(startDate.getDate())+'.'+calendar.beautifyDate(startDate.getMonth()+1)+'&nbsp;'+value.title+'</li>'
-									  list += '<li class="eventDetail" style="display:none;">'+startDate.getHours()+':'+startDate.getMinutes()+' - '+endDate.getHours()+':'+endDate.getMinutes()+'<br>'+value.place+'</li>';
+									  list += '<li data-eventId="'+value.id+'" onclick="events.show('+value.id+');" id="sideEvent_'+value.id+'">'+calendar.beautifyDate(startDate.getDate())+'.'+calendar.beautifyDate(startDate.getMonth()+1)+'&nbsp;'+value.title+'</li>'
 									
 								  }
 								 });
 							}
 					//apend month and trigger to load month into sidebar
 					$('#side #events').append(list);
-					
+					$('#events .header').unbind('click');
 					$('#events .header').click(function(){
 						$('#side #events li').not('.header').not('.eventDetail').slideToggle();
 					});
@@ -1045,6 +1257,22 @@ var focus = true;
 			  }
 			  
 			  var events = new function(){
+			  	
+			  	this.getData = function(eventId){
+			  		var res;
+			  		$.ajax({
+				      url:"api.php?action=getEventData",
+				      async: false,  
+					  type: "POST",
+					  data: { 
+					  	eventId : eventId
+					  	 },
+				      success:function(data) {
+				         res = $.parseJSON(data); 
+				      }
+				   });
+				   return res;
+			  	}
 			  	
 			  	this.create = function(startStamp, stopStamp, title, place, privacyShow, privacyEdit){
 			  		
@@ -1111,7 +1339,7 @@ var focus = true;
 					  		    	content += 'Privacy:';
 					  		    	content += '</td>';
 					  		    	content += '<td>';
-					  		    	content += privacy.show('f//f');
+					  		    	content += privacy.show('f//f', true);
 					  		    	content += '</td>';
 					  		    content += '</tr>';
 			  		    	content += '</form>';
@@ -1144,6 +1372,124 @@ var focus = true;
               		});
 			  	}
 			  	
+			  	this.show = function(eventId, editable){
+			  		var eventData = events.getData(eventId);
+			  		
+			  		var startDate = new Date(eventData.startStamp*1000);
+			  		var  stopDate = new Date(eventData.stopStamp*1000);
+			  		console.log('hours:'+startDate.getHours()+'	min:'+startDate.getMinutes());
+			  		console.log('hours:'+stopDate.getHours()+'	min:'+stopDate.getMinutes());
+			  		
+			  		
+			  		var allDay, 	//contains checkbox or check-image
+			  			editableToken
+			  		
+			  		//generate formstuff from eventdata
+			  		if(editable){
+			  			editableToken = 'contentEditable';
+			  			var checked
+			  			if(editable == 'true')
+			  				checked = 'checked="checked"';
+			  			
+			  			allDay = '<input type="checkbox" name="allDay" id="eventAllDay" value="true" onclick="$(\'.eventTime\').toggle();" '+checked+'>';
+			  		}else{
+			  			if(editable != 'true')
+			  				allDay = 'x';
+			  			else
+			  				allDay = '';
+			  			
+			  		}
+			  		
+			  		var startTime = calendar.beautifyDate(startDate.getHours())+':'+calendar.beautifyDate(startDate.getMinutes());
+			  		var stopTime  = calendar.beautifyDate(stopDate.getHours())+':'+calendar.beautifyDate(stopDate.getMinutes());
+			  		
+			  		var content  = '<table class="formTable">';
+			  				content += '<form id="updateEvent" method="post">';
+					  		    content += '<tr>';
+					  		    	content += '<td>';
+					  		    	content += 'Title:';
+					  		    	content += '</td>';
+					  		    	content += '<td '+editableToken+' id="title">';
+					  		    	content += eventData.title;
+					  		    	content += '</td>';
+					  		    content += '</tr>';
+					  		    content += '<tr>';
+					  		    	content += '<td>';
+					  		    	content += 'Place:';
+					  		    	content += '</td>';
+					  		    	content += '<td '+editableToken+' id="place">';
+					  		    	content += eventData.place;
+					  		    	content += '</td>';
+					  		    content += '</tr>';
+					  		    content += '<tr>';
+					  		    	content += '<td>';
+					  		    	content += 'Day:';
+					  		    	content += '</td>';
+					  		    	content += '<td><span id="startDate" '+editableToken+'>';
+					  		    	content += startDate.getMonth()+1+'/'+startDate.getDate()+'/'+startDate.getFullYear();
+					  		    	content += '</span>&nbsp;<span id="startTime" '+editableToken+'>'+startTime+'</span>&nbsp;to&nbsp;<span '+editableToken+' id="stopDate">';
+					  		    	content += stopDate.getMonth()+1+'/'+stopDate.getDate()+'/'+stopDate.getFullYear();
+					  		    	content += '</span>&nbsp;<span id="stopTime" '+editableToken+'>'+stopTime+'</span>';
+					  		    	content += '</td>';
+					  		    content += '</tr>';
+					  		    content += '<tr>';
+					  		    	content += '<td>';
+					  		    	content += 'All-Day:';
+					  		    	content += '</td>';
+					  		    	content += '<td>';
+					  		    	content += allDay;
+					  		    	content += '</td>';
+					  		    content += '</tr>';
+					  		    content += '<tr>';
+					  		    	content += '<td>';
+					  		    	content += 'Privacy:';
+					  		    	content += '</td>';
+					  		    	content += '<td>';
+					  		    	content += privacy.show(eventData.privacy, editable);
+					  		    	content += '</td>';
+					  		    content += '</tr>';
+			  		    	content += '</form>';
+			  		    content += '</table>';
+			  		var onSubmit = function() {
+			  			$('#updateEvent').submit();
+  					}
+  					
+  					//create modal
+              		modal.create('Event '+eventData.title, content, [onSubmit, 'Save']);
+              		
+              		//init datepicker in modal
+              		$('.startDate').datepicker();
+              		
+              		$('#updateEvent').submit(function(e){
+              			e.preventDefault();
+              			if($('#title').text().length > 0 && $('#startDate').text().length > 0 && $('#stopDate').text().length > 0){
+              				
+              				var privacy = $('.blueModal .privacySettings  :input').serialize();
+              				
+              				var searchString  = 'eventId='+encodeURIComponent(eventId);
+              					searchString += '&title='+encodeURIComponent($('.blueModal #title').text());
+              					searchString += '&place='+encodeURIComponent($('.blueModal #place').text());
+              					searchString += '&startDate='+encodeURIComponent($('.blueModal #startDate').text());
+              					searchString += '&startTime='+encodeURIComponent($('.blueModal #startTime').text());
+              					searchString += '&endDate='+encodeURIComponent($('.blueModal #stopDate').text());
+              					searchString += '&endTime='+encodeURIComponent($('.blueModal #stopTime').text());
+              					searchString += '&allDay='+encodeURIComponent($('.blueModal #eventAllDay').is(':checked'));
+              					searchString += '&'+privacy;
+              					
+	              			$.post("api.php?action=updateEvent",searchString,function(data){
+					            alert(data); //post check to show that the mysql string is the same as submit                        
+					        });
+
+              			}else{
+              				jsAlert('', 'You need to fill out all the fields.');
+              			}
+              			
+              			
+              			return false;
+              		});
+			  		
+			  	}
+			  	
 			  	this.get = function(startStamp, stopStamp, privacy){
 			  		var result;
 				    $.ajax({
@@ -1168,25 +1514,30 @@ var focus = true;
 			  
 			  var privacy = new function(){
 			  	
-			  	this.load = function(selector, val){
+			  	this.load = function(selector, val, editable){
+			  		if(typeof editable == 'undefined')
+			  			editable = false;
 			  		
 			  		
 			  		$.post("doit.php?action=loadPrivacySettings", {
-	                       val:val
+	                       val:val, editable : editable
 	                       }, function(result){
 		                   		$(selector).html(result);
 	                       }, "html");
 			  		
 			  		
 			  	}
-			  	this.show = function(val){
+			  	this.show = function(val, editable){
+			  		if(typeof editable == 'undefined')
+			  			editable = false;
+			  			
 				    var result="";
 				    
 				    $.ajax({
 				      url:"doit.php?action=loadPrivacySettings",
 				      async: false,  
 					  type: "POST",
-					  data: { val : val },
+					  data: { val : val, editable : editable },
 				      success:function(data) {
 				         result = data; 
 				      }
@@ -1326,35 +1677,85 @@ var focus = true;
               	
               }
               
+              var elements = new function(){
+              	
+              	this.elementIdToElementTitle = function(elementId){
+				    var result="";
+				    
+				    $.ajax({
+				      url:"api.php?action=elementIdToElementTitle",
+				      async: false,  
+					  type: "POST",
+					  data: { elementId : elementId },
+				      success:function(data) {
+				         result = data; 
+				      }
+				   });
+				   return result;
+              	}
+              	
+              }
+              
+              var folders = new function(){
+              	
+              	this.folderIdToFolderTitle = function(folderId){
+				    var result="";
+				    
+				    $.ajax({
+				      url:"api.php?action=folderIdToFolderTitle",
+				      async: false,  
+					  type: "POST",
+					  data: { folderId : folderId },
+				      success:function(data) {
+				         result = data; 
+				      }
+				   });
+				   return result;
+              	}
+              	
+              }
+              
               var filesystem =  new function() {
               	
               	this.openShareModal = function(type, typeId){
               		
               		var title;
               		var content;
-              		var universeFileBrowserURL;
+              		var kickstarterURL;
+              		var embedURL;
               		switch(type){
               			case 'file':
               				var fileTitle = files.fileIdToFileTitle(typeId);
               				title = 'Share "'+fileTitle+'"';
-              				universeFileBrowserURL = '?file='+typeId;
-              				universeKickStarterURL = '?file='+typeId; //should be the same like fileBrowserURL 
+              				kickstarterURL = sourceURL+'/out/kickstarter/files/?id='+typeId;
+              				embedURL = sourceURL+'/out/?file='+typeId; //should be the same like fileBrowserURL 
               			break;
-              			case 'elemement':
+              			case 'element':
+              				var elementTitle = elements.elementIdToElementTitle(typeId);
+              				title = 'Share "'+elementTitle+'"';
+              				kickstarterURL = sourceURL+'/out/kickstarter/elements/?id='+typeId;
+              				embedURL = sourceURL+'/out/?element='+typeId; //should be the same like fileBrowserURL 
               			break;
               		}
-              		universeFileBrowserURL = sourceURL+'/out/'+universeFileBrowserURL;
+              		
+              		var facebook = 'window.open(\'http://www.facebook.com/sharer/sharer.php?u='+kickstarterURL+'&t='+fileTitle+'\', \'facebook_share\', \'height=320, width=640, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, directories=no, status=no\');';
+              		var twitter = 'window.open(\'http://www.twitter.com/share?url='+kickstarterURL+'\', \'twitter_share\', \'height=320, width=640, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, directories=no, status=no\');';
+					var googleplus = "window.open('https://plus.google.com/share?url="+kickstarterURL+"','', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;";
               		
               		content = '<ul class="shareList">';
 	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #facebook\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">Facebook <img src="gfx/startPage/facebook.png"></li>';
 	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #twitter\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">Twitter <img src="gfx/startPage/twitter.png"></li>';
+	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #googleplus\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">Google+ <img src="gfx/startPage/googleplus.png"></li>';
 	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #embed\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">Embed Code <img src="gfx/startPage/wikipedia.png"></li>';
+	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #url\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">URL <img src="gfx/startPage/wikipedia.png"></li>';
               		content += '</ul>';
               		
               		content += '<ul class="shareBox">';
-              			content += '<li id="facebook"><center><a target="_blank" href="http://www.facebook.com/sharer/sharer.php?u='+universeFileBrowserURL+'" class="btn btn-success"><img src="gfx/startPage/facebook.png" height="20"> Click Here To Share</a></center></li>'
-              			content += '<li id="embed"><center><textarea><iframe src="'+universeFileBrowserURL+'"></iframe></textarea></center>Just place the HTML code for your Filebrowser wherever<br> you want the Browser to appear on your site.</li>';
-              			content += '<li id="twitter"><center><a target="_blank" href="https://twitter.com/share?url='+universeFileBrowserURL+'" class="btn btn-success"><img src="gfx/startPage/twitter.png" height="20"> Click Here To Share</a></center></li>';
+              			content += '<li id="facebook"><center><a target="_blank" href="#" onclick="'+facebook+'" class="btn btn-success"><img src="gfx/startPage/facebook.png" height="20"> Click Here To Share</a></center></li>'
+              			content += '<li id="url"><center><textarea>'+kickstarterURL+'</textarea></center>Just place the HTML code for your Filebrowser wherever<br> you want the Browser to appear on your site.</li>';
+              			content += '<li id="embed"><center><textarea><iframe src="'+embedURL+'"></iframe></textarea></center>Just place the HTML code for your Filebrowser wherever<br> you want the Browser to appear on your site.</li>';
+              			content += '<li id="googleplus"><center><a href="#" onclick="'+googleplus+'" class="btn btn-success"><img src="gfx/startPage/googleplus.png" height="20"> Click Here To Share</a></center></li>';
+              			content += '<li id="twitter"><center><a href="#" onclick="'+twitter+'" class="btn btn-success"><img src="gfx/startPage/twitter.png" height="20"> Click Here To Share</a></center></li>';
               		content += '</ul>';
               		
               		
@@ -1365,8 +1766,9 @@ var focus = true;
               
               
               var modal =  new function() {
-			    this.html = '';
+			    this.html;
 			    this.create = function (title, content, action) {
+			    	this.html = '';
 			    	this.html += '<div class="blueModal border-radius container">';
 	            		this.html += '<header>';
 	            			this.html += title;
@@ -1385,7 +1787,7 @@ var focus = true;
 	            		this.html += '</footer>';
 	            		
 	            	this.html += '</div>';
-            		
+            		$('.blueModal').remove();
             		$('#popper').append(this.html);
             		
             		if(typeof action !== 'undefined'){
@@ -1393,7 +1795,7 @@ var focus = true;
 	            			action[0]();
 	            		});
             		}
-			    };
+			    }
 			}
        
        
@@ -1505,7 +1907,22 @@ var focus = true;
 				   	
     				var keyHash =  hash.SHA512(passwordHashMD5+salt);
 				    
-				    return [passwordHash, passwordHashMD5, keyHash];
+				    return [passwordHash, passwordHashMD5, keyHash, salt];
+			    }
+			    
+			    this.getPrivateKey = function(type, itemId, salt, password){
+			    	return getPrivateKey(type, itemId, salt, password);
+			    }
+			    
+			    this.symEncrypt = function(key, message){
+			    	
+			    	return symEncrypt(key,message);
+			    	
+			    }
+			    this.symDecrypt = function(key, message){
+			    	
+			    	return symDecrypt(key,message);
+			    	
 			    }
 			    
 			    this.randomString = function(){
