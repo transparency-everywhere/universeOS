@@ -218,7 +218,14 @@ $k = 5;//limit
 		
 		
 ?>
-<a target="_blank" href="http://www.amazon.de/gp/search?ie=UTF8&camp=1638&creative=6742&index=aps&keywords=<?=htmlentities($qEncoded);?>&linkCode=ur2&tag=universeos-21">Find on Amazon</a>
+
+<div class="listContainer">
+	<ul class="list resultList">
+		<li class="strippedRow"><a target="_blank" href="http://www.amazon.de/gp/search?ie=UTF8&camp=1638&creative=6742&index=aps&keywords=<?=htmlentities($qEncoded);?>&linkCode=ur2&tag=universeos-21">Find on Amazon</a></li>
+	</ul>
+	<header>Advertising</header>
+</div>
+
 
 
 
