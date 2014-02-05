@@ -152,5 +152,12 @@ if(!empty($newMessages) OR !empty($newFriends) OR !empty($newGroup) OR !empty($p
     echo"});";
       
     echo"</script>";
-    
+    $_SESSION['loggedOut'] = true;
+}else{
+	
+	if(!$_SESSION['loggedOut']){
+		//reload page if session is expired
+		echo"<script>window.location.href='index.php'</script>";
+		$_SESSION['loggedOut'] = true;
+	}
 } ?>
