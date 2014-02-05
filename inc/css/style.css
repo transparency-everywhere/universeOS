@@ -331,9 +331,6 @@ font-size: 19px;
     font-size: 11pt;
     color: #C6C6C6;
 }
-.mousePop > .content table,tr,td{
-    
-}
 
 .formTable{
 	margin-top: 20px;
@@ -346,7 +343,9 @@ font-size: 19px;
 	padding-right: 10px;
 	font-size: 21px;
 }
-
+.formTable tr td{
+    line-height: 31px;
+}
 .formTable tr{
 	height: 35px;
 }
@@ -914,8 +913,8 @@ border: 1px solid rgba(0,0,0,0.05);
 }
 
 .shareList li{
-	width: 32%;
-	height: 30px;
+	width: 50%;
+	height: 40px;
 	border-left: 1px solid #4f85bb;
 	border-bottom: 1px solid #4f85bb;
 	background: #7A9BBD;
@@ -923,9 +922,9 @@ border: 1px solid rgba(0,0,0,0.05);
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
-	padding: 5px;
+	padding: 10px;
 	font-size: 20px;
-	cursor:pointer;
+	cursor: pointer;
 }
 
 .shareList li:hover, .shareList .active{
@@ -2417,11 +2416,47 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 	width: 1px;
 }
 
+	#systemAlerts{
+		position: absolute;
+		bottom: 0px;
+		left: 0;
+	}
+	
+	#systemAlerts li{
+		font-size: 23px;
+		position: relative;
+		background: rgba(50,50,50,0.9);
+		-moz-box-shadow: 0px 4px 7px 0px #131313;
+		-webkit-box-shadow: 0px 4px 7px 0px #131313;
+		box-shadow: 0px 4px 7px 0px #131313;
+		margin: 10px 0 5px 5px;
+		padding: 10px;
+		border-radius: 5px;
+		height: 65px;
+		width: 300px;
+	}
+	
+	#systemAlerts li .userPicture{
+		margin-top: -3px;
+		margin-right: 5px;
+	}
+	
+	#systemAlerts li .messageButton{
+		position: absolute;
+		right: 10px;
+		bottom: 10px;
+	}
+
+	#systemAlerts li .messageButton .btn{
+		width: 70px;
+	}
+
 	#dashBoard{
 		top: 0;
 		z-index: 99999;
 		position: absolute;
 		height: 10px;
+		right: 5px;
 	}
 	
 	.dashBox:hover .content{
@@ -2439,16 +2474,16 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 		width: 170px;
 		border-radius: 1px;
 		background: #fff9f0;
-		margin: 0px 0px 30px 10px;
+		margin: 5px 0px 30px 5px;
 		position: relative;
-		float:left;
+		float: left;
 	}
 	
 	.dashBox .content{
 		overflow: auto;
 		max-height: 100%;
-		display:none;
-		padding-bottom: 15px;
+		min-height: 100px;
+		display: none;
 	}
 	
 	.dashBox header{
@@ -2554,14 +2589,13 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
                     padding-top: 12px;
                     padding-bottom: 12px;
                     margin-left: 0px;
-                    color: #8f8f8f;
+                    color: rgba(241, 241, 241, 0.15)
                     border: 0px;
                     border-top: #424242 1px solid;
                     border-left: #424242 1px solid;
-                   	width: 150px;
+                   	width: 153px;
                     cursor:pointer;
                     float:left;
-                    font-weight:bold;
                     font-size: 25px;
                 }
                 

@@ -4,10 +4,10 @@
 <?
 include("../../inc/config.php");
 	$type = "File";
-	$itemId = $_GET[id];
+	$itemId = $_GET['id'];
 	$query = mysql_query("SELECT `title` FROM `files` WHERE id='".mysql_real_escape_string($_GET[id])."'");
 	$data = mysql_fetch_array($query);
-	$title = $data[title];
+	$title = $data['title'];
 	
 	$metaDescriptionContent = "universeOS $type $title.";
 	$metaDescriptionContent .= "Discover the social webOS. Connect with your friends, read your favourite book or RSS-Feed, watch your favourite movie, listen your favourite song and be creative...";

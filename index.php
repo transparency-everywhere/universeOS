@@ -40,7 +40,9 @@ if(!isset($_SESSION["userid"])) {
         <div id="reload"></div>
         <div id="bodywrap">
         	
-        	
+        	<ul id="systemAlerts">
+        		
+        	</ul>
             <div id="alerter" class="container"></div><div id="loader"></div><div id="popper"></div><iframe name="submitter" style="display:none;" id="submitter"></iframe>
             <div id="suggest">
             </div>

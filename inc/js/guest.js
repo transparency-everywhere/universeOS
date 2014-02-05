@@ -212,6 +212,39 @@ function login(){
 	
 }
 
+var update = new function(){
+	this.sha512TOsha512_2 = function(userid, password){
+			//is used to erase use of md5
+		
+			//UPDATE PASSWORD
+	    	var cypherOld = sec.passwordCypher(password, 'auth', userid);
+	    	var passwordHashOld = cypherOld[0];
+			var saltDecrypted = cypherOld[3];
+			
+			//generate new password
+			var password_new = hash.SHA512(password+saltDecrypted);
+			
+			//encrypt salt with password
+			var passwordSHA512 = hash.SHA512(password); //stretch password
+			var saltEncrypted_new = sec.symEncrypt(passwordSHA512, saltDecrypted);
+		
+		
+		
+			//UPDATE PRIVATE KEY
+			
+			//get old private key
+			var privateKey = sec.getPrivateKey(type, userid, saltDecrypted, cypherOld[2]);
+		
+		
+			//save new private key
+		
+		
+		
+		
+		
+	}
+}
+
 function updatePasswordAndCreateSignatures(userid, password){
 	
 	jsAlert('', 'You started using the universeOS with version 0.1, that means your password was not stored with the biggest security and your signatures are not up to date. We use the password you just entered to catch up.');
