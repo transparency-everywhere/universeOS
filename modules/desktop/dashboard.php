@@ -6,7 +6,6 @@ $dashboard = new dashBoard();
 ?>
 <div id="dashBoard">
 	<?php
-	echo $dashboard->showWelcomeBox();
 	
 	echo $dashboard->showAppBox();
 	
@@ -41,6 +40,6 @@ $userData = mysql_fetch_array($userSql);
 	
 		echo $dashboard->showFavBox();
 	
-		//echo $dashboard->showTaskBox();
+		echo $dashboard->showTaskBox();
 	?>
 </div>

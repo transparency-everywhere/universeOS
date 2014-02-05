@@ -2349,6 +2349,18 @@ echo"</div>";
     }
     
     
+	  /**
+	  * finds out if current user is authorized to see or edit
+	  * item with $privacy and $author
+	  *
+	  * @param string $privacy      contains privacy query.
+	  *
+	  * @param string $type      	see//edit
+	  *
+	  * @param int $author      	author of the item
+	  *
+	  * @return bool 
+	  */
     function authorize($privacy, $type, $author=NULL){
         
 		if(end(explode(";", $privacy)) == "UNDELETABLE"){
@@ -2488,41 +2500,13 @@ echo"</div>";
         
     }
     
-    //old one
-    function checkAuthorisation($code, $author=NULL){
-        
-        
-        
-        
-        
-        
-            if($code == "p"){
-                //public
-                    $allowance = "1";
-            }else if($code == "u"){
-                //just user
-                if($author == getUser()){
-                    $allowance = "1";
-                }
-            }else{
-            $groupAtSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='".getUser()."' and validated='1'");
-            while($groupAtData = mysql_fetch_array($groupAtSql)){
-                
-                 $string = explode(";", $code);
-                 foreach($string as &$value){
-                     if($value == $groupAtData['group']){
-                         $allowance = "1";
-                     }
-                 }
-            }}
-        if($allowance == "1"){
-            return TRUE;
-        }else{
-            return FALSE;
-        }
-    }
-    
-	//finds out whether or not a privacies value is "protected"
+	  /**
+	  * finds out whether or not a privacies value is "protected"
+	  *
+	  * @param string $value      contains privacy query.
+	  *
+	  * @return bool 
+	  */
 	function isProtected($value){
 		if(end(explode(";", $value)) == "PROTECTED"){
 			return true;
@@ -2530,7 +2514,14 @@ echo"</div>";
 			return false;
 		}
 	}
-	//finds out whether or not a privacies value is "undeletable"
+	
+	  /**
+	  * finds out whether or not a privacies value is "undeletable"
+	  *
+	  * @param string $value      contains privacy query.
+	  *
+	  * @return bool 
+	  */
 	function isUndeletable($value){
 		if(end(explode(";", $value)) == "UNDELETABLE"){
 			return true;
@@ -2539,8 +2530,15 @@ echo"</div>";
 		}
 	}
 	
-	//show the privacysettings box 
-    function showPrivacySettings($value=NULL){
+	
+	  /**
+	  * shows the privacysettings box 
+	  *
+	  * @param string $value      contains privacy query.
+	  *
+	  * @return
+	  */
+    function showPrivacySettings($value=NULL, $editable=true){
     	
 		$oldValue = $value;
 		if(end(explode(";", $oldValue)) == "PROTECTED"){
@@ -2601,15 +2599,15 @@ echo"</div>";
         }
 		
 		if(true){
-			if($protected){
-				$disabled = 'disabled="disabled"';
+			if($protected OR !$editable){
+				$disabled = 'disabled="disabled"'; //added to checkboxes
 			}
         			if($protected){
         				echo"<li style=\"font-size:16pt;\">Protected</li>";
         			}else if($undeletable){
         				//echo"<li style=\"font-size:16pt;\">Undeletable</li>";
         			}
-			if(1 == 1){
+			if(true){
         ?>
         	<div class="privacySettings">
         		<header>Privacy Settings</header>
@@ -3492,6 +3490,12 @@ echo"</div>";
 		return $fileData['title'];
 	}
     
+    
+	function elementIdToElementTitle($elementId){
+		$elementData = getElementData($elementId);
+		return $elementData['title'];
+	}
+    
     function fileIdToFileType($fileId){
         $fileData = mysql_fetch_array(mysql_query("SELECT type FROM files WHERE id='".save($fileId)."'"));
         return $fileData['type'];
@@ -4079,12 +4083,21 @@ echo"</div>";
             
         }else{
             
+			//get userfolder
+			$userData = getUserData();
+			$userfolder = $userData['homefolder'];
+			
+			
 			//special folder handlers
 			
 			//userFolder
 			if($folder == "2"){
-				$userData = getUserData();
-				$folder = $userData['homefolder'];
+				$folder = $userfolder;
+				$parentFolderData['folder'] = 1;
+			}
+			
+			if($folder == $userfolder){
+				$parentFolderData['folder'] = 1;
 			}
 			
 			
@@ -4096,7 +4109,8 @@ echo"</div>";
 
         if(!empty($query)){
         	if(!empty($folder) && ($folder !== "1")){
-        		$parentFolderData = mysql_fetch_array(mysql_query("SELECT folder FROM folders WHERE id='".mysql_real_escape_string($folder)."'"));
+        		if($parentFolderData['folder'] !== 1)
+        			$parentFolderData = mysql_fetch_array(mysql_query("SELECT folder FROM folders WHERE id='".mysql_real_escape_string($folder)."'"));
         		?>
 	            <tr class="strippedRow" height="30">
 	                <td width="30">&nbsp;<img src="<?=$subpath;?>gfx/icons/filesystem/folder.png" height="22"></td>
@@ -4203,7 +4217,7 @@ echo"</div>";
 	
 	function getElementData($elementId){
 		$query = mysql_query("SELECT * FROM `elements` WHERE id='".save($elementId)."'");
-		$data = mysql_real_escape_string($query);
+		$data = mysql_fetch_array($query);
 		
 		return $data;
 	}
@@ -5237,6 +5251,7 @@ class dashBoard{
 		
 		$content = "<ul class=\"appList\">";
 	    	$content .= "<li onclick=\"toggleApplication('feed')\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/feed.png\" border=\"0\" height=\"16\">Feed</li>";
+	    	$content .= "<li onclick=\"calendar.show();\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/feed.png\" border=\"0\" height=\"16\">Kalendar</li>";
 			$content .= "<li onclick=\"toggleApplication('filesystem')\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/filesystem.png\" border=\"0\" height=\"16\">Filesystem</li>";
 	 		$content .= "<li onclick=\"javascript: toggleApplication('reader')\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/viewer.png\" border=\"0\" height=\"16\">Reader</li>";
 	   		$content .= "<li onclick=\"javascript: toggleApplication('buddylist')\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/buddylist.png\" border=\"0\" height=\"16\">Buddylist</li>";
@@ -5383,8 +5398,26 @@ class dashBoard{
 	function showTaskBox($grid=true){
 		$title = "Your Tasks";
 		
-		return $this->showDashBox($title, $output,"", "task", $grid);
+		
+		$tasks = new tasks();
+		
+		$taskArray = $tasks->get(array('user'=>getUser()));
+		$output = '<ul>';
+		foreach($taskArray AS $task){
+			$editable = authorize($task['privacy'], 'edit', $task['user']);
+			$output .= '<li onclick="tasks.show('.$task['id'].','.$editable.');">'.date('d.m.', $task['timestamp']).' - '.$task['title'].'</li>';
+		}
+		$output .= '</ul>';
+		
+		
+		$footer = "<a href=\"#addTask\" onclick=\"tasks.addForm();\" title=\"Create a new Task\"><i class=\"icon icon-plus\"></i></a>";
+			
+		
+		
+		return $this->showDashBox($title, $output,$footer, "task", $grid);
 	}
+	
+	
 }
 
 class signatures{
@@ -5425,8 +5458,33 @@ class sec{
 	}
 }
 
+class users{
+	function getData($userid, $query='*'){
+		$data = mysql_query("SELECT $query FROM users WHERE userid='".save($userid)."'");
+		return $data;
+	}
+	public function updateData($values){
+		foreach($values as $param=>$value) {
+		    
+			$query .= ", `".save($param)."`='".save($value)."' "; //will return "   ,`param`='value'   "
+			
+			
+		}
+	}
+	public function updateBirthdate(){
+		
+	}
+	public function updateUserpicture(){
+		
+	}
+	public function showUserpicture(){
+		
+	}
+	
+}
+
 class groups{
-	function get($userid=NULL){
+	public function get($userid=NULL){
 		if(empty($userid))
 			$userid = getUser();
 		
@@ -5436,19 +5494,96 @@ class groups{
 		}
 		return $groups;
 	}
-	function getTitle($groupId){
+	public function getTitle($groupId){
 		$data = mysql_fetch_array(mysql_query("SELECT `title` FROM `groups` WHERE id='".save($groupId)."'"));
 		return $data['title'];
 	}
 }
 
+class db{
+	public function insert($table, $options){
+					
+			//generate update query	
+			foreach($options AS $row=>$value){
+				$query[] = "`".save($row)."`";
+				$values[] = "'".save($value)."'";
+			}
+			
+			
+			$query = "(".implode(',', $query).")";
+			$values = "(".implode(',', $values).");";
+			
+			
+		mysql_query("INSERT INTO `$table` $query VALUES $values");
+		
+	}
+	public function update($table, $options, $primary){
+					
+			//generate update query	
+			foreach($options AS $row=>$value){
+				
+				//only add row to query if value is not empty
+				if(!empty($value)){
+					$query[] = " $row='".save($value)."'";
+				}
+			}
+			$query = implode(',', $query);
+			
+			
+		mysql_query("UPDATE `$table` SET $query WHERE $primary[0]='".save($primary[1])."'");
+		
+	}
+}
+
+class tasks{
+	public function create($user, $timestamp, $title, $description, $privacy){
+		$values['user'] = $user;
+		$values['timestamp'] = $timestamp;
+		$values['title'] = $title;
+		$values['description'] = $description;
+		$values['privacy'] = $privacy;
+		
+		$db = new db();
+		$db->insert('tasks', $values);
+	}
+	public function update($id, $user, $timestamp, $title, $description, $privacy){
+		
+		$db = new db();
+		$db->update('tasks', array('user'=>$user, 'timestamp'=>$timestamp, 'title'=>$title, 'description'=>$description,  'privacy'=>$privacy), array('id',$id));
+	
+	}
+	public function getData($id){
+		
+		
+		$query = "WHERE `id`='".save($id)."'";
+		$data = mysql_fetch_array(mysql_query("SELECT * FROM `tasks` $query"));
+		return $data;
+	}
+	public function get($arguments, $limit=NULL){
+		if(!empty($arguments['user'])){
+			$query = "WHERE `user`='".save($arguments['user'])."'";
+		}
+		$query = mysql_query("SELECT * FROM `tasks` $query");
+		while($data = mysql_fetch_array($query)){
+			$ret[] = $data;
+		}
+		return $ret;
+	}
+}
+
 class events{
 	
-	function create($user, $startStamp, $stopStamp, $title, $place, $privacy){
+	public function create($user, $startStamp, $stopStamp, $title, $place, $privacy){
 		mysql_query("INSERT INTO `events` (`user`, `startStamp`, `stopStamp`, `title`, `place`, `privacy`) VALUES ('$user', '$startStamp', '$stopStamp', '$title', '$place', '$privacy');");
 	}
 	
-	function get($user=NULL, $startStamp, $stopStamp, $privacy=NULL){
+	public function update($eventId, $startStamp, $stopStamp, $title, $place, $privacy){
+		
+		$db = new db();
+		$db->update('events', array('title'=>$title, 'place'=>$place, 'privacy'=>$privacy, 'startStamp'=>$startStamp,  'stopStamp'=>$stopStamp), array('id', $eventId));
+	}
+	
+	public function get($user=NULL, $startStamp, $stopStamp, $privacy=NULL){
 		
 		if($privacy != NULL){
 			$privacy = explode(';', $privacy);
@@ -5461,6 +5596,13 @@ class events{
 			$arr[] = $data;
 		}
 		return $arr;
+	}
+	
+	public function getData($eventId){
+		$sql = mysql_query("SELECT * FROM `events` WHERE id='".save($eventId)."'");
+		$data = mysql_fetch_array($sql);
+		
+		return $data;
 	}
 
 }?>

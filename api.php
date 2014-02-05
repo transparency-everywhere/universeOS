@@ -299,7 +299,20 @@ switch($action){
 		
 		
 	case 'useridToUsername':
-		echo useridToUsername($_POST['userid']);
+		if(is_numeric($_POST['userid']))
+			//only a single request
+			echo useridToUsername($_POST['userid']);
+		else {
+			//array of requests
+			$userids = json_decode($_POST['request'],true);
+			
+			foreach($userids as $userid){
+				$ret[] = useridToUsername($_POST['userid']);
+			}
+			
+			echo json_encode($ret);
+			
+		}
 		break;
 		
 		
@@ -556,17 +569,83 @@ switch($action){
 		$events = new events();
 		$events->create(getUser(), $startTime, $stopTime, $_POST['title'], $_POST['place'], $privacy);
 		break;
+	case 'updateEvent':
+		
+		if($_POST['allDay'] == "true"){
+		
+			$startTime = strtotime($_POST['startDate']."-00:00");
+			$stopTime = strtotime($_POST['endDate']."-23:59:60");	
+			
+		}else{
+			
+			$startTime = strtotime($_POST['startDate']."-".$_POST['startTime']);
+			$stopTime = strtotime($_POST['endDate']."-".$_POST['endTime']);
+		}
+		
+        //set privacy
+      	$customShow = $_POST['privacyCustomSee'];
+        $customEdit = $_POST['privacyCustomEdit'];
+        
+        $privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
+		
+		$events = new events();
+		$events->update($_POST['eventId'], $startTime, $stopTime, $_POST['title'], $_POST['place'], $privacy);
+		echo $_POST['allDay'];
+		break;
 	case 'getEvents':
 		
 		$events = new events();
 		echo json_encode($events->get(getUser(), $_POST['startStamp'], $_POST['stopStamp'], $_POST['privacy']));
 		
 		break;
+	case 'getEventData':
 		
+		
+		$events = new events();
+		echo json_encode($events->getData($_POST['eventId']));
+		
+		
+		break;
+	
+	case 'createTask':
+		
+        //set privacy
+      	$customShow = $_POST['privacyCustomSee'];
+        $customEdit = $_POST['privacyCustomEdit'];
+        
+        $privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
+		
+		$tasks = new tasks();
+		$tasks->create(getUser(), $timestamp, $_POST['title'], $_POST['description'], $privacy);
+		
+		break;
+	case 'updateTask':
+		
+        //set privacy
+      	$customShow = $_POST['privacyCustomSee'];
+        $customEdit = $_POST['privacyCustomEdit'];
+        
+        $privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
+		
+		$tasks = new tasks();
+		$tasks->update($_POST['taskId'],$_POST['user'], $timestamp, $_POST['title'], $_POST['description'], $privacy);
+		
+		break;
+	case 'getTaskData':
+		
+		
+		$events = new tasks();
+		echo json_encode($events->getData($_POST['taskId']));
+		
+		
+	break;
 		
 //filesystem
 	case 'fileIdToFileTitle':
 		echo fileIdToFileTitle($_POST['fileId']);
+		break;
+	case 'elementIdToElementTitle':
+		echo elementIdToElementTitle($_POST['elementId']);
 		break;
 		
 //groups

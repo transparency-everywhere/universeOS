@@ -2036,8 +2036,8 @@ if($_GET['action'] == "scorePlus"){
             }
         }else if($_GET['action'] == "loadPrivacySettings"){
         	//is used bei js privacy.load to load privacy selection with privacy = $_POST['val'] into DOM
-        	
-        	showPrivacySettings($_POST['val']);
+			$editable =  ($_POST['editable'] === 'true'); //str to bool
+          	showPrivacySettings($_POST['val'], $editable);
         	
         }
         else if($_GET['action'] == "changePrivacy"){
@@ -2901,7 +2901,13 @@ if($_GET['action'] == "scorePlus"){
             }else if($_GET['action'] == "tester"){
             	
 				//mysql_query("DELETE FROM messages WHERE 1=1");
+				$db = new db();
+
+				$array['one'] = 'uno';
+				$array['two'] = 'dos';
+				$array['three'] = 'quatro';
 				
+				echo $db->insert('table', $array);
 	     		
             }
 ?>
