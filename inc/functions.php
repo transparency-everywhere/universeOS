@@ -5259,7 +5259,7 @@ class dashBoard{
 	    	$content .= "<li onclick=\"javascript: showModuleSettings();\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/settings.png\" border=\"0\" height=\"16\">Settings</li>";
 	    $content .= "</ul>";
 		
-		$output = $this->showDashBox($title, $content,"", "app", $grid);
+		$output = $this->showDashBox($title, $content," ", "app", $grid);
 		
 		return $output;
 		
@@ -5271,7 +5271,7 @@ class dashBoard{
 		
 		$title = "Your Groups";
 		
-		$output .= "<ul class=\"content\">";
+		$output .= "<ul class=\"\">";
 			$i = 0;
 			foreach($groups AS $group){
 				$output .="<li>";
@@ -5325,7 +5325,7 @@ class dashBoard{
 			if($i == 0){
 				$output .= "<li>";
 				$output .= "You don't have any playlists so far.";
-				$output .= "<li>";
+				$output .= "</li>";
 			}
 			$output .= "</ul>";
 			
@@ -5390,7 +5390,7 @@ class dashBoard{
 				$output .= "</table>";
 			$output .= "</div>";
 		
-			$output = $this->showDashBox($title, $output,"", "fav", $grid);
+			$output = $this->showDashBox($title, $output," ", "fav", $grid);
 			
 			return $output;
 	}

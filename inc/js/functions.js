@@ -291,7 +291,7 @@ var focus = true;
               		this.toolTipper();
               		this.search();
               		
-              		
+              		dashBoard.init();
               		//fade in applications
                     $("#filesystem:hidden").fadeIn(3000);
                     $("#buddylist:hidden").fadeIn(3000);
@@ -446,7 +446,7 @@ var focus = true;
 					  		    	content += 'Day:';
 					  		    	content += '</td>';
 					  		    	content += '<td>';
-					  		    	content += '<input type="text" name="date" id="date" class="date" value="'+d.getMonth()+1+'/'+d.getDate()+'/'+d.getFullYear()+'" style="width: 72px;">';
+					  		    	content += '<input type="text" name="date" id="date" class="date datepicker" value="'+d.getMonth()+1+'/'+d.getDate()+'/'+d.getFullYear()+'" style="width: 72px;">';
 					  		    	content += '&nbsp;<input type="text" name="time" id="time" class="time eventTime" value="15:30" style="width: 37px;">';
 					  		    	content += '</td>';
 					  		    content += '</tr>';
@@ -468,7 +468,7 @@ var focus = true;
               		modal.create('Create New Task', content, [onSubmit, 'Save']);
               		
               		//init datepicker in modal
-              		$('.date').datepicker();
+              		$('.datepicker').datepicker();
               		
               		$('#createTask').submit(function(e){
               			e.preventDefault();
@@ -477,6 +477,7 @@ var focus = true;
               				
 	              			$.post("api.php?action=createTask",$(this).serialize(),function(data){
 					            alert(data); //post check to show that the mysql string is the same as submit                        
+								tasks.update();
 					        });
 
               			}else{
@@ -532,7 +533,7 @@ var focus = true;
 					  		    	content += '<td>';
 					  		    	content += 'Day:';
 					  		    	content += '</td>';
-					  		    	content += '<td><span id="date" '+editableToken+'>';
+					  		    	content += '<td><span id="date" class="datepicker" '+editableToken+'>';
 					  		    	content += date.getMonth()+1+'/'+date.getDate()+'/'+date.getFullYear();
 					  		    	content += '</span>&nbsp;<span id="time" '+editableToken+'>'+time+'</span>';
 					  		    	content += '</td>';
@@ -556,7 +557,7 @@ var focus = true;
               		modal.create('Task '+taskData.title, content, [onSubmit, 'Save']);
               		
               		//init datepicker in modal
-              		$('.startDate').datepicker();
+              		$('.datepicker').datepicker();
               		
               		$('#updateTask').submit(function(e){
               			e.preventDefault();
@@ -600,6 +601,9 @@ var focus = true;
 				         result = data; 
 				      }
 				   });
+			  	}
+			  	this.update = function(){
+			  		updateDashbox('task');
 			  	}
 			  }
 			  
@@ -655,6 +659,9 @@ var focus = true;
 							html += '</div>';
 							html += '<div id="side" class="leftNav">';
 							
+								html += '<ul>';
+									html += '<li class="header"><input type="checkbox">&nbsp;Show Tasks</li>';
+								html += '</ul>';
 								html += '<ul id="calendars">';
 									html += '<li class="header">Calendars</li>';
 									
@@ -670,7 +677,6 @@ var focus = true;
 										});
 									}
 								html += '</ul>';
-								
 								html += '<ul id="events">';
 									html += '<li class="header">Events<a href="#" class="pull-right" onclick="events.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon-plus icon-white"></i></a></li>';
 									//events will apend to this list
@@ -1320,9 +1326,9 @@ var focus = true;
 					  		    	content += 'Day:';
 					  		    	content += '</td>';
 					  		    	content += '<td>';
-					  		    	content += '<input type="text" name="startDate" id="startDate" class="startDate" value="'+d.getMonth()+1+'/'+d.getDate()+'/'+d.getFullYear()+'" style="width: 72px;">';
+					  		    	content += '<input type="text" name="startDate" id="startDate" class="startDate datepicker" value="'+d.getMonth()+1+'/'+d.getDate()+'/'+d.getFullYear()+'" style="width: 72px;">';
 					  		    	content += '&nbsp;<input type="text" name="startTime" id="startTime" class="startTime eventTime" value="15:30" style="width: 37px;">&nbsp;to&nbsp;';
-					  		    	content += '<input type="text" name="endDate" id="endDate" class="endDate" value="'+d.getMonth()+1+'/'+d.getDate()+'/'+d.getFullYear()+'" style="width: 72px;">';
+					  		    	content += '<input type="text" name="endDate" id="endDate" class="endDate datepicker" value="'+d.getMonth()+1+'/'+d.getDate()+'/'+d.getFullYear()+'" style="width: 72px;">';
 					  		    	content += '&nbsp;<input type="text" name="endTime" id="endTime" class="endTime eventTime" value="16:30" style="width: 37px;">';
 					  		    	content += '</td>';
 					  		    content += '</tr>';
@@ -1352,7 +1358,7 @@ var focus = true;
               		modal.create('Create New Event', content, [onSubmit, 'Save']);
               		
               		//init datepicker in modal
-              		$('.startDate').datepicker();
+              		$('.datepicker').datepicker();
               		
               		$('#createEvent').submit(function(e){
               			e.preventDefault();
@@ -1425,9 +1431,9 @@ var focus = true;
 					  		    	content += '<td>';
 					  		    	content += 'Day:';
 					  		    	content += '</td>';
-					  		    	content += '<td><span id="startDate" '+editableToken+'>';
+					  		    	content += '<td><span id="startDate" '+editableToken+' class="datepicker">';
 					  		    	content += startDate.getMonth()+1+'/'+startDate.getDate()+'/'+startDate.getFullYear();
-					  		    	content += '</span>&nbsp;<span id="startTime" '+editableToken+'>'+startTime+'</span>&nbsp;to&nbsp;<span '+editableToken+' id="stopDate">';
+					  		    	content += '</span>&nbsp;<span id="startTime" '+editableToken+'>'+startTime+'</span>&nbsp;to&nbsp;<span '+editableToken+' id="stopDate" class="datepicker">';
 					  		    	content += stopDate.getMonth()+1+'/'+stopDate.getDate()+'/'+stopDate.getFullYear();
 					  		    	content += '</span>&nbsp;<span id="stopTime" '+editableToken+'>'+stopTime+'</span>';
 					  		    	content += '</td>';
@@ -1458,7 +1464,7 @@ var focus = true;
               		modal.create('Event '+eventData.title, content, [onSubmit, 'Save']);
               		
               		//init datepicker in modal
-              		$('.startDate').datepicker();
+              		$('.datepicker').datepicker();
               		
               		$('#updateEvent').submit(function(e){
               			e.preventDefault();
@@ -2697,6 +2703,48 @@ function initDashClose(){
 }
     
 //dashboard
+
+var dashBoard = new function(){
+	
+	
+	
+	this.view = 'up'; // up or down 
+	
+	this.init = function(){
+		$('#dashBoard a, #dashBoard li').not('.disableToggling').click(function(){dashBoard.slideUp();});
+    	$("#dashBoard").draggable({ axis: "y", containment: "#dashGrid"});
+	
+	}
+	
+	this.slideDown = function(){
+		
+			$('#dashBoard').animate({top: 190}, 750, function() {
+				$('#dashBoard').removeClass('up');
+				$('#dashBoardBG').removeClass('up');
+				$('#dashBoard footer a i').removeClass('icon-arrow-down');
+				$('#dashBoard footer a i').addClass('icon-arrow-up');
+			});
+			this.view = 'down';
+	}
+	this.slideUp = function(){
+		
+			$('#dashBoard').animate({top: 0}, 750, function() {
+				$('#dashBoard').addClass('up');
+				$('#dashBoardBG').addClass('up');
+				$('#dashBoard footer a i').removeClass('icon-arrow-up');
+				$('#dashBoard footer a i').addClass('icon-arrow-down');
+			});
+			this.view = 'up';
+	}
+	this.toggle = function(){
+		if(this.view === 'up'){
+			this.slideDown();
+		}else if(this.view === 'down'){
+			this.slideUp();
+		}
+	}
+}
+
 function updateDashbox(type){
 	$('.dashBox#'+type+'Box').load('modules/desktop/updateDashboard.php?type='+type, function(){
 		

@@ -4,7 +4,8 @@
 
 $dashboard = new dashBoard();
 ?>
-<div id="dashBoard">
+<div id="dashGrid">
+<div id="dashBoard" class="up" style="border-bottom: 1px solid #171717;">
 	<?php
 	
 	echo $dashboard->showAppBox();
@@ -42,4 +43,7 @@ $userData = mysql_fetch_array($userSql);
 	
 		echo $dashboard->showTaskBox();
 	?>
-</div>
+	<footer>
+		<a href="#" onclick="dashBoard.toggle();" class="disableToggling"><i class="icon-arrow-down"></i></a>
+	</footer>
+</div></div>

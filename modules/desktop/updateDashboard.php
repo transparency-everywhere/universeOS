@@ -24,6 +24,9 @@ switch($type){
 	case 'fav':
 	echo $dashboard->showFavBox(false);
 		break;
+	case 'task':
+	echo $dashboard->showTaskBox(false);
+		break;
 	
 }
 	
