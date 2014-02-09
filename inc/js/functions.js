@@ -488,6 +488,28 @@ var focus = true;
               			return false;
               		});
 			  	}
+			  	
+			  	this.get = function(startStamp, stopStamp, privacy){
+			  		var result;
+				    $.ajax({
+				      url:"api.php?action=getTasks",
+				      async: false,  
+					  type: "POST",
+					  data: { 
+					  	 startStamp: startStamp,
+					  	 stopStamp: stopStamp,
+					  	 privacy: privacy
+					  	 },
+				      success:function(data) {
+				      	if(data){
+				        	result = $.parseJSON(data); 
+				      	}
+				      }
+				   });
+				   
+				   return result;
+			  	}
+			  	
 			  	this.show = function(taskId, editable){
 			  		
 			  		var taskData = tasks.getData(taskId);
@@ -623,6 +645,14 @@ var focus = true;
 			  			this.init();
 			  	}
 			  	
+			  	this.show = function(){
+			  		if(!$('#calendarFenster')){
+			  			calendar.init();
+			  		}else{
+			  			application.show('calendatFenster');
+			  		}
+			  	}
+			  	
 			  	this.init = function(){
 			  		
 			  		var html = '<div id="calendar">';
@@ -660,7 +690,8 @@ var focus = true;
 							html += '<div id="side" class="leftNav">';
 							
 								html += '<ul>';
-									html += '<li class="header"><input type="checkbox">&nbsp;Show Tasks</li>';
+									html += '<li class="header"><input type="checkbox" id="showTasks" onclick="calendar.toggleTasks();">&nbsp;Show Tasks</li>';
+									html += '<li><input type="checkbox" checked>&nbsp;hide done</li>';
 								html += '</ul>';
 								html += '<ul id="calendars">';
 									html += '<li class="header">Calendars</li>';
@@ -766,7 +797,47 @@ var focus = true;
 			  		return privacy.join(';');
 			  	}
 			  	
+			  	this.loadTasks = function(){
+			  		$('.calendarFrame .day').each(function(){
+			  			var startstamp = $(this).data("timestamp");
+			  			
+			  			var taskList = tasks.get(startstamp, startstamp+86400, calendar.getPrivacy());
+						var list = '';
+					
+							if(taskList){
+								$.each( taskList, function( key, value ) {
+								  if($('#taskDetail_'+value.id).length === 0){
+								  	
+									  var d = new Date(value.timestamp*1000);
+									  list += '<li data-taskId="'+value.id+'" class="task" onclick="$(\'#taskDetail_'+value.id+'\').toggle();">&nbsp;<input type="checkbox">&nbsp;'+value.title+'<br>'+d.getHours()+':'+d.getMinutes()+'</li>'
+									  list += '<li class="taskDetail" id="taskDetail_'+value.id+'">'+value.description+'</li>';
+									
+								  }
+								 });
+							}
+							
+						$(this).children('.eventList').append(list);
+			  			
+			  			
+			  			
+			  		});
+			  		
+			  		console.log('tasks loaded');
+			  	}
+			  	
+			  	this.toggleTasks = function(){
+			  		if($('#showTasks').is(':checked')){
+			  			calendar.loadTasks();
+			  		}else{
+			  			$('.task').remove();
+			  			$('.taskDetail').remove();
+			  		}
+			  	}
+			  	
 			  	this.loadEvents = function(){
+			  		if($('#showTasks').is(':checked')){
+			  			calendar.loadTasks();
+			  		}
 			  		$('.calendarFrame .day').each(function(){
 			  			var startstamp = $(this).data("timestamp");
 			  			
@@ -792,7 +863,7 @@ var focus = true;
 			  			
 			  		});
 			  		
-			  		console.log('main');
+			  		console.log('events loaded into mainframe..');
 			  	}
 			  	
 				this.appendDayToCalender = function(time){
