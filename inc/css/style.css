@@ -2435,7 +2435,7 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 		-moz-box-shadow: 0px 4px 7px 0px #131313;
 		-webkit-box-shadow: 0px 4px 7px 0px #131313;
 		box-shadow: 0px 4px 7px 0px #131313;
-		margin: 10px 0 5px 5px;
+		margin: 10px 0 5px 9px;
 		padding: 10px;
 		border-radius: 5px;
 		height: 65px;
@@ -2504,6 +2504,11 @@ margin: 0;
 		left: 0;
 		right: 0;
 		margin-bottom: -8px;
+	}
+	
+	#dashBoxFrame{
+		max-width:1000px;
+		overflow-x:auto;
 	}
 	
 	.dashBox:hover .content{
@@ -2967,7 +2972,6 @@ border-left: 1px solid #424242;
 			}
 			
 			.calendarFrame .day .eventList li{
-				background-color: #6ac00e;
 				border-radius: 5px;
 				margin: 2px;
 				padding: 2px;
@@ -2977,7 +2981,7 @@ border-left: 1px solid #424242;
 				cursor:pointer;
 			}
 			
-			.calendarFrame .day .eventList li.eventDetail{
+			.calendarFrame .day .eventList li.eventDetail, .calendarFrame .day .eventList li.taskDetail{
 				display:none;
 				margin: 0px 10px;
 				margin-top: -3px;
@@ -2986,6 +2990,11 @@ border-left: 1px solid #424242;
 				line-height: 15px;
 				padding: 4px;
 				padding-top: 6px;
+			}
+			
+			/*set color for tasks*/
+			.calendarFrame .day .eventList li.task, .calendarFrame .day .eventList li.taskDetail{
+				background: #F4C540;
 			}
 /*calendar end*/
 
