@@ -639,6 +639,12 @@ switch($action){
 		
 		
 	break;
+	case 'getTasks':
+		
+		$tasks = new tasks();
+		echo json_encode($tasks->get(getUser(), $_POST['startStamp'], $_POST['stopStamp'], $_POST['privacy']));
+		
+		break;
 		
 //filesystem
 	case 'fileIdToFileTitle':

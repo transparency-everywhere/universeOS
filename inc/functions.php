@@ -1192,7 +1192,7 @@
                          }
 						   if($i == 0){
 						   		$output .="<tr>";
-							   		$output .="<td colspan=\"2\">";
+							   		$output .="<td colspan=\"2\" style=\"padding: 5px; padding-top: 12px;\">";
 									$output .="You don't have any favourites so far. Add folders, elements, files, playlists or other items to your favourites and they will appear here.";
 							   		$output .="</td>";
 						   		$output .="</tr>";
@@ -5401,7 +5401,7 @@ class dashBoard{
 		
 		$tasks = new tasks();
 		
-		$taskArray = $tasks->get(array('user'=>getUser()));
+		$taskArray = $tasks->get(getUser(), time()-86400, time()+(7*86400));
 		$output = '<ul>';
 		foreach($taskArray AS $task){
 			$editable = authorize($task['privacy'], 'edit', $task['user']);
@@ -5559,15 +5559,19 @@ class tasks{
 		$data = mysql_fetch_array(mysql_query("SELECT * FROM `tasks` $query"));
 		return $data;
 	}
-	public function get($arguments, $limit=NULL){
-		if(!empty($arguments['user'])){
-			$query = "WHERE `user`='".save($arguments['user'])."'";
+	public function get($user=NULL, $startStamp, $stopStamp, $privacy=NULL){
+		
+		if($privacy != NULL){
+			$privacy = explode(';', $privacy);
+			$privacy = implode('|', $privacy);
+			$privacyQuery = "AND privacy REGEXP '$privacy'";
 		}
-		$query = mysql_query("SELECT * FROM `tasks` $query");
-		while($data = mysql_fetch_array($query)){
-			$ret[] = $data;
+		
+		$sql = mysql_query("SELECT * FROM `tasks` WHERE `timestamp`>'".save($startStamp)."' AND `timestamp`<'".save($stopStamp)."' AND `user`='".save($user)."' $privacyQuery");
+		while($data = mysql_fetch_array($sql)){
+			$arr[] = $data;
 		}
-		return $ret;
+		return $arr;
 	}
 }
 
