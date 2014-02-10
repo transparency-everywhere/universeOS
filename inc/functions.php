@@ -339,7 +339,7 @@
         }elseif($type == "file"){
             $checkFileSql = mysql_query("SELECT privacy, owner FROM files WHERE id='$itemId'");
             $checkFileData = mysql_fetch_array($checkFileSql);
-            if(authorize($checkFileData['privacy'], "edit", $checkFileData[owner])){
+            if(authorize($checkFileData['privacy'], "edit", $checkFileData['owner'])){
                 $privacy = "<li><a href=\"javascript: popper('doit.php?action=changePrivacy&type=file&itemId=$itemId')\">Privacy</a></li>";
                 $delete = "<li><a href=\"doit.php?action=deleteItem&type=file&itemId=$itemId\" target=\"submitter\">Delete</a></li>";  
                 
@@ -529,6 +529,7 @@
 		 
 	     if(!empty($userid) && $password == $data['password']) {
 			 //set cookies
+			 $_SESSION['guest'] = false;
 	       	 $_SESSION['userid'] = $data['userid'];
 	         $_SESSION['userhash'] = $hash;
 			 
@@ -662,7 +663,7 @@
       }
   }
   
-  function updateUserPassword($oldPassword, $newPassword, $newSalt, $privateKey, $userid=NULL){
+  function updateUserPassword($oldPassword, $newPassword, $newSalt=NULL, $privateKey, $userid=NULL){
   	if($userid == NULL){
   		$userid = getUser();
   	}
@@ -671,19 +672,20 @@
 	$userData = getUserData($userid);
 	if($userData['password'] == $oldPassword){
 		
-		//store salt
-		createSalt('auth', $userid, 'user', $userid, $newSalt);
+		if(!empty($newSalt)){
+			//store salt
+			createSalt('auth', $userid, 'user', $userid, $newSalt);
+		}
         
 		//create signature
 		$sig = new signatures();
 		$sig->updatePrivateKey('user', $userid, $privateKey); //store encrypted private key
 		
-		mysql_query("UPDATE `user` SET  `password`='".$newPassword."' WHERE userid='$userid'");
+		mysql_query("UPDATE `user` SET  `password`='".save($newPassword)."' WHERE userid='$userid'");
 	
-  		return true;
+  		return $newPassword;
 	}else{
-		echo $userData['password'].'//////////////////////'.$oldPassword;
-		return false;
+		return 'Old Password was wrong';
 	}
   }
   
@@ -5271,28 +5273,30 @@ class dashBoard{
 		
 		$title = "Your Groups";
 		
-		$output .= "<ul class=\"\">";
-			$i = 0;
-			foreach($groups AS $group){
-				$output .="<li>";
-					$output .="<span class=\"marginRight\">";
-						$output .="<img src=\"./gfx/icons/group.png\" height=\"14\">";
-					$output .="</span>";
-					$output .="<span>";
-						$output .="<a href=\"#\" onclick=\"showGroup('$group');\">";
-						$output .= getGroupName($group);
-						$output .="</a>";
-					$output .="</span>";
-				$output .="</li>";
-				$i++;
-			}
-			if($i == 0){
-				$output .="<li>";
-				$output .="You don't have any messages so far. Search for friends, add them to your buddylist and open a chat dialoge to write a message.";
-				$output .="</li>";
-			}
+		if(count($groups) == 0){
 			
-		$output .= "</ul>";
+				$output .='<p style="font-size:15pt;padding: 5px; padding-top: 12px;">';
+				$output .="You don't have any messages so far. Search for friends, add them to your buddylist and open a chat dialoge to write a message.";
+				$output .="</p>";
+		}else{
+			
+			$output .= "<ul class=\"\">";
+				foreach($groups AS $group){
+					$output .="<li>";
+						$output .="<span class=\"marginRight\">";
+							$output .="<img src=\"./gfx/icons/group.png\" height=\"14\">";
+						$output .="</span>";
+						$output .="<span>";
+							$output .="<a href=\"#\" onclick=\"showGroup('$group');\">";
+							$output .= getGroupName($group);
+							$output .="</a>";
+						$output .="</span>";
+					$output .="</li>";
+					$i++;
+				}
+				
+			$output .= "</ul>";
+		}
 		
 		$footer = "<a href=\"#addGroup\" onclick=\"popper('doit.php?action=addGroup')\" title=\"Create a new Group\"><i class=\"icon icon-plus\"></i></a>";
 		
@@ -5307,27 +5311,30 @@ class dashBoard{
 			$playlists = getPlaylists();
 			
 			$title = "Your Playlists";
-			$i = 0;
-			$output .= "<ul>";
-			foreach($playlists AS $playlist){
-				$output .= "<li>";
-					$output .= "<span class=\"marginRight\">";
-						$output .= "<img src=\"./gfx/icons/playlist.png\" height=\"14\">";
-					$output .= "</span>";
-					$output .= "<span>";
-						$output .= "<a href=\"#\" onclick=\"showPlaylist('$playlist');\">";
-						$output .=  getPlaylistTitle($playlist);
-						$output .= "</a>";
-					$output .= "</span>";
-				$output .= "</li>";
-				$i++;
+			if(count($playlists) == 0){
+			
+				$output .= '<p style="padding: 5px; padding-top: 12px;">';
+				$output .= 'You don\'t have any playlists so far.';
+				$output .= '</p>';
+			
+			}else{
+				
+				$output .= "<ul>";
+					foreach($playlists AS $playlist){
+						$output .= "<li>";
+							$output .= "<span class=\"marginRight\">";
+								$output .= "<img src=\"./gfx/icons/playlist.png\" height=\"14\">";
+							$output .= "</span>";
+							$output .= "<span>";
+								$output .= "<a href=\"#\" onclick=\"showPlaylist('$playlist');\">";
+								$output .=  getPlaylistTitle($playlist);
+								$output .= "</a>";
+							$output .= "</span>";
+						$output .= "</li>";
+					}
+				$output .= "</ul>";
+				
 			}
-			if($i == 0){
-				$output .= "<li>";
-				$output .= "You don't have any playlists so far.";
-				$output .= "</li>";
-			}
-			$output .= "</ul>";
 			
 		$footer = "<a href=\"#addPlaylist\" onclick=\"popper('doit.php?action=addPlaylist')\" title=\"Create a new Playlist\"><i class=\"icon icon-plus\"></i></a>";
 			
@@ -5459,8 +5466,12 @@ class sec{
 }
 
 class users{
-	function getData($userid, $query='*'){
-		$data = mysql_query("SELECT $query FROM users WHERE userid='".save($userid)."'");
+	var $userid;
+   	function __construct($userid) {
+       $this->userid = $userid;
+	}
+	function getData($query='*'){
+		$data = mysql_fetch_array(mysql_query("SELECT $query FROM `user` WHERE `userid`='".save($this->userid)."'"));
 		return $data;
 	}
 	public function updateData($values){
@@ -5536,9 +5547,10 @@ class db{
 }
 
 class tasks{
-	public function create($user, $timestamp, $title, $description, $privacy){
+	public function create($user, $timestamp, $status, $title, $description, $privacy){
 		$values['user'] = $user;
 		$values['timestamp'] = $timestamp;
+		$values['status'] = $status;
 		$values['title'] = $title;
 		$values['description'] = $description;
 		$values['privacy'] = $privacy;
@@ -5546,10 +5558,10 @@ class tasks{
 		$db = new db();
 		$db->insert('tasks', $values);
 	}
-	public function update($id, $user, $timestamp, $title, $description, $privacy){
+	public function update($id, $user, $timestamp, $status, $title, $description, $privacy){
 		
 		$db = new db();
-		$db->update('tasks', array('user'=>$user, 'timestamp'=>$timestamp, 'title'=>$title, 'description'=>$description,  'privacy'=>$privacy), array('id',$id));
+		$db->update('tasks', array('user'=>$user, 'timestamp'=>$timestamp, 'status'=>$status, 'title'=>$title, 'description'=>$description,  'privacy'=>$privacy), array('id',$id));
 	
 	}
 	public function getData($id){
