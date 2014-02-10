@@ -365,28 +365,28 @@ var focus = true;
               		init.applicationOnTop();
 			  	}
 			  	
-			  	this.onTop = new function(id){
+			  	this.onTop = function(id){
 			  		
                   $(".fenster").css('z-index', 998);
                   $("#"+id+"").css('z-index', 999);
                   $("#"+id+"").css('position', 'absolute');
 			  		
-			  	};
+			  	}
 			  	
-			  	this.show = new function(id){
+			  	this.show = function(id){
                   applicationOnTop(id);
                   $("#" + id +"").show();
-			  	};
+			  	}
 			  	
-			  	this.hide = new function(id){
+			  	this.hide = function(id){
                   $("#" + id +"").hide();
-			  	};
+			  	}
 			  	
-			  	this.fullscreen = new function(id){
+			  	this.fullscreen = function(id){
                   $("#" + id +"").toggle();
-			  	};
+			  	}
 			  	
-			  	this.returnFromFullScreen = new function(id){
+			  	this.returnFromFullScreen = function(id){
               	$('#'+id+' .fullScreenIcon').attr("onClick","moduleFullscreen('"+id+"')");
                   var returnFullScreenCSS = {
                         'position' : 'absolute',
@@ -396,7 +396,7 @@ var focus = true;
                         'height' : window.fullScreenOldY
                         }
                   $("#" + id + "").css(returnFullScreenCSS);
-			  	};
+			  	}
 			  }
 			  
 			  var tasks = new function(){
@@ -448,6 +448,17 @@ var focus = true;
 					  		    	content += '<td>';
 					  		    	content += '<input type="text" name="date" id="date" class="date datepicker" value="'+d.getMonth()+1+'/'+d.getDate()+'/'+d.getFullYear()+'" style="width: 72px;">';
 					  		    	content += '&nbsp;<input type="text" name="time" id="time" class="time eventTime" value="15:30" style="width: 37px;">';
+					  		    	content += '</td>';
+					  		    content += '</tr>';
+					  		    content += '<tr>';
+					  		    	content += '<td>';
+					  		    	content += 'Status:';
+					  		    	content += '</td>';
+					  		    	content += '<td>';
+					  		    	content += '<select name="status">';
+					  		    	content += '<option value="pending">Pending</option>';
+					  		    	content += '<option value="done">Done</option>';
+					  		    	content += '</select>';
 					  		    	content += '</td>';
 					  		    content += '</tr>';
 					  		    content += '<tr>';
@@ -517,15 +528,29 @@ var focus = true;
 			  		var date = new Date(taskData.timestamp*1000);
 			  		
 			  		
-			  		var editableToken
+			  		var editableToken;
 			  		
+			  		
+			  		var status = taskData.status;
 			  		//generate formstuff from eventdata
 			  		if(editable){
 			  			editableToken = 'contentEditable';
 			  			var checked
-			  			if(editable == 'true')
+			  			if(editable == true){
+			  				
 			  				checked = 'checked="checked"';
+			  				status = '<select name="status" id="status">';
+			  						if(taskData.status == 'pending'){
+						  		    	status += '<option value="pending">Pending</option>';
+						  		    	status += '<option value="done">Done</option>';
+			  						}else{
+						  		    	status += '<option value="done">Done</option>';
+						  		    	status += '<option value="pending">Pending</option>';
+			  						}
+								status += '</select>';
+			  			}
 			  			
+			  		}else{
 			  		}
 			  		
 			  		var time = calendar.beautifyDate(date.getHours())+':'+calendar.beautifyDate(date.getMinutes());
@@ -555,9 +580,17 @@ var focus = true;
 					  		    	content += '<td>';
 					  		    	content += 'Day:';
 					  		    	content += '</td>';
-					  		    	content += '<td><span id="date" class="datepicker" '+editableToken+'>';
+					  		    	content += '<td><div id="date" class="datepicker" '+editableToken+'>';
 					  		    	content += date.getMonth()+1+'/'+date.getDate()+'/'+date.getFullYear();
-					  		    	content += '</span>&nbsp;<span id="time" '+editableToken+'>'+time+'</span>';
+					  		    	content += '</div>&nbsp;<div id="time" '+editableToken+'>'+time+'</div>';
+					  		    	content += '</td>';
+					  		    content += '</tr>';
+					  		    content += '<tr>';
+					  		    	content += '<td>';
+					  		    	content += 'Status:';
+					  		    	content += '</td>';
+					  		    	content += '<td>';
+					  		    	content += status;
 					  		    	content += '</td>';
 					  		    content += '</tr>';
 					  		    content += '<tr>';
@@ -579,7 +612,15 @@ var focus = true;
               		modal.create('Task '+taskData.title, content, [onSubmit, 'Save']);
               		
               		//init datepicker in modal
-              		$('.datepicker').datepicker();
+              		$(".datepicker").datepicker({
+					    dateFormat: 'dd/mm/yy',
+					    showOn: "button",
+					    buttonImage: "images/calendar.gif",
+					    buttonImageOnly: true,
+					    onClose: function(dateText, inst) {
+					        $(this).parent().find("[contenteditable=true]").focus().html(dateText).blur();
+					    }
+					});
               		
               		$('#updateTask').submit(function(e){
               			e.preventDefault();
@@ -590,7 +631,8 @@ var focus = true;
               				var searchString  = 'taskId='+encodeURIComponent(taskId);
               					searchString += '&title='+encodeURIComponent($('.blueModal #title').text());
               					searchString += '&description='+encodeURIComponent($('.blueModal #description').text());
-              					searchString += '&data='+encodeURIComponent($('.blueModal #date').text());
+              					searchString += '&date='+encodeURIComponent($('.blueModal #date').justtext());
+              					searchString += '&status='+encodeURIComponent($('.blueModal #status').val());
               					searchString += '&time='+encodeURIComponent($('.blueModal #time').text());
               					searchString += '&'+privacy;
               					
@@ -639,17 +681,10 @@ var focus = true;
 			  	this.loader;
 			  	
 			  	this.show = function(){
-			  		if($('#calendar').length > 0)
-			  			$('#calendar').show();
-			  		else
-			  			this.init();
-			  	}
-			  	
-			  	this.show = function(){
-			  		if(!$('#calendarFenster')){
+			  		if($('#calendarFenster').length === 0){
 			  			calendar.init();
 			  		}else{
-			  			application.show('calendatFenster');
+			  			application.show('calendarFenster');
 			  		}
 			  	}
 			  	
@@ -689,10 +724,6 @@ var focus = true;
 							html += '</div>';
 							html += '<div id="side" class="leftNav">';
 							
-								html += '<ul>';
-									html += '<li class="header"><input type="checkbox" id="showTasks" onclick="calendar.toggleTasks();">&nbsp;Show Tasks</li>';
-									html += '<li><input type="checkbox" checked>&nbsp;hide done</li>';
-								html += '</ul>';
 								html += '<ul id="calendars">';
 									html += '<li class="header">Calendars</li>';
 									
@@ -708,6 +739,10 @@ var focus = true;
 										});
 									}
 								html += '</ul>';
+								html += '<ul id="taskList">';
+									html += '<li class="header"><input type="checkbox" id="showTasks" onclick="calendar.toggleTasks();">&nbsp;Show Tasks<a href="#" class="pull-right" onclick="tasks.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon-plus icon-white"></i></a></li>';
+									html += '<li style="display:none;"><input type="checkbox" id="showDoneTasks" onclick="calendar.toggleDoneTasks();" checked>&nbsp;hide done</li>';
+								html += '</ul>';
 								html += '<ul id="events">';
 									html += '<li class="header">Events<a href="#" class="pull-right" onclick="events.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon-plus icon-white"></i></a></li>';
 									//events will apend to this list
@@ -718,6 +753,8 @@ var focus = true;
 						
 			  			application.create('calendarFenster', 'Calendar', 'html', html);
 			  			
+			  			//fix resize bug
+			  			$('#calendarFenster ').height('+5');
 			  			
 						$('#calendars .header').click(function(){
 							$('#side #calendars li').not('.header').slideToggle();
@@ -806,13 +843,23 @@ var focus = true;
 					
 							if(taskList){
 								$.each( taskList, function( key, value ) {
-								  if($('#taskDetail_'+value.id).length === 0){
-								  	
-									  var d = new Date(value.timestamp*1000);
-									  list += '<li data-taskId="'+value.id+'" class="task" onclick="$(\'#taskDetail_'+value.id+'\').toggle();">&nbsp;<input type="checkbox">&nbsp;'+value.title+'<br>'+d.getHours()+':'+d.getMinutes()+'</li>'
-									  list += '<li class="taskDetail" id="taskDetail_'+value.id+'">'+value.description+'</li>';
-									
-								  }
+									  if($('#taskDetail_'+value.id).length === 0){
+									  	  var style = '';
+									  	  if(!$('#showDoneTasks').is(':checked') && value.status == 'done'){
+									  	  	style = 'display:none;'
+									  	  }
+									  	  console.log(style);
+									  	  var taskClass;
+									  	  if(value.status == 'done'){
+									  	  	taskClass = 'doneTask'
+									  	  }else{
+									  	  	taskClass = '';
+									  	  }
+										  var d = new Date(value.timestamp*1000);
+										  list += '<li data-taskId="'+value.id+'" style="'+style+'" class="'+taskClass+' task" onclick="$(\'#taskDetail_'+value.id+'\').toggle();">&nbsp;<input type="checkbox">&nbsp;'+value.title+'<br>'+d.getHours()+':'+d.getMinutes()+'</li>'
+										  list += '<li class="taskDetail '+taskClass+'" id="taskDetail_'+value.id+'" style="'+style+'">'+value.description+'</li>';
+										
+									  }
 								 });
 							}
 							
@@ -827,10 +874,21 @@ var focus = true;
 			  	
 			  	this.toggleTasks = function(){
 			  		if($('#showTasks').is(':checked')){
+						$('#side #taskList li').not('.header').slideDown();
 			  			calendar.loadTasks();
 			  		}else{
+			  			
+						$('#side #taskList li').not('.header').slideUp();
 			  			$('.task').remove();
 			  			$('.taskDetail').remove();
+			  		}
+			  	}
+			  	
+			  	this.toggleDoneTasks = function(){
+			  		if($('#showDoneTasks').is(':checked')){
+			  			$('.doneTask').show();
+			  		}else{
+			  			$('.doneTask').hide();
 			  		}
 			  	}
 			  	
@@ -2783,7 +2841,14 @@ var dashBoard = new function(){
 	
 	this.init = function(){
 		$('#dashBoard a, #dashBoard li').not('.disableToggling').click(function(){dashBoard.slideUp();});
-    	$("#dashBoard").draggable({ axis: "y", containment: "#dashGrid"});
+    	$("#dashBoard").draggable({
+    		axis: "y", 
+    		containment: "#dashGrid",
+    		stop: function( event, ui ) {
+    			if(parseInt($('#dashBoard').css('top').replace(/[^-\d\.]/g, '')) > 191)
+    				$('#dashBoard').css('top', '191px');
+    		}
+    	});
 	
 	}
 	
