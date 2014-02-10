@@ -217,27 +217,57 @@ var update = new function(){
 			//is used to erase use of md5
 		
 			//UPDATE PASSWORD
-	    	var cypherOld = sec.passwordCypher(password, 'auth', userid);
-	    	var passwordHashOld = cypherOld[0];
-			var saltDecrypted = cypherOld[3];
+	    		var cypherOld = sec.passwordCypher(password, 'auth', userid);
+	    		var passwordHashOld = cypherOld[0];
+	    	
+				var saltDecrypted = cypherOld[3];
 			
-			//generate new password
-			var password_new = hash.SHA512(password+saltDecrypted);
-			
-			//encrypt salt with password
-			var passwordSHA512 = hash.SHA512(password); //stretch password
-			var saltEncrypted_new = sec.symEncrypt(passwordSHA512, saltDecrypted);
+				//generate new password
+				var password_new = hash.SHA512(password+saltDecrypted);
+				console.log(password_new);
+				//encrypt salt with sha512(password)
+				var passwordSHA512 = hash.SHA512(password); //stretch password
+				var saltEncrypted_new = sec.symEncrypt(passwordSHA512, saltDecrypted);
 		
 		
 		
 			//UPDATE PRIVATE KEY
 			
-			//get old private key
-			var privateKey = sec.getPrivateKey(type, userid, saltDecrypted, cypherOld[2]);
-		
-		
-			//save new private key
-		
+				//get old private key
+				var privateKey = sec.getPrivateKey('user', userid, saltDecrypted, cypherOld[1]);
+				
+				//save new private key
+				
+				//generate salt for random key
+    			var keySalt = hash.SHA512(randomString(64, '#aA'));  //generate salt and hash it.
+			    var privateKeyHash = hash.SHA512(passwordSHA512+keySalt);
+			    console.log('key salt:'+keySalt);
+			    
+			    
+			    //save salt
+			    var encryptedSalt = sec.symEncrypt(passwordSHA512, keySalt);
+			    createSalt('privateKey', userid, '', '', encryptedSalt);
+			    
+			    var privateKeyNew = sec.symEncrypt(privateKeyHash, privateKey);
+			
+				//save new password, new private key and send oldpw & userid
+				$.post("api.php?action=update_sha512TOsha512_2", {
+	                       userid:userid,
+	                       oldPassword:passwordHashOld,
+	                       newPassword:password_new,
+	                       newPrivateKey:privateKeyNew,
+	                       saltNew: saltEncrypted_new
+	                       }, function(result){
+	                            var res = result;
+	                            if(res){
+	                            	
+	                            	jsAlert(res);
+	                            }else{
+	                                jsAlert('', 'Your account has been updated.');
+	                            }
+	                            return false;
+	                       }, "html");
+			
 		
 		
 		
