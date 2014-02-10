@@ -60,7 +60,21 @@ switch($action){
 			echo "1";
 		}
 	break;
+	case 'update_sha512TOsha512_2':
+		$userid = $_POST['userid'];
+		$userData = getUserData($userid);
 		
+		if($userData['cypher'] == 'sha512'){
+			
+			//update password string and  privatekey (encryption key has been changed)
+			$result = updateUserPassword($_POST['oldPassword'], $_POST['newPassword'], $_POST['saltNew'], $_POST['newPrivateKey'], $userid);
+			if($result == true){
+				
+			}else{
+				echo $result;
+			}
+		}
+		break;
 		
 		
 	case 'updatePassword':
@@ -616,7 +630,7 @@ switch($action){
         $privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
 		
 		$tasks = new tasks();
-		$tasks->create(getUser(), $timestamp, $_POST['title'], $_POST['description'], $privacy);
+		$tasks->create(getUser(), $timestamp, $_POST['status'], $_POST['title'], $_POST['description'], $privacy);
 		
 		break;
 	case 'updateTask':
@@ -628,7 +642,7 @@ switch($action){
         $privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
 		
 		$tasks = new tasks();
-		$tasks->update($_POST['taskId'],$_POST['user'], $timestamp, $_POST['title'], $_POST['description'], $privacy);
+		$tasks->update($_POST['taskId'],$_POST['user'], $timestamp, $_POST['status'], $_POST['title'], $_POST['description'], $privacy);
 		
 		break;
 	case 'getTaskData':
