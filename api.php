@@ -667,6 +667,9 @@ switch($action){
 	case 'elementIdToElementTitle':
 		echo elementIdToElementTitle($_POST['elementId']);
 		break;
+	case 'folderIdToFolderTitle':
+		echo folderIdToFolderTitle($_POST['folderId']);
+		break;
 		
 //groups
 	case 'getGroups':
