@@ -261,254 +261,16 @@
  
     //shows the settins button for folders, elements, files, playlists and posts.
     function showItemSettings($type, $itemId){
-        if($type == "feed"){
-            $feedCheck = mysql_query("SELECT author, privacy FROM feed WHERE id='$itemId'");
-            $feedData = mysql_fetch_array($feedCheck);
-            if(authorize($feedData[privacy], "edit", $feedData[author])){
-                $privacy = "<li><a href=\"javascript: popper('doit.php?action=changePrivacy&type=feed&itemId=$itemId')\">Privacy</a></li>";
-                $delete = "<li><a href=\"doit.php?action=deleteItem&type=feed&itemId=$itemId\" target=\"submitter\">Delete</a></li>";
-            }
-        }elseif($type == "comment"){
-            $commentCheck = mysql_query("SELECT author, type, typeid, privacy FROM comments WHERE id='$itemId'");
-            $commentData = mysql_fetch_array($commentCheck);
-            
-            //allow profile owner to delete comments that other users made in his profile
-            if($commentData[type] == "profile" && $commentData[typeid] == $_SESSION[userid]){
-            $delete = "<li><a href=\"doit.php?action=deleteItem&type=comment&itemId=$itemId\" target=\"submitter\">Delete</a></li>";    
-            }
-            if(authorize($commentData[privacy], "edit", $commentData[author])){
-                $privacy = "<li><a href=\"javascript: popper('doit.php?action=changePrivacy&type=comment&itemId=$itemId')\">Privacy</a></li>";
-                $delete = "<li><a href=\"doit.php?action=deleteItem&type=comment&itemId=$itemId\" target=\"submitter\">Delete</a></li>";    
-            }
-        }elseif($type == "folder"){
-            $checkFolderSql = mysql_query("SELECT privacy, creator FROM folders WHERE id='$itemId'");
-            $checkFolderData = mysql_fetch_array($checkFolderSql);
-            if(authorize($checkFolderData[privacy], "edit", $checkFolderData[creator])){
-                $edit = "<li><a href=\"#\" onclick=\"popper('doit.php?action=editItem&type=folder&itemId=$itemId')\" target=\"submitter\">Edit</a></li>";
-                $privacy = "<li><a href=\"javascript: popper('doit.php?action=changePrivacy&type=folder&itemId=$itemId')\">Privacy</a></li>";
-                $delete = "<li><a href=\"doit.php?action=deleteItem&type=folder&itemId=$itemId\" target=\"submitter\">Delete</a></li>";    
-            }
-	        if(proofLogin()){
-	          	$fav = "<li><a href=\"doit.php?action=addFav&type=folder&item=$itemId\" target=\"submitter\">Add to Fav</a></li>";
-	        }
-			
-			//check if person has rights to protect filesystem items of changes
-			if(hasRight("protectFileSystemItems")){
-				if(!isProtected($checkFolderData['privacy']))
-					$protect = "<li><a href=\"javascript: popper('doit.php?action=protectFileSystemItems&type=folder&itemId=$itemId')\">Protect</a></li>";
-				else
-					$protect = "<li><a href=\"javascript: popper('doit.php?action=removeProtectionFromFileSystemItems&type=folder&itemId=$itemId')\">Unprotect</a></li>";
-					
-			}
-
-			//check if person has rights to make files undeletable
-			if(hasRight("undeletableFilesystemItems")){
-				if(!isUndeletable($checkFolderData['privacy']))
-					$undeletable = "<li><a href=\"javascript: popper('doit.php?action=makeFileSystemItemUndeletable&type=folder&itemId=$itemId')\">Make Undeletable</a></li>";
-				else
-					$undeletable = "<li><a href=\"javascript: popper('doit.php?action=makeFileSystemItemDeletable&type=folder&itemId=$itemId')\">Make Deletable</a></li>";
-			}
-			
-        }elseif($type == "element"){
-            $checkElementSql = mysql_query("SELECT privacy, author FROM elements WHERE id='$itemId'");
-            $checkElementData = mysql_fetch_array($checkElementSql);
-            if(authorize($checkElementData['privacy'], "edit", $checkElementData[author])){
-                $privacy = "<li><a href=\"javascript: popper('doit.php?action=changePrivacy&type=element&itemId=$itemId')\">Privacy</a></li>";
-                $edit = "<li><a href=\"#\" onclick=\"popper('doit.php?action=editItem&type=element&itemId=$itemId')\" target=\"submitter\">Edit</a></li>";
-                $delete = "<li><a href=\"#\" onclick=\"popper('doit.php?action=deleteItem&type=element&itemId=$itemId')\" target=\"submitter\">Delete</a></li>";
-            }
-	        if(proofLogin()){
-	          	$fav = "<li><a href=\"doit.php?action=addFav&type=element&item=$itemId\" target=\"submitter\">Add to Fav</a></li>";
-	        }
-			
-			if(hasRight("protectFileSystemItems")){
-				if(!isProtected($checkElementData['privacy']))
-					$protect = "<li><a href=\"javascript: popper('doit.php?action=protectFileSystemItems&type=element&itemId=$itemId')\">Protect</a></li>";
-				else
-					$protect = "<li><a href=\"javascript: popper('doit.php?action=removeProtectionFromFileSystemItems&type=element&itemId=$itemId')\">Unprotect</a></li>";
-					
-			}
-			
-			if(hasRight("undeletableFilesystemItems")){
-				if(!isUndeletable($checkElementData['privacy']))
-					$undeletable = "<li><a href=\"javascript: popper('doit.php?action=makeFileSystemItemUndeletable&type=element&itemId=$itemId')\">Make Undeletable</a></li>";
-				else
-					$undeletable = "<li><a href=\"javascript: popper('doit.php?action=makeFileSystemItemDeletable&type=element&itemId=$itemId')\">Make Deletable</a></li>";
-			}
-			
-        }elseif($type == "file"){
-            $checkFileSql = mysql_query("SELECT privacy, owner FROM files WHERE id='$itemId'");
-            $checkFileData = mysql_fetch_array($checkFileSql);
-            if(authorize($checkFileData['privacy'], "edit", $checkFileData['owner'])){
-                $privacy = "<li><a href=\"javascript: popper('doit.php?action=changePrivacy&type=file&itemId=$itemId')\">Privacy</a></li>";
-                $delete = "<li><a href=\"doit.php?action=deleteItem&type=file&itemId=$itemId\" target=\"submitter\">Delete</a></li>";  
-                
-            }
-			if(proofLogin()){
-            $fav = "<li><a href=\"doit.php?action=addFav&type=file&item=$itemId\" target=\"submitter\">Add to Fav</a></li>";
-			}
-            $report = "<li><a href=\"javascript: popper('doit.php?action=reportFile&fileId=$itemId')\">Report</a></li>";
-			if(hasRight("protectFileSystemItems")){
-				if(!isProtected($checkFileData['privacy']))
-					$protect = "<li><a href=\"javascript: popper('doit.php?action=protectFileSystemItems&type=file&itemId=$itemId')\">Protect</a></li>";
-				else
-					$protect = "<li><a href=\"javascript: popper('doit.php?action=removeProtectionFromFileSystemItems&type=file&itemId=$itemId')\">Unprotect</a></li>";
-					
-			}
-			
-			if(hasRight("undeletableFilesystemItems")){
-				if(!isUndeletable($checkFileData['privacy']))
-					$undeletable = "<li><a href=\"javascript: popper('doit.php?action=makeFileSystemItemUndeletable&type=file&itemId=$itemId')\">Make Undeletable</a></li>";
-				else
-					$undeletable = "<li><a href=\"javascript: popper('doit.php?action=makeFileSystemItemDeletable&type=file&itemId=$itemId')\">Make Deletable</a></li>";
-			}
-			
-        }elseif($type == "link"){
-            $checkLinkSql = mysql_query("SELECT privacy, author FROM links WHERE id='$itemId'");
-            $checkLinkData = mysql_fetch_array($checkLinkSql);
-            if(authorize($checkLinkData['privacy'], "edit", $checkLinkData[author])){
-                $privacy = "<li><a href=\"javascript: popper('doit.php?action=changePrivacy&type=link&itemId=$itemId')\">Privacy</a></li>";
-				$edit = "<li><a href=\"#\" onclick=\"popper('doit.php?action=editItem&type=link&itemId=$itemId')\" target=\"submitter\">Edit</a></li>";
-                
-                $delete = "<li><a href=\"doit.php?action=deleteLink&linkId=$itemId\" target=\"submitter\">Delete</a></li>";
-            }
-			if(proofLogin()){
-                $fav = "<li><a href=\"doit.php?action=addFav&type=link&item=$itemId\" target=\"submitter\">Add to Fav</a></li>"; 
-			} 
-            	$report = "<li><a href=\"javascript: popper('doit.php?action=reportFile&fileId=$itemId')\">Report</a></li>";
-			if(hasRight("protectFileSystemItems")){
-				if(!isProtected($checkLinkData['privacy']))
-                	$protect = "<li><a href=\"javascript: popper('doit.php?action=protectFileSystemItems&type=link&itemId=$itemId')\">Protect</a></li>";
-				else
-					$protect = "<li><a href=\"javascript: popper('doit.php?action=removeProtectionFromFileSystemItems&type=link&itemId=$itemId')\">Unprotect</a></li>";
-			}
-			
-			if(hasRight("undeletableFilesystemItems")){
-				if(!isUndeletable($checkLinkData['privacy']))
-					$undeletable = "<li><a href=\"javascript: popper('doit.php?action=makeFileSystemItemUndeletable&type=link&itemId=$itemId')\">Make Undeletable</a></li>";
-				else
-					$undeletable = "<li><a href=\"javascript: popper('doit.php?action=makeFileSystemItemDeletable&type=link&itemId=$itemId')\">Make Deletable</a></li>";
-			}
-			
-        }else if($type == "internLink"){
-            $checkInternLinkData = mysql_fetch_array(mysql_query("SELECT * FROM internLinks WHERE id='$itemId'"));
-            
-                if($checkInternLinkData['type'] == "folder"){
-                    
-                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT name, privacy, creator FROM folders WHERE id='$checkInternLinkData[typeId]'"));
-                    
-                    $user = $shortCutItemData['creator'];
-                    
-                }else if($checkInternLinkData['type'] == "element"){
-                    
-                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy, creator FROM elements WHERE id='$checkInternLinkData[typeId]'"));
-                    $user = $shortCutItemData['creator'];
-                }else if($checkInternLinkData['type'] == "file"){
-
-                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy, type, owner FROM files WHERE id='$checkInternLinkData[typeId]'"));
-                    $user = $shortCutItemData['owner'];
-  
-                }else if($checkInternLinkData['type'] == "link"){
-
-                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, link, privacy, type, author FROM links WHERE id='$checkInternLinkData[typeId]'"));
-                    $user = $shortCutItemData['author'];
-                  
-                }
-                
-                if(authorize($shortCutItemData['privacy'], "edit", $user)){
-                    
-                    $delete = "<li><a href=\"doit.php?action=deleteItem&type=internLink&itemId=$itemId\" target=\"submitter\">Delete</a></li>";  
-                    
-                }
-                
-            
-            
-        }
-        if(!empty($privacy) || !empty($fav) || !empty($delete) || !empty($edit) || !empty($report)){
-        $return = "
-        <a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"btn btn-mini\"><i class=\"icon-cog\"></i></a>
-        <div class=\"itemSettingsWindow\">
-            <ul>
-                $privacy
-                $fav
-                $delete
-                $edit
-                $report
-                $protect
-                $undeletable
-            </ul>
-        </div>
-        ";
         
-        return $return;
-    }}
+      $contextMenu = new contextMenu($type, $itemId, '', '');
+	  $output = $contextMenu->showItemSettings();
+	  return $output;
+    }
   function showRightClickMenu($type, $itemId, $title, $info1=NULL){
       
-      if($type == "folder"){
-          //info1 is the creator of the folder
-          //it is used to proof if privacy settings should be shown
-          $checkFolderSql = mysql_query("SELECT privacy, creator FROM folders WHERE id='$itemId'");
-          $checkFolderData = mysql_fetch_array($checkFolderSql);
-          
-          $open = "<li><a href=\"javascript: openFolder('$itemId')\">Open</a></li>";
-          if(authorize($checkFolderData[privacy], "edit", $checkFolderData[creator])){
-              $privacy = "<li><a href=\"javascript: popper('doit.php?action=changePrivacy&type=folder&itemId=$itemId')\">Privacy</a></li>";
-          }
-          if(proofLogin()){
-          	$fav = "<li><a href=\"doit.php?action=addFav&type=folder&item=$itemId\" target=\"submitter\">Add to Fav</a></li>";
-          }
-      }
-      
-      if($type == "element"){
-         $checkElementSql = mysql_query("SELECT privacy, author FROM elements WHERE id='$itemId'");
-         $checkElementData = mysql_fetch_array($checkElementSql);
-		 
-          	$open = "<li><a href=\"#\" onclick=\"openElement('$itemId', '$title'); return false;\">Open</a></li>";
-          
-         if(authorize($checkElementData[privacy], "edit", $checkElementData[author])){
-            $privacy = "<li><a href=\"javascript: popper('doit.php?action=changePrivacy&type=element&itemId=$itemId')\">Privacy</a></li>";  
-         }
-         $fav = "<li><a href=\"doit.php?action=addFav&type=element&item=$itemId\" target=\"submitter\">Add to Fav</a></li>";
-      }
-      if($type == "file"){
-          $open = "<li><a href=\"#\" onclick=\"openFile('$info1', '$itemId', '$title');\">Open</a>";
-          $fav = "<li><a href=\"doit.php?action=addFav&type=file&item=$itemId\" target=\"submitter\">Add to Fav</a></li>";
-          $playList = "<li><a href=\"javascript: popper('doit.php?action=addFileToPlaylist&file=$itemId')\">Add to Playlist</a></li>";
-          $download = "<li><a href=\"./out/download/?fileId=$itemId\">download</a></li>";
-      }
-        if($type == "image"){
-          $checkFileSql = mysql_query("SELECT privacy, owner FROM files WHERE id='$itemId'");
-          $checkFileData = mysql_fetch_array($checkFileSql);
-	          $open = "<li><a href=\"#\" onclick=\"openFile('image', '$itemId', '$title');\">Open</a>";
-	          $background = "<li><a href=\"doit.php?action=changeBackgroundImage&type=file&id=$itemId\" target=\"submitter\">set as background</a></li>";
-	          $fav = "<li><a href=\"doit.php?action=addFav&type=file&item=$itemId\" target=\"submitter\">Add to Fav</a></li>";
-	          $download = "<li><a href=\"./out/download/?fileId=$itemId\">download</a></li>";
-	      if(authorize($checkFileData[privacy], "edit", $checkFileData[owner])){
-          	  $delete = "<li><a href=\"doit.php?action=deleteItem&type=file&itemId=$itemId\" target=\"submitter\">Delete</a></li>";
-          }
-        }
-      if($type == "link"){
-          //info1 is used as filetype, because it is needed in the JS-openfile() function
-          $open = "<li><a href=\"#\" onclick=\"openFile('$info1', '$itemId', '$title');\">Open</a></li>";
-          $fav = "<li><a href=\"doit.php?action=addFav&type=link&item=$itemId\" target=\"submitter\">Add to Fav</a></li>";
-          $playList = "<li><a href=\"javascript: popper('doit.php?action=addFileToPlaylist&link=$itemId')\">Add to Playlist</a></li>";
-          
-      }
-	  
-	  $output = "<span id=\"rightClick$type$itemId\" class=\"rightclick\" style=\"display: none;\">";
-	  	$output .= "<ul>";
-		
-        	$output .= $open;
-            $output .= $fav;
-            $output .= $playList;
-            $output .= $privacy;
-            $output .= $download;
-            $output .= $background;
-            $output .= $delete;
-	  	$output .= "</ul>";
-	  $output .= "</span>";
-		
-		echo $output;
+      $contextMenu = new contextMenu($type, $itemId, $title, $info1);
+	  $output = $contextMenu->showRightClick();
+	  echo $output;
   }
 
   function userLogin($username, $password){
@@ -2145,7 +1907,7 @@ echo"</div>";
        }
    }
     
-    function showFeedNew($type, $user=NULL, $limit=NULL, $feedId){
+    function showFeedNew($type, $user=NULL, $limit=NULL, $feedId=NULL){
         
         if(empty($limit)){
             $limit = "0,30";
@@ -2237,7 +1999,7 @@ echo"</div>";
             <div style="padding: 15px;">
                 <div>
                     <?=showScore("feed", $feedData['id']);?>
-                    <div style="float:right; position: absolute; margin-top: -24px; margin-left: 108px;"><?=showItemSettings('feed', "$feedData[id]");?></div>
+                    <div style="float:right; position: absolute; margin-top: -24px; margin-left: 108px;"><?=showItemSettings('feed', $feedData['id']);?></div>
                 </div>
             </div>
             <a href="javascript:showfeedComment(<?=$feedData['id'];?>);" class="btn btn-mini" style="float: right; margin-top: -38px; margin-right: 15px; color: #606060"><i class="icon-comment"></i>&nbsp;(<?=countComment("feed", $feedData[id]);?>)</a>
@@ -2744,7 +2506,7 @@ echo"</div>";
                                                         <li style="padding-left:10px;"><input type="checkbox" name="privacyCustomEdit[]" value="h" class="privacyCustomTrigger privacyOnlyMeTrigger uncheckPublic uncheckHidden" <?=$checked[privacyCustomEditH];?> <?=$disabled;?>>Only Me</li>
 	
                                         <li><input type="checkbox" class="privacyHiddenTrigger uncheckPublic uncheckCustom" name="privacyHidden" value="true" <?=$checked[privacyHidden];?> <?=$disabled;?>>Hidden:</li>
-					<? } ?>
+					<?php }?>
         		</ul>
         	</div>
                                 <script>
@@ -3497,8 +3259,14 @@ echo"</div>";
 		$elementData = getElementData($elementId);
 		return $elementData['title'];
 	}
-    
-    function fileIdToFileType($fileId){
+	
+	function folderIdToFolderTitle($folderId){
+		$folderData = getFolderData($folderId);
+		return $folderData['name'];
+		
+	}
+	
+	function fileIdToFileType($fileId){
         $fileData = mysql_fetch_array(mysql_query("SELECT type FROM files WHERE id='".save($fileId)."'"));
         return $fileData['type'];
     }
@@ -4221,6 +3989,12 @@ echo"</div>";
 		$query = mysql_query("SELECT * FROM `elements` WHERE id='".save($elementId)."'");
 		$data = mysql_fetch_array($query);
 		
+		return $data;
+	}
+	
+	function getFolderData($folderId){
+		$query = mysql_query("SELECT * FROM `folders` WHERE id='".save($folderId)."'");
+		$data = mysql_fetch_array($query);
 		return $data;
 	}
 	
@@ -5193,6 +4967,531 @@ echo"</div>";
 	        }
 	        $postCheck = 1;
 		}
+		
+class contextMenu{
+	public $type;
+	public $itemId;
+	public $title;
+	public $info1;
+	
+	
+	
+	function __construct($type, $itemId, $title, $info1) {
+      	$this->type = $type;
+      	$this->itemId = $itemId;
+		if(!empty($title)){
+      		$this->title = $title;
+		}
+		if(!empty($info1)){
+      		$this->info1 = $info1;
+		}
+	}
+	function getOptions(){
+		$itemId = $this->itemId;
+		
+				//init vars
+	            $open[] = '';
+	            $fav[] = '';
+	            $privacy[] = '';
+	            $playlist[] = '';
+				$edit[] = '';
+				$delete[] = '';
+				$protect[] = '';
+				$undeletable[] = '';
+				
+		switch($this->type){
+			case 'feed':
+	        	$feedCheck = mysql_query("SELECT author, privacy FROM feed WHERE id='$itemId'");
+	            $feedData = mysql_fetch_array($feedCheck);
+	            if(authorize('p', "edit", $feedData['author'])){
+	            	$privacy['title'] = 'Privacy';
+					$privacy['href'] = '#';
+					$privacy['onclick'] = "javascript: popper('doit.php?action=changePrivacy&type=feed&itemId=$itemId')";
+					
+
+				  	$delete['title'] = 'Delete';
+					$delete['href'] = "doit.php?action=deleteItem&type=feed&itemId=$itemId";
+					$delete['target'] = 'submitter'; 
+	            }
+				
+				$options[] = $privacy;
+				$options[] = $delete;
+ 				break;
+			case 'comment':
+	        	$commentCheck = mysql_query("SELECT author, type, typeid, privacy FROM comments WHERE id='$itemId'");
+	            $commentData = mysql_fetch_array($commentCheck);
+	            
+	            //allow profile owner to delete comments that other users made in his profile
+	            if($commentData['type'] == "profile" && $commentData['typeid'] == getUser()){
+	            	$delete['title'] = 'Delete';
+					$delete['href'] = "doit.php?action=deleteItem&type=comment&itemId=$itemId";
+					$delete['target'] = 'submitter'; 
+				}
+	            if(authorize('p', "edit", $commentData['author'])){
+	                $privacy['title'] = 'Privacy';
+					$privacy['href'] = '#';
+					$privacy['onclick'] = "javascript: popper('doit.php?action=changePrivacy&type=comment&itemId=$itemId')";
+					
+
+				  	$delete['title'] = 'Delete';
+					$delete['href'] = "doit.php?action=deleteItem&type=comment&itemId=$itemId";
+					$delete['target'] = 'submitter'; 
+	            }
+				
+				$options[] = $delete;
+				$options[] = $privacy;
+				break;
+			case 'internLink':
+				$checkInternLinkData = mysql_fetch_array(mysql_query("SELECT * FROM internLinks WHERE id='$itemId'"));
+            
+                if($checkInternLinkData['type'] == "folder"){
+                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT name, privacy, creator FROM folders WHERE id='$checkInternLinkData[typeId]'"));
+                    $user = $shortCutItemData['creator'];
+                }else if($checkInternLinkData['type'] == "element"){
+                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy, creator FROM elements WHERE id='$checkInternLinkData[typeId]'"));
+                    $user = $shortCutItemData['creator'];
+                }else if($checkInternLinkData['type'] == "file"){
+                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy, type, owner FROM files WHERE id='$checkInternLinkData[typeId]'"));
+                    $user = $shortCutItemData['owner'];
+                }else if($checkInternLinkData['type'] == "link"){
+                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, link, privacy, type, author FROM links WHERE id='$checkInternLinkData[typeId]'"));
+                    $user = $shortCutItemData['author'];
+                }
+                
+                if(authorize($shortCutItemData['privacy'], "edit", $user)){
+				  	$delete['title'] = 'Delete';
+					$delete['href'] = "doit.php?action=deleteItem&type=internLink&itemId=$itemId";
+					$delete['target'] = 'submitter'; 
+                }
+                $options[] = $delete;
+				break;
+			case "folder":
+				
+				
+		    	$checkFolderSql = mysql_query("SELECT `privacy`, `creator` FROM `folders` WHERE id='$itemId'");
+		        $checkFolderData = mysql_fetch_array($checkFolderSql);
+				  
+				$open['title'] = 'open';
+				$open['href'] = '#';
+				$open['onclick'] = "openFolder('$itemId')";
+				
+				if(proofLogin()){
+					
+					$fav['title'] = 'Add to Fav';
+					$fav['href'] = "doit.php?action=addFav&type=folder&item=$itemId";
+					$fav['target'] = 'submitter';
+					
+				}
+				
+				if(authorize($checkFolderData['privacy'], "edit", $checkFolderData['creator'])){
+				
+					$privacy['title'] = 'Privacy';
+					$privacy['href'] = '#';
+					$privacy['onclick'] = "javascript: popper('doit.php?action=changePrivacy&type=folder&itemId=$itemId')";
+					
+					$edit['title'] = 'Edit';
+					$edit['href'] = '#';
+					$edit['onclick'] = "popper('doit.php?action=editItem&type=folder&itemId=$itemId')";
+					
+					$delete['title'] = 'Delete';
+					$delete['href'] = "doit.php?action=deleteItem&type=folder&itemId=$itemId";
+					$delete['target'] = 'submitter';
+					
+				}
+				
+				
+				//check if person has rights to protect filesystem items of changes
+				if(hasRight("protectFileSystemItems")){
+					if(!isProtected($checkFolderData['privacy'])){
+						$protect['title'] = 'Protect';
+						$protect['href'] = '#';
+						$protect['onclick'] = "javascript: popper('doit.php?action=protectFileSystemItems&type=folder&itemId=$itemId')";
+
+					}else{
+						
+						$protect['title'] = 'Unprotect';
+						$protect['href'] = '#';
+						$protect['onclick'] = "javascript: popper('doit.php?action=removeProtectionFromFileSystemItems&type=folder&itemId=$itemId')";
+						
+					}
+				}
+	
+				//check if person has rights to make files undeletable
+				if(hasRight("undeletableFilesystemItems")){
+					if(!isUndeletable($checkFolderData['privacy'])){
+						
+						$undeletable['title'] = 'Make Undeletable';
+						$undeletable['href'] = '#';
+						$undeletable['onclick'] = "javascript: popper('doit.php?action=makeFileSystemItemUndeletable&type=folder&itemId=$itemId');";
+					
+					}else{
+						
+						$undeletable['title'] = 'Make Deletable';
+						$undeletable['href'] = '#';
+						$undeletable['onclick'] = "javascript: popper('doit.php?action=makeFileSystemItemDeletable&type=folder&itemId=$itemId');";
+					
+					}
+					
+				}
+				
+				$options[] = $open;
+				$options[] = $privacy;
+				$options[] = $edit;
+				$options[] = $delete;
+				$options[] = $fav;
+				$options[] = $protect;
+				$options[] = $undeletable;
+				
+				
+		      break;
+		   	case "element":
+			  
+		    	$checkElementSql = mysql_query("SELECT privacy, author FROM elements WHERE id='$itemId'");
+		      	$checkElementData = mysql_fetch_array($checkElementSql);
+			 
+			 
+			 	$open['title'] = 'Open';
+			 	$open['href'] = '#';
+			 	$open['onclick'] = "openElement('$itemId', '$title');";
+			 
+		      	if(authorize($checkElementData['privacy'], "edit", $checkElementData['author'])){
+		      		$privacy['title'] = 'Privacy';
+					$privacy['href'] = '#';
+					$privacy['onclick'] = "javascript: popper('doit.php?action=changePrivacy&type=element&itemId=$itemId')";
+		         
+					$edit['title'] = 'Edit';
+					$edit['href'] = '#';
+					$edit['onclick'] = "popper('doit.php?action=editItem&type=element&itemId=$itemId')";
+				
+					$delete['title'] = 'Delete';
+					$delete['href'] = "doit.php?action=deleteItem&type=element&itemId=$itemId";
+					$delete['target'] = 'submitter';
+		      	}
+			 
+			 	if(proofLogin()){
+			 		$fav['title'] = 'Add to Fav';
+					$fav['href'] = "doit.php?action=addFav&type=element&item=$itemId";
+					$fav['target'] = "submitter";
+			 	}
+			 
+				//check if person has rights to protect filesystem items of changes
+				if(hasRight("protectFileSystemItems")){
+					if(!isProtected($checkElementData['privacy'])){
+						$protect['title'] = 'Protect';
+						$protect['href'] = '#';
+						$protect['onclick'] = "javascript: popper('doit.php?action=protectFileSystemItems&type=element&itemId=$itemId')";
+
+					}else{
+					
+						$protect['title'] = 'Unprotect';
+						$protect['href'] = '#';
+						$protect['onclick'] = "javascript: popper('doit.php?action=removeProtectionFromFileSystemItems&type=element&itemId=$itemId')";
+					
+					}
+				}
+	
+				//check if person has rights to make files undeletable
+				if(hasRight("undeletableFilesystemItems")){
+					if(!isUndeletable($checkElementData['privacy'])){
+					
+						$undeletable['title'] = 'Make Undeletable';
+						$undeletable['href'] = '#';
+						$undeletable['onclick'] = "javascript: popper('doit.php?action=makeFileSystemItemUndeletable&type=element&itemId=$itemId');";
+				
+					}else{
+					
+						$undeletable['title'] = 'Make Deletable';
+						$undeletable['href'] = '#';
+						$undeletable['onclick'] = "javascript: popper('doit.php?action=makeFileSystemItemDeletable&type=element&itemId=$itemId');";
+					}
+				
+				}
+			
+				$options[] = $open;
+				$options[] = $privacy;
+				$options[] = $edit;
+				$options[] = $delete;
+				$options[] = $fav;
+				$options[] = $protect;
+				$options[] = $undeletable;
+			
+				break;
+		   	case "file":
+		    	$checkFileSql = mysql_query("SELECT privacy, owner FROM files WHERE id='$itemId'");
+		       	$checkFileData = mysql_fetch_array($checkFileSql);
+			  
+			  	$open['title'] = 'Open';
+			  	$open['href'] = '#';
+			  	$open['onclick'] = "openFile('$info1', '$itemId', '$title');";
+			  
+			  	if(proofLogin()){
+			  		$fav['title'] = 'Add to Fav';
+					$fav['href'] = "doit.php?action=addFav&type=file&item=$itemId";
+					$fav['target'] = 'submitter';
+				
+					$playlist['title'] = 'Add to Playlist';
+					$playlist['href'] = '#';
+					$playlist['onclick'] = "javascript: popper('doit.php?action=addFileToPlaylist&file=$itemId');";
+			  	}
+			  
+		       	if(authorize($checkFileData['privacy'], "edit", $checkFileData['owner'])){
+		       		$privacy['title'] = 'Privacy';
+					$privacy['href'] = '#';
+					$privacy['onclick'] = "javascript: popper('doit.php?action=changePrivacy&type=file&itemId=$itemId')";
+		         
+				
+					$delete['title'] = 'Delete';
+					$delete['href'] = "doit.php?action=deleteItem&type=file&itemId=$itemId";
+					$delete['target'] = 'submitter';
+		       	}
+			 
+				//check if person has rights to protect filesystem items of changes
+				if(hasRight("protectFileSystemItems")){
+					if(!isProtected($checkFileData['privacy'])){
+						$protect['title'] = 'Protect';
+						$protect['href'] = '#';
+						$protect['onclick'] = "javascript: popper('doit.php?action=protectFileSystemItems&type=file&itemId=$itemId')";
+	
+					}else{
+						$protect['title'] = 'Unprotect';
+						$protect['href'] = '#';
+						$protect['onclick'] = "javascript: popper('doit.php?action=removeProtectionFromFileSystemItems&type=file&itemId=$itemId')";
+						
+					}
+				}
+		
+				//check if person has rights to make files undeletable
+				if(hasRight("undeletableFilesystemItems")){
+					if(!isUndeletable($checkFileData['privacy'])){
+						$undeletable['title'] = 'Make Undeletable';
+						$undeletable['href'] = '#';
+						$undeletable['onclick'] = "javascript: popper('doit.php?action=makeFileSystemItemUndeletable&type=file&itemId=$itemId');";
+					
+					}else{
+						$undeletable['title'] = 'Make Deletable';
+						$undeletable['href'] = '#';
+						$undeletable['onclick'] = "javascript: popper('doit.php?action=makeFileSystemItemDeletable&type=file&itemId=$itemId');";
+					
+					}
+					
+				}
+			  	
+			
+			  	$report['title'] = 'Report';
+			    $report['href'] = '#';
+			  	$report['onclick'] = "javascript: popper('doit.php?action=reportFile&fileId=$itemId')";
+			  
+			  	$download['title'] = 'download';
+			  	$download['href'] = "./out/download/?fileId=$itemId";
+			  	$download['target'] = 'submitter';
+			
+				$options[] = $open;
+				$options[] = $privacy;
+				$options[] = $fav;
+				$options[] = $playlist;
+				$options[] = $download;
+				$options[] = $delete;
+				$options[] = $protect;
+				$options[] = $undeletable;
+				$options[] = $report;
+			
+		   		break;
+		   	case "image":
+		    	$checkFileSql = mysql_query("SELECT privacy, owner FROM files WHERE id='$itemId'");
+		       	$checkFileData = mysql_fetch_array($checkFileSql);
+		       
+			  
+			  	$open['title'] = 'Open';
+			  	$open['href'] = '#';
+			  	$open['onclick'] = "openFile('image', '$itemId', '$title');";
+			  
+			  
+			  	$download['title'] = 'Download';
+			  	$download['href'] = "./out/download/?fileId=$itemId";
+			  	$download['target'] = 'submitter';
+			  	if(proofLogin()){
+			  		$fav['title'] = 'Add to Fav';
+					$fav['href'] = "doit.php?action=addFav&type=file&item=$itemId";
+					$fav['target'] = 'submitter';
+				
+					$background['title'] = 'Set as Background';
+					$background['href'] = "doit.php?action=changeBackgroundImage&type=file&id=$itemId";
+					$background['target'] = 'submitter';
+			  	}
+				
+			  	if(authorize($checkFileData['privacy'], "edit", $checkFileData['owner'])){
+			  	 	$delete['title'] = 'Delete';
+				 	$delete['href'] = "doit.php?action=deleteItem&type=file&itemId=$itemId";
+				 	$delete['target'] = 'submitter';
+			  	}
+				$options[] = $open;
+				$options[] = $download;
+				$options[] = $fav;
+				$options[] = $background;
+				$options[] = $delete;
+		   		break;
+		   	case "link":
+		    	$checkLinkSql = mysql_query("SELECT privacy, author FROM links WHERE id='$itemId'");
+	           	$checkLinkData = mysql_fetch_array($checkLinkSql);
+	           
+			  	$open['title'] = 'Open';
+			  	$open['href'] = '#';
+			  	$open['onclick'] = "openFile('$info1', '$itemId', '$title');";
+			  
+			  	if(proofLogin()){
+			  	
+			  		$fav['title'] = 'Add to Fav';
+					$fav['href'] = "doit.php?action=addFav&type=link&item=$itemId";
+					$fav['target'] = 'submitter';
+				
+					$playlist['title'] = 'Add to Playlist';
+					$playlist['href'] = '#';
+					$playlist['onclick'] = "popper('doit.php?action=addFileToPlaylist&link=$itemId');";
+			  	}
+			  
+		      	if(authorize($checkLinkData['privacy'], "edit", $checkLinkData['author'])){
+		      		$privacy['title'] = 'Privacy';
+					$privacy['href'] = '#';
+					$privacy['onclick'] = "javascript: popper('doit.php?action=changePrivacy&type=link&itemId=$itemId')";
+		         
+					$edit['title'] = 'Edit';
+					$edit['href'] = '#';
+					$edit['onclick'] = "popper('doit.php?action=editItem&type=link&itemId=$itemId')";
+				
+					$delete['title'] = 'Delete';
+					$delete['href'] = "doit.php?action=deleteItem&type=link&itemId=$itemId";
+					$delete['target'] = 'submitter';
+		      	}
+			 
+			  
+			  
+				//check if person has rights to protect filesystem items of changes
+				if(hasRight("protectFileSystemItems")){
+					if(!isProtected($checkLinkData['privacy'])){
+						$protect['title'] = 'Protect';
+						$protect['href'] = '#';
+						$protect['onclick'] = "javascript: popper('doit.php?action=protectFileSystemItems&type=link&itemId=$itemId')";
+	
+					}else{
+						
+						$protect['title'] = 'Unprotect';
+						$protect['href'] = '#';
+						$protect['onclick'] = "javascript: popper('doit.php?action=removeProtectionFromFileSystemItems&type=link&itemId=$itemId')";
+						
+					}
+				}
+		
+				//check if person has rights to make files undeletable
+				if(hasRight("undeletableFilesystemItems")){
+					if(!isUndeletable($checkLinkData['privacy'])){
+						
+						$undeletable['title'] = 'Make Undeletable';
+						$undeletable['href'] = '#';
+						$undeletable['onclick'] = "javascript: popper('doit.php?action=makeFileSystemItemUndeletable&type=link&itemId=$itemId');";
+					
+					}else{
+						
+						$undeletable['title'] = 'Make Deletable';
+						$undeletable['href'] = '#';
+						$undeletable['onclick'] = "javascript: popper('doit.php?action=makeFileSystemItemDeletable&type=link&itemId=$itemId');";
+					
+					}
+					
+				}
+			  
+			  	
+				$options[] = $open;
+				$options[] = $fav;
+				$options[] = $playlist;
+				$options[] = $privacy;
+				$options[] = $edit;
+				$options[] = $delete;
+				$options[] = $protect;
+				$options[] = $undeletable;
+			  
+		   		break;
+			  
+			  return $options;
+			
+		}
+	}
+	public function showRightClick(){
+		
+      	 $type = $this->type;
+      	 $itemId = $this->itemId;
+		
+		$options = $this->getOptions();
+		
+		if(count($options) < 0){
+			$list = '';
+			foreach($options AS $option){
+				if(!empty($option['title'])){
+				if(!empty($option['href'])){
+					$href = 'href="'.$option['href'].'"';
+				}
+				if(!empty($option['onclick'])){
+					
+					$onclick = 'onclick="'.$option['onclick'].'"';
+				}
+				if(!empty($option['target'])){
+					$target = 'target="'.$option['target'].'"';
+					
+				}
+				$list .= "<li $href $onclick $target>".$option['title'].'</li>';  
+					
+				}
+			}
+		}
+	  
+		  $output = "<span id=\"rightClick$type$itemId\" class=\"rightclick\" style=\"display: none;\">";
+		  	$output .= "<ul>";
+	        	$output .= $list;
+		  	$output .= "</ul>";
+		  $output .= "</span>";
+		  
+		  return $output;
+	}
+	public function showItemSettings(){
+		$options = $this->getOptions();
+		if(count($options) < 0){
+			$list = '';
+			foreach($options AS $option){
+				if(!empty($option['title'])){
+				if(!empty($option['href'])){
+					$href = 'href="'.$option['href'].'"';
+				}
+				if(!empty($option['onclick'])){
+					
+					$onclick = 'onclick="'.$option['onclick'].'"';
+				}
+				if(!empty($option['target'])){
+					$target = 'target="'.$option['target'].'"';
+					
+				}
+				$list .= "<li $href $onclick $target>".$option['title'].'</li>';  
+					
+				}
+			}
+		}
+		
+				if(!empty($list)){
+					
+			        $return = "
+			        <a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"btn btn-mini\"><i class=\"icon-cog\"></i></a>
+			        <div class=\"itemSettingsWindow\">
+			            <ul>
+			                $list
+			            </ul>
+			        </div>";
+				}
+				if(!empty($return)){
+					
+					return $return;
+				}else{
+					
+				}
+	}
+}
 
 class dashBoard{
 	public $userid;
