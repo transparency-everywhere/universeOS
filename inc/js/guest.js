@@ -166,22 +166,31 @@ function processRegistration(){
 			      });
 }
 
+var cypher = new function(){
+	
+	this.getKey = function(type, typeId, shaPass){
+		var salt = getSalt(type, typeId, shaPass);
+	    var response = hash.SHA512(shaPass+salt);
+	    return response;
+	};
+	
+};
+
 
 function login(){
 	var username = $('#loginUsername').val();
 	var password = $('#loginPassword').val();
 	var userid = usernameToUserid(username);
+	var userCypher = getUserCypher(userid);
 	
-	if(getUserCypher(userid) === 'md5'){
+	
+	if(userCypher === 'md5'){
 		updatePasswordAndCreateSignatures(userid, password);
-	}else{
-		
-		
-		//old passwords(<0.2) are only using md5, new passwords use (sha512(md5(password)+salt))
-		if(getUserCypher(userid) == 'sha512'){
-	    	var cypher = sec.passwordCypher(password, 'auth', userid);
-	    	var passwordHash = cypher[0];
-		}
+	}else if(userCypher == 'sha512'){
+		update.sha512TOsha512_2(userid, password);
+	}else if(userCypher == 'sha512_2'){
+		var shaPass = hash.SHA512(password);
+		var passwordHash = cypher.getKey('auth', userid, shaPass);
 		
 	                $.post("api.php?action=authentificate", {
 	                       username:username,
@@ -223,10 +232,10 @@ var update = new function(){
 				var saltDecrypted = cypherOld[3];
 			
 				//generate new password
-				var password_new = hash.SHA512(password+saltDecrypted);
+				var passwordSHA512 = hash.SHA512(password); //stretch password
+				var password_new = hash.SHA512(passwordSHA512+saltDecrypted);
 				console.log(password_new);
 				//encrypt salt with sha512(password)
-				var passwordSHA512 = hash.SHA512(password); //stretch password
 				var saltEncrypted_new = sec.symEncrypt(passwordSHA512, saltDecrypted);
 		
 		
@@ -245,8 +254,8 @@ var update = new function(){
 			    
 			    
 			    //save salt
-			    var encryptedSalt = sec.symEncrypt(passwordSHA512, keySalt);
-			    createSalt('privateKey', userid, '', '', encryptedSalt);
+			    var encryptedKeySalt = sec.symEncrypt(passwordSHA512, keySalt);
+			    createSalt('privateKey', userid, '', '', encryptedKeySalt);
 			    
 			    var privateKeyNew = sec.symEncrypt(privateKeyHash, privateKey);
 			
@@ -272,8 +281,8 @@ var update = new function(){
 		
 		
 		
-	}
-}
+	};
+};
 
 function updatePasswordAndCreateSignatures(userid, password){
 	

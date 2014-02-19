@@ -322,6 +322,10 @@
 
   }
   
+  function updateSalt($type, $itemId, $salt){
+  	mysql_query("UPDATE  `salts` SET salt='".save($salt)."' WHERE `type`='".save($type)."' AND itemId='".save($itemId)."'");
+  }
+  
   function getSalt($type, $itemId){
   	$type = save($type);
 	$itemId = save($itemId);
@@ -425,7 +429,7 @@
       }
   }
   
-  function updateUserPassword($oldPassword, $newPassword, $newSalt=NULL, $privateKey, $userid=NULL){
+  function updateUserPassword($oldPassword, $newPassword, $newSalt=NULL, $privateKey=NULL, $userid=NULL){
   	if($userid == NULL){
   		$userid = getUser();
   	}
@@ -436,9 +440,9 @@
 		
 		if(!empty($newSalt)){
 			//store salt
-			createSalt('auth', $userid, 'user', $userid, $newSalt);
+			updateSalt('auth', $userid, $newSalt);
 		}
-        
+		  
 		//create signature
 		$sig = new signatures();
 		$sig->updatePrivateKey('user', $userid, $privateKey); //store encrypted private key
