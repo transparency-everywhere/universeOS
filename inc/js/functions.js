@@ -2058,10 +2058,40 @@ var focus = true;
 		return result;
 		
 	};
-		
 	
+	this.getPrivateKey = function(type, itemId){
+	    	var privateKey;
+            var index = type+'_'+itemId;
+            if(typeof privateKeys[index] === 'undefined'){
+                console.log(index);
+                    var encryptedKey = '';
+			$.ajax({
+			  url:"api.php?action=getPrivateKey",
+			  async: false,  
+			  type: "POST",
+			  data: { type : type, itemId : itemId },
+			  success:function(data) {
+			     encryptedKey = data; 
+			  }
+			});
+		
+				var shaPass = localStorage.currentUser_shaPass;
+			
+			var salt = getSalt('privateKey', itemId, shaPass);
+			console.log(salt);
+		    var keyHash = hash.SHA512(shaPass+salt);
+		    console.log(keyHash);
+			
+	    	privateKey = symDecrypt(keyHash, encryptedKey); //encrypt private Key using password
+                privateKeys[index] = privateKey;
+            }else{
+                
+                privateKey = privateKeys[index];
+                
+            }
+	    	return privateKey;
+	    };
 };
-
 	var sec =  new function() {
 		
 				//standard password cypher used in processRegistration(), login() and updatePassword();
@@ -2827,8 +2857,9 @@ var focus = true;
 	    		}else{
 	    			
 	    		
-		    		var salt = getSalt('auth', localStorage.currentUser_userid, localStorage.currentUser_passwordHashMD5);
-	                var privateKey = getPrivateKey('user', localStorage.currentUser_userid, salt);
+	                var privateKey = cypher.getPrivateKey('user', localStorage.currentUser_userid);
+	                
+	                console.log(privateKey);
 		    		
 		    		
 	                //encrypt random key with privateKey

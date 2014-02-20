@@ -306,6 +306,7 @@ var update = new function(){
 				
 				//generate salt for random key
     			var keySalt = hash.SHA512(randomString(64, '#aA'));  //generate salt and hash it.
+    			
 			    var privateKeyHash = hash.SHA512(passwordSHA512+keySalt);
 			    console.log('key salt:'+keySalt);
 			    
@@ -315,6 +316,7 @@ var update = new function(){
 			    createSalt('privateKey', userid, '', '', encryptedKeySalt);
 			    
 			    var privateKeyNew = sec.symEncrypt(privateKeyHash, privateKey);
+			    console.log('keyHash:'+privateKeyHash);
 			
 				//save new password, new private key and send oldpw & userid
 				$.post("api.php?action=update_sha512TOsha512_2", {
@@ -329,7 +331,7 @@ var update = new function(){
 	                            	
 	                            	jsAlert(res);
 	                            }else{
-	                                jsAlert('', 'Your account has been updated.');
+	                                jsAlert('', 'Your account has been updated. You can login with your default userdata.');
 	                            }
 	                            return false;
 	                       }, "html");
