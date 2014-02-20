@@ -342,7 +342,7 @@
     
     if(empty($data['username'])){
         $time = time();
-        mysql_query("INSERT INTO `user` (`password`, `cypher`, `username`, `email`, `regdate`, `lastactivity`) VALUES ('$password', 'sha512', '$username', '', '$time', '$time')");
+        mysql_query("INSERT INTO `user` (`password`, `cypher`, `username`, `email`, `regdate`, `lastactivity`) VALUES ('$password', 'sha512_2', '$username', '', '$time', '$time')");
         $userid = mysql_insert_id();
 		
 		//store salt

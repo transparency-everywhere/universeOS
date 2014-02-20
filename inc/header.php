@@ -3,6 +3,26 @@
         
         
         <!--meta information-->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		
+		<!-- <meta property="fb:app_id" content="141861192518680">
+
+		<meta property="twitter:user_id" content="139909832" />
+		<meta name="twitter:site" content="@PolicyMic">
+		<meta name="twitter:card" content="summary">
+		
+		<meta name="language" content="en" />
+		<meta name="robots" content="index, follow" />
+		<meta name="author" content="Transparency Everywhere" />
+		<meta name="medium" content="webDesktop" />
+		
+		<meta property="og:site_name" content="universeOS" />
+		<meta property="identifier-URL" content="http://universeos.org" />
+		<meta property="article:publisher" content="https://www.facebook.com/policymic" /> -->
+
         <meta name="description" content='Discover the social webOS. Connect with your friends, read your favourite book or RSS-Feed, watch your favourite movie, listen your favourite song and be creative...'>
         <META Name="keywords" content='universe, universeos, universe os, webdesktop, web desktop, social webdesktop , youtube, youtube playlist, documents, rss, free speech, human rights, privacy, community, social'>
         <meta name="title" content="universeOS">

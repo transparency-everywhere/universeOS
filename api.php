@@ -61,7 +61,7 @@ switch($action){
 		}
 	break;
 	case 'update_sha512TOsha512_2':
-		$userid = $_POST['userid'];
+		$userid = save($_POST['userid']);
 		$userData = getUserData($userid);
 		
 		if($userData['cypher'] == 'sha512'){
@@ -69,6 +69,8 @@ switch($action){
 			//update password string and  privatekey (encryption key has been changed)
 			$result = updateUserPassword($_POST['oldPassword'], $_POST['newPassword'], $_POST['saltNew'], $_POST['newPrivateKey'], $userid);
 			if($result == true){
+				
+				mysql_query("UPDATE `user` SET `cypher`='sha512_2' WHERE userid='$userid'");
 				
 			}else{
 				echo $result;
@@ -382,7 +384,11 @@ switch($action){
     case 'processSiteRegistration':
     
 	    if(validateCapatcha($_POST['captcha'])){
-	        createUser($_POST['username'], $_POST['password'], $_POST['salt'], $_POST['privateKey'], $_POST['publicKey']);
+	        createUser($_POST['username'], $_POST['password'], $_POST['authSalt'], $_POST['privateKey'], $_POST['publicKey']);
+			
+			//store salt
+			createSalt('privateKey', $userid, 'user', $userid, $_POST['keySalt']);
+			
 			echo "1";
 	   	}else{
 	    	echo "The Captcha was wrong";

@@ -2017,14 +2017,51 @@ var focus = true;
 		this.MD5 = function(string){
 			var hash = CryptoJS.MD5(string);
 			return hash.toString(CryptoJS.enc.Hex);
-		}
+		};
 		this.SHA512 = function(string){
 			var hash = CryptoJS.SHA512(string);
 			return hash.toString(CryptoJS.enc.Hex);
-		}
-	}
+		};
+	};
 	
+	var cypher = new function(){
 	
+	this.generateRand = function(){
+		return hash.SHA512(randomString(64, '#aA'));
+	};
+	
+	this.getKey = function(type, typeId, shaPass){
+		var salt = getSalt(type, typeId, shaPass);
+	    var response = hash.SHA512(shaPass+salt);
+	    return response;
+	};
+	
+	/*returns pwHash/salt and keyHash/salt. for a user*/
+	this.createKeysForUser = function(pass){
+		var shaPass = hash.SHA512(pass);
+		
+		var authSaltDecrypted = cypher.generateRand();
+		var keySaltDecrypted = cypher.generateRand();
+		
+	    var authHash = hash.SHA512(shaPass+authSaltDecrypted);
+	    var keyHash = hash.SHA512(shaPass+keySaltDecrypted);
+		
+		var authSaltEncrypted = symEncrypt(shaPass, authSaltDecrypted);
+		var keySaltEncrypted = symEncrypt(shaPass, authSaltDecrypted);
+		
+		var result = new Object();
+			result['authHash'] = authHash;
+			result['keyHash'] = keyHash;
+			result['authSaltEncrypted'] = authSaltEncrypted;
+			result['keySaltEncrypted'] = keySaltEncrypted;
+		
+		return result;
+		
+	};
+		
+	
+};
+
 	var sec =  new function() {
 		
 				//standard password cypher used in processRegistration(), login() and updatePassword();
@@ -2043,28 +2080,28 @@ var focus = true;
     				var keyHash =  hash.SHA512(passwordHashMD5+salt);
 				    
 				    return [passwordHash, passwordHashMD5, keyHash, salt];
-			    }
+			    };
 			    
 			    this.getPrivateKey = function(type, itemId, salt, password){
 			    	return getPrivateKey(type, itemId, salt, password);
-			    }
+			    };
 			    
 			    this.symEncrypt = function(key, message){
 			    	
 			    	return symEncrypt(key,message);
 			    	
-			    }
+			    };
 			    this.symDecrypt = function(key, message){
 			    	
 			    	return symDecrypt(key,message);
 			    	
-			    }
+			    };
 			    
 			    this.randomString = function(){
 			    	return hash.SHA512(randomString(64, '#aA'));  //generate salt and hash it.
 			    	
-			    }
-			}
+			    };
+		};
 	
     function getPrivateKey(type, itemId, salt, password){
             

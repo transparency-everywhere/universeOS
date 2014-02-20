@@ -102,77 +102,133 @@ function randomString(length, chars) {
 
 
 function processRegistration(){
+	//get user input
     var username = $("#regUsername").val();
     var password = $("#registration #password").val();
     var captcha = $("#captcha").val();
     
     
-	//cypher password into two hashes
+    //hide registration form, show loading wheel
+    $('#regForm').slideUp();
+	jsAlert('', 'The universe is creating your keypair now, this may take some minutes..');
+	$('#regLoad').show();
+    
+    
+	//cypher password into two hashes and two salts
 	//passwordHash is used to cypher the password for db
 	//keyHash is used to encrypt the pricate Key
 	
-    var salt = CryptoJS.SHA512(randomString(64, '#aA'));  //generate salt and hash it.
-    
-    var shaPass = CryptoJS.SHA512(salt+passwordMD5);
-    var cypher = sec.passwordCypher(password, '', '', salt);
-    var passwordMD5 = cypher[1]
-    var passwordHash = cypher[0];
-    
-    
-    var shaKey = CryptoJS.SHA512(passwordMD5+salt);
-    var keyHash = cypher[2];
-    var salt = symEncrypt(passwordMD5, salt.toString(CryptoJS.enc.Hex)); //encrypt salt, using sha51-pw hash
-    
-    
-    			//generate Keypair
-			      var crypt;
-			      var publicKey;
-			      var privateKey;
-			      crypt = new JSEncrypt({default_key_size: 4096});
-			      $('#regForm').slideUp();
-				  jsAlert('', 'The universe is creating your keypair now, this may take some minutes..');
-			      $('#regLoad').show();
-			      crypt.getKey(function () {
-			      	privateKey = symEncrypt(keyHash, crypt.getPrivateKey()); //encrypt privatestring, usering the password hash
-			      	publicKey = crypt.getPublicKey();
-    
-                //submit registration
-                $.post("api.php?action=processSiteRegistration", {
-                       username:username,
-                       password:passwordHash,
-                       salt:salt,
-                       publicKey:publicKey,
-                       privateKey:privateKey,
-                       captcha:captcha
-                       }, function(result){
+	
+    				//generate Keypair
+			      	var crypt;
+					var publicKey;
+			      	var privateKey;
+			      	
+			      	crypt = new JSEncrypt({default_key_size: 4096});
+			      	crypt.getKey(function () {
+			      		
+			      		//generate salts and keys from password
+    					var keys = cypher.createKeysForUser(password);
+    					
+			      		privateKey = symEncrypt(keys['keyHash'], crypt.getPrivateKey()); //encrypt privatestring, usering the password hash
+			      		publicKey = crypt.getPublicKey();
+    					
+                		//submit registration
+                		$.post("api.php?action=processSiteRegistration", {
+                       		username:username,
+                       		password:keys['authHash'],
+                       		authSalt:keys['authSaltEncrypted'],
+                       		keySalt:keys['keySaltEncrypted'],
+                       		publicKey:publicKey,
+                       		privateKey:privateKey,
+                       		captcha:captcha
+                       		
+                       	}, function(result){
                             var res = result;
-                            if(res == 1){
-                                //load checked message
-                                jsAlert('','You just joined the universeOS');
-                                $('#regLoad').slideUp('');
+                            	if(res == 1){
+                                	//load checked message
+                                	jsAlert('','You just joined the universeOS');
+                                	$('#regLoad').slideUp('');
                                 
-                                $('#loginUsername').val(username);
-                                $('#loginPassword').val($("#registration #password").val());
-					            $("#startbox").show("slow");
-					            $("#startbox").css('z-index', 9999);
-					            $("#startbox").css('position', 'absolute');
-                            }else{
-                                alert(res);
-                                $('#regLoad').slideUp('');
-                                $('#regForm').show();
-                            }
-                       }, "html");
+                                	$('#loginUsername').val(username);
+                                	$('#loginPassword').val($("#registration #password").val());
+					            	$("#startbox").show("slow");
+					            	$("#startbox").css('z-index', 9999);
+					            	$("#startbox").css('position', 'absolute');
+                            	}else{
+                                	alert(res);
+                                	$('#regLoad').slideUp('');
+                                	$('#regForm').show();
+                            	}
+                       	}, "html");
 
 			      });
 }
 
 var cypher = new function(){
 	
+	this.generateRand = function(){
+		return hash.SHA512(randomString(64, '#aA'));
+	};
+	
 	this.getKey = function(type, typeId, shaPass){
 		var salt = getSalt(type, typeId, shaPass);
 	    var response = hash.SHA512(shaPass+salt);
 	    return response;
 	};
+	
+	/*returns pwHash/salt and keyHash/salt. for a user*/
+	this.createKeysForUser = function(pass){
+		var shaPass = hash.SHA512(pass);
+		
+		var authSaltDecrypted = cypher.generateRand();
+		var keySaltDecrypted = cypher.generateRand();
+		
+	    var authHash = hash.SHA512(shaPass+authSaltDecrypted);
+	    var keyHash = hash.SHA512(shaPass+keySaltDecrypted);
+		
+		var authSaltEncrypted = symEncrypt(shaPass, authSaltDecrypted);
+		var keySaltEncrypted = symEncrypt(shaPass, authSaltDecrypted);
+		
+		var result = new Object();
+			result['authHash'] = authHash;
+			result['keyHash'] = keyHash;
+			result['authSaltEncrypted'] = authSaltEncrypted;
+			result['keySaltEncrypted'] = keySaltEncrypted;
+		
+		return result;
+		
+	};
+	this.getPrivateKey = function(){
+	    var privateKey;
+            var index = type+'_'+itemId;
+            if(typeof privateKeys[index] === 'undefined'){
+                console.log(index);
+                    var encryptedKey = '';
+			$.ajax({
+			  url:"api.php?action=getPrivateKey",
+			  async: false,  
+			  type: "POST",
+			  data: { type : type, itemId : itemId },
+			  success:function(data) {
+			     encryptedKey = data; 
+			  }
+			});
+		
+			if(typeof password === 'undefined'){
+				var password = localStorage.currentUser_shaPass;
+			}
+			var keySalt = getSalt('privateKey', localStorage.currentUser_userid, localStorage.currentUser_shaPass);
+		    var keyHash = hash.SHA512(password+keySalt);
+			
+	    	privateKey = symDecrypt(keyHash, encryptedKey); //encrypt private Key using password
+                privateKeys[index] = privateKey;
+            }else{
+                privateKey = privateKeys[index];
+            }
+	    return privateKey;
+	};
+		
 	
 };
 
@@ -202,7 +258,8 @@ function login(){
 	                            	//store needed values in localStorage
 	    							localStorage.currentUser_userid = userid;
 	    							localStorage.currentUser_username = username;
-	    							localStorage.currentUser_passwordHashMD5 = cypher[1];
+	    							localStorage.currentUser_passwordHashMD5 = false; // <- delete!
+	    							localStorage.currentUser_shaPass = shaPass;
 	    							
 	    							
 	                                //load checked message
