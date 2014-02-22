@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 3.5.8.1
+-- version 4.0.4.1
 -- http://www.phpmyadmin.net
 --
--- Host: localhost:3306
--- Erstellungszeit: 20. Sep 2013 um 00:05
--- Server Version: 5.5.24-0ubuntu0.12.04.1
--- PHP-Version: 5.3.10
+-- Host: localhost
+-- Erstellungszeit: 22. Feb 2014 um 19:03
+-- Server Version: 5.6.12
+-- PHP-Version: 5.5.1
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
@@ -15,6 +15,12 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
+
+--
+-- Datenbank: `staging`
+--
+CREATE DATABASE IF NOT EXISTS `staging` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `staging`;
 
 -- --------------------------------------------------------
 
@@ -65,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `comments` (
   `score` varchar(255) NOT NULL DEFAULT '0',
   `privacy` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -94,15 +100,32 @@ CREATE TABLE IF NOT EXISTS `elements` (
   `votes` int(11) NOT NULL DEFAULT '0',
   `score` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Daten für Tabelle `elements`
 --
 
-INSERT INTO `elements` (`id`, `title`, `folder`, `creator`, `name`, `year`,`originalTitle`,`language`, `type`, `author`, `license`, `timestamp`, `info1`, `info2`, `info3`, `privacy`, `hidden`, `votes`, `score`) VALUES
-(1, 'myFiles', 4, '', '', '', '', '','myFiles', 1, 'Creative Commons Attribution/Share Alike', 1379628108, '', '', '', 'h', 0, 0, 0),
+INSERT INTO `elements` (`id`, `title`, `folder`, `creator`, `name`, `year`, `originalTitle`, `language`, `type`, `author`, `license`, `timestamp`, `info1`, `info2`, `info3`, `privacy`, `hidden`, `votes`, `score`) VALUES
+(1, 'myFiles', 4, '', '', '', '', '', 'myFiles', 1, 'Creative Commons Attribution/Share Alike', 1379628108, '', '', '', 'h', 0, 0, 0),
 (2, 'profile pictures', 5, '', '', '', '', '', 'image', 1, 'Creative Commons Attribution/Share Alike', 1379628108, '', '', '', 'p', 0, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `events`
+--
+
+CREATE TABLE IF NOT EXISTS `events` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user` int(11) NOT NULL,
+  `startStamp` int(11) NOT NULL,
+  `stopStamp` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `place` varchar(255) NOT NULL,
+  `privacy` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -139,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `feed` (
   `votes` int(11) NOT NULL,
   `score` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -165,7 +188,7 @@ CREATE TABLE IF NOT EXISTS `files` (
   `var1` text NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -185,7 +208,7 @@ CREATE TABLE IF NOT EXISTS `folders` (
   `votes` int(11) NOT NULL DEFAULT '0',
   `score` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Daten für Tabelle `folders`
@@ -213,7 +236,7 @@ CREATE TABLE IF NOT EXISTS `groupAttachments` (
   `timestamp` int(11) NOT NULL,
   `validated` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -231,7 +254,7 @@ CREATE TABLE IF NOT EXISTS `groups` (
   `homeFolder` int(11) NOT NULL,
   `homeElement` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -284,8 +307,9 @@ CREATE TABLE IF NOT EXISTS `messages` (
   `read` int(11) NOT NULL,
   `crypt` int(11) NOT NULL DEFAULT '0',
   `seen` int(11) NOT NULL,
+  `protocoll` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -303,7 +327,7 @@ CREATE TABLE IF NOT EXISTS `personalEvents` (
   `timestamp` int(11) NOT NULL,
   `seen` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -323,7 +347,7 @@ CREATE TABLE IF NOT EXISTS `playlist` (
   `privacy` varchar(255) NOT NULL,
   `played` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -336,7 +360,8 @@ CREATE TABLE IF NOT EXISTS `salts` (
   `itemId` int(11) NOT NULL,
   `receiverType` varchar(255) NOT NULL,
   `receiverId` int(11) NOT NULL,
-  `salt` text NOT NULL
+  `salt` text NOT NULL,
+  `algo` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -354,7 +379,6 @@ CREATE TABLE IF NOT EXISTS `signatures` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
-
 
 --
 -- Tabellenstruktur für Tabelle `staticContents`
@@ -378,14 +402,31 @@ INSERT INTO `staticContents` (`id`, `title`, `content`, `comment`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `tasks`
+--
+
+CREATE TABLE IF NOT EXISTS `tasks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user` int(11) NOT NULL,
+  `timestamp` int(11) NOT NULL,
+  `status` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `privacy` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `user`
 --
 
- CREATE TABLE IF NOT EXISTS `user` (
+CREATE TABLE IF NOT EXISTS `user` (
   `userid` int(11) NOT NULL AUTO_INCREMENT,
   `usergroup` int(11) NOT NULL DEFAULT '0',
   `username` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
+  `password` text NOT NULL,
   `cypher` varchar(255) NOT NULL DEFAULT 'md5',
   `homefolder` int(11) NOT NULL,
   `myFiles` int(11) NOT NULL,
@@ -419,18 +460,19 @@ INSERT INTO `staticContents` (`id`, `title`, `content`, `comment`) VALUES
   `priv_foreignerMessages` tinyint(1) NOT NULL,
   `priv_foreignerFeeds` tinyint(1) NOT NULL,
   `hash` varchar(255) NOT NULL,
+  `passwordHash` text NOT NULL,
   `backgroundImg` text NOT NULL,
   `startLink` varchar(255) NOT NULL DEFAULT 'doit.php?action=showStartMessage',
   `buddySuggestions` text NOT NULL COMMENT 'is used to save already suggested users',
   PRIMARY KEY (`userid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
 -- Daten für Tabelle `user`
 --
 
-INSERT INTO `user` (`userid`, `usergroup`, `username`, `password`, `cypher`, `homefolder`, `myFiles`, `profilepictureelement`, `userPicture`, `email`, `regdate`, `lastactivity`, `birthdate`, `realname`, `home`, `place`, `gender`, `school1`, `school2`, `school3`, `university1`, `university2`, `employer`, `typeofwork`, `status`, `openChatWindows`, `priv_activateProfile`, `priv_showProfile`, `priv_profileInformation`, `priv_profilePicture`, `priv_profileFav`, `priv_profileLog`, `priv_activateFeed`, `priv_buddyRequest`, `priv_foreignerMessages`, `priv_foreignerFeeds`, `hash`, `backgroundImg`, `startLink`, `buddySuggestions`) VALUES
-(1, 1, 'admin', '440ac85892ca43ad26d44c7ad9d47d3e', 'md5', 4, 1, 2, '', 1379628108, 1379628318, '', '', '', '',  '', '', '', '', '', '', '', '', '', '', '', 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, '9daac2a5464b45fa16ae355469622277', '', 'doit.php?action=showStartMessage', '');
+INSERT INTO `user` (`userid`, `usergroup`, `username`, `password`, `cypher`, `homefolder`, `myFiles`, `profilepictureelement`, `userPicture`, `email`, `regdate`, `lastactivity`, `birthdate`, `realname`, `home`, `place`, `gender`, `school1`, `school2`, `school3`, `university1`, `university2`, `employer`, `typeofwork`, `status`, `openChatWindows`, `priv_activateProfile`, `priv_showProfile`, `priv_profileInformation`, `priv_profilePicture`, `priv_profileFav`, `priv_profileLog`, `priv_activateFeed`, `priv_buddyRequest`, `priv_foreignerMessages`, `priv_foreignerFeeds`, `hash`, `passwordHash`, `backgroundImg`, `startLink`, `buddySuggestions`) VALUES
+(1, 1, 'admin', '440ac85892ca43ad26d44c7ad9d47d3e', 'md5', 4, 1, 2, '', '1379628108', 1379628318, 1393092205, '', '', '', '', '', '', '', '', '', '', '', '', '', '', 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, '9daac2a5464b45fa16ae355469622277', '', '', 'doit.php?action=showStartMessage', '');
 
 -- --------------------------------------------------------
 
@@ -447,7 +489,7 @@ CREATE TABLE IF NOT EXISTS `userGroups` (
   `undeletableFilesystemItems` tinyint(1) NOT NULL DEFAULT '0',
   `editUndeletableFilesystemItems` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Daten für Tabelle `userGroups`
@@ -456,7 +498,6 @@ CREATE TABLE IF NOT EXISTS `userGroups` (
 INSERT INTO `userGroups` (`id`, `title`, `showAdminPanel`, `protectFileSystemItems`, `editProtectedFilesystemItem`, `undeletableFilesystemItems`, `editUndeletableFilesystemItems`) VALUES
 (0, 'standard user', 0, 0, 0, 0, 0),
 (1, 'admin', 1, 1, 1, 1, 1);
-
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
