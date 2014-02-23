@@ -67,7 +67,7 @@ switch($action){
 		if($userData['cypher'] == 'sha512'){
 			
 			//update password string and  privatekey (encryption key has been changed)
-			$result = updateUserPassword($_POST['oldPassword'], $_POST['newPassword'], $_POST['saltNew'], $_POST['newPrivateKey'], $userid);
+			$result = updateUserPassword($_POST['oldPassword'], $_POST['newPassword'], $_POST['saltAuthNew'],  $_POST['saltKeyNew'], $_POST['newPrivateKey'], $userid);
 			if($result == true){
 				
 				mysql_query("UPDATE `user` SET `cypher`='sha512_2' WHERE userid='$userid'");
@@ -81,7 +81,7 @@ switch($action){
 		
 	case 'updatePassword':
 		
-		echo updateUserPassword($_POST['oldPassword'], $_POST['newPassword'], $_POST['newSalt'], $_POST['newPrivateKey']);
+		echo updateUserPassword($_POST['oldPassword'], $_POST['password'], $_POST['authSalt'], $_POST['keySalt'], $_POST['privateKey']);
 		
 	break;
 		
@@ -294,51 +294,28 @@ switch($action){
 	
 	case 'getUserPicture':
 		
-		$userid = save($_POST['userid']);
-		
-		$userData = getUserData($userid);
-		
-		//check if user is standard user
-		if(empty($userData['userPicture'])){
-			$src = 'gfx/standardusersm.png';
-		}else{
-			$src = 'upload/userFiles/'.$userid.'/userPictures/thumb/40/'.$userData['userPicture'];
-		}
-		$mime = mime_content_type($src);
-		
-	    $file = fopen($src, 'r');
-	    $output = base64_encode(fread($file, filesize($src)));
-					
-		echo 'data:'.$mime.';base64,'.$output;
+		$api = new api();
+		echo $api->getUserPicture($_POST['request']);
 		
 		break;
 		
 		
 	case 'useridToUsername':
-		if(is_numeric($_POST['userid']))
-			//only a single request
-			echo useridToUsername($_POST['userid']);
-		else {
-			//array of requests
-			$userids = json_decode($_POST['request'],true);
-			
-			foreach($userids as $userid){
-				$ret[] = useridToUsername($_POST['userid']);
-			}
-			
-			echo json_encode($ret);
-			
-		}
+		$api = new api();
+		echo $api->useridToUsername($_POST['request']);
 		break;
 		
 		
 	case 'searchUserByString':
-		echo json_encode(searchUserByString($_POST['string'], $_POST['limit']));
+		
+		$api = new api();
+		echo json_encode($api->useridToUsername($_POST['userid']));
 		break;
 		
 		
 	case 'useridToRealname':
-		echo useridToRealname($_POST['userid']);
+		$api = new api();
+		echo $api->useridToRealname($_POST['request']);
 		break;
 		
 		
@@ -350,16 +327,8 @@ switch($action){
 	case 'getLastActivity':
 	
 	
-        $userid = save($_POST['userid']);
-		
-        $data = mysql_fetch_array(mysql_query("SELECT lastactivity FROM user WHERE userid='$userid'"));
-		
-		$diff = time() - $data['lastactivity'];
-		if($diff < 90){
-			echo 1;
-		}else{
-			echo 0;
-		}
+       $api = new api();
+	   echo $api->getLastActivity($_POST['request']);
 		
 		break;
 		
@@ -384,10 +353,8 @@ switch($action){
     case 'processSiteRegistration':
     
 	    if(validateCapatcha($_POST['captcha'])){
-	        createUser($_POST['username'], $_POST['password'], $_POST['authSalt'], $_POST['privateKey'], $_POST['publicKey']);
+	        createUser($_POST['username'], $_POST['password'], $_POST['authSalt'], $_POST['keySalt'], $_POST['privateKey'], $_POST['publicKey']);
 			
-			//store salt
-			createSalt('privateKey', $userid, 'user', $userid, $_POST['keySalt']);
 			
 			echo "1";
 	   	}else{
@@ -632,8 +599,10 @@ switch($action){
         //set privacy
       	$customShow = $_POST['privacyCustomSee'];
         $customEdit = $_POST['privacyCustomEdit'];
-        
         $privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
+		
+		//get timestamp
+		$timestamp = strtotime($_POST['date']."-".$_POST['time']);
 		
 		$tasks = new tasks();
 		$tasks->create(getUser(), $timestamp, $_POST['status'], $_POST['title'], $_POST['description'], $privacy);
@@ -644,8 +613,10 @@ switch($action){
         //set privacy
       	$customShow = $_POST['privacyCustomSee'];
         $customEdit = $_POST['privacyCustomEdit'];
-        
         $privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
+		
+		//get timestamp
+		$timestamp = strtotime($_POST['date']."-".$_POST['time']);
 		
 		$tasks = new tasks();
 		$tasks->update($_POST['taskId'],$_POST['user'], $timestamp, $_POST['status'], $_POST['title'], $_POST['description'], $privacy);
@@ -689,5 +660,11 @@ switch($action){
 		$groups = new groups();
 		echo $groups->getTitle($_POST['groupId']);
 	
+		break;
+		
+//privacy
+	case 'authorize':
+		//checks if user is authorized, to edit an item with privacy $_POST['privacy'].
+		echo authorize($_POST['privacy'], 'edit', $_POST['author']);
 		break;
 }

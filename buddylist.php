@@ -1,10 +1,10 @@
 <?
-if(empty($_SESSION[userid])){
+if(empty($_SESSION['userid'])){
     session_start();
 }
 require_once("inc/config.php");
 require_once("inc/functions.php");
-if(empty($_GET[reload])){
+if(empty($_GET['reload'])){
 ?>
 <div class="fenster" id="buddylist" style="display: none;">
     <header class="titel">
@@ -38,11 +38,11 @@ if(empty($_GET[reload])){
 <?
 $i++;
 }
-$_SESSION[reloadBuddylist] = "$userRow";
+$_SESSION['reloadBuddylist'] = "$userRow";
 ?>
             </table>
         <?
-if(empty($_GET[reload])){
+if(empty($_GET['reload'])){
 if(empty($i)){
     ?>
                 <div style="font-size: 12pt;">

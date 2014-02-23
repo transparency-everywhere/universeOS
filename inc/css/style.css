@@ -1416,7 +1416,7 @@ color:#FFFFFF;
 	position: absolute;
 	left: 50%;
 	margin-left: -470px;
-	z-index: 9999;
+	z-index: 99999;
 	margin-top:20px;
 }
 
@@ -1602,17 +1602,16 @@ color:#FFFFFF;
         
         
         #searchField{
-           border-radius: 22px;
-bottom: -3px;
-font-size: 22px;
-height: 24px;
-position: absolute;
-right: 7px;
-vertical-align: bottom;
-text-align: right;
-width: 180px;
-padding: 0px 6px;
-            
+			border-radius: 22px;
+			bottom: -3px;
+			font-size: 17px;
+			height: 21px;
+			position: absolute;
+			right: 7px;
+			vertical-align: bottom;
+			text-align: right;
+			width: 180px;
+			padding: 3px 6px 0px 6px;
         }    
         
         #clockDiv{
@@ -2177,6 +2176,14 @@ del.bar{
     overflow: auto;
 }
 
+#profileWrap #joinButton{
+	position: absolute;  
+	width: 300px; 
+	height: 40px; 
+	margin-top: 20px; 
+	right: 20px;
+}
+
 .profileElement{
     margin-top: 20;
     margin-right: 20;
@@ -2509,6 +2516,7 @@ margin: 0;
 	#dashBoxFrame{
 		max-width:1000px;
 		overflow-x:auto;
+		overflow-y:hidden;
 	}
 	
 	.dashBox:hover .content{

@@ -415,7 +415,7 @@ if($_GET['action'] == "scorePlus"){
      <?PHP
      }else if($_GET['action'] == "showUserGroups"){ ?>
                  
-                     <h3 class="readerStartItem">
+                      <h3 class="readerStartItem">
                         <img src="./gfx/icons/group.png" height="14">&nbsp;Your Groups <span style="float:right"><a href="javascript: popper('doit.php?action=addGroup');" class="btn"><img src="./gfx/icons/group.png" height="14">&nbsp;Add Group</a>  </span>
                     </h3>
                     <table class="border-top-radius border-box readerStartItem" cellspacing="0"  style="border: 1px solid #c9c9c9; margin-top: -15px;">
@@ -425,11 +425,10 @@ if($_GET['action'] == "scorePlus"){
                            <td align="right">members&nbsp;&nbsp;</td>
                        </tr>
                        <?
-                       $userid = getUser();
                        $attSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='$userid' AND validated='1'");
                        while($attData = mysql_fetch_array($attSql)){
                            $i++;
-                           $groupSql = mysql_query("SELECT id, title FROM groups WHERE id='".$attData['group']."'");
+                           $groupSql = mysql_query("SELECT id, title FROM groups WHERE id='$attData[group]'");
                            $groupData = mysql_fetch_array($groupSql);
                        $result = mysql_query("SELECT * FROM groupAttachments WHERE group='2'");
                        $num_rows = mysql_num_rows($result);
@@ -500,7 +499,7 @@ if($_GET['action'] == "scorePlus"){
 			//if group is public add group attachment
          	$time = time();
          	mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`, `validated`) VALUES ('".$group."', 'user', '".getUser()."', '$time', '".getUser()."', '1');");
-     
+     		$publicScript = "parent.$('#profileWrap.group_".$group." #joinButton .btn').hide();";
 		}else{
 			
 			//update entry which has been added in request group
@@ -511,6 +510,7 @@ if($_GET['action'] == "scorePlus"){
                 <script>
                 parent.$('#favTab_Group').load('doit.php?action=showUserGroups');
                 parent.parent.updateDashbox('group');
+                <?=$publicScript;?>
                 </script>
          <?
      }else if($_GET['action'] == "declineGroup"){

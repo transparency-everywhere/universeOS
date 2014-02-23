@@ -330,24 +330,33 @@ var focus = true;
 				  	this.index++;
 				  	$(this.parentSelector).children('.tabs .tabBar').append('<li class="active" id="1">'+firstTitle+'</li>');
 				  	$(this.parentSelector).children('.tabs').append('<div class="tab active" id="'+this.index+'"></div>');
-				  }
+				  };
 				  
 				  this.updateTab = function(id, title, type, content){
 				  	
-				  }
+				  };
 				  this.deleteTab = function(id){
 				  	
-				  }
-			  }
+				  };
+			  };
               
 			  var application = new function(){
-			  	this.create = function(id, title, type, content){
+			  	this.create = function(id, title, type, content, style){
+			  		var windowStyle = '';
 			  		if(type === 'html'){
 			  			content = content;
 			  		}
 			  		
+			  		if(typeof style['width'] != 'undefined'){
+			  			windowStyle +='width:'+style['width']+';';
+			  		}
+			  		if(typeof style['height'] != 'undefined'){
+			  			windowStyle +='height:'+style['height']+';';
+			  		}
 			  		
-			  		var output = '<div class="fenster" id="'+id+'">';
+			  		
+			  		
+			  		var output = '<div class="fenster" id="'+id+'" style="'+windowStyle+'">';
 			  			output += '<header class="titel">';
 	        				output += '<p>'+title+'&nbsp;</p>';
 	        				output += '<p class="windowMenu">';
@@ -363,7 +372,7 @@ var focus = true;
               		init.draggableApplications();
               		init.resizableApplications();
               		init.applicationOnTop();
-			  	}
+			  	};
 			  	
 			  	this.onTop = function(id){
 			  		
@@ -371,20 +380,20 @@ var focus = true;
                   $("#"+id+"").css('z-index', 999);
                   $("#"+id+"").css('position', 'absolute');
 			  		
-			  	}
+			  	};
 			  	
 			  	this.show = function(id){
                   applicationOnTop(id);
                   $("#" + id +"").show();
-			  	}
+			  	};
 			  	
 			  	this.hide = function(id){
                   $("#" + id +"").hide();
-			  	}
+			  	};
 			  	
 			  	this.fullscreen = function(id){
                   $("#" + id +"").toggle();
-			  	}
+			  	};
 			  	
 			  	this.returnFromFullScreen = function(id){
               	$('#'+id+' .fullScreenIcon').attr("onClick","moduleFullscreen('"+id+"')");
@@ -396,8 +405,8 @@ var focus = true;
                         'height' : window.fullScreenOldY
                         }
                   $("#" + id + "").css(returnFullScreenCSS);
-			  	}
-			  }
+			  	};
+			  };
 			  
 			  var tasks = new function(){
 			  	
@@ -415,7 +424,7 @@ var focus = true;
 				      }
 				   });
 				   return res;
-			  	}
+			  	};
 			  	
 			  	this.addForm = function(startstamp){
 			  		if(typeof startstamp === undefined)
@@ -423,6 +432,9 @@ var focus = true;
 			  		else
 			  			var d = new Date();
 			  			
+			  		
+			  		var formattedDate = calendar.beautifyDate((d.getMonth())+1)+'/'+calendar.beautifyDate(d.getDate())+'/'+d.getFullYear();
+			  		
 			  		var content  = '<table class="formTable">';
 			  				content += '<form id="createTask" method="post">';
 					  		    content += '<tr>';
@@ -446,7 +458,7 @@ var focus = true;
 					  		    	content += 'Day:';
 					  		    	content += '</td>';
 					  		    	content += '<td>';
-					  		    	content += '<input type="text" name="date" id="date" class="date datepicker" value="'+d.getMonth()+1+'/'+d.getDate()+'/'+d.getFullYear()+'" style="width: 72px;">';
+					  		    	content += '<input type="text" name="date" id="date" class="date datepicker" value="'+formattedDate+'" style="width: 72px;">';
 					  		    	content += '&nbsp;<input type="text" name="time" id="time" class="time eventTime" value="15:30" style="width: 37px;">';
 					  		    	content += '</td>';
 					  		    content += '</tr>';
@@ -473,7 +485,7 @@ var focus = true;
 			  		    content += '</table>';
 			  		var onSubmit = function() {
 			  			$('#createTask').submit();
-  					}
+  					};
   					
   					//create modal
               		modal.create('Create New Task', content, [onSubmit, 'Save']);
@@ -487,8 +499,14 @@ var focus = true;
               			if($('#taskTitle').val().length > 0 && $('#date').val().length > 0 && $('#time').val().length > 0){
               				
 	              			$.post("api.php?action=createTask",$(this).serialize(),function(data){
-					            alert(data); //post check to show that the mysql string is the same as submit                        
-								tasks.update();
+					              if(data.length === 0){
+					            	calendar.loadTasks();
+					            	jsAlert('','The Task has been added.');
+					            	$('.blueModal').slideUp();
+					            	updateDashbox('task');
+					            }else{
+					            	jsAlert('', data);
+					            }
 					        });
 
               			}else{
@@ -498,7 +516,7 @@ var focus = true;
               			
               			return false;
               		});
-			  	}
+			  	};
 			  	
 			  	this.get = function(startStamp, stopStamp, privacy){
 			  		var result;
@@ -519,7 +537,7 @@ var focus = true;
 				   });
 				   
 				   return result;
-			  	}
+			  	};
 			  	
 			  	this.show = function(taskId, editable){
 			  		
@@ -647,7 +665,7 @@ var focus = true;
               			
               			return false;
               		});
-			  	}
+			  	};
 			  	this.create = function(user, timestamp, title, description, privacy){
 			  		
 				    $.ajax({
@@ -665,11 +683,11 @@ var focus = true;
 				         result = data; 
 				      }
 				   });
-			  	}
+			  	};
 			  	this.update = function(){
 			  		updateDashbox('task');
-			  	}
-			  }
+			  	};
+			  };
 			  
 			  var calendar = new function(){
 			  	
@@ -686,7 +704,7 @@ var focus = true;
 			  		}else{
 			  			application.show('calendarFenster');
 			  		}
-			  	}
+			  	};
 			  	
 			  	this.init = function(){
 			  		
@@ -751,7 +769,7 @@ var focus = true;
 							html += '</div>';
 						html += '</div>';
 						
-			  			application.create('calendarFenster', 'Calendar', 'html', html);
+			  			application.create('calendarFenster', 'Calendar', 'html', html,{width: "400px", height: "200px"});
 			  			
 			  			//fix resize bug
 			  			$('#calendarFenster ').height('+5');
@@ -772,7 +790,7 @@ var focus = true;
 			  				calendar.toggleListType('list');
 			  			});
 			  			this.loadMonth();
-			  	}
+			  	};
 			  	
 			  	this.toggleListType = function(type){
 			  		
@@ -823,7 +841,7 @@ var focus = true;
 			  			
 			  			
 			  		}
-			  	}
+			  	};
 			  	
 			  	this.getPrivacy = function(){
 			  		var privacy = [];
@@ -832,7 +850,7 @@ var focus = true;
 			  		});
 			  		
 			  		return privacy.join(';');
-			  	}
+			  	};
 			  	
 			  	this.loadTasks = function(){
 			  		$('.calendarFrame .day').each(function(){
@@ -846,17 +864,17 @@ var focus = true;
 									  if($('#taskDetail_'+value.id).length === 0){
 									  	  var style = '';
 									  	  if(!$('#showDoneTasks').is(':checked') && value.status == 'done'){
-									  	  	style = 'display:none;'
+									  	  	style = 'display:none;';
 									  	  }
 									  	  console.log(style);
 									  	  var taskClass;
 									  	  if(value.status == 'done'){
-									  	  	taskClass = 'doneTask'
+									  	  	taskClass = 'doneTask';
 									  	  }else{
 									  	  	taskClass = '';
 									  	  }
 										  var d = new Date(value.timestamp*1000);
-										  list += '<li data-taskId="'+value.id+'" style="'+style+'" class="'+taskClass+' task" onclick="$(\'#taskDetail_'+value.id+'\').toggle();">&nbsp;<input type="checkbox">&nbsp;'+value.title+'<br>'+d.getHours()+':'+d.getMinutes()+'</li>'
+										  list += '<li data-taskId="'+value.id+'" style="'+style+'" class="'+taskClass+' task" onclick="$(\'#taskDetail_'+value.id+'\').toggle();">&nbsp;<input type="checkbox">&nbsp;'+value.title+'<br>'+d.getHours()+':'+d.getMinutes()+'</li>';
 										  list += '<li class="taskDetail '+taskClass+'" id="taskDetail_'+value.id+'" style="'+style+'">'+value.description+'</li>';
 										
 									  }
@@ -870,7 +888,7 @@ var focus = true;
 			  		});
 			  		
 			  		console.log('tasks loaded');
-			  	}
+			  	};
 			  	
 			  	this.toggleTasks = function(){
 			  		if($('#showTasks').is(':checked')){
@@ -882,7 +900,7 @@ var focus = true;
 			  			$('.task').remove();
 			  			$('.taskDetail').remove();
 			  		}
-			  	}
+			  	};
 			  	
 			  	this.toggleDoneTasks = function(){
 			  		if($('#showDoneTasks').is(':checked')){
@@ -890,7 +908,7 @@ var focus = true;
 			  		}else{
 			  			$('.doneTask').hide();
 			  		}
-			  	}
+			  	};
 			  	
 			  	this.loadEvents = function(){
 			  		if($('#showTasks').is(':checked')){
@@ -908,8 +926,8 @@ var focus = true;
 								  	
 									  var startDate = new Date(value.startStamp*1000);
 									  var endDate = new Date(value.stopStamp*1000);
-									  list += '<li data-eventId="'+value.id+'" onclick="$(\'#eventDetail_'+value.id+'\').toggle();">'+startDate.getHours()+':'+startDate.getMinutes()+'&nbsp;'+value.title+'</li>'
-									  list += '<li class="eventDetail" id="eventDetail_'+value.id+'">'+startDate.getHours()+':'+startDate.getMinutes()+' - '+endDate.getHours()+':'+endDate.getMinutes()+'<br>'+value.place+'</li>';
+									  list += '<li data-eventId="'+value.id+'" onclick="$(\'#eventDetail_'+value.id+'\').toggle();">'+startDate.getHours()+':'+startDate.getMinutes()+'&nbsp;'+value.title+'</li>';
+									  list += '<li class="eventDetail" id="eventDetail_'+value.id+'" onclick="events.show('+value.id+', '+privacy.authorize(value.privacy, value.user)+');">'+startDate.getHours()+':'+startDate.getMinutes()+' - '+endDate.getHours()+':'+endDate.getMinutes()+'<br>'+value.place+'</li>';
 									
 								  }
 								 });
@@ -922,7 +940,7 @@ var focus = true;
 			  		});
 			  		
 			  		console.log('events loaded into mainframe..');
-			  	}
+			  	};
 			  	
 				this.appendDayToCalender = function(time){
 				
@@ -966,7 +984,7 @@ var focus = true;
 						day += '</div>';
 					
 					$('.calendarFrame').append(day);
-				}
+				};
 				 
 				this.loadMonth = function(date){
 					
@@ -985,7 +1003,7 @@ var focus = true;
 					
 					
 					if(!date){
-						var d = new Date()
+						var d = new Date();
 					}else if(typeof date == 'object'){
 						var d = date;
 					}else{
@@ -997,7 +1015,7 @@ var focus = true;
 					var lastSecondOfMonth = new Date(d.getFullYear(), d.getMonth() + 1, 0, 0, 0, 0);
 					var month = lastSecondOfMonth.getMonth();
 					clearTimeout(this.loader);
-					this.loader = setTimeout(function(){calendar.loadEventsIntoSide(firstDayOfMonth)}, 1000);
+					this.loader = setTimeout(function(){calendar.loadEventsIntoSide(firstDayOfMonth);}, 1000);
 					this.updateViewDetail('month', this.getMonthName(d.getMonth()));
 					
 					var firstDayOfMonthWeekday = firstDayOfMonth.getDay();
@@ -1036,7 +1054,7 @@ var focus = true;
 					}
 					$('.dropdown-toggle').dropdown();//init day dropdowns
 					this.loader = setTimeout(calendar.loadEvents, 1000);
-			  	}
+			  };
 			  	
 			  	this.loadWeek = function(startStamp){
 			  		//tidy up calendar
@@ -1074,7 +1092,7 @@ var focus = true;
 					}
 					this.loader = setTimeout(function() {calendar.loadEvents();}, 1000);
 			  		
-			  	}
+			  };
 			  	
 			  	this.loadDay = function(date){
 			  		//tidy up calendar
@@ -1122,7 +1140,7 @@ var focus = true;
 									  
 									  
 									  
-									  list += '<li class="event" data-eventId="'+value.id+'" onclick="$(\'#eventDetail_'+value.id+'\').toggle();" style="top: '+top+'px; height: '+height+'">'+startDate.getHours()+':'+startDate.getMinutes()+'&nbsp;'+value.title+'</li>'
+									  list += '<li class="event" data-eventId="'+value.id+'" onclick="$(\'#eventDetail_'+value.id+'\').toggle();" style="top: '+top+'px; height: '+height+'">'+startDate.getHours()+':'+startDate.getMinutes()+'&nbsp;'+value.title+'</li>';
 									  
 								  }
 								 });
@@ -1139,7 +1157,7 @@ var focus = true;
 					clearTimeout(this.loader);
 					this.loader = setTimeout(function() {calendar.loadEvents();}, 1000);
 					this.updateViewDetail('day', this.shownTimeObject);
-			  	}
+			  	};
 			  	
 			  	this.updateViewDetail = function(type, dateObj){
 			  		
@@ -1186,7 +1204,7 @@ var focus = true;
 			  				calendar.loadWeek(calendar.shownTimeObject.getTime()/1000);
 							
 						});
-						console.log(calendar.shownTimeObject)
+						console.log(calendar.shownTimeObject);
 						var nextWeek = new Date(calendar.shownTimeObject.getTime()+(7*86400000));
 						
 						$('#calendarViewDetail #text').html(calendar.shownTimeObject.getDate()+'.'+calendar.shownTimeObject.getMonth()+1+' - '+nextWeek.getDate()+'.'+nextWeek.getMonth()+1);
@@ -1251,13 +1269,13 @@ var focus = true;
 			  			
 			  		});
 			  		
-			  	}
+			  	};
 			  	
 			  	this.getMonthName = function(month){
-					var monthName = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+					var monthName = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
 					return monthName[month];
 					
-			  	}
+			  	};
 			  	
 			  	this.loadMonthsIntoSide = function(date){
 			  		var d = new Date(date);
@@ -1289,7 +1307,7 @@ var focus = true;
 					});
 			  		
 			  		
-			  	}
+			  	};
 			  	
 			  	this.loadEventsIntoSide = function(date){
 			  		console.log('side');
@@ -1316,11 +1334,12 @@ var focus = true;
 					
 							if(appointments){
 								$.each( appointments, function( key, value ) {
+									console.log(value);
 								  if($('#sideEvent_'+value.id).length === 0){
 								  	
 									  var startDate = new Date(value.startStamp*1000);
 									  var endDate = new Date(value.stopStamp*1000);
-									  list += '<li data-eventId="'+value.id+'" onclick="events.show('+value.id+');" id="sideEvent_'+value.id+'">'+calendar.beautifyDate(startDate.getDate())+'.'+calendar.beautifyDate(startDate.getMonth()+1)+'&nbsp;'+value.title+'</li>'
+									  list += '<li data-eventId="'+value.id+'" onclick="events.show('+value.id+', '+privacy.authorize(value.privacy, value.user)+');" id="sideEvent_'+value.id+'">'+calendar.beautifyDate(startDate.getDate())+'.'+calendar.beautifyDate(startDate.getMonth()+1)+'&nbsp;'+value.title+'</li>';
 									
 								  }
 								 });
@@ -1333,21 +1352,21 @@ var focus = true;
 					});
 			  		
 			  		
-			  	}
+			  	};
 			  	
 			  	this.beautifyDate =function(value){
 			  		if(value < 10){
 			  			value = '0'+value;
 			  		}
 			  		return value;
-				}
+				};
 				
 				this.getAppointmentsForDay = function(time){
 					var array = [];
 					array[0] = 'startStamp';
 					
 					return array;
-				}
+				};
 				
 				
 				this.getNextMonth = function(month){
@@ -1362,7 +1381,7 @@ var focus = true;
 							
 					}
 					return ret;
-				}
+				};
 				
 				this.getLastMonth = function(month){
 					var ret;
@@ -1376,7 +1395,7 @@ var focus = true;
 							
 					}
 					return ret;
-				}
+				};
 				this.getMonday = function(d){
 				  d = new Date(d);
 				  var d = new Date(d.setHours(0));
@@ -1386,11 +1405,10 @@ var focus = true;
 				  var day = d.getDay(),
 				      diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
 				  return new Date(d.setDate(diff));
-				}
+				};
 				
 				
-			  }
-			  
+			  };
 			  var events = new function(){
 			  	
 			  	this.getData = function(eventId){
@@ -1407,7 +1425,7 @@ var focus = true;
 				      }
 				   });
 				   return res;
-			  	}
+			  	};
 			  	
 			  	this.create = function(startStamp, stopStamp, title, place, privacyShow, privacyEdit){
 			  		
@@ -1428,9 +1446,11 @@ var focus = true;
 				      }
 				   });
 				   
-			  	}
+			  	};
 			  	this.addForm = function(startstamp){
 			  		var d = new Date(startstamp*1000);
+			  		console.log(d.getMonth());
+			  		var formattedDate = calendar.beautifyDate((d.getMonth())+1)+'/'+calendar.beautifyDate(d.getDate())+'/'+d.getFullYear();
 			  		
 			  		var content  = '<table class="formTable">';
 			  				content += '<form id="createEvent" method="post">';
@@ -1455,9 +1475,9 @@ var focus = true;
 					  		    	content += 'Day:';
 					  		    	content += '</td>';
 					  		    	content += '<td>';
-					  		    	content += '<input type="text" name="startDate" id="startDate" class="startDate datepicker" value="'+d.getMonth()+1+'/'+d.getDate()+'/'+d.getFullYear()+'" style="width: 72px;">';
+					  		    	content += '<input type="text" name="startDate" id="startDate" class="startDate datepicker" value="'+formattedDate+'" style="width: 72px;">';
 					  		    	content += '&nbsp;<input type="text" name="startTime" id="startTime" class="startTime eventTime" value="15:30" style="width: 37px;">&nbsp;to&nbsp;';
-					  		    	content += '<input type="text" name="endDate" id="endDate" class="endDate datepicker" value="'+d.getMonth()+1+'/'+d.getDate()+'/'+d.getFullYear()+'" style="width: 72px;">';
+					  		    	content += '<input type="text" name="endDate" id="endDate" class="endDate datepicker" value="'+formattedDate+'" style="width: 72px;">';
 					  		    	content += '&nbsp;<input type="text" name="endTime" id="endTime" class="endTime eventTime" value="16:30" style="width: 37px;">';
 					  		    	content += '</td>';
 					  		    content += '</tr>';
@@ -1481,7 +1501,7 @@ var focus = true;
 			  		    content += '</table>';
 			  		var onSubmit = function() {
 			  			$('#createEvent').submit();
-  					}
+  					};
   					
   					//create modal
               		modal.create('Create New Event', content, [onSubmit, 'Save']);
@@ -1495,8 +1515,15 @@ var focus = true;
               			if($('#eventTitle').val().length > 0 && $('#startDate').val().length > 0 && $('#endDate').val().length > 0){
               				
 	              			$.post("api.php?action=createEvent",$(this).serialize(),function(data){
-					            alert(data); //post check to show that the mysql string is the same as submit                        
-					        });
+					            if(data.length === 0){
+					            	calendar.loadEvents();
+					            	calendar.loadEventsIntoSide(new Date(calendar.shownTimeObject.getFullYear(), calendar.shownTimeObject.getMonth(), 1, 0, 0, 0));
+					            	jsAlert('','The Event has been added');
+					            	$('.blueModal').slideUp();
+					            }else{
+					            	jsAlert('', data);
+					            }
+							});
 
               			}else{
               				jsAlert('', 'You need to fill out all the fields.');
@@ -1505,7 +1532,7 @@ var focus = true;
               			
               			return false;
               		});
-			  	}
+			  	};
 			  	
 			  	this.show = function(eventId, editable){
 			  		var eventData = events.getData(eventId);
@@ -1517,7 +1544,7 @@ var focus = true;
 			  		
 			  		
 			  		var allDay, 	//contains checkbox or check-image
-			  			editableToken
+			  			editableToken;
 			  		
 			  		//generate formstuff from eventdata
 			  		if(editable){
@@ -1587,7 +1614,7 @@ var focus = true;
 			  		    content += '</table>';
 			  		var onSubmit = function() {
 			  			$('#updateEvent').submit();
-  					}
+  					};
   					
   					//create modal
               		modal.create('Event '+eventData.title, content, [onSubmit, 'Save']);
@@ -1623,7 +1650,7 @@ var focus = true;
               			return false;
               		});
 			  		
-			  	}
+			  	};
 			  	
 			  	this.get = function(startStamp, stopStamp, privacy){
 			  		var result;
@@ -1644,8 +1671,8 @@ var focus = true;
 				   });
 				   
 				   return result;
-			  	}
-			  }
+			  	};
+			  };
 			  
 			  var privacy = new function(){
 			  	
@@ -1663,6 +1690,7 @@ var focus = true;
 			  		
 			  	}
 			  	this.show = function(val, editable){
+
 			  		if(typeof editable == 'undefined')
 			  			editable = false;
 			  			
@@ -1678,6 +1706,32 @@ var focus = true;
 				      }
 				   	});
 				   return result;
+			  	};
+			  	
+			  	//checks if user is authorized, to edit an item with privacy.
+			  	this.authorize = function(privacy, author){
+			  		if(author == localStorage.currentUser_userid)
+			  			return true;
+			  			
+			  		var result;
+				    $.ajax({
+				      url:"api.php?action=authorize",
+				      async: false,  
+					  type: "POST",
+					  data: { 
+					  	 privacy: privacy,
+					  	 author: author
+					  	 },
+				      success:function(data) {
+				      	if(data){
+				        	result = data;
+				      	}
+				      }
+				   });
+				   if(parseInt(result) === 1)
+				   		return true;
+				   else
+				   		return false;
 			  	}
 			  	
 			  }
@@ -1808,9 +1862,9 @@ var focus = true;
 				      }
 				   });
 				   return result;
-              	}
+              	};
               	
-              }
+              };
               
               var elements = new function(){
               	
@@ -1827,9 +1881,9 @@ var focus = true;
 				      }
 				   });
 				   return result;
-              	}
+              	};
               	
-              }
+              };
               
               var folders = new function(){
               	
@@ -1846,9 +1900,9 @@ var focus = true;
 				      }
 				   });
 				   return result;
-              	}
+              	};
               	
-              }
+              };
               
               var filesystem =  new function() {
               	
@@ -1895,9 +1949,9 @@ var focus = true;
               		
               		
               		modal.create(title, content);
-              	}
+              	};
               	
-              }
+              };
               
               
               var modal =  new function() {
@@ -1930,8 +1984,8 @@ var focus = true;
 	            			action[0]();
 	            		});
             		}
-			    }
-			}
+			    };
+			};
        
        
 //encryption functions
@@ -2024,6 +2078,7 @@ var focus = true;
 		};
 	};
 	
+	//different to the one in the guest.js (the one in the guest.js needs to be deleted and the functions on offline page(login, updatepass need to be checked...))
 	var cypher = new function(){
 	
 	this.generateRand = function(){
@@ -2047,7 +2102,7 @@ var focus = true;
 	    var keyHash = hash.SHA512(shaPass+keySaltDecrypted);
 		
 		var authSaltEncrypted = symEncrypt(shaPass, authSaltDecrypted);
-		var keySaltEncrypted = symEncrypt(shaPass, authSaltDecrypted);
+		var keySaltEncrypted = symEncrypt(shaPass, keySaltDecrypted);
 		
 		var result = new Object();
 			result['authHash'] = authHash;
@@ -2092,6 +2147,7 @@ var focus = true;
 	    	return privateKey;
 	    };
 };
+
 	var sec =  new function() {
 		
 				//standard password cypher used in processRegistration(), login() and updatePassword();
@@ -2315,7 +2371,7 @@ var focus = true;
 		      url:"api.php?action=useridToUsername",
 		      async: false,  
 			  type: "POST",
-			  data: { userid : id },
+			  data: { request : id },
 		      success:function(data) {
 		         result = data; 
 		      }
@@ -2701,54 +2757,31 @@ var focus = true;
     function updatePassword(oldPassword, newPassword, userid){
     	
 		//cypher old password
-		var mdOld = CryptoJS.MD5(oldPassword);
-		var passwordHashMD5Old  = mdOld.toString(CryptoJS.enc.Hex);
-		
-		var saltOld = getSalt('auth', userid, passwordHashMD5Old); //get auth salt, using md5 hash as key
-		console.log(saltOld);
-		
-	    var shaPassOld = CryptoJS.SHA512(saltOld+passwordHashMD5Old);
-	    var passwordHashOld = shaPassOld.toString(CryptoJS.enc.Hex);
-		
-		//cypher new password
-		var mdNew = CryptoJS.MD5(newPassword);
-		var passwordHashMD5New  = mdNew.toString(CryptoJS.enc.Hex);
-		console.log(passwordHashMD5New);
-		
-		
-    	var saltNew = saltOld;
-		console.log(salt);
-	    var shaPassNew = CryptoJS.SHA512(saltNew+passwordHashMD5New);
-    	var salt = symEncrypt(passwordHashMD5New, saltNew); //encrypt the new salt with md5password
-	    var passwordHashNew = shaPassNew.toString(CryptoJS.enc.Hex);
+		var shaPass_old = hash.SHA512(oldPassword);
+		var passwordHash_old = cypher.getKey('auth', userid, shaPass_old);
+		var privateKey = cypher.getPrivateKey('user', localStorage.currentUser_userid);
+		console.log(privateKey);            
+		var keysNew = cypher.createKeysForUser(newPassword);
+	    console.log(keysNew);
+	    privateKey = symEncrypt(keysNew['keyHash'], privateKey); //encrypt privatestring, using the password hash
 	    
-	    console.log(passwordHashNew);
-	    
-	    var shaKeyNew = CryptoJS.SHA512(passwordHashMD5New+salt);
-	    var keyHashNew = shaKeyNew.toString(CryptoJS.enc.Hex);
-	    
-	    console.log('dsa');
-	    var privateKey = getPrivateKey('user', userid, saltOld, passwordHashMD5Old); //get the old private key, using the old salt
-	    console.log(privateKey);
-	    var newPrivateKey = symEncrypt(passwordHashMD5New, privateKey);
+	    $.post("api.php?action=updatePassword", {
+		    oldPassword:passwordHash_old,
+	        password:keysNew['authHash'],
+	        authSalt:keysNew['authSaltEncrypted'],
+	        keySalt:keysNew['keySaltEncrypted'],
+	        privateKey:privateKey 
+	    	}, function(result){
+		    	if(result == 1){
 		    		
+	    			parent.localStorage.currentUser_passwordHashMD5 = passwordHashMD5New;
+		    		jsAlert('', 'Your password has been changed');
+		    	}else{
+		    		jsAlert('', result);
+		    	}
+	    	}, "html");
 	    
-	                $.post("api.php?action=updatePassword", {
-	                       oldPassword:passwordHashOld,
-	                       newPassword:passwordHashNew,
-	                       newPrivateKey: newPrivateKey,
-	                       newSalt: salt
-	                       }, function(result){
-		                       	if(result == 1){
-		                       		
-	    							parent.localStorage.currentUser_passwordHashMD5 = passwordHashMD5New;
-		                       		jsAlert('', 'Your password has been changed');
-		                       	}else{
-		                       		jsAlert('', result);
-		                       	}
-	                       }, "html");
-
-  
+	    
     }
     
     function toggleKey(username){
@@ -2859,8 +2892,6 @@ var focus = true;
 	    		
 	                var privateKey = cypher.getPrivateKey('user', localStorage.currentUser_userid);
 	                
-	                console.log(privateKey);
-		    		
 		    		
 	                //encrypt random key with privateKey
 	                var randKey = asymDecrypt(privateKey, message[0]);
@@ -2911,6 +2942,7 @@ var dashBoard = new function(){
 		$('#dashBoard a, #dashBoard li').not('.disableToggling').click(function(){dashBoard.slideUp();});
     	$("#dashBoard").draggable({
     		axis: "y", 
+    		cancel : '#dashBoxFrame',
     		containment: "#dashGrid",
     		stop: function( event, ui ) {
     			if(parseInt($('#dashBoard').css('top').replace(/[^-\d\.]/g, '')) > 191)
@@ -2918,7 +2950,7 @@ var dashBoard = new function(){
     		}
     	});
 	
-	}
+	};
 	
 	this.slideDown = function(){
 		
@@ -2929,7 +2961,7 @@ var dashBoard = new function(){
 				$('#dashBoard footer a i').addClass('icon-arrow-up');
 			});
 			this.view = 'down';
-	}
+	};
 	this.slideUp = function(){
 		
 			$('#dashBoard').animate({top: 0}, 750, function() {
@@ -2939,15 +2971,15 @@ var dashBoard = new function(){
 				$('#dashBoard footer a i').addClass('icon-arrow-down');
 			});
 			this.view = 'up';
-	}
+	};
 	this.toggle = function(){
 		if(this.view === 'up'){
 			this.slideDown();
 		}else if(this.view === 'down'){
 			this.slideUp();
 		}
-	}
-}
+	};
+};
 
 function updateDashbox(type){
 	$('.dashBox#'+type+'Box').load('modules/desktop/updateDashboard.php?type='+type, function(){

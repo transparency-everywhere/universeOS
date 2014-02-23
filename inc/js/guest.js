@@ -130,7 +130,7 @@ function processRegistration(){
 			      		//generate salts and keys from password
     					var keys = cypher.createKeysForUser(password);
     					
-			      		privateKey = symEncrypt(keys['keyHash'], crypt.getPrivateKey()); //encrypt privatestring, usering the password hash
+			      		privateKey = symEncrypt(keys['keyHash'], crypt.getPrivateKey()); //encrypt privatestring, using the password hash
 			      		publicKey = crypt.getPublicKey();
     					
                 		//submit registration
@@ -165,72 +165,6 @@ function processRegistration(){
 			      });
 }
 
-var cypher = new function(){
-	
-	this.generateRand = function(){
-		return hash.SHA512(randomString(64, '#aA'));
-	};
-	
-	this.getKey = function(type, typeId, shaPass){
-		var salt = getSalt(type, typeId, shaPass);
-	    var response = hash.SHA512(shaPass+salt);
-	    return response;
-	};
-	
-	/*returns pwHash/salt and keyHash/salt. for a user*/
-	this.createKeysForUser = function(pass){
-		var shaPass = hash.SHA512(pass);
-		
-		var authSaltDecrypted = cypher.generateRand();
-		var keySaltDecrypted = cypher.generateRand();
-		
-	    var authHash = hash.SHA512(shaPass+authSaltDecrypted);
-	    var keyHash = hash.SHA512(shaPass+keySaltDecrypted);
-		
-		var authSaltEncrypted = symEncrypt(shaPass, authSaltDecrypted);
-		var keySaltEncrypted = symEncrypt(shaPass, authSaltDecrypted);
-		
-		var result = new Object();
-			result['authHash'] = authHash;
-			result['keyHash'] = keyHash;
-			result['authSaltEncrypted'] = authSaltEncrypted;
-			result['keySaltEncrypted'] = keySaltEncrypted;
-		
-		return result;
-		
-	};
-	this.getPrivateKey = function(){
-	    var privateKey;
-            var index = type+'_'+itemId;
-            if(typeof privateKeys[index] === 'undefined'){
-                console.log(index);
-                    var encryptedKey = '';
-			$.ajax({
-			  url:"api.php?action=getPrivateKey",
-			  async: false,  
-			  type: "POST",
-			  data: { type : type, itemId : itemId },
-			  success:function(data) {
-			     encryptedKey = data; 
-			  }
-			});
-		
-			if(typeof password === 'undefined'){
-				var password = localStorage.currentUser_shaPass;
-			}
-			var keySalt = getSalt('privateKey', localStorage.currentUser_userid, localStorage.currentUser_shaPass);
-		    var keyHash = hash.SHA512(password+keySalt);
-			
-	    	privateKey = symDecrypt(keyHash, encryptedKey); //encrypt private Key using password
-                privateKeys[index] = privateKey;
-            }else{
-                privateKey = privateKeys[index];
-            }
-	    return privateKey;
-	};
-		
-	
-};
 
 
 function login(){
@@ -246,7 +180,9 @@ function login(){
 		update.sha512TOsha512_2(userid, password);
 	}else if(userCypher == 'sha512_2'){
 		var shaPass = hash.SHA512(password);
+    	console.log('dude');
 		var passwordHash = cypher.getKey('auth', userid, shaPass);
+		console.log('dude');
 		
 	                $.post("api.php?action=authentificate", {
 	                       username:username,
@@ -273,6 +209,8 @@ function login(){
 		
 		
 		
+	}else{
+		jsAlert('', 'There is no user with this username.');
 	}
 	
 	
@@ -313,7 +251,7 @@ var update = new function(){
 			    
 			    //save salt
 			    var encryptedKeySalt = sec.symEncrypt(passwordSHA512, keySalt);
-			    createSalt('privateKey', userid, '', '', encryptedKeySalt);
+			    //createSalt('privateKey', userid, '', '', encryptedKeySalt);
 			    
 			    var privateKeyNew = sec.symEncrypt(privateKeyHash, privateKey);
 			    console.log('keyHash:'+privateKeyHash);
@@ -324,7 +262,8 @@ var update = new function(){
 	                       oldPassword:passwordHashOld,
 	                       newPassword:password_new,
 	                       newPrivateKey:privateKeyNew,
-	                       saltNew: saltEncrypted_new
+	                       saltAuthNew: saltEncrypted_new,
+	                       saltKeyNew: encryptedKeySalt
 	                       }, function(result){
 	                            var res = result;
 	                            if(res){

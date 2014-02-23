@@ -2,7 +2,7 @@
 session_start();
 include("inc/config.php");
 include("inc/functions.php");
-$group = $_GET[id];
+$group = $_GET['id'];
 $needle = "$_GET[id];";
 $group = save($group);
 $groupSql = mysql_query("SELECT * FROM groups WHERE id='$group'");
@@ -22,13 +22,13 @@ if (!empty($memberData['itemId'])) {
    $member = "1";
 }
 ?>
-    <div id="profileWrap">
+    <div id="profileWrap" class="group_<?=$group;?>">
     <div>&nbsp;</div>
     <div class="signatureGradient" style="height: 80px; padding: 15px; font-size: 17pt; margin-top: -18px;">
         <img src="./gfx/icons/group.png" style="float: right;">
         <p style="float: left; margin-top: 5px; margin-left: 20px; margin-right: 10px; font-size:18px; text-align: right;"><?=nl2br($groupData[description]);?></p>
         <p style="float: right; margin-top: 5px; margin-left: 20px; margin-right: 10px; font-size:18px; text-align: right;"><b><?=$groupData[title];?></b><br>
-                <span style="position: absolute;  width: 300px; height: 40px; margin-top: 20px; right: 20px;">
+                <span id="joinButton">
                     <?
                     if(proofLogin()){
                         if(!empty($admin)){?>

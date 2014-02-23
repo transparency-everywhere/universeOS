@@ -59,14 +59,19 @@ if(isset($_GET['folder'])){
 	$folder = $_GET['folder']; 
 			//userFolder
 		if($folder == "2"){
-			$userData = getUserData();
-			$folder = $userData['homefolder'];
+			if(proofLogin()){
+				$userData = getUserData();
+				$folder = $userData['homefolder'];
+				$showFileBrowser = true;
+			}else{
+				$showFileBrowser = false;
+			}
+			
 		}
 	
 } else if(empty($_GET['folder'])  OR $_GET['folder']==0){
 $folder = "1";
 }}
-
 
 $pathsql = mysql_query("SELECT id, folder, path, privacy, creator FROM folders WHERE id='".mysql_real_escape_string($folder)."'");
 $pathdata = mysql_fetch_array($pathsql);

@@ -1,6 +1,6 @@
 <?php
 session_start();
-if($_GET[reload] == "1"){
+if($_GET['reload'] == "1"){
     $includepath = "../../inc";
 }else{
 $includepath = "inc";
@@ -12,11 +12,11 @@ include_once("$includepath/functions.php");
 $userSql = mysql_query("SELECT username FROM user WHERE userid='$_SESSION[userid]'");
 $userData = mysql_fetch_array($userSql);
 
-if($_GET[action] == "add"){
-    $type = $_GET[type];
+if($_GET['action'] == "add"){
+    $type = $_GET['type'];
     $check = mysql_query("SELECT type,item FROM fav WHERE type='$_GET[type]' && item='$_GET[item]'");
     $checkData = mysql_fetch_array($check);
-    if(isset($checkData[type])){
+    if(isset($checkData['type'])){
         echo"allready your favourite";
     } else {
         $time = time();
@@ -28,7 +28,7 @@ if($_GET[action] == "add"){
     ?>
     
       <?
-      if(!isset($_GET[action])){ 
+      if(!isset($_GET['action'])){ 
       	
       	
       	?>
@@ -66,14 +66,14 @@ if($_GET[action] == "add"){
                            $groupData = mysql_fetch_array($groupSql);
                        $result = mysql_query("SELECT * FROM groupAttachments WHERE group='2'");
                        $num_rows = mysql_num_rows($result);
-                           $title = $groupData[title];
+                           $title = $groupData['title'];
                            $title10 = substr("$title", 0, 10);
                            $title15 = substr("$title", 0, 25);
                            ?>
                                <tr height="30" class="strippedRow">
                                    <td width="27">&nbsp;<img src="./gfx/icons/group.png" height="15"></td>
-                                   <td width="300">&nbsp;<a href="#" onclick="createNewTab('reader_tabView','<?=$title10;?>','','group.php?id=<?=$groupData[id];?>',true);return false"><?=$title15;?></a></td>
-                                   <td align="right"><?=countGroupMembers($groupData[id]);?>&nbsp;&nbsp;</td>
+                                   <td width="300">&nbsp;<a href="#" onclick="createNewTab('reader_tabView','<?=$title10;?>','','group.php?id=<?=$groupData['id'];?>',true);return false"><?=$title15;?></a></td>
+                                   <td align="right"><?=countGroupMembers($groupData['id']);?>&nbsp;&nbsp;</td>
                                </tr>
                        <?}
                        if($i < 1){
@@ -94,7 +94,7 @@ if($_GET[action] == "add"){
                     		<td></td>
                     	</tr>
                     	<? 
-					     showFav($_SESSION[userid]);
+					     showFav($_SESSION['userid']);
 					     ?>
                     </table>
                     <?
@@ -149,7 +149,7 @@ if($_GET[action] == "add"){
                             if(empty($i)){
                                 echo"<tr><td colspan=\"3\">Add playlist to automaticly play mp3´s and Youtube Songs in a row.</td></tr>";
                             }
-?>
+							?>
                         </table><br><br>
             </div>
             <div style="display: none;" class="favTab" id="favTab_News">
@@ -190,7 +190,7 @@ if($_GET[action] == "add"){
                     </div>
                     <div class="frameRight" id="personalFileFrame">
                         <?
-		                  $user = $_SESSION[userid];
+		                  $user = $_SESSION['userid'];
 		                 
 		                  //show folders and elements
 		                  $folderQuery = "WHERE creator='$user' ORDER BY timestamp DESC";

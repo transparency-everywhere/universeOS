@@ -334,7 +334,7 @@
   	return $data['salt'];
   }
   
-  function createUser($username, $password, $salt, $privateKey, $publicKey){
+  function createUser($username, $password, $authSalt, $keySalt, $privateKey, $publicKey){
     
     $username = save($_POST['username']);
     $sql = mysql_query("SELECT username FROM user WHERE username='$username'");
@@ -345,9 +345,10 @@
         mysql_query("INSERT INTO `user` (`password`, `cypher`, `username`, `email`, `regdate`, `lastactivity`) VALUES ('$password', 'sha512_2', '$username', '', '$time', '$time')");
         $userid = mysql_insert_id();
 		
-		//store salt
-		createSalt('auth', $userid, 'user', $userid, $salt);
-        
+		//store salts
+		createSalt('auth', $userid, 'user', $userid, $authSalt);
+		createSalt('privateKey', $userid, 'user', $userid, $keySalt);
+			
 		//create signature
 		$sig = new signatures();
 		$sig->create('user', $userid, $privateKey, $publicKey);
@@ -429,7 +430,7 @@
       }
   }
   
-  function updateUserPassword($oldPassword, $newPassword, $newSalt=NULL, $privateKey=NULL, $userid=NULL){
+  function updateUserPassword($oldPassword, $newPassword, $newAuthSalt=NULL, $newKeySalt=NULL, $privateKey=NULL, $userid=NULL){
   	if($userid == NULL){
   		$userid = getUser();
   	}
@@ -438,9 +439,13 @@
 	$userData = getUserData($userid);
 	if($userData['password'] == $oldPassword){
 		
-		if(!empty($newSalt)){
+		if(!empty($newAuthSalt)){
 			//store salt
-			updateSalt('auth', $userid, $newSalt);
+			updateSalt('auth', $userid, $newAuthSalt);
+		}
+		if(!empty($newKeySalt)){
+			//store salt
+			updateSalt('privateKey', $userid, $newKeySalt);
 		}
 		  
 		//create signature
@@ -538,28 +543,6 @@
         $loginData = mysql_fetch_array($loginSQL);
         return $loginData['realname'];
   }
-  
-  function searchUserByString($string, $limit){
-  		$q = save($string);
-		$k = save($limit);
-		$userSuggestSQL = mysql_query("SELECT userid, username, realname FROM user WHERE username LIKE '%$q%' OR realname LIKE '%$q%' OR email='$q' OR userid='$q' LIMIT 0,10");
-		while ($suggestData = mysql_fetch_array($userSuggestSQL)) {
-			
-			
-			if(!isset($return[$userid])){		//only return every user once
-				
-				$userid = $suggestData['userid'];
-				$array[] = $suggestData['username'];
-				$array[] = $suggestData['realname'];
-				
-				$return[$userid] = $array;		//add user data tu return array
-				
-			}
-		}
-		
-		return $return;
-  }
-  
   
   function getUserData($userid=NULL){
   	if(empty($userid)){
@@ -2581,7 +2564,7 @@ echo"</div>";
 		
 	}
 	
-	function getUserPlaylistArray($userId=null){
+	function getUserPlaylistArray($userId=null, $type='show'){
 		if($userId == null){
 			$userId = getUser();
 		}
@@ -2606,7 +2589,7 @@ echo"</div>";
             //get playlists for user and groups
             $playListsSql = mysql_query("SELECT id, title, privacy, user FROM playlist WHERE user='".getUser()."' $query");
             while($playListsData = mysql_fetch_array($playListsSql)){
-                if(authorize($playListsData['privacy'], 'show', $playListsData['user'])){
+                if(authorize($playListsData['privacy'], $type, $playListsData['user'])){
 	                $ids[] = $playListsData['id'];
 	                $titles[] = $playListsData['title'];
 				}
@@ -3554,7 +3537,7 @@ echo"</div>";
 			// to a playlist to the header
 			if(proofLogin()){
 			//get all the playlists
-			$playlists = getUserPlaylistArray();
+			$playlists = getUserPlaylistArray('', 'edit');
 			//init form and select
 			$options = "<form action=\"doit.php?action=addYouTubeItemToPlaylistVeryLongName&vId=$vId\" target=\"submitter\" method=\"post\"><select name=\"playlistId\">";
 			foreach ($playlists['ids'] as $key => $id){
@@ -5414,10 +5397,11 @@ class contextMenu{
 				$options[] = $undeletable;
 			  
 		   		break;
-			  
-			  return $options;
 			
 		}
+		
+			  
+			  return $options;
 	}
 	public function showRightClick(){
 		
@@ -5426,7 +5410,7 @@ class contextMenu{
 		
 		$options = $this->getOptions();
 		
-		if(count($options) < 0){
+		if(count($options) > 0){
 			$list = '';
 			foreach($options AS $option){
 				if(!empty($option['title'])){
@@ -5457,7 +5441,7 @@ class contextMenu{
 	}
 	public function showItemSettings(){
 		$options = $this->getOptions();
-		if(count($options) < 0){
+		if(count($options) > 0){
 			$list = '';
 			foreach($options AS $option){
 				if(!empty($option['title'])){
@@ -5489,10 +5473,7 @@ class contextMenu{
 			        </div>";
 				}
 				if(!empty($return)){
-					
 					return $return;
-				}else{
-					
 				}
 	}
 }
@@ -5556,7 +5537,7 @@ class dashBoard{
 		
 		$content = "<ul class=\"appList\">";
 	    	$content .= "<li onclick=\"toggleApplication('feed')\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/feed.png\" border=\"0\" height=\"16\">Feed</li>";
-	    	$content .= "<li onclick=\"calendar.show();\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/feed.png\" border=\"0\" height=\"16\">Kalendar</li>";
+	    	$content .= "<li onclick=\"calendar.show();\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/feed.png\" border=\"0\" height=\"16\">Calendar</li>";
 			$content .= "<li onclick=\"toggleApplication('filesystem')\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/filesystem.png\" border=\"0\" height=\"16\">Filesystem</li>";
 	 		$content .= "<li onclick=\"javascript: toggleApplication('reader')\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/viewer.png\" border=\"0\" height=\"16\">Reader</li>";
 	   		$content .= "<li onclick=\"javascript: toggleApplication('buddylist')\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/buddylist.png\" border=\"0\" height=\"16\">Buddylist</li>";
@@ -5744,10 +5725,36 @@ class signatures{
 	
 	function updatePrivateKey($type, $itemId, $privateKey){
 		if(!empty($privateKey)){
-			mysql_query("UPDATE `signatures` SET privateKey='".save($privateKey)."' WHERE `type`='".save($type)."', `itemId`='".save($itemId)."'");
+			mysql_query("UPDATE `signatures` SET privateKey='".save($privateKey)."' WHERE `type`='".save($type)."' AND `itemId`='".save($itemId)."'");
 		}
 	}
 	
+	function delete($type, $itemId){
+		mysql_query("DELETE FROM `signatures` WHERE `type`='$type' AND `itemId`='$itemId'");
+	}
+}
+
+class sessionHashes{
+	private $validity; //time in seconds untill hash expires
+	
+	
+	function create($userid){
+		
+		//create unique identifyer and hash it with rand salt (the user agent needs to be encrypted!)
+		$uniqueSystemIdentifyer = hash('sha512', $_SERVER['HTTP_USER_AGENT']);
+		//add salt
+		$randomSalt = hash('sha512', $uniqueSystemIdentifyer+substr(str_shuffle("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 1) . substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 10));
+		
+		mysql_query("DELETE FROM `sessionHashes` WHERE timestamp>'".(time()-$this->validity)."' AND userid='".save($userid)."' AND uniqueSystemIdentifyer='".save($uniqueSystemIdentifyer)."'");
+		//save id, identifier and salt
+		mysql_query("INSERT INTO `signatures` (``, `itemId`, `privateKey`, `publicKey`, `timestamp`) VALUES ('$type', '$itemId', '$privateKey', '$publicKey', '".time()."')");
+		return mysql_insert_id();
+	}
+	
+	function get($id){
+		$data = mysql_fetch_array(mysql_query("SELECT * FROM `signatures` WHERE `type`='$type' AND `itemId`='$itemId'"));
+		return $data;
+	}
 	function delete($type, $itemId){
 		mysql_query("DELETE FROM `signatures` WHERE `type`='$type' AND `itemId`='$itemId'");
 	}
@@ -5924,4 +5931,128 @@ class events{
 		return $data;
 	}
 
-}?>
+}
+class api{
+	public function useridToUsername($request){
+		if(is_numeric($request))
+			//only a single request
+			return useridToUsername($request);
+		else {
+			//array of requests
+			$userids = json_decode($request,true);
+			
+			foreach($userids as $userid){
+				$ret[$userid] = useridToUsername($userid);
+			}
+			
+			return json_encode($ret);
+			
+		}
+	}
+	public function useridToRealname($request){
+		if(is_numeric($request))
+			//only a single request
+			return useridToRealname($request);
+		else {
+			//array of requests
+			$userids = json_decode($request,true);
+			
+			foreach($userids as $userid){
+				$ret[$userid] = useridToRealname($userid);
+			}
+			
+			return json_encode($ret);
+			
+		}
+	}
+	public function searchUserByString($string, $limit){
+		$q = save($string);
+		$k = save($limit);
+		$userSuggestSQL = mysql_query("SELECT userid, username, realname FROM user WHERE username LIKE '%$q%' OR realname LIKE '%$q%' OR email='$q' OR userid='$q' LIMIT 0,10");
+		while ($suggestData = mysql_fetch_array($userSuggestSQL)) {
+			
+			
+			if(!isset($return[$userid])){		//only return every user once
+				
+				$userid = $suggestData['userid'];
+				$array[] = $suggestData['username'];
+				$array[] = $suggestData['realname'];
+				
+				$return[$userid] = $array;		//add user data tu return array
+				
+			}
+		}
+		
+		return $return;
+	}
+	
+	//returns base64 string with userdata
+	public function getUserPicture($request){
+		//single userid
+		if(is_numeric($request)){
+			$userids[] = save($request);
+		}else {
+			//array of requests
+			$userids = json_decode($request,true);
+		}
+			foreach($userids AS $userid){
+				
+				$userData = getUserData($userid);
+			
+				//check if user is standard user
+				if(empty($userData['userPicture'])){
+					$src = 'gfx/standardusersm.png';
+				}else{
+					$src = 'upload/userFiles/'.$userid.'/userPictures/thumb/40/'.$userData['userPicture'];
+				}
+				$mime = mime_content_type($src);
+				
+			    $file = fopen($src, 'r');
+			    $output = base64_encode(fread($file, filesize($src)));
+							
+				$return[$userid] = 'data:'.$mime.';base64,'.$output;
+				
+			}
+			
+			if(count($return) == 1){
+				return $return[$request];
+			}else{
+				return json_encode($return);
+			}
+			
+		
+	
+	}
+	public function getLastActivity($request){
+		
+		//single userid
+		if(is_numeric($request)){
+			$userids[] = save($request);
+		}else {
+			//array of requests
+			$userids = json_decode($request,true);
+		}
+			foreach($userids AS $userid){
+				
+				$userid = save($userid);
+		        $data = mysql_fetch_array(mysql_query("SELECT lastactivity FROM user WHERE userid='$userid'"));
+				$diff = time() - $data['lastactivity'];
+				if($diff < 90){
+					$return[$userid] =  1;
+				}else{
+					$return[$userid] =  0;
+				}
+				
+			}
+			
+			if(count($return) == 1){
+				return $return[$request];
+			}else{
+				return json_encode($return);
+			}
+			
+		
+	}
+}
+
+?>

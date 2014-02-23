@@ -20,21 +20,3 @@
         </tr>
     </table>
 </div>
-<script>
-    $("#modulePlayer").click(function () {
-    	$("#dockplayer").toggle("slow");
-    });
-    $("#startButton").click(function () {
-    
-    	if($("#dashBoard:visible").length > 0 && $('.dashBox:hidden').length > 0){
-    		$('.dashBox').show();
-    	}else if($("#dashBoard:visible").length > 0 && $('.dashBox:hidden').length == 0){
-    		$('#dashBoard').slideUp();
-    	}else if($("#dashBoard:hidden").length > 0){
-    			$('#dashBoard').slideDown();
-    	}
-    }); 
-    $("#personalButton").click(function () {
-    	$("#personalFeed").toggle("slow");
-    });
-</script>
