@@ -38,6 +38,9 @@ if(!isset($_SESSION["userid"])) {
 } ?>
 		<script>$('#reader').show();</script>
         <div id="reload"></div><div id="alerter" class="container"></div>
+				<?
+				 include("modules/desktop/dashboard.php");
+				?>
         <div id="bodywrap">
         	
         	<ul id="systemAlerts">
@@ -46,9 +49,6 @@ if(!isset($_SESSION["userid"])) {
             <div id="loader"></div><div id="popper"></div><iframe name="submitter" style="display:none;" id="submitter"></iframe>
             <div id="suggest">
             </div>
-				<?
-				 include("modules/desktop/dashboard.php");
-				?>
 
             <div id="invisiblefeed">
                 <? include("modules/feed/index.php") ?>

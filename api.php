@@ -309,9 +309,8 @@ switch($action){
 	case 'searchUserByString':
 		
 		$api = new api();
-		echo json_encode($api->useridToUsername($_POST['userid']));
+		echo json_encode($api->searchUserByString($_POST['string'], '0,10'));
 		break;
-		
 		
 	case 'useridToRealname':
 		$api = new api();
@@ -366,7 +365,7 @@ switch($action){
     //is used for universeIM registration form
     case 'processSiteRegistrationMobile':
     
-	        createUser($_POST['username'], $_POST['password'], $_POST['salt'], $_POST['privateKey'], $_POST['publicKey']);
+	        createUser($_POST['username'], $_POST['password'], $_POST['authSalt'], $_POST['keySalt'], $_POST['privateKey'], $_POST['publicKey']);
 			echo "1";
 			
     break;
@@ -537,13 +536,12 @@ switch($action){
 		
 		if($_POST['allDay'] == "true"){
 		
-			$startTime = strtotime($_POST['startDate']."-00:00");
-			$stopTime = strtotime($_POST['endDate']."-23:59:60");	
-			
+			$startTime = strtotime($_POST['startDate']."-00:00")-3599;
+			$stopTime = strtotime($_POST['startDate']."-23:59")-3599; //no idea why, but it works	
 		}else{
 			
 			$startTime = strtotime($_POST['startDate']."-".$_POST['startTime']);
-			$stopTime = strtotime($_POST['endDate']."-".$_POST['endTime']);
+			$stopTime = strtotime($_POST['startDate']."-".$_POST['endTime']);
 		}
 		
         //set privacy
@@ -559,14 +557,14 @@ switch($action){
 	case 'updateEvent':
 		
 		if($_POST['allDay'] == "true"){
-		
-			$startTime = strtotime($_POST['startDate']."-00:00");
-			$stopTime = strtotime($_POST['endDate']."-23:59:60");	
+			
+			$startTime = strtotime($_POST['startDate']."-00:00")-3599;
+			$stopTime = strtotime($_POST['startDate']."-23:59")-3599; //no idea why, but it works
 			
 		}else{
 			
 			$startTime = strtotime($_POST['startDate']."-".$_POST['startTime']);
-			$stopTime = strtotime($_POST['endDate']."-".$_POST['endTime']);
+			$stopTime = strtotime($_POST['startDate']."-".$_POST['endTime']);
 		}
 		
         //set privacy
@@ -636,7 +634,14 @@ switch($action){
 		echo json_encode($tasks->get(getUser(), $_POST['startStamp'], $_POST['stopStamp'], $_POST['privacy']));
 		
 		break;
-		
+	case 'markTaskAsDone':
+		$tasks = new tasks();
+		$tasks->changeStatus($_POST['eventid'], 'done');
+		break;
+	case 'markTaskAsPending':
+		$tasks = new tasks();
+		$tasks->changeStatus($_POST['eventid'], 'pending');
+		break;
 //filesystem
 	case 'fileIdToFileTitle':
 		echo fileIdToFileTitle($_POST['fileId']);

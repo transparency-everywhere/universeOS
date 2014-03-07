@@ -1,5 +1,5 @@
 //initializeeader
-var sourceURL = 'http://staging.universeos.org';
+var sourceURL = 'http://localhost/universe';
 
 
 var usernames = [];
@@ -60,20 +60,30 @@ var focus = true;
                                     
                                     $('.privacyBuddyTrigger').click(function(){
                                     	
+                                    	var buddyTriggerId = '.privacyBuddyTrigger';
                                         if($(this).is(':checked')){
-                                            //$('.privacyBuddyTrigger').prop('checked', true);
+                                        	if($(this).data('privacytype') == "edit")
+                                            	$(buddyTriggerId+'_see').prop('checked', true);
                                         }else{
-                                           // $('.privacyBuddyTrigger').prop('checked', false);
+                                        	if($(this).data('privacytype') == "see")
+                                            	$(buddyTriggerId+'_edit').prop('checked', false);
+                                        	if($(this).data('privacytype') == "edit")
+                                            	$(buddyTriggerId+'_see').prop('checked', false);
                                         }
                                     	$('.privacyShowBuddy').show();
                                     });
                                     
                                     $('.privacyGroupTrigger').click(function(){
                                     	$('.privacyShowGroups').show();
+                                    	var groupTriggerId = '.privacyGroupTrigger_'+$(this).data('groupid');
                                         if($(this).is(':checked')){
-                                            //$('.privacyGroupTrigger').prop('checked', true);
+                                        	if($(this).data('privacytype') == "edit")
+                                            	$(groupTriggerId+'_see').prop('checked', true);
                                         }else{
-                                            //$('.privacyGroupTrigger').prop('checked', false);
+                                        	if($(this).data('privacytype') == "see")
+                                            	$(groupTriggerId+'_edit').prop('checked', false);
+                                        	if($(this).data('privacytype') == "edit")
+                                            	$(groupTriggerId+'_see').prop('checked', false);
                                         }
                                     });
                                     
@@ -119,7 +129,7 @@ var focus = true;
                                         $('*').enableSelection();
                                     }
                             });
-              	}
+              	};
               	this.resizableApplications = function(){
                             $(".fenster").not('.ui-resizable').resizable({
                                     handles: 'n, e, s, w, ne, se, sw, nw',
@@ -138,7 +148,7 @@ var focus = true;
                                         $('*').enableSelection();
                                     }
                             });
-              	}
+              	};
               	this.applicationOnTop = function(){
                         $('.fenster').children().mousedown(function(){
 							
@@ -149,7 +159,7 @@ var focus = true;
                             $(this).parent(".fenster").css('position', 'absolute');
                             }
                         });
-              	}
+              	};
               	this.setApplicationsToStartupSizes = function(){
               		//old creepy way to initalize windows => in future => css media width
                 	
@@ -210,14 +220,14 @@ var focus = true;
                         'height' : heightBig,
                         'z-index' : '999'
                             });
-              	}
+              	};
               	
               	this.dashBox = function(){
 		            //init dashcloses 
 					$('.dashBox .dashClose').click(function(){
 						$(this).parent('.dashBox').slideUp();
 					});	
-              	}
+              	};
               	
               	this.toolTipper = function(){
                 
@@ -242,7 +252,7 @@ var focus = true;
 	                    $('.mousePop').hide();
 	                });
               		
-              	}
+              	};
               	this.search = function(){
               		//init search
 					$("#searchField").keyup(function()
@@ -276,7 +286,7 @@ var focus = true;
 							
 						}, 500 );
 					});
-              	}
+              };
               	
               	//this function is called to initialzie GUI
               	//all needed functions are collected here
@@ -301,7 +311,7 @@ var focus = true;
                         
               	};
               	
-              }
+             };
               // function Rabbit(adjective) {
 				  // this.adjective = adjective;
 				  // this.speak = function(line) {
@@ -324,7 +334,7 @@ var focus = true;
 				  			content += '</div>';
 				  		content += '</div>';
 				  
-				  }
+				  };
 				  
 				  this.addTab = function(title, type, content){
 				  	this.index++;
@@ -350,10 +360,10 @@ var focus = true;
 			  		if(typeof style['width'] != 'undefined'){
 			  			windowStyle +='width:'+style['width']+';';
 			  		}
-			  		if(typeof style['height'] != 'undefined'){
-			  			windowStyle +='height:'+style['height']+';';
-			  		}
-			  		
+			  		// if(typeof style['height'] != 'undefined'){
+			  			// console.log('height:'+style['height']+';');
+			  		// }
+// 			  		
 			  		
 			  		
 			  		var output = '<div class="fenster" id="'+id+'" style="'+windowStyle+'">';
@@ -371,7 +381,7 @@ var focus = true;
 			  		
               		init.draggableApplications();
               		init.resizableApplications();
-              		init.applicationOnTop();
+              		application.onTop('calendarFenster');
 			  	};
 			  	
 			  	this.onTop = function(id){
@@ -403,7 +413,7 @@ var focus = true;
                         'left' : window.fullScreenOldMarginX,
                         'width' : window.fullScreenOldX,
                         'height' : window.fullScreenOldY
-                        }
+                       };
                   $("#" + id + "").css(returnFullScreenCSS);
 			  	};
 			  };
@@ -553,7 +563,7 @@ var focus = true;
 			  		//generate formstuff from eventdata
 			  		if(editable){
 			  			editableToken = 'contentEditable';
-			  			var checked
+			  			var checked;
 			  			if(editable == true){
 			  				
 			  				checked = 'checked="checked"';
@@ -624,7 +634,7 @@ var focus = true;
 			  		
 			  		var onSubmit = function() {
 			  			$('#updateTask').submit();
-  					}
+  					};
   					
   					//create modal
               		modal.create('Task '+taskData.title, content, [onSubmit, 'Save']);
@@ -655,7 +665,13 @@ var focus = true;
               					searchString += '&'+privacy;
               					
 	              			$.post("api.php?action=updateTask",searchString,function(data){
-					            alert(data); //post check to show that the mysql string is the same as submit                        
+					        
+					            if(empty(data)){
+					            	jsAlert('', 'The event has been updated.');
+					            	$('.blueModal').slideUp();
+					            }else{
+					            	jsAlert('', data);
+					            }
 					        });
 
               			}else{
@@ -684,6 +700,38 @@ var focus = true;
 				      }
 				   });
 			  	};
+			  	this.markAsDone = function(id){
+			  		$.ajax({
+				      url:"api.php?action=markTaskAsDone",
+				      async: false,  
+					  type: "POST",
+					  data: { 
+					  	eventid : id,
+					  	 },
+				      success:function(data) {
+				         result = data; 
+				      }
+				   });
+				   $('.task_'+id).addClass('doneTask');
+				   if(!calendar.showDoneTasks){
+				   	$('.task_'+id).hide();
+				   }
+			  	};
+			  	this.markAsPending = function(id){
+			  		$.ajax({
+				      url:"api.php?action=markTaskAsPending",
+				      async: false,  
+					  type: "POST",
+					  data: { 
+					  	eventid : id,
+					  	 },
+				      success:function(data) {
+				         result = data; 
+				      }
+				   });
+				  $('.task_'+id).removeClass('doneTask');
+				  $('.task_'+id).show();
+			  	};
 			  	this.update = function(){
 			  		updateDashbox('task');
 			  	};
@@ -697,6 +745,7 @@ var focus = true;
 				this.listType = 'boxes';
 			  	this.shownTimeObject;
 			  	this.loader;
+			  	this.showDoneTasks = false; // defines if tasks with status "done" are shown
 			  	
 			  	this.show = function(){
 			  		if($('#calendarFenster').length === 0){
@@ -759,7 +808,7 @@ var focus = true;
 								html += '</ul>';
 								html += '<ul id="taskList">';
 									html += '<li class="header"><input type="checkbox" id="showTasks" onclick="calendar.toggleTasks();">&nbsp;Show Tasks<a href="#" class="pull-right" onclick="tasks.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon-plus icon-white"></i></a></li>';
-									html += '<li style="display:none;"><input type="checkbox" id="showDoneTasks" onclick="calendar.toggleDoneTasks();" checked>&nbsp;hide done</li>';
+									html += '<li style="display:none;"><input type="checkbox" id="hideDoneTasks" onclick="calendar.toggleDoneTasks();" checked>&nbsp;hide done</li>';
 								html += '</ul>';
 								html += '<ul id="events">';
 									html += '<li class="header">Events<a href="#" class="pull-right" onclick="events.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon-plus icon-white"></i></a></li>';
@@ -769,17 +818,15 @@ var focus = true;
 							html += '</div>';
 						html += '</div>';
 						
-			  			application.create('calendarFenster', 'Calendar', 'html', html,{width: "400px", height: "200px"});
+			  			application.create('calendarFenster', 'Calendar', 'html', html,{width: ($(document).width()*0.9)+"px", dfgh:  ($(document).height()*0.8)+"px"});
 			  			
-			  			//fix resize bug
-			  			$('#calendarFenster ').height('+5');
 			  			
 						$('#calendars .header').click(function(){
 							$('#side #calendars li').not('.header').slideToggle();
 						});
 			  			
 			  			$('#calendars input[type=checkbox]').click(function(){
-			  				console.log(calendar.getPrivacy());
+			  				calendar.loadEvents();
 			  			});
 			  			
 			  			$('#calendarListType #boxes').click(function(){
@@ -789,6 +836,8 @@ var focus = true;
 			  			$('#calendarListType #list').click(function(){
 			  				calendar.toggleListType('list');
 			  			});
+			  			
+			  			
 			  			this.loadMonth();
 			  	};
 			  	
@@ -863,19 +912,19 @@ var focus = true;
 								$.each( taskList, function( key, value ) {
 									  if($('#taskDetail_'+value.id).length === 0){
 									  	  var style = '';
-									  	  if(!$('#showDoneTasks').is(':checked') && value.status == 'done'){
-									  	  	style = 'display:none;';
-									  	  }
-									  	  console.log(style);
-									  	  var taskClass;
+									  	  var taskClass = 'task_'+value.id;
+									  	  var checked;
 									  	  if(value.status == 'done'){
-									  	  	taskClass = 'doneTask';
+									  	  	if(!calendar.showDoneTasks)
+									  	  		style = 'display:none;';
+									  	  	taskClass += ' doneTask';
+									  	  	checked = 'checked="checked"';
 									  	  }else{
-									  	  	taskClass = '';
+									  	  	checked = '';
 									  	  }
 										  var d = new Date(value.timestamp*1000);
-										  list += '<li data-taskId="'+value.id+'" style="'+style+'" class="'+taskClass+' task" onclick="$(\'#taskDetail_'+value.id+'\').toggle();">&nbsp;<input type="checkbox">&nbsp;'+value.title+'<br>'+d.getHours()+':'+d.getMinutes()+'</li>';
-										  list += '<li class="taskDetail '+taskClass+'" id="taskDetail_'+value.id+'" style="'+style+'">'+value.description+'</li>';
+										  list += '<li data-taskId="'+value.id+'" style="'+style+'" class="'+taskClass+' task">&nbsp;<input type="checkbox" class="eventBox" data-eventid="'+value.id+'" '+checked+'>&nbsp;'+value.title+'<br>'+d.getHours()+':'+d.getMinutes()+'<span class="caret" onclick="$(\'#taskDetail_'+value.id+'\').toggle();"></span></li>';
+										  list += '<li class="taskDetail '+taskClass+'" id="taskDetail_'+value.id+'" style="'+style+'"><i class="icon-pencil icon-white" onclick="tasks.show('+value.id+', '+value.editable+');"></i>'+value.description+'</li>';
 										
 									  }
 								 });
@@ -884,7 +933,15 @@ var focus = true;
 						$(this).children('.eventList').append(list);
 			  			
 			  			
-			  			
+			  		});
+			  		
+			  		$('.task .eventBox').click(function(){
+			  			if($(this).is(':checked')){
+			  				tasks.markAsDone($(this).data('eventid'));
+			  			}else{
+			  				tasks.markAsPending($(this).data('eventid'));
+			  			}
+			  			console.log($(this).is(':checked'));
 			  		});
 			  		
 			  		console.log('tasks loaded');
@@ -903,10 +960,12 @@ var focus = true;
 			  	};
 			  	
 			  	this.toggleDoneTasks = function(){
-			  		if($('#showDoneTasks').is(':checked')){
-			  			$('.doneTask').show();
-			  		}else{
+			  		if($('#hideDoneTasks').is(':checked')){
 			  			$('.doneTask').hide();
+			  			calendar.showDoneTasks = false;
+			  		}else{
+			  			$('.doneTask').show();
+			  			calendar.showDoneTasks = true;
 			  		}
 			  	};
 			  	
@@ -924,10 +983,24 @@ var focus = true;
 								$.each( appointments, function( key, value ) {
 								  if($('#eventDetail_'+value.id).length === 0){
 								  	
+								  	  //create date objects
 									  var startDate = new Date(value.startStamp*1000);
 									  var endDate = new Date(value.stopStamp*1000);
-									  list += '<li data-eventId="'+value.id+'" onclick="$(\'#eventDetail_'+value.id+'\').toggle();">'+startDate.getHours()+':'+startDate.getMinutes()+'&nbsp;'+value.title+'</li>';
-									  list += '<li class="eventDetail" id="eventDetail_'+value.id+'" onclick="events.show('+value.id+', '+privacy.authorize(value.privacy, value.user)+');">'+startDate.getHours()+':'+startDate.getMinutes()+' - '+endDate.getHours()+':'+endDate.getMinutes()+'<br>'+value.place+'</li>';
+									  
+									  var startTime = calendar.beautifyDate(startDate.getHours())+':'+calendar.beautifyDate(startDate.getMinutes());
+									  var stopTime = calendar.beautifyDate(endDate.getHours())+':'+calendar.beautifyDate(endDate.getMinutes());
+									  
+									  var title = startTime+'&nbsp;'+value.title;
+									  
+									  if(startTime == '00:00' && stopTime == '23:59'){
+									  	title = value.title;
+									  	startTime = 'All Day';
+									  	stopTime = '';
+									  }
+									  
+									  
+									  list += '<li data-eventId="'+value.id+'" onclick="$(\'#eventDetail_'+value.id+'\').toggle();">'+title+'</li>';
+									  list += '<li class="eventDetail" id="eventDetail_'+value.id+'" onclick="events.show('+value.id+', '+privacy.authorize(value.privacy, value.user)+');"><i class="icon-pencil"></i>'+startTime+' - '+stopTime+'<br>'+value.place+'</li>';
 									
 								  }
 								 });
@@ -975,8 +1048,10 @@ var focus = true;
 										day += '<span class="caret"></span>';
 									day += '</a>';
 									day += '<ul class="dropdown-menu">';
-										day += '<li>Options</li>';
+										day += '<li><a href="#" class="header">Options</a></li>';
 										day += '<li><a href="#" title="Add Event" onclick="events.addForm('+time+')">Add Event</a></li>';
+									
+										day += '<li><a href="#" title="Add Task" onclick="tasks.addForm('+time+')">Add Task</a></li>';
 									day += '</ul>';
 								day += '</div>';
 							day += '</header>';
@@ -1476,8 +1551,7 @@ var focus = true;
 					  		    	content += '</td>';
 					  		    	content += '<td>';
 					  		    	content += '<input type="text" name="startDate" id="startDate" class="startDate datepicker" value="'+formattedDate+'" style="width: 72px;">';
-					  		    	content += '&nbsp;<input type="text" name="startTime" id="startTime" class="startTime eventTime" value="15:30" style="width: 37px;">&nbsp;to&nbsp;';
-					  		    	content += '<input type="text" name="endDate" id="endDate" class="endDate datepicker" value="'+formattedDate+'" style="width: 72px;">';
+					  		    	content += '&nbsp;<input type="text" name="startTime" id="startTime" class="startTime eventTime" value="15:30" style="width: 37px;"><span class="endDate">&nbsp;to&nbsp;</span>';
 					  		    	content += '&nbsp;<input type="text" name="endTime" id="endTime" class="endTime eventTime" value="16:30" style="width: 37px;">';
 					  		    	content += '</td>';
 					  		    content += '</tr>';
@@ -1512,7 +1586,7 @@ var focus = true;
               		$('#createEvent').submit(function(e){
               			e.preventDefault();
               			console.log($(this).serialize());
-              			if($('#eventTitle').val().length > 0 && $('#startDate').val().length > 0 && $('#endDate').val().length > 0){
+              			if($('#eventTitle').val().length > 0 && $('#startDate').val().length > 0 && $('#endTime').val().length > 0){
               				
 	              			$.post("api.php?action=createEvent",$(this).serialize(),function(data){
 					            if(data.length === 0){
@@ -1549,7 +1623,7 @@ var focus = true;
 			  		//generate formstuff from eventdata
 			  		if(editable){
 			  			editableToken = 'contentEditable';
-			  			var checked
+			  			var checked;
 			  			if(editable == 'true')
 			  				checked = 'checked="checked"';
 			  			
@@ -1624,7 +1698,7 @@ var focus = true;
               		
               		$('#updateEvent').submit(function(e){
               			e.preventDefault();
-              			if($('#title').text().length > 0 && $('#startDate').text().length > 0 && $('#stopDate').text().length > 0){
+              			if($('#title').text().length > 0 && $('#startDate').text().length > 0){
               				
               				var privacy = $('.blueModal .privacySettings  :input').serialize();
               				
@@ -1633,13 +1707,17 @@ var focus = true;
               					searchString += '&place='+encodeURIComponent($('.blueModal #place').text());
               					searchString += '&startDate='+encodeURIComponent($('.blueModal #startDate').text());
               					searchString += '&startTime='+encodeURIComponent($('.blueModal #startTime').text());
-              					searchString += '&endDate='+encodeURIComponent($('.blueModal #stopDate').text());
               					searchString += '&endTime='+encodeURIComponent($('.blueModal #stopTime').text());
               					searchString += '&allDay='+encodeURIComponent($('.blueModal #eventAllDay').is(':checked'));
               					searchString += '&'+privacy;
               					
 	              			$.post("api.php?action=updateEvent",searchString,function(data){
-					            alert(data); //post check to show that the mysql string is the same as submit                        
+					            if(empty(data)){
+					            	jsAlert('', 'The event has been updated.');
+					            	$('.blueModal').slideUp();
+					            }else{
+					            	jsAlert('', data);
+					            }
 					        });
 
               			}else{
@@ -1688,7 +1766,7 @@ var focus = true;
 	                       }, "html");
 			  		
 			  		
-			  	}
+			  	};
 			  	this.show = function(val, editable){
 
 			  		if(typeof editable == 'undefined')
@@ -1732,9 +1810,9 @@ var focus = true;
 				   		return true;
 				   else
 				   		return false;
-			  	}
+			  	};
 			  	
-			  }
+			  };
 			  var groups = new function(){
 			  	
 			  	this.get = function(){
@@ -1754,7 +1832,7 @@ var focus = true;
 				   	if(result != null){
 				   		return $.parseJSON(result);
 				   	}
-			  	}
+			  	};
 			  	this.getTitle = function(groupId){
 			  		
 				    var result="";
@@ -1772,9 +1850,9 @@ var focus = true;
 				   		return result;
 				   	}
 			  		
-			  	}
+			  	};
 			  	
-			  }
+			  };
 
 
               function applicationOnTop(id){
@@ -1813,7 +1891,7 @@ var focus = true;
                         'right' : '5px',
                         'width' : 'auto',
                         'height' : 'auto'
-                        }
+                       };
                   $("#" + moduleId + "").css(fullscreenCss);
               }
               
@@ -1825,7 +1903,7 @@ var focus = true;
                         'left' : window.fullScreenOldMarginX,
                         'width' : window.fullScreenOldX,
                         'height' : window.fullScreenOldY
-                        }
+                       };
                   $("#" + moduleId + "").css(returnFullScreenCSS);
                   
               	
@@ -1940,7 +2018,7 @@ var focus = true;
               		content += '</ul>';
               		
               		content += '<ul class="shareBox">';
-              			content += '<li id="facebook"><center><a target="_blank" href="#" onclick="'+facebook+'" class="btn btn-success"><img src="gfx/startPage/facebook.png" height="20"> Click Here To Share</a></center></li>'
+              			content += '<li id="facebook"><center><a target="_blank" href="#" onclick="'+facebook+'" class="btn btn-success"><img src="gfx/startPage/facebook.png" height="20"> Click Here To Share</a></center></li>';
               			content += '<li id="url"><center><textarea>'+kickstarterURL+'</textarea></center>Just place the HTML code for your Filebrowser wherever<br> you want the Browser to appear on your site.</li>';
               			content += '<li id="embed"><center><textarea><iframe src="'+embedURL+'"></iframe></textarea></center>Just place the HTML code for your Filebrowser wherever<br> you want the Browser to appear on your site.</li>';
               			content += '<li id="googleplus"><center><a href="#" onclick="'+googleplus+'" class="btn btn-success"><img src="gfx/startPage/googleplus.png" height="20"> Click Here To Share</a></center></li>';
@@ -1991,7 +2069,7 @@ var focus = true;
 //encryption functions
 
 	function symEncrypt(key, message){
-		var msg
+		var msg;
 		var output;
 	    msg = CryptoJS.AES.encrypt(message, key);
 	    return String(msg);
@@ -2285,7 +2363,7 @@ var focus = true;
 
       function showContent(content, title){
         showApplication('reader');
-        createNewTab('reader_tabView', title,'','showContent.php?content='+content,true);return true
+        createNewTab('reader_tabView', title,'','showContent.php?content='+content,true);return true;
           
       }
       
@@ -2469,7 +2547,7 @@ var focus = true;
 	function openUploadTab(element){
 	
         showApplication('filesystem');
-        createNewTab('fileBrowser_tabView', 'Upload File','','modules/filesystem/upload.php?element='+element,true);return true
+        createNewTab('fileBrowser_tabView', 'Upload File','','modules/filesystem/upload.php?element='+element,true);return true;
 	}
 	
 	function initUploadify(id, uploader, element, timestamp, token){
@@ -2486,7 +2564,7 @@ var focus = true;
 				        'onUploadSuccess' : function(file, data, response) {
 				        	
 				        	if(response){
-				        		eval(data);
+				        		eval(data); //no esta bien! que?
 				        	}
 				        },
 	                    'onUploadError' : function(file, errorCode, errorMsg, errorString) {
@@ -2517,7 +2595,7 @@ var focus = true;
     
     function openElement(elementId, title){
         showApplication('filesystem');
-        createNewTab('fileBrowser_tabView', title,'','modules/filesystem/showElement.php?element='+elementId,true);return true
+        createNewTab('fileBrowser_tabView', title,'','modules/filesystem/showElement.php?element='+elementId,true);return true;
     }
 
     function openFile(type, typeId, title, typeInfo, extraInfo1, extraInfo2){
@@ -2550,44 +2628,44 @@ var focus = true;
         		
             	createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=youTube&linkId='+linkId+'&typeInfo='+vId+'&extraInfo1='+playlist+'&extraInfo2='+row+'&external=1',true);
             
-        	}return false
+        	}return false;
         }
         
         if(type == 'RSS'){
             createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=RSS&linkId='+typeId,true);
-            return false
+            return false;
         }
         
         if(type == 'wikipedia'){
         	//typeId needs to be changed to title
             createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=wiki&title='+typeId,true);
-            return false
+            return false;
         }
         
         //real files
         if(type == 'UFF'){
             createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=UFF&fileId='+typeId,true);
-            return false
+            return false;
         }
         if(type == 'document' ||type == 'application/pdf' ||type == 'text/plain'){
             createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?fileId='+typeId,true);
-            return false
+            return false;
         }
         if(type == 'video' ||type == 'video/mp4' ||type == 'video/quicktime'  ){
             createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=video&fileId='+typeId,true);
-            return false
+            return false;
         }
         if(type == 'audio' ||type == 'audio/wav' ||type == 'audio/mpeg'  ){
             createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=audio&fileId='+typeId,true);
-            return false
+            return false;
         }
         if(type == 'image/png' ||type == 'image/jpeg' || type == 'image'){
             createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=image&fileId='+typeId,true);
-            return false
+            return false;
             
         }else{
             alert(type);
-            return false
+            return false;
         }
         return false;
     }
@@ -2659,7 +2737,7 @@ var focus = true;
     //opens articles out of the universe wiki
     //located in reader cause it will be placed there in future
     function openUniverseWikiArticle(title){
-    	openURL("http://wiki.universeos.org/index.php?title="+title, title)
+    	openURL("http://wiki.universeos.org/index.php?title="+title, title);
     }
     
     function openURL(url, title){
@@ -2667,7 +2745,7 @@ var focus = true;
     		url = 'modules/reader/browser/?url='+url;
             createNewTab('reader_tabView',title,'',url,true);
             showApplication('reader');   
-            return false
+            return false;
     }
     
     
@@ -2719,7 +2797,7 @@ var focus = true;
 	        string = string.replace(new RegExp(escape(val), "g"), replacement[val]);
 	        string.replace(/\[itemthumb type=(\S*) typeId=(\S*)]/g, '<a href="$1">$2<\/a>');
 	    string = unescape(string);
-	    return string
+	    return string;
     }
     
        
@@ -3015,7 +3093,7 @@ function groupMakeUserAdmin(groupId, userId){
                     //this function should be used at the beginning of any function that is called from the menu
                     var cssObj = {
                         'display' : 'none'
-                        }
+                       };
                     $(".rightclick").css(cssObj);
                 }
               
@@ -3041,8 +3119,7 @@ function groupMakeUserAdmin(groupId, userId){
                         menu.style.top = Event.clientY + "px";
 
                         
-                        $(".rightclick").css('z-index', '9999');
-
+                        $(".rightclick").css('z-index', '99999');
                     }
                 }
                 
@@ -3141,13 +3218,13 @@ function groupMakeUserAdmin(groupId, userId){
               function showGroup(groupId){
                   showApplication('reader');
                   createNewTab('reader_tabView',"" + groupId + "",'',"./group.php?id=" + groupId + "",true);
-                  return false
+                  return false;
               }
               
               function showProfile(userId){
                   showApplication('reader');
                   createNewTab('reader_tabView',useridToUsername(userId),'',"./profile.php?user=" + userId + "",true);
-                  return false
+                  return false;
               }
                 
               function showPlaylist(id){
@@ -3208,7 +3285,7 @@ function groupMakeUserAdmin(groupId, userId){
 			    		jsAlert('The passwords dont match');
 			    	}
 			    };
-			}
+			};
               
               
              
@@ -3225,11 +3302,11 @@ function groupMakeUserAdmin(groupId, userId){
                    /* Don't let it grow over the max height */
                    if (f.scrollHeight > max) {
                       /* Add the scrollbar back and bail */
-                      if (f.style.overflowY != 'scroll') { f.style.overflowY = 'scroll' }
+                      if (f.style.overflowY != 'scroll') { f.style.overflowY = 'scroll'; }
                       return;
                    }
                    /* Make sure element does not have scroll bar to prevent jumpy-ness */
-                   if (f.style.overflowY != 'hidden') { f.style.overflowY = 'hidden' }
+                   if (f.style.overflowY != 'hidden') { f.style.overflowY = 'hidden'; }
                    /* Now adjust the height */
                    var scrollH = f.scrollHeight;
                    if( scrollH > f.style.height.replace(/[^0-9]/g,'') ){
@@ -3608,7 +3685,7 @@ function groupMakeUserAdmin(groupId, userId){
 
                                         });
                                 }
-                        }
+                        };
                 })(jQuery);  	
 
 				var delay = (function(){

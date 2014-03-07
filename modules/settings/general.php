@@ -72,11 +72,11 @@
 			                    </div>
 			                    <div class="controls controlls-row" id="changePasswordButton">
 			                        <span class="span2"></span>
-			                        <div class="span3"><a href="#" class="btn btn-primary" onclick="$('.changePassword').slideDown();">Change Password</a><br/>&nbsp;</div>
+			                        <div class="span3"><a href="#" class="btn btn-primary" onclick="$('.changePassword').slideDown(); return false">Change Password</a><br/>&nbsp;</div>
 			                    </div>
 			                    <div class="controls controlls-row changePassword">
-			                        <span class="span2" style="text-align:right;">ACHTUNG</span>
-			                        <span class="span3" style="">Nach &auml;ndern des Passworts sind <b>alte Nachrichten</b> nicht mehr entschlüsselbar.<br>&nbsp;</span>
+			                        <span class="span2" style="text-align:right;">CAUTION</span>
+			                        <span class="span3" style="">After changing the password, old messages are no longer readable.<br>&nbsp;</span>
 			                    </div>
 			                    <div class="controls controlls-row changePassword">
 			                        <span class="span2" style="text-align:right;">Old Password:&nbsp;</span>

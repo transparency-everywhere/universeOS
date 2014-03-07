@@ -60,11 +60,11 @@ $k = 5;//limit
 		
 		
 	//folders
-		$folderSuggestSQL = mysql_query("SELECT id, name, privacy FROM folders WHERE name LIKE '%$q%' LIMIT $k");
+		$folderSuggestSQL = mysql_query("SELECT id, name, privacy, creator FROM folders WHERE name LIKE '%$q%' LIMIT $k");
 		while ($suggestData = mysql_fetch_array($folderSuggestSQL)) {
 			
     
-   			if(authorize($suggestData[privacy], "show")){
+   			if(authorize($suggestData['privacy'], "show", $suggestData['creator'])){
 			echo"<li class=\"strippedRow\">";
 			
 			//icon
@@ -76,11 +76,11 @@ $k = 5;//limit
 		}  }
 		
 	//elements
-		$elementSuggestSQL = mysql_query("SELECT id, title, privacy FROM elements WHERE title LIKE '%$q%' LIMIT $k");
+		$elementSuggestSQL = mysql_query("SELECT id, title, privacy, author FROM elements WHERE title LIKE '%$q%' LIMIT $k");
 		while ($suggestData = mysql_fetch_array($elementSuggestSQL)) {
 			
     
-   			if(authorize($suggestData[privacy], "show")){
+   			if(authorize($suggestData['privacy'], "show", $suggestData['author'])){
 			echo"<li class=\"strippedRow\">";
 			
 			//icon
@@ -93,14 +93,14 @@ $k = 5;//limit
 		}  }
 		
 	//files
-		$fileSuggestSQL = mysql_query("SELECT id, title, privacy, type FROM files WHERE title LIKE '%$q%' LIMIT $k");
+		$fileSuggestSQL = mysql_query("SELECT id, title, privacy, type, owner FROM files WHERE title LIKE '%$q%' LIMIT $k");
 		while ($suggestData = mysql_fetch_array($fileSuggestSQL)) {
 			
     
 			
-            $image = getFileIcon($suggestData[type]);
+            $image = getFileIcon($suggestData['type']);
 	
-   			if(authorize($suggestData[privacy], "show")){
+   			if(authorize($suggestData['privacy'], "show", $suggestData['owner'])){
 			echo"<li class=\"strippedRow\">";
 			
 			//icon

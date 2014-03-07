@@ -1380,8 +1380,8 @@ if($_GET['action'] == "scorePlus"){
             if(!empty($_POST['feedInput']) || !empty($_POST['feed1'])){
             
                     //set privacy
-                    $customShow = 'f';
-                    $customEdit = 'f';
+                    $customShow = $_POST['privacyCustomSee'];
+                    $customEdit = $_POST['privacyCustomEdit'];
                     
                     $privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
                     $user = getUser();
@@ -1498,10 +1498,17 @@ if($_GET['action'] == "scorePlus"){
          $UpdateData = mysql_fetch_array($UpdateStringSql);
    
             if(!empty($vId)){
-             $items= "$vId;".$UpdateData['youTube'];
-             if(mysql_query("UPDATE playlist SET youTube='$items' WHERE id='$playlist'")){
-                 jsAlert("worked ;)");
-             }
+            	
+				//faster than explode-implode
+            	if(!empty($UpdateData['youTube'])){
+			 		$itemString = $UpdateData['youTube'].$vId.";"; 
+            	}else{
+            		$itemString = $vId.";";
+            	}
+			 
+             	if(mysql_query("UPDATE playlist SET youTube='$itemString' WHERE id='$playlist'")){
+                 	jsAlert("worked ;)");
+             	}
             }
      }else if($_GET['action'] == "showSingleImage"){
          $element = $_GET['element'];
@@ -1953,7 +1960,7 @@ if($_GET['action'] == "scorePlus"){
             }else if($type == "element"){
                 $checkElementSql = mysql_query("SELECT folder, privacy, author FROM elements WHERE id='$itemId'");
                 $checkElementData = mysql_fetch_array($checkElementSql);
-                if(authorize($checkElementData['privacy'], "edit", $checkElementData['creator'])){
+                if(authorize($checkElementData['privacy'], "edit", $checkElementData['author'])){
 				
                    	deleteElement($itemId);
                     jsAlert("The Element has been deleted");
@@ -2526,7 +2533,7 @@ if($_GET['action'] == "scorePlus"){
 						$filesWithError[] = $file; //add fileid to error list
 				}
 				echo'<script>parent.deleteTab("Upload File");</script>';
-				jsAlert("The files have successfully been added to the Element. $woff $files");
+				jsAlert("The files have successfully been added to the Element.");
 			
 				
 			

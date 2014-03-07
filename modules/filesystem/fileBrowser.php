@@ -1,5 +1,5 @@
 <?
-if(isset($_GET[reload])) {
+if(isset($_GET['reload'])) {
     session_start();
     include_once("../../inc/config.php");
     include_once("../../inc/functions.php");
@@ -10,7 +10,7 @@ if(isset($_GET[reload])) {
 $showFileBrowser = true;
 
 
-if(!isset($_GET[initter])){
+if(!isset($_GET['initter'])){
     
 ?>
 

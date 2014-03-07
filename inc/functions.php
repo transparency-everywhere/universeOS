@@ -2136,101 +2136,101 @@ echo"</div>";
              $edit = false;
 			 $delete = false;
         
-        if($privacy == "p"){
-            
-            
-             $show = true;
-             if(proofLogin()){
-             $edit = true;
-			 $delete = true;
-			 }
-            
-        }else if($privacy == "h"){
-            
-            if($author == $_SESSION['userid'] && proofLogin()){
-            
-                $show = true;
-                $edit = true;
-				$delete = true;
-                
-            }else{
-                
-                $show = false;
-                $edit = false;
-				$delete = true;
-                
-            }
-            
-        }else{
-            
-
-
-                $custom = explode("//", $privacy);
-                $customShow = $custom[1];
-                $customShow = explode(";", $customShow);
-                $customEdit = $custom[0];
-				
-				if($customEdit == "h" && $author == getUser()){
-                	$edit = true;
-				}
-                $customEdit = explode(";", $customEdit);
-                
-                //check if friends are allowed to see or edit this
-                if((in_array("f", $customShow) || in_array("f", $customEdit)) && proofLogin()){
-                    if($author == $_SESSION['userid']){
-                            //if friends are allowed to see => show = true
-                            if(in_array("f", $customShow)){
-                                $show = true;
-                            }
-                            //if friends are allowed to edit => show = true
-                            if(in_array("f", $customEdit)){
-                                $edit = true;
-                                
-                            }
-                    	
-                    }
-                    //get friends from SQL unefizient
-                    $buddylistSql = mysql_query("SELECT * FROM buddylist WHERE owner='$author' && request='0'");
-                    while($buddylistData = mysql_fetch_array($buddylistSql)) {
-                        
-                        //check if user is buddy of $author
-                        if($buddylistData['buddy'] == getUser() && proofLogin()){
-                            //if friends are allowed to see => show = true
-                            if(in_array("f", $customShow)){
-                                $show = true;
-                            }
-                            //if friends are allowed to edit => show = true
-                            if(in_array("f", $customEdit)){
-                                $edit = true;
-                                
-                            }
-                        }
-                    }
-                }
-                
-                
-                
-                
-                if(proofLogin()){
-                //check if user is in group which is allowed to see this item
-	                $groupAtSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='".getUser()."' and validated='1'");
-	                while($groupAtData = mysql_fetch_array($groupAtSql)){
+	        if($privacy == "p"){
+	            
+	            
+	             $show = true;
+	             if(proofLogin()){
+	             $edit = true;
+				 $delete = true;
+				 }
+	            
+	        }else if($privacy == "h"){
+	            
+	            if($author == $_SESSION['userid'] && proofLogin()){
+	            
+	                $show = true;
+	                $edit = true;
+					$delete = true;
+	                
+	            }else{
+	                
+	                $show = false;
+	                $edit = false;
+					$delete = true;
+	                
+	            }
+	            
+	        }else{
+	            
 	
-	                    if(in_array($groupAtData['group'], $customShow) && proofLogin()){
-	                        $show = true;  
+	
+	                $custom = explode("//", $privacy);
+	                $customShow = $custom[1];
+	                $customShow = explode(";", $customShow);
+	                $customEdit = $custom[0];
+					
+					if($customEdit == "h" && $author == getUser()){
+	                	$edit = true;
+					}
+	                $customEdit = explode(";", $customEdit);
+	                
+	                //check if friends are allowed to see or edit this
+	                if((in_array("f", $customShow) || in_array("f", $customEdit)) && proofLogin()){
+	                    if($author == getUser()){
+	                            //if friends are allowed to see => show = true
+	                            if(in_array("f", $customShow)){
+	                                $show = true;
+	                            }
+	                            //if friends are allowed to edit => show = true
+	                            if(in_array("f", $customEdit)){
+	                                $edit = true;
+	                                
+	                            }
+	                    	
 	                    }
-	                    if(in_array($groupAtData['group'], $customEdit) && proofLogin()){
-	                        $edit = true;  
+	                    //get friends from SQL unefizient
+	                    $buddylistSql = mysql_query("SELECT * FROM buddylist WHERE owner='$author' && request='0'");
+	                    while($buddylistData = mysql_fetch_array($buddylistSql)) {
+	                        
+	                        //check if user is buddy of $author
+	                        if($buddylistData['buddy'] == getUser() && proofLogin()){
+	                            //if friends are allowed to see => show = true
+	                            if(in_array("f", $customShow)){
+	                                $show = true;
+	                            }
+	                            //if friends are allowed to edit => show = true
+	                            if(in_array("f", $customEdit)){
+	                                $edit = true;
+	                                
+	                            }
+	                        }
 	                    }
 	                }
-				}
-                
-                
-                
-            
-            
-            
-        }
+	                
+	                
+	                
+	                
+	                if(proofLogin()){
+	                //check if user is in group which is allowed to see this item
+		                $groupAtSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='".getUser()."' and validated='1'");
+		                while($groupAtData = mysql_fetch_array($groupAtSql)){
+		
+		                    if(in_array($groupAtData['group'], $customShow) && proofLogin()){
+		                        $show = true;  
+		                    }
+		                    if(in_array($groupAtData['group'], $customEdit) && proofLogin()){
+		                        $edit = true;  
+		                    }
+		                }
+					}
+	                
+	                
+	                
+	            
+	            
+	            
+	        }
         }
         
         if($type == "show"){
@@ -2376,8 +2376,8 @@ echo"</div>";
         				Friends cann see or edit.
         			</li>
         			<li class="<?=$showCustom;?> sub privacyShowBuddy">
-        				<div><input type="checkbox" name="privacyCustomSee[]" value="f" class="privacyCustomTrigger uncheckPublic uncheckHidden privacyBuddyTrigger" <?=$checked['privacyCustomShowF'];?> <?=$disabled;?>>See</div>
-        				<div><input type="checkbox" name="privacyCustomEdit[]" value="f" class="uncheckPublic privacyCustomTrigger uncheckHidden privacyBuddyTrigger" <?=$checked['privacyCustomEditF'];?> <?=$disabled;?>>Edit</div>
+        				<div><input type="checkbox" name="privacyCustomSee[]" value="f" data-privacytype="see" class="privacyCustomTrigger uncheckPublic uncheckHidden privacyBuddyTrigger privacyBuddyTrigger_see" <?=$checked['privacyCustomShowF'];?> <?=$disabled;?>>See</div>
+        				<div><input type="checkbox" name="privacyCustomEdit[]" value="f" data-privacytype="edit" class="uncheckPublic privacyCustomTrigger uncheckHidden privacyBuddyTrigger privacyBuddyTrigger_edit" <?=$checked['privacyCustomEditF'];?> <?=$disabled;?>>Edit</div>
         			</li>
         			<li>
         				<h2><input type="checkbox" class="uncheckPublic privacyGroupTrigger privacyCustomTrigger uncheckHidden" <?=$disabled;?>>Groups</h2>
@@ -2400,19 +2400,19 @@ echo"</div>";
                                                                 $color="383838";
                                                             }
                                                             if(in_array("$groupData[id]", $customEdit)){
-                                                                $checked[editGroup] = 'checked="checked"';
+                                                                $checked['editGroup'] = 'checked="checked"';
                                                             }else{
-                                                                $checked[editGroup] = '';
+                                                                $checked['editGroup'] = '';
                                                             }
                                                             ?>
                                                                 <li>
                                                                 	<div><img src="./gfx/icons/group.png" height="15">&nbsp;<a href="#" onclick="createNewTab('reader_tabView','<?=$title10;?>','','group.php?id=<?=$groupData[id];?>',true);return false"><?=$title15;?></a></div>
                                                                 	<div>
-                                                                		<input type="checkbox" name="privacyCustomSee[]" value="<?=$groupData[id];?>" class="privacyGroupTrigger privacyCustomTrigger uncheckPublic privacySee uncheckHidden" <?=$checked[editGroup];?> <?=$disabled;?>>
+                                                                		<input type="checkbox" name="privacyCustomSee[]" value="<?=$groupData['id'];?>" data-groupid="<?=$groupData['id'];?>" data-privacytype="see" class="privacyGroupTrigger privacyCustomTrigger uncheckPublic privacySee uncheckHidden privacyGroupTrigger_<?=$groupData['id'];?>_see" <?=$checked['editGroup'];?> <?=$disabled;?>>
 																		show
                                                                 	</div>      
                                                                 	<div>
-                                                                		<input type="checkbox" name="privacyCustomEdit[]" value="<?=$groupData[id];?>" class="privacyGroupTrigger privacyCustomTrigger uncheckPublic checkPrev uncheckHidden" <?=$checked[editGroup];?> <?=$disabled;?>>
+                                                                		<input type="checkbox" name="privacyCustomEdit[]" value="<?=$groupData['id'];?>" data-groupid="<?=$groupData['id'];?>" data-privacytype="edit"  class="privacyGroupTrigger privacyCustomTrigger uncheckPublic checkPrev uncheckHidden privacyGroupTrigger_<?=$groupData['id'];?>_edit" <?=$checked['editGroup'];?> <?=$disabled;?>>
 																		edit
                                                                 	</div>
                                                                 </li>
@@ -2779,7 +2779,7 @@ echo"</div>";
     
     function deleteElement($elementId){
          
-            $checkElementSql = mysql_query("SELECT privacy, folder FROM elements WHERE id='$elementId'");
+            $checkElementSql = mysql_query("SELECT privacy, folder, author FROM elements WHERE id='$elementId'");
             $checkElementData = mysql_fetch_array($checkElementSql);
 			
 			//deleting all  atached items
@@ -2788,24 +2788,24 @@ echo"</div>";
 			$files = getFilesInElement($elementId);
 			$links = getLinksInElement($elementId);
 			
-				//delete all Files
-				foreach($files AS &$fileId){
-					deleteFile($fileId);
-				}
-				
-				//delete all links
-				foreach($links AS &$linkId){
-					deleteLink($linkId);
-				}
-				//delete all comments
-	            deleteComments("element", $elementId);
-				//delete all feeds
-	            deleteFeeds("element", $elementId);
+                    
+                    if(authorize($checkElementData['privacy'], "edit", $checkElementData['author'])){
+
+					//delete all Files
+					foreach($files AS &$fileId){
+						deleteFile($fileId);
+					}
+					
+					//delete all links
+					foreach($links AS &$linkId){
+						deleteLink($linkId);
+					}
+					//delete all comments
+		            deleteComments("element", $elementId);
+					//delete all feeds
+		            deleteFeeds("element", $elementId);
                                 //delete all shortcuts
                     deleteInternLinks("element", $elementId);
-                    
-                    if(authorize($checkElementData[privacy], "edit")){
-
 
 
                         if(mysql_query("DELETE FROM elements WHERE id='$elementId'")){
@@ -3916,7 +3916,7 @@ echo"</div>";
             $title15 = substr("$title", 0, 25);
 
             if(authorize($fileddata['privacy'], "show", $fileddata['author'])){
-            echo "<tr class=\"strippedRow\" oncontextmenu=\"showMenu('element".$filefdata['id'].";'); return false;\" height=\"30\">";
+            echo "<tr class=\"strippedRow\" oncontextmenu=\"showMenu('element".$fileddata['id']."'); return false;\" height=\"30\">";
 	            echo "<td width=\"30\">&nbsp;<img src=\"$subpath"."gfx/icons/filesystem/element.png\" height=\"22\"></td>";
 	            echo "<td><a href=\"$subpath"."out/?element=".$fileddata['id']."\" onclick=\"openElement('".$fileddata['id']."', '".addslashes($title10)."'); return false;\">$title15</a></td>";
 	            echo "<td width=\"80px\">";
@@ -3927,7 +3927,7 @@ echo"</div>";
 	            echo "<td width=\"50px\">".showScore("element", $fileddata['id'])."</td>";
             echo "</tr>";
             if($rightClick){
-            showRightClickMenu("element", $fileddata[id], $title10, $fileddata['author']);
+            echo showRightClickMenu("element", $fileddata['id'], $title10, $fileddata['author']);
             }}}
             
             $shortCutSql = mysql_query("SELECT * FROM internLinks $shortCutQuery");
@@ -4060,7 +4060,7 @@ echo"</div>";
                     </tr>
                     <?php
                     if(!$git){
-                    showRightClickMenu("file", $fileListData['id'], $title10, $openFileType);
+                    echo showRightClickMenu("file", $fileListData['id'], $title10, $openFileType);
                     }
 
             }}
@@ -4100,7 +4100,7 @@ echo"</div>";
                 </tr>
                 <?php
                     if(!$git){
-                showRightClickMenu("link", $linkListData['id'], $title10, $linkListData['type']);
+                echo showRightClickMenu("link", $linkListData['id'], $title10, $linkListData['type']);
 					}
                 }
                 
@@ -5414,18 +5414,23 @@ class contextMenu{
 			$list = '';
 			foreach($options AS $option){
 				if(!empty($option['title'])){
+					
+						$onclick = '';
 				if(!empty($option['href'])){
 					$href = 'href="'.$option['href'].'"';
+					
 				}
 				if(!empty($option['onclick'])){
-					
-					$onclick = 'onclick="'.$option['onclick'].'"';
+					if($href == 'href="#"'){
+						$onclick = 'onclick="'.$option['onclick'].'"';
+					}
 				}
 				if(!empty($option['target'])){
-					$target = 'target="'.$option['target'].'"';
+					if($href != 'href="#"')
+						$target = 'target="'.$option['target'].'"';
 					
 				}
-				$list .= "<li $href $onclick $target>".$option['title'].'</li>';  
+				$list .= "<li><a $href $onclick $target>".$option['title'].'</a></li>';  
 					
 				}
 			}
@@ -5445,18 +5450,23 @@ class contextMenu{
 			$list = '';
 			foreach($options AS $option){
 				if(!empty($option['title'])){
+					
+						$onclick = '';
 				if(!empty($option['href'])){
 					$href = 'href="'.$option['href'].'"';
+					
 				}
 				if(!empty($option['onclick'])){
-					
-					$onclick = 'onclick="'.$option['onclick'].'"';
+					if($href == 'href="#"'){
+						$onclick = 'onclick="'.$option['onclick'].'"';
+					}
 				}
 				if(!empty($option['target'])){
-					$target = 'target="'.$option['target'].'"';
+					if($href != 'href="#"')
+						$target = 'target="'.$option['target'].'"';
 					
 				}
-				$list .= "<li $href $onclick $target>".$option['title'].'</li>';  
+				$list .= "<li><a $href $onclick $target>".$option['title'].'a</a></li>';  
 					
 				}
 			}
@@ -5687,7 +5697,7 @@ class dashBoard{
 	}
 
 	function showTaskBox($grid=true){
-		$title = "Your Tasks";
+		$title = "Future Tasks";
 		
 		
 		$tasks = new tasks();
@@ -5874,6 +5884,15 @@ class tasks{
 		$db->update('tasks', array('user'=>$user, 'timestamp'=>$timestamp, 'status'=>$status, 'title'=>$title, 'description'=>$description,  'privacy'=>$privacy), array('id',$id));
 	
 	}
+	public function changeStatus($id, $status){
+		$eventData=$this->getData($id);
+		if(authorize($eventData['privacy'], 'edit', $eventData['user'])){
+			
+			$db = new db();
+			$db->update('tasks', array('status'=>$status), array('id',$id));
+		
+		}
+	}
 	public function getData($id){
 		
 		
@@ -5891,6 +5910,7 @@ class tasks{
 		
 		$sql = mysql_query("SELECT * FROM `tasks` WHERE `timestamp`>'".save($startStamp)."' AND `timestamp`<'".save($stopStamp)."' AND `user`='".save($user)."' $privacyQuery");
 		while($data = mysql_fetch_array($sql)){
+			$data['editable'] = authorize($data['privacy'], 'edit', $data['user']);
 			$arr[] = $data;
 		}
 		return $arr;
@@ -5919,6 +5939,7 @@ class events{
 		
 		$sql = mysql_query("SELECT * FROM `events` WHERE `startStamp`>'".save($startStamp)."' AND `stopStamp`<'".save($stopStamp)."' AND `user`='".save($user)."' $privacyQuery");
 		while($data = mysql_fetch_array($sql)){
+			$data['editable'] = authorize($data['privacy'], 'edit', $data['user']);
 			$arr[] = $data;
 		}
 		return $arr;
@@ -5958,7 +5979,7 @@ class api{
 			$userids = json_decode($request,true);
 			
 			foreach($userids as $userid){
-				$ret[$userid] = useridToRealname($userid);
+				$ret[$userid] = useridToRealname($userid).' ';
 			}
 			
 			return json_encode($ret);
@@ -5991,7 +6012,9 @@ class api{
 		//single userid
 		if(is_numeric($request)){
 			$userids[] = save($request);
+			$numeric = true;
 		}else {
+			$numeric = false;
 			//array of requests
 			$userids = json_decode($request,true);
 		}
@@ -6009,12 +6032,11 @@ class api{
 				
 			    $file = fopen($src, 'r');
 			    $output = base64_encode(fread($file, filesize($src)));
-							
 				$return[$userid] = 'data:'.$mime.';base64,'.$output;
 				
 			}
 			
-			if(count($return) == 1){
+			if($numeric){
 				return $return[$request];
 			}else{
 				return json_encode($return);
@@ -6028,6 +6050,7 @@ class api{
 		//single userid
 		if(is_numeric($request)){
 			$userids[] = save($request);
+			$numeric = true;
 		}else {
 			//array of requests
 			$userids = json_decode($request,true);
@@ -6045,7 +6068,7 @@ class api{
 				
 			}
 			
-			if(count($return) == 1){
+			if($numeric){
 				return $return[$request];
 			}else{
 				return json_encode($return);

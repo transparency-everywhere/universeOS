@@ -27,7 +27,7 @@ if($elementData['type'] == "image"){
   }
   
   
-  $documentSQL = mysql_query("SELECT id, title, owner FROM files WHERE folder='$elementData[id]'");
+  $documentSQL = mysql_query("SELECT id, title, owner, privacy FROM files WHERE folder='$elementData[id]'");
   $fileNumbers = mysql_num_rows($documentSQL);
     ?>
         <center>
@@ -51,7 +51,7 @@ if($elementData['type'] == "image"){
         }else{
         $folderPath = "upload$folderPath/thumbs/";
         }
-        if(authorize("p", "show", $documentData['owner'])){
+        if(authorize($documentData['privacy'], "show", $documentData['owner'])){
             ?>
             <td onclick="openFile('image', '<?=$documentData['id'];?>', '<?=$elementData['title'];?>');" oncontextmenu="showMenu('image<?=$documentData['id'];?>'); return false;"><img src="<?=getFullFilePath($documentData['id']);?>" height="100px"></td>   
                 
@@ -70,7 +70,7 @@ if($elementData['type'] == "image"){
 	    	<?
 	    	if(proofLogin() && $bar){
 	    	?>
-	        <a href="#" onclick="openUploadTab('<?=$_GET[element];?>');" class="btn btn-info"><i class="icon-file icon-white"></i>&nbsp;add File</a>&nbsp;
+	        <a href="#" onclick="openUploadTab('<?=$_GET[element];?>');" class="btn btn-info"><i class="icon-file icon-white"></i>&nbsp;upload File</a>&nbsp;
 	        <a href="#" onclick="popper('./doit.php?action=addLink&element=<?=$_GET[element];?>')" class="btn btn-info"><i class="icon-globe icon-white"></i>&nbsp;add Link</a>
 			<? }
 			
@@ -143,7 +143,7 @@ if($elementData['type'] == "image"){
                 <td ></td>
             </tr>
             <?
-            showFileList($elementData[id]);
+            showFileList($elementData['id']);
             ?>
                 
         </table>
@@ -152,7 +152,7 @@ if($elementData['type'] == "image"){
     	if(proofLogin()){
     	?>
     	<a class="btn btn-info" href="#" onclick="loader('loader', 'doit.php?action=createNewUFF&element=<?=$element;?>'); " target="submitter"><i class="icon-file icon-white"></i> Create Document</a>
-        <a href="#" onclick="openUploadTab('<?=$_GET[element];?>');" class="btn btn-info"><i class="icon-file icon-white"></i>&nbsp;Upload File</a>
+        <a href="#" onclick="openUploadTab('<?=$_GET['element'];?>');" class="btn btn-info"><i class="icon-file icon-white"></i>&nbsp;Upload File</a>
         &nbsp;<a href="#" onclick="popper('./doit.php?action=addLink&element=<?=$_GET['element'];?>')" class="btn btn-info"><i class="icon-globe icon-white"></i>&nbsp;Add Link</a>
 		<? } ?>
     </center>
