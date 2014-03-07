@@ -53,7 +53,7 @@ if(!empty($_GET['folder'])){
 	}
 	
 	//meta information
-	echo'<meta name=\"title\" content=\"universeOS - $type $title\">';
+	echo"<meta name=\"title\" content=\"universeOS - $type $title\">";
 	echo"<meta name=\"keywords\" content=\"universeOS $type $title, $type, $title, $type $title\">";
     echo'<meta name=\"Robots\" content=\"index,follow\">';
 echo'</head>';

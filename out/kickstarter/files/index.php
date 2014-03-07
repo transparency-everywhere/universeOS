@@ -2,10 +2,10 @@
 <html lang="mul" dir="ltr">
 	<head>
 <?
-include("../../inc/config.php");
+include("../../../inc/config.php");
 	$type = "File";
 	$itemId = $_GET['id'];
-	$query = mysql_query("SELECT `title` FROM `files` WHERE id='".mysql_real_escape_string($_GET[id])."'");
+	$query = mysql_query("SELECT `title` FROM `files` WHERE id='".mysql_real_escape_string($_GET['id'])."'");
 	$data = mysql_fetch_array($query);
 	$title = $data['title'];
 	
@@ -33,7 +33,7 @@ include("../../inc/config.php");
 	echo"<meta name=\"keywords\" content=\"universeOS $type $title, $type, $title, $type $title\">";
 	?>
 		<script>
-		window.location.href = "http://universeos.org/index.php?openFromLink=file&type=file&file=<?=$_GET[id];?>";
+		window.location.href = "<?=$universeURL;?>/index.php?openFromLink=file&type=file&file=<?=$_GET['id'];?>";
 		</script>
 	</head>
 </html>
