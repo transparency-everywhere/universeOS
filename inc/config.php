@@ -7,6 +7,10 @@ error_reporting(0);
 //include dbConfig
 include("config/dbConfig.php");
 
+//serverstuf
+$universeURL = 'http://localhost/universe'; //url of current installation
+
+
 $timestamp = time();
 
 //mysql connect	or die
