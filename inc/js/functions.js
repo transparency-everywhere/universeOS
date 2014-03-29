@@ -1,5 +1,5 @@
 //initializeeader
-var sourceURL = 'http://localhost/universe';
+var sourceURL = 'http://universeos.org';
 
 
 var usernames = [];

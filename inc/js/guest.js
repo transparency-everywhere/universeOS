@@ -225,11 +225,14 @@ var update = new function(){
 	    		var passwordHashOld = cypherOld[0];
 	    	
 				var saltDecrypted = cypherOld[3];
-			
+				console.log('s:'+saltDecrypted);
+				if(saltDecrypted.length == 0||passwordHashOld.length==0||saltDecrypted=='undefined'){
+					jsAlert('', 'The Password you entered was wrong');
+					return false;
+				}
 				//generate new password
 				var passwordSHA512 = hash.SHA512(password); //stretch password
 				var password_new = hash.SHA512(passwordSHA512+saltDecrypted);
-				console.log(password_new);
 				//encrypt salt with sha512(password)
 				var saltEncrypted_new = sec.symEncrypt(passwordSHA512, saltDecrypted);
 		
@@ -246,7 +249,6 @@ var update = new function(){
     			var keySalt = hash.SHA512(randomString(64, '#aA'));  //generate salt and hash it.
     			
 			    var privateKeyHash = hash.SHA512(passwordSHA512+keySalt);
-			    console.log('key salt:'+keySalt);
 			    
 			    
 			    //save salt
@@ -254,7 +256,6 @@ var update = new function(){
 			    //createSalt('privateKey', userid, '', '', encryptedKeySalt);
 			    
 			    var privateKeyNew = sec.symEncrypt(privateKeyHash, privateKey);
-			    console.log('keyHash:'+privateKeyHash);
 			
 				//save new password, new private key and send oldpw & userid
 				$.post("api.php?action=update_sha512TOsha512_2", {

@@ -53,7 +53,7 @@ h3{
 	-moz-border-radius:1px;
 	-webkit-border-radius:1px;
 	border-radius:1px;
-    padding: 2px 0 35px;
+   padding: 0px 0 29px 0px;
 	position:absolute;
 	z-index:1;
 	background: rgba(255,255,255,0.9);
@@ -65,7 +65,7 @@ h3{
 	cursor:move;
 	height:16px;
 	overflow:hidden;
-	padding:4px 0 5px 5px;
+	padding:3px 0 4px 5px;
 	text-overflow:ellipsis;
 	font-size: 16pt;
 	white-space:nowrap;
@@ -80,7 +80,7 @@ h3{
 	border: 1px solid rgba(223, 223, 223, 0.9);
 	color:#58585A;
 	height:100%;
-	margin:0 6px;
+	margin:0 3px;
 	overflow:auto;
 	position:relative;
 }

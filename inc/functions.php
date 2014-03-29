@@ -323,7 +323,14 @@
   }
   
   function updateSalt($type, $itemId, $salt){
-  	mysql_query("UPDATE  `salts` SET salt='".save($salt)."' WHERE `type`='".save($type)."' AND itemId='".save($itemId)."'");
+  	mysql_query("DELETE FROM `salts` WHERE `type`='".save($type)."' AND `itemId`='".save($itemId)."'");
+	
+  	
+	
+  		if(mysql_query("INSERT INTO `salts` (`type`, `itemId`, `receiverType`, `receiverId`, `salt`) VALUES ('$type', '$itemId', 'user', '$itemId', '$salt')"))
+			return true;
+		else 
+			return false;
   }
   
   function getSalt($type, $itemId){
