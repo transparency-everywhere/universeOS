@@ -78,15 +78,31 @@ while($personalEventData = mysql_fetch_array($personalEventSql)){
     $newEventData2 = mysql_fetch_array($newEventSql2);
     $countEvents++;
 
+	//comments
     if($personalEventData['event'] == "comment"){
         if($personalEventData['info'] == "feed"){
             $description = "Has commented your post.";
             $link = "createNewTab(\'reader_tabView\',\'Comment\','\',\'modules/reader/showComment.php?type=$personalEventData[info]&itemid=$personalEventData[eventId]\',true);";
         }else if($personalEventData['info'] == "profile"){
             $description = "Has commented in your profile.";
-            $link = "showProfile(\'$_SESSION[userid]\');";
+            $link = "showProfile(\'".$_SESSION['userid']."\');";
         }
     }
+	//events
+    if($personalEventData['event'] == "event"){
+    	$events = new events($personalEventData['eventId']);
+		$eventData = $events->getData($personalEventData['eventId']);
+		
+		
+        $description = 'Invited you to the event "<a href="#" onclick="events.show(\\\''.$personalEventData['eventId'].'\\\');">'.$eventData['title'].'</a>"';
+		
+		if(!empty($eventData['place']))
+			$description .= ' at '.$eventData['place'];
+		
+		$link = "events.joinForm(\'".$personalEventData['eventId']."\');";
+    	
+    }
+
     ?>
     <script>
         if($("#personalEvent_<?=$personalEventData['event'];?>_<?=$personalEventData['info'];?>_<?=$personalEventData['eventId'];?>").length == 0){

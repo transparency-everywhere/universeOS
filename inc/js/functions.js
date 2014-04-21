@@ -1,8 +1,10 @@
 //initializeeader
-var sourceURL = 'http://universeos.org';
+var sourceURL = 'http://localhost/old/universe';
 
 
 var usernames = [];
+var userPictures = [];
+
 var privateKeys = [];
 var messageKeys = [];
 
@@ -734,6 +736,21 @@ var focus = true;
 			  	};
 			  	this.update = function(){
 			  		updateDashbox('task');
+			  	};
+			  };
+			  
+			  var buddylist = new function(){
+	            this.getBuddies = function(){
+	                var res;
+			  		$.ajax({
+				      url:"api.php?action=getBuddylist",
+				      async: false,  
+					  type: "POST",
+				      success:function(data) {
+				         res = $.parseJSON(data); 
+				      }
+				   });
+				   return res;
 			  	};
 			  };
 			  
@@ -1527,10 +1544,10 @@ var focus = true;
 			  		console.log(d.getMonth());
 			  		var formattedDate = calendar.beautifyDate((d.getMonth())+1)+'/'+calendar.beautifyDate(d.getDate())+'/'+d.getFullYear();
 			  		
-			  		var content  = '<table class="formTable">';
-			  				content += '<form id="createEvent" method="post">';
+			  		var content  = '<form id="createEvent" method="post">';
+			  				content += '<table class="formTable">';
 					  		    content += '<tr>';
-					  		    	content += '<td>';
+					  		    	content += '<td style="width:65px;">';
 					  		    	content += 'Title:';
 					  		    	content += '</td>';
 					  		    	content += '<td>';
@@ -1571,8 +1588,15 @@ var focus = true;
 					  		    	content += privacy.show('f//f', true);
 					  		    	content += '</td>';
 					  		    content += '</tr>';
-			  		    	content += '</form>';
-			  		    content += '</table>';
+					  		    content += '<tr>';
+					  		    	content += '<td>';
+					  		    	content += 'Users:';
+					  		    	content += '</td>';
+					  		    	content += '<td>';
+					  		    	content += '<div class="userSelectionInput"></div>';
+					  		    	content += '</td>';
+			  		    	content += '</table>';
+			  		    content += '</form>';
 			  		var onSubmit = function() {
 			  			$('#createEvent').submit();
   					};
@@ -1582,6 +1606,9 @@ var focus = true;
               		
               		//init datepicker in modal
               		$('.datepicker').datepicker();
+              		
+              		$('.userSelectionInput').userSearch();
+              		
               		
               		$('#createEvent').submit(function(e){
               			e.preventDefault();
@@ -1606,6 +1633,64 @@ var focus = true;
               			
               			return false;
               		});
+			  	};
+			  	
+			  	this.join = function(originalEventId, addToVisitors){
+			  		var result;
+				    $.ajax({
+				      url:"api.php?action=joinEvent",
+				      async: false,  
+					  type: "POST",
+					  data: { 
+					  	 originalEventId: originalEventId,
+					  	 addToVisitors: addToVisitors
+					  	 },
+				      success:function(data) {
+				      	if(data){
+				        	result = $.parseJSON(data); 
+				      	}
+				      }
+				   });
+				   
+				   return result;
+			  		
+			  	};
+			  	
+			  	this.joinForm = function(originalEventId){
+			  		
+			  		var eventData = events.getData(originalEventId);
+			  		
+			  		var content  = '<form id="joinEvent" method="post">';
+			  				content += '<table class="formTable">';
+					  		    content += '<tr>';
+					  		    	content += '<td style="width:65px;">';
+					  		    	content += '';
+					  		    	content += '</td>';
+					  		    	content += '<td>';
+					  		    	content += '<input type="hidden" id="originalEventId" value='+originalEventId+'>';
+					  		    	content += 'If you join an event the even will be added to your personal calendar.';
+					  		    	content += '</td>';
+					  		    content += '</tr>';
+					  		    content += '<tr>';
+					  		    	content += '<td>&nbsp;</td>';
+					  		    content += '</tr>';
+					  		    content += '<tr>';
+					  		    	content += '<td align="right">';
+					  		    	content += '<input type="checkbox" checked="checked" id="addToVisitors">';
+					  		    	content += '</td>';
+					  		    	content += '<td>';
+					  		    	content += 'Add yourself to the <b>public</b> guest list.';
+					  		    	content += '</td>';
+					  		    content += '</tr>';
+					  		    	
+			  		    	content += '</table>';
+			  		    content += '</form>';
+			  		    
+			  		var onSubmit = function(){
+			  									events.join($('#joinEvent #originalEventId').val(), $('#joinEvent #addToVisitors').is(':checked'));
+			  									};
+  					//create modal
+              		modal.create('Join the event "'+eventData.title+'"', content, [onSubmit, 'Save']);
 			  	};
 			  	
 			  	this.show = function(eventId, editable){
@@ -1853,8 +1938,160 @@ var focus = true;
 			  	};
 			  	
 			  };
+			  
+			  function getUserBorder(lastActivity){
+		        //every userpicture has a border, this border is green if the lastactivty defines that
+		        //the user is online and its red if the lastactivity defines that the user is offline.
+		        
+		            
+		            
+		            var border;
+		            if(lastActivity === 1){
+		                border = 'border-color: green';
+		            }else{
+		                border = 'border-color: red';
+		            }
+		            
+		            return border
+		        }
 
+		        function getLastActivity(request){
+		            
+		            
+		            
+		            
+		                    //load data from server
+		                    var result="";
+		            
+				    $.ajax({
+		                        url:sourceURL+"/api.php?action=getLastActivity",
+		                        async: false,  
+		                            type: "POST",
+		                            data: { 
+		                                    request : request 
+		                                },
+		                        success:function(data) {
+		                           result = data; 
+		                        }
+		                    });
+		            
+		            if(is_numeric(request)){
+		                if(result.length > 0){
+		                    response = result;
+		                }
+		            }else{
+		                var response = new Array();
+		                
+		                var lastActivityArray = JSON.parse(result);
+		                $.each(lastActivityArray, function(index, value) {
+		                        response[index]=parseInt(value); 
+		                   });
+		                
+		                
+		            }
+		            
+		            
+		            
+		            if(is_numeric(request)){
+		                return parseInt(response);
+		            }else{
+		                return response
+		                console.log(response);
+		            }
+		        }
+			function getUserPicture(request){
+			            var post;
+			            var userid;
+			            if(is_numeric(request)){
+			                userid = request;
+			                //check if username is stored
+			                if(typeof userPictures[userid] !== 'undefined'){
+			                    //return stored username
+			                    console.log('should be defined..')
+			                    return userPictures[userid];
+			                }else{
+			                    post = request;
+			                }
+			            }else{
+			                post = request;
+			            }
+			            
+			            //load data from sercer
+			            var result = '';
+			            $.ajax({
+			                url:sourceURL+"/api.php?action=getUserPicture",
+			                async: false,  
+					type: "POST",
+					data: { request : post },
+			                success:function(data) { result = data; console.log('network');}
+			            });
+			            
+			            if(is_numeric(request)){
+			                if(result.length > 0){
+			                    
+			                }
+			                userPictures[userid]=result;
+			            }else{
+			                var response = new Array();
+			                
+			                var userPictureObject = JSON.parse(result);
+			                $.each(userPictureObject, function(index, value) {
+			                        //add value to userPictures var
+			                        userPictures[index]=htmlentities(value);
+			                        response[index]=htmlentities(value);
+			                    });
+			                
+			                
+			            }
+			            if(is_numeric(request)){
+			                return userPictures[userid];
+			            }else{
+			                return response;
+			                console.log(response);
+			            }
+				
+			}
+			
+	        function searchUserByString(string, limit){
+	            var result = [];
+	            $.ajax({
+	              url:sourceURL+"/api.php?action=searchUserByString",
+	              async: false,  
+	              type: "POST",
+	              data: { string : string, limit : limit },
+	              success:function(data) {
+		              if(data === '"null"')
+		                  return false;
+		              else{
+			              var res = JSON.parse(data);
+			              if(res.length !== 0 && res != null){
+			                
+			                result = res;
+			                
+			              }else{
+			              	result = false;
+			              }
+		              }
+	              }
+	            });
+	            return result;
+	        }
 
+	        function showUserPicture(userid, lastActivity){
+	            
+	            var userpicture = getUserPicture(userid);
+	            if(typeof lastActivity === 'undefined')
+	                var lastActivity = getLastActivity(userid); //get last activity so the border of the userpicture can show if the user is online or offline
+	            
+	            var ret;
+	            ret = '<div class="userPicture userPicture_'+userid+'" style="background: url(\''+userpicture+'\'); '+getUserBorder(lastActivity)+'; width: 20px;height: 20px;background-size: 100%;"></div>';
+	
+	            $('.userPicture_'+userid).css('border', getUserBorder(lastActivity)); //update all shown pictures of the user
+	            
+	            return ret;
+	            
+	        }
+	        
               function applicationOnTop(id){
                   $(".fenster").css('z-index', 999);
                   $("#"+id+"").css('z-index', 9999);
@@ -3695,3 +3932,113 @@ function groupMakeUserAdmin(groupId, userId){
 				    timer = setTimeout(callback, ms);
 				  };
 				})();
+				
+(function ( $ ) {
+ //tags
+    $.fn.userSearch = function( options ) {
+ 
+        // This is the easiest way to have default options.
+        var settings = $.extend({
+            // These are the defaults.
+            source: null,
+            seperator: ",",
+            fieldName: "users",
+            val: ''
+        }, options );
+ 
+ 		var output, buddies, username, userPicture;
+ 		output = '<div class="userSearch">';
+ 		output += '<ul class="inputTagBar" style="display:none;">';
+ 		output += '</ul>';
+ 		output += '<input type="text" placeholder="search users..." class="userTagSearch">';
+ 		output += '<ul class="inputTagSuggestions">';
+ 		output += '</ul>';
+ 		output += '<input type="hidden" value="'+settings.val+'" name="'+settings.fieldName+'">';
+ 		output += '<div>';
+		
+		//add output to the chosen element
+ 		this.html(output);
+ 		//search suggestions
+ 		$('.userTagSearch').keyup(function(key){
+ 			var shownUsers = [];
+ 			$('.inputTagBar li').each(function(){
+ 				shownUsers[shownUsers.length+1] = $(this).data('user');
+ 			});
+ 			if(shownUsers.length === 0)
+ 				$('.inputTagBar').hide();
+ 			else
+ 				$('.inputTagBar').show();
+ 			
+ 			//hide if no input
+ 			if($('.userTagSearch').val().length === 0)
+ 				$('.inputTagSuggestions').hide();
+ 				
+ 			output = '';
+ 			
+ 			//backspace =-> delete last tag
+ 			if(key.keyCode === 8){
+ 				$('.inputTagSuggestions').hide();
+ 			}else{
+ 				$('.inputTagSuggestions').show();
+				$('.inputTagSuggestions').html('');
+				
+				
+				//load suggestions from API
+ 				var suggestions = searchUserByString($(this).val(), '0,30');
+				$.each(suggestions, function( index, value ) {
+					  			if(value !== undefined && !in_array(index, shownUsers)){
+					  			
+					  			username = String(value);
+					  			username = username.slice(0,-1);
+					  			userPicture = showUserPicture(index);
+					  			
+					  			
+					  			output += '<li onclick="addUserToInputTagBar('+index+')">';
+					  			output += userPicture;
+					  			output += ' ';
+					  			output += username;
+					  			output += '</li>';
+					  			}
+					  			
+				});
+				if(output.length === 0){
+					output = 'no results...';
+				}
+				$('.inputTagSuggestions').html(output);
+				
+ 				
+ 			}
+ 		});
+ 
+        // Greenify the collection based on the settings variable.
+        return this;
+ 
+    };
+ 
+}( jQuery ));
+
+function removeUserFromInputTagBar(userid){
+	//remove value from input
+	var oldValue = $('.userSearch input[type=hidden]').val();
+	$('.userSearch input[type=hidden]').val(oldValue.replace(userid+',',''));
+	
+	//remove tag
+	$('.inputTagBar .userTag_'+userid).remove();
+}
+
+function addUserToInputTagBar(userid){
+	//dumb way to find out which users are already loaded
+	var shownUsers = [];
+ 	$('.inputTagBar li').each(function(){
+ 		shownUsers[shownUsers.length+1] = $(this).data('user');
+ 	});
+	if(!in_array(userid, shownUsers)){
+		//add value to input
+		$('.userSearch input[type=hidden]').val($('.userSearch input[type=hidden]').val()+userid+',');
+		$('.inputTagBar').show();
+		username = useridToUsername(userid);
+		//append tag to tagBar
+		$('.inputTagBar').append('<li class="userTag_'+userid+'" data-user="'+userid+'">'+username+'<a onclick="removeUserFromInputTagBar(\''+userid+'\');">x</a></li>');
+	}
+			 
+}

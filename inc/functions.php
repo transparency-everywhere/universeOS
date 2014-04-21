@@ -969,6 +969,18 @@
 		
 	}
     
+//personal Events
+//personal Events
+//personal Events
+	class personalEvents{
+		
+		function create($owner,$user,$event,$info,$eventId){
+			
+	         mysql_query("INSERT INTO personalEvents (`owner`,`user`,`event`,`info`,`eventId`,`timestamp`) VALUES('$owner','$user', '$event','$info','$eventId', '".time()."');");
+	        
+		}
+	}
+    
 //comments
 //comments
 //comments	
@@ -977,17 +989,19 @@
      $time = time();
      mysql_query("INSERT INTO comments (`type`,`typeid`,`author`,`timestamp`,`text`, `privacy`) VALUES('$type','$itemid','$author','$time','$message', 'p');");
      $commentId = mysql_insert_id();
-     if($type == "feed"){
+	 $personalEvents = new personalEvents();
+     	if($type == "feed"){
          //fügt Benachrichtigung für den Author des Feeds hinzu, falls ein anderer User einen Kommentar erstellt
          $feedSql = mysql_query("SELECT owner FROM userfeeds WHERE feedid='$itemid'");
          $feedData = mysql_fetch_array($feedSql);
-         if($_SESSION['userid'] !== "$feedData[owner]"){
-         mysql_query("INSERT INTO personalEvents (`owner`,`user`,`event`,`info`,`eventId`,`timestamp`) VALUES('$feedData[owner]','$_SESSION[userid]', 'comment','feed','$itemid','$time');");
-         }
+         if($_SESSION['userid'] !== $feedData['owner']){
+         	$personalEvents->create($feedData['owner'],$_SESSION['userid'],'comment','feed',$itemId);
+		 }
 	   }
 	   else if($type == "profile"){
-	        mysql_query("INSERT INTO personalEvents (`owner`,`user`,`event`,`info`,`eventId`,`timestamp`) VALUES('$itemid','$_SESSION[userid]', 'comment','profile','$itemid','$time');");
-	   }
+	   	
+         	$personalEvents->create($itemid,$_SESSION['userid'],'comment','profile',$itemId);
+       }
    }
    
    function deleteComments($type, $itemid){
@@ -5926,8 +5940,39 @@ class tasks{
 
 class events{
 	
-	public function create($user, $startStamp, $stopStamp, $title, $place, $privacy){
-		mysql_query("INSERT INTO `events` (`user`, `startStamp`, `stopStamp`, `title`, `place`, `privacy`) VALUES ('$user', '$startStamp', '$stopStamp', '$title', '$place', '$privacy');");
+	public function create($user, $startStamp, $stopStamp, $title, $place, $privacy, $users, $originalEventId=0){
+		$invitedUsers = $users;
+		mysql_query("INSERT INTO `events` (`user`, `startStamp`, `stopStamp`, `title`, `place`, `privacy`, `invitedUsers`, `originalEventId`) VALUES ('".save($user)."', '".save($startStamp)."', '".save($stopStamp)."', '".save($title)."', '".save($place)."', '$privacy', '".save($invitedUsers)."', '".save($originalEventId)."');");
+		
+		//add personalEvents for each user in array $users
+		if(!empty($users)){
+			$users = explode(',', $users);
+			$personalEvents = new personalEvents();
+			foreach($users AS $user){
+				if($user != 0)
+	         		$personalEvents->create($user,$_SESSION['userid'],'event','invitation',mysql_insert_id());
+			}
+		}
+	}
+	
+	public function joinEvent($originalEventId, $user, $addToVisitors=true){
+				
+		$originalEventData = $this->getData($originalEventId);
+		
+		//create new event
+		$this->create($user, $originalEventData['startStamp'], $originalEventData['stopStamp'], $originalEventData['title'], $originalEventData['place'], 'h', '', $originalEventId);
+
+		//update original event
+		if($addToVisitors){
+				
+				//add user to inviteduser string
+				$invitedUsers = $user.','.$originalEventData['invitedUsers'];
+			
+				//update db
+				$db = new db();
+				$db->update('events', array('invitedUsers'=>$invitedUsers), array('id', $originalEventId));
+	
+		}
 	}
 	
 	public function update($eventId, $startStamp, $stopStamp, $title, $place, $privacy){

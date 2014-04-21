@@ -552,7 +552,7 @@ switch($action){
 		
 		
 		$events = new events();
-		$events->create(getUser(), $startTime, $stopTime, $_POST['title'], $_POST['place'], $privacy);
+		$events->create(getUser(), $startTime, $stopTime, $_POST['title'], $_POST['place'], $privacy, $_POST['users']);
 		break;
 	case 'updateEvent':
 		
@@ -576,6 +576,10 @@ switch($action){
 		$events = new events();
 		$events->update($_POST['eventId'], $startTime, $stopTime, $_POST['title'], $_POST['place'], $privacy);
 		echo $_POST['allDay'];
+		break;
+	case 'joinEvent':
+		$events = new events();
+		$events->joinEvent($_POST['originalEventId'], getUser(), $_POST['addToVisitors']);
 		break;
 	case 'getEvents':
 		
