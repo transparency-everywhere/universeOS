@@ -110,8 +110,7 @@ function initPrivacy(){
                             });
 
 }
-    
-              
+
 //window functions
 var init = new function(){
 	
@@ -2368,8 +2367,7 @@ function getSalt(type, itemId, key){
 			});
 	    	var salt = sec.symDecrypt(key, encryptedSalt); //encrypt salt using key
 	    	return salt;
-		
-	}
+}
 
 function createSalt(type, itemId, receiverType, receiverId, salt){
 			var ret;
@@ -2434,7 +2432,7 @@ var cypher = new function(){
 	};
 	
 	this.getPrivateKey = function(type, itemId){
-	    	var privateKey;
+	    var privateKey;
             var index = type+'_'+itemId;
             if(typeof privateKeys[index] === 'undefined'){
                 console.log(index);
@@ -2465,6 +2463,21 @@ var cypher = new function(){
             }
 	    	return privateKey;
 	    };
+            
+        this.getPublicKey = function(type, itemId){
+			var key = '';
+			$.ajax({
+			  url:"api.php?action=getPublicKey",
+			  async: false,  
+			  type: "POST",
+			  data: { type : type, itemId : itemId },
+			  success:function(data) {
+			     key = data; 
+			  }
+			});
+	    	return key;
+	};
+	
 };
 
 var sec =  new function() {
@@ -2488,8 +2501,8 @@ var sec =  new function() {
                                 };
 
     this.getPrivateKey = function(type, itemId, salt, password){
-                                    return getPrivateKey(type, itemId, salt, password);
-                                };
+                                    return cypher.getPrivateKey(type, itemId, salt, password);
+    };
 
     this.symEncrypt = function(key, message){
         var msg;
@@ -2523,40 +2536,7 @@ var sec =  new function() {
 			    	
 			    };
 };
-	
-function getPrivateKey(type, itemId, salt, password){
-            
-	    var privateKey;
-            var index = type+'_'+itemId;
-            if(typeof privateKeys[index] === 'undefined'){
-                console.log(index);
-                    var encryptedKey = '';
-			$.ajax({
-			  url:"api.php?action=getPrivateKey",
-			  async: false,  
-			  type: "POST",
-			  data: { type : type, itemId : itemId },
-			  success:function(data) {
-			     encryptedKey = data; 
-			  }
-			});
-		
-			if(typeof password === 'undefined'){
-				var password = localStorage.currentUser_passwordHashMD5;
-			}
-				console.log(password);
 
-		    var keyHash = hash.SHA512(password+salt);
-			
-	    	privateKey = sec.symDecrypt(keyHash, encryptedKey); //encrypt private Key using password
-                privateKeys[index] = privateKey;
-            }else{
-                
-                privateKey = privateKeys[index];
-                
-            }
-	    return privateKey;
-	}
 	
 function getPublicKey(type, itemId){
 			var key = '';
@@ -2572,7 +2552,6 @@ function getPublicKey(type, itemId){
 	    	return key;
 	}
 	
-	
 function storeMessageKey(messageId, key){
         messageKeys[messageId] = key;
     }
@@ -2581,7 +2560,7 @@ function getStoredKey(messageId){
         return messageKeys[messageId];
     }
     
-    function isStored(messageId){
+function isStored(messageId){
         if(messageKeys[messageId] !== undefined){
             return true;
         }else{
@@ -2997,8 +2976,6 @@ function initWysiwyg(id, readOnly){
     $('.uffViewer_'+id).ckeditor(config);
 }
 
-    
-
 function initUffReader(id, content, readOnly){
 		    initWysiwyg(id, readOnly);
 		    
@@ -3023,7 +3000,7 @@ function openURL(url, title){
     
 //IM CHAT  
 //IM CHAT  
-//IM CHAT
+//IM CHAT - needs to be put in own var
 function chatMessageSubmit(userid){
     	
     	var publicKey = getPublicKey('user', userid); //get public key of receiver
@@ -3073,7 +3050,7 @@ function chatMessageSubmit(userid){
            }, "html");
  } 
 
- function chatDecrypt(userid){
+function chatDecrypt(userid){
     	
     	
     $('.chatMessage_'+userid).each(function(){
@@ -3132,7 +3109,7 @@ function chatMessageSubmit(userid){
     return true;
 }
 
- function openChatDialoge(username){
+function openChatDialoge(username){
       showApplication('chat');   
       
       	//check if dialoge allready exists
@@ -3238,7 +3215,7 @@ function toggleDashboard(){
 }
     
     
-//group
+//group - needs to be put in own var
 function groupMakeUserAdmin(groupId, userId){
 	
 	$.post( "doit.php?action=groupMakeUserAdmin&groupId="+groupId+"&userId="+userId, function( data ) {
@@ -3288,49 +3265,24 @@ function showMenu(id) {
                 
                 
 	//the rest
-
-function showModuleMail() {
-                    $.get("modules/mail/index.php",function(data){
-                          $('#bodywrap').append(data);
-                    },'html');
-                }
-  
-function showModuleCalender() {
-                    $.get("modules/calender/index.php",function(data){
-                          $('#bodywrap').append(data);
-                    },'html');
-                }
-  
-function showModuleSettings() {
+var standardModules = function(){
+    this.showSettings = function(){
                     $.get("modules/settings/index.php",function(data){
                           $('#bodywrap').append(data);
                           applicationOnTop('settings');
                     },'html');
                     
-                }
+        
+    };
+    
+    
+};
 
 function updateUserActivity() {
               	$("#loader").load("doit.php?action=updateUserActivity");
               }
 
-function closeModuleSettings() {
-              	$("#invisibleSettings").hide("slow");
-              }
-function openModule(moduleId) {
-              	$("#invisible" + moduleId + "").toggle("slow");
-              }
 
-function openModuleMail() {
-              	$("#invisiblemail").show("slow");
-              }
-
-function closeModuleMail() {
-              	$("#invisiblemail").hide("slow");
-              }
-  
-function play(){
-              	$("#jquery_jplayer_2").jPlayer("play");
-              } 
    
 function playPlaylist(playlist, row, fileId){
                   
@@ -3368,16 +3320,11 @@ function showfeedComment(feedId) {
 function loader(id, link){
                   $("#" + id + "").load("" + link + "");
               }
-
-
-
+              
 function deleteFromPersonals(id){
                   $("#loader").load("doit.php?action=deleteFromPersonals&id=" + id + "");
               }
-
-
-
-
+              
 function showGroup(groupId){
                   showApplication('reader');
                   createNewTab('reader_tabView',"" + groupId + "",'',"./group.php?id=" + groupId + "",true);
@@ -3398,17 +3345,9 @@ function startPlayer(type, typeid){
               $("#dockplayer").load("player/dockplayer.php?reload=1&" + type +"=" + typeid + "");
               }
 
-
 function popper(url) {
               $("#loader").load("" + url +"");
                 }
-  
-  
-function swapApplication(app, link){
-              
-              $("#" + app +":hidden").load("" + url +"");    
-              }
-
 
 function closeDockMenu(){
                 $("#dockMenu").hide("fast");
@@ -3450,22 +3389,10 @@ var settings =  new function() {
 			    };
 			};
               
-              
-             
-
 
 //PLUGINS
 //PLUGINS
 //PLUGINS
-
-
-
-
-
-
-
-
-
 
 /*
                  * AutoSuggest
@@ -3834,7 +3761,7 @@ var settings =  new function() {
                                         });
                                 }
                         };
-})(jQuery);  	
+})(jQuery);
 
 var delay = (function(){
 				  var timer = 0;

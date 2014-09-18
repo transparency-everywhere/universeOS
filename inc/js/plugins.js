@@ -5191,3 +5191,270 @@ function is_numeric (mixed_var) {
   return (typeof mixed_var === 'number' || typeof mixed_var === 'string') && mixed_var !== '' && !isNaN(mixed_var);
 }
 
+var formClass = new function(){
+    this.initWysiwyg = false; //is used in generateField and createForm to check if wysiwyg needs to be initialized
+    this.initializeUploadify = false;
+    this.toggleAdvanced = function(){
+        if($('.advanced').hasClass('open')){
+            $('.advanced .advancedField').hide();
+            $('.advanced').removeClass('open');
+        }else{
+            $('.advanced .advancedField').show();
+            $('.advanced').addClass('open');
+        }
+    };
+    this.generateField = function(fieldData, tr_class){
+        if(typeof fieldData['value'] === 'undefined')
+            fieldData['value'] = '';
+        var mainHTML = '';
+        mainHTML += '<tr class='+tr_class+'>';
+        if(fieldData['type'] !== 'wysiwyg')
+            mainHTML += '<td>&nbsp;' + fieldData.caption + ':</td><td>&nbsp;</td>';
+
+                    switch(fieldData['type']){
+                        case 'text':
+                            if(!fieldData['value']){
+                                fieldData['value'] = '';
+                            }
+                            var disabled = '';
+                            if(typeof fieldData['disabled'] != 'undefined'){
+                                if(fieldData['disabled']){
+                                    disabled = 'disabled="disabled"';
+                                }else{
+                                    disabled = '';
+                                }
+                            }
+                            mainHTML += '<td><input type="text" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '" value="' + fieldData['value'] + '" '+disabled+'/></td>';
+                            break;
+                        case 'textarea':
+                            if(!fieldData['value']){
+                                fieldData['value'] = '';
+                            }
+                            mainHTML += '<td><textarea name="' + fieldData.inputName + '" id="' + fieldData.inputName + '">' + fieldData['value'] + '</textarea></td>';
+                            break;
+                        case 'password':
+                            mainHTML += '<td><input type="password" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '"/></td>';
+                            break;
+                        case 'checkbox':
+                            var checked;
+                            if(fieldData.checked === true){
+                                checked = 'checked="checked"';
+                            }else{
+                                checked = '';
+                            }
+                            mainHTML += '<td><input type="checkbox" value="' + fieldData.value + '" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '" '+ checked +'/></td>';
+                            break;
+                        case 'radio':
+                            mainHTML += '<td><input type="text" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '"/></td>';
+                            break;
+                        case 'dropdown':
+                            mainHTML += '<td><select name="' + fieldData.inputName + '" id="' + fieldData.inputName + '">';
+                            mainHTML += formClass.createDropdown(fieldData.values, fieldData.captions, fieldData.preselected);
+                            mainHTML += '</select></td>';
+                            break;
+                        case 'space':
+                            mainHTML += '<td></td>';
+                            break;
+                        case 'wysiwyg':
+                            formClass.initWysiwyg = true;
+                            mainHTML += '<td colspan="3"><div class="wysiwyg" id="' + fieldData.inputName + '">'+fieldData.value+'</div></td>';
+                            break;
+                        case 'button':
+                            mainHTML += '<td colspan="1"><a href="#" onclick="'+fieldData.actionFunction+'" class="btn btn-primary">'+fieldData.value+'</a></td>';
+                            break;
+                        case 'file':
+                            formClass.initializeUploadify = true;
+                            
+                            var fileGallery = '';
+                            if(fieldData.value){
+                                fileGallery = formClass.generateFileGallery(fieldData.value, fieldData.inputName);
+                            }
+                            mainHTML += '<td colspan="1">'+fileGallery+'<ul id="' + fieldData.inputName + '_fileList"></ul><input type="hidden" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '"><div id="' + fieldData.inputName + '_fileField"></div></td>';
+                            break;
+                    }
+        mainHTML += '</tr>'; 
+        return mainHTML;
+    };
+    this.createForm = function($selector, fields, options){
+
+        var mainHTML = '';
+        var advancedHTML = '';
+        
+        //reset init var
+        this.initWysiwyg = false;
+        $.each(fields, function(index, fieldData){
+            console.log(fieldData['advanced']);
+            if((typeof fieldData['advanced'] === 'undefined')||fieldData['advanced'] === false){
+                mainHTML += formClass.generateField(fieldData, '');
+            }
+            else if(fieldData['advanced'] === true){
+                advancedHTML += formClass.generateField(fieldData, 'advancedField');
+            }
+           
+        });
+
+
+        var html =  '<form id="dynForm" class="dynForm">';
+        if(advancedHTML.length > 0){
+            html += '<table class="advanced">';
+            html += advancedHTML;
+            html += '<tr><td colspan="3" align="center"><a href="#" class="toggle" onclick="formClass.toggleAdvanced();"><i class="glyphicon glyphicon-chevron-down""></i><i class="glyphicon glyphicon-chevron-up""></i></a></td></tr>';
+            html += '</table>';
+        }
+        html +=  '<h1>' + options['headline'] + '</h1>';
+        html +=  '<table>';
+        html += mainHTML;
+        html += '<tr><td colspan="3"><a href="#" onclick="history.back();" class="btn btn-primary" style="margin-right:15px;">Back</a><input type="submit" value="' + options['buttonTitle'] + '" name="submit" id="submitButton" class="btn btn-success"></td></tr>';
+        html += '</table>';
+        html += '</form>';
+        
+        $($selector).html(html);
+        if (typeof options['action'] == 'function'){
+            $('#dynForm').submit(function(e){
+                e.preventDefault();
+                options['action']();
+            });
+        }
+        if(this.initWysiwyg){
+            var editor = new MediumEditor('.wysiwyg', {
+                anchorInputPlaceholder: 'Type a link',
+                //buttons: ['bold', 'italic', 'quote'],
+                //diffLeft: 25,
+                //diffTop: 10,
+                firstHeader: 'h1',
+                secondHeader: 'h2',
+                delay: 1000,
+                targetBlank: true
+            });
+        }
+        if(this.initializeUploadify){
+            $.each(fields, function(index, fieldData){
+                if(fieldData['type'] == 'file'){
+                    formClass.initUploadify('#'+fieldData['inputName']+'_fileField',fieldData['inputName']);
+                }
+            });
+        }
+        return html;
+    };
+    this.createDropdown = function(values, captions, preselected){
+        var html = '';
+        $.each(values, function( index, value ) {
+            var selected;
+            if(typeof preselected !== 'undefined'){
+                if(preselected == value)
+                    {selected = 'selected="selected"';}
+                else
+                    {selected = '';}
+            }
+            html += '<option value="' + value + '" '+selected+'>' + captions[index] + '</option>';
+        });
+        return html;
+    };
+    this.createOverview = function($selector, ids, captions, actions, title){
+        
+        var html;
+        html = '<h3 class="pull-left">'+title+'</h3>';
+        if(typeof actions['add'] !== 'undefined'){
+            html += '<a href="#" onclick="'+actions['add']['onclick']+'" class="btn btn-success pull-right">'+actions['add']['caption']+'</a>';
+        }
+        html += '<table class="table table-striped">';
+        $.each(ids, function( index, value ) {
+            
+            var actionHTML = '';
+            
+            if(typeof actions['update'] !== 'undefined'){
+                actionHTML += '<a href="#" class="btn btn-default" onclick="'+actions['update']['onclick']+'('+value+')'+'"><span class="glyphicon glyphicon-pencil"></span></a>';
+            }
+            if(typeof actions['delete'] !== 'undefined'){
+                actionHTML += '<a href="#" class="btn btn-default" onclick="'+actions['delete']['onclick']+'('+value+')'+'"><span class="glyphicon glyphicon-remove-circle"></span></a>';
+            }
+            if(actionHTML.length > 0){
+                actionHTML = '<div class="btn-group">'+actionHTML+'</div>';
+            }
+            
+            html += '<tr>';
+                html += '<td>'+captions[index]+'</td>';
+                html += '<td align="right">'+actionHTML+'</td>';
+            html += '</tr>';
+        });
+        
+        html += '</table>';
+        $($selector).html(html);
+        return true;
+        
+    };
+    this.verifyRemoval = function(type, link){
+        
+	Check = confirm("Are you sure to delete this "+type+" ?");
+	if (Check == true){
+            $.ajax({
+                  url: link,
+                  type: "GET",
+                  async: false,
+                  success: function(data) {
+                                    alert('The '+type+' has been deleted');
+                                    window.location.href = window.location.href;
+                  }
+            });
+	}
+    };
+    this.loadScript = function(url){
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.async = true;
+            s.src = url;
+            var x = document.getElementsByTagName('head')[0];
+            x.appendChild(s);
+    };
+    this.initUploadify = function($selector, inputName){
+              
+	            $($selector).uploadify({
+	                    'formData'     : {
+	                            'timestamp' : 'timestamp',
+	                            'token'     : ''
+	                    },
+	                    'swf'      : 'inc/plugins/uploadify/uploadify.swf',
+	                    'uploader' : 'api.php?action=uploadFile',
+				        'onUploadSuccess' : function(file, data, response) {
+				        	
+				        	if(response){
+                                                        $('#'+inputName+'_fileList').append('<li class="file_'+data+'">'+files.idToTitle(data)+'<a href="#" onclick="files.removeFileFromUploader(\''+inputName+'\',\''+data+'\');">x</a></li>')
+                                                        $('#'+inputName).val($('#'+inputName).val()+data+',');
+                                                    
+				        	}
+				        },
+	                    'onUploadError' : function(file, errorCode, errorMsg, errorString) {
+	                        alert('The file ' + file.name + ' could not be uploaded: ' + errorString);
+	                    }
+	            });
+               
+    };
+    
+    /**
+    *Generates html for file gallery
+    *@param str fileStr String with comma separed file id´s
+    *@param str fieldName String with id of the field from which the file_id needs to be removed
+    *@return str html with file gallery for formClass.createForm
+    */
+    this.generateFileGallery = function(fileStr, fieldName){
+        var html = '<ul>';
+        var fileArray = explode(',', fileStr);
+        $.each(fileArray, function(key, value){
+            if(value){
+                html += '<li class="file_'+value+'">'+files.idToTitle(value)+'<a href="#" class="btn btn-default" onclick="formClass.removeFileFromGallery('+value+', \''+fieldName+'\');"><span class="glyphicon glyphicon-remove-circle"></span></a></li>';
+            }});
+        html += '</ul>';
+        return html;
+    };
+    this.removeFileFromGallery = function(file_id, fieldName){
+        Check = confirm("Are you sure to delete this file?");
+	if (Check === true){
+            var field = String(fieldName);
+            var newValue = $('#'+field).val();
+            newValue.replace(String(file_id+','),'');
+            $('#'+field).val(newValue);
+            $('.file_'+file_id).remove();
+	};
+        
+    };
+};
