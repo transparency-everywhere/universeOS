@@ -5,7 +5,7 @@ require_once("inc/config.php");
 require_once("inc/functions.php");
 }
 $userid = getUser();
-if($userid){
+if(proofLogin()){
 echo"<script>";
 updateActivity($userid);
 $time = time();
@@ -155,9 +155,7 @@ if(!empty($newMessages) OR !empty($newFriends) OR !empty($newGroup) OR !empty($p
     $_SESSION['loggedOut'] = true;
 }else{
 	
-	if(!$_SESSION['loggedOut']){
-		//reload page if session is expired
-		echo"<script>window.location.href='index.php'</script>";
-		$_SESSION['loggedOut'] = true;
-	}
+	
+	//reload page if session is expired
+	proofSession();
 } ?>

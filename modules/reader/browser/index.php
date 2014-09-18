@@ -59,15 +59,12 @@ $url = $_GET['url'];
 </style>
 <div class="browser">
 <header>
-	<form onsubmit="alert('stuff'); return false;">	
+	<form onsubmit=" return false;">	
 		<span><a href="#" class="browserBack btn btn-small"><<</a> <a href="#" class="browserNext btn btn-small">>></a> <a href="#" class="browserToggleProxy btn btn-small" class="You are currently not using your proxy"><i class="icon icon-eye-open"></i></a> </span><input type="text" class="browserInput" placeholder="http://transparency-everywhere.com" value="<?=$url;?>">
 
 		
 	</form>
 	</header>
-<iframe src="<?=$url;?>">
-	
-</iframe>
 <footer>
 	
 </footer>

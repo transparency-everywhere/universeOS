@@ -30,7 +30,7 @@ include("inc/header.php");
     <body onclick="clearMenu()" onload="clock()<?=$startLink;?>">
 <?
 if(!isset($_SESSION["userid"])) {
-
+	$_SESSION['loggedOut'] = true;
     include("guest.php");
     
     die();
