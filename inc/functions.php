@@ -2043,11 +2043,22 @@ echo"</div>";
    }
     function init(){
     	
-		
-         $checkSql = mysql_query("SELECT userid, hash FROM user WHERE userid='$_SESSION[userid]'");
-         $checkData = mysql_fetch_array($checkSql);
+		if(proofLogin()){
+         	$checkSql = mysql_query("SELECT userid, hash FROM user WHERE userid='".getUser()."'");
+         	$checkData = mysql_fetch_array($checkSql);
+		}else{
+			
+			$_SESSION['loggedOut'] = true;
+		}
 
     }
+    //reload page if session is expired is used in reload.php
+	function proofSession(){
+		if((!$_SESSION['loggedOut'])&&(!proofLogin())){
+			echo"<script>window.location.href='index.php'</script>";
+			$_SESSION['loggedOut'] = true;
+		}
+	}
     function bc_really_big_int($bc_func, $a, $b) {
            // check if function exists
            if(function_exists($bc_func)) {
@@ -2060,40 +2071,6 @@ echo"</div>";
            } else {
                    return(false);
            }
-    }
-    function Encode($str){
-       $array = preg_split('//', $str, -1, PREG_SPLIT_NO_EMPTY); //zerlegt String in einzelne Zeichen
-       foreach ($array as &$value){ 
-       $value = ord($value);
-       $txtData = ($value);
-       return $txtData;
-       }
-    }
-    function Decode($txtData){
-       $txtData = ($txtData);
-       $txtData = chr($txtData);
-       return $txtData;
-    }
-    function universeEncode($text, $password){
-    $password2 = Encode($password);
-    $str = $text;   
-        $array = preg_split('//', $str, -1, PREG_SPLIT_NO_EMPTY); //zerlegt String in einzelne Zeichen
-        foreach ($array as &$value){
-        $value = Encode($value);
-        $value = ($value * $password2);
-        $readystring = "$readystring$value;";
-        }
-        return $readystring;
-    }
-    function universeDecode($text, $password){
-    $password2 = Encode($password);
-        $teile = explode(";", $text);
-        foreach($teile as &$value){
-            $value = ($value / $password2);
-            $value = Decode($value);
-            $return=  "$return$value";
-        }
-        return $return;
     }
 	
     function commaToOr($string, $type){
@@ -2133,7 +2110,7 @@ echo"</div>";
 	  *
 	  * @return bool 
 	  */
-    function authorize($privacy, $type, $author=NULL){
+	function authorize($privacy, $type, $author=NULL){
         
 		if(end(explode(";", $privacy)) == "UNDELETABLE"){
 			$undeletable = true;
@@ -2162,8 +2139,8 @@ echo"</div>";
 	            
 	             $show = true;
 	             if(proofLogin()){
-	             $edit = true;
-				 $delete = true;
+	             	$edit = true;
+				 	$delete = true;
 				 }
 	            
 	        }else if($privacy == "h"){
@@ -4975,6 +4952,46 @@ echo"</div>";
 	        }
 	        $postCheck = 1;
 		}
+class playlist{
+	public $playlist;
+	
+	function __construct($fileId=0){
+		if($playlistId != 0){
+			$fileData = 'array';
+			//get file source
+			
+			//read out json
+			
+			//parse json to playlist
+			$this->playlist = 'array';
+		}
+	}
+	
+	function create($items, $element){
+		
+		//parse items to json
+		
+		//create file in $element
+		
+		
+	}
+	function addItem($item){
+		
+	}
+	function moveItemUp($item){
+		
+	}
+	function moveItemDown($item){
+		
+	}
+	function removeItem($item){
+		
+	}
+	
+	function updatePlaylists($user){
+		$oldPlaylistsSQL = mysql_query("SELECT * FROM `playlist` WHERE use");
+	}
+}
 		
 class contextMenu{
 	public $type;

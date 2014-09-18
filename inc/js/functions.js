@@ -1,5 +1,5 @@
 //initializeeader
-var sourceURL = 'http://localhost/old/universe';
+var sourceURL = 'http://localhost/universe';
 
 
 var usernames = [];
@@ -751,6 +751,38 @@ var focus = true;
 				      }
 				   });
 				   return res;
+			  	};
+			  };
+			  
+			  var browser = new function(){
+			  	this.currentTab = 0;
+			  	this.startUrl = 'http://transparency-everywhere.com';
+			  	this.init = function(){
+			  		var html = '<div class="browser">';
+							html += '<header>';
+								html += '<form onsubmit=" return false;">';
+									html += '<span><a href="#" class="browserBack btn btn-small"><<</a> <a href="#" class="browserNext btn btn-small">>></a> <a href="#" class="browserToggleProxy btn btn-small" title="You are currently not using your proxy"><i class="icon icon-eye-open"></i></a> </span><input type="text" class="browserInput" placeholder="'+this.startUrl+'" value="'+this.startUrl+'">';
+								html += '</form>';
+							html += '</header>';
+						html += '</div>';
+			  			application.create('calendarFenster', 'Calendar', 'html', html,{width: ($(document).width()*0.9)+"px", dfgh:  ($(document).height()*0.8)+"px"});
+			  			
+						tabs.init('.browser');
+						tabs.addTab('.browser', 'start', browser.loadPage('http://transparency-everywhere.com'));
+			  	};
+			  	this.loadPage = function(url){
+			  		var result;
+			  		$.ajax({
+				      url:url,
+				      async: false,  
+				      success:function(data) {
+				         result = data; 
+				      }
+				   	});
+				   	return result;
+			  	};
+			  	this.openUrl = function(url){
+			  		
 			  	};
 			  };
 			  
@@ -1568,7 +1600,7 @@ var focus = true;
 					  		    	content += '</td>';
 					  		    	content += '<td>';
 					  		    	content += '<input type="text" name="startDate" id="startDate" class="startDate datepicker" value="'+formattedDate+'" style="width: 72px;">';
-					  		    	content += '&nbsp;<input type="text" name="startTime" id="startTime" class="startTime eventTime" value="15:30" style="width: 37px;"><span class="endDate">&nbsp;to&nbsp;</span>';
+					  		    	content += '&nbsp;<input type="text" name="startTime" id="startTime" class="startTime eventTime" value="15:30" style="width: 37px;"><span class="endDate eventTime">&nbsp;to&nbsp;</span>';
 					  		    	content += '&nbsp;<input type="text" name="endTime" id="endTime" class="endTime eventTime" value="16:30" style="width: 37px;">';
 					  		    	content += '</td>';
 					  		    content += '</tr>';
@@ -1589,10 +1621,10 @@ var focus = true;
 					  		    	content += '</td>';
 					  		    content += '</tr>';
 					  		    content += '<tr>';
-					  		    	content += '<td>';
+					  		    	content += '<td valign="top" style="padding-top: 15px;">';
 					  		    	content += 'Users:';
 					  		    	content += '</td>';
-					  		    	content += '<td>';
+					  		    	content += '<td style="padding-top: 15px;">';
 					  		    	content += '<div class="userSelectionInput"></div>';
 					  		    	content += '</td>';
 			  		    	content += '</table>';
@@ -1836,7 +1868,14 @@ var focus = true;
 				   return result;
 			  	};
 			  };
-			  
+			  var playlists = new function(){
+			  	this.create = function(){
+			  		
+			  	};
+			  	this.addForm = function(){
+			  		
+			  	};
+			  };
 			  var privacy = new function(){
 			  	
 			  	this.load = function(selector, val, editable){
@@ -2573,6 +2612,27 @@ var focus = true;
               
 //general functions
         
+	var tabs = new function(){
+		this.init = function(parentIdentifier){
+			$(parentIdentifier).append('<div class="tabFrame"><header><ul></ul></header></div>');
+		};
+		this.addTab = function(parentIdentifier, tab_identifier, title, contentType, content){
+			var numberOfTabs = $(parentIdentifier+' .tabFrame .tab').length;
+			$(parentIdentifier+' .tabFrame header ul').append('<li data-tab="'+(numberOfTabs+1)+'">'+title+'</li>');
+			$(parentIdentifier+' .tabFrame').append('<div class="tab" id="tab_'+(numberOfTabs+1)+'">'+content+'</div>');
+		};
+		this.showTab = function(parentIdentifier, tab){
+		};
+		this.updateTabContent = function(parenttIdentifier, tab_identifier ,content){
+			
+		};
+		this.removeTab = function(parentIdentifier, tab){
+			
+		};
+		this.moveTab = function(parentIdentifier, tab){
+			
+		};
+	};
 
 //       function mousePop(type, id, html){
 //           if($("#mousePop_"+type+id).length == 0){
@@ -2590,6 +2650,15 @@ var focus = true;
 	  		return true;
 	  	}else{
 	  		return false;
+	  	}
+	  }
+	  
+	  function maxLength(string, maxlength){
+	  	if(string.length <= maxlength)
+	  		return string;
+	  	else{
+	  		return string.substring(0, maxlength-5)+'(..)';
+	  		
 	  	}
 	  }
 	  
@@ -4021,7 +4090,9 @@ function removeUserFromInputTagBar(userid){
 	//remove value from input
 	var oldValue = $('.userSearch input[type=hidden]').val();
 	$('.userSearch input[type=hidden]').val(oldValue.replace(userid+',',''));
-	
+	if($('.userSearch input[type=hidden]').val().length === 0){
+		$('.inputTagBar').hide();
+	}
 	//remove tag
 	$('.inputTagBar .userTag_'+userid).remove();
 }
