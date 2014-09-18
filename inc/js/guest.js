@@ -130,7 +130,7 @@ function processRegistration(){
 			      		//generate salts and keys from password
     					var keys = cypher.createKeysForUser(password);
     					
-			      		privateKey = symEncrypt(keys['keyHash'], crypt.getPrivateKey()); //encrypt privatestring, using the password hash
+			      		privateKey = sec.symEncrypt(keys['keyHash'], crypt.getPrivateKey()); //encrypt privatestring, using the password hash
 			      		publicKey = crypt.getPublicKey();
     					
                 		//submit registration
@@ -304,7 +304,7 @@ function updatePasswordAndCreateSignatures(userid, password){
     var keyHash = shaKey.toString(CryptoJS.enc.Hex);
     
     
-    var salt = symEncrypt(password, salt.toString(CryptoJS.enc.Hex));				  //encrypt salt, using md5-pw hash
+    var salt = sec.symEncrypt(password, salt.toString(CryptoJS.enc.Hex));				  //encrypt salt, using md5-pw hash
     console.log('salt encrypted:'+salt);
     console.log('keyHash:'+keyHash);
     
@@ -318,7 +318,7 @@ function updatePasswordAndCreateSignatures(userid, password){
 			      	
 			      	console.log('P:::'+temp+':::P');
 			      	
-			      	var privateKey = symEncrypt(keyHash, temp); //encrypt privatestring, usering the password hash
+			      	var privateKey = sec.symEncrypt(keyHash, temp); //encrypt privatestring, usering the password hash
 			      	
 			      	console.log('encrypted privateKey:'+privateKey);
 			      	publicKey = crypt.getPublicKey();

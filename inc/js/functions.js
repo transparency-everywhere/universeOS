@@ -12,736 +12,803 @@ var openDialogueInterval;
 
 var focus = true;
 
-                $(document).ready(function(){
-                        
-                        
-                        //init draggable windows
-                        init.GUI();
-                        
-                        //init bootstrap popover
-                        $('.bsPopOver').popover();
-                        
-                        //init bootstrap alert
-                        $(".alert").alert();
-                    
-                });
+$(document).ready(function(){
+        
+        
+        //init draggable windows
+        init.GUI();
+        
+        //init bootstrap popover
+        $('.bsPopOver').popover();
+        
+        //init bootstrap alert
+        $(".alert").alert();
+    
+});
 //privacy
 
 
-	function initPrivacy(){
-		
+function initPrivacy(){
+	
 
-                                    $('.privacyPublicTrigger').click(function(){
+                            $('.privacyPublicTrigger').click(function(){
 
-                                        if($(this).is(':checked')){
+                                if($(this).is(':checked')){
 
-                                            $('.uncheckPublic').prop('checked', false);
+                                    $('.uncheckPublic').prop('checked', false);
 
-                                        }
+                                }
 
-                                    });
+                            });
 
-                                    $('.privacyCustomTrigger').click(function(){
-                                        if($(this).is(':checked')){
-                                            $('.uncheckCustom').prop('checked', false);
-                                        }
-                                    });
+                            $('.privacyCustomTrigger').click(function(){
+                                if($(this).is(':checked')){
+                                    $('.uncheckCustom').prop('checked', false);
+                                }
+                            });
 
 
-                                    $('.privacyHiddenTrigger').click(function(){
-                                        if($(this).is(':checked')){
-                                            $('.uncheckHidden').prop('checked', false);
-                                        }
-                                    });
-                                    
-                                    $('.privacyOnlyMeTrigger').click(function(){
-                                        if($(this).is(':checked')){
-                                            $('.uncheckOnlyMe').prop('checked', false);
-                                        }
-                                    });
-                                    
-                                    $('.privacyBuddyTrigger').click(function(){
-                                    	
-                                    	var buddyTriggerId = '.privacyBuddyTrigger';
-                                        if($(this).is(':checked')){
-                                        	if($(this).data('privacytype') == "edit")
-                                            	$(buddyTriggerId+'_see').prop('checked', true);
-                                        }else{
-                                        	if($(this).data('privacytype') == "see")
-                                            	$(buddyTriggerId+'_edit').prop('checked', false);
-                                        	if($(this).data('privacytype') == "edit")
-                                            	$(buddyTriggerId+'_see').prop('checked', false);
-                                        }
-                                    	$('.privacyShowBuddy').show();
-                                    });
-                                    
-                                    $('.privacyGroupTrigger').click(function(){
-                                    	$('.privacyShowGroups').show();
-                                    	var groupTriggerId = '.privacyGroupTrigger_'+$(this).data('groupid');
-                                        if($(this).is(':checked')){
-                                        	if($(this).data('privacytype') == "edit")
-                                            	$(groupTriggerId+'_see').prop('checked', true);
-                                        }else{
-                                        	if($(this).data('privacytype') == "see")
-                                            	$(groupTriggerId+'_edit').prop('checked', false);
-                                        	if($(this).data('privacytype') == "edit")
-                                            	$(groupTriggerId+'_see').prop('checked', false);
-                                        }
-                                    });
-                                    
-                                    $('.uncheckOnlyMe').click(function(){
-                                        if($(this).is(':checked')){
-                                            $('.privacyOnlyMeTrigger').prop('checked', false);
-                                        }
-                                    });
-                                    $('.privacyHiddenTrigger').click(function(){
-                                        if($(this).is(':checked')){
-                                            $('.uncheckHidden').prop('checked', false);
-                                        }
-                                    });
-                                    $('.privacyCustomTrigger').click(function(){
-                                        if($(this).is(':checked')){
-                                            $('.uncheckCustom').prop('checked', false);
-                                        }
-                                    });
-                                    
-                                    $('.checkPrev').click(function(){
-                                        //prev see check
-                                    });
+                            $('.privacyHiddenTrigger').click(function(){
+                                if($(this).is(':checked')){
+                                    $('.uncheckHidden').prop('checked', false);
+                                }
+                            });
+                            
+                            $('.privacyOnlyMeTrigger').click(function(){
+                                if($(this).is(':checked')){
+                                    $('.uncheckOnlyMe').prop('checked', false);
+                                }
+                            });
+                            
+                            $('.privacyBuddyTrigger').click(function(){
+                            	
+                            	var buddyTriggerId = '.privacyBuddyTrigger';
+                                if($(this).is(':checked')){
+                                	if($(this).data('privacytype') == "edit")
+                                    	$(buddyTriggerId+'_see').prop('checked', true);
+                                }else{
+                                	if($(this).data('privacytype') == "see")
+                                    	$(buddyTriggerId+'_edit').prop('checked', false);
+                                	if($(this).data('privacytype') == "edit")
+                                    	$(buddyTriggerId+'_see').prop('checked', false);
+                                }
+                            	$('.privacyShowBuddy').show();
+                            });
+                            
+                            $('.privacyGroupTrigger').click(function(){
+                            	$('.privacyShowGroups').show();
+                            	var groupTriggerId = '.privacyGroupTrigger_'+$(this).data('groupid');
+                                if($(this).is(':checked')){
+                                	if($(this).data('privacytype') == "edit")
+                                    	$(groupTriggerId+'_see').prop('checked', true);
+                                }else{
+                                	if($(this).data('privacytype') == "see")
+                                    	$(groupTriggerId+'_edit').prop('checked', false);
+                                	if($(this).data('privacytype') == "edit")
+                                    	$(groupTriggerId+'_see').prop('checked', false);
+                                }
+                            });
+                            
+                            $('.uncheckOnlyMe').click(function(){
+                                if($(this).is(':checked')){
+                                    $('.privacyOnlyMeTrigger').prop('checked', false);
+                                }
+                            });
+                            $('.privacyHiddenTrigger').click(function(){
+                                if($(this).is(':checked')){
+                                    $('.uncheckHidden').prop('checked', false);
+                                }
+                            });
+                            $('.privacyCustomTrigger').click(function(){
+                                if($(this).is(':checked')){
+                                    $('.uncheckCustom').prop('checked', false);
+                                }
+                            });
+                            
+                            $('.checkPrev').click(function(){
+                                //prev see check
+                            });
 
-	}
+}
     
               
 //window functions
-              var init = new function(){
-              	
-              	
-              	this.draggableApplications = function(){
-              		
-                            $(".fenster").not('.ui-draggable').draggable({
-                                    cancel: '.inhalt',
-                                    containment: '#bodywrap',
-                                    scroll: false,
-                                    drag: function(){
-                                        //disable textmarking
-                                        $('*').disableSelection();
-                                    },
-                                    stop: function(){
-                                        //enable textmarking
-                                        $('*').enableSelection();
-                                    }
-                            });
-              	};
-              	this.resizableApplications = function(){
-                            $(".fenster").not('.ui-resizable').resizable({
-                                    handles: 'n, e, s, w, ne, se, sw, nw',
-                                    containment: '#bodywrap',
-                                    start: function(){
-                                        //disable textmarking
-                                        $('*').disableSelection();
-                                        if($(this) != undefined){
-	                                        //bring window to front 
-	                                        $(this).css('z-index', 9999);
-	                                        $(this).css('position', 'absolute');
-                                        }
-                                    },
-                                    stop: function(){
-                                        //enable textmarking
-                                        $('*').enableSelection();
-                                    }
-                            });
-              	};
-              	this.applicationOnTop = function(){
-                        $('.fenster').children().mousedown(function(){
-							
-                           	if($(this) != undefined){
-                           		
-                  			$(".fenster").css('z-index', 999);
-                            $(this).parent(".fenster").css('z-index', 9999); 
-                            $(this).parent(".fenster").css('position', 'absolute');
-                            }
-                        });
-              	};
-              	this.setApplicationsToStartupSizes = function(){
-              		//old creepy way to initalize windows => in future => css media width
-                	
-                	
-                    var oneSixthWidth = ($(document).width())/6;
-                    var oneSixthHeight = $(document).height()/6;
-                    
-                    var offsetTop = oneSixthHeight/2;
-                    var offsetRight = oneSixthWidth/2;
-                    var offsetLeft = offsetRight;
-                    
-                    var widthSm = oneSixthWidth;
-                    var heightSm = oneSixthHeight*4;
-                    
-                    var widthBig = oneSixthWidth*3;
-                    var heightBig = heightSm;
-                    
-                    
-                    
-                            
-                        $("#buddylist").css({
-                        'top' : offsetTop,
-                        'right' : offsetRight+20,
-                        'width' : widthSm,
-                        'height' : heightBig,
-                        'z-index' : '9998'
-                            });
-                        
-                        $("#feed").css({
-                        'top' : offsetTop+20,
-                        'right' : offsetRight,
-                        'width' : widthSm,
-                        'height' : heightBig,
-                        'z-index' : '9997'
-                            });
-                            
-                            
-                        $("#chat").css({
-                        'top' : offsetTop,
-                        'left' : offsetLeft,
-                        'width' : widthBig,
-                        'height' : heightBig,
-                        'z-index' : '997'
-                            });
-                            
-                        $("#filesystem").css({
-                        'top' : offsetTop+20,
-                        'left' : offsetLeft+20,
-                        'width' : widthBig,
-                        'height' : heightBig,
-                        'z-index' : '998'
-                            });
-                            
-                        $("#reader").css({
-                        'top' : offsetTop+40,
-                        'left' : offsetLeft+40,
-                        'width' : widthBig,
-                        'height' : heightBig,
-                        'z-index' : '999'
-                            });
-              	};
-              	
-              	this.dashBox = function(){
-		            //init dashcloses 
-					$('.dashBox .dashClose').click(function(){
-						$(this).parent('.dashBox').slideUp();
-					});	
-              	};
-              	
-              	this.toolTipper = function(){
-                
-                
+var init = new function(){
+	
+	
+	this.draggableApplications = function(){
+		
+              $(".fenster").not('.ui-draggable').draggable({
+                      cancel: '.inhalt',
+                      containment: '#bodywrap',
+                      scroll: false,
+                      drag: function(){
+                          //disable textmarking
+                          $('*').disableSelection();
+                      },
+                      stop: function(){
+                          //enable textmarking
+                          $('*').enableSelection();
+                      }
+              });
+	};
+	this.resizableApplications = function(){
+              $(".fenster").not('.ui-resizable').resizable({
+                      handles: 'n, e, s, w, ne, se, sw, nw',
+                      containment: '#bodywrap',
+                      start: function(){
+                          //disable textmarking
+                          $('*').disableSelection();
+                          if($(this) != undefined){
+                                  //bring window to front 
+                                  $(this).css('z-index', 9999);
+                                  $(this).css('position', 'absolute');
+                          }
+                      },
+                      stop: function(){
+                          //enable textmarking
+                          $('*').enableSelection();
+                      }
+              });
+	};
+	this.applicationOnTop = function(){
+          $('.fenster').children().mousedown(function(){
+					
+             	if($(this) != undefined){
+             		
+    			$(".fenster").css('z-index', 999);
+              $(this).parent(".fenster").css('z-index', 9999); 
+              $(this).parent(".fenster").css('position', 'absolute');
+              }
+          });
+	};
+	this.setApplicationsToStartupSizes = function(){
+		//old creepy way to initalize windows => in future => css media width
+  	
+  	
+      var oneSixthWidth = ($(document).width())/6;
+      var oneSixthHeight = $(document).height()/6;
+      
+      var offsetTop = oneSixthHeight/2;
+      var offsetRight = oneSixthWidth/2;
+      var offsetLeft = offsetRight;
+      
+      var widthSm = oneSixthWidth;
+      var heightSm = oneSixthHeight*4;
+      
+      var widthBig = oneSixthWidth*3;
+      var heightBig = heightSm;
+      
+      
+      
+              
+          $("#buddylist").css({
+          'top' : offsetTop,
+          'right' : offsetRight+20,
+          'width' : widthSm,
+          'height' : heightBig,
+          'z-index' : '9998'
+              });
+          
+          $("#feed").css({
+          'top' : offsetTop+20,
+          'right' : offsetRight,
+          'width' : widthSm,
+          'height' : heightBig,
+          'z-index' : '9997'
+              });
+              
+              
+          $("#chat").css({
+          'top' : offsetTop,
+          'left' : offsetLeft,
+          'width' : widthBig,
+          'height' : heightBig,
+          'z-index' : '997'
+              });
+              
+          $("#filesystem").css({
+          'top' : offsetTop+20,
+          'left' : offsetLeft+20,
+          'width' : widthBig,
+          'height' : heightBig,
+          'z-index' : '998'
+              });
+              
+          $("#reader").css({
+          'top' : offsetTop+40,
+          'left' : offsetLeft+40,
+          'width' : widthBig,
+          'height' : heightBig,
+          'z-index' : '999'
+              });
+	};
+	
+	this.dashBox = function(){
+            //init dashcloses 
+			$('.dashBox .dashClose').click(function(){
+				$(this).parent('.dashBox').slideUp();
+			});	
+	};
+	
+	this.toolTipper = function(){
+  
+  
 
-	                $(document).mousemove(function(event){
-	                    window.mouseX = event.pageX;
-	                    window.mouseY = event.pageY;
-	                    $('.mousePop').hide();
-	                });
-	                
-	                
-	                
-	                //initialize mousePop(tooltip)
-	                $('.tooltipper').mouseenter(function(){
-	                    
-	                    var type = $(this).attr("data-popType");
-	                    var id = $(this).attr("data-typeId");
-	                    var text = $(this).attr("data-text");
-	                    mousePop(type, id, text);
-	                }).mouseleave(function(){
-	                    $('.mousePop').hide();
-	                });
-              		
-              	};
-              	this.search = function(){
-              		//init search
-					$("#searchField").keyup(function()
+          $(document).mousemove(function(event){
+              window.mouseX = event.pageX;
+              window.mouseY = event.pageY;
+              $('.mousePop').hide();
+          });
+          
+          
+          
+          //initialize mousePop(tooltip)
+          $('.tooltipper').mouseenter(function(){
+              
+              var type = $(this).attr("data-popType");
+              var id = $(this).attr("data-typeId");
+              var text = $(this).attr("data-text");
+              mousePop(type, id, text);
+          }).mouseleave(function(){
+              $('.mousePop').hide();
+          });
+		
+	};
+	this.search = function(){
+		//init search
+			$("#searchField").keyup(function()
+			{
+				
+				delay(function(){
+					var search;
+					
+					search = $("#searchField").val();
+					if (search.length > 1)
 					{
-						
-						delay(function(){
-							var search;
-							
-							search = $("#searchField").val();
-							if (search.length > 1)
-							{
-								$.ajax(
-								{
-									type: "POST",
-									url: "modules/suggestions/dockSearch.php",
-									data: "search=" + search,
-									success: function(message)
-									{
-										$("#suggest").empty();
-								  		if (message.length > 1)
-										{						
-											$("#suggest").append(message);
-										}
-									}
-								});
-							}
-							else
+						$.ajax(
+						{
+							type: "POST",
+							url: "modules/suggestions/dockSearch.php",
+							data: "search=" + search,
+							success: function(message)
 							{
 								$("#suggest").empty();
+						  		if (message.length > 1)
+								{						
+									$("#suggest").append(message);
+								}
 							}
-							
-						}, 500 );
-					});
-              };
-              	
-              	//this function is called to initialzie GUI
-              	//all needed functions are collected here
-              	this.GUI = function(){
-              		this.draggableApplications();
-              		this.resizableApplications();
-              		this.applicationOnTop();
-              		this.setApplicationsToStartupSizes();
-              		
-              		this.dashBox();
-              		
-              		this.toolTipper();
-              		this.search();
-              		
-              		dashBoard.init();
-              		//fade in applications
-                    $("#filesystem:hidden").fadeIn(3000);
-                    $("#buddylist:hidden").fadeIn(3000);
-                    
-                    $("#feed:hidden").fadeIn(3000);
-                    $("#chat:hidden").fadeIn(3000);
-                        
-              	};
-              	
-             };
-              // function Rabbit(adjective) {
-				  // this.adjective = adjective;
-				  // this.speak = function(line) {
-				    // print("The ", this.adjective, " rabbit says '", line, "'");
-				  // };
-			  // }
-			  // var killerRabbit = new Rabbit("killer");
-			  // killerRabbit.speak("GRAAAAAAAAAH!");
-              function Tab(parentId) {
-				  this.parentId = parentId; //id in which tabs are loaded
-				  this.index = 1;
-				  this.init = function(firstTitle, firstType, firstContent) {
-				  
-				  	var content =  '<div class="tabs">';
-				  			content += '<ul class="tabBar">';
-				  				content += '<li class="active" id="1">'+firstTitle+'</li>';
-				  			content += '</ul>';
-				  		
-				  			content += '<div class="tab active" id="1">';
-				  			content += '</div>';
-				  		content += '</div>';
-				  
-				  };
-				  
-				  this.addTab = function(title, type, content){
-				  	this.index++;
-				  	$(this.parentSelector).children('.tabs .tabBar').append('<li class="active" id="1">'+firstTitle+'</li>');
-				  	$(this.parentSelector).children('.tabs').append('<div class="tab active" id="'+this.index+'"></div>');
-				  };
-				  
-				  this.updateTab = function(id, title, type, content){
-				  	
-				  };
-				  this.deleteTab = function(id){
-				  	
-				  };
-			  };
+						});
+					}
+					else
+					{
+						$("#suggest").empty();
+					}
+					
+				}, 500 );
+			});
+};
+	
+	//this function is called to initialzie GUI
+	//all needed functions are collected here
+	this.GUI = function(){
+		this.draggableApplications();
+		this.resizableApplications();
+		this.applicationOnTop();
+		this.setApplicationsToStartupSizes();
+		
+		this.dashBox();
+		
+		this.toolTipper();
+		this.search();
+		
+		dashBoard.init();
+		//fade in applications
+      $("#filesystem:hidden").fadeIn(3000);
+      $("#buddylist:hidden").fadeIn(3000);
+      
+      $("#feed:hidden").fadeIn(3000);
+      $("#chat:hidden").fadeIn(3000);
+          
+	};
+	
+};
+
+function Tab(parentId) {
+		  this.parentId = parentId; //id in which tabs are loaded
+		  this.index = 1;
+		  this.init = function(firstTitle, firstType, firstContent) {
+		  
+		  	var content =  '<div class="tabs">';
+		  			content += '<ul class="tabBar">';
+		  				content += '<li class="active" id="1">'+firstTitle+'</li>';
+		  			content += '</ul>';
+		  		
+		  			content += '<div class="tab active" id="1">';
+		  			content += '</div>';
+		  		content += '</div>';
+		  
+		  };
+		  
+		  this.addTab = function(title, type, content){
+		  	this.index++;
+		  	$(this.parentSelector).children('.tabs .tabBar').append('<li class="active" id="1">'+firstTitle+'</li>');
+		  	$(this.parentSelector).children('.tabs').append('<div class="tab active" id="'+this.index+'"></div>');
+		  };
+		  
+		  this.updateTab = function(id, title, type, content){
+		  	
+		  };
+		  this.deleteTab = function(id){
+		  	
+		  };
+};
               
-			  var application = new function(){
-			  	this.create = function(id, title, type, content, style){
-			  		var windowStyle = '';
-			  		if(type === 'html'){
-			  			content = content;
-			  		}
-			  		
-			  		if(typeof style['width'] != 'undefined'){
-			  			windowStyle +='width:'+style['width']+';';
-			  		}
-			  		// if(typeof style['height'] != 'undefined'){
-			  			// console.log('height:'+style['height']+';');
-			  		// }
-// 			  		
-			  		
-			  		
-			  		var output = '<div class="fenster" id="'+id+'" style="'+windowStyle+'">';
-			  			output += '<header class="titel">';
-	        				output += '<p>'+title+'&nbsp;</p>';
-	        				output += '<p class="windowMenu">';
-	        					output += '<a href="javascript:hideApplication(\''+id+'\');"><img src="./gfx/icons/close.png" width="16"></a>';
-	        					output += '<a href="#" onclick="moduleFullscreen(\''+id+'\');" class="fullScreenIcon"><img src="./gfx/icons/fullScreen.png" width="16"></a>';
-	        				output += '</p>';
-        				output += '</header>';
-        				output += '<div class="inhalt autoflow" id="'+id+'Main">'+content+'</div>';
-    
-			  		
-			  		$('#bodywrap').append(output);
-			  		
-              		init.draggableApplications();
-              		init.resizableApplications();
-              		application.onTop('calendarFenster');
-			  	};
-			  	
-			  	this.onTop = function(id){
-			  		
-                  $(".fenster").css('z-index', 998);
-                  $("#"+id+"").css('z-index', 999);
-                  $("#"+id+"").css('position', 'absolute');
-			  		
-			  	};
-			  	
-			  	this.show = function(id){
-                  applicationOnTop(id);
-                  $("#" + id +"").show();
-			  	};
-			  	
-			  	this.hide = function(id){
-                  $("#" + id +"").hide();
-			  	};
-			  	
-			  	this.fullscreen = function(id){
-                  $("#" + id +"").toggle();
-			  	};
-			  	
-			  	this.returnFromFullScreen = function(id){
-              	$('#'+id+' .fullScreenIcon').attr("onClick","moduleFullscreen('"+id+"')");
-                  var returnFullScreenCSS = {
-                        'position' : 'absolute',
-                        'top' : window.fullScreenOldMarginY,
-                        'left' : window.fullScreenOldMarginX,
-                        'width' : window.fullScreenOldX,
-                        'height' : window.fullScreenOldY
-                       };
-                  $("#" + id + "").css(returnFullScreenCSS);
-			  	};
-			  };
-			  
-			  var tasks = new function(){
-			  	
-			  	this.getData = function(taskId){
-			  		var res;
-			  		$.ajax({
-				      url:"api.php?action=getTaskData",
-				      async: false,  
-					  type: "POST",
-					  data: { 
-					  	taskId : taskId
-					  	 },
-				      success:function(data) {
-				         res = $.parseJSON(data); 
-				      }
-				   });
-				   return res;
-			  	};
-			  	
-			  	this.addForm = function(startstamp){
-			  		if(typeof startstamp === undefined)
-			  			var d = new Date(startstamp*1000);
-			  		else
-			  			var d = new Date();
-			  			
-			  		
-			  		var formattedDate = calendar.beautifyDate((d.getMonth())+1)+'/'+calendar.beautifyDate(d.getDate())+'/'+d.getFullYear();
-			  		
-			  		var content  = '<table class="formTable">';
-			  				content += '<form id="createTask" method="post">';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'Title:';
-					  		    	content += '</td>';
-					  		    	content += '<td>';
-					  		    	content += '<input type="text" name="title" id="taskTitle">';
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'Description:';
-					  		    	content += '</td>';
-					  		    	content += '<td>';
-					  		    	content += '<textarea name="description" id="taskDescription"></textarea>';
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'Day:';
-					  		    	content += '</td>';
-					  		    	content += '<td>';
-					  		    	content += '<input type="text" name="date" id="date" class="date datepicker" value="'+formattedDate+'" style="width: 72px;">';
-					  		    	content += '&nbsp;<input type="text" name="time" id="time" class="time eventTime" value="15:30" style="width: 37px;">';
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'Status:';
-					  		    	content += '</td>';
-					  		    	content += '<td>';
-					  		    	content += '<select name="status">';
-					  		    	content += '<option value="pending">Pending</option>';
-					  		    	content += '<option value="done">Done</option>';
-					  		    	content += '</select>';
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'Privacy:';
-					  		    	content += '</td>';
-					  		    	content += '<td>';
-					  		    	content += privacy.show('f//f', true);
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-			  		    	content += '</form>';
-			  		    content += '</table>';
-			  		var onSubmit = function() {
-			  			$('#createTask').submit();
-  					};
-  					
-  					//create modal
-              		modal.create('Create New Task', content, [onSubmit, 'Save']);
-              		
-              		//init datepicker in modal
-              		$('.datepicker').datepicker();
-              		
-              		$('#createTask').submit(function(e){
-              			e.preventDefault();
-              			console.log($(this).serialize());
-              			if($('#taskTitle').val().length > 0 && $('#date').val().length > 0 && $('#time').val().length > 0){
-              				
-	              			$.post("api.php?action=createTask",$(this).serialize(),function(data){
-					              if(data.length === 0){
-					            	calendar.loadTasks();
-					            	jsAlert('','The Task has been added.');
-					            	$('.blueModal').slideUp();
-					            	updateDashbox('task');
-					            }else{
-					            	jsAlert('', data);
-					            }
-					        });
+var application = new function(){
+	this.create = function(id, title, type, content, style){
+		var windowStyle = '';
+		if(type === 'html'){
+			content = content;
+		}
+		
+		if(typeof style['width'] != 'undefined'){
+			windowStyle +='width:'+style['width']+';';
+		}  		
+		
+		
+		var output = '<div class="fenster" id="'+id+'" style="'+windowStyle+'">';
+			output += '<header class="titel">';
+			output += '<p>'+title+'&nbsp;</p>';
+			output += '<p class="windowMenu">';
+				output += '<a href="javascript:hideApplication(\''+id+'\');"><img src="./gfx/icons/close.png" width="16"></a>';
+				output += '<a href="#" onclick="moduleFullscreen(\''+id+'\');" class="fullScreenIcon"><img src="./gfx/icons/fullScreen.png" width="16"></a>';
+			output += '</p>';
+		output += '</header>';
+		output += '<div class="inhalt autoflow" id="'+id+'Main">'+content+'</div>';
 
-              			}else{
-              				jsAlert('', 'You need to fill out all the fields.');
-              			}
-              			
-              			
-              			return false;
-              		});
-			  	};
-			  	
-			  	this.get = function(startStamp, stopStamp, privacy){
-			  		var result;
-				    $.ajax({
-				      url:"api.php?action=getTasks",
-				      async: false,  
-					  type: "POST",
-					  data: { 
-					  	 startStamp: startStamp,
-					  	 stopStamp: stopStamp,
-					  	 privacy: privacy
-					  	 },
-				      success:function(data) {
-				      	if(data){
-				        	result = $.parseJSON(data); 
-				      	}
-				      }
-				   });
-				   
-				   return result;
-			  	};
-			  	
-			  	this.show = function(taskId, editable){
-			  		
-			  		var taskData = tasks.getData(taskId);
-			  		
-			  		var date = new Date(taskData.timestamp*1000);
-			  		
-			  		
-			  		var editableToken;
-			  		
-			  		
-			  		var status = taskData.status;
-			  		//generate formstuff from eventdata
-			  		if(editable){
-			  			editableToken = 'contentEditable';
-			  			var checked;
-			  			if(editable == true){
-			  				
-			  				checked = 'checked="checked"';
-			  				status = '<select name="status" id="status">';
-			  						if(taskData.status == 'pending'){
-						  		    	status += '<option value="pending">Pending</option>';
-						  		    	status += '<option value="done">Done</option>';
-			  						}else{
-						  		    	status += '<option value="done">Done</option>';
-						  		    	status += '<option value="pending">Pending</option>';
-			  						}
-								status += '</select>';
-			  			}
-			  			
-			  		}else{
-			  		}
-			  		
-			  		var time = calendar.beautifyDate(date.getHours())+':'+calendar.beautifyDate(date.getMinutes());
-			  		
-			  		
-			  		
-			  		
-			  		var content  = '<table class="formTable">';
-			  				content += '<form id="updateTask" method="post">';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'Title:';
-					  		    	content += '</td>';
-					  		    	content += '<td '+editableToken+' id="title">';
-					  		    	content += taskData.title;
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'Description:';
-					  		    	content += '</td>';
-					  		    	content += '<td '+editableToken+' id="description">';
-					  		    	content += taskData.description;
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'Day:';
-					  		    	content += '</td>';
-					  		    	content += '<td><div id="date" class="datepicker" '+editableToken+'>';
-					  		    	content += date.getMonth()+1+'/'+date.getDate()+'/'+date.getFullYear();
-					  		    	content += '</div>&nbsp;<div id="time" '+editableToken+'>'+time+'</div>';
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'Status:';
-					  		    	content += '</td>';
-					  		    	content += '<td>';
-					  		    	content += status;
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'Privacy:';
-					  		    	content += '</td>';
-					  		    	content += '<td>';
-					  		    	content += privacy.show(taskData.privacy, editable);
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-			  		    	content += '</form>';
-			  		    content += '</table>';
-			  		
-			  		var onSubmit = function() {
-			  			$('#updateTask').submit();
-  					};
-  					
-  					//create modal
-              		modal.create('Task '+taskData.title, content, [onSubmit, 'Save']);
-              		
-              		//init datepicker in modal
-              		$(".datepicker").datepicker({
-					    dateFormat: 'dd/mm/yy',
-					    showOn: "button",
-					    buttonImage: "images/calendar.gif",
-					    buttonImageOnly: true,
-					    onClose: function(dateText, inst) {
-					        $(this).parent().find("[contenteditable=true]").focus().html(dateText).blur();
-					    }
-					});
-              		
-              		$('#updateTask').submit(function(e){
-              			e.preventDefault();
-              			if($('#title').text().length > 0 && $('#date').text().length > 0 && $('#time').text().length > 0){
-              				
-              				var privacy = $('.blueModal .privacySettings  :input').serialize();
-              				
-              				var searchString  = 'taskId='+encodeURIComponent(taskId);
-              					searchString += '&title='+encodeURIComponent($('.blueModal #title').text());
-              					searchString += '&description='+encodeURIComponent($('.blueModal #description').text());
-              					searchString += '&date='+encodeURIComponent($('.blueModal #date').justtext());
-              					searchString += '&status='+encodeURIComponent($('.blueModal #status').val());
-              					searchString += '&time='+encodeURIComponent($('.blueModal #time').text());
-              					searchString += '&'+privacy;
-              					
-	              			$.post("api.php?action=updateTask",searchString,function(data){
-					        
-					            if(empty(data)){
-					            	jsAlert('', 'The event has been updated.');
-					            	$('.blueModal').slideUp();
-					            }else{
-					            	jsAlert('', data);
-					            }
-					        });
-
-              			}else{
-              				jsAlert('', 'You need to fill out all the fields.');
-              			}
-              			
-              			
-              			return false;
-              		});
-			  	};
-			  	this.create = function(user, timestamp, title, description, privacy){
-			  		
-				    $.ajax({
-				      url:"api.php?action=createTask",
-				      async: false,  
-					  type: "POST",
-					  data: { 
-					  	user : user,
-					  	timestamp : timestamp,
-					  	title : title,
-					  	description : description,
-					  	privacy : privacy
-					  	 },
-				      success:function(data) {
-				         result = data; 
-				      }
-				   });
-			  	};
-			  	this.markAsDone = function(id){
-			  		$.ajax({
-				      url:"api.php?action=markTaskAsDone",
-				      async: false,  
-					  type: "POST",
-					  data: { 
-					  	eventid : id,
-					  	 },
-				      success:function(data) {
-				         result = data; 
-				      }
-				   });
-				   $('.task_'+id).addClass('doneTask');
-				   if(!calendar.showDoneTasks){
-				   	$('.task_'+id).hide();
-				   }
-			  	};
-			  	this.markAsPending = function(id){
-			  		$.ajax({
-				      url:"api.php?action=markTaskAsPending",
-				      async: false,  
-					  type: "POST",
-					  data: { 
-					  	eventid : id,
-					  	 },
-				      success:function(data) {
-				         result = data; 
-				      }
-				   });
-				  $('.task_'+id).removeClass('doneTask');
-				  $('.task_'+id).show();
-			  	};
-			  	this.update = function(){
-			  		updateDashbox('task');
-			  	};
-			  };
+		
+		$('#bodywrap').append(output);
+		
+              init.draggableApplications();
+              init.resizableApplications();
+              application.onTop('calendarFenster');
+	};
+	
+	this.onTop = function(id){
+		
+          $(".fenster").css('z-index', 998);
+          $("#"+id+"").css('z-index', 999);
+          $("#"+id+"").css('position', 'absolute');
+		
+	};
+	
+	this.show = function(id){
+          applicationOnTop(id);
+          $("#" + id +"").show();
+	};
+	
+	this.hide = function(id){
+          $("#" + id +"").hide();
+	};
+	
+	this.fullscreen = function(id){
+          $("#" + id +"").toggle();
+	};
+	
+	this.returnFromFullScreen = function(id){
+          $('#'+id+' .fullScreenIcon').attr("onClick","moduleFullscreen('"+id+"')");
+            var returnFullScreenCSS = {
+                  'position' : 'absolute',
+                  'top' : window.fullScreenOldMarginY,
+                  'left' : window.fullScreenOldMarginX,
+                  'width' : window.fullScreenOldX,
+                  'height' : window.fullScreenOldY
+                 };
+            $("#" + id + "").css(returnFullScreenCSS);
+	};
+};
 			  
-			  var buddylist = new function(){
-	            this.getBuddies = function(){
-	                var res;
+var tasks = new function(){
+	
+	this.getData = function(taskId){
+		var res;
+		$.ajax({
+	      url:"api.php?action=getTaskData",
+	      async: false,  
+		  type: "POST",
+		  data: { 
+		  	taskId : taskId
+		  	 },
+	      success:function(data) {
+	         res = $.parseJSON(data); 
+	      }
+	   });
+	   return res;
+	};
+	
+	this.addForm = function(startstamp){
+		if(typeof startstamp === undefined)
+			var d = new Date(startstamp*1000);
+		else
+			var d = new Date();
+			
+		
+		var formattedDate = calendar.beautifyDate((d.getMonth())+1)+'/'+calendar.beautifyDate(d.getDate())+'/'+d.getFullYear();
+		
+		var content  = '<table class="formTable">';
+				content += '<form id="createTask" method="post">';
+		  		    content += '<tr>';
+		  		    	content += '<td>';
+		  		    	content += 'Title:';
+		  		    	content += '</td>';
+		  		    	content += '<td>';
+		  		    	content += '<input type="text" name="title" id="taskTitle">';
+		  		    	content += '</td>';
+		  		    content += '</tr>';
+		  		    content += '<tr>';
+		  		    	content += '<td>';
+		  		    	content += 'Description:';
+		  		    	content += '</td>';
+		  		    	content += '<td>';
+		  		    	content += '<textarea name="description" id="taskDescription"></textarea>';
+		  		    	content += '</td>';
+		  		    content += '</tr>';
+		  		    content += '<tr>';
+		  		    	content += '<td>';
+		  		    	content += 'Day:';
+		  		    	content += '</td>';
+		  		    	content += '<td>';
+		  		    	content += '<input type="text" name="date" id="date" class="date datepicker" value="'+formattedDate+'" style="width: 72px;">';
+		  		    	content += '&nbsp;<input type="text" name="time" id="time" class="time eventTime" value="15:30" style="width: 37px;">';
+		  		    	content += '</td>';
+		  		    content += '</tr>';
+		  		    content += '<tr>';
+		  		    	content += '<td>';
+		  		    	content += 'Status:';
+		  		    	content += '</td>';
+		  		    	content += '<td>';
+		  		    	content += '<select name="status">';
+		  		    	content += '<option value="pending">Pending</option>';
+		  		    	content += '<option value="done">Done</option>';
+		  		    	content += '</select>';
+		  		    	content += '</td>';
+		  		    content += '</tr>';
+		  		    content += '<tr>';
+		  		    	content += '<td>';
+		  		    	content += 'Privacy:';
+		  		    	content += '</td>';
+		  		    	content += '<td>';
+		  		    	content += privacy.show('f//f', true);
+		  		    	content += '</td>';
+		  		    content += '</tr>';
+		    	content += '</form>';
+		    content += '</table>';
+		var onSubmit = function() {
+			$('#createTask').submit();
+		};
+		
+		//create modal
+              modal.create('Create New Task', content, [onSubmit, 'Save']);
+
+              //init datepicker in modal
+              $('.datepicker').datepicker();
+
+              $('#createTask').submit(function(e){
+                      e.preventDefault();
+                      console.log($(this).serialize());
+                      if($('#taskTitle').val().length > 0 && $('#date').val().length > 0 && $('#time').val().length > 0){
+
+                              $.post("api.php?action=createTask",$(this).serialize(),function(data){
+                                            if(data.length === 0){
+                                              calendar.loadTasks();
+                                              jsAlert('','The Task has been added.');
+                                              $('.blueModal').slideUp();
+                                              updateDashbox('task');
+                                          }else{
+                                              jsAlert('', data);
+                                          }
+                                      });
+
+                      }else{
+                              jsAlert('', 'You need to fill out all the fields.');
+                      }
+
+
+                      return false;
+              });
+	};
+	
+	this.get = function(startStamp, stopStamp, privacy){
+		var result;
+	    $.ajax({
+	      url:"api.php?action=getTasks",
+	      async: false,  
+		  type: "POST",
+		  data: { 
+		  	 startStamp: startStamp,
+		  	 stopStamp: stopStamp,
+		  	 privacy: privacy
+		  	 },
+	      success:function(data) {
+	      	if(data){
+	        	result = $.parseJSON(data); 
+	      	}
+	      }
+	   });
+	   
+	   return result;
+	};
+	
+	this.show = function(taskId, editable){
+		
+		var taskData = tasks.getData(taskId);
+		
+		var date = new Date(taskData.timestamp*1000);
+		
+		
+		var editableToken;
+		
+		
+		var status = taskData.status;
+		//generate formstuff from eventdata
+		if(editable){
+			editableToken = 'contentEditable';
+			var checked;
+			if(editable == true){
+				
+				checked = 'checked="checked"';
+				status = '<select name="status" id="status">';
+						if(taskData.status == 'pending'){
+			  		    	status += '<option value="pending">Pending</option>';
+			  		    	status += '<option value="done">Done</option>';
+						}else{
+			  		    	status += '<option value="done">Done</option>';
+			  		    	status += '<option value="pending">Pending</option>';
+						}
+					status += '</select>';
+			}
+			
+		}else{
+		}
+		
+		var time = calendar.beautifyDate(date.getHours())+':'+calendar.beautifyDate(date.getMinutes());
+		
+		
+		
+		
+		var content  = '<table class="formTable">';
+				content += '<form id="updateTask" method="post">';
+		  		    content += '<tr>';
+		  		    	content += '<td>';
+		  		    	content += 'Title:';
+		  		    	content += '</td>';
+		  		    	content += '<td '+editableToken+' id="title">';
+		  		    	content += taskData.title;
+		  		    	content += '</td>';
+		  		    content += '</tr>';
+		  		    content += '<tr>';
+		  		    	content += '<td>';
+		  		    	content += 'Description:';
+		  		    	content += '</td>';
+		  		    	content += '<td '+editableToken+' id="description">';
+		  		    	content += taskData.description;
+		  		    	content += '</td>';
+		  		    content += '</tr>';
+		  		    content += '<tr>';
+		  		    	content += '<td>';
+		  		    	content += 'Day:';
+		  		    	content += '</td>';
+		  		    	content += '<td><div id="date" class="datepicker" '+editableToken+'>';
+		  		    	content += date.getMonth()+1+'/'+date.getDate()+'/'+date.getFullYear();
+		  		    	content += '</div>&nbsp;<div id="time" '+editableToken+'>'+time+'</div>';
+		  		    	content += '</td>';
+		  		    content += '</tr>';
+		  		    content += '<tr>';
+		  		    	content += '<td>';
+		  		    	content += 'Status:';
+		  		    	content += '</td>';
+		  		    	content += '<td>';
+		  		    	content += status;
+		  		    	content += '</td>';
+		  		    content += '</tr>';
+		  		    content += '<tr>';
+		  		    	content += '<td>';
+		  		    	content += 'Privacy:';
+		  		    	content += '</td>';
+		  		    	content += '<td>';
+		  		    	content += privacy.show(taskData.privacy, editable);
+		  		    	content += '</td>';
+		  		    content += '</tr>';
+		    	content += '</form>';
+		    content += '</table>';
+		
+		var onSubmit = function() {
+			$('#updateTask').submit();
+		};
+		
+		//create modal
+              modal.create('Task '+taskData.title, content, [onSubmit, 'Save']);
+
+              //init datepicker in modal
+              $(".datepicker").datepicker({
+                                  dateFormat: 'dd/mm/yy',
+                                  showOn: "button",
+                                  buttonImage: "images/calendar.gif",
+                                  buttonImageOnly: true,
+                                  onClose: function(dateText, inst) {
+                                      $(this).parent().find("[contenteditable=true]").focus().html(dateText).blur();
+                                  }
+                              });
+
+                              $('#updateTask').submit(function(e){
+                                      e.preventDefault();
+                                      if($('#title').text().length > 0 && $('#date').text().length > 0 && $('#time').text().length > 0){
+
+                                              var privacy = $('.blueModal .privacySettings  :input').serialize();
+
+                                              var searchString  = 'taskId='+encodeURIComponent(taskId);
+                                                      searchString += '&title='+encodeURIComponent($('.blueModal #title').text());
+                                                      searchString += '&description='+encodeURIComponent($('.blueModal #description').text());
+                                                      searchString += '&date='+encodeURIComponent($('.blueModal #date').justtext());
+                                                      searchString += '&status='+encodeURIComponent($('.blueModal #status').val());
+                                                      searchString += '&time='+encodeURIComponent($('.blueModal #time').text());
+                                                      searchString += '&'+privacy;
+
+                                              $.post("api.php?action=updateTask",searchString,function(data){
+
+                                                          if(empty(data)){
+                                                              jsAlert('', 'The event has been updated.');
+                                                              $('.blueModal').slideUp();
+                                                          }else{
+                                                              jsAlert('', data);
+                                                          }
+                                                      });
+
+                                      }else{
+                                              jsAlert('', 'You need to fill out all the fields.');
+                                      }
+
+
+                                      return false;
+                              });
+	};
+	this.create = function(user, timestamp, title, description, privacy){
+		
+	    $.ajax({
+	      url:"api.php?action=createTask",
+	      async: false,  
+		  type: "POST",
+		  data: { 
+		  	user : user,
+		  	timestamp : timestamp,
+		  	title : title,
+		  	description : description,
+		  	privacy : privacy
+		  	 },
+	      success:function(data) {
+	         result = data; 
+	      }
+	   });
+	};
+	this.markAsDone = function(id){
+		$.ajax({
+	      url:"api.php?action=markTaskAsDone",
+	      async: false,  
+		  type: "POST",
+		  data: { 
+		  	eventid : id,
+		  	 },
+	      success:function(data) {
+	         result = data; 
+	      }
+	   });
+	   $('.task_'+id).addClass('doneTask');
+	   if(!calendar.showDoneTasks){
+	   	$('.task_'+id).hide();
+	   }
+	};
+	this.markAsPending = function(id){
+		$.ajax({
+	      url:"api.php?action=markTaskAsPending",
+	      async: false,  
+		  type: "POST",
+		  data: { 
+		  	eventid : id,
+		  	 },
+	      success:function(data) {
+	         result = data; 
+	      }
+	   });
+	  $('.task_'+id).removeClass('doneTask');
+	  $('.task_'+id).show();
+	};
+	this.update = function(){
+		updateDashbox('task');
+	};
+};
+
+var User = new function(){
+    this.userid;
+    this.setUserId = function(id){
+        
+        this.userid = id;
+    };
+    this.getBorder = function(lastActivity){
+    //every userpicture has a border, this border is green if the lastactivty defines that
+    //the user is online and its red if the lastactivity defines that the user is offline.
+
+
+
+        var border;
+        if(lastActivity === 1){
+                border = 'border-color: green';
+            }else{
+                border = 'border-color: red';
+            }
+
+        return border;
+    };
+    this.showPicture = function(userid, lastActivity){
+	            
+        var userpicture = getUserPicture(userid);
+        if(typeof lastActivity === 'undefined')
+            var lastActivity = User.getLastActivity(userid); //get last activity so the border of the userpicture can show if the user is online or offline
+
+        var ret;
+        ret = '<div class="userPicture userPicture_'+userid+'" style="background: url(\''+userpicture+'\'); '+User.getBorder(lastActivity)+'; width: 20px;height: 20px;background-size: 100%;"></div>';
+
+        $('.userPicture_'+userid).css('border', User.getBorder(lastActivity)); //update all shown pictures of the user
+
+        return ret;
+	            
+    };
+    this.getLastActivity = function(request){
+		            //load data from server
+		            var result="";
+		            
+                            $.ajax({
+		                url:sourceURL+"/api.php?action=getLastActivity",
+		                async: false,  
+		                    type: "POST",
+		                    data: { 
+		                                    request : request 
+		                                },
+		                success:function(data) {
+		                           result = data; 
+		                        }
+		            });
+		            
+		            if(is_numeric(request)){
+		                if(result.length > 0){
+		                    response = result;
+		                }
+		            }else{
+		                var response = new Array();
+		                
+		                var lastActivityArray = JSON.parse(result);
+		                $.each(lastActivityArray, function(index, value) {
+		                        response[index]=parseInt(value); 
+		                   });
+		                
+		                
+		            }
+		            
+		            
+		            
+		            if(is_numeric(request)){
+		                return parseInt(response);
+		            }else{
+		                return response
+		                console.log(response);
+		            }
+        
+    };
+};
+			  
+var buddylist = new function(){
+  this.getBuddies = function(){
+                                   var res;
 			  		$.ajax({
 				      url:"api.php?action=getBuddylist",
 				      async: false,  
@@ -752,12 +819,15 @@ var focus = true;
 				   });
 				   return res;
 			  	};
-			  };
+  this.addBuddy = function(){
+                                
+                            };
+};
 			  
-			  var browser = new function(){
-			  	this.currentTab = 0;
-			  	this.startUrl = 'http://transparency-everywhere.com';
-			  	this.init = function(){
+var browser = new function(){
+	this.currentTab = 0;
+	this.startUrl = 'http://transparency-everywhere.com';
+	this.init = function(){
 			  		var html = '<div class="browser">';
 							html += '<header>';
 								html += '<form onsubmit=" return false;">';
@@ -770,7 +840,7 @@ var focus = true;
 						tabs.init('.browser');
 						tabs.addTab('.browser', 'start', browser.loadPage('http://transparency-everywhere.com'));
 			  	};
-			  	this.loadPage = function(url){
+	this.loadPage = function(url){
 			  		var result;
 			  		$.ajax({
 				      url:url,
@@ -781,30 +851,30 @@ var focus = true;
 				   	});
 				   	return result;
 			  	};
-			  	this.openUrl = function(url){
+	this.openUrl = function(url){
 			  		
 			  	};
-			  };
+};
 			  
-			  var calendar = new function(){
-			  	
-			  	this.todayTimeObject = new Date();
-			  	this.ShownDay; //defines the starttime of shown intervall(first day of month, first day of week, day)
-				this.view = 'month'; //defines type of view(month, week or day)
-				this.listType = 'boxes';
-			  	this.shownTimeObject;
-			  	this.loader;
-			  	this.showDoneTasks = false; // defines if tasks with status "done" are shown
-			  	
-			  	this.show = function(){
+var calendar = new function(){
+	
+	this.todayTimeObject = new Date();
+	this.ShownDay; //defines the starttime of shown intervall(first day of month, first day of week, day)
+	this.view = 'month'; //defines type of view(month, week or day)
+	this.listType = 'boxes';
+	this.shownTimeObject;
+	this.loader;
+	this.showDoneTasks = false; // defines if tasks with status "done" are shown
+	
+	this.show = function(){
 			  		if($('#calendarFenster').length === 0){
 			  			calendar.init();
 			  		}else{
 			  			application.show('calendarFenster');
 			  		}
 			  	};
-			  	
-			  	this.init = function(){
+	
+	this.init = function(){
 			  		
 			  		var html = '<div id="calendar">';
 			  				html += '<header>';
@@ -889,8 +959,8 @@ var focus = true;
 			  			
 			  			this.loadMonth();
 			  	};
-			  	
-			  	this.toggleListType = function(type){
+	
+	this.toggleListType = function(type){
 			  		
 			  		//show days as boxes
 			  		if(type == 'boxes'){
@@ -940,8 +1010,8 @@ var focus = true;
 			  			
 			  		}
 			  	};
-			  	
-			  	this.getPrivacy = function(){
+	
+	this.getPrivacy = function(){
 			  		var privacy = [];
 			  		$('#calendars input[type=checkbox]:checked').each(function(){
 			  			 privacy.push($(this).data('value'));
@@ -949,8 +1019,8 @@ var focus = true;
 			  		
 			  		return privacy.join(';');
 			  	};
-			  	
-			  	this.loadTasks = function(){
+	
+	this.loadTasks = function(){
 			  		$('.calendarFrame .day').each(function(){
 			  			var startstamp = $(this).data("timestamp");
 			  			
@@ -995,8 +1065,8 @@ var focus = true;
 			  		
 			  		console.log('tasks loaded');
 			  	};
-			  	
-			  	this.toggleTasks = function(){
+	
+	this.toggleTasks = function(){
 			  		if($('#showTasks').is(':checked')){
 						$('#side #taskList li').not('.header').slideDown();
 			  			calendar.loadTasks();
@@ -1007,8 +1077,8 @@ var focus = true;
 			  			$('.taskDetail').remove();
 			  		}
 			  	};
-			  	
-			  	this.toggleDoneTasks = function(){
+	
+	this.toggleDoneTasks = function(){
 			  		if($('#hideDoneTasks').is(':checked')){
 			  			$('.doneTask').hide();
 			  			calendar.showDoneTasks = false;
@@ -1017,8 +1087,8 @@ var focus = true;
 			  			calendar.showDoneTasks = true;
 			  		}
 			  	};
-			  	
-			  	this.loadEvents = function(){
+	
+	this.loadEvents = function(){
 			  		if($('#showTasks').is(':checked')){
 			  			calendar.loadTasks();
 			  		}
@@ -1063,8 +1133,8 @@ var focus = true;
 			  		
 			  		console.log('events loaded into mainframe..');
 			  	};
-			  	
-				this.appendDayToCalender = function(time){
+	
+	this.appendDayToCalender = function(time){
 				
 					var selection;
 					var dayDateObject = new Date(time * 1000);
@@ -1109,8 +1179,8 @@ var focus = true;
 					
 					$('.calendarFrame').append(day);
 				};
-				 
-				this.loadMonth = function(date){
+	 
+	this.loadMonth = function(date){
 					
 			  		//tidy up calendar
 					$('.calendarFrame').html('');
@@ -1179,8 +1249,8 @@ var focus = true;
 					$('.dropdown-toggle').dropdown();//init day dropdowns
 					this.loader = setTimeout(calendar.loadEvents, 1000);
 			  };
-			  	
-			  	this.loadWeek = function(startStamp){
+	
+	this.loadWeek = function(startStamp){
 			  		//tidy up calendar
 					$('.calendarFrame').html('');
 					$('.calendarFrame').removeClass('dayView');
@@ -1217,8 +1287,8 @@ var focus = true;
 					this.loader = setTimeout(function() {calendar.loadEvents();}, 1000);
 			  		
 			  };
-			  	
-			  	this.loadDay = function(date){
+	
+	this.loadDay = function(date){
 			  		//tidy up calendar
 					$('.calendarFrame').html('');
 					$('.calendarFrame').removeClass('weeView');
@@ -1282,8 +1352,8 @@ var focus = true;
 					this.loader = setTimeout(function() {calendar.loadEvents();}, 1000);
 					this.updateViewDetail('day', this.shownTimeObject);
 			  	};
-			  	
-			  	this.updateViewDetail = function(type, dateObj){
+	
+	this.updateViewDetail = function(type, dateObj){
 			  		
 			  		if(type == 'month'){
 			  			
@@ -1394,14 +1464,14 @@ var focus = true;
 			  		});
 			  		
 			  	};
-			  	
-			  	this.getMonthName = function(month){
+	
+	this.getMonthName = function(month){
 					var monthName = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
 					return monthName[month];
 					
 			  	};
-			  	
-			  	this.loadMonthsIntoSide = function(date){
+	
+	this.loadMonthsIntoSide = function(date){
 			  		var d = new Date(date);
 			  		d.setMonth(0);
 			  		d.setDate(1);
@@ -1432,8 +1502,8 @@ var focus = true;
 			  		
 			  		
 			  	};
-			  	
-			  	this.loadEventsIntoSide = function(date){
+	
+	this.loadEventsIntoSide = function(date){
 			  		console.log('side');
 			  		var d = new Date(date);
 			  		d.setMonth(0);
@@ -1477,23 +1547,23 @@ var focus = true;
 			  		
 			  		
 			  	};
-			  	
-			  	this.beautifyDate =function(value){
+	
+	this.beautifyDate =function(value){
 			  		if(value < 10){
 			  			value = '0'+value;
 			  		}
 			  		return value;
 				};
-				
-				this.getAppointmentsForDay = function(time){
+	
+	this.getAppointmentsForDay = function(time){
 					var array = [];
 					array[0] = 'startStamp';
 					
 					return array;
 				};
-				
-				
-				this.getNextMonth = function(month){
+	
+	
+	this.getNextMonth = function(month){
 					var ret;
 					switch(month){
 						default: 
@@ -1506,8 +1576,8 @@ var focus = true;
 					}
 					return ret;
 				};
-				
-				this.getLastMonth = function(month){
+	
+	this.getLastMonth = function(month){
 					var ret;
 					switch(month){
 						default: 
@@ -1520,7 +1590,7 @@ var focus = true;
 					}
 					return ret;
 				};
-				this.getMonday = function(d){
+	this.getMonday = function(d){
 				  d = new Date(d);
 				  var d = new Date(d.setHours(0));
 				  var d = new Date(d.setMinutes(0));
@@ -1530,12 +1600,12 @@ var focus = true;
 				      diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
 				  return new Date(d.setDate(diff));
 				};
-				
-				
-			  };
-			  var events = new function(){
-			  	
-			  	this.getData = function(eventId){
+	
+	
+};
+var events = new function(){
+	
+	this.getData = function(eventId){
 			  		var res;
 			  		$.ajax({
 				      url:"api.php?action=getEventData",
@@ -1550,8 +1620,8 @@ var focus = true;
 				   });
 				   return res;
 			  	};
-			  	
-			  	this.create = function(startStamp, stopStamp, title, place, privacyShow, privacyEdit){
+	
+	this.create = function(startStamp, stopStamp, title, place, privacyShow, privacyEdit){
 			  		
 				    $.ajax({
 				      url:"doit.php?action=loadPrivacySettings",
@@ -1571,7 +1641,7 @@ var focus = true;
 				   });
 				   
 			  	};
-			  	this.addForm = function(startstamp){
+	this.addForm = function(startstamp){
 			  		var d = new Date(startstamp*1000);
 			  		console.log(d.getMonth());
 			  		var formattedDate = calendar.beautifyDate((d.getMonth())+1)+'/'+calendar.beautifyDate(d.getDate())+'/'+d.getFullYear();
@@ -1666,8 +1736,8 @@ var focus = true;
               			return false;
               		});
 			  	};
-			  	
-			  	this.join = function(originalEventId, addToVisitors){
+	
+	this.join = function(originalEventId, addToVisitors){
 			  		var result;
 				    $.ajax({
 				      url:"api.php?action=joinEvent",
@@ -1687,8 +1757,8 @@ var focus = true;
 				   return result;
 			  		
 			  	};
-			  	
-			  	this.joinForm = function(originalEventId){
+	
+	this.joinForm = function(originalEventId){
 			  		
 			  		var eventData = events.getData(originalEventId);
 			  		
@@ -1724,8 +1794,8 @@ var focus = true;
   					//create modal
               		modal.create('Join the event "'+eventData.title+'"', content, [onSubmit, 'Save']);
 			  	};
-			  	
-			  	this.show = function(eventId, editable){
+	
+	this.show = function(eventId, editable){
 			  		var eventData = events.getData(eventId);
 			  		
 			  		var startDate = new Date(eventData.startStamp*1000);
@@ -1846,8 +1916,8 @@ var focus = true;
               		});
 			  		
 			  	};
-			  	
-			  	this.get = function(startStamp, stopStamp, privacy){
+	
+	this.get = function(startStamp, stopStamp, privacy){
 			  		var result;
 				    $.ajax({
 				      url:"api.php?action=getEvents",
@@ -1867,18 +1937,18 @@ var focus = true;
 				   
 				   return result;
 			  	};
-			  };
-			  var playlists = new function(){
-			  	this.create = function(){
+};
+var playlists = new function(){
+	this.create = function(){
 			  		
 			  	};
-			  	this.addForm = function(){
+	this.addForm = function(){
 			  		
 			  	};
-			  };
-			  var privacy = new function(){
-			  	
-			  	this.load = function(selector, val, editable){
+};
+var privacy = new function(){
+	
+	this.load = function(selector, val, editable){
 			  		if(typeof editable == 'undefined')
 			  			editable = false;
 			  		
@@ -1891,7 +1961,7 @@ var focus = true;
 			  		
 			  		
 			  	};
-			  	this.show = function(val, editable){
+	this.show = function(val, editable){
 
 			  		if(typeof editable == 'undefined')
 			  			editable = false;
@@ -1909,9 +1979,9 @@ var focus = true;
 				   	});
 				   return result;
 			  	};
-			  	
-			  	//checks if user is authorized, to edit an item with privacy.
-			  	this.authorize = function(privacy, author){
+	
+	//checks if user is authorized, to edit an item with privacy.
+	this.authorize = function(privacy, author){
 			  		if(author == localStorage.currentUser_userid)
 			  			return true;
 			  			
@@ -1935,11 +2005,11 @@ var focus = true;
 				   else
 				   		return false;
 			  	};
-			  	
-			  };
-			  var groups = new function(){
-			  	
-			  	this.get = function(){
+	
+};
+var groups = new function(){
+	
+	this.get = function(){
 			  		
 				    var result="";
 				    
@@ -1957,7 +2027,7 @@ var focus = true;
 				   		return $.parseJSON(result);
 				   	}
 			  	};
-			  	this.getTitle = function(groupId){
+	this.getTitle = function(groupId){
 			  		
 				    var result="";
 				    
@@ -1975,70 +2045,11 @@ var focus = true;
 				   	}
 			  		
 			  	};
-			  	
-			  };
+	
+};
 			  
-			  function getUserBorder(lastActivity){
-		        //every userpicture has a border, this border is green if the lastactivty defines that
-		        //the user is online and its red if the lastactivity defines that the user is offline.
-		        
-		            
-		            
-		            var border;
-		            if(lastActivity === 1){
-		                border = 'border-color: green';
-		            }else{
-		                border = 'border-color: red';
-		            }
-		            
-		            return border
-		        }
 
-		        function getLastActivity(request){
-		            
-		            
-		            
-		            
-		                    //load data from server
-		                    var result="";
-		            
-				    $.ajax({
-		                        url:sourceURL+"/api.php?action=getLastActivity",
-		                        async: false,  
-		                            type: "POST",
-		                            data: { 
-		                                    request : request 
-		                                },
-		                        success:function(data) {
-		                           result = data; 
-		                        }
-		                    });
-		            
-		            if(is_numeric(request)){
-		                if(result.length > 0){
-		                    response = result;
-		                }
-		            }else{
-		                var response = new Array();
-		                
-		                var lastActivityArray = JSON.parse(result);
-		                $.each(lastActivityArray, function(index, value) {
-		                        response[index]=parseInt(value); 
-		                   });
-		                
-		                
-		            }
-		            
-		            
-		            
-		            if(is_numeric(request)){
-		                return parseInt(response);
-		            }else{
-		                return response
-		                console.log(response);
-		            }
-		        }
-			function getUserPicture(request){
+function getUserPicture(request){
 			            var post;
 			            var userid;
 			            if(is_numeric(request)){
@@ -2091,9 +2102,9 @@ var focus = true;
 				
 			}
 			
-	        function searchUserByString(string, limit){
-	            var result = [];
-	            $.ajax({
+function searchUserByString(string, limit){
+    var result = [];
+    $.ajax({
 	              url:sourceURL+"/api.php?action=searchUserByString",
 	              async: false,  
 	              type: "POST",
@@ -2113,42 +2124,27 @@ var focus = true;
 		              }
 	              }
 	            });
-	            return result;
-	        }
-
-	        function showUserPicture(userid, lastActivity){
-	            
-	            var userpicture = getUserPicture(userid);
-	            if(typeof lastActivity === 'undefined')
-	                var lastActivity = getLastActivity(userid); //get last activity so the border of the userpicture can show if the user is online or offline
-	            
-	            var ret;
-	            ret = '<div class="userPicture userPicture_'+userid+'" style="background: url(\''+userpicture+'\'); '+getUserBorder(lastActivity)+'; width: 20px;height: 20px;background-size: 100%;"></div>';
-	
-	            $('.userPicture_'+userid).css('border', getUserBorder(lastActivity)); //update all shown pictures of the user
-	            
-	            return ret;
-	            
-	        }
+    return result;
+}
 	        
-              function applicationOnTop(id){
+function applicationOnTop(id){
                   $(".fenster").css('z-index', 999);
                   $("#"+id+"").css('z-index', 9999);
                   $("#"+id+"").css('position', 'absolute');
               }
 
-              function showApplication(id){
+function showApplication(id){
                   applicationOnTop(id);
                   $("#" + id +"").show();
               }
-              function hideApplication(id){
+function hideApplication(id){
                   $("#" + id +"").hide();
               }
-              function toggleApplication(id){
+function toggleApplication(id){
                   $("#" + id +"").toggle();
               }
-              
-              function moduleFullscreen(moduleId){
+
+function moduleFullscreen(moduleId){
               	
               	//$('#'+moduleId+' .fullScreenIcon').html('rofl');
               	$('#'+moduleId+' .fullScreenIcon').attr("onClick","moduleReturnFullScreen('"+moduleId+"')");
@@ -2170,8 +2166,8 @@ var focus = true;
                        };
                   $("#" + moduleId + "").css(fullscreenCss);
               }
-              
-              function moduleReturnFullScreen(moduleId){
+
+function moduleReturnFullScreen(moduleId){
               	$('#'+moduleId+' .fullScreenIcon').attr("onClick","moduleFullscreen('"+moduleId+"')");
                   var returnFullScreenCSS = {
                         'position' : 'absolute',
@@ -2184,8 +2180,8 @@ var focus = true;
                   
               	
               }
-              
-              function jsAlert(type, message){
+
+function jsAlert(type, message){
 	              	var alertClass;
 	              	if(empty(type)){
 	              		alertClass = 'alert-info';
@@ -2200,8 +2196,8 @@ var focus = true;
 	              		$(this).remove();
 	              	});
               }
-              
-              var files = new function(){
+
+var files = new function(){
               	
               	this.fileIdToFileTitle = function(fileId){
 				    var result="";
@@ -2219,8 +2215,8 @@ var focus = true;
               	};
               	
               };
-              
-              var elements = new function(){
+
+var elements = new function(){
               	
               	this.elementIdToElementTitle = function(elementId){
 				    var result="";
@@ -2238,8 +2234,8 @@ var focus = true;
               	};
               	
               };
-              
-              var folders = new function(){
+
+var folders = new function(){
               	
               	this.folderIdToFolderTitle = function(folderId){
 				    var result="";
@@ -2257,8 +2253,8 @@ var focus = true;
               	};
               	
               };
-              
-              var filesystem =  new function() {
+
+var filesystem =  new function() {
               	
               	this.openShareModal = function(type, typeId){
               		
@@ -2306,9 +2302,9 @@ var focus = true;
               	};
               	
               };
-              
-              
-              var modal =  new function() {
+
+
+var modal =  new function() {
 			    this.html;
 			    this.create = function (title, content, action) {
 			    	this.html = '';
@@ -2344,21 +2340,8 @@ var focus = true;
        
 //encryption functions
 
-	function symEncrypt(key, message){
-		var msg;
-		var output;
-	    msg = CryptoJS.AES.encrypt(message, key);
-	    return String(msg);
-	}
-
-	function symDecrypt(key, message){
-            var msg;
-	    msg = CryptoJS.AES.decrypt(message, key);
-	    var output = CryptoJS.enc.Utf8.stringify(msg);
-	    return String(output);
-	}
-	
-	function generateAsymKeyPair(){
+//not in use because of async
+function generateAsymKeyPair(){
       var keySize = 1024;
       var crypt;
       var ret = [];
@@ -2371,26 +2354,8 @@ var focus = true;
       
       
 	}
-	
-	function asymEncrypt(publicKey, message){
-		
-		  var encrypt = new JSEncrypt();
-		  
-          encrypt.setPublicKey(publicKey);
-          
-          return encrypt.encrypt(message);
-          
-	}
-	
-	function asymDecrypt(privateKey, encryptedMessage){
-            var message;
-            var decrypt = new JSEncrypt();
-            decrypt.setPrivateKey(privateKey);
-            message = decrypt.decrypt(encryptedMessage);
-            return message;
-	}
-	
-	function getSalt(type, itemId, key){
+
+function getSalt(type, itemId, key){
 			var encryptedSalt = '';
 			$.ajax({
 			  url:"api.php?action=getSalt",
@@ -2401,12 +2366,12 @@ var focus = true;
 			     encryptedSalt = data; 
 			  }
 			});
-	    	var salt = symDecrypt(key, encryptedSalt); //encrypt salt using key
+	    	var salt = sec.symDecrypt(key, encryptedSalt); //encrypt salt using key
 	    	return salt;
 		
 	}
-	
-	function createSalt(type, itemId, receiverType, receiverId, salt){
+
+function createSalt(type, itemId, receiverType, receiverId, salt){
 			var ret;
 			$.ajax({
 			  url:"api.php?action=createSalt",
@@ -2420,8 +2385,8 @@ var focus = true;
 			
 			return ret;
 	}
-	
-	var hash = new function(){
+
+var hash = new function(){
 		this.MD5 = function(string){
 			var hash = CryptoJS.MD5(string);
 			return hash.toString(CryptoJS.enc.Hex);
@@ -2431,9 +2396,9 @@ var focus = true;
 			return hash.toString(CryptoJS.enc.Hex);
 		};
 	};
-	
-	//different to the one in the guest.js (the one in the guest.js needs to be deleted and the functions on offline page(login, updatepass need to be checked...))
-	var cypher = new function(){
+
+//different to the one in the guest.js (the one in the guest.js needs to be deleted and the functions on offline page(login, updatepass need to be checked...))
+var cypher = new function(){
 	
 	this.generateRand = function(){
 		return hash.SHA512(randomString(64, '#aA'));
@@ -2452,11 +2417,11 @@ var focus = true;
 		var authSaltDecrypted = cypher.generateRand();
 		var keySaltDecrypted = cypher.generateRand();
 		
-	    var authHash = hash.SHA512(shaPass+authSaltDecrypted);
-	    var keyHash = hash.SHA512(shaPass+keySaltDecrypted);
+                var authHash = hash.SHA512(shaPass+authSaltDecrypted);
+                var keyHash = hash.SHA512(shaPass+keySaltDecrypted);
 		
-		var authSaltEncrypted = symEncrypt(shaPass, authSaltDecrypted);
-		var keySaltEncrypted = symEncrypt(shaPass, keySaltDecrypted);
+		var authSaltEncrypted = sec.symEncrypt(shaPass, authSaltDecrypted);
+		var keySaltEncrypted = sec.symEncrypt(shaPass, keySaltDecrypted);
 		
 		var result = new Object();
 			result['authHash'] = authHash;
@@ -2491,7 +2456,7 @@ var focus = true;
 		    var keyHash = hash.SHA512(shaPass+salt);
 		    console.log(keyHash);
 			
-	    	privateKey = symDecrypt(keyHash, encryptedKey); //encrypt private Key using password
+	    	privateKey = sec.symDecrypt(keyHash, encryptedKey); //encrypt private Key using password
                 privateKeys[index] = privateKey;
             }else{
                 
@@ -2502,48 +2467,64 @@ var focus = true;
 	    };
 };
 
-	var sec =  new function() {
+var sec =  new function() {
 		
-				//standard password cypher used in processRegistration(), login() and updatePassword();
-			    this.passwordCypher = function (password, type, itemId, salt) {
-			    	
-			    	//md5 has to be replaced with more secure hashing function
-					var passwordHashMD5  = hash.MD5(password);
-					
-					if(type.length > 0){
-						var salt = getSalt(type, itemId, passwordHashMD5); //get auth salt, using md5 hash as key
-					}
-					
-				   	
-				   	var passwordHash = hash.SHA512(salt+passwordHashMD5);;
-				   	
-    				var keyHash =  hash.SHA512(passwordHashMD5+salt);
-				    
-				    return [passwordHash, passwordHashMD5, keyHash, salt];
-			    };
-			    
-			    this.getPrivateKey = function(type, itemId, salt, password){
-			    	return getPrivateKey(type, itemId, salt, password);
-			    };
-			    
-			    this.symEncrypt = function(key, message){
-			    	
-			    	return symEncrypt(key,message);
-			    	
-			    };
-			    this.symDecrypt = function(key, message){
-			    	
-			    	return symDecrypt(key,message);
-			    	
-			    };
-			    
-			    this.randomString = function(){
+    //standard password cypher used in processRegistration(), login() and updatePassword();
+    this.passwordCypher = function (password, type, itemId, salt) {
+
+                                    //md5 has to be replaced with more secure hashing function
+                                            var passwordHashMD5  = hash.MD5(password);
+
+                                            if(type.length > 0){
+                                                    var salt = getSalt(type, itemId, passwordHashMD5); //get auth salt, using md5 hash as key
+                                            }
+
+
+                                            var passwordHash = hash.SHA512(salt+passwordHashMD5);;
+
+                                    var keyHash =  hash.SHA512(passwordHashMD5+salt);
+
+                                        return [passwordHash, passwordHashMD5, keyHash, salt];
+                                };
+
+    this.getPrivateKey = function(type, itemId, salt, password){
+                                    return getPrivateKey(type, itemId, salt, password);
+                                };
+
+    this.symEncrypt = function(key, message){
+        var msg;
+        msg = CryptoJS.AES.encrypt(message, key);
+        return String(msg);
+    };
+    this.symDecrypt = function(key, message){
+        var msg;
+        msg = CryptoJS.AES.decrypt(message, key);
+        var output = CryptoJS.enc.Utf8.stringify(msg);
+        return String(output);
+    };
+
+    this.asymEncrypt = function(publicKey, message){
+        var encrypt = new JSEncrypt();
+        encrypt.setPublicKey(publicKey);
+        return encrypt.encrypt(message);
+    };
+
+    this.asymDecrypt = function(privateKey, encryptedMessage){
+        var message;
+        var decrypt = new JSEncrypt();
+        decrypt.setPrivateKey(privateKey);
+        message = decrypt.decrypt(encryptedMessage);
+        return message;
+    };
+
+
+    this.randomString = function(){
 			    	return hash.SHA512(randomString(64, '#aA'));  //generate salt and hash it.
 			    	
 			    };
-		};
+};
 	
-    function getPrivateKey(type, itemId, salt, password){
+function getPrivateKey(type, itemId, salt, password){
             
 	    var privateKey;
             var index = type+'_'+itemId;
@@ -2567,7 +2548,7 @@ var focus = true;
 
 		    var keyHash = hash.SHA512(password+salt);
 			
-	    	privateKey = symDecrypt(keyHash, encryptedKey); //encrypt private Key using password
+	    	privateKey = sec.symDecrypt(keyHash, encryptedKey); //encrypt private Key using password
                 privateKeys[index] = privateKey;
             }else{
                 
@@ -2577,7 +2558,7 @@ var focus = true;
 	    return privateKey;
 	}
 	
-	function getPublicKey(type, itemId){
+function getPublicKey(type, itemId){
 			var key = '';
 			$.ajax({
 			  url:"api.php?action=getPublicKey",
@@ -2592,11 +2573,11 @@ var focus = true;
 	}
 	
 	
-    function storeMessageKey(messageId, key){
+function storeMessageKey(messageId, key){
         messageKeys[messageId] = key;
     }
-    
-    function getStoredKey(messageId){
+
+function getStoredKey(messageId){
         return messageKeys[messageId];
     }
     
@@ -2612,7 +2593,7 @@ var focus = true;
               
 //general functions
         
-	var tabs = new function(){
+var tabs = new function(){
 		this.init = function(parentIdentifier){
 			$(parentIdentifier).append('<div class="tabFrame"><header><ul></ul></header></div>');
 		};
@@ -2634,26 +2615,15 @@ var focus = true;
 		};
 	};
 
-//       function mousePop(type, id, html){
-//           if($("#mousePop_"+type+id).length == 0){
-//               
-//            $("#popper").load("doit.php?action=mousePop&type=&id=&html", { 
-//                'type': type,
-//                'id':id,
-//                'html':html
-//            });
-//           }
-//       }
-
-	  function empty(value){
+function empty(value){
 	  	if(value.length == 0) {
 	  		return true;
 	  	}else{
 	  		return false;
 	  	}
 	  }
-	  
-	  function maxLength(string, maxlength){
+
+function maxLength(string, maxlength){
 	  	if(string.length <= maxlength)
 	  		return string;
 	  	else{
@@ -2663,56 +2633,52 @@ var focus = true;
 	  }
 	  
 	  //updates 
-      function updatePictureStatus(userId, borderColor){
-          $('.userPicture_'+userId).css('border-color', borderColor);
-      }
+function updatePictureStatus(userId, borderColor){
+    $('.userPicture_'+userId).css('border-color', borderColor);
+}
 
-      function showContent(content, title){
-        showApplication('reader');
-        createNewTab('reader_tabView', title,'','showContent.php?content='+content,true);return true;
-          
+function showContent(content, title){
+  showApplication('reader');
+  createNewTab('reader_tabView', title,'','showContent.php?content='+content,true);return true;
+    
+}
+
+function mousePop(type, id, html){
+      $('.mousePop').remove();
+      if($('#mousePop_'+type+id).length == 0){   
+      $("#popper").load("doit.php?action=mousePop&type=&id=&html", {
+          'type': type,
+          'id':id,
+          'html':html
+      });
       }
+}
       
-      function mousePop(type, id, html){
-            $('.mousePop').remove();
-            if($('#mousePop_'+type+id).length == 0){   
-            $("#popper").load("doit.php?action=mousePop&type=&id=&html", {
-                'type': type,
-                'id':id,
-                'html':html
-            });
-            }
-       }
-       
-       
-       function getCaretPosition(editableDiv) {
-            var caretPos = 0, containerEl = null, sel, range;
-            if (window.getSelection) {
-                sel = window.getSelection();
-                if (sel.rangeCount) {
-                    range = sel.getRangeAt(0);
-                    if (range.commonAncestorContainer.parentNode == editableDiv) {
-                        caretPos = range.endOffset;
-                    }
-                }
-            } else if (document.selection && document.selection.createRange) {
-                range = document.selection.createRange();
-                if (range.parentElement() == editableDiv) {
-                    var tempEl = document.createElement("span");
-                    editableDiv.insertBefore(tempEl, editableDiv.firstChild);
-                    var tempRange = range.duplicate();
-                    tempRange.moveToElementText(tempEl);
-                    tempRange.setEndPoint("EndToEnd", range);
-                    caretPos = tempRange.text.length;
-                }
-            }
-            return caretPos;
-        }
-       
-       
-       
-       
-       function getElementsByClassName(node,classname) {
+function getCaretPosition(editableDiv) {
+     var caretPos = 0, containerEl = null, sel, range;
+     if (window.getSelection) {
+         sel = window.getSelection();
+         if (sel.rangeCount) {
+             range = sel.getRangeAt(0);
+             if (range.commonAncestorContainer.parentNode == editableDiv) {
+                 caretPos = range.endOffset;
+             }
+         }
+     } else if (document.selection && document.selection.createRange) {
+         range = document.selection.createRange();
+         if (range.parentElement() == editableDiv) {
+             var tempEl = document.createElement("span");
+             editableDiv.insertBefore(tempEl, editableDiv.firstChild);
+             var tempRange = range.duplicate();
+             tempRange.moveToElementText(tempEl);
+             tempRange.setEndPoint("EndToEnd", range);
+             caretPos = tempRange.text.length;
+         }
+     }
+     return caretPos;
+}
+            
+function getElementsByClassName(node,classname) {
 		  if (node.getElementsByClassName) { // use native implementation if available
 		    return node.getElementsByClassName(classname);
 		  } else {
@@ -2736,8 +2702,8 @@ var focus = true;
 		}
 
 
-                //loads URL into an iFrame
-                function loadIframe(iframeName, url) {
+//loads URL into an iFrame
+function loadIframe(iframeName, url) {
                     $('#' + iframeName).html('');
                     var $iframe = $('#' + iframeName);
                     if ( $iframe.length ) {
@@ -2747,7 +2713,7 @@ var focus = true;
                     return true;
                 }
 //api connection stuff
-	function useridToUsername(id){
+function useridToUsername(id){
 		if(usernames[id] == undefined){
 			
 		    var result="";
@@ -2767,8 +2733,8 @@ var focus = true;
 		}
 		
 	}
-	
-	function usernameToUserid(username){
+
+function usernameToUserid(username){
 			
 		    var result="";
 		    $.ajax({
@@ -2784,8 +2750,8 @@ var focus = true;
 		   return result;
 		
 	}
-	
-	function getUserCypher(id){
+
+function getUserCypher(id){
 		var result="";
 		    $.ajax({
 		      url:"api.php?action=getUserCypher",
@@ -2799,8 +2765,8 @@ var focus = true;
 		   
 		   return result;
 	}
-	
-	function getUserSalt(id){
+
+function getUserSalt(id){
 		//returns user salt (aes encrypted with pw hash)
 		
 		
@@ -2817,19 +2783,19 @@ var focus = true;
 		   
 		   return result;
 	}
-                
+        
 //reload
 
 
 //feed
-	function feedLoadMore(destination ,type, user, limit){
+function feedLoadMore(destination ,type, user, limit){
 	    $.get("doit.php?action=feedLoadMore&user="+user+"&limit="+limit+"&type="+type,function(data){
 	    	$(destination).append(data);
 		},'html');
 	}
        
        
-    function reloadFeed(type){
+function reloadFeed(type){
         console.log('reloadFeed - initialised...');
         if(type === "friends"){
             $.post('api.php?action=checkForFeeds&type=friends', function(data) {
@@ -2850,13 +2816,13 @@ var focus = true;
     }
 
 //filesystem
-	function openUploadTab(element){
+function openUploadTab(element){
 	
         showApplication('filesystem');
         createNewTab('fileBrowser_tabView', 'Upload File','','modules/filesystem/upload.php?element='+element,true);return true;
 	}
-	
-	function initUploadify(id, uploader, element, timestamp, token){
+
+function initUploadify(id, uploader, element, timestamp, token){
 		
 	    $(function() {
 	            $(id).uploadify({
@@ -2882,29 +2848,29 @@ var focus = true;
 	}
 	
 //reader
-    function toggleProfileTabs(id){
+function toggleProfileTabs(id){
         $(".profileSlider").hide();
         $("#" + id + "").slideDown();
     }                
-    function toggleGroupTabs(id){
+function toggleGroupTabs(id){
         $(".groupSlider").hide();
         $("#" + id + "").slideDown();
     }
 
 
-    function openFolder(folderId){
+function openFolder(folderId){
         showApplication('filesystem');
         addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?reload=1&folder='+folderId);
         return false;
         
     }
-    
-    function openElement(elementId, title){
+
+function openElement(elementId, title){
         showApplication('filesystem');
         createNewTab('fileBrowser_tabView', title,'','modules/filesystem/showElement.php?element='+elementId,true);return true;
     }
 
-    function openFile(type, typeId, title, typeInfo, extraInfo1, extraInfo2){
+function openFile(type, typeId, title, typeInfo, extraInfo1, extraInfo2){
         
         title = 'Open '+title;
         
@@ -2975,42 +2941,42 @@ var focus = true;
         }
         return false;
     }
-    
-    //zoom functions for pictures
-    function zoomIn(element){
+
+//zoom functions for pictures
+function zoomIn(element){
        var PictureWidth = $("#viewedPicture_"+element).width();
        var newWidth = PictureWidth*1.25;
        $("#viewedPicture_"+element).css("width", newWidth);
     }
-    
-    function zoomOut(element){
+
+function zoomOut(element){
        var PictureWidth = $("#viewedPicture_"+element).width();
        var newWidth = PictureWidth/1.25;
        $("#viewedPicture_"+element).css("width", newWidth);
     }
-    
+
 	//UFF
-		//what you see is what you get            
-		function initWysiwyg(id, readOnly){
-		    if(readOnly == 'false'){
+//what you see is what you get            
+function initWysiwyg(id, readOnly){
+    if(readOnly == 'false'){
 		        readOnly = false;
 		    }
-		    if(readOnly == 'true'){
+    if(readOnly == 'true'){
 		        readOnly = true;
 		    }
-		    
-		    var config = {
-		        
-			extraPlugins: 'autogrow',
-		        // toolbarGroups: [
-		                                    // { name: 'document',	   groups: [ 'mode', 'document' ] },			
-		                                    // { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },			
-		                                    // { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-		                                    // { name: 'links' }],
-		        removePlugins: 'resize',
-		        readOnly: readOnly,
-		        autoGrow_onStartup: true,
-		                    on: {
+    
+    var config = {
+        
+	extraPlugins: 'autogrow',
+        // toolbarGroups: [
+                                    // { name: 'document',	   groups: [ 'mode', 'document' ] },			
+                                    // { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },			
+                                    // { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+                                    // { name: 'links' }],
+        removePlugins: 'resize',
+        readOnly: readOnly,
+        autoGrow_onStartup: true,
+                    on: {
 		                        instanceReady: function() {
 		
 		                                    //add eventlistener for onchange
@@ -3026,27 +2992,27 @@ var focus = true;
 		                                    });
 		                        }
 		                    }
-		            };
-		
-		    $('.uffViewer_'+id).ckeditor(config);
-		}
-		
-		    
-		
-		function initUffReader(id, content, readOnly){
+            };
+
+    $('.uffViewer_'+id).ckeditor(config);
+}
+
+    
+
+function initUffReader(id, content, readOnly){
 		    initWysiwyg(id, readOnly);
 		    
 		    $('.uffViewer_'+id).val(content);
 		}
     
     
-    //opens articles out of the universe wiki
-    //located in reader cause it will be placed there in future
-    function openUniverseWikiArticle(title){
+//opens articles out of the universe wiki
+//located in reader cause it will be placed there in future
+function openUniverseWikiArticle(title){
     	openURL("http://wiki.universeos.org/index.php?title="+title, title);
     }
-    
-    function openURL(url, title){
+
+function openURL(url, title){
     		url = encodeURI(url);
     		url = 'modules/reader/browser/?url='+url;
             createNewTab('reader_tabView',title,'',url,true);
@@ -3058,150 +3024,16 @@ var focus = true;
 //IM CHAT  
 //IM CHAT  
 //IM CHAT
-
-       function openChatDialoge(username){
-            showApplication('chat');   
-            
-            	//check if dialoge allready exists
-                if($("#test_"+ username +"").length == 0){
-                	
-                	userid = usernameToUserid(username);
-                    createNewTab('chat_tabView1',username,'',"modules/chat/chatreload.php?buddy="+username+"",true);
-                    
-                    openDialogueInterval = window.setInterval("chatDecrypt(userid)", 500);
-                }else{
-                	//if dialoge doesnt exists => bring dialoge to front..
-                	
-                	
-
-                }
-       }
-       
-        
-      function chatLoadMore(username, limit){
-           $.get("doit.php?action=chatLoadMore&buddy="+username+"&limit="+limit,function(data){
-                    $('.chatMainFrame_'+username).append(data);
-            },'html');
-       }
-       
-    function universeText(str){
-    	//http://growingtech.blogspot.de/2012/06/replace-smiley-code-with-images-in-chat.html
-    	var replacement = { 
-    		":(": "<a class=\"smiley smiley1\"></a>",
-    		":|": '<a class="smiley smiley2"></a>',
-    		";)": '<a class="smiley smiley3"></a>',
-    		":P": '<a class="smiley smiley4"></a>',
-    		":D": '<a class="smiley smiley5"></a>',
-    		":)": '<a class="smiley smiley6"></a>',
-    		":(": '<a class="smiley smiley7"></a>',
-    		":-*": '<a class="smiley smiley8"></a>',
-    		
-    	};
-    	var string = str;
-	    string = escape(string);
-	    for (var val in replacement)
-	        string = string.replace(new RegExp(escape(val), "g"), replacement[val]);
-	        string.replace(/\[itemthumb type=(\S*) typeId=(\S*)]/g, '<a href="$1">$2<\/a>');
-	    string = unescape(string);
-	    return string;
-    }
-    
-       
-    function addStrToChatInput(buddy, string){
-        $('#chatInput_'+buddy).val($('#chatInput_'+buddy).val() + string);
-    }
-              
-    function chatSetKey(userid){
-
-		if(localStorage.key[userid]){
-	  		jsAlert('', 'The key already has been set.');
-		}else{
-			localStorage.key[userid] = $('#chatKeyInput_'+userid).val();
-			$('#chatCryptionMarker_'+userid).val('true');
-		  	$('#chatKeySettings_'+userid).html('<a href="#" onclick="chatDeactivateKey(\''+userid+'\'); return false;">deactivate key</a>');
-			
-	  		jsAlert('', 'The key for your buddy '+userid+' has been set.');
-			
-            chatDecrypt(userid);
-            
-            $('#toggleKey_'+userid+' .lockIcon').addClass('locked');
-            $('#chatKeySettings_'+userid).hide();
-            
-		}
-    }
-    
-    function chatDeactivateKey(userid){
-    	localStorage.key[userid] = '';
-			$('#chatCryptionMarker_'+userid).val('false');
-		$('#chatKeySettings_'+userid).html('<form action="" method="post" target="submitter" onsubmit="chatSetKey(\''+userid+'\'); return false;"><input type="password" name="key" placeholder="type key" id="chatKeyInput_'+userid+'"></form>');
-	    jsAlert('', 'The key has been removed');
-        $('#toggleKey_'+userid+' .lockIcon').removeClass('locked');
-    }
-    
-    function updatePassword(oldPassword, newPassword, userid){
+function chatMessageSubmit(userid){
     	
-		//cypher old password
-		var shaPass_old = hash.SHA512(oldPassword);
-		var passwordHash_old = cypher.getKey('auth', userid, shaPass_old);
-		var privateKey = cypher.getPrivateKey('user', localStorage.currentUser_userid);
-		console.log(privateKey);            
-		var keysNew = cypher.createKeysForUser(newPassword);
-	    console.log(keysNew);
-	    privateKey = symEncrypt(keysNew['keyHash'], privateKey); //encrypt privatestring, using the password hash
-	    
-	    $.post("api.php?action=updatePassword", {
-		    oldPassword:passwordHash_old,
-	        password:keysNew['authHash'],
-	        authSalt:keysNew['authSaltEncrypted'],
-	        keySalt:keysNew['keySaltEncrypted'],
-	        privateKey:privateKey 
-	    	}, function(result){
-		    	if(result == 1){
-		    		
-	    			parent.localStorage.currentUser_passwordHashMD5 = passwordHashMD5New;
-		    		jsAlert('', 'Your password has been changed');
-		    	}else{
-		    		jsAlert('', result);
-		    	}
-	    	}, "html");
-	    
-	    
-    }
-    
-    function toggleKey(username){
-    	
-    	if(localStorage.key[username]){
-		  	$('#chatKeySettings_'+username).html('<a href="#" onclick="chatDeactivateKey(\''+username+'\'); return false;">deactivate key</a>');	
-    	}else{
-		    $('#chatKeySettings_'+username).html('<form action="" method="post" target="submitter" onsubmit="chatSetKey(\''+username+'\'); return false;"><input type="password" name="key" placeholder="type key" id="chatKeyInput_'+username+'"></form>');	
-    	}				
-    	
-    	if($("#chatKeySettings_" + username +" ").is(":visible")){
-          $("#chatKeySettings_" + username +" ").hide("slow");
-    	}else{
-          $("#chatKeySettings_" + username +" ").show("slow");
-    		
-    	}
-    }
-    
-    function chatSubmit(username){
-        $("#chatWindow_" + username + "").load("modules/chat/chatreload.php?buddy=" + username + "&reload=1");
-    }
-    
-    function chatMessageSubmit(userid){
-    	
-    	console.log('getPublicKey');
     	var publicKey = getPublicKey('user', userid); //get public key of receiver
-    	console.log('getRandKey');
+    	
     	var randKey = Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2); //generate random key
    	
-    	console.log('symEncrypt:'+randKey);
-    	var message = symEncrypt(randKey, $('#chatInput_'+userid).val()); //encrypt message semitrically
+    	var message = sec.symEncrypt(randKey, $('#chatInput_'+userid).val()); //encrypt message semitrically
 
-    	console.log('symkey'+publicKey+randKey);
-    	var symKey = asymEncrypt(publicKey, randKey); //random generated key for symetric encryption
-
-    	console.log('messsage');    	
+    	var symKey = sec.asymEncrypt(publicKey, randKey); //random generated key for symetric encryption
+   	
     	var message = symKey+'////message////'+message; //message = symetric Key + sym encoded message with key = symKey
 
     	$('#chatInput_'+userid).val(message);
@@ -3239,68 +3071,93 @@ var focus = true;
                     alert('There was an error sending the message.');
                 }
            }, "html");
-    }
-    
-    function chatDecrypt(userid){
+ } 
+
+ function chatDecrypt(userid){
     	
     	
-	    	$('.chatMessage_'+userid).each(function(){
-	    		
-	    		//clear intervall which calls this function
-	    		if($('.chatMessage_'+userid).length !== 0){
-	    			
-	    			window.clearInterval(openDialogueInterval);
-	    			
-	    		}
-	    	
-	    		var content = $(this).html();
-	    		var id = $(this).data('id');
-	    		
-	    		
-	    		
-	    		if(localStorage.key[userid]){
-		    		content = CryptoJS.AES.decrypt(content, localStorage.key[userid]);
-		    		content = content.toString(CryptoJS.enc.Utf8);
-	    			$(this).removeClass('.cryptedChatMessage_'+userid);
-	    		}
-	    		
-	    		
-		    	//split content into key and message
-		    	var message = content.split("////message////");
-	    		
-	    		//check if randKey is stored, if not get randKey from message, using the asym privateKey
-	    		if(isStored(id)){
-	    			randKey = getStoredKey(id);
-	    		}else{
-	    			
-	    		
-	                var privateKey = cypher.getPrivateKey('user', localStorage.currentUser_userid);
-	                
-		    		
-	                //encrypt random key with privateKey
-	                var randKey = asymDecrypt(privateKey, message[0]);
-	                
-	                
-	    		}
-	    		
-	    		
-                if(randKey !== null){
-                    //encrypt message with random key
-	    			console.log('sym');
-                    var content = htmlentities(symDecrypt(randKey, message[1]));
-	    		
-	    		}else{
-	    			content = 'The key is not stored anymore';
-	    		}
-	    		
-	    		
-	    		$(this).html(content);
-	    		$(this).removeClass('chatMessage_'+userid);
-	    	});
-	    	return true;
-    }
-    
-    function replaceLinks(){
+    $('.chatMessage_'+userid).each(function(){
+
+            //clear intervall which calls this function
+            if($('.chatMessage_'+userid).length !== 0){
+
+                    window.clearInterval(openDialogueInterval);
+
+            }
+
+            var content = $(this).html();
+            var id = $(this).data('id');
+
+
+
+            if(localStorage.key[userid]){
+                    content = CryptoJS.AES.decrypt(content, localStorage.key[userid]);
+                    content = content.toString(CryptoJS.enc.Utf8);
+                    $(this).removeClass('.cryptedChatMessage_'+userid);
+            }
+
+
+            //split content into key and message
+            var message = content.split("////message////");
+
+            //check if randKey is stored, if not get randKey from message, using the asym privateKey
+            if(isStored(id)){
+                    randKey = getStoredKey(id);
+            }else{
+
+
+            var privateKey = cypher.getPrivateKey('user', localStorage.currentUser_userid);
+
+
+            //encrypt random key with privateKey
+            var randKey = sec.asymDecrypt(privateKey, message[0]);
+
+
+            }
+
+
+    if(randKey !== null){
+        //encrypt message with random key
+                    console.log('sym');
+        var content = htmlentities(sec.symDecrypt(randKey, message[1]));
+
+            }else{
+                    content = 'The key is not stored anymore';
+            }
+
+
+            $(this).html(content);
+            $(this).removeClass('chatMessage_'+userid);
+    });
+    return true;
+}
+
+ function openChatDialoge(username){
+      showApplication('chat');   
+      
+      	//check if dialoge allready exists
+          if($("#test_"+ username +"").length == 0){
+          	
+          	userid = usernameToUserid(username);
+              createNewTab('chat_tabView1',username,'',"modules/chat/chatreload.php?buddy="+username+"",true);
+              
+              openDialogueInterval = window.setInterval("chatDecrypt(userid)", 500);
+          }else{
+          	//if dialoge doesnt exists => bring dialoge to front..
+          	
+          	
+
+          }
+ }
+ 
+  
+function chatLoadMore(username, limit){
+     $.get("doit.php?action=chatLoadMore&buddy="+username+"&limit="+limit,function(data){
+              $('.chatMainFrame_'+username).append(data);
+      },'html');
+ }
+ 
+function replaceLinks(){
     	
     	$('body').html($(this).html().replaceAll("/(b(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig","<a href='#' onclick='$1'>$1</a>"));
         
@@ -3395,15 +3252,15 @@ function groupMakeUserAdmin(groupId, userId){
 
 
 	//rightclick
-                function clearMenu() { //used to make the menu disappear
+function clearMenu() { //used to make the menu disappear
                     //this function should be used at the beginning of any function that is called from the menu
                     var cssObj = {
                         'display' : 'none'
                        };
                     $(".rightclick").css(cssObj);
                 }
-              
-                function showMenu(id) {
+
+function showMenu(id) {
                     /*  check whether the event is a right click 
                     *  because different browser (ahem IE) assign different numbers to the keys to
                     *  your mouse buttons and different values to the event, you'll have to do some evaluation
@@ -3432,136 +3289,136 @@ function groupMakeUserAdmin(groupId, userId){
                 
 	//the rest
 
-              function showModuleMail() {
+function showModuleMail() {
                     $.get("modules/mail/index.php",function(data){
                           $('#bodywrap').append(data);
                     },'html');
                 }
-                
-              function showModuleCalender() {
+  
+function showModuleCalender() {
                     $.get("modules/calender/index.php",function(data){
                           $('#bodywrap').append(data);
                     },'html');
                 }
-                
-              function showModuleSettings() {
+  
+function showModuleSettings() {
                     $.get("modules/settings/index.php",function(data){
                           $('#bodywrap').append(data);
                           applicationOnTop('settings');
                     },'html');
                     
                 }
-              
-              function updateUserActivity() {
+
+function updateUserActivity() {
               	$("#loader").load("doit.php?action=updateUserActivity");
               }
-              
-              function closeModuleSettings() {
+
+function closeModuleSettings() {
               	$("#invisibleSettings").hide("slow");
               }
-              function openModule(moduleId) {
+function openModule(moduleId) {
               	$("#invisible" + moduleId + "").toggle("slow");
               }
-              
-              function openModuleMail() {
+
+function openModuleMail() {
               	$("#invisiblemail").show("slow");
               }
-              
-              function closeModuleMail() {
+
+function closeModuleMail() {
               	$("#invisiblemail").hide("slow");
               }
-                
-              function play(){
+  
+function play(){
               	$("#jquery_jplayer_2").jPlayer("play");
               } 
-                 
-              function playPlaylist(playlist, row, fileId){
+   
+function playPlaylist(playlist, row, fileId){
                   
 	              alert("lol a" + fileId + " b" + playlist + " c" + row + " ");
 	              $("#dockplayer").load("./player/dockplayer.php?file=" + fileId +"&reload=1&playList=" + playlist +"&row=" + row + "");
 	              play();
               }
-              function playFileDock(fileId){
+function playFileDock(fileId){
               	$("#dockplayer").load("./player/dockplayer.php?file=" + fileId +"&reload=1");
               }
-                
-              function nextPlaylistItem(playList, row){
+  
+function nextPlaylistItem(playList, row){
              	  $("#playListPlayer").load("playListplayer.php?playList=" + playList +"&row=" + row +"");
               }
 
-			  function removeFav(type, typeId){
+function removeFav(type, typeId){
 			  	if($.post("doit.php?action=removeFav", { type: type, typeId: typeId } )){
 			  		jsAlert('', 'Your favorite has been removed.');
 			  		updateDashbox('fav');
 			  	}
 			  }
-			  
-              function addBuddy(userId) {
+	  
+function addBuddy(userId) {
               	$("#loader").load("addbuddy.php?user=" + userId +"");
               }
-                
-              function showSubComment(commentId) {
+  
+function showSubComment(commentId) {
                   $("#comment" + commentId + "").load("showComment.php?id=" + commentId +"");
                   $("#comment" + commentId + "").toggle("slow");
               }
-              function showfeedComment(feedId) {
+function showfeedComment(feedId) {
                   $("#feed" + feedId + "").load("showComment.php?type=feed&feedid=" + feedId +"");
                   $("#feed" + feedId + "").toggle("slow");
               }
-              function loader(id, link){
+function loader(id, link){
                   $("#" + id + "").load("" + link + "");
               }
-              
-              
-              
-              function deleteFromPersonals(id){
+
+
+
+function deleteFromPersonals(id){
                   $("#loader").load("doit.php?action=deleteFromPersonals&id=" + id + "");
               }
-              
-              
-              
 
-              function showGroup(groupId){
+
+
+
+function showGroup(groupId){
                   showApplication('reader');
                   createNewTab('reader_tabView',"" + groupId + "",'',"./group.php?id=" + groupId + "",true);
                   return false;
               }
-              
-              function showProfile(userId){
+
+function showProfile(userId){
                   showApplication('reader');
                   createNewTab('reader_tabView',useridToUsername(userId),'',"./profile.php?user=" + userId + "",true);
                   return false;
               }
-                
-              function showPlaylist(id){
+  
+function showPlaylist(id){
               	popper('doit.php?action=showPlaylist&id='+id);
               }
-                
-              function startPlayer(type, typeid){
+  
+function startPlayer(type, typeid){
               $("#dockplayer").load("player/dockplayer.php?reload=1&" + type +"=" + typeid + "");
               }
-              
-              
-              function popper(url) {
+
+
+function popper(url) {
               $("#loader").load("" + url +"");
                 }
-                
-                
-              function swapApplication(app, link){
+  
+  
+function swapApplication(app, link){
               
               $("#" + app +":hidden").load("" + url +"");    
               }
-              
-              
-              function closeDockMenu(){
+
+
+function closeDockMenu(){
                 $("#dockMenu").hide("fast");
               }
-              
-              function updateUserActivity() {
+
+function updateUserActivity() {
               $("#loader").load("doit.php?action=updateUserActivity");
                 }
-                
-              function clock() {
+  
+function clock() {
                 var now = new Date();
 
                     var hours = now.getHours();
@@ -3577,8 +3434,8 @@ function groupMakeUserAdmin(groupId, userId){
                 $('#clockDiv').html(outStr);
                 setTimeout('clock()',1000);
               }
-              
-              var settings =  new function() {
+
+var settings =  new function() {
 			    this.userid = localStorage.currentUser_userid;
 			    
 			    this.submitPassword = function () {
@@ -3601,31 +3458,16 @@ function groupMakeUserAdmin(groupId, userId){
 //PLUGINS
 //PLUGINS
 
-                // textarea autogrow from figovo.com - thx
-                function autoGrowField(f, max) {
-                   /* Default max height */
-                   var max = (typeof max == 'undefined')?1000:max;
-                   /* Don't let it grow over the max height */
-                   if (f.scrollHeight > max) {
-                      /* Add the scrollbar back and bail */
-                      if (f.style.overflowY != 'scroll') { f.style.overflowY = 'scroll'; }
-                      return;
-                   }
-                   /* Make sure element does not have scroll bar to prevent jumpy-ness */
-                   if (f.style.overflowY != 'hidden') { f.style.overflowY = 'hidden'; }
-                   /* Now adjust the height */
-                   var scrollH = f.scrollHeight;
-                   if( scrollH > f.style.height.replace(/[^0-9]/g,'') ){
-                      f.style.height = scrollH+'px';
-                   }
-                }
 
 
 
 
 
 
-                /*
+
+
+
+/*
                  * AutoSuggest
                  * Copyright 2009-2010 Drew Wilson
                  * www.drewwilson.com
@@ -3646,8 +3488,8 @@ function groupMakeUserAdmin(groupId, userId){
                  *   http://www.gnu.org/licenses/gpl.html
                  */
 
-                (function($){
-                        $.fn.autoSuggest = function(data, options) {
+(function($){
+        $.fn.autoSuggest = function(data, options) {
                                 var defaults = { 
                                         asHtmlID: false,
                                         startText: "Enter Name Here",
@@ -3992,9 +3834,9 @@ function groupMakeUserAdmin(groupId, userId){
                                         });
                                 }
                         };
-                })(jQuery);  	
+})(jQuery);  	
 
-				var delay = (function(){
+var delay = (function(){
 				  var timer = 0;
 				  return function(callback, ms){
 				    clearTimeout (timer);
@@ -4059,7 +3901,7 @@ function groupMakeUserAdmin(groupId, userId){
 					  			
 					  			username = String(value);
 					  			username = username.slice(0,-1);
-					  			userPicture = showUserPicture(index);
+					  			userPicture = User.showPicture(index);
 					  			
 					  			
 					  			output += '<li onclick="addUserToInputTagBar('+index+')">';
