@@ -9,22 +9,26 @@ if($_GET['action'] == "showScore"){
 if($_GET['action'] == "scorePlus"){
     $type = $_GET['type'];
     $typeid = $_GET['typeid'];
-    plusOne($type, $typeid);
+    $item = new item($type, $typeid);
+    $item->plusOne();
     ?>
     <script>
         parent.$('.score<?=$type;?><?=$typeid;?>').load('doit.php?action=showScore&type=<?=$type;?>&typeid=<?=$typeid;?>');
     </script>
     <?
-}else if($_GET['action'] == "scoreMinus"){
+}
+else if($_GET['action'] == "scoreMinus"){
         $type = $_GET['type'];
         $typeid = $_GET['typeid'];
-        minusOne($type, $typeid);
+        $item = new item($type, $typeid);
+        $item->minusOne();
         ?>
         <script>
             parent.$('.score<?=$type;?><?=$typeid;?>').load('doit.php?action=showScore&type=<?=$type;?>&typeid=<?=$typeid;?>');
         </script>
         <?
-}else if($_GET['action'] == "addFav"){
+}
+else if($_GET['action'] == "addFav"){
         $type = $_GET['type'];
         $check = mysql_query("SELECT type,item FROM fav WHERE type='".$_GET['type']."' && item='".$_GET['item']."' && user='".$_SESSION['userid']."'");
         $checkData = mysql_fetch_array($check);
@@ -49,10 +53,11 @@ if($_GET['action'] == "scorePlus"){
             <?
             }
         }
-    }else if($_GET['action'] == "removeFav"){
+    }
+else if($_GET['action'] == "removeFav"){
     	removeFav($_POST['type'], $_POST['typeId']);
   	}
-    else if($_GET['action'] == "requestpositive"){
+else if($_GET['action'] == "requestpositive"){
     	$buddy = $_GET['buddy'];
         if(replyRequest($buddy)){
         	
@@ -61,7 +66,7 @@ if($_GET['action'] == "scorePlus"){
 	        jsAlert("worked :)");
 		}
     }
-    else if($_GET['action'] == "requestnegative"){
+else if($_GET['action'] == "requestnegative"){
     	$buddy = $_GET['buddy'];
         if(denyRequest($_GET['buddy'])){
         	
@@ -70,7 +75,7 @@ if($_GET['action'] == "scorePlus"){
 			
         }
     }
-    else if($_GET['action'] == "addbuddy"){
+else if($_GET['action'] == "addbuddy"){
     	
 		$buddy = save($_GET['buddy']);
 		
@@ -91,20 +96,24 @@ if($_GET['action'] == "scorePlus"){
 			$message = "There was an error.";
 	        jsAlert($message);
 		}
-     }else if($_GET['action'] == "addToNotSuggestList"){
+     }
+else if($_GET['action'] == "addToNotSuggestList"){
      	
 		 addToNotSuggestList($_GET['user']);
 		 echo"<script>parent.$('#buddySuggestions').load('doit.php?action=showBuddySuggestList');</script>";
 		 
-     }else if($_GET['action'] == "showBuddySuggestList"){
+     }
+else if($_GET['action'] == "showBuddySuggestList"){
      	$false = false;
 		showBuddySuggestions($false);
-     }else if($_GET['action'] == "deleteBuddy"){
+     }
+else if($_GET['action'] == "deleteBuddy"){
      	$buddy = $_GET['buddy'];
      	deleteBuddy($buddy);
 		jsAlert("The Buddy was removed from your Buddylist.");
 		echo "<script>parent.$('.buddy_$buddy').hide()</script>";
-     }else if($_GET['action'] == "download"){
+     }
+else if($_GET['action'] == "download"){
      	
         $documentSQL = mysql_query("SELECT id, title, type, filename, privacy, owner FROM files WHERE id='".save($_GET['fileId'])."'");
         $documentData = mysql_fetch_array($documentSQL); 
@@ -122,7 +131,8 @@ if($_GET['action'] == "scorePlus"){
 	 	}else{
 	 		jsAlert("No rights, bro.");
 	 	}
-     }else if($_GET['action'] == "showPlaylist"){
+     }
+else if($_GET['action'] == "showPlaylist"){
         $playListId = save($_GET['id']);
         $playListSql = mysql_query("SELECT * FROM playlist WHERE id='$playListId'");
         $playListData = mysql_fetch_array($playListSql);
@@ -164,7 +174,7 @@ if($_GET['action'] == "scorePlus"){
             </div>
     <?
      }
-    else if($_GET['action'] == "addFileToPlaylist"){
+else if($_GET['action'] == "addFileToPlaylist"){
          
          $playlist = save($_POST['playlistId']);
          $newPlaylist = save($_POST['playlistName']);
@@ -252,7 +262,8 @@ if($_GET['action'] == "scorePlus"){
             </script>
      <?}
      
-     }else if($_GET['action'] == "addPlaylist"){
+     }
+else if($_GET['action'] == "addPlaylist"){
          if(isset($_POST['submit'])){
                         
                     //set privacy
@@ -311,7 +322,8 @@ if($_GET['action'] == "scorePlus"){
         </script>
         </form>
      <?
-     }else if($_GET['action'] == "copyPlaylist"){
+     }
+else if($_GET['action'] == "copyPlaylist"){
          $playList = save($_GET['playlist']);
          $playlistData = mysql_query("SELECT * FROM playlist WHERE id='$playList'");
          $playlistData = mysql_fetch_array($playlistData);
@@ -371,7 +383,7 @@ if($_GET['action'] == "scorePlus"){
         </form>
      <?
      }
-     else if($_GET['action'] == "showUserPlaylists"){ ?>
+else if($_GET['action'] == "showUserPlaylists"){ ?>
                  
                     <h3 class="readerStartItem">
                         <img src="./gfx/icons/playlist.png" height="14">&nbsp;Your Playlists<span style="float: right;"><a href="javascript: popper('doit.php?action=addPlaylist');" class="btn"><img src="./gfx/icons/playlist.png" height="14">&nbsp;Add Playlist</a></span>
@@ -413,7 +425,8 @@ if($_GET['action'] == "scorePlus"){
 ?>
                         </table><br><br>
      <?PHP
-     }else if($_GET['action'] == "showUserGroups"){ ?>
+     }
+else if($_GET['action'] == "showUserGroups"){ ?>
                  
                       <h3 class="readerStartItem">
                         <img src="./gfx/icons/group.png" height="14">&nbsp;Your Groups <span style="float:right"><a href="javascript: popper('doit.php?action=addGroup');" class="btn"><img src="./gfx/icons/group.png" height="14">&nbsp;Add Group</a>  </span>
@@ -448,7 +461,8 @@ if($_GET['action'] == "scorePlus"){
                        ?>
                      </table>
      <?    
-     }else if($_GET['action'] == "showUserGroups"){
+     }
+else if($_GET['action'] == "showUserGroups"){
          ?>
                     <h3 class="readerStartItem">
                         <img src="./gfx/icons/group.png" height="14">&nbsp;Your Groups <a href="#" class="btn btn-info btn-small bsPopOver" data-toggle="popover" title="" data-content="And here's some amazing content. It's very engaging. right?" data-original-title="A Title" id="popoooo"><i class="icon-info-sign"></i></a> <span style="float:right"><a href="javascript: popper('doit.php?action=addGroup');" class="btn"><img src="./gfx/icons/group.png" height="14">&nbsp;Add Group</a>  </span>
@@ -485,12 +499,12 @@ if($_GET['action'] == "scorePlus"){
          <?
          
      }
-     else if($_GET['action'] == "requestGroup"){
+else if($_GET['action'] == "requestGroup"){
          $time = time();
 		 $group = save($_GET['group']);
          mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`, `validated`) VALUES ('".$group."', 'user', '".getUser()."', '$time', '".getUser()."', '0');");
      }
-     else if($_GET['action'] == "joinGroup"){
+else if($_GET['action'] == "joinGroup"){
      	
 		
 		$group = save($_GET['group']);
@@ -513,11 +527,13 @@ if($_GET['action'] == "scorePlus"){
                 <?=$publicScript;?>
                 </script>
          <?
-     }else if($_GET['action'] == "declineGroup"){
+     }
+else if($_GET['action'] == "declineGroup"){
          
          mysql_query("DELETE FROM groupAttachments WHERE id='".$_GET['id']."'");
          jsAlert("Declined..");
-     }else if($_GET['action'] == "loadPersonalFileFrame"){
+     }
+else if($_GET['action'] == "loadPersonalFileFrame"){
          //is used to load filelists into the reader home view
          $query = save($_GET['query']);
          switch($query){
@@ -547,11 +563,13 @@ if($_GET['action'] == "scorePlus"){
              break;
          }
          
-     }else if($_GET['action'] == "loadMiniBrowser"){
+     }
+else if($_GET['action'] == "loadMiniBrowser"){
      	
 		showMiniFileBrowser("".$_GET['folder']."", "".$_GET['element']."", "".$_GET['level']."", false, $_GET['select']);
      	
-     }else if($_GET['action'] == "addFolder"){
+     }
+else if($_GET['action'] == "addFolder"){
          if(proofLogin()){
          if($_POST['submit']) {
              $checkSQL = mysql_query("SELECT privacy, creator FROM folders WHERE id='".mysql_real_escape_string($_POST['folder'])."'");
@@ -640,7 +658,8 @@ if($_GET['action'] == "scorePlus"){
                 </script>
          
 <?}
-     }else if($_GET['action'] == "addElement"){
+     }
+else if($_GET['action'] == "addElement"){
          
          if(proofLogin()){
             $selectsql = mysql_query("SELECT * FROM folders WHERE id='$_GET[folder]'");
@@ -775,7 +794,8 @@ if($_GET['action'] == "scorePlus"){
 
 <?
         }}    
-     }else if($_GET['action'] == "addInternLink"){
+     }
+else if($_GET['action'] == "addInternLink"){
      	if(proofLogin()){
      		
      		if(isset($_POST['submit'])){
@@ -875,7 +895,8 @@ if($_GET['action'] == "scorePlus"){
 			
      	}
      	}
-     }else if($_GET['action'] == "addLink"){
+     }
+else if($_GET['action'] == "addLink"){
          if(proofLogin()){
                   if($_POST['submit']) {
              
@@ -979,7 +1000,8 @@ if($_GET['action'] == "scorePlus"){
 
         <? 
          }
-     }else if($_GET['action'] == "changeBackgroundImage"){
+     }
+else if($_GET['action'] == "changeBackgroundImage"){
         if(proofLogin()){
         if($_GET['type'] == "file"){
             $fileSql = mysql_query("SELECT * FROM files WHERE id='$_GET[id]'");
@@ -995,7 +1017,8 @@ if($_GET['action'] == "scorePlus"){
                 
         }
         mysql_query("UPDATE user SET backgroundImg='$img' WHERE userid='$_SESSION[userid]'");
-     }}else if($_GET['action'] == "writeMessage"){
+     }}
+else if($_GET['action'] == "writeMessage"){
         if(proofLogin()){
         $user = save($_GET['buddy']);
         if(isset($_POST['feed'])) {
@@ -1067,7 +1090,7 @@ if($_GET['action'] == "scorePlus"){
 //GROUPS
  
      
-     else if($_GET['action'] == "groupAdmin"){
+else if($_GET['action'] == "groupAdmin"){
      	//shows the group admin window
 		
 		
@@ -1173,7 +1196,8 @@ if($_GET['action'] == "scorePlus"){
             });
         </script>
         <?
-     }else if($_GET['action'] == "groupInviteUsers"){
+     }
+else if($_GET['action'] == "groupInviteUsers"){
          if(proofLogin()){
          $group = save($_GET['id']);
          $time = time();
@@ -1244,20 +1268,24 @@ if($_GET['action'] == "scorePlus"){
             });
         </script>
         <?}
-     }else if($_GET['action'] == "groupMakeUserAdmin"){
+     }
+else if($_GET['action'] == "groupMakeUserAdmin"){
      	
 		
      	echo groupMakeUserAdmin($_GET['groupId'], $_GET['userId']);
 		
 		
-     }else if($_GET['action'] == "groupremoveAdmin"){
+     }
+else if($_GET['action'] == "groupremoveAdmin"){
      	
-     }else if($_GET['action'] == "groupLeave"){
+     }
+else if($_GET['action'] == "groupLeave"){
          $group = $_GET['id'];
      	if(deleteUserFromGroup(getUser(), $group)){
          jsAlert("You left the group");
 		}
-     }else if($_GET['action'] == "deleteUserFromGroup"){
+     }
+else if($_GET['action'] == "deleteUserFromGroup"){
      	if(deleteUserFromGroup($_GET['userid'], $_GET['groupid'])){
 			echo'<script>parent.$(".groupMember_'.$_GET['groupid'].'_'.$_GET['userid'].'").hide();</script>';
      		jsAlert('The user left the group.');
@@ -1270,7 +1298,7 @@ if($_GET['action'] == "scorePlus"){
 //CHAT - IM
      
      
-     else if($_GET['action'] == "chatSendMessage"){
+else if($_GET['action'] == "chatSendMessage"){
      	
 		if(sendMessage($_GET['buddy'], $_POST['message'], $_POST['cryption'])){
 			
@@ -1283,7 +1311,8 @@ if($_GET['action'] == "scorePlus"){
 	        echo"</script>";
 		}
 		
-        }else if($_GET['action'] == "updateMessageStatus"){
+        }
+else if($_GET['action'] == "updateMessageStatus"){
              
         	//updates if the message was seen, after the receiver clicked the input in the textarea
 	        $user = getUser();
@@ -1291,10 +1320,11 @@ if($_GET['action'] == "scorePlus"){
 		    markMessageAsRead($buddy, $user);
 			echo "1";
 		
-        }else if($_GET['action'] == "chatReload"){
+        }
+else if($_GET['action'] == "chatReload"){
         	
 		  $buddyName = $_GET['buddyName'];
-		  $buddy = usernameToUserid($buddyName);
+		  $buddy = user::usernameToUserid($buddyName);
 			
 			
           echo'<script>';
@@ -1304,11 +1334,12 @@ if($_GET['action'] == "scorePlus"){
 			  showMessages(getUser(), $buddy, "0,10");
           echo"<div onclick=\"chatLoadMore('<?=$buddyName;?>', '1');\">...load more</div>";
           echo'</div>';
-        }else if($_GET['action'] == "chatLoadMore"){
+        }
+else if($_GET['action'] == "chatLoadMore"){
             
             $userid = getUser();
             $buddyName = save($_GET['buddy']);
-            $buddy = usernameToUserid($buddyName);
+            $buddy = user::usernameToUserid($buddyName);
             
             //when chatframe is loaded $limit = 0, when load more is clicked the first time $limit=1 etc.
             //it always adds thirty messages
@@ -1328,7 +1359,8 @@ if($_GET['action'] == "scorePlus"){
                 echo "<div onclick=\"chatLoadMore('$buddyName', '$newLimit'); $(this).hide();\">...load more</div>";
             
                 
-        }else if($_GET['action'] == "chatSendItem"){
+        }
+else if($_GET['action'] == "chatSendItem"){
         	if(isset($_POST['submit'])){
         		
 				
@@ -1374,7 +1406,8 @@ if($_GET['action'] == "scorePlus"){
                 </script>
          
 		<?
-        }else if($_GET['action'] == "createFeed"){
+        }
+else if($_GET['action'] == "createFeed"){
             
             
             if(!empty($_POST['feedInput']) || !empty($_POST['feed1'])){
@@ -1399,20 +1432,22 @@ if($_GET['action'] == "scorePlus"){
                 }
             
         }
-        else if($_GET['action'] == "showSingleFeed"){
+else if($_GET['action'] == "showSingleFeed"){
         $feedId = save($_GET['feedId']);
         echo'<div id="addFeed"></div>';
         showFeedNew("singleEntry", "", "", "$feedId");
         
         
-        }else if($_GET['action'] == "reloadMainFeed"){
+        }
+else if($_GET['action'] == "reloadMainFeed"){
             
             
                 showFeedNew("friends", "$_SESSION[userid]");
                 echo "<div onclick=\"feedLoadMore('.feedMain' ,'friends', 'NULL', '1'); feedLoadMore('friends','1'); $(this).hide();\">...load more</div>";
                 
             
-        }else if($_GET['action'] == "feedLoadMore"){
+        }
+else if($_GET['action'] == "feedLoadMore"){
             $type = save($_GET['type']);
             $user = save($_GET['user']);
             $limit = save($_GET['limit']);
@@ -1426,7 +1461,8 @@ if($_GET['action'] == "scorePlus"){
             showFeedNew("$type", "$user","$limit");
             
             
-        }else if($_GET['action'] == "showYoutube"){
+        }
+else if($_GET['action'] == "showYoutube"){
          if(isset($_GET['start'])){?>
                     <div id="playListReaderTab" style="background: #000000;">
                     <?}?>
@@ -1490,7 +1526,8 @@ if($_GET['action'] == "scorePlus"){
                     </div>
          <?}
          
-     }else if($_GET['action'] == "addYouTubeItemToPlaylistVeryLongName"){
+     }
+else if($_GET['action'] == "addYouTubeItemToPlaylistVeryLongName"){
          $playlist = save($_POST['playlistId']);
          $vId = save($_GET['vId']);
          
@@ -1510,7 +1547,8 @@ if($_GET['action'] == "scorePlus"){
                  	jsAlert("worked ;)");
              	}
             }
-     }else if($_GET['action'] == "showSingleImage"){
+     }
+else if($_GET['action'] == "showSingleImage"){
          $element = $_GET['element'];
          $elementName = $_GET['elementName'];
          $file = $_GET['file'];
@@ -1522,7 +1560,8 @@ if($_GET['action'] == "scorePlus"){
         <div style="position: absolute; top: 57px; right: 0px; bottom: 100px; left: 0px; overflow: auto;" id="<?=$elementName;?>">
             <img src="./upload/<?=$path;?>" width="100%">
         </div>
-    <? }else if($_GET['action'] == "addGroup"){
+    <? }
+else if($_GET['action'] == "addGroup"){
         if(proofLogin()){
             
         if(isset($_POST['submit'])){
@@ -1626,13 +1665,15 @@ if($_GET['action'] == "scorePlus"){
 </script>
      
      <?php
-    }}}else if($_GET['action'] == "showSingleComment"){
+    }}}
+else if($_GET['action'] == "showSingleComment"){
         if($_GET['type'] == "feed"){
             showFeedComments($_GET['itemid']);
         }else{
             showComments($_GET['type'], $_GET['itemid']);
         }
-    }else if($_GET['action'] == "showStartMessage"){
+    }
+else if($_GET['action'] == "showStartMessage"){
             if(empty($_GET['step'])){ ?>
             <script>
                     $("#dashBoard").hide("slow");
@@ -1822,27 +1863,31 @@ if($_GET['action'] == "scorePlus"){
             </div>
 		       </form>
             <?}
-        }else if($_GET['action'] == "updatePasswordAndCreateSignatures"){
+        }
+else if($_GET['action'] == "updatePasswordAndCreateSignatures"){
         	//called by guest.js->updatePasswordAndCreateSignatures()
         	
 			
 			
 			
 			
-        }else if($_GET['action'] == "showSingleRssFeed"){
+        }
+else if($_GET['action'] == "showSingleRssFeed"){
             $rssSql = mysql_query("SELECT link FROM links WHERE id='".mysql_real_escape_string($_GET['id'])."'");
             $rssData = mysql_fetch_array($rssSql);
             
             echo"<div style=\"padding: 20px;\">";
             echo getRssfeed("$rssData[link]","$linkData[title]","auto",10,3);
             echo"</div>";
-        }else if($_GET['action'] == "deleteFromPersonals"){
+        }
+else if($_GET['action'] == "deleteFromPersonals"){
             $personalSql = mysql_query("SELECT owner FROM personalEvents WHERE id='".mysql_real_escape_string($_GET['id'])."'");
             $personalData = mysql_fetch_array($personalSql);
             if($personalData['owner'] == $_SESSION['userid']){
                 mysql_query("DELETE FROM personalEvents WHERE id='".mysql_real_escape_string($_GET['id'])."'");
             }
-        }else if($_GET['action'] == "deleteFromPlaylist"){
+        }
+else if($_GET['action'] == "deleteFromPlaylist"){
              //deletes a single file, link or youtube icon from a playlist
              $type = save($_GET['type']);
              $itemId = $_GET['itemId'];
@@ -1895,7 +1940,8 @@ if($_GET['action'] == "scorePlus"){
              </script>
              <?php
              }
-        }else if($_GET['action'] == "deleteItem"){
+        }
+else if($_GET['action'] == "deleteItem"){
             if(proofLogin()){
             $type = $_GET['type'];
             $itemId = $_GET['itemId'];
@@ -2041,13 +2087,14 @@ if($_GET['action'] == "scorePlus"){
             }
                 
             }
-        }else if($_GET['action'] == "loadPrivacySettings"){
+        }
+else if($_GET['action'] == "loadPrivacySettings"){
         	//is used bei js privacy.load to load privacy selection with privacy = $_POST['val'] into DOM
 			$editable =  ($_POST['editable'] === 'true'); //str to bool
           	showPrivacySettings($_POST['val'], $editable);
         	
         }
-        else if($_GET['action'] == "changePrivacy"){
+else if($_GET['action'] == "changePrivacy"){
             if(proofLogin()){
             if(isset($_POST['submit'])){
                 
@@ -2181,7 +2228,8 @@ if($_GET['action'] == "scorePlus"){
                 });
             </script>
             <?}
-            }else if($_GET['action'] == "editItem"){
+            }
+else if($_GET['action'] == "editItem"){
                 if(proofLogin()){
                 $itemId = save($_GET['itemId']);
                 $type = save($_GET['type']);
@@ -2451,7 +2499,8 @@ if($_GET['action'] == "scorePlus"){
                 });
             </script>
                 <?}
-            }else if($_GET['action'] == "shareItem"){
+            }
+else if($_GET['action'] == "shareItem"){
                 ?>
                                 <div class="jqPopUp border-radius transparency" id="addFolder">
                                 <a class="jqClose" id="closeFolder">X</a>
@@ -2471,7 +2520,8 @@ if($_GET['action'] == "scorePlus"){
                 </script>
          
 		<?
-            }else if($_GET['action'] == "showItemThumb"){ 
+            }
+else if($_GET['action'] == "showItemThumb"){ 
                 $type = $_GET['type'];
                 $itemId = $_GET['itemId'];
                 ?>
@@ -2504,13 +2554,15 @@ if($_GET['action'] == "scorePlus"){
                         </div>
                 </div>
             <?    
-            }else if($_GET['action'] == "validateTempFile"){
+            }
+else if($_GET['action'] == "validateTempFile"){
 				 if(validateTempFile($_POST['fileid'], $privacy))
 				 	echo'true';
 				 else
 				 	echo'false';
 				
-            }else if($_GET['action'] == "submitUploader"){
+            }
+else if($_GET['action'] == "submitUploader"){
 			//handler for form submit in upload.php
 			//adds privacy and removes temp status
 			//from temp files
@@ -2538,7 +2590,8 @@ if($_GET['action'] == "scorePlus"){
 				
 			
 				
-            }else if($_GET['action'] == "manageUpload"){
+            }
+else if($_GET['action'] == "manageUpload"){
             	
             	switch($_GET['type']){
             		
@@ -2563,7 +2616,8 @@ if($_GET['action'] == "scorePlus"){
 						break;
             		
             	}
-            }else if($_GET['action'] == "feedUpload"){
+            }
+else if($_GET['action'] == "feedUpload"){
             if(proofLogin()){
             if(empty($_FILES['feedFile']['tmp_name'])){
                 $error = "please select a file";
@@ -2582,7 +2636,8 @@ if($_GET['action'] == "scorePlus"){
             $file = $_FILES['Filedata'];
             addFile($file, $element, $folder, $privacy, $user);
             }}
-            }else if($_GET['action'] == "reportFile"){
+            }
+else if($_GET['action'] == "reportFile"){
                 if(isset($_POST['submit'])){
                     $timstamp = time();
                     jsAlert("A report message has been send");
@@ -2630,11 +2685,13 @@ if($_GET['action'] == "scorePlus"){
                 });
             </script>
                 <?
-            }else if($_GET['action'] == "updateUserActivity"){
+            }
+else if($_GET['action'] == "updateUserActivity"){
                 if(proofLogin()){
                 updateActivity("$_SESSION[userid]");
                 }
-            }else if($_GET['action'] == "reportBug"){
+            }
+else if($_GET['action'] == "reportBug"){
                 if(isset($_POST['submit'])){
                     $time=time();
                     if(mysql_query("INSERT INTO `adminMessages` (`timestamp` ,`author` ,`category` ,`type` ,`message`) VALUES (".time().",'$_SESSION[userid]', '2', 'Bug', '$_POST[message]');")){  
@@ -2670,7 +2727,8 @@ if($_GET['action'] == "scorePlus"){
                     $('.jqPopUp').slideUp();
                     });
                 </script>
-            <?}else if($_GET['action'] == "deleteFile"){
+            <?}
+else if($_GET['action'] == "deleteFile"){
 //cann propably be deleted
                 if(proofLogin()){
                     
@@ -2689,7 +2747,8 @@ if($_GET['action'] == "scorePlus"){
                         
                     }
                 }
-            }else if($_GET['action'] == "deleteLink"){
+            }
+else if($_GET['action'] == "deleteLink"){
                 
                 $linkId = save($_GET['linkId']);
                 if(proofLogin()){
@@ -2699,19 +2758,23 @@ if($_GET['action'] == "scorePlus"){
                         jsAlert("The Link has been deleted");
                     }
                 }
-            }else if($_GET['action'] == "protectFileSystemItems"){
+            }
+else if($_GET['action'] == "protectFileSystemItems"){
             	
             	protectFilesystemItem($_GET['type'], $_GET['itemId']);
 				jsAlert("This Item can not be edited anymore.");
-            }else if($_GET['action'] == "removeProtectionFromFileSystemItems"){
+            }
+else if($_GET['action'] == "removeProtectionFromFileSystemItems"){
             	
             	removeProtectionFromFilesystemItem($_GET['type'], $_GET['itemId']);
 				jsAlert("This Item can be edited again.");
-            }else if($_GET['action'] == "makeFileSystemItemUndeletable"){
+            }
+else if($_GET['action'] == "makeFileSystemItemUndeletable"){
             	
             	makeFilesystemItemUndeletable($_GET['type'], $_GET['itemId']);
 				jsAlert("This Item can not be deleted anymore.");
-            }else if($_GET['action'] == "makeFileSystemItemDeletable"){
+            }
+else if($_GET['action'] == "makeFileSystemItemDeletable"){
             	
             	makeFilesystemItemDeletable($_GET['type'], $_GET['itemId']);
 				jsAlert("This Item can be deleted again.");
@@ -2722,7 +2785,7 @@ if($_GET['action'] == "scorePlus"){
 // ajax stuff
 // ajax stuff
             
-          	else if($_GET['action'] == "mousePop"){
+else if($_GET['action'] == "mousePop"){
                 $type = $_POST['type'];
                 $id = $_POST['id'];
                 $html = $_POST["html"];
@@ -2776,7 +2839,8 @@ if($_GET['action'] == "scorePlus"){
                         $("#mousePop_<?=$type;?><?=$id;?>").css('position', 'absolute');
                     });
                 </script>
-            <?}else if($_GET['action'] == "createNewUFF"){
+            <?}
+else if($_GET['action'] == "createNewUFF"){
                 
                 $element = save($_GET['element']);
                 if(isset($_POST['submit'])){
@@ -2876,20 +2940,24 @@ if($_GET['action'] == "scorePlus"){
                 });
             </script>
                 
-            <? }}else if($_GET['action'] == "loadUff"){
+            <? }}
+else if($_GET['action'] == "loadUff"){
                 //is used to load content of a UFF
                 $id = save($_GET['id']);
                 echo showUffFile($id, '1');
                 
-            }else if($_GET['action'] == "writeUff"){
+            }
+else if($_GET['action'] == "writeUff"){
                 $id = save($_POST['id']);
                 $input = $_POST['input'];
                 writeUffFile($id, $input, '1');
                 
-            }else if($_GET['action'] == "removeUFFcookie"){
+            }
+else if($_GET['action'] == "removeUFFcookie"){
                 $id = save($_POST['id']);
                 removeUFFcookie($id);
-            }else if($_GET['action'] == "logout"){
+            }
+else if($_GET['action'] == "logout"){
             	if(!empty($_SESSION['userid'])){
             		
             	unset($_SESSION['userid']);
@@ -2905,7 +2973,8 @@ if($_GET['action'] == "scorePlus"){
 				<?
 				}
             	
-            }else if($_GET['action'] == "tester"){
+            }
+else if($_GET['action'] == "tester"){
             	
 				//mysql_query("DELETE FROM messages WHERE 1=1");
 				$db = new db();

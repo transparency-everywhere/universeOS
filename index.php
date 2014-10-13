@@ -3,23 +3,9 @@ error_reporting(0);
 @ini_set('display_errors', 0);
 session_start();
 
-
-// //if user uses internetexplorer => include error template
-// $browser = get_browser(null, true);
-// echo$browser['browser'];
-preg_match('/MSIE (.*?);/', $_SERVER['HTTP_USER_AGENT'], $matches);
-if (count(preg_match('/MSIE (.*?);/', $_SERVER['HTTP_USER_AGENT'], $matches))>1){
-
-    include("inc/crossbrowsing/ie/ie.php");
-    
-    die();
-	
-}
-// unset($browser);
-
 include_once("inc/functions.php");
 include_once("inc/config.php");
-init();
+universe::init();
 $timestamp = time();
 $usersql = mysql_query("SELECT * FROM user WHERE userid='".getUser()."'");
 $userdata = mysql_fetch_array($usersql);
@@ -30,17 +16,18 @@ include("inc/header.php");
     <body onclick="clearMenu()" onload="clock()<?=$startLink;?>">
 <?
 if(!isset($_SESSION["userid"])) {
-	$_SESSION['loggedOut'] = true;
+    $_SESSION['loggedOut'] = true;
     include("guest.php");
     
     die();
        
 } ?>
-		<script>$('#reader').show();</script>
-        <div id="reload"></div><div id="alerter" class="container"></div>
-				<?
-				 include("modules/desktop/dashboard.php");
-				?>
+	<script>$('#reader').show();</script>
+        <div id="reload"></div>
+        <div id="alerter" class="container"></div>
+            <?
+             include("modules/desktop/dashboard.php");
+            ?>
         <div id="bodywrap">
         	
         	<ul id="systemAlerts">
@@ -80,11 +67,11 @@ if(!isset($_SESSION["userid"])) {
                 ?>
             </div>
         </div>
-            <?
-            include("dock.php");
+<?
+    gui::showDock();
 			
     include("openFileFromLink.php");
-    ?>
-    </body>
+?>
+</body>
     
 

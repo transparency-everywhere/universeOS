@@ -2,13 +2,19 @@
   $userid = getUser();
   $time = time();
 
+  class debug{
+      function write($param){
+          
+      }
+  }
+  
   // Thumbnails: [url]www.codeschnipsel.net[/url]
-  function mkthumb($img_src,     // Dateiname
+function mkthumb($img_src,     // Dateiname
                    $img_width,       // max. Größe in x-Richtung
                    $img_height,       // max. Größe in y-Richtung
                    $folder_scr,  // Ordner der normalen Bilder
                    $des_src)    // Ordner der Thumbs
-  {
+{
     // Größe und Typ ermitteln
     list($src_width, $src_height, $src_typ) = getimagesize($folder_scr."/".$img_src);
 
@@ -59,14 +65,14 @@
       return false;
     }
   }
- /**
+/**
   * Validates if SESSION of last generated Captcha is equal to the submitted value
   *
   * @param string $value      Contains a user-provided query.
   *
   * @return bool Contains the returned rows from the query.
   */
- function validateCapatcha($value){
+function validateCapatcha($value){
      
      $sessionValue = $_SESSION['lastCaptcha'];
 	 
@@ -79,8 +85,8 @@
         }
 	
  }
-  
- function showYoutubeVideo($id, $subPath=NULL){
+ 
+function showYoutubeVideo($id, $subPath=NULL){
     ?>
 	<script type="text/javascript" src="inc/swfObj/swfobject.js"></script>    
 	<div id="ytapiplayer">
@@ -97,15 +103,15 @@
 
 	<?php
  }
- 
- /**
+
+/**
   * Opens an URL with curl and outputs xml
   *
   * @param string $url      Contains URL
   *
   * @return array Contains the returned xm.
   */
- function curler($url){
+function curler($url){
  	
         //umgehen des HTTP Verbots
         $ch = curl_init();
@@ -123,8 +129,8 @@
         $xml = simplexml_import_dom($dom);
 		return $xml;
  }
- 
- function getRssfeed($rssfeed, $cssclass="", $encode="auto", $anzahl=10, $mode=0) {
+
+function getRssfeed($rssfeed, $cssclass="", $encode="auto", $anzahl=10, $mode=0) {
      $data = @file($rssfeed);
      $data = implode ("", $data);
          preg_match_all("/<item.*>(.+)<\/item>/Uism", $data, $items);
@@ -205,7 +211,7 @@
 		return $output;
 
  }
- function showRssFeed($url){
+function showRssFeed($url){
         $feed_url = "$url";
 
    // INITIATE CURL. 
@@ -257,58 +263,23 @@
    $count--; 
    } 
  }    
- 
- 
-    //shows the settins button for folders, elements, files, playlists and posts.
-    function showItemSettings($type, $itemId){
+
+
+   //shows the settins button for folders, elements, files, playlists and posts.
+   function showItemSettings($type, $itemId){
         
       $contextMenu = new contextMenu($type, $itemId, '', '');
 	  $output = $contextMenu->showItemSettings();
 	  return $output;
     }
-  function showRightClickMenu($type, $itemId, $title, $info1=NULL){
-      
-      $contextMenu = new contextMenu($type, $itemId, $title, $info1);
+function showRightClickMenu($type, $itemId, $title, $info1=NULL){
+     
+     $contextMenu = new contextMenu($type, $itemId, $title, $info1);
 	  $output = $contextMenu->showRightClick();
 	  echo $output;
-  }
+ }
 
-  function userLogin($username, $password){
-  	
-	     $username = mysql_real_escape_string($username);
-	     $sql = mysql_query("SELECT userid, password, hash, cypher FROM user WHERE username='$username'");
-	     $data = mysql_fetch_array($sql);
-		 $userid = $data['userid'];
-		 
-	     $timestamp = time();
-	     $timestamp = ($timestamp / 2);
-	     $hash = md5($timestamp);
-		 
-		 //old version
-		 if($data['cypher'] == 'md5'){
-	     	$password = md5($password);
-		 }
-		 
-	     if(!empty($userid) && $password == $data['password']) {
-			 //set cookies
-			 $_SESSION['guest'] = false;
-	       	 $_SESSION['userid'] = $data['userid'];
-	         $_SESSION['userhash'] = $hash;
-			 
-			 //update db
-	         mysql_query("UPDATE user SET hash='$hash' WHERE userid='".$_SESSION['userid']."'");
-	         
-	         createFeed($_SESSION['userid'], "is logged in", "60", "feed", "p");
-	         updateActivity($_SESSION['userid']);
-			 
-			 
-			 return 1;
-	     }else{
-	     	return 0;
-	     }
-  }
-  
-  function createSalt($type, $itemId, $receiverType, $receiverId, $salt){
+function createSalt($type, $itemId, $receiverType, $receiverId, $salt){
   	//stores encrypted salt in db
   	
   	//delete all old salts
@@ -321,8 +292,8 @@
 			return false;
 
   }
-  
-  function updateSalt($type, $itemId, $salt){
+
+function updateSalt($type, $itemId, $salt){
   	mysql_query("DELETE FROM `salts` WHERE `type`='".save($type)."' AND `itemId`='".save($itemId)."'");
 	
   	
@@ -332,16 +303,16 @@
 		else 
 			return false;
   }
-  
-  function getSalt($type, $itemId){
+
+function getSalt($type, $itemId){
   	$type = save($type);
 	$itemId = save($itemId);
 	
   	$data = mysql_fetch_array(mysql_query("SELECT * FROM `salts` WHERE `type`='$type' AND itemId='$itemId' LIMIT 1"));
   	return $data['salt'];
   }
-  
-  function createUser($username, $password, $authSalt, $keySalt, $privateKey, $publicKey){
+
+function createUser($username, $password, $authSalt, $keySalt, $privateKey, $publicKey){
     
     $username = save($_POST['username']);
     $sql = mysql_query("SELECT username FROM user WHERE username='$username'");
@@ -390,8 +361,8 @@
     }
       
   }
-  
-  function deleteUser($userid, $reason){
+
+function deleteUser($userid, $reason){
       $authorization = true;
       if($authorization){
           
@@ -436,8 +407,8 @@
           
       }
   }
-  
-  function updateUserPassword($oldPassword, $newPassword, $newAuthSalt=NULL, $newKeySalt=NULL, $privateKey=NULL, $userid=NULL){
+
+function updateUserPassword($oldPassword, $newPassword, $newAuthSalt=NULL, $newKeySalt=NULL, $privateKey=NULL, $userid=NULL){
   	if($userid == NULL){
   		$userid = getUser();
   	}
@@ -467,15 +438,15 @@
 	}
   }
   
-  function proofLogin(){
+function proofLogin(){
       if(isset($_SESSION['userid'])){
           return true;
       }else{
           return false;
       }
   }
-  
-  function proofLoginMobile($user, $hash){
+
+function proofLoginMobile($user, $hash){
   	
 	$userData = getUserData($user);
 	
@@ -489,8 +460,8 @@
 		}
 	}
   }
-  
-  function getUser(){
+
+function getUser(){
   	
   	if(isset($_SESSION['userid'])){
   		return $_SESSION['userid'];
@@ -498,8 +469,8 @@
   		return false;
   	}
   }
-  
-  function hasRight($type){
+
+function hasRight($type){
 	  //checks if user has right to ...
 	  //gets information from $global_userGroupData
 	  //whis is defined in config.php
@@ -514,13 +485,8 @@
 	  }
   	
   }
-  
-  // function hasLies($type){
-	  // return $global_userGroupData["protectFileSystemItems"];
-//   	
-  // }
-  
-  function checkMobileAuthentification($username, $hash){
+
+function checkMobileAuthentification($username, $hash){
       
         $username = $username;
         $hash = $hash;
@@ -533,25 +499,24 @@
             return true;
         }
   }
-  
-  function usernameToUserid($username){
-        $loginSQL = mysql_query("SELECT userid, username FROM user WHERE username='".save($username)."'");
-        $loginData = mysql_fetch_array($loginSQL);
-        return $loginData['userid'];
+
+function usernameToUserid($username){
+        debug::write('use of function usernameToUserid');
+        return user::usernameToUserid($username);
   }
-  
-  function useridToUsername($userid){
+
+function useridToUsername($userid){
         $loginSQL = mysql_query("SELECT userid, username FROM user WHERE userid='".save($userid)."'");
         $loginData = mysql_fetch_array($loginSQL);
         return $loginData['username'];
   }
-  function useridToRealname($userid){
+function useridToRealname($userid){
         $loginSQL = mysql_query("SELECT realname FROM user WHERE userid='".save($userid)."'");
         $loginData = mysql_fetch_array($loginSQL);
         return $loginData['realname'];
   }
-  
-  function getUserData($userid=NULL){
+
+function getUserData($userid=NULL){
   	if(empty($userid)){
   		$userid = getUser();
   	}
@@ -560,7 +525,7 @@
 	return $userData;
   }
 
-  function showUserPicture($userid, $size, $subpath = NULL, $small = NULL /*defines if functions returns or echos and if script with bordercolor is loaded*/){
+function showUserPicture($userid, $size, $subpath = NULL, $small = NULL /*defines if functions returns or echos and if script with bordercolor is loaded*/){
     $picSQL = mysql_query("SELECT userid, lastactivity, userPicture, priv_profilePicture FROM user WHERE userid='".mysql_real_escape_string($userid)."'");
     $picData = mysql_fetch_array($picSQL);
     $time = time();
@@ -655,9 +620,9 @@
       $time = time();
       mysql_query("UPDATE user SET lastactivity='$time' WHERE userid='$userid'");
   }
-  //shows online status
-     
-  function userSignature($userid, $timestamp, $subpath = NULL, $reverse=NULL){
+//shows online status
+   
+function userSignature($userid, $timestamp, $subpath = NULL, $reverse=NULL){
     $feedUserSql = mysql_query("SELECT userid, username, userPicture FROM user WHERE userid='$userid'");
     $feedUserData = mysql_fetch_array($feedUserSql);
     if(isset($subpath)){
@@ -703,7 +668,7 @@
   }
 
 
-  function getUserFavs($userid=NULL){
+function getUserFavs($userid=NULL){
   	if(empty($userid)){
   		$userid=$_SESSION['userid'];
   	}
@@ -715,7 +680,7 @@
 		return $return;
   }
 
-	function getUserFavOutput($user){
+function getUserFavOutput($user){
 		if(empty($user)){
 			$user = $_SESSION['userid'];
 		}
@@ -723,164 +688,16 @@
 		
 	}
 	
-	
-	function markMessageAsRead($buddy, $user){
-			
-		$user = save($user);
-		$buddy = save($buddy);
-		
-	        mysql_query("UPDATE `messages` SET `read`='1' WHERE `sender` ='$buddy' AND `receiver` ='$user';");
-	}
-	
-		
-	function getLastMessage($userid){
-		$userid = save($userid);
-		updateActivity($userid);
-		$chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' OR receiver='$userid' ORDER BY timestamp DESC LIMIT 1");
-		$chatData =  mysql_fetch_array($chatSQL);
-		
-		
-		if($chatData['read'] == 0){
-			return $chatData['id'];
-		}
-		
-	}
-	
-	function getUnseenMessageAuthors($userid){;
-		$chatSQL = mysql_query("SELECT * FROM `messages` WHERE (`sender`='$userid' AND `seen`='0') OR (`read`='0' AND `receiver`='$userid')");
-		while($chatData =  mysql_fetch_array($chatSQL)){
-			if($chatData['sender'] == $userid){
-				if(!in_array($chatData['receiver'], $return))
-					$return[] = $chatData['receiver'];
-			}else if($chatData['receiver'] == $userid){
-				
-				if(!in_array($chatData['sender'], $return))
-					$return[] = $chatData['sender'];
-			}
-		}
-		return $return;
-	}
-	
-	function getMessages($userid, $buddyId, $limit){
-		$chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' && receiver='$buddyId' OR sender='$buddyId' && receiver='$userid' ORDER BY timestamp DESC LIMIT $limit");
-		while($chatData =  mysql_fetch_array($chatSQL)){
-			$id = $chatData['id'];
-			$return[$id] = $chatData;
-		}
-		return $return;
-	}
-	
-	
-	function showMessages($userid, $buddyId, $limit){
-		
-		$buddyData = getUserData($buddyId);
-		$userData = getUserData($userid);
-		
-				
-		
-		
-		$chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' && receiver='$buddyId' OR sender='$buddyId' && receiver='$userid' ORDER BY timestamp DESC LIMIT $limit");
-		while($chatData = mysql_fetch_array($chatSQL)) {
-	    
-		    if($chatData['receiver'] == getUser() && $chatData['read'] == "0"){
-		    mysql_query("UPDATE `messages` SET  `read`='1' WHERE  id='$chatData[id]'");
-		    }
-		    if($chatData['sender'] == $_SESSION['userid'] && $chatData['seen'] == "0"){
-		    mysql_query("UPDATE `messages` SET  `seen`='1' WHERE  id='$chatData[id]'");
-		    }
-		    
-		    $sender = $chatData['sender'];
-		    $whileid = getUser();
-		    if($sender == $userid){
-			    $receiver = $buddyId;
-			    $authorid =  $userData['userid'];
-			    $class = 'incoming';
-		    } else {
-			    $authorid =  $buddyData['userid'];
-			    $receiver = $userid;
-			    $class = 'outgoing';
-		    }
-		    
-			$authorName = useridToUsername($authorid);
-			$buddyName = str_replace(" ","_",$buddyData['username']); //replace spaces with _ to get classname
-			
-			
-			//check if message is crypted
-		    if($chatData['crypt'] == "1"){
-		    	
-				$messageClasses = "cryptedChatMessage_$buddyId";
-		        $message = $chatData['text'];
-			} else{
-				
-				$messageClasses = "";
-		        $message = $chatData['text'];
-		    }
-		    $message = universeText($message);
-			
-			//show message
-		              echo '<div class="box-shadow chatMessage '.$class.'">';
-		              	echo '<span class="username">';
-						echo showUserPicture($authorid, "15");
-						echo $authorName;
-		              	echo "</span>";
-		              	echo'<span class="timestamp pull-right">'.universeTime($chatData['timestamp']).'</span>';
-		              	echo'<span class="chatMessage_'.$buddyId.' '.$messageClasses.'" data-sender="'.$authorid.'" data-receiver="'.$receiver.'" data-id="'.$chatData['id'].'" data-decrypted="false">'.$message.'</span>';
-		              echo'</div>';
-			}
-	
-	}
 
-   //gets all unseen messages for receiver=user
-   function getLastMessages($user=NULL){
-   	if($user == NULL){
-   		$user = getUser();
-   	}else{
-   		$user = save($user);
-   	}
-   	$listedUsers[] = $user;
-	$newMessagesSql = mysql_query("SELECT * FROM  `messages` WHERE  receiver='$user' OR sender='$user' ORDER BY timestamp DESC LIMIT 0, 5");
-	while($newMessagesData = mysql_fetch_array($newMessagesSql)){
-		$session .= "newMessage $newMessagesData[id]";
-		
-		
-		//each sender is only listed once
-		if(!in_array($newMessagesData['sender'], $listedUsers)){
-	    $text = substr($newMessagesData['text'], 0, 100);
+include('classes/class_gui.php');
+include('classes/class_messages.php');
 
-		//define everything that is important	    
-		$return['messageId'] = $newMessagesData['id'];
-		$return['sender'] = $newMessagesData['sender'];
-		$return['receiver'] = $newMessagesData['receiver'];
-		$return['timestamp'] = $newMessagesData['timestamp'];
-		$return['text'] = $newMessagesData['text'];
-		
-		$return['seen'] = $newMessagesData['seen'];
-		$return['read'] = $newMessagesData['read'];
-		$return['senderUsername'] = useridToUsername($newMessagesData['sender']);
-		
-		//add sender too users array
-		$listedUsers[] = $newMessagesData['sender'];
-		
-		//add all return data to returner array
-		$returner[] = $return;
-			
-		}
-	}
-	
-	return $returner;
-	
-   }
-   
-   function getMessageData($messageId){
-   	$newMessagesSql = mysql_query("SELECT * FROM  `messages` WHERE  id='".mysql_real_escape_string($messageId)."'");
-	return mysql_fetch_array($newMessagesSql);
-   }
    
 //fav
 //fav
 //fav
 
-  function addFav($type, $typeid, $userid){
+function addFav($type, $typeid, $userid){
       $type = $_GET['type'];
       $check = mysql_query("SELECT type,item FROM fav WHERE type='$_GET[type]' && item='$_GET[item]'");
       $checkData = mysql_fetch_array($check);
@@ -893,8 +710,8 @@
     }
   }
 
-    
-    function showFav($user=NULL){ 
+   
+function showFav($user=NULL){ 
                         if($user == NULL){
                         	$user = getUser();
                        	}
@@ -961,7 +778,7 @@
         
     }
 
-	function removeFav($type, $item){
+function removeFav($type, $item){
 		
 			if(mysql_query("DELETE FROM fav WHERE type='".mysql_real_escape_string($type)."' AND user='$_SESSION[userid]' AND item='".mysql_real_escape_string($item)."'")){
 				return true;
@@ -972,7 +789,7 @@
 //personal Events
 //personal Events
 //personal Events
-	class personalEvents{
+class personalEvents{
 		
 		function create($owner,$user,$event,$info,$eventId){
 			
@@ -985,7 +802,7 @@
 //comments
 //comments	
 	
-  function addComment($type, $itemid, $author, $message){
+function addComment($type, $itemid, $author, $message){
      $time = time();
      mysql_query("INSERT INTO comments (`type`,`typeid`,`author`,`timestamp`,`text`, `privacy`) VALUES('$type','$itemid','$author','$time','$message', 'p');");
      $commentId = mysql_insert_id();
@@ -1004,7 +821,7 @@
        }
    }
    
-   function deleteComments($type, $itemid){
+function deleteComments($type, $itemid){
        if(mysql_query("DELETE FROM `comments` WHERE `type`='$type' AND `typeid`='$itemid'")){
            return true;
        }
@@ -1073,7 +890,7 @@ function showComments($type, $itemid) {
 echo"</div>";
 }
     
-    function showFeedComments($feedid) 
+function showFeedComments($feedid) 
     { ?>
     <div id="feedComment_<?=$feedid;?>">
     <div class="shadow comments">
@@ -1123,7 +940,7 @@ echo"</div>";
 //groups
 //groups
 
-	function userJoinGroup($group, $user=NULL){
+function userJoinGroup($group, $user=NULL){
 		
 		$userid = getUser();
 		
@@ -1134,37 +951,37 @@ echo"</div>";
         mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`) VALUES ('$group', 'user', '$user', '$time', '$userid');");
          
 	}
-	
-	function userLeaveGroup($group, $user=NULL){
+
+function userLeaveGroup($group, $user=NULL){
 		if(mysql_query("DELETE FROM `groupAttachments` WHERE group='$group' AND item='user' AND itemId='".save($user)."'")){
 			return true;
 		}
 	}
 
-	function getGroups($userid=NULL){
+function getGroups($userid=NULL){
 		//moved to class groups->get();
 		$groups = new Groups();
 		return $groups->get($userid);
 		
 	}
-	
-	function getGroupData($groupId){
+
+function getGroupData($groupId){
 		$data = mysql_fetch_array(mysql_query("SELECT * FROM groups WHERE id='".mysql_real_escape_string($groupId)."'"));
 		return $data;
 	}
 
-	function getGroupName($groupId){
+function getGroupName($groupId){
 		$data = mysql_fetch_array(mysql_query("SELECT title FROM groups WHERE id='".mysql_real_escape_string($groupId)."'"));
 		return $data['title'];
 	}
 	
-    function countGroupMembers($groupId){
+function countGroupMembers($groupId){
         $total = mysql_query("SELECT COUNT(*) FROM `groupAttachments` WHERE `group`='$groupId' AND `item`='user' AND `validated`='1' "); 
         $total = mysql_fetch_array($total); 
         return $total[0];
     }
 	
-  function createGroup($title, $privacy, $description, $users){
+function createGroup($title, $privacy, $description, $users){
   	
 	
             $userid = getUser();
@@ -1199,22 +1016,22 @@ echo"</div>";
   	
   }
 
-  function deleteUserFromGroup($userid, $groupid){
+function deleteUserFromGroup($userid, $groupid){
 		
 	if(mysql_query("DELETE FROM groupAttachments WHERE `group`='".save($groupid)."' AND `item`='user' AND `itemId`='".save($userid)."'")){
 		return true;
 	}
   }
-  
-  function updateGroup($groupId, $privacy, $description, $membersInvite){
+
+function updateGroup($groupId, $privacy, $description, $membersInvite){
   	
   		if(mysql_query("UPDATE groups SET public='$privacy', description='$description', membersInvite='$membersInvite' WHERE id='$groupId'")){
   			return true;
   		}
          
   }
-  
-  function groupMakeUserAdmin($groupId, $userId){
+
+function groupMakeUserAdmin($groupId, $userId){
   	
 		$groupData = getGroupData($groupId);
 		
@@ -1232,7 +1049,7 @@ echo"</div>";
 		}
   	
   }
-  function groupRemoveAdmin($groupId, $userId){
+function groupRemoveAdmin($groupId, $userId){
   	
 		$groupData = getGroupData($groupId);
 		
@@ -1245,7 +1062,7 @@ echo"</div>";
 
 //basic universe stuff
 
-   function jsAlert($text){
+function jsAlert($text){
         ?>
         <script>
         //check if function is calles from window or from iframe
@@ -1258,7 +1075,7 @@ echo"</div>";
         </script> 
             <?php
     }
-  function universeTime($unixtime){
+function universeTime($unixtime){
      $time = time();
      $difference = ($time - $unixtime);
      if($difference < 60){
@@ -1280,62 +1097,10 @@ echo"</div>";
      
   }
      
-  
-   
-    function plusOne($type, $typeid){
-       if($type == "comment"){
-           mysql_query("UPDATE comments SET votes = votes + 1, score = score + 1 WHERE id='$typeid'");
-       }else if($type == "feed"){
-           mysql_query("UPDATE feed SET votes = votes + 1, score = score + 1 WHERE id='$typeid'");
-       }
-       if($type == "file"){
-           mysql_query("UPDATE files SET votes = votes + 1, score = score + 1 WHERE id='$typeid'"); 
-       }
-       if($type == "folder"){
-           mysql_query("UPDATE folders SET votes = votes + 1, score = score + 1 WHERE id='$typeid'"); 
-       }
-       if($type == "element"){
-           mysql_query("UPDATE elements SET votes = votes + 1, score = score + 1 WHERE id='$typeid'"); 
-   
-       }
-       if($type == "file"){
-           mysql_query("UPDATE file SET votes = votes + 1, score = score + 1 WHERE id='$typeid'"); 
-   
-       }
-       if($type == "link"){
-           mysql_query("UPDATE links SET votes = votes + 1, score = score + 1 WHERE id='$typeid'"); 
-   
-       }
-       //score++
-       }
-       function minusOne($type, $typeid){
-       if($type == "comment"){
-           mysql_query("UPDATE comments SET votes = votes + 1, score = score - 1 WHERE id='$typeid'");
-           
-       }else if($type == "feed"){
-           mysql_query("UPDATE feed SET votes = votes + 1, score = score - 1 WHERE id='$typeid'");
-       }
-       if($type == "file"){
-           mysql_query("UPDATE files SET votes = votes + 1, score = score - 1 WHERE id='$typeid'"); 
-       }
-       if($type == "folder"){
-           mysql_query("UPDATE folders SET votes = votes + 1, score = score - 1 WHERE id='$typeid'"); 
-       }
-       if($type == "element"){
-           mysql_query("UPDATE elements SET votes = votes + 1, score = score - 1 WHERE id='$typeid'"); 
-       }
-       if($type == "file"){
-           mysql_query("UPDATE file SET votes = votes + 1, score = score - 1 WHERE id='$typeid'"); 
-   
-       }
-       if($type == "link"){
-           mysql_query("UPDATE links SET votes = votes + 1, score = score - 1 WHERE id='$typeid'"); 
-   
-       }
-       } //score--
-       
-    
-    function showScore($type, $typeid, $reload=NULL) {
+include('classes/class_item.php');
+
+function showScore($type, $typeid, $reload=NULL) {
+    debug::write('use of show score');
         if(proofLogin()){
                if($type == "comment"){
                $scoreSql = mysql_query("SELECT id, votes, score FROM comments WHERE id='$typeid'");
@@ -1390,7 +1155,7 @@ echo"</div>";
            
        }
 
-		function showLanguageDropdown($value=NULL){
+function showLanguageDropdown($value=NULL){
 			//References :
 		    //1. http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
 		    //2. http://blog.xoundboy.com/?p=235
@@ -2041,38 +1806,9 @@ echo"</div>";
        
        echo $typeTable;
    }
-    function init(){
-    	
-		if(proofLogin()){
-         	$checkSql = mysql_query("SELECT userid, hash FROM user WHERE userid='".getUser()."'");
-         	$checkData = mysql_fetch_array($checkSql);
-		}else{
-			
-			$_SESSION['loggedOut'] = true;
-		}
-
-    }
-    //reload page if session is expired is used in reload.php
-	function proofSession(){
-		if((!$_SESSION['loggedOut'])&&(!proofLogin())){
-			echo"<script>window.location.href='index.php'</script>";
-			$_SESSION['loggedOut'] = true;
-		}
-	}
-    function bc_really_big_int($bc_func, $a, $b) {
-           // check if function exists
-           if(function_exists($bc_func)) {
-                   $scale = (strlen($a) > strlen($b))?strlen($a):strlen($b);
-                   $afloat = '0.'.str_repeat('0', $scale-strlen($a)).$a;
-                   $bfloat = '0.'.str_repeat('0', $scale-strlen($b)).$b;
-                   $result = call_user_func($bc_func, $afloat, $bfloat, $scale);
-                   $result = str_replace('.', '', $result);
-                   return($result);
-           } else {
-                   return(false);
-           }
-    }
-	
+   
+   
+   include('classes/class_universe.php');
     function commaToOr($string, $type){
         //converts Strings with Values, which are separeted with commas into SQL conform STRINGS
         $string = explode(";", $string);
@@ -2097,439 +1833,7 @@ echo"</div>";
         return $text;
     }
     
-    
-	  /**
-	  * finds out if current user is authorized to see or edit
-	  * item with $privacy and $author
-	  *
-	  * @param string $privacy      contains privacy query.
-	  *
-	  * @param string $type      	see//edit
-	  *
-	  * @param int $author      	author of the item
-	  *
-	  * @return bool 
-	  */
-	function authorize($privacy, $type, $author=NULL){
-        
-		if(end(explode(";", $privacy)) == "UNDELETABLE"){
-			$undeletable = true;
-			$privacy = str_replace(";UNDELETABLE", "", $privacy);
-		}
-		
-		
-        if(end(explode(";", $privacy)) == "PROTECTED"){
-        	
-             $show = true;
-             if(hasRight("editProtectedFilesystemItem")){
-             	$edit = true;
-				 $delete = true;
-			 }else{
-			 	$edit = false;
-				$delete = false;
-			 }
-        	
-        }else{
-             $show = false;
-             $edit = false;
-			 $delete = false;
-        
-	        if($privacy == "p"){
-	            
-	            
-	             $show = true;
-	             if(proofLogin()){
-	             	$edit = true;
-				 	$delete = true;
-				 }
-	            
-	        }else if($privacy == "h"){
-	            
-	            if($author == $_SESSION['userid'] && proofLogin()){
-	            
-	                $show = true;
-	                $edit = true;
-					$delete = true;
-	                
-	            }else{
-	                
-	                $show = false;
-	                $edit = false;
-					$delete = true;
-	                
-	            }
-	            
-	        }else{
-	            
-	
-	
-	                $custom = explode("//", $privacy);
-	                $customShow = $custom[1];
-	                $customShow = explode(";", $customShow);
-	                $customEdit = $custom[0];
-					
-					if($customEdit == "h" && $author == getUser()){
-	                	$edit = true;
-					}
-	                $customEdit = explode(";", $customEdit);
-	                
-	                //check if friends are allowed to see or edit this
-	                if((in_array("f", $customShow) || in_array("f", $customEdit)) && proofLogin()){
-	                    if($author == getUser()){
-	                            //if friends are allowed to see => show = true
-	                            if(in_array("f", $customShow)){
-	                                $show = true;
-	                            }
-	                            //if friends are allowed to edit => show = true
-	                            if(in_array("f", $customEdit)){
-	                                $edit = true;
-	                                
-	                            }
-	                    	
-	                    }
-	                    //get friends from SQL unefizient
-	                    $buddylistSql = mysql_query("SELECT * FROM buddylist WHERE owner='$author' && request='0'");
-	                    while($buddylistData = mysql_fetch_array($buddylistSql)) {
-	                        
-	                        //check if user is buddy of $author
-	                        if($buddylistData['buddy'] == getUser() && proofLogin()){
-	                            //if friends are allowed to see => show = true
-	                            if(in_array("f", $customShow)){
-	                                $show = true;
-	                            }
-	                            //if friends are allowed to edit => show = true
-	                            if(in_array("f", $customEdit)){
-	                                $edit = true;
-	                                
-	                            }
-	                        }
-	                    }
-	                }
-	                
-	                
-	                
-	                
-	                if(proofLogin()){
-	                //check if user is in group which is allowed to see this item
-		                $groupAtSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='".getUser()."' and validated='1'");
-		                while($groupAtData = mysql_fetch_array($groupAtSql)){
-		
-		                    if(in_array($groupAtData['group'], $customShow) && proofLogin()){
-		                        $show = true;  
-		                    }
-		                    if(in_array($groupAtData['group'], $customEdit) && proofLogin()){
-		                        $edit = true;  
-		                    }
-		                }
-					}
-	                
-	                
-	                
-	            
-	            
-	            
-	        }
-        }
-        
-        if($type == "show"){
-            return $show;
-        }else if($type == "edit"){
-            return $edit;
-        }else if($type == "delete"){
-        	if($undeletable){
-        		if(hasRight("editUndeletableFilesystemItems")){
-        			return true;
-        		}else{
-        			return false;
-        		}
-        	}else{
-            	return $delete;
-        	}
-        }
-        
-    }
-    
-	  /**
-	  * finds out whether or not a privacies value is "protected"
-	  *
-	  * @param string $value      contains privacy query.
-	  *
-	  * @return bool 
-	  */
-	function isProtected($value){
-		if(end(explode(";", $value)) == "PROTECTED"){
-			return true;
-		}else{
-			return false;
-		}
-	}
-	
-	  /**
-	  * finds out whether or not a privacies value is "undeletable"
-	  *
-	  * @param string $value      contains privacy query.
-	  *
-	  * @return bool 
-	  */
-	function isUndeletable($value){
-		if(end(explode(";", $value)) == "UNDELETABLE"){
-			return true;
-		}else{
-			return false;
-		}
-	}
-	
-	
-	  /**
-	  * shows the privacysettings box 
-	  *
-	  * @param string $value      contains privacy query.
-	  *
-	  * @return
-	  */
-    function showPrivacySettings($value=NULL, $editable=true){
-    	
-		$oldValue = $value;
-		if(end(explode(";", $oldValue)) == "PROTECTED"){
-        	
-			
-			$protected = true;
-			$value = str_replace(";PROTECTED", "", $value);
-        	
-        }
-		if(end(explode(";", $oldValue)) == "UNDELETABLE"){
-        	
-			
-			$undeletable = true;
-			$value = str_replace(";UNDELETABLE", "", $value);
-        	
-        }
-		
-    	if(empty($value)){
-    		$value = "p";
-    	}
-		
-        if($value == "p"){
-            //check checkbox on public
-            $checked['privacyPublic'] = 'checked="checked"';
-        }else if($value == "h"){
-            //check checkbox on hidden
-            $checked['privacyHidden'] = 'checked="checked"';
-        }else{
-			$showCustom = "notHidden";
-            //handle other cases
-            //   f;4;3;2//f;2;
-            $custom = explode("//", $value);
-            
-            $customShow = $custom[1];
-            $customShow = explode(";", $customShow);
-            
-            if(in_array("f", $customShow)){
-                //check checkbox on show friends
-                $checked['privacyCustomShowF'] = 'checked="checked"';
-            }
-            
-            
-            
-            $customEdit = $custom[0];
-            $customEdit = explode(";", $customEdit);
-            
-            
-            if(in_array("f", $customEdit)){
-                //check checkbox on allow friends to edit
-                $checked['privacyCustomEditF'] = 'checked="checked"';
-            }
-            if(in_array("h", $customEdit)){
-                //only authour is allow to edit
-                $checked['privacyCustomEditH'] = 'checked="checked"';
-            }
-            
-            
-        }
-		
-		if(true){
-			if($protected OR !$editable){
-				$disabled = 'disabled="disabled"'; //added to checkboxes
-			}
-        			if($protected){
-        				echo"<li style=\"font-size:16pt;\">Protected</li>";
-        			}else if($undeletable){
-        				//echo"<li style=\"font-size:16pt;\">Undeletable</li>";
-        			}
-			if(true){
-        ?>
-        	<div class="privacySettings">
-        		<header>Privacy Settings</header>
-        		<ul>
-        			<li>
-        				<h2><input type="checkbox" name="privacyPublic" value="true" class="privacyPublicTrigger uncheckCustom uncheckHidden" <?=$checked[privacyPublic];?> <?=$disabled;?>>Public</h2>
-        				Every user is allowed to see and edit.
-        			</li>
-        			<li>
-        				<h2><input type="checkbox" class="privacyHiddenTrigger uncheckPublic uncheckCustom" name="privacyHidden" value="true" <?=$checked[privacyHidden];?> <?=$disabled;?>>Only me</h2>
-        				You are the only one who is allowed to see and edit.
-        			</li>
-        			<li>
-        				<h2><input type="checkbox" class="privacyBuddyTrigger privacyCustomTrigger uncheckPublic uncheckHidden" <?=$checked['privacyCustomShowF'];?> <?=$checked['privacyCustomEditF'];?> <?=$disabled;?>>Friends</h2>
-        				Friends cann see or edit.
-        			</li>
-        			<li class="<?=$showCustom;?> sub privacyShowBuddy">
-        				<div><input type="checkbox" name="privacyCustomSee[]" value="f" data-privacytype="see" class="privacyCustomTrigger uncheckPublic uncheckHidden privacyBuddyTrigger privacyBuddyTrigger_see" <?=$checked['privacyCustomShowF'];?> <?=$disabled;?>>See</div>
-        				<div><input type="checkbox" name="privacyCustomEdit[]" value="f" data-privacytype="edit" class="uncheckPublic privacyCustomTrigger uncheckHidden privacyBuddyTrigger privacyBuddyTrigger_edit" <?=$checked['privacyCustomEditF'];?> <?=$disabled;?>>Edit</div>
-        			</li>
-        			<li>
-        				<h2><input type="checkbox" class="uncheckPublic privacyGroupTrigger privacyCustomTrigger uncheckHidden" <?=$disabled;?>>Groups</h2>
-        				Particular Groups can see and edit.
-        			</li>
-        			<li class="<?=$showCustom;?> sub privacyShowGroups <?=$showBuddy;?>">
-        				<ul class="groupList">
-        					                           <?
-                                                        $attSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='".getUser()."' AND validated='1'");
-                                                        while($attData = mysql_fetch_array($attSql)){
-                                                            $i++;
-                                                            $groupSql = mysql_query("SELECT id, title FROM groups WHERE id='$attData[group]'");
-                                                            $groupData = mysql_fetch_array($groupSql);
-                                                            $title = $groupData['title'];
-                                                            $title10 = substr("$title", 0, 10);
-                                                            $title15 = substr("$title", 0, 25);
-                                                            if($i%2 == 0){
-                                                                $color="000000";
-                                                            }else{
-                                                                $color="383838";
-                                                            }
-                                                            if(in_array("$groupData[id]", $customEdit)){
-                                                                $checked['editGroup'] = 'checked="checked"';
-                                                            }else{
-                                                                $checked['editGroup'] = '';
-                                                            }
-                                                            ?>
-                                                                <li>
-                                                                	<div><img src="./gfx/icons/group.png" height="15">&nbsp;<a href="#" onclick="createNewTab('reader_tabView','<?=$title10;?>','','group.php?id=<?=$groupData[id];?>',true);return false"><?=$title15;?></a></div>
-                                                                	<div>
-                                                                		<input type="checkbox" name="privacyCustomSee[]" value="<?=$groupData['id'];?>" data-groupid="<?=$groupData['id'];?>" data-privacytype="see" class="privacyGroupTrigger privacyCustomTrigger uncheckPublic privacySee uncheckHidden privacyGroupTrigger_<?=$groupData['id'];?>_see" <?=$checked['editGroup'];?> <?=$disabled;?>>
-																		show
-                                                                	</div>      
-                                                                	<div>
-                                                                		<input type="checkbox" name="privacyCustomEdit[]" value="<?=$groupData['id'];?>" data-groupid="<?=$groupData['id'];?>" data-privacytype="edit"  class="privacyGroupTrigger privacyCustomTrigger uncheckPublic checkPrev uncheckHidden privacyGroupTrigger_<?=$groupData['id'];?>_edit" <?=$checked['editGroup'];?> <?=$disabled;?>>
-																		edit
-                                                                	</div>
-                                                                </li>
-                                                        <?}
-                                                        if($i < 1){
-                                                            echo'<li style="padding-left:10px;">Your are in no group</li>';
-                                                        }?>
-        				</ul>
-        			</li>
-        			<li style="height:1px;"></li>
-        			<?php
-        			}
-        			if(1 == 2){
-        			if($protected){
-        				echo"<li style=\"font-size:16pt;\">Protected</li>";
-        			}
-        			?>
-        			<li><input type="checkbox" name="privacyPublic" value="true" class="privacyPublicTrigger uncheckCustom uncheckHidden" <?=$checked[privacyPublic];?> <?=$disabled;?>> Public</li>
-					<li>Custom:</li>
-					<li style="padding-left:5px;">See</li>
-					<li style="padding-left: 10px;"><input type="checkbox" name="privacyCustomSee[]" value="f" class="privacyCustomTrigger uncheckPublic uncheckHidden" <?=$checked[privacyCustomShowF];?> <?=$disabled;?>> All your Friends</li>
-
-                                                        <?                            
-                                                        $attSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='$_SESSION[userid]' AND validated='1'");
-                                                        while($attData = mysql_fetch_array($attSql)){
-                                                            $i++;
-                                                            $groupSql = mysql_query("SELECT id, title FROM groups WHERE id='$attData[group]'");
-                                                            $groupData = mysql_fetch_array($groupSql);
-                                                            $title = $groupData[title];
-                                                            $title10 = substr("$title", 0, 10);
-                                                            $title15 = substr("$title", 0, 25);
-                                                            if($i%2 == 0){
-                                                                $color="000000";
-                                                            }else{
-                                                                $color="383838";
-                                                            }
-                                                            
-                                                            if(in_array($groupData['id'], $customShow)){
-                                                                $checked['showGroup'] = 'checked="checked"';
-                                                            }else{
-                                                                $checked['showGroup'] = '';
-                                                            }
-                                                            ?>
-                                                            <li style="padding-left:10px;"><input type="checkbox" name="privacyCustomSee[]" value="<?=$groupData[id];?>" class="privacyCustomTrigger uncheckPublic uncheckHidden" <?=$checked[showGroup];?> <?=$disabled;?>><img src="./gfx/icons/group.png" height="15">&nbsp;<a href="#" onclick="createNewTab('reader_tabView','<?=$title10;?>','','group.php?id=<?=$groupData[id];?>',true);return false"><?=$title15;?></a></li>
-       
-                                                        <?}
-                                                        if($i < 1){
-                                                            echo'<li style="padding-left:10px;">Your are in no group</li>';
-                                                        }?>
-                     <li style="padding-left:5px;">Edit</li>
-                     <li style="padding-left:5px;"><input type="checkbox" name="privacyCustomEdit[]" value="f" class="privacyCustomTrigger uncheckPublic uncheckOnlyMe uncheckHidden"<?=$checked[privacyCustomEditF];?> <?=$disabled;?>>All your Friends</li>
-
-                                                        <?                            
-                                                        $attSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='$_SESSION[userid]' AND validated='1'");
-                                                        while($attData = mysql_fetch_array($attSql)){
-                                                            $i++;
-                                                            $groupSql = mysql_query("SELECT id, title FROM groups WHERE id='$attData[group]'");
-                                                            $groupData = mysql_fetch_array($groupSql);
-                                                            $title = $groupData['title'];
-                                                            $title10 = substr("$title", 0, 10);
-                                                            $title15 = substr("$title", 0, 25);
-                                                            if($i%2 == 0){
-                                                                $color="000000";
-                                                            }else{
-                                                                $color="383838";
-                                                            }
-                                                            if(in_array($groupData['id'], $customEdit)){
-                                                                $checked['editGroup'] = 'checked="checked"';
-                                                            }else{
-                                                                $checked['editGroup'] = '';
-                                                            }
-                                                            ?>
-                                                                <li style="padding-left:10px;"><input type="checkbox" name="privacyCustomEdit[]" value="<?=$groupData[id];?>" class="privacyCustomTrigger uncheckOnlyMe uncheckPublic uncheckHidden" <?=$checked[editGroup];?> <?=$disabled;?>><img src="./gfx/icons/group.png" height="15">&nbsp;<a href="#" onclick="createNewTab('reader_tabView','<?=$title10;?>','','group.php?id=<?=$groupData[id];?>',true);return false"><?=$title15;?></a></li>
-                                                        <?}
-                                                        if($i < 1){
-                                                            echo'<li style="padding-left:10px;">Your are in no group</li>';
-                                                        }?>
-                                                        <li style="padding-left:10px;"><input type="checkbox" name="privacyCustomEdit[]" value="h" class="privacyCustomTrigger privacyOnlyMeTrigger uncheckPublic uncheckHidden" <?=$checked[privacyCustomEditH];?> <?=$disabled;?>>Only Me</li>
-	
-                                        <li><input type="checkbox" class="privacyHiddenTrigger uncheckPublic uncheckCustom" name="privacyHidden" value="true" <?=$checked[privacyHidden];?> <?=$disabled;?>>Hidden:</li>
-					<?php }?>
-        		</ul>
-        	</div>
-                                <script>
-									initPrivacy();
-                                </script>
-       <?php
-       }
-    }
-    
-    function exploitPrivacy($public, $hidden, $customEdit, $customShow){
-    	if(!empty($public) OR !empty($hidden) OR !empty($customEdit) OR !empty($customShow)){
-	        if($public == "true"){
-	            $privacy = "p";
-	        }
-	        else if($hidden == "true"){
-	            $privacy = "h";
-	        }else{
-	            
-	            $customEdit = implode(";", $customEdit);
-	            $customShow = implode(";", $customShow);
-	            if(empty($customShow)){
-	            	$customShow = "h";
-	            }
-	            if(empty($customEdit)){
-	            	$customEdit = "h";
-	            }
-	            if(empty($customEdit) OR empty($customShow)){
-	            	$privacy = "p";
-	           	}else{
-	            $privacy = "$customEdit//$customShow";
-				}
-	        }
-	        
-	        return $privacy;
-		}
-    }
-    
-    
+    include('classes/class_privacy.php');
     
     function jPlayerFormat($title, $fileId, $type){
         $path = getFilePath($fileId);
@@ -3229,40 +2533,40 @@ echo"</div>";
                 return $filePath;
     }
 
-	function getFileData($fileId){
+function getFileData($fileId){
 		$fileData = mysql_fetch_array(mysql_query("SELECT * FROM files WHERE id='".save($fileId)."'"));
 		return $fileData;
 	}
-    
-	function fileIdToFileTitle($fileId){
+
+function fileIdToFileTitle($fileId){
 		$fileData = getFileData($fileId);
 		return $fileData['title'];
 	}
-    
-    
-	function elementIdToElementTitle($elementId){
+
+
+function elementIdToElementTitle($elementId){
 		$elementData = getElementData($elementId);
 		return $elementData['title'];
 	}
-	
-	function folderIdToFolderTitle($folderId){
+
+function folderIdToFolderTitle($folderId){
 		$folderData = getFolderData($folderId);
 		return $folderData['name'];
 		
 	}
-	
-	function fileIdToFileType($fileId){
+
+function fileIdToFileType($fileId){
         $fileData = mysql_fetch_array(mysql_query("SELECT type FROM files WHERE id='".save($fileId)."'"));
         return $fileData['type'];
     }
     
-    function linkIdToFileType($fileId){
+function linkIdToFileType($fileId){
         
         $fileData = mysql_fetch_array(mysql_query("SELECT type FROM links WHERE id='".save($fileId)."'"));
         return $fileData['type'];
     }
-    
-    function getFileIcon($fileType, $full=false){
+
+function getFileIcon($fileType, $full=false){
         //turns filetype into src of icon
         //used in showFileList(); showItemThum();
         switch($fileType){
@@ -3348,88 +2652,23 @@ echo"</div>";
 //links
 //links
 //links
+include('classes/class_links.php');
+	
+	
+//shortcuts
+//shortcuts
+//shortcuts
 
-	function addLink($folder, $title, $type, $privacy, $link){
-             
-             
-    
-                $user = getUser();
+include('classes/class_internLink.php');
 
-                $time = time();
-                if(mysql_query("INSERT INTO `links` (`folder`, `type`, `title`, `link`, `privacy`, `author`, `timestamp`) VALUES ( '".save($folder)."', '".save($type)."', '".save($title)."', '".save($link)."', '$privacy', '$user', '$time');")){
-                	
-                	$feedText = "has created the link $title in the folder";
-                    $feedLink1 = mysql_insert_id();
-                    $feedLink2 = $folder;
-					
-                    addFeed($user, $feedText, folderAdd, $feedLink1, $feedLink2);
-					
-					return true;
-                }
-	}
+//folders
+include('classes/class_folder.php');
+
+//elements
+include('classes/class_element.php');
+
     
-    function deleteLink($linkId){
-        
-                $linkSql = mysql_query("SELECT * FROM links WHERE id='$linkId'");
-                $linkData = mysql_fetch_array($linkSql);
-                    
-                //file can only be deleted if uploader = deleter
-                if(authorize($linkData['privacy'], "edit", $linkData['author'])){
-                    
-                       if(mysql_query("DELETE FROM links WHERE id='$linkId'")){
-                           
-                           //delete comments
-                           deleteComments("link", $linkId);
-                           deleteFeeds("link", $linkId);
-                           deleteInternLinks("link", $linkId);
-                           
-                           
-                           
-                               return true;
-                       }else{
-                               return false;
-                       }
-                }else{
-                    return false;
-                }
-    }
-	
-	
-//shortcuts
-//shortcuts
-//shortcuts
-	
-	function createInternLink($parentType, $parentId, $type, $typeId, $title=NULL){
-	//creates shortcut
-		
-		//check if link allready exists
-		$linkCheckData = mysql_fetch_array(mysql_query("SELECT type FROM internLinks WHERE type='$type' AND typeId='$typeId'"));
-		if(empty($linkCheckData[type])){
-			
-			if(mysql_query("INSERT INTO `internLinks` (`id`, `parentType`, `parentId`, `type`, `typeId`, `title`) VALUES (NULL, '$parentType', '$parentId', '$type', '$typeId', '$title');")){
-				return true;
-			}
-			
-		}
-	}
-        
-    function deleteInternLink($linkId){
-    	//deletes single shortcut
-        if(mysql_query("DELETE FROM internLinks WHERE id='$linkId'")){
-            return true;
-        }
-    }
-    
-    function deleteInternLinks($parentType, $parentId){
-        //is used when element which the shortcut is linked to is deleted
-        if(mysql_query("DELETE FROM internLinks WHERE type='$parentType' AND typeId='$parentId'")){
-            return true;
-        }
-    }
-    
-    
-    
-    function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo=NULL, $extraInfo1=NULL, $extraInfo2=NULL,  $extraInfo3=NULL, $extraInfo4=NULL, $extraInfo5=NULL, $subpath){
+function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo=NULL, $extraInfo1=NULL, $extraInfo2=NULL,  $extraInfo3=NULL, $extraInfo4=NULL, $extraInfo5=NULL, $subpath){
         
         
         
@@ -3758,9 +2997,9 @@ echo"</div>";
         
         return $output;
     }
-    
-    
-    function loadFolderArray($type, $folder){
+
+
+function loadFolderArray($type, $folder){
         switch($type){
             
             //loads all subordinated folders of $folder
@@ -3803,25 +3042,9 @@ echo"</div>";
         
         return $return;
     }
-    
-    function showFolderPath($folder, $class=NULL){
-        
-        $folders = loadFolderArray("path", $folder);
-        
-        $return .= "<ul>";
-        $i = 0;
-        $folderNames = $folders['names'];
-        foreach($folders['ids'] AS &$folder){
-            $return .= "<li>$folderNames[$i]</li>";
-            $i++;
-        }
-        
-        $return .=  "</li>";
-        
-        return $return;
-    }
-    
-    function showFileBrowser($folder, $folderQuery=NULL, $elementQuery=NULL, $rightClick=true, $subpath=NULL){
+
+
+function showFileBrowser($folder, $folderQuery=NULL, $elementQuery=NULL, $rightClick=true, $subpath=NULL){
         echo'<table cellspacing="0" class="filetable">';
         
         //if folder is empty => execute folder- and elementQuery
@@ -3970,20 +3193,8 @@ echo"</div>";
     }
     
 	
-	function getElementData($elementId){
-		$query = mysql_query("SELECT * FROM `elements` WHERE id='".save($elementId)."'");
-		$data = mysql_fetch_array($query);
-		
-		return $data;
-	}
 	
-	function getFolderData($folderId){
-		$query = mysql_query("SELECT * FROM `folders` WHERE id='".save($folderId)."'");
-		$data = mysql_fetch_array($query);
-		return $data;
-	}
-	
-    function showFileList($element=NULL, $fileQuery=NULL, $git=NULL, $subpath=NULL){
+function showFileList($element=NULL, $fileQuery=NULL, $git=NULL, $subpath=NULL){
         //shows list of files which are in the element $element or which meets criteria of $fileQuery
         //if git=1 => only basic information without itemsettings etc.
         if(empty($element)){
@@ -4174,7 +3385,7 @@ echo"</div>";
 
     }
 
-	function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true, $select=NULL){
+function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true, $select=NULL){
 		
 		//$level is used to give the list a regular margin
 		//each time a new list is loaded inside the old one
@@ -4365,7 +3576,7 @@ echo"</div>";
 		
 	}
 
-	function protectFilesystemItem($type, $typeId){
+function protectFilesystemItem($type, $typeId){
 		if(hasRight('protectFileSystemItems')){
 			$type = save($type);
 			$typeId = save($typeId);
@@ -4427,7 +3638,7 @@ echo"</div>";
 			jsAlert("You dont have the rights to protect an Item.");
 		}
 	}
-	function removeProtectionFromFilesystemItem($type, $typeId){
+function removeProtectionFromFilesystemItem($type, $typeId){
 		
 		if(hasRight('editProtectedFilesystemItem')){
 			$type = save($type);
@@ -4486,7 +3697,7 @@ echo"</div>";
 		}
 	}
 
-	function makeFilesystemItemUndeletable($type, $typeId){
+function makeFilesystemItemUndeletable($type, $typeId){
 		
 		if(hasRight('undeletableFilesystemItems')){
 			$type = save($type);
@@ -4550,7 +3761,7 @@ echo"</div>";
 			jsAlert("You do not have the right to make Items undeletable.");
 		}
 	}
-	function makeFilesystemItemDeletable($type, $typeId){
+function makeFilesystemItemDeletable($type, $typeId){
 		if(hasRight("editUndeletableFilesystemItems")){
 		$type = save($type);
 		$typeId = save($typeId);
@@ -4608,8 +3819,8 @@ echo"</div>";
 		}
 	}
 	
-    //shows a picture of element or folder if available
-	function showThumb($type, $itemId){
+//shows a picture of element or folder if available
+function showThumb($type, $itemId){
         switch($type){
             case 'folder':
                 $elementSQL = mysql_query("SELECT id FROM elements WHERE folder='$itemId' ORDER BY RAND() LIMIT 0,1");
@@ -4640,7 +3851,7 @@ echo"</div>";
     
     
     
-    function showChatThumb($input){
+function showChatThumb($input){
         
         $itemType = $input[1];
         $itemId = $input[2];
@@ -4649,9 +3860,9 @@ echo"</div>";
         
         return $return;
     }
-    
-    //shows a box with item title, item link and settings
-    function showItemThumb($itemType, $itemId){
+
+//shows a box with item title, item link and settings
+function showItemThumb($itemType, $itemId){
         $itemId = save($itemId);
         
         switch($itemType){
@@ -4800,10 +4011,10 @@ echo"</div>";
         </div>";
         return $return;
     }
-    
-    
-    
-    function addChecksumToUffCookie($fileId, $checksum){
+
+
+
+function addChecksumToUffCookie($fileId, $checksum){
                 //for each opened UFF the file id is added to the $_SESSION[openUffs]
                 //and a $_SESSION with the checksum will be created, which shows the 
                 //reload.php if a reload of the document is nessacary
@@ -4850,8 +4061,8 @@ echo"</div>";
                     mysql_query("UPDATE files SET var1='$activeUserArray' WHERE id='$fileId'");
                 }
     }
-    
-    function removeUFFcookie($fileId){
+
+function removeUFFcookie($fileId){
                 //removes checksum and caller from $_SESSION so that the 
                 //reload.php dont handels and empty request
                 
@@ -4894,9 +4105,9 @@ echo"</div>";
                         
                     }
     }
-    
-    //loads content from UFF
-    function showUffFile($fileId, $subPath){
+
+//loads content from UFF
+function showUffFile($fileId, $subPath){
                 
                 if(empty($subPath)){
                 $filePath = "../../".getFullFilePath($fileId);
@@ -4913,8 +4124,8 @@ echo"</div>";
                 return $return;
     }
 
-    //writes Data into an UFF
-    function writeUffFile($fileId, $input, $subPath){
+//writes Data into an UFF
+function writeUffFile($fileId, $input, $subPath){
                 if(empty($subPath)){
                 $filePath = "../../".getFullFilePath($fileId);
                 }else{
@@ -4933,25 +4144,6 @@ echo"</div>";
 	
 	
 		
-		function sendMessage($receiver, $text, $crypted, $sender=NULL){
-			
-	        if($sender == NULL)
-	        	$sender = getUser();
-			
-			updateActivity($sender);
-	     	$buddy = $receiver;
-	        if($crypted == "true"){
-	            $crypt = "1";
-	        }else{
-	            $crypt = "0";
-	        }
-			
-			$message = addslashes($text);
-	        if(mysql_query("INSERT INTO `messages` (`sender`,`receiver`,`timestamp`,`text`,`read`,`crypt`) VALUES('$sender', '$buddy', '".time()."', '$text', '0', '$crypt');")){
-	        	return mysql_insert_id();
-	        }
-	        $postCheck = 1;
-		}
 class playlist{
 	public $playlist;
 	
@@ -5823,34 +5015,7 @@ class sec{
 	}
 }
 
-class users{
-	var $userid;
-   	function __construct($userid) {
-       $this->userid = $userid;
-	}
-	function getData($query='*'){
-		$data = mysql_fetch_array(mysql_query("SELECT $query FROM `user` WHERE `userid`='".save($this->userid)."'"));
-		return $data;
-	}
-	public function updateData($values){
-		foreach($values as $param=>$value) {
-		    
-			$query .= ", `".save($param)."`='".save($value)."' "; //will return "   ,`param`='value'   "
-			
-			
-		}
-	}
-	public function updateBirthdate(){
-		
-	}
-	public function updateUserpicture(){
-		
-	}
-	public function showUserpicture(){
-		
-	}
-	
-}
+include('classes/class_user.php');
 
 class groups{
 	public function get($userid=NULL){

@@ -157,5 +157,5 @@ if(!empty($newMessages) OR !empty($newFriends) OR !empty($newGroup) OR !empty($p
 	
 	
 	//reload page if session is expired
-	proofSession();
+	unverse::proofSession();
 } ?>

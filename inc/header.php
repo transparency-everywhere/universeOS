@@ -48,10 +48,8 @@
         <link rel="stylesheet" type="text/css" href="inc/css/style.css" media="all" />
         
         
-		<script type="text/javascript" src="inc/js/plugins.js"></script>
+	<script type="text/javascript" src="inc/js/plugins.js"></script>
         <script type="text/javascript" src="inc/js/functions.js"></script>
-        
-        <link href="inc/blue.monday/jplayer.blue.monday.css" rel="stylesheet" type="text/css" />
         
         <!-- <script type="inc/js/jquery.jplayer.min.js"></script> -->
         <script src="inc/bootstrap/js/bootstrap.min.js"></script>

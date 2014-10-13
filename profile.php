@@ -82,16 +82,6 @@ if(empty($friendButton)){
         }
     }
 }
-if(empty($friendButton)){
-    
-}
-
-
-if(isset($_GET['scoreaction'])){
-    if($_GET['scoreaction'] == 'voteplus'){
-        plusOne(getUser(), 'comments', $_GET['typeid']);
-    }
-}
 ?>   
     <div class="signatureGradient" style="height: 80px; padding: 15px; font-size: 17pt;">
         <span style="float: left;"><a href="#" onclick="showProfile(<?=$profiledata['userid'];?>)"><?=$profiledata['username'];?></a><span style="float: right"><?=$name;?></span><br><p style="font-size: 13pt;"><?=$birthtext;?> <?=$profileText;?></p>
