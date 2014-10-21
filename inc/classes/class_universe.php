@@ -30,3 +30,25 @@ class universe {
             }
     }
 }
+
+function universeText($str){
+    
+    $str = str_replace(":'(", '<a class="smiley smiley1"></a>', $str);//crying smilye /&#039; = '
+    $str = str_replace(':|', '<a class="smiley smiley2"></a>', $str);
+    $str = str_replace(';)', '<a class="smiley smiley3"></a>', $str);
+    $str = str_replace(':P', '<a class="smiley smiley4"></a>', $str);
+    $str = str_replace(':-D', '<a class="smiley smiley5"></a>', $str);
+    $str = str_replace(':D', '<a class="smiley smiley5"></a>', $str);
+    $str = str_replace(':)', '<a class="smiley smiley6"></a>', $str);
+    $str = str_replace(':(', '<a class="smiley smiley7"></a>', $str);
+    $str = str_replace(':-*', '<a class="smiley smiley8"></a>', $str);
+		$str = preg_replace("#(^|[^\"=]{1})(http://|ftp://|mailto:|https://)([^\s<>]+)([\s\n<>]|$)#sm","\\1<a target=\"_blank\" href=\"\\2\\3\">\\3</a>\\4",$str);
+    # Links
+    $str = preg_replace_callback("#\[itemThumb type=(.*)\ typeId=(.*)\]#", 'showChatThumb' , $str);
+
+  
+
+    return $str;
+}
+	
+	
