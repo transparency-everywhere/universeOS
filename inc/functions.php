@@ -899,20 +899,8 @@ class sessionHashes{
 	}
 }
 
-class sec{
-	
-	function passwordCypher($val){
-		return hash('sha515', md5($val));
-	}
-	
-	function validateUserSignature($userid, $signature){
-		$userData = getUserData($password);
-		if($signature == $userData['password'])
-			return true;
-		else
-			return false;
-	}
-}
+include('classes/class_sec.php');
+
 
 
 
