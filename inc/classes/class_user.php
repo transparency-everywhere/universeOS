@@ -267,3 +267,141 @@ function getUserFavOutput($user){
 		
 		
 	}
+
+        
+
+function deleteUser($userid, $reason){
+      $authorization = true;
+      if($authorization){
+          
+          //delete all files
+          $fileSQL = mysql_query("SELECT id FROM files WHERE owner='$userid'");
+          while($fileData = mysql_fetch_array($fileSQL)){
+              deleteFile($fileData['id']);
+              
+          }
+          
+          //delete all links
+          $linkSQL = mysql_query("SELECT id FROM links WHERE author='$userid'");
+          while($linkData = mysql_fetch_array($linkSQL)){
+              deleteLink($linkData['userid']);
+          }
+          
+          
+          //elements
+          $elementSQL = mysql_query("SELECT id FROM elements WHERE author='$userid'");
+          while($elementData = mysql_fetch_array($elementSQL)){
+              deleteElement($elementData['id']);
+          }
+          
+          
+          //folders
+          $folderSQL = mysql_query("SELECT id FROM folders creator='$userid'");
+          while($folderData = mysql_fetch_array($folderSQL)){
+              deleteFolder($folderData['id']);
+          }
+          
+          //comments
+          
+          
+          //buddy
+          mysql_query("DELETE FROM buddylist WHERE buddy='$userid' OR owner='$userid'");
+          
+          //delete user
+          mysql_query("DELETE FROM user WHERE userid='$userid'");
+         
+          
+          //log userid, username, reason
+          
+      }
+  }
+
+function showUserPicture($userid, $size, $subpath = NULL, $small = NULL /*defines if functions returns or echos and if script with bordercolor is loaded*/){
+    $picSQL = mysql_query("SELECT userid, lastactivity, userPicture, priv_profilePicture FROM user WHERE userid='".mysql_real_escape_string($userid)."'");
+    $picData = mysql_fetch_array($picSQL);
+    $time = time();
+    
+    $difference = ($time - $picData['lastactivity']);
+     if($difference < 90){
+        $color = "#B1FFAD";
+     }else{
+        $color = "#FD5E48";
+     }
+     
+    if(isset($subpath)) {
+        if($subpath !== "total"){
+        $path = "./../.";
+        $subPath = 1;
+        }
+        
+    }else{
+        $subPath = NULL;
+    }
+      
+        
+        $style = '';
+        //there are three different thumb sizes which are created when
+        //the userpicture is uploaded, depending on the requested size
+        //a different thumb needs to be choosen to minimize traffic
+        if($size < "25"){
+            $folderpath = "25";
+
+        } else if($size < "40"){
+            $folderpath = "40";
+
+        } else if($size < "300"){
+            $folderpath = "300";
+
+        }
+		$size.="px";
+    
+    if(empty($picData['userPicture'])){
+        
+        
+    	$class = "standardUser";
+    
+    }else{
+        
+		$class = "";
+		
+        if($subpath !== "total"){
+            
+            $src = "$path./upload/userFiles/$userid/userPictures/thumb/$folderpath/".$picData['userPicture']."";
+			if(empty($class)){
+            	$style = "background-image: url('$src');";
+			}
+        }else{
+            $src = "./upload/userFiles/$userid/userPictures/thumb/$folderpath/".$picData['userPicture']."";
+			if(empty($class)){
+            	$style = "background-image: url('$src');";
+			}
+        }
+        
+    }
+       
+
+        if($subpath !== "total"){
+            
+            $return="<div class=\"userPicture userPicture_$userid $class\" onload=\"updatePictureStatus('$userid', '$color');\" onclick=\"showProfile('$userid');\" style=\"width: $size; height: $size; border-color: $color; $style\"></div>";
+        }else{
+            $return="<div class=\"userPicture userPicture_$userid $class\" onload=\"updatePictureStatus('$userid', '$color');\" onclick=\"showProfile('$userid;');\" style=\"width: $size; height: $size; $style border-color: $color; $style\"></div>";
+        }
+      
+      
+      
+      
+        if($small){
+        	if(!empty($picData['userPicture'])){
+        		$style = " background-image: url(\\'$src\\');";
+				if($small == 'unescaped'){
+        			$style = " background-image: url(\\'$src\\');";
+				}
+			}
+			
+            $return="<div class=\"userPicture userPicture_$userid $class\" onload=\"updatePictureStatus(\'jjj$userid\', \\'$color\\');\" onclick=\"showProfile(\\'$userid\\');\" style=\"$style width: $size; height: $size; border-color: $color;\"></div>";
+
+            return $return;
+        }else{
+            echo $return;
+        }
+}

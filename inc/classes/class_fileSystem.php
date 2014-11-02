@@ -11,7 +11,7 @@
  *
  * @author niczem
  */
-class newPHPClass {
+class fileSystem {
     //put your code here
 }
 

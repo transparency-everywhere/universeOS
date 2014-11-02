@@ -544,3 +544,19 @@ class contextMenu{
 				}
 	}
 }
+
+
+
+//shows the settings button for folders, elements, files, playlists and posts.
+function showItemSettings($type, $itemId){
+        
+      $contextMenu = new contextMenu($type, $itemId, '', '');
+	  $output = $contextMenu->showItemSettings();
+	  return $output;
+    }
+function showRightClickMenu($type, $itemId, $title, $info1=NULL){
+     
+     $contextMenu = new contextMenu($type, $itemId, $title, $info1);
+	  $output = $contextMenu->showRightClick();
+	  echo $output;
+ }

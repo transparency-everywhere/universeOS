@@ -11,7 +11,7 @@
  *
  * @author niczem
  */
-class newPHPClass {
+class uff {
     //put your code here
 }
 
