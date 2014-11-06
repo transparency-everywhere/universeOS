@@ -12,9 +12,6 @@
  * @author niczem
  */
 class comments {
-    //put your code here
-}
-
 	
 function addComment($type, $itemid, $author, $message){
      $time = time();
@@ -34,19 +31,20 @@ function addComment($type, $itemid, $author, $message){
          	$personalEvents->create($itemid,$_SESSION['userid'],'comment','profile',$itemId);
        }
    }
-   
-function deleteComments($type, $itemid){
-       if(mysql_query("DELETE FROM `comments` WHERE `type`='$type' AND `typeid`='$itemid'")){
-           return true;
-       }
-   }
-   
-function countComment($type, $itemid){
-    $result = mysql_query("SELECT * FROM comments WHERE type='$type' && typeid='$itemid' ORDER BY timestamp");
-    $num_rows = mysql_num_rows($result);
-    return $num_rows;
-}
 
+   
+    function deleteComments($type, $itemid){
+           if(mysql_query("DELETE FROM `comments` WHERE `type`='$type' AND `typeid`='$itemid'")){
+               return true;
+           }
+    }
+   
+    function countComment($type, $itemid){
+        $result = mysql_query("SELECT * FROM comments WHERE type='$type' && typeid='$itemid' ORDER BY timestamp");
+        $num_rows = mysql_num_rows($result);
+        return $num_rows;
+    }
+    
 function showComments($type, $itemid) {
     if(proofLogin()){?>
     <div id="<?=$type;?>Comment_<?=$itemid;?>">    
@@ -87,23 +85,26 @@ function showComments($type, $itemid) {
             }
 
     }else{
+     $commentClass = new comments();
+        
     $comment_sql = mysql_query("SELECT * FROM comments WHERE type='$type' && typeid='$itemid' ORDER BY timestamp DESC");
-    while($comment_data = mysql_fetch_array($comment_sql)) { 
+    while($comment_data = mysql_fetch_array($comment_sql)) {
     $jsId = $comment_data['id'];
+    
+    
     ?>
     <div class="shadow subComment commentBox<?=$comment_data['id'];?>" id="<?=$type;?>Comment">
     <?=userSignature($comment_data['author'], $comment_data['timestamp']);?>
     <br><?=$comment_data['text'];?><br><br>
-
-    <div style="padding: 15px; margin-bottom: 20px;"><div><div style="float:left;"><?=showScore('comment', $comment_data['id']);?></div><div style="float:left; margin-left: 10px;"><?=showItemSettings('comment', $comment_data['id']);?></div></div>
-				<a href="javascript:showSubComment(<?=$jsId;?>);" class="btn btn-mini" style="float: right; margin-right: 30px; color: #606060;"><i class="icon-comment"></i>&nbsp;(<?=countComment("comment", $comment_data['id']);?>)</a></div>
-                <div class="shadow subComment" id="comment<?=$jsId;?>" style="display: none;"></div>
+        <div style="padding: 15px; margin-bottom: 20px;"><div><div style="float:left;"><?=showScore('comment', $comment_data['id']);?></div><div style="float:left; margin-left: 10px;"><?=showItemSettings('comment', $comment_data['id']);?></div></div>
+            <a href="javascript:showSubComment(<?=$jsId;?>);" class="btn btn-mini" style="float: right; margin-right: 30px; color: #606060;"><i class="icon-comment"></i>&nbsp;(<?=$commentClass->countComment("comment", $comment_data['id']);?>)</a></div>
+        <div class="shadow subComment" id="comment<?=$jsId;?>" style="display: none;"></div>
     </div>
 <?php
 }}
 echo"</div>";
 }
-    
+
 function showFeedComments($feedid){ 
     ?>
     <div id="feedComment_<?=$feedid;?>">
@@ -149,3 +150,7 @@ function showFeedComments($feedid){
     echo"</div>";
     echo"</div>";
     }
+}
+
+
+    

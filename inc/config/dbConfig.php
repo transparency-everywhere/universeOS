@@ -6,4 +6,8 @@
 
 	
 	$db = "staging";
+        
+        $universeBasePath = '/Applications/XAMPP/xamppfiles/htdocs/universe';
+        
+        define('universeBasePath', $universeBasePath);
 ?>

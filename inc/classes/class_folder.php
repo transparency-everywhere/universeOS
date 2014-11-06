@@ -16,6 +16,34 @@ class newPHPClass {
 }
 
 
+function createFolder($superiorFolder, $title, $user, $privacy){
+		
+		if(strpos($title, '/') == false){
+			$titleURL = urlencode($title);
+			
+			$title = mysql_real_escape_string($title);
+		    
+		    $foldersql = mysql_query("SELECT * FROM folders WHERE id='$superiorFolder'");
+		    $folderData = mysql_fetch_array($foldersql);
+		
+		    $folderpath = universeBasePath.'/'.getFolderPath($superiorFolder).urldecode("$titleURL");
+			if (!file_exists("$folderpath")) {
+		    mkdir($folderpath);
+		    $time = time();
+		    mysql_query("INSERT INTO `folders` (`folder`, `name`, `path`, `creator`, `timestamp`, `privacy`) VALUES ( '$superiorFolder', '$title', '$folderpath', '$user', '$time', '$privacy');");
+		    $folderId = mysql_insert_id();
+		    $feed = "has created a folder";
+		    createFeed($user, $feed, "", "showThumb", $privacy, "folder", $folderId);
+		    //return true;
+		    
+		    return $folderId;
+			}else{
+				jsAlert("The folder already exists.");
+			}
+		}else{
+			jsAlert("The title contains forbidden characters.");
+		}
+    }
 function showFolderPath($folder, $class=NULL){
         
         $folders = loadFolderArray("path", $folder);

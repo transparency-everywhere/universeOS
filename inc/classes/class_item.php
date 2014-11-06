@@ -364,6 +364,7 @@ function showItemThumb($itemType, $itemId){
 					
 		//add information
 		if(!empty($info[0]) || !empty($info[1])){
+                $classComments = new comments();
 		$return .=  "<td>
                         <table class=\"eightPt\">
                             <tr>
@@ -376,7 +377,7 @@ function showItemThumb($itemType, $itemId){
                 <tr height=\"22px\">
                     <td bgcolor=\"#F2F2F2\">".showItemSettings($itemType, $itemId)."</td>
                     <td bgcolor=\"#F2F2F2\" align=\"right\">
-                        <a href=\"#\" class=\"btn btn-mini disabled\" style=\"float: right; margin-right: 30px; color: #606060;\"><i class=\"icon-comment\"></i>&nbsp;(".countComment($itemType, $itemId).")</a>
+                        <a href=\"#\" class=\"btn btn-mini disabled\" style=\"float: right; margin-right: 30px; color: #606060;\"><i class=\"icon-comment\"></i>&nbsp;(".$classComments->countComment($itemType, $itemId).")</a>
                     </td>
                 </tr>
             </table>

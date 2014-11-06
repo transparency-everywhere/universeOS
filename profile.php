@@ -140,9 +140,11 @@ if(empty($friendButton)){
     <div id="profileFiles" class="profileSlider" style="display: none;">
         <?
         
+                        $fileSystem = new fileSystem();
+        
                         $folderQuery = "WHERE creator='$user' ORDER BY timestamp DESC";
                         $elementQuery = "WHERE author='$user' ORDER BY timestamp DESC";
-                        showFileBrowser($folder, "$folderQuery", "$elementQuery");
+                        $fileSystem->showFileBrowser($folder, "$folderQuery", "$elementQuery");
                         ?>
                         <table cellspacing="0" width="100%">
                         <?
@@ -192,7 +194,8 @@ if(empty($friendButton)){
             <center>
                     <div style="width: 90%; border:1px solid #c9c9c9;">
                     <?
-                    showComments('profile', $user, $profiledata['username'], $link);
+                    $classComments = new comments();
+                    $classComments->showComments('profile', $user, $profiledata['username'], $link);
                     ?>
                     </div>
             </center>

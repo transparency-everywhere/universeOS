@@ -5,7 +5,8 @@ include("inc/functions.php");
 if(proofLogin()){
 if(isset($_POST[comment])) {
     echo'<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>';
-    addComment($_POST[type], $_POST[itemid], $_POST[user], $_POST[comment]);
+    $commentClass = new comments();
+    $commentClass->addComment($_POST['type'], $_POST['itemid'], $_POST['user'], $_POST['comment']);
     
     
     ?>
@@ -24,11 +25,13 @@ if(isset($_POST[comment])) {
 }
 if($_GET[type] == "feed"){
 $commentid = $_GET[feedid];
-showFeedComments($commentid);
+$commentClass = new comments();
+$commentClass->showFeedComments($commentid);
     
 }
 else {
 $commentid = $_GET[id];
-showComments(comment, $commentid);
+$classComments = new comments();
+$classComments->showComments(comment, $commentid);
 }
 ?>

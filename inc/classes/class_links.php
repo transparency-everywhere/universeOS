@@ -47,7 +47,8 @@ class link {
                        if(mysql_query("DELETE FROM links WHERE id='$linkId'")){
                            
                            //delete comments
-                           deleteComments("link", $linkId);
+                           $classComments = new comments();
+                           $classComments->deleteComments("link", $linkId);
                            deleteFeeds("link", $linkId);
                            deleteInternLinks("link", $linkId);
                            

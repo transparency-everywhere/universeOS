@@ -62,7 +62,8 @@ echo'<table width="100%">';
 
 switch($type){
 	case "Folder":
-                        showFileBrowser($itemId, '', '', false,  '../');
+                        $fileSystem = new fileSystem();
+                        $fileSystem->showFileBrowser($itemId, '', '', false,  '../');
 		break;
 	case "Element":
 						echo'<style>';

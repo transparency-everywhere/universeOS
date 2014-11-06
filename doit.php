@@ -59,7 +59,8 @@ else if($_GET['action'] == "removeFav"){
   	}
 else if($_GET['action'] == "requestpositive"){
     	$buddy = $_GET['buddy'];
-        if(replyRequest($buddy)){
+        $buddyListClass = new buddylist();
+        if($buddyListClass->replyRequest($buddy)){
         	
 			$_SESSION['personalFeed'] = 0;
 	        echo"<script>parent.$('#friendRequest_$buddy').hide()</script>";
@@ -68,7 +69,8 @@ else if($_GET['action'] == "requestpositive"){
     }
 else if($_GET['action'] == "requestnegative"){
     	$buddy = $_GET['buddy'];
-        if(denyRequest($_GET['buddy'])){
+        $buddyListClass = new buddylist();
+        if($buddyListClass->denyRequest($_GET['buddy'])){
         	
 	        echo"<script>parent.$('#friendRequest_$buddy').hide()</script>";
 	        jsAlert("worked :)");
@@ -77,9 +79,11 @@ else if($_GET['action'] == "requestnegative"){
     }
 else if($_GET['action'] == "addbuddy"){
     	
-		$buddy = save($_GET['buddy']);
+        $buddyListClass = new buddylist();
+    
+	$buddy = save($_GET['buddy']);
 		
-    	$check = addBuddy($buddy);
+    	$check = $buddyListClass->addBuddy($buddy);
 		if($check){
 		$message = "The Buddy was added.";
 		$_SESSION['personalFeed'] = 0;
@@ -98,9 +102,9 @@ else if($_GET['action'] == "addbuddy"){
 		}
      }
 else if($_GET['action'] == "addToNotSuggestList"){
-     	
-		 addToNotSuggestList($_GET['user']);
-		 echo"<script>parent.$('#buddySuggestions').load('doit.php?action=showBuddySuggestList');</script>";
+                $buddylistClass = new buddylist();
+		$buddylistClass->addToNotSuggestList($_GET['user']);
+		echo"<script>parent.$('#buddySuggestions').load('doit.php?action=showBuddySuggestList');</script>";
 		 
      }
 else if($_GET['action'] == "showBuddySuggestList"){
@@ -109,7 +113,8 @@ else if($_GET['action'] == "showBuddySuggestList"){
      }
 else if($_GET['action'] == "deleteBuddy"){
      	$buddy = $_GET['buddy'];
-     	deleteBuddy($buddy);
+        $buddyListClass = new buddylist();
+     	$buddyListClass->deleteBuddy($buddy);
 		jsAlert("The Buddy was removed from your Buddylist.");
 		echo "<script>parent.$('.buddy_$buddy').hide()</script>";
      }
@@ -534,17 +539,19 @@ else if($_GET['action'] == "declineGroup"){
          jsAlert("Declined..");
      }
 else if($_GET['action'] == "loadPersonalFileFrame"){
+    
          //is used to load filelists into the reader home view
          $query = save($_GET['query']);
          switch($query){
              case allFiles:
                   
                   $user = $_SESSION['userid'];
+                  $fileSystem = new fileSystem();
                  
                   //show folders and elements
                   $folderQuery = "WHERE creator='$user' ORDER BY timestamp DESC";
                   $elementQuery = "WHERE author='$user' ORDER BY timestamp DESC";
-                  showFileBrowser($folder, "$folderQuery", "$elementQuery");
+                  $fileSystem->showFileBrowser($folder, "$folderQuery", "$elementQuery");
                   
                   //show files
                   $fileQuery = "owner='$user' ORDER BY timestamp DESC";
@@ -565,8 +572,8 @@ else if($_GET['action'] == "loadPersonalFileFrame"){
          
      }
 else if($_GET['action'] == "loadMiniBrowser"){
-     	
-		showMiniFileBrowser("".$_GET['folder']."", "".$_GET['element']."", "".$_GET['level']."", false, $_GET['select']);
+                $fileSystem = new fileSystem();
+		$fileSystem->showMiniFileBrowser("".$_GET['folder']."", "".$_GET['element']."", "".$_GET['level']."", false, $_GET['select']);
      	
      }
 else if($_GET['action'] == "addFolder"){
@@ -857,8 +864,8 @@ else if($_GET['action'] == "addInternLink"){
 												
 												<?
 												echo "$hiddenInput";
-												
-												showMiniFileBrowser("1");
+												$fileSystem = new fileSystem();
+												$fileSystem->showMiniFileBrowser("1");
 												
 												?>
 												
@@ -1237,7 +1244,8 @@ else if($_GET['action'] == "groupInviteUsers"){
 	                                    <div>
 	                                        <ul>
 					                        <?
-								            $buddies = buddyListArray();
+                                                                            $buddyListClass = new buddylist();
+								            $buddies = $buddyListClass->buddyListArray();
 											foreach($buddies AS $buddy){
 												if(!in_array($buddy, $users)){
 													$username =  useridToUsername($buddy);
@@ -1389,7 +1397,8 @@ else if($_GET['action'] == "chatSendItem"){
                                 	<?php
                                 		echo"<h3>Please choose a File from the Filesystem:</h3>";
                                 		echo"<div>";
-												showMiniFileBrowser("1");
+                                                $fileSystem = new fileSystem();
+						$fileSystem->showMiniFileBrowser("1");
                                 		echo"</div>";
 									?>
                                 </div>
@@ -1667,10 +1676,11 @@ else if($_GET['action'] == "addGroup"){
      <?php
     }}}
 else if($_GET['action'] == "showSingleComment"){
+        $classComments = new comments();
         if($_GET['type'] == "feed"){
-            showFeedComments($_GET['itemid']);
+            $classComments->showFeedComments($_GET['itemid']);
         }else{
-            showComments($_GET['type'], $_GET['itemid']);
+            $classComments->showComments($_GET['type'], $_GET['itemid']);
         }
     }
 else if($_GET['action'] == "showStartMessage"){
@@ -2976,14 +2986,15 @@ else if($_GET['action'] == "logout"){
             }
 else if($_GET['action'] == "tester"){
             	
-				//mysql_query("DELETE FROM messages WHERE 1=1");
-				$db = new db();
-
-				$array['one'] = 'uno';
-				$array['two'] = 'dos';
-				$array['three'] = 'quatro';
-				
-				echo $db->insert('table', $array);
+//				//mysql_query("DELETE FROM messages WHERE 1=1");
+//				$db = new db();
+//
+//				$array['one'] = 'uno';
+//				$array['two'] = 'dos';
+//				$array['three'] = 'quatro';
+//				
+//				echo $db->insert('table', $array);
+    echo getFolderPath(1);
 	     		
             }
 ?>

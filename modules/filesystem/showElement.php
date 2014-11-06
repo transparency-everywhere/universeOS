@@ -75,14 +75,15 @@ if($elementData['type'] == "image"){
 			<? }
 			
 			if($changeUserPicture){ ?>
-				<a href="#" onclick="showModuleSettings();" class="btn btn-info">&nbsp;change Userpicture&nbsp;</a>
+				<a href="#" onclick="standardModules.showSettings();" class="btn btn-info">&nbsp;change Userpicture&nbsp;</a>
 			<? }
 			?>
 	    </center>
         <hr>
             <div>
                 <?
-                showComments(element, $elementData[id]);
+                $classComments = new comments();
+                $classComments->showComments(element, $elementData[id]);
                 ?>
             </div>
 <?    
@@ -159,7 +160,8 @@ if($elementData['type'] == "image"){
     <hr>
     <div>
         <?
-        showComments('element', $elementData['id']);
+        $classComments = new comments();
+        $classComments->showComments('element', $elementData['id']);
         ?>
     </div>
 </div>

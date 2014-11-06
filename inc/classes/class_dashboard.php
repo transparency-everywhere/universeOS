@@ -240,6 +240,4 @@ class dashBoard{
 		
 		return $this->showDashBox($title, $output,$footer, "task", $grid);
 	}
-	
-	
 }

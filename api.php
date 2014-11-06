@@ -10,7 +10,8 @@ $action = $_GET['action'];
 
 switch($action){
 	case 'authentificate':
-		echo userLogin($_POST['username'], $_POST['password']);
+                $user = new user();
+		echo $user->login($_POST['username'], $_POST['password']);
 		break;
 	case 'getUserCypher':
 			if(empty($_POST['userid'])){
@@ -138,21 +139,24 @@ switch($action){
     break;
 	case 'getBuddylist':
 		if(proofLoginMobile($_POST['userid'], $_POST['hash'])){
-			echo json_encode(buddyListArray($_POST['userid']));
+                        $buddyListClass = new buddylist();
+			echo json_encode($buddyListClass->buddyListArray($_POST['userid']));
 		}
 		break;
 	case 'getOpenRequests':
 		$user = $_POST['userid'];
+                $buddyListClass = new buddylist();
 		if(proofLoginMobile($_POST['userid'], $_POST['hash'])){
-			echo json_encode(getOpenRequests($user));
+			echo json_encode($buddyListClass->getOpenRequests($user));
 		}
 		break;
 	case 'replyFriendRequest':
 		
 			$user = $_POST['userid'];
 			$buddy = $_POST['buddy'];
+                        $buddyListClass = new buddylist();
 			if(proofLoginMobile($_POST['userid'], $_POST['hash'])){
-				replyRequest($buddy, $user);
+				$buddyListClass->replyRequest($buddy, $user);
 			}
 			
 		break;
@@ -161,16 +165,17 @@ switch($action){
 			
 			$user = $_POST['userid'];
 			$buddy = $_POST['buddy'];
+                        $buddyListClass = new buddylist();
 			if(proofLoginMobile($_POST['userid'], $_POST['hash'])){
-				denyRequest($buddy, $user);
+				$buddyListClass->denyRequest($buddy, $user);
 			}
 				
 	
 		break;
 	case 'addBuddy':
 		if(proofLoginMobile($_POST['userid'], $_POST['hash'])){
-			
-			if(addBuddy($_POST['buddy'], $_POST['userid'])){
+			$buddyListClass = new buddylist();
+			if($buddyListClass->addBuddy($_POST['buddy'], $_POST['userid'])){
 				echo true;
 			}else{
 				echo false;
@@ -395,9 +400,9 @@ switch($action){
                 //shows just entries of buddies
                 case "friends":
 
-
+                    $buddyListClass = new buddylist();
                     //get all users which are in the buddylist
-                    $buddies = buddyListArray();
+                    $buddies = $buddyListClass->buddyListArray();
                     $buddies[] = $_SESSION['userid'];
                     $buddies = join(',',$buddies);  
                     //push array with the user, which is logged in
@@ -474,7 +479,8 @@ switch($action){
         if(checkMobileAuthentification($username, $hash)){
             
             $commentid = $_GET['feedid'];
-            showFeedComments($commentid);
+            $commentClass = new comments();
+            $commentClass->showFeedComments($commentid);
             
         }
         

@@ -62,9 +62,9 @@ class playlists {
                 $query = "$query OR (INSTR(`privacy`, '{$userGroup}') > 0)";
         }
 		
-		
+		$buddylistClass = new buddylist();
 			//get playlists from friends
-				$buddies = buddyListArray();
+				$buddies = $buddylistClass->buddyListArray();
                 $buddies = join(',',$buddies);
                 $query .= "OR (INSTR(`user`, '{$buddies}') > 0)";
         

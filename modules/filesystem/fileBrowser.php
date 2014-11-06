@@ -110,7 +110,8 @@ $pathdata = mysql_fetch_array($pathsql);
 			
 			
 				if($showFileBrowser){
-                	showFileBrowser($folder, $folderQuery, $elementQuery);
+                                    $fileSystem = new fileSystem();
+                                    $fileSystem->showFileBrowser($folder, $folderQuery, $elementQuery);
 				}
 
 				if($fav){

@@ -126,5 +126,6 @@ if (!empty($memberData['itemId'])) {
 	    </table>
     </div>
     <?
-    showComments(group, $group, $GroupData[title], $link);
+    $classComments = new comments();
+    $classComments->showComments(group, $group, $GroupData[title], $link);
     ?>

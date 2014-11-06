@@ -15,6 +15,17 @@ class fav {
     //put your code here
 }
 
+   function favTable($type){
+       if($type == "folder"){
+           $typeTable = "folders";
+       }else if($type == "element"){
+           $typeTable = "elements";
+       }else if($type == "file"){
+           $typeTable = "files";
+       }
+       
+       echo $typeTable;
+   }
 
 function addFav($type, $typeid, $userid){
       $type = $_GET['type'];

@@ -191,11 +191,12 @@ if($_GET['action'] == "add"){
                     <div class="frameRight" id="personalFileFrame">
                         <?
 		                  $user = $_SESSION['userid'];
+                                  $fileSystem = new fileSystem();
 		                 
 		                  //show folders and elements
 		                  $folderQuery = "WHERE creator='$user' ORDER BY timestamp DESC";
 		                  $elementQuery = "WHERE author='$user' ORDER BY timestamp DESC";
-		                  showFileBrowser($folder, "$folderQuery", "$elementQuery");
+		                  $fileSystem->showFileBrowser($folder, "$folderQuery", "$elementQuery");
 		                  
 		                  //show files
 		                  $fileQuery = "owner='$user' ORDER BY timestamp DESC";

@@ -15,8 +15,8 @@ if(empty($_GET['reload'])){
         <? } ?>
             <table width="100%" cellspacing="0">
             <?
-            
-            $buddies = buddyListArray();
+            $buddyListClass = new buddylist();
+            $buddies = $buddyListClass->buddyListArray();
 			foreach($buddies AS $buddy){
 				
 				$username =  useridToUsername($buddy);
@@ -54,7 +54,8 @@ if(empty($i)){
    </div>
    
    	<?
-	showBuddySuggestions();
+        
+	$buddyListClass->showBuddySuggestions();
 	?>
 </div>
 <? } ?>

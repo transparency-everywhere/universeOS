@@ -84,5 +84,4 @@ class events{
 		
 		return $data;
 	}
-
 }

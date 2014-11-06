@@ -90,55 +90,6 @@ include('classes/class_rss.php');
 
 include('classes/class_salt.php');
 
-function createUser($username, $password, $authSalt, $keySalt, $privateKey, $publicKey){
-    
-    $username = save($_POST['username']);
-    $sql = mysql_query("SELECT username FROM user WHERE username='$username'");
-    $data = mysql_fetch_array($sql);
-    
-    if(empty($data['username'])){
-        $time = time();
-        mysql_query("INSERT INTO `user` (`password`, `cypher`, `username`, `email`, `regdate`, `lastactivity`) VALUES ('$password', 'sha512_2', '$username', '', '$time', '$time')");
-        $userid = mysql_insert_id();
-		
-		//store salts
-		createSalt('auth', $userid, 'user', $userid, $authSalt);
-		createSalt('privateKey', $userid, 'user', $userid, $keySalt);
-			
-		//create signature
-		$sig = new signatures();
-		$sig->create('user', $userid, $privateKey, $publicKey);
-		
-        //create user folder(name=userid) in folder userFiles
-        $userFolder = createFolder("2", $userid, $userid, "h");
-        
-        //create folder for userpics in user folder
-        $pictureFolder = createFolder($userFolder, "userPictures", $userid, "h");
-        
-        //create thumb folders || NOT LISTED IN DB!
-        $path3 = ".//upload//userFiles//$userid//userPictures//thumb";
-        $path4 = ".//upload//userFiles//$userid//userPictures//thumb//25";
-        $path5 = ".//upload//userFiles//$userid//userPictures//thumb//40";
-        $path6 = ".//upload//userFiles//$userid//userPictures//thumb//300";
-        mkdir($path3);  //Creates Thumbnail Folder
-        mkdir($path4); //Creates Thumbnail Folder
-        mkdir($path5); //Creates Thumbnail Folder
-        mkdir($path6); //Creates Thumbnail Folder
-        
-        
-        //create Element "myFiles" in userFolder
-        $myFiles = createElement($userFolder, "myFiles", "myFiles", $userid, "h");
-        
-        //create Element "user pictures" to collect profile pictures
-        $pictureElement = createElement($pictureFolder, "profile pictures", "image", $userid, "p");
-
-
-        mysql_query("UPDATE user SET homefolder='$userFolder', myFiles='$myFiles', profilepictureelement='$pictureElement' WHERE userid='$userid'");
-
-        return true;
-    }
-      
-  }
   
 	
 
@@ -189,17 +140,6 @@ include('classes/class_buddylist.php');
     include('classes/class_feed.php');
 
     
-   function favTable($type){
-       if($type == "folder"){
-           $typeTable = "folders";
-       }else if($type == "element"){
-           $typeTable = "elements";
-       }else if($type == "file"){
-           $typeTable = "files";
-       }
-       
-       echo $typeTable;
-   }
    
    
    include('classes/class_universe.php');
@@ -209,40 +149,6 @@ include('classes/class_buddylist.php');
     include('classes/class_privacy.php');
     include('classes/class_playlists.php');
     
-	
-	
-    
-	
-
-    
-function createFolder($superiorFolder, $title, $user, $privacy){
-		
-		if(strpos($title, '/') == false){
-			$titleURL = urlencode($title);
-			
-			$title = mysql_real_escape_string($title);
-		    
-		    $foldersql = mysql_query("SELECT * FROM folders WHERE id='$superiorFolder'");
-		    $folderData = mysql_fetch_array($foldersql);
-		
-		    $folderpath = getFolderPath($superiorFolder).urldecode("$titleURL");
-			if (!file_exists("$folderpath")) {
-		    mkdir($folderpath);
-		    $time = time();
-		    mysql_query("INSERT INTO `folders` (`folder`, `name`, `path`, `creator`, `timestamp`, `privacy`) VALUES ( '$superiorFolder', '$title', '$folderpath', '$user', '$time', '$privacy');");
-		    $folderId = mysql_insert_id();
-		    $feed = "has created a folder";
-		    createFeed($user, $feed, "", "showThumb", $privacy, "folder", $folderId);
-		    //return true;
-		    
-		    return $folderId;
-			}else{
-				jsAlert("The folder already exists.");
-			}
-		}else{
-			jsAlert("The title contains forbidden characters.");
-		}
-    }
     
 function deleteFolder($folderId){
         
@@ -265,7 +171,8 @@ function deleteFolder($folderId){
                 system('/bin/rm -rf ' . escapeshellarg($folderpath));
                 
                 //delete comments, feeds and shortcuts
-                deleteComments("folder", $folderId);
+                $commentClass = new comments();
+                $commentClass->deleteComments("folder", $folderId);
                 deleteFeeds("folder", $folderId);
                 deleteInternLinks("folder", $folderId);
 				
@@ -273,8 +180,6 @@ function deleteFolder($folderId){
 				return true;
         
     }
-    
-    
 
 
 function uploadTempfile($file, $element, $folder, $privacy, $user, $lang=NULL, $download=true){
@@ -417,7 +322,8 @@ function deleteFile($fileId){
                     	if(mysql_query("DELETE FROM files WHERE id='$fileId'")){
                            
                            //delete comments
-                           deleteComments("file", $fileId);
+                           $commentClass = new comments();
+                           $commentClass->deleteComments("file", $fileId);
                            deleteFeeds("file", $fileId);
                            deleteInternLinks("file", $fileId);
                            

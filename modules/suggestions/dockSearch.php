@@ -21,9 +21,8 @@ if(strlen("$_POST[search]") > 2){
 				        <?
 					}
 				}else if($_POST['search'] == "/test"){
-				    
-				    jsAlert(array_values(buddyListArray("1"))."asdasd");
-				    
+				    $buddylistClass = new buddylist();
+				    jsAlert(array_values($buddylistClass->buddyListArray("1"))."asdasd");
 				}else{
 					
 

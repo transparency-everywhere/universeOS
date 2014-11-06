@@ -12,9 +12,8 @@
  * @author niczem
  */
 class buddylist {
-    //put your code here
-}
-function addBuddy($buddyid, $user=false){
+    
+    function addBuddy($buddyid, $user=false){
    		if(!$user){
    			$user = getUser();
    		}
@@ -59,7 +58,6 @@ function addBuddy($buddyid, $user=false){
 		return $message;
 		
 	}
-
 	function replyRequest($buddy, $user=false){
 		
    		if(!$user){
@@ -77,7 +75,6 @@ function addBuddy($buddyid, $user=false){
  		mysql_query("INSERT INTO `buddylist` (`owner`, `buddy`,`timestamp`,`request`) VALUES('".$user."', '".mysql_real_escape_string($buddy)."', '$timestamp', '0');");
 		return true;
 	}
-
 	function denyRequest($buddy, $user=false){
    		if(!$user){
    			$user = getUser();
@@ -86,35 +83,32 @@ function addBuddy($buddyid, $user=false){
 		$user = save($user);
 		$buddy = save($buddy);
 		
-        mysql_query("DELETE FROM buddylist WHERE owner='".$buddy."' && buddy='".$user."'");
-        mysql_query("DELETE FROM buddylist WHERE owner='".$user."' && buddy='".$buddy."'");
-        return true;
+                mysql_query("DELETE FROM buddylist WHERE owner='".$buddy."' && buddy='".$user."'");
+                mysql_query("DELETE FROM buddylist WHERE owner='".$user."' && buddy='".$buddy."'");
+                return true;
 	}
+        function deleteBuddy($buddy, $user=false){
+                     if(!$user){
+                             $user = getUser();
+                     }
 
+                     mysql_query("DELETE FROM `buddylist` WHERE owner='".save($user)."' AND buddy='".save($buddy)."'");
+                     mysql_query("DELETE FROM `buddylist` WHERE buddy='".save($user)."' AND owner='".save($buddy)."'");
 
-   function deleteBuddy($buddy, $user=false){
-   		if(!$user){
-   			$user = getUser();
-   		}
-		
-		mysql_query("DELETE FROM `buddylist` WHERE owner='".save($user)."' AND buddy='".save($buddy)."'");
-		mysql_query("DELETE FROM `buddylist` WHERE buddy='".save($user)."' AND owner='".save($buddy)."'");
-	
-   }
-   
-   function getOpenRequests($user=NULL){
-        if(empty($user)){
-            $user= getUser();
         }
-		
-		$friendRequestSql = mysql_query("SELECT owner FROM buddylist WHERE buddy='".$user."' && request='1'");
-		while($friendRequestData = mysql_fetch_array($friendRequestSql)){
-			$userid = $friendRequestData['owner'];
-			$return[$userid] = useridToUsername($userid);
-		}
-		
-		return $return; 
-   }
+        function getOpenRequests($user=NULL){
+             if(empty($user)){
+                 $user= getUser();
+             }
+
+                     $friendRequestSql = mysql_query("SELECT owner FROM buddylist WHERE buddy='".$user."' && request='1'");
+                     while($friendRequestData = mysql_fetch_array($friendRequestSql)){
+                             $userid = $friendRequestData['owner'];
+                             $return[$userid] = useridToUsername($userid);
+                     }
+
+                     return $return; 
+        }
 
    function buddyListArray($user=NULL, $request=0){
    //returns all buddies of $user
@@ -132,17 +126,6 @@ function addBuddy($buddyid, $user=false){
        
    }
    
-   function buddy($userid){
-   	//checks if user with id=$userid is buddy
-   	//of user with id=$_SESSION[userid]
-   	
-   	$buddies = buddyListArray($userid);
-	
-	if(in_array($_SESSION['userid'], $buddies) OR $userid == $_SESSION['userid']){
-		return true;
-	}
-   }
-   
    function friendsYouMayKnow(){
        //returns an array with people that match the buddylist of >2 friends
        
@@ -150,15 +133,15 @@ function addBuddy($buddyid, $user=false){
        //request is used for sql-injection to also
        //get buddies who didn't answered the
        //request
-       $buddies = buddyListArray('', "1' OR request='0");
+       $buddies = $this->buddyListArray('', "1' OR request='0");
        
-	   $notSuggest = getNotSuggestList(); //get array of users that will not be suggested
+	   $notSuggest = $this->getNotSuggestList(); //get array of users that will not be suggested
        
        //return every single buddy
        foreach($buddies AS &$buddy){
            
            //get every buddy of this buddy
-           $buddiesOfBuddy = buddyListArray($buddy);
+           $buddiesOfBuddy = $this->buddyListArray($buddy);
            
            
            //return every single buddy of this buddy
@@ -202,12 +185,11 @@ function addBuddy($buddyid, $user=false){
 			
 		 }
 	}
-
-	function addToNotSuggestList($user){
+        function addToNotSuggestList($user){
 		
 		$user = save(intval($user));
 		
-		$notSuggest = getNotSuggestList();
+		$notSuggest = $this->getNotSuggestList();
 		
 			if(!in_array($user, $notSuggest)){
 				
@@ -233,7 +215,7 @@ function addBuddy($buddyid, $user=false){
 	
 	function showBuddySuggestions($frame=true){
 		
-		$mayKnow = friendsYouMayKnow();
+		$mayKnow = $this->friendsYouMayKnow();
 		if(!empty($mayKnow)){
 			if($frame){
 				echo"<div id=\"buddySuggestions\">";
@@ -261,3 +243,19 @@ function addBuddy($buddyid, $user=false){
 			echo"<script>$('#buddySuggestions').hide();</script>";
 		}
 	}
+
+  
+   
+   function buddy($userid){
+   	//checks if user with id=$userid is buddy
+   	//of user with id=$_SESSION[userid]
+   	
+   	$buddies = $this->buddyListArray($userid);
+	
+	if(in_array($_SESSION['userid'], $buddies) OR $userid == $_SESSION['userid']){
+		return true;
+	}
+   }
+}
+
+

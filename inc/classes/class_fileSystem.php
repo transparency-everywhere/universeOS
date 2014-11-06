@@ -12,158 +12,155 @@
  * @author niczem
  */
 class fileSystem {
-    //put your code here
-}
-
-function showFileBrowser($folder, $folderQuery=NULL, $elementQuery=NULL, $rightClick=true, $subpath=NULL){
-        echo'<table cellspacing="0" class="filetable">';
-        
-        //if folder is empty => execute folder- and elementQuery
-        if(empty($folder)){
-            
-            if(isset($folderQuery)){
-                $query = $folderQuery;
-            }
-            
-            if(isset($folderQuery)){
-                $query2 = $elementQuery;
-            }
-            
-            
-        }else{
-            
-			//get userfolder
-			$userData = getUserData();
-			$userfolder = $userData['homefolder'];
-			
-			
-			//special folder handlers
-			
-			//userFolder
-			if($folder == "2"){
-				$folder = $userfolder;
-				$parentFolderData['folder'] = 1;
-			}
-			
-			if($folder == $userfolder){
-				$parentFolderData['folder'] = 1;
-			}
-			
-			
-            $query = "WHERE folder='$folder' ORDER BY name ASC";
-            $query2 = "WHERE folder='$folder' ORDER BY name ASC";
-            $shortCutQuery = "WHERE parentType='folder' AND parentId='$folder'";
-        }
-
-
-        if(!empty($query)){
-        	if(!empty($folder) && ($folder !== "1")){
-        		if($parentFolderData['folder'] !== 1)
-        			$parentFolderData = mysql_fetch_array(mysql_query("SELECT folder FROM folders WHERE id='".mysql_real_escape_string($folder)."'"));
-        		?>
-	            <tr class="strippedRow" height="30">
-	                <td width="30">&nbsp;<img src="<?=$subpath;?>gfx/icons/filesystem/folder.png" height="22"></td>
-	                <td><a href="<?=$subpath;?>out/?folder=<?=$parentFolderData['folder'];?>" onclick="openFolder('<?=$parentFolderData['folder'];?>'); return false;">...</a></td>
-	                <td width="50px">
-	                </td>
-	                <td width="50px"></td>
-	            </tr>
-        		<?php
-        	}
-        $filefsql = mysql_query("SELECT * FROM folders $query");
-        while($filefdata = mysql_fetch_array($filefsql)) {
-        if(authorize($filefdata['privacy'], "show", $filefdata['creator'])){
-        	
-        		$name = $filefdata['name'];
-        	//special folder handlers
-        	if($folder == 3){
-        		$name = getGroupName($filefdata['name']).'´s Files';
-			}
-			
-        ?>
-            <tr class="strippedRow" oncontextmenu="showMenu('folder<?=$filefdata['id'];?>'); return false;" height="30">
-                <td width="30"><?php
-            	if($rightClick){
-            	showRightClickMenu("folder", $filefdata['id'], $filefdata['name'], $filefdata['creator']);
-            	}?>&nbsp;<img src="<?=$subpath;?>gfx/icons/filesystem/folder.png" height="22"></td>
-                <td><a href="<?=$subpath;?>out/?folder=<?=$filefdata[id];?>" onclick="openFolder('<?=$filefdata['id'];?>'); return false;"><?=$name;?></a></td>
-                <td width="50px">
-                	<?php
-                	if($rightClick){
-                	echo showItemSettings('folder', $filefdata['id']);
-					}
-                	?>
-                </td>
-                <td width="50px"><?=showScore("folder", $filefdata['id']);?></td>
-            </tr>
-            <?php
-            }}}
-            $filedsql = mysql_query("SELECT * FROM elements $query2");
-            while($fileddata = mysql_fetch_array($filedsql)) {
-
-            $filefolderSQL = mysql_query("SELECT * FROM folders WHERE id='$folder'");
-            $fileFolderData = mysql_fetch_array($filefolderSQL);
-            $title = $fileddata['title'];
-            $title10 = substr("$title", 0, 10);
-            $title15 = substr("$title", 0, 25);
-
-            if(authorize($fileddata['privacy'], "show", $fileddata['author'])){
-            echo "<tr class=\"strippedRow\" oncontextmenu=\"showMenu('element".$fileddata['id']."'); return false;\" height=\"30\">";
-	            echo "<td width=\"30\">&nbsp;<img src=\"$subpath"."gfx/icons/filesystem/element.png\" height=\"22\"></td>";
-	            echo "<td><a href=\"$subpath"."out/?element=".$fileddata['id']."\" onclick=\"openElement('".$fileddata['id']."', '".addslashes($title10)."'); return false;\">$title15</a></td>";
-	            echo "<td width=\"80px\">";
-	                	if($rightClick){
-	                	echo showItemSettings('element', $fileddata['id']);
-						}
-	            echo "</td>";
-	            echo "<td width=\"50px\">".showScore("element", $fileddata['id'])."</td>";
-            echo "</tr>";
-            if($rightClick){
-            echo showRightClickMenu("element", $fileddata['id'], $title10, $fileddata['author']);
-            }}}
-            
-            $shortCutSql = mysql_query("SELECT * FROM internLinks $shortCutQuery");
-            while($shortCutData = mysql_fetch_array($shortCutSql)){
-                if($shortCutData['type'] == "folder"){
-                    
-                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT name, privacy FROM folders WHERE id='".$shortCutData['typeId']."'"));
-                    
-                    $title = $shortCutItemData['name'];
-                    $image = "folder.png";
-                    $link = "openFolder('".$shortCutData['typeId']."'); return false;";
-                    
-                }else if($shortCutData['type'] == "element"){
-                    
-                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy FROM elements WHERE id='".save($shortCutData[typeId])."'"));
-                    
-                    $title = $shortCutItemData['title'];
-                    $image = "element.png";
-                    $link = "openElement('".$shortCutData['typeId']."', '".addslashes(substr($shortCutItemData['title'],0,10))."'); return false;";
-                }
-                
-                echo'<tr class="strippedRow">';
-                    echo"<td>";
-                        echo"&nbsp;<img src=\"$subpath"."/gfx/icons/filesystem/$image\" height=\"22\"><i class=\"shortcutMark\"> </i>";
-                    echo"</td>";
-                    echo"<td>";
-                        echo"<a href=\"$subpath"."out/?$shortCutData[type]=$shortCutData[typeId]\" onclick=\"$link\">$title</a>";
-                    echo"</td>";
-                    echo"<td>";
-                    echo showItemSettings("internLink", $shortCutData['id']);
-                    echo"</td>";
-                    
-                echo"</tr>";
-                
-                
-                
-            }
-            
-            
-            echo"</table>";
-        
-    }
     
-	
+    function showFileBrowser($folder, $folderQuery=NULL, $elementQuery=NULL, $rightClick=true, $subpath=NULL){
+            echo'<table cellspacing="0" class="filetable">';
+
+            //if folder is empty => execute folder- and elementQuery
+            if(empty($folder)){
+
+                if(isset($folderQuery)){
+                    $query = $folderQuery;
+                }
+
+                if(isset($folderQuery)){
+                    $query2 = $elementQuery;
+                }
+
+
+            }else{
+
+                            //get userfolder
+                            $userData = getUserData();
+                            $userfolder = $userData['homefolder'];
+
+
+                            //special folder handlers
+
+                            //userFolder
+                            if($folder == "2"){
+                                    $folder = $userfolder;
+                                    $parentFolderData['folder'] = 1;
+                            }
+
+                            if($folder == $userfolder){
+                                    $parentFolderData['folder'] = 1;
+                            }
+
+
+                $query = "WHERE folder='$folder' ORDER BY name ASC";
+                $query2 = "WHERE folder='$folder' ORDER BY name ASC";
+                $shortCutQuery = "WHERE parentType='folder' AND parentId='$folder'";
+            }
+
+
+            if(!empty($query)){
+                    if(!empty($folder) && ($folder !== "1")){
+                            if($parentFolderData['folder'] !== 1)
+                                    $parentFolderData = mysql_fetch_array(mysql_query("SELECT folder FROM folders WHERE id='".mysql_real_escape_string($folder)."'"));
+                            ?>
+                        <tr class="strippedRow" height="30">
+                            <td width="30">&nbsp;<img src="<?=$subpath;?>gfx/icons/filesystem/folder.png" height="22"></td>
+                            <td><a href="<?=$subpath;?>out/?folder=<?=$parentFolderData['folder'];?>" onclick="openFolder('<?=$parentFolderData['folder'];?>'); return false;">...</a></td>
+                            <td width="50px">
+                            </td>
+                            <td width="50px"></td>
+                        </tr>
+                            <?php
+                    }
+            $filefsql = mysql_query("SELECT * FROM folders $query");
+            while($filefdata = mysql_fetch_array($filefsql)) {
+            if(authorize($filefdata['privacy'], "show", $filefdata['creator'])){
+
+                            $name = $filefdata['name'];
+                    //special folder handlers
+                    if($folder == 3){
+                            $name = getGroupName($filefdata['name']).'´s Files';
+                            }
+
+            ?>
+                <tr class="strippedRow" oncontextmenu="showMenu('folder<?=$filefdata['id'];?>'); return false;" height="30">
+                    <td width="30"><?php
+                    if($rightClick){
+                    showRightClickMenu("folder", $filefdata['id'], $filefdata['name'], $filefdata['creator']);
+                    }?>&nbsp;<img src="<?=$subpath;?>gfx/icons/filesystem/folder.png" height="22"></td>
+                    <td><a href="<?=$subpath;?>out/?folder=<?=$filefdata[id];?>" onclick="openFolder('<?=$filefdata['id'];?>'); return false;"><?=$name;?></a></td>
+                    <td width="50px">
+                            <?php
+                            if($rightClick){
+                            echo showItemSettings('folder', $filefdata['id']);
+                                            }
+                            ?>
+                    </td>
+                    <td width="50px"><?=showScore("folder", $filefdata['id']);?></td>
+                </tr>
+                <?php
+                }}}
+                $filedsql = mysql_query("SELECT * FROM elements $query2");
+                while($fileddata = mysql_fetch_array($filedsql)) {
+
+                $filefolderSQL = mysql_query("SELECT * FROM folders WHERE id='$folder'");
+                $fileFolderData = mysql_fetch_array($filefolderSQL);
+                $title = $fileddata['title'];
+                $title10 = substr("$title", 0, 10);
+                $title15 = substr("$title", 0, 25);
+
+                if(authorize($fileddata['privacy'], "show", $fileddata['author'])){
+                echo "<tr class=\"strippedRow\" oncontextmenu=\"showMenu('element".$fileddata['id']."'); return false;\" height=\"30\">";
+                        echo "<td width=\"30\">&nbsp;<img src=\"$subpath"."gfx/icons/filesystem/element.png\" height=\"22\"></td>";
+                        echo "<td><a href=\"$subpath"."out/?element=".$fileddata['id']."\" onclick=\"openElement('".$fileddata['id']."', '".addslashes($title10)."'); return false;\">$title15</a></td>";
+                        echo "<td width=\"80px\">";
+                                    if($rightClick){
+                                    echo showItemSettings('element', $fileddata['id']);
+                                                    }
+                        echo "</td>";
+                        echo "<td width=\"50px\">".showScore("element", $fileddata['id'])."</td>";
+                echo "</tr>";
+                if($rightClick){
+                echo showRightClickMenu("element", $fileddata['id'], $title10, $fileddata['author']);
+                }}}
+
+                $shortCutSql = mysql_query("SELECT * FROM internLinks $shortCutQuery");
+                while($shortCutData = mysql_fetch_array($shortCutSql)){
+                    if($shortCutData['type'] == "folder"){
+
+                        $shortCutItemData = mysql_fetch_array(mysql_query("SELECT name, privacy FROM folders WHERE id='".$shortCutData['typeId']."'"));
+
+                        $title = $shortCutItemData['name'];
+                        $image = "folder.png";
+                        $link = "openFolder('".$shortCutData['typeId']."'); return false;";
+
+                    }else if($shortCutData['type'] == "element"){
+
+                        $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy FROM elements WHERE id='".save($shortCutData[typeId])."'"));
+
+                        $title = $shortCutItemData['title'];
+                        $image = "element.png";
+                        $link = "openElement('".$shortCutData['typeId']."', '".addslashes(substr($shortCutItemData['title'],0,10))."'); return false;";
+                    }
+
+                    echo'<tr class="strippedRow">';
+                        echo"<td>";
+                            echo"&nbsp;<img src=\"$subpath"."/gfx/icons/filesystem/$image\" height=\"22\"><i class=\"shortcutMark\"> </i>";
+                        echo"</td>";
+                        echo"<td>";
+                            echo"<a href=\"$subpath"."out/?$shortCutData[type]=$shortCutData[typeId]\" onclick=\"$link\">$title</a>";
+                        echo"</td>";
+                        echo"<td>";
+                        echo showItemSettings("internLink", $shortCutData['id']);
+                        echo"</td>";
+
+                    echo"</tr>";
+
+
+
+                }
+
+
+                echo"</table>";
+
+    }
+
 function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true, $select=NULL){
 		
 		//$level is used to give the list a regular margin
@@ -355,6 +352,8 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 		
 	}
 
+}
+	
 function protectFilesystemItem($type, $typeId){
 		if(hasRight('protectFileSystemItems')){
 			$type = save($type);

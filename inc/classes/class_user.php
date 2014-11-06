@@ -246,6 +246,57 @@ function userSignature($userid, $timestamp, $subpath = NULL, $reverse=NULL){
     </div>
       <?php
   }
+  
+  
+function createUser($username, $password, $authSalt, $keySalt, $privateKey, $publicKey){
+    
+    $username = save($_POST['username']);
+    $sql = mysql_query("SELECT username FROM user WHERE username='$username'");
+    $data = mysql_fetch_array($sql);
+    
+    if(empty($data['username'])){
+        $time = time();
+        mysql_query("INSERT INTO `user` (`password`, `cypher`, `username`, `email`, `regdate`, `lastactivity`) VALUES ('$password', 'sha512_2', '$username', '', '$time', '$time')");
+        $userid = mysql_insert_id();
+		
+		//store salts
+		createSalt('auth', $userid, 'user', $userid, $authSalt);
+		createSalt('privateKey', $userid, 'user', $userid, $keySalt);
+			
+		//create signature
+		$sig = new signatures();
+		$sig->create('user', $userid, $privateKey, $publicKey);
+		
+        //create user folder(name=userid) in folder userFiles
+        $userFolder = createFolder("2", $userid, $userid, "h");
+        
+        //create folder for userpics in user folder
+        $pictureFolder = createFolder($userFolder, "userPictures", $userid, "h");
+        
+        //create thumb folders || NOT LISTED IN DB!
+        $path3 = universeBasePath."//upload//userFiles//$userid//userPictures//thumb";
+        $path4 = universeBasePath."//upload//userFiles//$userid//userPictures//thumb//25";
+        $path5 = universeBasePath."//upload//userFiles//$userid//userPictures//thumb//40";
+        $path6 = universeBasePath."//upload//userFiles//$userid//userPictures//thumb//300";
+        mkdir($path3);  //Creates Thumbnail Folder
+        mkdir($path4); //Creates Thumbnail Folder
+        mkdir($path5); //Creates Thumbnail Folder
+        mkdir($path6); //Creates Thumbnail Folder
+        
+        
+        //create Element "myFiles" in userFolder
+        $myFiles = createElement($userFolder, "myFiles", "myFiles", $userid, "h");
+        
+        //create Element "user pictures" to collect profile pictures
+        $pictureElement = createElement($pictureFolder, "profile pictures", "image", $userid, "p");
+
+
+        mysql_query("UPDATE user SET homefolder='$userFolder', myFiles='$myFiles', profilepictureelement='$pictureElement' WHERE userid='$userid'");
+
+        return true;
+    }
+      
+  }
 
 
 function getUserFavs($userid=NULL){

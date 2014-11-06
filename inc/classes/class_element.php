@@ -54,7 +54,8 @@ function getElementData($elementId){
 						deleteLink($linkId);
 					}
 					//delete all comments
-		            deleteComments("element", $elementId);
+                                        $commentClass = new comments();
+                                        $commentClass->deleteComments("element", $elementId);
 					//delete all feeds
 		            deleteFeeds("element", $elementId);
                                 //delete all shortcuts

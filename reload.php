@@ -18,7 +18,10 @@ $time = time();
                 $caller = "UFFsum_$file";
                 $filePath = getFullFilePath($file);
                 $checksum = md5_file($filePath);
-                if($_SESSION[$caller] != $checksum){?>
+                if($_SESSION[$caller] != $checksum){
+                ?>
+
+
         
         
                     if($('.uffViewer_<?=$file;?>').length > 0){
@@ -48,7 +51,8 @@ $time = time();
 
 
 //check if the buddylists needs to be reloaded
-$buddies = buddyListArray();
+$buddylistClass = new buddylist();
+$buddies = $buddylistClass->buddyListArray();
 
 if(!empty($buddies) && ($_SESSION['buddyListReload'] < (time()-60))){
 echo"$('#buddyListFrame').load('buddylist.php?reload=1');";
@@ -157,5 +161,5 @@ if(!empty($newMessages) OR !empty($newFriends) OR !empty($newGroup) OR !empty($p
 	
 	
 	//reload page if session is expired
-	unverse::proofSession();
+	universe::proofSession();
 } ?>

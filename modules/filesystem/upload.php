@@ -46,8 +46,9 @@ $folder = $_GET[folder];
 		<h1>Upload File</h1>
 			<?php
 			if(empty($_GET['element']) OR $_GET['element'] == "undefined"){
+                                $fileSystem = new fileSystem();
 				echo '<h3>Choose Element</h3>';
-				echo showMiniFileBrowser("1", '', '', true, "element");
+				echo $fileSystem->showMiniFileBrowser("1", '', '', true, "element");
 			}else{
 				
 				$elementData = getElementData($_GET['element']);

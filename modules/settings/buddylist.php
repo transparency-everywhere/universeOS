@@ -20,7 +20,8 @@
 	                jsAlert("worked :(");
 	            }
 			 echo"<ul>";
-			 $buddies = buddyListArray();
+                         $buddylistData = new buddylist();
+			 $buddies = $buddylistData->buddyListArray();
 			 	$i = 0;
 	         	foreach($buddies AS $buddy){
 	            $blUserSql = mysql_query("SELECT username FROM user WHERE userid='$buddy'");
