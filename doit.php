@@ -123,7 +123,8 @@ else if($_GET['action'] == "download"){
         $documentSQL = mysql_query("SELECT id, title, type, filename, privacy, owner FROM files WHERE id='".save($_GET['fileId'])."'");
         $documentData = mysql_fetch_array($documentSQL); 
 		if(authorize($documentData['privacy'], "show", $documentData['owner'])){
-	        $downloadfile = getFilePath($_GET['fileId']);
+                $file = new file();
+	        $downloadfile = $file->getFilePath($_GET['fileId']);
 	        $downloadfile = substr($downloadfile, 1);
 	        $filename = $documentData['filename'];
 	        $downloadfile = "upload/$downloadfile/$filename";
@@ -554,9 +555,10 @@ else if($_GET['action'] == "loadPersonalFileFrame"){
                   $fileSystem->showFileBrowser($folder, "$folderQuery", "$elementQuery");
                   
                   //show files
+                  $element = new element();
                   $fileQuery = "owner='$user' ORDER BY timestamp DESC";
                   echo'<table width="100%">';
-                  showFileList('', $fileQuery);
+                  $element->showFileList('', $fileQuery);
                   echo"</table>";
              break;
              case myFiles:
@@ -565,7 +567,8 @@ else if($_GET['action'] == "loadPersonalFileFrame"){
                   //show files
                   $fileQuery = "id='".$userData['myFiles']."'";
                   echo'<table width="100%">';
-                  showFileList('', $fileQuery);
+                  $element = new element();
+                  $element->showFileList('', $fileQuery);
                   echo"</table>";
              break;
          }
@@ -1887,7 +1890,8 @@ else if($_GET['action'] == "showSingleRssFeed"){
             $rssData = mysql_fetch_array($rssSql);
             
             echo"<div style=\"padding: 20px;\">";
-            echo getRssfeed("$rssData[link]","$linkData[title]","auto",10,3);
+            $rss = new rss();
+            echo $rss->getRssfeed("$rssData[link]","$linkData[title]","auto",10,3);
             echo"</div>";
         }
 else if($_GET['action'] == "deleteFromPersonals"){
@@ -2017,9 +2021,9 @@ else if($_GET['action'] == "deleteItem"){
                 $checkElementSql = mysql_query("SELECT folder, privacy, author FROM elements WHERE id='$itemId'");
                 $checkElementData = mysql_fetch_array($checkElementSql);
                 if(authorize($checkElementData['privacy'], "edit", $checkElementData['author'])){
-				
-                   	deleteElement($itemId);
-                    jsAlert("The Element has been deleted");
+                        $element = new element($itemId);
+                   	$element->delete();
+                        jsAlert("The Element has been deleted");
                     ?>
                         <script>
                             parent.addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?reload=1&folder=<?=$checkElementData['folder'];?>');
@@ -2872,7 +2876,7 @@ else if($_GET['action'] == "createNewUFF"){
 					    
             			$title10 = addslashes(substr($elementData['title'], 0, 10));
                         
-                        $path = getFolderPath($elementData['folder']);
+                        $path = universeBasePath.'/'.getFolderPath($elementData['folder']);
                         $filename = "$filename.UFF";
                         $folder = $element;
                         $timestamp = time();
@@ -2953,14 +2957,15 @@ else if($_GET['action'] == "createNewUFF"){
             <? }}
 else if($_GET['action'] == "loadUff"){
                 //is used to load content of a UFF
-                $id = save($_GET['id']);
-                echo showUffFile($id, '1');
+                $uff = new uff(save($_GET['id']));
+                echo $uff->show();
                 
             }
 else if($_GET['action'] == "writeUff"){
                 $id = save($_POST['id']);
                 $input = $_POST['input'];
-                writeUffFile($id, $input, '1');
+                $uff = new uff($id);
+                $uff->write($input);
                 
             }
 else if($_GET['action'] == "removeUFFcookie"){

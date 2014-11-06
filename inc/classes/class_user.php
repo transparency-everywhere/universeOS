@@ -114,7 +114,7 @@ function proofLogin(){
       }else{
           return false;
       }
-  }
+}
 
 function proofLoginMobile($user, $hash){
   	
@@ -285,10 +285,11 @@ function createUser($username, $password, $authSalt, $keySalt, $privateKey, $pub
         
         
         //create Element "myFiles" in userFolder
-        $myFiles = createElement($userFolder, "myFiles", "myFiles", $userid, "h");
+        $element = new element();
+        $myFiles = $element->create($userFolder, "myFiles", "myFiles", $userid, "h");
         
         //create Element "user pictures" to collect profile pictures
-        $pictureElement = createElement($pictureFolder, "profile pictures", "image", $userid, "p");
+        $pictureElement = $element->create($pictureFolder, "profile pictures", "image", $userid, "p");
 
 
         mysql_query("UPDATE user SET homefolder='$userFolder', myFiles='$myFiles', profilepictureelement='$pictureElement' WHERE userid='$userid'");
@@ -342,7 +343,8 @@ function deleteUser($userid, $reason){
           //elements
           $elementSQL = mysql_query("SELECT id FROM elements WHERE author='$userid'");
           while($elementData = mysql_fetch_array($elementSQL)){
-              deleteElement($elementData['id']);
+              $element = new element($elementData['id']);
+              $element->delete();
           }
           
           

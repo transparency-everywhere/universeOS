@@ -66,12 +66,13 @@ switch($type){
                         $fileSystem->showFileBrowser($itemId, '', '', false,  '../');
 		break;
 	case "Element":
+            $element = new element();
 						echo'<style>';
 						echo'img{ margin-top: -16px; }';
 						echo'</style>';
 						echo'<div>&nbsp;<img src="../gfx/icons/filesystem/folder.png" height="22" style="margin-top:0px;">';
 						echo'<a href="../out/?folder='.$data['folder'].'" onclick="openFolder(\''.$data['folder'].'\'); return false;">&nbsp;&nbsp;...</a></td></div>';
-                        showFileList($itemId, '', true, '../');
+                        $element->showFileList($itemId, '', true, '../');
 		break;
 	case "File":
 						echo"</table>";

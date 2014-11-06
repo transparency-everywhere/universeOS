@@ -164,7 +164,8 @@ function deleteFolder($folderId){
                 //select and delete element which are children of this folder
                 $childrenElementSQL = mysql_query("SELECT id FROM elements WHERE folder='$folderId'");
                 while($childrenElementData = mysql_fetch_array($childrenElementSQL)){
-                    deleteElement($childrenElementData[id]);
+                    $element = new element($childrenElementData['id']);
+                    $element->delete();
                 }
                 $folderpath = getFolderPath($folderId);
                 mysql_query("DELETE FROM folders WHERE id='$folderId'");
@@ -374,40 +375,6 @@ include('classes/class_fileSystem.php');
 
 
 //loads content from UFF
-function showUffFile($fileId, $subPath){
-                
-                if(empty($subPath)){
-                $filePath = "../../".getFullFilePath($fileId);
-                }else{
-                $filePath = getFullFilePath($fileId);
-                }
-
-                $file = fopen($filePath, 'r');
-                $return = fread($file, filesize($filePath));
-                fclose($file);
-                $checksum = md5_file($filePath);
-                
-                addChecksumToUffCookie($fileId, $checksum);
-                return $return;
-    }
-
-//writes Data into an UFF
-function writeUffFile($fileId, $input, $subPath){
-                if(empty($subPath)){
-                $filePath = "../../".getFullFilePath($fileId);
-                }else{
-                $filePath = getFullFilePath($fileId);
-                }
-
-                $file = fopen($filePath, 'w');
-
-                fwrite($file, $input);
-                fclose($file);
-
-                $checksum = md5_file($filePath);
-                addChecksumToUffCookie($fileId, $checksum);
-                return true;
-    }
 	
 include('classes/class_UFF.php');
 

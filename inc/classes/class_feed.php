@@ -48,13 +48,26 @@ class feed {
                 $folderAddData = mysql_fetch_array($folderAddSql);
                 $text = "<a href=\"#\" onclick=\"addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=".$folderAddData[id]."&reload=1');return false\"> ".$folderAddData[name]."/</a>";   
                 }
-$commentClass = new comments();                
+$commentClass = new comments();
+$contextMenu = new contextMenu('feed', "$feedData[feedid]");
 if($needStructure == "1"){ ?><div id="add"></div><? } ?>
     <div id="realFeed" class="feedNo<?=$feedData['feedid'];?>">
         <?=userSignature($feedData['owner'], $feedData['timestamp']);?>
-        <div style="padding: 10px;"><?=nl2br(htmlspecialchars($feedData['feed']));?><?=$text;?></div><br>
-        <div style="padding: 15px;"><div><?=showScore("feed", $feedData['feedid']);?><div style=" width: 150px; float:right; margin-top: -24px;"><?=showItemSettings('feed', "$feedData[feedid]");?></div></div></div>
-                <a href="javascript:showfeedComment(<?=$feedData['feedid'];?>);" class="btn btn-mini" style="float: right; margin-top: -29px; margin-right: 5px; color: #606060">comments&nbsp;(<?=$commentClass->countComment("feed", $feedData[feedid]);?>)</a><div class="shadow" id="feed<?=$feedData[feedid];?>" style="padding:15px; display:none;"></div>
+        <div style="padding: 10px;">
+            <?=nl2br(htmlspecialchars($feedData['feed']));?><?=$text;?>
+        </div><br>
+        <div style="padding: 15px;">
+            <div>
+                <?=showScore("feed", $feedData['feedid']);?>
+                <div style=" width: 150px; float:right; margin-top: -24px;">
+                    <?=$contextMenu->showItemSettings();?>
+                </div>
+            </div>
+        </div>
+        <a href="javascript:showfeedComment(<?=$feedData['feedid'];?>);" class="btn btn-mini" style="float: right; margin-top: -29px; margin-right: 5px; color: #606060">
+            comments&nbsp;(<?=$commentClass->countComment("feed", $feedData[feedid]);?>)
+        </a>
+        <div class="shadow" id="feed<?=$feedData[feedid];?>" style="padding:15px; display:none;"></div>
     </div>
     <?php
                 //feeds like the login feed are deleted after the validity passed
@@ -198,17 +211,20 @@ if($needStructure == "1"){ ?><div id="add"></div><? } ?>
            
                 
         $commentClass = new comments();
+        $contextMenu = new contextMenu('feed', $feedData['id']);
         if($needStructure == "1"){ ?><div id="add"></div><? } ?>
         <div id="realFeed" class="feedNo<?=$feedData['id'];?>">
             <?=userSignature($feedData['author'], $feedData['timestamp']);?>
-            <div style="padding: 10px;"><?=nl2br(universeText(htmlspecialchars($feedData['feed'])));?><?=$text;?></div><br>
+            <div style="padding: 10px;"><?=nl2br(universe::universeText(htmlspecialchars($feedData['feed'])));?><?=$text;?></div><br>
             <div style="padding: 15px;">
                 <?=$attachment;?>
             </div>
             <div style="padding: 15px;">
                 <div>
                     <?=showScore("feed", $feedData['id']);?>
-                    <div style="float:right; position: absolute; margin-top: -24px; margin-left: 108px;"><?=showItemSettings('feed', $feedData['id']);?></div>
+                    <div style="float:right; position: absolute; margin-top: -24px; margin-left: 108px;">
+                        <?=$contextMenu->showItemSettings();?>
+                    </div>
                 </div>
             </div>
             <a href="javascript:showfeedComment(<?=$feedData['id'];?>);" class="btn btn-mini" style="float: right; margin-top: -38px; margin-right: 15px; color: #606060"><i class="icon-comment"></i>&nbsp;(<?=$commentClass->countComment("feed", $feedData[id]);?>)</a>

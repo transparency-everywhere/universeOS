@@ -174,7 +174,8 @@ if($_GET['action'] == "add"){
 			            <?php
 			            $url = "http://feeds.bbci.co.uk/news/world/rss.xml";
 			            echo"<div style=\"padding: 20px;\">";
-			            showRssFeed($url);
+                                    $rss = new rss();
+			            $rss->showRssFeed($url);
 			            echo"</div>";
 			            ?>
                     </div>
@@ -201,7 +202,8 @@ if($_GET['action'] == "add"){
 		                  //show files
 		                  $fileQuery = "owner='$user' ORDER BY timestamp DESC";
 		                  echo'<table width="100%">';
-		                  showFileList('', $fileQuery);
+                                  $element = new element();
+		                  $element->showFileList('', $fileQuery);
 		                  echo"</table>";
                         ?>
                         

@@ -74,12 +74,25 @@ function showComments($type, $itemid) {
     }
     if($type == "comment"){
         $comment_sql = mysql_query("SELECT * FROM comments WHERE type='$type' && typeid='$itemid' ORDER BY timestamp DESC");
-        while($comment_data = mysql_fetch_array($comment_sql)) {?>
+        while($comment_data = mysql_fetch_array($comment_sql)) {
+            $contextMenu = new contextMenu('comment', $comment_data['id']);
+        ?>
+    
+    
             <div class="shadow subComment commentBox<?=$comment_data['id'];?>" id="<?=$type;?>Comment" style="background-color: #FFF;">
-            <?=userSignature($comment_data['author'], $comment_data['timestamp']);?>
-            <br><?=$comment_data['text'];?><br><br>
+                <?=userSignature($comment_data['author'], $comment_data['timestamp']);?>
+                <br><?=$comment_data['text'];?><br><br>
 
-            <div style="padding: 15px; "><div><span style="float:left;"><?=showScore(comment, $comment_data[id]);?></span><span style="float:left;"><?=showItemSettings('comment', $comment_data['id']);?></span></div></div>
+                <div style="padding: 15px; ">
+                    <div>
+                        <span style="float:left;">
+                        <?=showScore(comment, $comment_data[id]);?>
+                        </span>
+                        <span style="float:left;">
+                        <?=$contextMenu->showItemSettings();?>
+                        </span>
+                    </div>
+                </div>
             </div>
             <?php
             }
@@ -94,10 +107,22 @@ function showComments($type, $itemid) {
     
     ?>
     <div class="shadow subComment commentBox<?=$comment_data['id'];?>" id="<?=$type;?>Comment">
-    <?=userSignature($comment_data['author'], $comment_data['timestamp']);?>
+    <?=userSignature($comment_data['author'], $comment_data['timestamp']);
+    $contextMenu = new contextMenu('comment', $comment_data['id']);?>
     <br><?=$comment_data['text'];?><br><br>
-        <div style="padding: 15px; margin-bottom: 20px;"><div><div style="float:left;"><?=showScore('comment', $comment_data['id']);?></div><div style="float:left; margin-left: 10px;"><?=showItemSettings('comment', $comment_data['id']);?></div></div>
-            <a href="javascript:showSubComment(<?=$jsId;?>);" class="btn btn-mini" style="float: right; margin-right: 30px; color: #606060;"><i class="icon-comment"></i>&nbsp;(<?=$commentClass->countComment("comment", $comment_data['id']);?>)</a></div>
+        <div style="padding: 15px; margin-bottom: 20px;">
+            <div>
+                <div style="float:left;">
+                <?=showScore('comment', $comment_data['id']);?>
+                </div>
+                <div style="float:left; margin-left: 10px;">
+                    <?=$contextMenu->showItemSettings();?>
+                </div>
+            </div>
+            <a href="javascript:showSubComment(<?=$jsId;?>);" class="btn btn-mini" style="float: right; margin-right: 30px; color: #606060;">
+                <i class="icon-comment"></i>&nbsp;(<?=$commentClass->countComment("comment", $comment_data['id']);?>)
+            </a>
+        </div>
         <div class="shadow subComment" id="comment<?=$jsId;?>" style="display: none;"></div>
     </div>
 <?php
@@ -135,17 +160,23 @@ function showFeedComments($feedid){
     <?php
 
     $comment_sql = mysql_query("SELECT * FROM comments WHERE type='feed' && typeid='$feedid' ORDER BY timestamp DESC");
-    while($comment_data = mysql_fetch_array($comment_sql)) { 
-    ?>
-    <div class="shadow subComment commentBox<?=$comment_data['id'];?>" id="feedComment">
-    <?=userSignature($comment_data['author'], $comment_data['timestamp']);?>
-        <div style="margin: 7px;">
-            <br>
-            <?=$comment_data['text'];?><br><br>
-            <div style="padding: 15px;"><div style="margin-bottom:15px;"><span style="float:left;margin-right:15px;"><?=showScore('comment', $comment_data['id']);?></span><span style="float:left;"><?=showItemSettings('comment', $comment_data['id']);?></span></div></div>
+    while($comment_data = mysql_fetch_array($comment_sql)) {
+        $contextMenu = new contextMenu('comment', $comment_data['id']);
+        ?>
+        <div class="shadow subComment commentBox<?=$comment_data['id'];?>" id="feedComment">
+        <?=userSignature($comment_data['author'], $comment_data['timestamp']);?>
+            <div style="margin: 7px;">
+                <br>
+                <?=$comment_data['text'];?><br><br>
+                <div style="padding: 15px;">
+                    <div style="margin-bottom:15px;">
+                        <span style="float:left;margin-right:15px;"><?=showScore('comment', $comment_data['id']);?></span>
+                        <span style="float:left;"><?=$contextMenu->showItemSettings();?></span>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    <?php
+        <?php
     }
     echo"</div>";
     echo"</div>";

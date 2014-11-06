@@ -126,9 +126,10 @@ if($_GET[type] == "document"){
         //show RSS File
         if($linkData[type] == "RSS"){
         $url = $linkData[link];
+        $rss = new rss();
         ?>
         <div class="rssReader windowContent">
-                <?=getRssfeed("$url","$linkData[title]","auto",10,3);?>
+                <?=$rss->getRssfeed("$url","$linkData[title]","auto",10,3);?>
         </div>
         <?
         }
@@ -145,17 +146,18 @@ if($_GET[type] == "document"){
                 <?
                 $documentSQL = mysql_query("SELECT id, title, folder FROM files WHERE folder='$documentElementData[id]'");
                 while($documentData = mysql_fetch_array($documentSQL)){
-                $documentFolderSQL = mysql_query("SELECT path FROM folders WHERE id='$documentElementData[folder]'");
-                $documentFolderData = mysql_fetch_array($documentFolderSQL);
-                if($documentElementData[title] == "profile pictures"){
-                $folderPath = urldecode($documentFolderData[path]);    
-                $folderPath = "http://universeos.org/upload$folderPath/thumb/300/";
-                }else{
-                $path = getFolderPath($documentElementData[folder])."thumbs/";
-                }?>
-                    <td oncontextmenu="showMenu('image<?=$documentData[id];?>'); return false;"><div id="viewerClick<?=$documentData[id];?>"><a href="#" onclick="addAjaxContentToTab('Open <?=substr("$documentElementData[title]",0,10);?>','./modules/reader/showfile.php?type=image&id=<?=$documentData[id];?>');return false"><img src="<?=$path;?><?=$documentData[title];?>" height="100px"></a></div></td>   
-               <?
-                showRightClickMenu("image", $documentData[id], $documentElementData[title]);
+                        $documentFolderSQL = mysql_query("SELECT path FROM folders WHERE id='$documentElementData[folder]'");
+                        $documentFolderData = mysql_fetch_array($documentFolderSQL);
+                    if($documentElementData['title'] == "profile pictures"){
+                        $folderPath = urldecode($documentFolderData['path']);
+                        $folderPath = "http://universeos.org/upload$folderPath/thumb/300/";
+                    }else{
+                    $path = getFolderPath($documentElementData['folder'])."thumbs/";
+                    }?>
+                        <td oncontextmenu="showMenu('image<?=$documentData['id'];?>'); return false;"><div id="viewerClick<?=$documentData[id];?>"><a href="#" onclick="addAjaxContentToTab('Open <?=substr("$documentElementData[title]",0,10);?>','./modules/reader/showfile.php?type=image&id=<?=$documentData[id];?>');return false"><img src="<?=$path;?><?=$documentData[title];?>" height="100px"></a></div></td>   
+                   <?php
+                    $contextMenu = new contextMenu("image", $documentData['id'], $documentElementData['title']);
+                    $contextMenu->showRightClick();
                }?>
                     <script>
                         $("#viewerClick<?=$documentData[id];?>").click(function (){

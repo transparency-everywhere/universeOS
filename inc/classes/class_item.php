@@ -373,9 +373,11 @@ function showItemThumb($itemType, $itemId){
                             </tr>
                         </table>
                     </td>";}
+                $contextMenu = new contextMenu($itemType, $itemId);
+                    
 		$return .=  "</tr>
                 <tr height=\"22px\">
-                    <td bgcolor=\"#F2F2F2\">".showItemSettings($itemType, $itemId)."</td>
+                    <td bgcolor=\"#F2F2F2\">".$contextMenu->showItemSettings()."</td>
                     <td bgcolor=\"#F2F2F2\" align=\"right\">
                         <a href=\"#\" class=\"btn btn-mini disabled\" style=\"float: right; margin-right: 30px; color: #606060;\"><i class=\"icon-comment\"></i>&nbsp;(".$classComments->countComment($itemType, $itemId).")</a>
                     </td>

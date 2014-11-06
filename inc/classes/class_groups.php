@@ -93,7 +93,8 @@ function createGroup($title, $privacy, $description, $users){
                 }}
                 
                 $groupFolder = createFolder("3", $groupId, $userid, "$groupId//$groupId");
-				$groupElement = createElement($groupFolder, $title, "other", $userid,  "$groupId//$groupId");
+                $element = new element();
+		$groupElement = $element->create($groupFolder, $title, "other", $userid,  "$groupId//$groupId");
                 mysql_query("UPDATE `groups` SET `homeFolder`='$groupFolder', `homeElement`='$groupElement' WHERE id='$groupId'");
 
            		//add user which added group to group and validate

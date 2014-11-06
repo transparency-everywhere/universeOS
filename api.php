@@ -657,7 +657,8 @@ switch($action){
 		echo fileIdToFileTitle($_POST['fileId']);
 		break;
 	case 'elementIdToElementTitle':
-		echo elementIdToElementTitle($_POST['elementId']);
+            $element = new element($_POST['elementId']);
+		echo $element->getName();
 		break;
 	case 'folderIdToFolderTitle':
 		echo folderIdToFolderTitle($_POST['folderId']);

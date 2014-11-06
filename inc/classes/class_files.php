@@ -12,11 +12,14 @@
  * @author niczem
  */
 class files {
-    //put your code here
-}
-
-
-	
+    public $id;
+    
+    function __construct($id=NULL){
+        if($id != NULL){
+            $this->id = $id;
+        }
+            
+    }
     function getFilePath($fileId){
         $documentSQL = mysql_query("SELECT id, folder, filename FROM files WHERE id='$fileId'");
         $documentData = mysql_fetch_array($documentSQL);
@@ -28,6 +31,22 @@ class files {
 			
             return $path;
     }
+    //put your code here
+}
+
+    function getFilePath($fileId){
+        $documentSQL = mysql_query("SELECT id, folder, filename FROM files WHERE id='$fileId'");
+        $documentData = mysql_fetch_array($documentSQL);
+            $documentElementSQL = mysql_query("SELECT id, title, folder FROM elements WHERE id='$documentData[folder]'");
+            $documentElementData = mysql_fetch_array($documentElementSQL);
+			
+			$path = getFolderPath($documentElementData['folder']);
+			$path .= $documentData['filename'];
+			
+            return $path;
+    }
+
+	
     
     
     function getMime($filename) {

@@ -50,12 +50,12 @@ $folder = $_GET[folder];
 				echo '<h3>Choose Element</h3>';
 				echo $fileSystem->showMiniFileBrowser("1", '', '', true, "element");
 			}else{
-				
-				$elementData = getElementData($_GET['element']);
+				$element = new element($_GET['element']);
+				$elementData = $element->getElementData();
 				
 				echo '<h3>You will add the files to this element:<br>';
 				echo '<img src="gfx/icons/filesystem/element.png">&nbsp;';
-				echo getElementName($_GET['element']);
+				echo $element->getName();
 				echo '</h3>';
 				echo '<input type="hidden" name="typeId" value="'.$_GET['element'].'" class="choosenTypeId">';
 				echo '<p>';

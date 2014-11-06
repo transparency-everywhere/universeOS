@@ -150,7 +150,8 @@ if(empty($friendButton)){
                         <?
                         
                         $fileQuery = "owner='$user' ORDER BY timestamp DESC";
-                        showFileList('', $fileQuery);
+                        $element = new element();
+                        $element->showFileList('', $fileQuery);
                         echo"</table>";
         
         ?>

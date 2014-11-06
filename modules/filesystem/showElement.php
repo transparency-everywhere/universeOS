@@ -56,8 +56,8 @@ if($elementData['type'] == "image"){
             <td onclick="openFile('image', '<?=$documentData['id'];?>', '<?=$elementData['title'];?>');" oncontextmenu="showMenu('image<?=$documentData['id'];?>'); return false;"><img src="<?=getFullFilePath($documentData['id']);?>" height="100px"></td>   
                 
         <? 
-        
-        showRightClickMenu("image", $documentData['id'], $elementData['title'] , $documentData['owner']);
+        $contextMenu = new contextMenu("image", $documentData['id'], $elementData['title'] , $documentData['owner']);
+        $contextMenu->showRightClick();
         }} ?>
         </tr>
         </table>
@@ -144,7 +144,9 @@ if($elementData['type'] == "image"){
                 <td ></td>
             </tr>
             <?
-            showFileList($elementData['id']);
+            
+            $classElement = new element($elementData['id']);
+            $classElement->showFileList();
             ?>
                 
         </table>
@@ -155,7 +157,7 @@ if($elementData['type'] == "image"){
     	<a class="btn btn-info" href="#" onclick="loader('loader', 'doit.php?action=createNewUFF&element=<?=$element;?>'); " target="submitter"><i class="icon-file icon-white"></i> Create Document</a>
         <a href="#" onclick="openUploadTab('<?=$_GET['element'];?>');" class="btn btn-info"><i class="icon-file icon-white"></i>&nbsp;Upload File</a>
         &nbsp;<a href="#" onclick="popper('./doit.php?action=addLink&element=<?=$_GET['element'];?>')" class="btn btn-info"><i class="icon-globe icon-white"></i>&nbsp;Add Link</a>
-		<? } ?>
+		<?}?>
     </center>
     <hr>
     <div>

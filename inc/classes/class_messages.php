@@ -125,7 +125,7 @@ function markMessageAsRead($buddy, $user){
 				$messageClasses = "";
 		        $message = $chatData['text'];
 		    }
-		    $message = universeText($message);
+		    $message = universe::universeText($message);
 			
 			//show message
 		              echo '<div class="box-shadow chatMessage '.$class.'">';

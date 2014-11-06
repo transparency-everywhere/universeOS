@@ -82,14 +82,15 @@ class fileSystem {
                 <tr class="strippedRow" oncontextmenu="showMenu('folder<?=$filefdata['id'];?>'); return false;" height="30">
                     <td width="30"><?php
                     if($rightClick){
-                    showRightClickMenu("folder", $filefdata['id'], $filefdata['name'], $filefdata['creator']);
+                        $contextMenu = new contextMenu("folder", $filefdata['id'], $filefdata['name'], $filefdata['creator']);
+                        echo $contextMenu->showRightClick();
                     }?>&nbsp;<img src="<?=$subpath;?>gfx/icons/filesystem/folder.png" height="22"></td>
                     <td><a href="<?=$subpath;?>out/?folder=<?=$filefdata[id];?>" onclick="openFolder('<?=$filefdata['id'];?>'); return false;"><?=$name;?></a></td>
                     <td width="50px">
                             <?php
                             if($rightClick){
-                            echo showItemSettings('folder', $filefdata['id']);
-                                            }
+                                echo $contextMenu->showItemSettings();
+                            }
                             ?>
                     </td>
                     <td width="50px"><?=showScore("folder", $filefdata['id']);?></td>
@@ -99,26 +100,31 @@ class fileSystem {
                 $filedsql = mysql_query("SELECT * FROM elements $query2");
                 while($fileddata = mysql_fetch_array($filedsql)) {
 
-                $filefolderSQL = mysql_query("SELECT * FROM folders WHERE id='$folder'");
-                $fileFolderData = mysql_fetch_array($filefolderSQL);
-                $title = $fileddata['title'];
-                $title10 = substr("$title", 0, 10);
-                $title15 = substr("$title", 0, 25);
+                    $filefolderSQL = mysql_query("SELECT * FROM folders WHERE id='$folder'");
+                    $fileFolderData = mysql_fetch_array($filefolderSQL);
+                    $title = $fileddata['title'];
+                    $title10 = substr("$title", 0, 10);
+                    $title15 = substr("$title", 0, 25);
 
-                if(authorize($fileddata['privacy'], "show", $fileddata['author'])){
-                echo "<tr class=\"strippedRow\" oncontextmenu=\"showMenu('element".$fileddata['id']."'); return false;\" height=\"30\">";
-                        echo "<td width=\"30\">&nbsp;<img src=\"$subpath"."gfx/icons/filesystem/element.png\" height=\"22\"></td>";
-                        echo "<td><a href=\"$subpath"."out/?element=".$fileddata['id']."\" onclick=\"openElement('".$fileddata['id']."', '".addslashes($title10)."'); return false;\">$title15</a></td>";
-                        echo "<td width=\"80px\">";
-                                    if($rightClick){
-                                    echo showItemSettings('element', $fileddata['id']);
-                                                    }
-                        echo "</td>";
-                        echo "<td width=\"50px\">".showScore("element", $fileddata['id'])."</td>";
-                echo "</tr>";
-                if($rightClick){
-                echo showRightClickMenu("element", $fileddata['id'], $title10, $fileddata['author']);
-                }}}
+                    if(authorize($fileddata['privacy'], "show", $fileddata['author'])){
+                        echo "<tr class=\"strippedRow\" oncontextmenu=\"showMenu('element".$fileddata['id']."'); return false;\" height=\"30\">";
+                                echo "<td width=\"30\">&nbsp;<img src=\"$subpath"."gfx/icons/filesystem/element.png\" height=\"22\"></td>";
+                                echo "<td><a href=\"$subpath"."out/?element=".$fileddata['id']."\" onclick=\"openElement('".$fileddata['id']."', '".addslashes($title10)."'); return false;\">$title15</a></td>";
+                                echo "<td width=\"80px\">";
+                                            if($rightClick){
+                                                $contextMenu = new contextMenu("element", $fileddata['id'], $title10, $fileddata['author']);
+                                                echo $contextMenu->showItemSettings();
+                                                            }
+                                echo "</td>";
+                                echo "<td width=\"50px\">".showScore("element", $fileddata['id'])."</td>";
+                        echo "</tr>";
+                        if($rightClick){
+                            echo $contextMenu->showRightClick();
+                        }
+
+                    }
+                
+                }
 
                 $shortCutSql = mysql_query("SELECT * FROM internLinks $shortCutQuery");
                 while($shortCutData = mysql_fetch_array($shortCutSql)){
@@ -138,6 +144,8 @@ class fileSystem {
                         $image = "element.png";
                         $link = "openElement('".$shortCutData['typeId']."', '".addslashes(substr($shortCutItemData['title'],0,10))."'); return false;";
                     }
+                    
+                    $contextMenu = new contextMenu("internLink", $shortCutData['id']);
 
                     echo'<tr class="strippedRow">';
                         echo"<td>";
@@ -147,7 +155,7 @@ class fileSystem {
                             echo"<a href=\"$subpath"."out/?$shortCutData[type]=$shortCutData[typeId]\" onclick=\"$link\">$title</a>";
                         echo"</td>";
                         echo"<td>";
-                        echo showItemSettings("internLink", $shortCutData['id']);
+                            echo $contextMenu->showItemSettings();
                         echo"</td>";
 
                     echo"</tr>";
@@ -804,7 +812,8 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 						$title = $extraInfo1;
 					}
 			        $output .= "<div class=\"rssReader windowContent\">";
-			        $output .= getRssfeed("$url","$title","auto",10,3);
+                                $rss = new rss();
+			        $output .= $rss->getRssfeed("$url","$title","auto",10,3);
 			        $output .= "</div>";
 					
 	                break;
