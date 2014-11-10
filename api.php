@@ -457,7 +457,8 @@ switch($action){
         $username = save($_POST['username']);
         $hash = $_POST[hash];
         if(checkMobileAuthentification($username, $hash)){
-        showFeed('','','1');
+            $feedClass = new feed();
+            $feedClass->show('','','1');
         }
     break;
 	

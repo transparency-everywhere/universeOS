@@ -69,7 +69,8 @@ class element {
                                         $commentClass = new comments();
                                         $commentClass->deleteComments("element", $elementId);
 					//delete all feeds
-		            deleteFeeds("element", $elementId);
+                                        $feedClass = new feed();
+                                        $feedClass->deleteFeeds("element", $elementId);
                                 //delete all shortcuts
                     deleteInternLinks("element", $elementId);
 

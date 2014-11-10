@@ -55,7 +55,8 @@ else if($_GET['action'] == "addFav"){
         }
     }
 else if($_GET['action'] == "removeFav"){
-    	removeFav($_POST['type'], $_POST['typeId']);
+        $classFav = new fav();
+    	$classFav->remove($_POST['type'], $_POST['typeId']);
   	}
 else if($_GET['action'] == "requestpositive"){
     	$buddy = $_GET['buddy'];
@@ -697,7 +698,9 @@ else if($_GET['action'] == "addElement"){
         //add feed
         $elementId = mysql_insert_id();
         $feed = "has created an element";
-        createFeed($user, $feed, "", "showThumb", $privacy, "element", $elementId);
+        
+        $feedClass = new feed();
+        $feedClass->create($user, $feed, "", "showThumb", $privacy, "element", $elementId);
     
         if($_POST['type'] == "image"){
             $filefolderSQL = mysql_query("SELECT * FROM folders WHERE id='".$_POST['folder']."'");
@@ -1433,7 +1436,8 @@ else if($_GET['action'] == "createFeed"){
                     $feed = $_POST['feedInput'].$_POST['feed1'];
                     
                     //create feed
-                    $id = createFeed($_SESSION['userid'], $feed, "", "feed", "p");
+                    $feedClass = new feed();
+                    $id = $feedClass->create($_SESSION['userid'], $feed, "", "feed", "p");
                     // $Groups is privacy right now and not used => "p" is used instead
             ?>
             <script>
@@ -1445,21 +1449,24 @@ else if($_GET['action'] == "createFeed"){
             
         }
 else if($_GET['action'] == "showSingleFeed"){
+        $feedClass = new feed();
         $feedId = save($_GET['feedId']);
         echo'<div id="addFeed"></div>';
-        showFeedNew("singleEntry", "", "", "$feedId");
+        $feedClass->show("singleEntry", "", "", "$feedId");
         
         
         }
 else if($_GET['action'] == "reloadMainFeed"){
             
+        $feedClass = new feed();
             
-                showFeedNew("friends", "$_SESSION[userid]");
+                $feedClass->show("friends", "$_SESSION[userid]");
                 echo "<div onclick=\"feedLoadMore('.feedMain' ,'friends', 'NULL', '1'); feedLoadMore('friends','1'); $(this).hide();\">...load more</div>";
                 
             
         }
 else if($_GET['action'] == "feedLoadMore"){
+            $feedClass = new feed();
             $type = save($_GET['type']);
             $user = save($_GET['user']);
             $limit = save($_GET['limit']);
@@ -1470,7 +1477,7 @@ else if($_GET['action'] == "feedLoadMore"){
             //convert $limit to a mysql LIMIT conform string 
             $limit = $limit*30;
             $limit = ($limit).",".($limit+30);
-            showFeedNew("$type", "$user","$limit");
+            $feedClass->show("$type", "$user","$limit");
             
             
         }
@@ -2891,7 +2898,9 @@ else if($_GET['action'] == "createNewUFF"){
                             //add feed
                             $fileId = mysql_insert_id();
                             $feed = "has created a new UFF-file";
-                            createFeed($user, $feed, "", "showThumb", $privacy, "file", $fileId);
+                            
+                            $feedClass = new feed();
+                            $feedClass->create($user, $feed, "", "showThumb", $privacy, "file", $fileId);
                             
                            
                             jsAlert("your file has been created");

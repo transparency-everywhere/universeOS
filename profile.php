@@ -6,10 +6,12 @@ session_start();
 include("inc/config.php");
 include("inc/functions.php");
 
+$budylistClass = new buddylist();
+
 $user = save("$_GET[user]");
 $profilesql = mysql_query("SELECT * FROM user WHERE userid='".mysql_real_escape_string($_GET['user'])."'");
 $profiledata = mysql_fetch_array($profilesql);
-if($profiledata['priv_showProfile'] == 1 OR ($profiledata['priv_showProfile'] == 0 && buddy($user))){
+if($profiledata['priv_showProfile'] == 1 OR ($profiledata['priv_showProfile'] == 0 && $budylistClass->buddy($user))){
 $link = "profile.php?user=$user";
 
 if(!empty($profiledata['realname'])){
@@ -91,7 +93,7 @@ if(empty($friendButton)){
                 
 				echo $friendButton;
 				
-				if($profiledata['priv_foreignerMessages'] == 1 OR ($profiledata['priv_foreignerMessages'] == 0 && buddy($user))){ ?>
+				if($profiledata['priv_foreignerMessages'] == 1 OR ($profiledata['priv_foreignerMessages'] == 0 && $budylistClass->buddy($user))){ ?>
                 <a href="#" onclick="popper('doit.php?action=writeMessage&buddy=<?=$profiledata['userid'];?>')" class="btn">Message</a>
 				<? } } ?>
              </div></span>
@@ -112,7 +114,11 @@ if(empty($friendButton)){
     <div id="profileAktivity" class="profileSlider">
         
         <div>
-                <?showFeedNew("singleUser", "$user");?>   
+                <?
+                $classFeed = new feed();
+                $classFeed->show("singleUser", "$user");
+                ?>   
+            
         </div>
         
     </div>
@@ -180,7 +186,8 @@ if(empty($friendButton)){
     <div id="profileFav" class="profileSlider" style="display: none;">
     	<table width="100%">
 	      <?
-	      echo showFav($user);
+              $favClass = new fav();
+	      echo $favClass->show($user);
 	      ?>
     	</table>
     </div>

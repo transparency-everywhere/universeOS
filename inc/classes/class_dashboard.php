@@ -205,12 +205,12 @@ class dashBoard{
 	}
 
 	function showFavBox($grid=true){
-		
+                        $favClass = new fav();
 			$title = "Your Favorites";
 			
 			$output .= "<div>";
 				$output .= "<table width=\"100%\">";
-					$output .= showFav();
+					$output .= $favClass->show();
 				$output .= "</table>";
 			$output .= "</div>";
 		

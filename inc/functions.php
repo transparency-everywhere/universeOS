@@ -174,7 +174,9 @@ function deleteFolder($folderId){
                 //delete comments, feeds and shortcuts
                 $commentClass = new comments();
                 $commentClass->deleteComments("folder", $folderId);
-                deleteFeeds("folder", $folderId);
+                
+                $classFeed = new feed();
+                $classFeed->deleteFeeds("folder", $folderId);
                 deleteInternLinks("folder", $folderId);
 				
 				jsAlert("The folder has been deleted.");
@@ -294,7 +296,9 @@ function addFile($file, $element, $folder, $privacy, $user, $lang=NULL, $downloa
         //add feed
         $fileId = mysql_insert_id();
         $feed = "has uploaded a file";
-        createFeed($user, $feed, "", "showThumb", $privacy, "file", $fileId);
+        
+        $feedClass = new feed();
+        $feedClass->create($user, $feed, "", "showThumb", $privacy, "file", $fileId);
         
     }
     
@@ -325,7 +329,9 @@ function deleteFile($fileId){
                            //delete comments
                            $commentClass = new comments();
                            $commentClass->deleteComments("file", $fileId);
-                           deleteFeeds("file", $fileId);
+                           
+                           $classFeed = new feed();
+                           $classFeed->deleteFeeds("file", $fileId);
                            deleteInternLinks("file", $fileId);
                            
                            //delete thumbnails

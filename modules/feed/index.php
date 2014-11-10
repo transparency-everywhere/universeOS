@@ -32,7 +32,8 @@ if(!isset($_SESSION['userid'])){
             </div>
             <div class="feedMain">
                 <?
-                showFeedNew("friends", getUser());
+                $classFeed = new feed();
+                $classFeed->show("friends", getUser());
                 echo "<div onclick=\"feedLoadMore('.feedMain' ,'friends', 'NULL', '1'); feedLoadMore('friends','1'); $(this).hide();\">...load more</div>";
                 ?>
             </div>

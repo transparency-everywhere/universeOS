@@ -115,8 +115,9 @@ $pathdata = mysql_fetch_array($pathsql);
 				}
 
 				if($fav){
+                                        $favClass = new fav();
 					echo'<table width="100%">';
-					echo showFav(getUser());
+					echo $favClass->show(getUser());
 					echo'</table>';
 				}
 				

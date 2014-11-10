@@ -33,7 +33,9 @@ function createFolder($superiorFolder, $title, $user, $privacy){
 		    mysql_query("INSERT INTO `folders` (`folder`, `name`, `path`, `creator`, `timestamp`, `privacy`) VALUES ( '$superiorFolder', '$title', '$folderpath', '$user', '$time', '$privacy');");
 		    $folderId = mysql_insert_id();
 		    $feed = "has created a folder";
-		    createFeed($user, $feed, "", "showThumb", $privacy, "folder", $folderId);
+                    
+                    $feedClass = new feed();
+		    $feedClass->create($user, $feed, "", "showThumb", $privacy, "folder", $folderId);
 		    //return true;
 		    
 		    return $folderId;

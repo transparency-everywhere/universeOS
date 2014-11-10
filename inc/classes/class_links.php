@@ -29,8 +29,8 @@ class link {
                 	$feedText = "has created the link $title in the folder";
                     $feedLink1 = mysql_insert_id();
                     $feedLink2 = $folder;
-					
-                    addFeed($user, $feedText, folderAdd, $feedLink1, $feedLink2);
+                    $feedClass = new feed();
+                    $feedClass->add($user, $feedText, folderAdd, $feedLink1, $feedLink2);
 					
 					return true;
                 }
@@ -49,7 +49,9 @@ class link {
                            //delete comments
                            $classComments = new comments();
                            $classComments->deleteComments("link", $linkId);
-                           deleteFeeds("link", $linkId);
+                           
+                           $classFeed = new feed();
+                           $classFeed->deleteFeeds("link", $linkId);
                            deleteInternLinks("link", $linkId);
                            
                            

@@ -41,7 +41,8 @@ class user {
             //update db
             mysql_query("UPDATE user SET hash='$hash' WHERE userid='".$_SESSION['userid']."'");
 
-            createFeed($_SESSION['userid'], "is logged in", "60", "feed", "p");
+            $feedClass = new feed();
+            $feedClass->create($_SESSION['userid'], "is logged in", "60", "feed", "p");
             updateActivity($_SESSION['userid']);
 
 

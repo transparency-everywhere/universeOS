@@ -66,7 +66,10 @@ if (!empty($memberData['itemId'])) {
         
         
         <div>
-                <?showFeedNew("group", "$group");?>   
+                <?php
+                $classFeed = new feed();
+                $classFeed->show("group", "$group");
+                ?>   
         </div>
         
         

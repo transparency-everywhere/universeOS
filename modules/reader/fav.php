@@ -94,7 +94,8 @@ if($_GET['action'] == "add"){
                     		<td></td>
                     	</tr>
                     	<? 
-					     showFav($_SESSION['userid']);
+                            $favClass = new fav();
+                            $favClass->show($_SESSION['userid']);
 					     ?>
                     </table>
                     <?
