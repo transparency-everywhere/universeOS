@@ -4,6 +4,17 @@ if(isset($_GET[reload])){
 }
 include_once("$path./inc/functions.php");
 include_once("$path./inc/config.php");
+
+
+    function jPlayerFormat($title, $fileId, $type){
+        $path = getFilePath($fileId);
+        $path = "$path/$title";
+        echo "{";
+        echo "title: \"$title\",";
+        echo "$type: \"./upload/$path\"";
+        echo "}";
+    }
+
 if(isset($_GET[file])){
     $fileSql = mysql_query("SELECT * FROM files WHERE id='$_GET[fileid]'");
     $fileData = mysql_fetch_array($fileSql);

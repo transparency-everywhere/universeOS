@@ -177,7 +177,9 @@ function deleteFolder($folderId){
                 
                 $classFeed = new feed();
                 $classFeed->deleteFeeds("folder", $folderId);
-                deleteInternLinks("folder", $folderId);
+                
+                $shortcutClass = new shortcut();
+                $shortcutClass->deleteInternLinks("folder", $folderId);
 				
 				jsAlert("The folder has been deleted.");
 				return true;
@@ -332,7 +334,9 @@ function deleteFile($fileId){
                            
                            $classFeed = new feed();
                            $classFeed->deleteFeeds("file", $fileId);
-                           deleteInternLinks("file", $fileId);
+                           
+                           $classShortcut = new shortcut();
+                           $classShortcut->deleteInternLinks("file", $fileId);
                            
                            //delete thumbnails
                            if($type == "image/jpg" || $type == "image/jpeg" || $type == "image/png"){

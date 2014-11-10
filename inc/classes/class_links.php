@@ -52,7 +52,9 @@ class link {
                            
                            $classFeed = new feed();
                            $classFeed->deleteFeeds("link", $linkId);
-                           deleteInternLinks("link", $linkId);
+                           
+                           $classShortcuts = new shortcut();
+                           $classShortcuts->deleteInternLinks("link", $linkId);
                            
                            
                            

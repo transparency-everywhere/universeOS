@@ -12,28 +12,21 @@
  * @author niczem
  */
 class youtube {
+    public $url;
+    public $id;
     //put your code here
-}
-
-function showYoutubeVideo($id, $subPath=NULL){
-    ?>
-	<script type="text/javascript" src="inc/swfObj/swfobject.js"></script>    
-	<div id="ytapiplayer">
-		You need Flash player 8+ and JavaScript enabled to view this video.
-	</div>
-	<script type="text/javascript">
-
-    var params = { allowScriptAccess: "always" };
-    var atts = { id: "myytplayer" };
-    swfobject.embedSWF("http://www.youtube.com/v/ASPDeS3_54U?enablejsapi=1&playerapiid=ytplayer&version=3",
-                       "ytapiplayer", "425", "356", "8", null, null, params, atts);
-
-	</script>
-
-	<?php
- }
-
-    function youTubeURLs($text) {
+    function __construct($url='', $id=''){
+        if(!empty($url))
+            $this->url = $url;
+        if(!empty($id))
+            $this->id = $id;
+        else
+            $this->getId();
+    }
+    function getId() {
+        if(!empty($this->id))
+            return $this->id;
+        $text = $this->url();
         $text = preg_replace('~
             # Match non-linked youtube URL in the wild. (Rev:20111012)
             https?://         # Required scheme. Either http or https.
@@ -57,12 +50,36 @@ function showYoutubeVideo($id, $subPath=NULL){
             ~ix', 
             '$1',
             $text);
+        
+        if(!empty($text)){
+            $this->id = text;
+        }
+        
         return $text;
     }
-    function youTubeIdToTitle($id){
+    function getTitle(){
+        
         //takes a Youtube video id and returns the title
         $video_id = $id;
         $video_info = simplexml_load_file('http://gdata.youtube.com/feeds/api/videos/'.$video_id.'?v=1');
-        $title = $video_info->title;
-        return $title; // title
+
+        return $video_info->title;
     }
+    function showYoutubeVideo($id, $subPath=NULL){
+        ?>
+            <script type="text/javascript" src="inc/swfObj/swfobject.js"></script>    
+            <div id="ytapiplayer">
+                    You need Flash player 8+ and JavaScript enabled to view this video.
+            </div>
+            <script type="text/javascript">
+
+        var params = { allowScriptAccess: "always" };
+        var atts = { id: "myytplayer" };
+        swfobject.embedSWF("http://www.youtube.com/v/ASPDeS3_54U?enablejsapi=1&playerapiid=ytplayer&version=3",
+                           "ytapiplayer", "425", "356", "8", null, null, params, atts);
+
+            </script>
+
+            <?php
+     }
+}

@@ -16,10 +16,10 @@ switch($_GET[type]){
     case link:
         break;
     case youTube:
-        if(isset($_GET[external])){
-            $vId = "$_GET[id]";
-            
-            $title  = youTubeIdToTitle("$vId");
+        if(isset($_GET['external'])){
+            $vId = $_GET['id'];
+            $youtubeClass = new youtube('', $vId);
+            $title  = $youtubeClass->getTitle();
             
             //add dropdown with all available playlists to $bar
             

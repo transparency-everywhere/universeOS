@@ -156,7 +156,7 @@ $k = 5;//limit
 		
 		
 	//wiki
-        $xml = curler("http://en.wikipedia.org/w/api.php?action=opensearch&limit=2&namespace=0&format=xml&search=$qEncoded");
+        $xml = xml::curler("http://en.wikipedia.org/w/api.php?action=opensearch&limit=2&namespace=0&format=xml&search=$qEncoded");
         foreach ($xml->Section->Item as $item) {
 			
     
@@ -173,10 +173,10 @@ $k = 5;//limit
 
 	
 	//youtube
-        $xml2 = curler("http://gdata.youtube.com/feeds/api/videos?max-results=5&restriction=DE&q=$qEncoded");
+        $xml2 = xml::curler("http://gdata.youtube.com/feeds/api/videos?max-results=5&restriction=DE&q=$qEncoded");
         foreach ($xml2->entry as $item2) {
-        	
-            $vId = youTubeURLs($item2->id);
+            $youtubeClass = new youtube($item2->id);
+            $vId = $youtubeClass->getId();
 			echo"<li class=\"strippedRow tooltipper\" data-popType=\"youTube\" data-typeId=\"$vId\" >";
 			//icon
 			echo"<img src=\"gfx/icons/fileIcons/youTube.png\" height=\"16\" style=\"\">";
@@ -187,7 +187,7 @@ $k = 5;//limit
 		}
 		
 	//spotify
-        $xml3 = curler("http://ws.spotify.com/search/1/track?q=$qEncoded");
+        $xml3 = xml::curler("http://ws.spotify.com/search/1/track?q=$qEncoded");
  
  		$i = 0;
         foreach ($xml3->track as $item3) {

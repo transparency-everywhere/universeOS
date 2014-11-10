@@ -72,7 +72,8 @@ class element {
                                         $feedClass = new feed();
                                         $feedClass->deleteFeeds("element", $elementId);
                                 //delete all shortcuts
-                    deleteInternLinks("element", $elementId);
+                                $shortcutClass = new shortcut();
+                                $shortcutClass->deleteShortcuts("element", $elementId);
 
 
                         if(mysql_query("DELETE FROM elements WHERE id='$elementId'")){
@@ -215,7 +216,8 @@ class element {
 
                     $link = "$link&id=$linkListData[id]";
                     if($linkListData['type'] == "youTube"){
-                        $vId = youTubeURLs($linkListData[link]);
+                        $youtubeClass = new youtube($linkListData['link']);
+                        $vId = $youtubeClass->getId();
                         $link = "openFile('youTube', '$linkListData[id]', '$title10', '$vId');";
                     }
 
@@ -291,7 +293,8 @@ class element {
                             $title10 = substr($shortCutItemData['title'], 0,10);
                             $title = $shortCutItemData['title'];
                             if($shortCutItemData['type'] == "youTube"){
-                                $vId = youTubeURLs($shortCutItemData[link]);
+                                $youtubeClass = new youtube($shortCutItemData['link']);
+                                $vId = $youtubeClass->getId();
                                 $link = "openFile('youTube', '$vId', '$title10');";
                             }
 

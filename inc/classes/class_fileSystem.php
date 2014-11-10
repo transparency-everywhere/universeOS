@@ -682,7 +682,9 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 		            }
 					if($type == "youTube"){
 						//generate link out of youtubelink
-						$vId = youTubeURLs($linkData[link]);
+                                                $youtubeClass = new youtube($linkData[link]);
+						$vId = $youtubeClass->getId();
+                                                
 					}
 				}
         }
@@ -702,7 +704,8 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 			
 			//get title from youtube server
 			if(empty($title)){
-				$title = youTubeIdToTitle($vId);
+                                $classYoutube = new youtube('', $vId);
+				$title = $classYoutube->getTitle();
 			}
 			
 			//optional options
@@ -710,21 +713,22 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 			$row = $extraInfo2;
 			
 			//add playlistdropdown to add video
-			// to a playlist to the header
-			if(proofLogin()){
-			//get all the playlists
-			$playlists = getUserPlaylistArray('', 'edit');
-			//init form and select
-			$options = "<form action=\"doit.php?action=addYouTubeItemToPlaylistVeryLongName&vId=$vId\" target=\"submitter\" method=\"post\"><select name=\"playlistId\">";
-			foreach ($playlists['ids'] as $key => $id){
+                        // to a playlist to the header
+                        if(proofLogin()){
+                            //get all the playlists
+                            $playlistClass = new playlists();
+                            $playlists = $playlistClass->getUserPlaylistArray('', 'edit');
+                            //init form and select
+                            $options = "<form action=\"doit.php?action=addYouTubeItemToPlaylistVeryLongName&vId=$vId\" target=\"submitter\" method=\"post\"><select name=\"playlistId\">";
+                            foreach ($playlists['ids'] as $key => $id){
 				
 				
-                    //add options to dropdown
-                    $options .= "<option value=\"$id\">".$playlists['titles'][$key]."</option>";
-				
-			}
-			//close select, form and and submit button
-			$options .= "</select><input type=\"submit\" name=\"submit\" value=\"add\" class=\"btn btn-mini\" style=\"margin-top: -11px;\"></form>";
+                                //add options to dropdown
+                                $options .= "<option value=\"$id\">".$playlists['titles'][$key]."</option>";
+                            
+                            }
+                            //close select, form and and submit button
+                            $options .= "</select><input type=\"submit\" name=\"submit\" value=\"add\" class=\"btn btn-mini\" style=\"margin-top: -11px;\"></form>";
 			}
 			$controls = $options;
 			

@@ -125,7 +125,8 @@ class dashBoard{
 	function showPlaylistBox($grid=true){
 		
 			//playlists
-			$playlists = getPlaylists();
+                        $playlistClass = new playlists();
+			$playlists = $playlistClass->getPlaylists();
 			
 			$title = "Your Playlists";
 			if(count($playlists) == 0){
@@ -144,7 +145,7 @@ class dashBoard{
 							$output .= "</span>";
 							$output .= "<span>";
 								$output .= "<a href=\"#\" onclick=\"showPlaylist('$playlist');\">";
-								$output .=  getPlaylistTitle($playlist);
+								$output .=  $playlistClass->getPlaylistTitle($playlist);
 								$output .= "</a>";
 							$output .= "</span>";
 						$output .= "</li>";

@@ -52,7 +52,8 @@ switch($action){
 		if($userData['cypher'] == 'md5' && $oldPassword == $userData['password']){
 			
 			//store salt
-			createSalt('auth', $userid, 'user', $userid, $salt);
+                        $saltClass = new salt();
+			$saltClass->create('auth', $userid, 'user', $userid, $salt);
 	        
 			//create signature
 			$sig = new signatures();
@@ -497,14 +498,15 @@ switch($action){
 		$salt = $_POST['salt'];
 		
 		//store salt
-		echo createSalt($type, $itemId, $receiverType, $receiverId, $salt);
+                $saltClass = new salt();
+		$saltClass->create($type, $itemId, $receiverType, $receiverId, $salt);
 		
 		break;
 		
 		
 	case 'getSalt':
-		
-		echo getSalt($_POST['type'], $_POST['itemId']);
+		$saltClass = new salt();
+		echo $saltClass->get($_POST['type'], $_POST['itemId']);
 		
 		break;
 		

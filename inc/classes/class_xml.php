@@ -12,9 +12,6 @@
  * @author niczem
  */
 class class_xml {
-    //put your code here
-}
-
 /**
   * Opens an URL with curl and outputs xml
   *
@@ -40,3 +37,4 @@ function curler($url){
         $xml = simplexml_import_dom($dom);
 		return $xml;
  }
+}

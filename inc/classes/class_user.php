@@ -88,13 +88,14 @@ function updateUserPassword($oldPassword, $newPassword, $newAuthSalt=NULL, $newK
 	$userData = getUserData($userid);
 	if($userData['password'] == $oldPassword){
 		
+                $saltClass = new salt();
 		if(!empty($newAuthSalt)){
 			//store salt
-			updateSalt('auth', $userid, $newAuthSalt);
+			$saltClass->update('auth', $userid, $newAuthSalt);
 		}
 		if(!empty($newKeySalt)){
 			//store salt
-			updateSalt('privateKey', $userid, $newKeySalt);
+			$saltClass->update('privateKey', $userid, $newKeySalt);
 		}
 		  
 		//create signature
@@ -261,8 +262,9 @@ function createUser($username, $password, $authSalt, $keySalt, $privateKey, $pub
         $userid = mysql_insert_id();
 		
 		//store salts
-		createSalt('auth', $userid, 'user', $userid, $authSalt);
-		createSalt('privateKey', $userid, 'user', $userid, $keySalt);
+                $saltClass = new salt();
+		$saltClass->create('auth', $userid, 'user', $userid, $authSalt);
+		$saltClass->create('privateKey', $userid, 'user', $userid, $keySalt);
 			
 		//create signature
 		$sig = new signatures();

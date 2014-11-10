@@ -157,7 +157,8 @@ else if($_GET['action'] == "showPlaylist"){
                         <center>
                             <div style="overflow: auto; width: 450px; height: 200px;">
                            		<?
-                           		showPlaylist($playListId);
+                                        $playlistClass = new playlists();
+                           		$playlistClass->showPlaylist($playListId);
                            		?>
                             </div>
                         </center>
@@ -812,8 +813,9 @@ else if($_GET['action'] == "addInternLink"){
      	if(proofLogin()){
      		
      		if(isset($_POST['submit'])){
+                                $shortcutClass = new shortcut();
      			
-				if(createInternLink($_POST['parentType'], $_POST['parentId'], $_POST['type'], $_POST['typeId'], $_POST['title'])){
+				if($shortcutClass->create($_POST['parentType'], $_POST['parentId'], $_POST['type'], $_POST['typeId'], $_POST['title'])){
 					jsAlert("The shortcut has been added :)");
 				}
                                 
@@ -2083,8 +2085,8 @@ else if($_GET['action'] == "deleteItem"){
                     }
 
                     if(authorize($shortCutItemData['privacy'], "edit", $user)){
-                        
-                        if(deleteInternLink($itemId)){
+                        $shortcutClass = new shortcut();
+                        if($shortcutClass->delete($itemId)){
                             jsAlert("The Shortcut has been deleted");
                             
                                 if($checkInternLinkData['parentType'] == "folder"){
@@ -2815,7 +2817,8 @@ else if($_GET['action'] == "mousePop"){
                         $text = $html;
                     break;
                     case 'youTube':
-                        $title = youTubeIdToTitle($id);
+                        $classYoutube = new youtube($id);
+                        $title = $classYoutube->getTitle();
                         if(!empty($title)){
                         $text = "
                                 <table>

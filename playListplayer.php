@@ -27,7 +27,8 @@ $i = "0";
                     while($playListLinkData = mysql_fetch_array($playListLinkSql)){
                         
                         if($playListLinkData[type] == "youTube"){
-                        $vId = youTubeURLs($playListLinkData[link]);
+                        $youtubeClass = new youtube($playListLinkData[link]);
+                        $vId = $youtubeClass->getId();
                         $link = "./modules/reader/showfile.php?type=youTube&vId=$vId&playList=$playList&row=$_GET[row]";
                         $link2 = "doit.php?action=showYoutube&id=$vId&playList=$playList&row=$_GET[row]";
                         }

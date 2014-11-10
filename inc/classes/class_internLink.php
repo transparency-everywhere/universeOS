@@ -11,12 +11,9 @@
  *
  * @author niczem
  */
-class internLink {
+class shortcut {
     //put your code here
-}
-
-
-	function createInternLink($parentType, $parentId, $type, $typeId, $title=NULL){
+	function create($parentType, $parentId, $type, $typeId, $title=NULL){
 	//creates shortcut
 		
 		//check if link allready exists
@@ -29,8 +26,7 @@ class internLink {
 			
 		}
 	}
-        
-    function deleteInternLink($linkId){
+    function delete($linkId){
     	//deletes single shortcut
         if(mysql_query("DELETE FROM internLinks WHERE id='$linkId'")){
             return true;
@@ -45,3 +41,7 @@ class internLink {
     }
     
     
+}
+
+
+        

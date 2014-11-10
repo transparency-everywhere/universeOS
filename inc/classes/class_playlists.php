@@ -12,18 +12,7 @@
  * @author niczem
  */
 class playlists {
-    //put your code here
-}
-
-    function jPlayerFormat($title, $fileId, $type){
-        $path = getFilePath($fileId);
-        $path = "$path/$title";
-        echo "{";
-        echo "title: \"$title\",";
-        echo "$type: \"./upload/$path\"";
-        echo "}";
-    }
-	
+    
 	function getPlaylists($userid=NULL){
 		if(empty($userid))
 			$userid = getUser();
@@ -35,7 +24,6 @@ class playlists {
 		
 		return $playlists;
 	}
-	
 	function getPlaylistTitle($playlistId){
 		$sql = mysql_query("SELECT `title` FROM playlist WHERE id='".mysql_real_escape_string($playlistId)."'");
 		$data = mysql_fetch_array($sql);
@@ -181,3 +169,6 @@ class playlists {
 		<?
 	}
 	
+	
+	
+}
