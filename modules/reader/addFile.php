@@ -77,9 +77,9 @@ $title10 = substr("$elementdata[title]", 0, 10);
        </tr>
        <tr>
            <td colspan="2">
-               
-                            <?
-                                    showPrivacySettings($elementdata[privacy]);
+                            <?php
+                            $privacyClass = new privacy($elementdata[privacy]);
+                            $privacyClass->showPrivacySettings();
                             ?>
            </td>
        </tr>

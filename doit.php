@@ -309,7 +309,8 @@ else if($_GET['action'] == "addPlaylist"){
                     <tr>
                         <td colspan="2">
                                 <?
-                                showPrivacySettings();
+                                $privacyClass = new privacy();
+                                $privacyClass->showPrivacySettings();
                                 ?>
                         </td>
                     </tr>
@@ -370,7 +371,8 @@ else if($_GET['action'] == "copyPlaylist"){
                         <td valign="top">Privacy</td>
                         <td>
 							<?
-							showPrivacySettings("h//f");
+                                                        $privacyClass = new privacy("h//f");
+							$privacyClass->showPrivacySettings();
 							?>
                         </td>
                     </tr>
@@ -636,13 +638,14 @@ else if($_GET['action'] == "addFolder"){
                                         <tr>
                                             <td colspan="2">
                                                 <?
-                                                if(isProtected($selectdata['privacy'])){
+                                                $privacyClass = new privacy($selectdata['privacy']);
+                                                if($privacyClass->isProtected()){
                                                 	if(hasRight("protectFileSystemItems")){
                                                 		
 														$selectdata['privacy'] = str_replace(";PROTECTED", "", $selectdata['privacy']);
                                                 	}
                                                 }
-                                                showPrivacySettings($selectdata['privacy']);
+                                                $privacyClass->showPrivacySettings();
                                                 ?>
                                             </td>
                                         </tr>
@@ -777,13 +780,14 @@ else if($_GET['action'] == "addElement"){
                     <tr>
                         <td colspan="2">
                             <?php
-                                                if(isProtected($selectdata['privacy'])){
+                                $privacyClass = new privacy($selectdata['privacy']);
+                                                if($privacyClass->isProtected()){
                                                 	if(hasRight("protectFileSystemItems")){
                                                 		
 														$selectdata['privacy'] = str_replace(";PROTECTED", "", $selectdata['privacy']);
                                                 	}
                                                 }
-                                    showPrivacySettings($selectdata['privacy']);
+                                $privacyClass->showPrivacySettings();
                             ?>
                             
                         </td>
@@ -921,13 +925,14 @@ else if($_GET['action'] == "addLink"){
 	                    $customShow = $_POST['privacyCustomSee'];
 	                    $customEdit = $_POST['privacyCustomEdit'];
 	                    $privacy = exploitPrivacy("".$_POST['privacyPublic']."", "".$_POST['privacyHidden']."", $customEdit, $customShow);
-						if(addLink($_POST['folder'], $_POST['title'], $_POST['type'], $privacy, $_POST['link'])){
-						?>
+                            $linkClass = new link();
+                            if($linkClass->addLink($_POST['folder'], $_POST['title'], $_POST['type'], $privacy, $_POST['link'])){
+                                ?>
 			                <script>
 			                    parent.addAjaxContentToTab('<?=$_POST['tabTitle'];?>', 'modules/filesystem/showElement.php?element=<?=$_POST['folder'];?>&reload=1');
 			                </script>
 	                	<?
-						}
+                            }
                 }
                 $selectsql = mysql_query("SELECT title, privacy FROM elements WHERE id='".$_GET['element']."'");
                 $selectdata = mysql_fetch_array($selectsql);
@@ -983,7 +988,8 @@ else if($_GET['action'] == "addLink"){
                                         <tr>
                                             <td colspan="2">
                                                 <?
-                                                    showPrivacySettings($selectdata['privacy']);
+                                                $privacyClass = new privacy($selectdata['privacy']);
+                                                $privacyClass->showPrivacySettings();
                                                 ?>
                                             </td>
                                         </tr>
@@ -2114,7 +2120,9 @@ else if($_GET['action'] == "deleteItem"){
 else if($_GET['action'] == "loadPrivacySettings"){
         	//is used bei js privacy.load to load privacy selection with privacy = $_POST['val'] into DOM
 			$editable =  ($_POST['editable'] === 'true'); //str to bool
-          	showPrivacySettings($_POST['val'], $editable);
+                        
+                $privacyClass = new privacy($_POST['val']);
+          	$privacyClass->showPrivacySettings($editable);
         	
         }
 else if($_GET['action'] == "changePrivacy"){
@@ -2234,7 +2242,8 @@ else if($_GET['action'] == "changePrivacy"){
                 <header>Set privacy of <?=$title;?><a class="jqClose" id="closePrivacy">X</a></header>
                 <div class="jqContent">
                 <?
-                  showPrivacySettings($privacyData['privacy']);
+                $privacyClass = new privacy($privacyData['privacy']);
+                $privacyClass->showPrivacySettings();
                 ?>
                 </div>
                 <footer>
@@ -2495,7 +2504,8 @@ else if($_GET['action'] == "editItem"){
                                 <?
                                 if(!empty($privacy)){
                                     echo"<tr><td colspan=\"2\">";
-                                    showPrivacySettings($privacy);
+                                    $privacyClass = new privacy($privacy);
+                                    $privacyClass->showPrivacySettings();
                                     echo"</td></tr>";
                                 }
                                 ?>
@@ -2568,7 +2578,8 @@ else if($_GET['action'] == "showItemThumb"){
                                 
                                 
                                 <?php
-                                showPrivacySettings();
+                                $privacyClass = new privacy();
+                                $privacyClass->showPrivacySettings();
                                 ?>
                                 
                                 
@@ -2775,7 +2786,8 @@ else if($_GET['action'] == "deleteLink"){
                 
                 $linkId = save($_GET['linkId']);
                 if(proofLogin()){
-                    if(deleteLink($linkId)){
+                    $linkClass = new link();
+                    if($linkClass->deleteLink($linkId)){
                     		
                     	echo"<script>parent.$('.link_$linkId').hide();</script>";
                         jsAlert("The Link has been deleted");
@@ -2943,7 +2955,10 @@ else if($_GET['action'] == "createNewUFF"){
                             </tr>
                             <tr>
                                 <td colspan="3">
-                                    <?=showPrivacySettings($elementData['privacy']);?>
+                                    <?
+                                    $privacyClass = new privacy($elementData['privacy']);
+                                    $privacyClass->showPrivacySettings();
+                                    ?>
                                 </td>
                             </tr>
                             <tr>

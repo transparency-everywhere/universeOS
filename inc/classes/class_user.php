@@ -337,9 +337,10 @@ function deleteUser($userid, $reason){
           }
           
           //delete all links
+          $linkClass = new link();
           $linkSQL = mysql_query("SELECT id FROM links WHERE author='$userid'");
           while($linkData = mysql_fetch_array($linkSQL)){
-              deleteLink($linkData['userid']);
+            $linkClass->deleteLink($linkData['userid']);
           }
           
           

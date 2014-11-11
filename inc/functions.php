@@ -147,6 +147,193 @@ include('classes/class_buddylist.php');
    include('classes/class_db.php');
     
     include('classes/class_privacy.php');
+    
+    
+    
+
+	  /**
+	  * finds out if current user is authorized to see or edit
+	  * item with $privacy and $author
+	  *
+	  * @param string $privacy      contains privacy query.
+	  *
+	  * @param string $type      	see//edit
+	  *
+	  * @param int $author      	author of the item
+	  *
+	  * @return bool 
+	  */
+	function authorize($privacy, $type, $author=NULL){
+        
+		if(end(explode(";", $privacy)) == "UNDELETABLE"){
+			$undeletable = true;
+			$privacy = str_replace(";UNDELETABLE", "", $privacy);
+		}
+		
+		
+        if(end(explode(";", $privacy)) == "PROTECTED"){
+        	
+             $show = true;
+             if(hasRight("editProtectedFilesystemItem")){
+             	$edit = true;
+				 $delete = true;
+			 }else{
+			 	$edit = false;
+				$delete = false;
+			 }
+        	
+        }else{
+             $show = false;
+             $edit = false;
+			 $delete = false;
+        
+	        if($privacy == "p"){
+	            
+	            
+	             $show = true;
+	             if(proofLogin()){
+	             	$edit = true;
+				 	$delete = true;
+				 }
+	            
+	        }else if($privacy == "h"){
+	            
+	            if($author == $_SESSION['userid'] && proofLogin()){
+	            
+	                $show = true;
+	                $edit = true;
+					$delete = true;
+	                
+	            }else{
+	                
+	                $show = false;
+	                $edit = false;
+					$delete = true;
+	                
+	            }
+	            
+	        }else{
+	            
+	
+	
+	                $custom = explode("//", $privacy);
+	                $customShow = $custom[1];
+	                $customShow = explode(";", $customShow);
+	                $customEdit = $custom[0];
+					
+					if($customEdit == "h" && $author == getUser()){
+	                	$edit = true;
+					}
+	                $customEdit = explode(";", $customEdit);
+	                
+	                //check if friends are allowed to see or edit this
+	                if((in_array("f", $customShow) || in_array("f", $customEdit)) && proofLogin()){
+	                    if($author == getUser()){
+	                            //if friends are allowed to see => show = true
+	                            if(in_array("f", $customShow)){
+	                                $show = true;
+	                            }
+	                            //if friends are allowed to edit => show = true
+	                            if(in_array("f", $customEdit)){
+	                                $edit = true;
+	                                
+	                            }
+	                    	
+	                    }
+	                    //get friends from SQL unefizient
+	                    $buddylistSql = mysql_query("SELECT * FROM buddylist WHERE owner='$author' && request='0'");
+	                    while($buddylistData = mysql_fetch_array($buddylistSql)) {
+	                        
+	                        //check if user is buddy of $author
+	                        if($buddylistData['buddy'] == getUser() && proofLogin()){
+	                            //if friends are allowed to see => show = true
+	                            if(in_array("f", $customShow)){
+	                                $show = true;
+	                            }
+	                            //if friends are allowed to edit => show = true
+	                            if(in_array("f", $customEdit)){
+	                                $edit = true;
+	                                
+	                            }
+	                        }
+	                    }
+	                }
+	                
+	                
+	                
+	                
+	                if(proofLogin()){
+	                //check if user is in group which is allowed to see this item
+		                $groupAtSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='".getUser()."' and validated='1'");
+		                while($groupAtData = mysql_fetch_array($groupAtSql)){
+		
+		                    if(in_array($groupAtData['group'], $customShow) && proofLogin()){
+		                        $show = true;  
+		                    }
+		                    if(in_array($groupAtData['group'], $customEdit) && proofLogin()){
+		                        $edit = true;  
+		                    }
+		                }
+					}
+	                
+	                
+	                
+	            
+	            
+	            
+	        }
+        }
+        
+        if($type == "show"){
+            return $show;
+        }else if($type == "edit"){
+            return $edit;
+        }else if($type == "delete"){
+        	if($undeletable){
+        		if(hasRight("editUndeletableFilesystemItems")){
+        			return true;
+        		}else{
+        			return false;
+        		}
+        	}else{
+            	return $delete;
+        	}
+        }
+        
+    }
+	
+    
+    function exploitPrivacy($public, $hidden, $customEdit, $customShow){
+    	if(!empty($public) OR !empty($hidden) OR !empty($customEdit) OR !empty($customShow)){
+	        if($public == "true"){
+	            $privacy = "p";
+	        }
+	        else if($hidden == "true"){
+	            $privacy = "h";
+	        }else{
+	            
+	            $customEdit = implode(";", $customEdit);
+	            $customShow = implode(";", $customShow);
+	            if(empty($customShow)){
+	            	$customShow = "h";
+	            }
+	            if(empty($customEdit)){
+	            	$customEdit = "h";
+	            }
+	            if(empty($customEdit) OR empty($customShow)){
+	            	$privacy = "p";
+	           	}else{
+	            $privacy = "$customEdit//$customShow";
+				}
+	        }
+	        
+	        return $privacy;
+		}
+    }
+    
+    
+    
+    
     include('classes/class_playlists.php');
     
     

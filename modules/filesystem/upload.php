@@ -78,7 +78,8 @@ $folder = $_GET[folder];
 			<h3>Privacy</h3>
 			<p>Please justify the privacy of the files you want to upload</p>
 			<?php
-			showPrivacySettings($elementData['privacy']);
+                        $privacyClass = new privacy($elementData['privacy']);
+			$privacyClass->showPrivacySettings();
 			?>
 		</div>
 		<footer>

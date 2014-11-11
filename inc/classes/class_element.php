@@ -62,8 +62,9 @@ class element {
 					}
 					
 					//delete all links
+                                        $linkClass = link();
 					foreach($links AS &$linkId){
-						deleteLink($linkId);
+                                            $linkClass->deleteLink($linkId);
 					}
 					//delete all comments
                                         $commentClass = new comments();

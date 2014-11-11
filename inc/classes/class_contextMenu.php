@@ -144,9 +144,10 @@ class contextMenu{
 				}
 				
 				
+                                $privacyClass = new privacy($checkFolderData['privacy']);
 				//check if person has rights to protect filesystem items of changes
 				if(hasRight("protectFileSystemItems")){
-					if(!isProtected($checkFolderData['privacy'])){
+					if(!$privacyClass->isProtected()){
 						$protect['title'] = 'Protect';
 						$protect['href'] = '#';
 						$protect['onclick'] = "javascript: popper('doit.php?action=protectFileSystemItems&type=folder&itemId=$itemId')";
@@ -162,7 +163,7 @@ class contextMenu{
 	
 				//check if person has rights to make files undeletable
 				if(hasRight("undeletableFilesystemItems")){
-					if(!isUndeletable($checkFolderData['privacy'])){
+					if(!$privacyClass->isUndeletable()){
 						
 						$undeletable['title'] = 'Make Undeletable';
 						$undeletable['href'] = '#';
@@ -218,9 +219,10 @@ class contextMenu{
 					$fav['target'] = "submitter";
 			 	}
 			 
+                                $privacyClass = new privacy($checkElementData['privacy']);
 				//check if person has rights to protect filesystem items of changes
 				if(hasRight("protectFileSystemItems")){
-					if(!isProtected($checkElementData['privacy'])){
+					if(!$privacyClass->isProtected()){
 						$protect['title'] = 'Protect';
 						$protect['href'] = '#';
 						$protect['onclick'] = "javascript: popper('doit.php?action=protectFileSystemItems&type=element&itemId=$itemId')";
@@ -236,7 +238,7 @@ class contextMenu{
 	
 				//check if person has rights to make files undeletable
 				if(hasRight("undeletableFilesystemItems")){
-					if(!isUndeletable($checkElementData['privacy'])){
+					if(!$privacyClass->isUndeletable()){
 					
 						$undeletable['title'] = 'Make Undeletable';
 						$undeletable['href'] = '#';
@@ -289,9 +291,10 @@ class contextMenu{
 					$delete['target'] = 'submitter';
 		       	}
 			 
+                                $privacyClass = new privacy($checkFileData['privacy']);
 				//check if person has rights to protect filesystem items of changes
 				if(hasRight("protectFileSystemItems")){
-					if(!isProtected($checkFileData['privacy'])){
+					if(!$privacyClass->isProtected()){
 						$protect['title'] = 'Protect';
 						$protect['href'] = '#';
 						$protect['onclick'] = "javascript: popper('doit.php?action=protectFileSystemItems&type=file&itemId=$itemId')";
@@ -306,7 +309,7 @@ class contextMenu{
 		
 				//check if person has rights to make files undeletable
 				if(hasRight("undeletableFilesystemItems")){
-					if(!isUndeletable($checkFileData['privacy'])){
+					if(!$privacyClass->isUndeletable()){
 						$undeletable['title'] = 'Make Undeletable';
 						$undeletable['href'] = '#';
 						$undeletable['onclick'] = "javascript: popper('doit.php?action=makeFileSystemItemUndeletable&type=file&itemId=$itemId');";
@@ -409,9 +412,10 @@ class contextMenu{
 			 
 			  
 			  
+                                $privacyClass = new privacy($checkLinkData['privacy']);
 				//check if person has rights to protect filesystem items of changes
 				if(hasRight("protectFileSystemItems")){
-					if(!isProtected($checkLinkData['privacy'])){
+					if(!$privacyClass->isProtected()){
 						$protect['title'] = 'Protect';
 						$protect['href'] = '#';
 						$protect['onclick'] = "javascript: popper('doit.php?action=protectFileSystemItems&type=link&itemId=$itemId')";
@@ -424,10 +428,9 @@ class contextMenu{
 						
 					}
 				}
-		
 				//check if person has rights to make files undeletable
 				if(hasRight("undeletableFilesystemItems")){
-					if(!isUndeletable($checkLinkData['privacy'])){
+					if(!$privacyClass->isUndeletable()){
 						
 						$undeletable['title'] = 'Make Undeletable';
 						$undeletable['href'] = '#';

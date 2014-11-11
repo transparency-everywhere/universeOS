@@ -12,11 +12,6 @@
  * @author niczem
  */
 class link {
-    //put your code here
-}
-
-
-
 	function addLink($folder, $title, $type, $privacy, $link){
              
              
@@ -66,3 +61,6 @@ class link {
                     return false;
                 }
     }
+}
+
+

@@ -22,7 +22,10 @@ if(!isset($_SESSION['userid'])){
                         </div>
                     </div>
                     <div id="addFeedPrivacy" class="coolGradient">
-                        <?=showPrivacySettings("h//f");?>
+                        <?php
+                        $privacyClass = new privacy("h//f");
+                        $privacyClass->showPrivacySettings();
+                        ?>
                     </div>
                     </form>
                     </div>
