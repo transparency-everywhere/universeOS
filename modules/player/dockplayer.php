@@ -7,7 +7,8 @@ include_once("$path./inc/config.php");
 
 
     function jPlayerFormat($title, $fileId, $type){
-        $path = getFilePath($fileId);
+        $fileClass = new file($fileId);
+        $path = $fileClass->getFilePath();
         $path = "$path/$title";
         echo "{";
         echo "title: \"$title\",";

@@ -29,7 +29,8 @@
 
                         if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
                         	
-							$type = getMime($imgName);
+                            $classFiles = new files();
+                            $type = $classFiles->getMime($imgName);
                         mkthumb("$imgName",25,25,$path,$thumbPath25); 
                         mkthumb("$imgName",40,40,$path,$thumbPath40); 
                         mkthumb("$imgName",300,300,$path,$thumbPath300);

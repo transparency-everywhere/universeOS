@@ -188,7 +188,8 @@ class element {
                         //define openFile function
                         $link = "openFile('$openFileType', '$fileListData[id]', '$elementTitle10');";
                     }
-                    $image = getFileIcon($fileListData['type']);
+                    $filesClass = new files();
+                    $image = $filesClass->getFileIcon($fileListData['type']);
                         ?>
                         <tr class="strippedRow file_<?=$fileListData[id];?>" oncontextmenu="showMenu('file<?=$fileListData['id'];?>'); return false;" height="40px">
                             <td width="30px">&nbsp;<img src="<?=$subpath;?>gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData['type'];?>" height="22"></td>
@@ -229,7 +230,8 @@ class element {
                     if($linkListData['type'] == "RSS"){
                         $link = "openFile('RSS', '$linkListData[id]', '$title10');";
                     }
-                    $image = getFileIcon($linkListData['type']);
+                    $fileClass = new files();
+                    $image = $fileClass->getFileIcon($linkListData['type']);
 
 
                         $i++;
@@ -304,8 +306,8 @@ class element {
                             }
                         }
 
-
-                        $image = getFileIcon($shortCutItemData['type']);
+                        $filesClass = new files();
+                        $image = $filesClass->getFileIcon($shortCutItemData['type']);
 
                         echo'<tr>';
                             echo'<td>';

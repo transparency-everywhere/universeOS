@@ -289,7 +289,8 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 	                	
 	                	
 	                $title10 = substr($fileListData['title'], 0, 10);
-	                $image = getFileIcon($fileListData['type']);
+                        $classFiles = new files();
+	                $image = $classFiles->getFileIcon($fileListData['type']);
 					
 					$action['files'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$fileListData[title]<input type=\'hidden\' class=\'choosenType\' name=\'type\' value=\'file\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$fileListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
 					$trigger['files'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$fileListData[title]<input type=\'hidden\' class=\'choosenType\' name=\'type\' value=\'file\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$fileListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
@@ -319,8 +320,8 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 	                $title10 = substr("$linkListData[title]", 0, 10);
 					
 					$action['links'] = "alert('lol'); return false";
-					
-	                $image = getFileIcon($linkListData['type']);
+			$classFiles = new files();
+	                $image = $classFiles->getFileIcon($linkListData['type']);
 	                
 					$action['links'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$linkListData[type]\' height=\'32px\'>&nbsp;$linkListData[title]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'link\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$linkListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
 					$trigger['links'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$linkListData[title]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'link\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$linkListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
@@ -765,8 +766,8 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 			
 			if($type == "audio/mpeg")
 				$type = 'audio';
-			
-	        $icon = getFileIcon($type);
+			$classFiles = new files();
+	        $icon = $classFiles->getFileIcon($type);
 	        $icon = "<img src=\"$subpath"."gfx/icons/fileIcons/$icon\" height=\"20\">";
 	        
 	        $output .= "<header class=\"gray-gradient\">";

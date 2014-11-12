@@ -16,7 +16,8 @@ $time = time();
             $openUffs = explode(";", $_SESSION["openUffs"]);
             foreach($openUffs AS &$file){
                 $caller = "UFFsum_$file";
-                $filePath = getFullFilePath($file);
+                $classFile = new file($file);
+                $filePath = $classFile->getFullFilePath();
                 $checksum = md5_file($filePath);
                 if($_SESSION[$caller] != $checksum){
                 ?>

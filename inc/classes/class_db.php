@@ -13,6 +13,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 @author nicZem for tranpanrency-everywhere.com
 */
+
+function save($str){
+    return mysql_real_escape_string($str);
+}
+
 class db{
         /**
         *Inserts record with $options into db $table 

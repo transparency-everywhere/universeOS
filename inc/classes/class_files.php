@@ -21,32 +21,9 @@ class files {
             
     }
     function getFilePath($fileId){
-        $documentSQL = mysql_query("SELECT id, folder, filename FROM files WHERE id='$fileId'");
-        $documentData = mysql_fetch_array($documentSQL);
-            $documentElementSQL = mysql_query("SELECT id, title, folder FROM elements WHERE id='$documentData[folder]'");
-            $documentElementData = mysql_fetch_array($documentElementSQL);
-			
-			$path = getFolderPath($documentElementData['folder']);
-			$path .= $documentData['filename'];
-			
-            return $path;
+       $file = new file($fileId);
+               return $file->getFilePath();
     }
-    //put your code here
-}
-
-    function getFilePath($fileId){
-        $documentSQL = mysql_query("SELECT id, folder, filename FROM files WHERE id='$fileId'");
-        $documentData = mysql_fetch_array($documentSQL);
-            $documentElementSQL = mysql_query("SELECT id, title, folder FROM elements WHERE id='$documentData[folder]'");
-            $documentElementData = mysql_fetch_array($documentElementSQL);
-			
-			$path = getFolderPath($documentElementData['folder']);
-			$path .= $documentData['filename'];
-			
-            return $path;
-    }
-
-	
     
     
     function getMime($filename) {
@@ -126,72 +103,9 @@ class files {
             return 'application/octet-stream';
         }
     }
-    
-	 function validateTempFile($fileId, $privacy){
-	 	$path = getFilePath($fileId);
-		$oldpath = $path.'.temp';
-		if(rename($oldpath, $path)){
-		 	if(mysql_query("UPDATE `files` SET `temp`='0', `status`='1', `privacy`='$privacy' WHERE id='".save($fileId)."'")){
-		 		return true;
-		 	}else{
-		 		return false;
-		 	}
-		}
-	 }
-	 
 	 function tidyTempFiles(){
 	 	mysql_query("DELETE FROM `files` WHERE temp='true' AND timestamp<'".(time()-86400)."'");
 	 }
-         
-         
-    
-    function getFullFilePath($fileId){
-        $documentSQL = mysql_query("SELECT folder, filename FROM  `files` WHERE id='".save($fileId)."'");
-        $documentData = mysql_fetch_array($documentSQL);
-            $documentElementSQL = mysql_query("SELECT folder FROM elements WHERE id='".save($documentData['folder'])."'");
-            $documentElementData = mysql_fetch_array($documentElementSQL);
-            $path = "upload/";
-            $folderArray = loadFolderArray("path", $documentElementData['folder']);
-            $folderArray = array_reverse($folderArray['names'], true);
-            foreach($folderArray as &$folder){
-                
-                $path .= "$folder/";
-            }
-            
-            
-                $documentFolderSQL = mysql_query("SELECT * FROM folders WHERE id='".save($documentElementData['folder'])."'");
-                $documentFolderData = mysql_fetch_array($documentFolderSQL);
-
-                $path = urldecode($path);
-                $filePath = $path.$documentData['filename'];
-                return $filePath;
-    }
-    
-    
-
-function getFileData($fileId){
-		$fileData = mysql_fetch_array(mysql_query("SELECT * FROM files WHERE id='".save($fileId)."'"));
-		return $fileData;
-	}
-
-function fileIdToFileTitle($fileId){
-		$fileData = getFileData($fileId);
-		return $fileData['title'];
-	}
-
-
-
-function fileIdToFileType($fileId){
-        $fileData = mysql_fetch_array(mysql_query("SELECT type FROM files WHERE id='".save($fileId)."'"));
-        return $fileData['type'];
-    }
-    
-function linkIdToFileType($fileId){
-        
-        $fileData = mysql_fetch_array(mysql_query("SELECT type FROM links WHERE id='".save($fileId)."'"));
-        return $fileData['type'];
-    }
-
 function getFileIcon($fileType, $full=false){
         //turns filetype into src of icon
         //used in showFileList(); showItemThum();
@@ -274,3 +188,102 @@ function getFileIcon($fileType, $full=false){
         
         return $image;
     }
+         
+    //put your code here
+}
+
+class file{
+    
+    public $id;
+    
+    function __construct($id=NULL){
+        if($id != NULL){
+            $this->id = $id;
+        }
+            
+    }
+
+    function getFilePath(){
+        $fileId = $this->id;
+        
+        $documentSQL = mysql_query("SELECT id, folder, filename FROM files WHERE id='$fileId'");
+        $documentData = mysql_fetch_array($documentSQL);
+            $documentElementSQL = mysql_query("SELECT id, title, folder FROM elements WHERE id='$documentData[folder]'");
+            $documentElementData = mysql_fetch_array($documentElementSQL);
+			
+			$path = getFolderPath($documentElementData['folder']);
+			$path .= $documentData['filename'];
+			
+            return $path;
+    }
+	 function validateTempFile($privacy){
+                $fileId = $this->id;
+	 	$path = $this->getFilePath();
+		$oldpath = $path.'.temp';
+		if(rename($oldpath, $path)){
+		 	if(mysql_query("UPDATE `files` SET `temp`='0', `status`='1', `privacy`='$privacy' WHERE id='".save($fileId)."'")){
+		 		return true;
+		 	}else{
+		 		return false;
+		 	}
+		}
+	 }
+    
+    
+    function getFullFilePath($fileId){
+        $documentSQL = mysql_query("SELECT folder, filename FROM  `files` WHERE id='".save($fileId)."'");
+        $documentData = mysql_fetch_array($documentSQL);
+            $documentElementSQL = mysql_query("SELECT folder FROM elements WHERE id='".save($documentData['folder'])."'");
+            $documentElementData = mysql_fetch_array($documentElementSQL);
+            $path = "upload/";
+            $folderArray = loadFolderArray("path", $documentElementData['folder']);
+            $folderArray = array_reverse($folderArray['names'], true);
+            foreach($folderArray as &$folder){
+                
+                $path .= "$folder/";
+            }
+            
+            
+                $documentFolderSQL = mysql_query("SELECT * FROM folders WHERE id='".save($documentElementData['folder'])."'");
+                $documentFolderData = mysql_fetch_array($documentFolderSQL);
+
+                $path = urldecode($path);
+                $filePath = $path.$documentData['filename'];
+                return $filePath;
+    }
+
+function getFileData(){
+    $fileId = $this->id;
+		$fileData = mysql_fetch_array(mysql_query("SELECT * FROM files WHERE id='".save($fileId)."'"));
+		return $fileData;
+	}
+
+function getTitle(){
+		$fileData = $this->getFileData();
+		return $fileData['title'];
+	}
+
+
+function getFileType($fileId){
+    $fileId = $this->id;
+        $fileData = mysql_fetch_array(mysql_query("SELECT type FROM files WHERE id='".save($fileId)."'"));
+        return $fileData['type'];
+    }
+    
+}
+
+	
+    
+    
+    
+	 
+         
+    
+
+    
+function linkIdToFileType($fileId){
+        
+        $fileData = mysql_fetch_array(mysql_query("SELECT type FROM links WHERE id='".save($fileId)."'"));
+        return $fileData['type'];
+    }
+

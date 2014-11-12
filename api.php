@@ -657,7 +657,8 @@ switch($action){
 		break;
 //filesystem
 	case 'fileIdToFileTitle':
-		echo fileIdToFileTitle($_POST['fileId']);
+                $fileClass = new file($_POST['fileId']);
+		echo $fileClass->getTitle();
 		break;
 	case 'elementIdToElementTitle':
             $element = new element($_POST['elementId']);

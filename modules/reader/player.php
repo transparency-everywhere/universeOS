@@ -12,10 +12,10 @@ $documentSQL = mysql_query("SELECT * FROM files WHERE id='$_GET[id]'");
 $documentData = mysql_fetch_array($documentSQL);
  $documentElementSQL = mysql_query("SELECT * FROM elements WHERE id='$documentData[folder]'");
  $documentElementData = mysql_fetch_array($documentElementSQL);
- 
-        $path = getFilePath($_GET[id]);
-        $path = "$path/$documentData[title]";
-  $folderPath = urldecode($documentFolderData[path]);
+        $fileClass = new file($_GET['id']);
+        $path = $fileClass->getFilePath();
+        $path = $path.'/'.$documentData['title'];
+  $folderPath = urldecode($documentFolderData['path']);
   ?>
 <!DOCTYPE html>
 <html>

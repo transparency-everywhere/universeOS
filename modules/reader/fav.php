@@ -98,18 +98,6 @@ if($_GET['action'] == "add"){
                             $favClass->show($_SESSION['userid']);
 					     ?>
                     </table>
-                    <?
-                    // $userFavs = getUserFavs();
-					// foreach($userFavs AS $userFav){
-						// echo "<tr>";
-						// echo "<td>".getFileIcon($userFav[type])."</td>";
-						// echo "<td>$userFav[type];</td>";
-						// echo "<td>$userFav[item];</td>";
-						// echo "<td>$userFav[timestamp];</td>";
-						// echo "<td>$userFav[hidden];</td>";
-						// echo"</tr>";
-					// }
-                    ?> 
             </div>
             <div style="display: none;" class="favTab" id="favTab_playList">
                 

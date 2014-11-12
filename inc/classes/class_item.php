@@ -214,7 +214,8 @@ function showThumb($type, $itemId){
                     $fileSQL = mysql_query("SELECT * FROM files WHERE type IN ('image/jpeg', 'image/png') AND title LIKE '%thumb%' AND folder='$itemId' ORDER BY RAND() LIMIT 0,1");
                     $fileData = mysql_fetch_array($fileSQL);
                     if($fileData){
-                        $path = "upload".getFilePath($fileData['id']);
+                        $fileClass = new file($fileData['id']);
+                        $path = "upload".$fileClass->getFilePath();
                         $path = "$path/$fileData[title]";
                     }
                 }
@@ -308,7 +309,8 @@ function showItemThumb($itemType, $itemId){
                 	$imgColumnStyle = "colspan=\"2\"";
                 }else{
                 $img = "fileIcons/";
-                $img .= getFileIcon($fileData['type']);
+                $classFiles = new files();
+                $img .= $classFiles->getFileIcon($fileData['type']);
                 //define info 1
                 $info[0] = "size";
                 $info[1] = round($fileData['size']/(1024*1024), 2)." MB";
@@ -327,7 +329,8 @@ function showItemThumb($itemType, $itemId){
 
                 //define linkIcon
                 $img = "fileIcons/";
-                $img .= getFileIcon($linkData[type]);
+                $classFiles = new files();
+                $img .= $classFiles->getFileIcon($linkData[type]);
 
                 //define info 1
                 $info[0] = "type";

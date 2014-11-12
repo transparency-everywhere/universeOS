@@ -91,7 +91,21 @@ include('classes/class_rss.php');
 include('classes/class_salt.php');
 
   
-	
+    function commaToOr($string, $type){
+        //converts Strings with Values, which are separeted with commas into SQL conform STRINGS
+        $string = explode(";", $string);
+        foreach($string as &$value){
+            if(empty($deddl)){
+                $return = "$type='$value'";
+                $deddl = "checked";
+            }else{
+            
+            $return = "$type='$value' OR $return";
+
+            }
+        }
+        return $return;
+    }
 
 include('classes/class_gui.php');
 include('classes/class_messages.php');
@@ -382,8 +396,8 @@ function uploadTempfile($file, $element, $folder, $privacy, $user, $lang=NULL, $
         $thumbname = "$filename.thumb";
         $size = $file['size'];
         $time = time();
-		
-	    $type = getMime($filename);
+        $classFiles = new files();
+	$type = $classFiles->getMime($filename);
         
 		
         $FileElementSQL = mysql_query("SELECT title, folder FROM elements WHERE id='$element'");
@@ -439,8 +453,9 @@ function addFile($file, $element, $folder, $privacy, $user, $lang=NULL, $downloa
         $thumbname = "$filename.thumb";
         $size = $file['size'];
         $time = time();
-		
-	    $type = getMime($filename);
+        
+        $classFiles = new files();
+	    $type = $classFiles->getMime($filename);
         
         $filefolderSQL = mysql_query("SELECT * FROM folders WHERE id='$folder'");
             $fileFolderData = mysql_fetch_array($filefolderSQL);
@@ -510,7 +525,8 @@ function deleteFile($fileId){
                 //file can only be deleted if uploader = deleter
                	if(authorize($fileData['privacy'], "edit")){
                     $folderPath = getFolderPath($fileElementData['folder']);
-                    $filePath = getFullFilePath($fileId);
+                    $fileClass = new file($fileId);
+                    $filePath = $fileClass->getFullFilePath($fileId);
                     $thumbPath = "$folderPath"."thumbs/$title";
                     if(unlink("$filePath")){
                     	if(mysql_query("DELETE FROM files WHERE id='$fileId'")){

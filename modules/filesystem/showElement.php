@@ -52,8 +52,9 @@ if($elementData['type'] == "image"){
         $folderPath = "upload$folderPath/thumbs/";
         }
         if(authorize($documentData['privacy'], "show", $documentData['owner'])){
+            $fileClass = new file($documentData['id']);
             ?>
-            <td onclick="openFile('image', '<?=$documentData['id'];?>', '<?=$elementData['title'];?>');" oncontextmenu="showMenu('image<?=$documentData['id'];?>'); return false;"><img src="<?=getFullFilePath($documentData['id']);?>" height="100px"></td>   
+            <td onclick="openFile('image', '<?=$documentData['id'];?>', '<?=$elementData['title'];?>');" oncontextmenu="showMenu('image<?=$documentData['id'];?>'); return false;"><img src="<?=$fileClass->getFullFilePath();?>" height="100px"></td>   
                 
         <? 
         $contextMenu = new contextMenu("image", $documentData['id'], $elementData['title'] , $documentData['owner']);

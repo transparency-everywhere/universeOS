@@ -120,8 +120,9 @@ class uff {
     //writes Data into an UFF
     function write($input){
             $fileId = $this->fileId;
+            $fileClass = new file($fileId);
                
-                $filePath = universeBasePath.'/'.getFullFilePath($fileId);
+                $filePath = universeBasePath.'/'.$fileClass->getFullFilePath();
                 $file = fopen($filePath, 'w');
 
                 fwrite($file, $input);
@@ -135,8 +136,9 @@ class uff {
     function show(){
                 
                 $fileId = $this->fileId;
+                $fileClass = new file($fileId);
                
-                $filePath = universeBasePath.'/'.getFullFilePath($fileId);
+                $filePath = universeBasePath.'/'.$fileClass->getFullFilePath();
 
                 $file = fopen($filePath, 'r');
                 $return = fread($file, filesize($filePath));

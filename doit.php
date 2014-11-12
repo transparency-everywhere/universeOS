@@ -2590,7 +2590,8 @@ else if($_GET['action'] == "showItemThumb"){
             <?    
             }
 else if($_GET['action'] == "validateTempFile"){
-				 if(validateTempFile($_POST['fileid'], $privacy))
+    $classFile = new file($_POST['fileid']);
+				 if($classFile->validateTempFile($privacy))
 				 	echo'true';
 				 else
 				 	echo'false';
@@ -2613,7 +2614,8 @@ else if($_GET['action'] == "submitUploader"){
 				$successfullUploadedFiles = 0;
 				foreach($files AS $file){
 					$woff .= $file;
-					if(validateTempFile($file, $privacy)){
+                                        $fileClass = new file($file);
+					if($fileClass->validateTempFile($privacy)){
 						$successfullUploadedFiles++;
 					}else
 						$filesWithError[] = $file; //add fileid to error list
@@ -2638,7 +2640,8 @@ else if($_GET['action'] == "manageUpload"){
 						$user = getUser();
 						
 						$id = uploadTempfile($file, $_POST['element'], '', $privacy, $user);
-						$li = "<li data-fileid=\"$id\">     <img src=\"gfx/icons/fileIcons/".getFileIcon(getMime($file['name']))."\" height=\"16\">     ".$file['name']."      <input type=\"hidden\" name=\"uploadedFiles[]\" value=\"$id\">    <i class=\"icon-remove pointer pull-right\" onclick=\"$(this).parent(\\'li\\').remove()\"></i></li>";
+                                                $filesClass = new files();
+						$li = "<li data-fileid=\"$id\">     <img src=\"gfx/icons/fileIcons/".$filesClass->getFileIcon($filesClass->getMime($file['name']))."\" height=\"16\">     ".$file['name']."      <input type=\"hidden\" name=\"uploadedFiles[]\" value=\"$id\">    <i class=\"icon-remove pointer pull-right\" onclick=\"$(this).parent(\\'li\\').remove()\"></i></li>";
 						
 						//add file to filelist in the uploader
 						echo'$(".tempFilelist").append(\''.$li.'\');';

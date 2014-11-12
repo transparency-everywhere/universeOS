@@ -34,13 +34,16 @@ class fav {
                                     $link = "openElement($item); return false;";
                                 }else if($type == "file"){
                                     $typeTable = "files";
-                                    $fileType = fileIdToFileType($item);
-                                    $img = "fileIcons/".getFileIcon($fileType, $size=NULL);
+                                    $fileClass = new file($item);
+                                    $fileType = $fileClass->getFileType();
+                                    $filesClass = new files();
+                                    $img = "fileIcons/".$filesClass->getFileIcon($fileType);
 
                                 }else if($type == "link"){
                                     $typeTable = "links";
                                     $fileType = linkIdToFileType($item);
-                                    $img = "fileIcons/".getFileIcon($fileType, $size=NULL);
+                                    $filesClass = new files();
+                                    $img = "fileIcons/".$filesClass->getFileIcon($fileType);
 
                                 }
                                 $favFolderSql = mysql_query("SELECT * FROM $typeTable WHERE id='$item'");

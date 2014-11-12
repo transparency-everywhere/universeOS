@@ -96,8 +96,8 @@ $k = 5;//limit
 		while ($suggestData = mysql_fetch_array($fileSuggestSQL)) {
 			
     
-			
-            $image = getFileIcon($suggestData['type']);
+            $classFiles = new files();
+            $image = $classFiles->getFileIcon($suggestData['type']);
 	
    			if(authorize($suggestData['privacy'], "show", $suggestData['owner'])){
 			echo"<li class=\"strippedRow\">";

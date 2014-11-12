@@ -6,7 +6,8 @@ include_once("../../../inc/functions.php");
         $documentSQL = mysql_query("SELECT id, title, type, filename, privacy, owner FROM files WHERE id='".save($_GET['fileId'])."'");
         $documentData = mysql_fetch_array($documentSQL); 
 		if(authorize($documentData['privacy'], "show", $documentData['owner'])){
-	        $downloadfile = getFilePath($_GET['fileId']);
+                $classFile = new file($_GET['fileId']);
+	        $downloadfile = $classFile->getFilePath();
 	        $filename = $documentData['filename'];
 	        $downloadfile = "../../../$downloadfile";
 	        $filesize = filesize($downloadfile);
