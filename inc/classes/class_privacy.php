@@ -29,7 +29,8 @@ class privacy {
 	  */
 	function isProtected(){
                 $value = $this->privacy;
-		if(end(explode(";", $value)) == "PROTECTED"){
+                $privacies = explode(";", $value);
+		if(end($privacies) == "PROTECTED"){
 			return true;
 		}else{
 			return false;
@@ -43,7 +44,8 @@ class privacy {
 	  */
 	function isUndeletable(){
                 $value = $this->privacy;
-		if(end(explode(";", $value)) == "UNDELETABLE"){
+                $privacies = explode(";", $value);
+		if(end($privacies) == "UNDELETABLE"){
 			return true;
 		}else{
 			return false;
@@ -289,13 +291,13 @@ class privacy {
 	  */
 	function authorize($privacy, $type, $author=NULL){
         
-		if(end(explode(";", $privacy)) == "UNDELETABLE"){
-			$undeletable = true;
-			$privacy = str_replace(";UNDELETABLE", "", $privacy);
-		}
-		
-		
-        if(end(explode(";", $privacy)) == "PROTECTED"){
+        $privacies = explode(";", $privacy);
+        $endExplode = end($privacies);
+	if($endExplode == "UNDELETABLE"){
+		$undeletable = true;
+		$privacy = str_replace(";UNDELETABLE", "", $privacy);
+	}
+        if($endExplode == "PROTECTED"){
         	
              $show = true;
              if(hasRight("editProtectedFilesystemItem")){

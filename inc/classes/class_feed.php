@@ -141,7 +141,7 @@ class feed {
    }
     
    
-    function createFeed($author, $feed, $validity, $type, $privacy, $attachedItem=NULL, $attachedItemId=NULL){
+    function create($author, $feed, $validity, $type, $privacy, $attachedItem=NULL, $attachedItemId=NULL){
         $feed = mysql_real_escape_string($feed);
 		
        //if privacy==h feed is not shown anyway so an insert would be jabberuserless

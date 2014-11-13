@@ -78,6 +78,11 @@ class user {
     }
 }
 
+function getUsername(){
+    $userData = $this->getData();
+    return $userData['username'];
+}
+
 
 function updateUserPassword($oldPassword, $newPassword, $newAuthSalt=NULL, $newKeySalt=NULL, $privateKey=NULL, $userid=NULL){
   	if($userid == NULL){

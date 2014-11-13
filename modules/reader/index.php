@@ -12,7 +12,7 @@
   
         <div class="dhtmlgoodies_aTab" style="">
             <?
-            if(isset($_SESSION[userid])){
+            if($login){
                 include("fav.php");
             }else{
                 //load offline Startpage

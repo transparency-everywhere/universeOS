@@ -2,16 +2,14 @@
 session_start();
 include("inc/config.php");
 include("inc/functions.php");
-$group = $_GET['id'];
-$needle = "$_GET[id];";
-$group = save($group);
-$groupSql = mysql_query("SELECT * FROM groups WHERE id='$group'");
-$groupData = mysql_fetch_array($groupSql);
+$group = (int)$_GET['id'];
+$groupClass = new groups();
+$groupData = $groupClass->getGroupData($group);
 $link = "group.php?id=$group";
 
 //check if user is admin
-$admins = explode(";", $groupData[admin]);
-if (in_array("$_SESSION[userid]", $admins)) {
+$admins = explode(";", $groupData['admin']);
+if (in_array(getUser(), $admins)) {
    $admin = "1";
 }
 

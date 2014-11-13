@@ -1,6 +1,7 @@
 <?php
 
 include('classes/class_user.php');
+include('classes/class_debug.php');
   $userid = getUser();
   $time = time();
 

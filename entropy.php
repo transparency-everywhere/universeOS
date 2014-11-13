@@ -1,5 +1,5 @@
 <?php
-class entropy
+class entropy{}
 
 
 switch($action){

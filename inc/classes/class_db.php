@@ -32,8 +32,12 @@ class db{
                     $query[] = "`".save($row)."`";
                     $values[] = "'".save($value)."'";
             }
+
+
             $query = "(".implode(',', $query).")";
             $values = "(".implode(',', $values).");";
+
+
             mysql_query("INSERT INTO `$table` $query VALUES $values");
             return mysql_insert_id();
 	}        /**
@@ -47,12 +51,14 @@ class db{
 					
             //generate update query	
             foreach($options AS $row=>$value){
+
                     //only add row to query if value is not empty
                     if(!empty($value) ||($value == 0)){
                             $query[] = " $row='".save($value)."'";
                     }
             }
             $query = implode(',', $query);
+
             
             mysql_query("UPDATE `$table` SET $query WHERE $primary[0]='".save($primary[1])."'");
             return mysql_affected_rows();
@@ -69,16 +75,36 @@ class db{
         /**
         *Updates record with $primary[0]=$primary[1] in db $table 
         *@param string $table Name of table
-        *@primary array Primary id of the record
+        *@primary array Primary id of the record( array(columnname, value) )
+        *@collumns array columns that will be selcted ('*' if null)
         *@return array mysql_result 
         */
-        public function select($table, $primary=NULL){
+        public function select($table, $primary=NULL, $columns=NULL, $order=NULL){
             if(!empty($primary)){
                 $WHERE = "WHERE $primary[0]='".save($primary[1])."'";
             }else{
                 $WHERE = "";
             }
-                $query = "SELECT * FROM `$table` $WHERE";
+            
+            
+            
+            
+            if(!empty($columns)){
+                foreach($columns AS $column){
+                    $columnQuery[] = '`'.$column.'`';
+                }
+                $columnQuery = join(',', $columnQuery);
+            }else{
+                $columnQuery = '*';
+            }
+            
+            if(!empty($order)){
+                $ORDER = "ORDER BY $order[0] $order[1]'";
+            }else{
+                $ORDER = "";
+            }
+            
+                $query = "SELECT $columnQuery FROM `$table` $WHERE";
                 $sql = mysql_query($query);
                 if($sql)
                 while($data = mysql_fetch_array($sql)){
@@ -93,6 +119,12 @@ class db{
                         return $return;
                     }
                 }
+
+
             return $return;
         }
+
+
+
+
  }

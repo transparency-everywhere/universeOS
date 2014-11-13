@@ -51,7 +51,7 @@ class groups{
                         return $groups->get($userid);
 
                 }
-
+                
         function getGroupData($groupId){
                         $data = mysql_fetch_array(mysql_query("SELECT * FROM groups WHERE id='".mysql_real_escape_string($groupId)."'"));
                         return $data;

@@ -60,7 +60,7 @@ if(empty($_GET['initter'])){
           <ul>
               <li><a class="smiley smiley1" onclick="addStrToChatInput('<?=$buddyid;?>', ':\'(');"></a><a class="smiley smiley2" onclick="addStrToChatInput('<?=$buddyid;?>', ':|');"></a><a class="smiley smiley3" onclick="addStrToChatInput('<?=$buddyid;?>', ';)');"></a><a class="smiley smiley4" onclick="addStrToChatInput('<?=$buddyid;?>', ':P');"></a></li>
               <li><a class="smiley smiley5" onclick="addStrToChatInput('<?=$buddyid;?>', ':D');"></a><a class="smiley smiley6" onclick="addStrToChatInput('<?=$buddyid;?>', ':)');"></a><a class="smiley smiley7" onclick="addStrToChatInput('<?=$buddyid;?>', ':(');"></a><a class="smiley smiley8" onclick="addStrToChatInput('<?=$buddyid;?>', ':-*');"></a></li>
-              <li><a href="#" onclick="popper('doit.php?action=chatSendItem&buddy=<?=$buddyData[userid];?>');">Send File</a></li>
+              <li><a href="#" onclick="popper('doit.php?action=chatSendItem&buddy=<?php echo $buddyData['userid'];?>');">Send File</a></li>
           </ul>
       </div>
       <footer class="blackGradient">

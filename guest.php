@@ -138,7 +138,7 @@ include_once("inc/config.php");
                     <td><input type="password" name="password" placeholder="password" id="loginPassword" class="margin bigInput" style="width: 170px;"></td>
                 </tr>
                 <tr>
-                    <td style="color: #FFFFFF" align="center"><?=$loginerror;?></td>
+                    <td style="color: #FFFFFF" align="center"></td>
                 </tr>
                 <tr>
                     <td><input type="submit" value="Log In" name="submit" class="btn btn-primary margin"></td>
@@ -207,8 +207,9 @@ include_once("inc/config.php");
 </script>
 <noscript><p><img src="http://analytics.transparency-everywhere.com/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript>
 <!-- End Piwik Code -->
-    <?
-    include("openFileFromLink.php");
-    ?>
-    </body>
-    </html>
+<?php
+			
+include('actions/openFileFromLink.php');
+?>
+</body>
+</html>

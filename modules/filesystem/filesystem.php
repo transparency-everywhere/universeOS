@@ -1,11 +1,11 @@
 <?
-if(empty($_SESSION[userid])) {
+if(empty($_SESSION['userid'])) {
 session_start();
 }
 
-include_once("../../inc/config.php");
-include_once("../../inc/functions.php");
-if(!isset($_GET[reload])){
+include_once(universeBasePath.'/'."inc/config.php");
+include_once(universeBasePath.'/'."inc/functions.php");
+if(!isset($_GET['reload'])){
     ?>
 <div id="filesystem" class="fenster" style="display: none;">
     <header class="titel">
@@ -21,27 +21,23 @@ if(!isset($_GET[reload])){
 ?>
  
         
-    <?
-if(!$_GET['action']) {
-if($_GET['folder']) {
-$folder = $_GET['folder'];
-} else {
-$folder = "1";
-}
-$pathsql = mysql_query("SELECT id, path FROM folders WHERE id='$folder'");
-$pathdata = mysql_fetch_array($pathsql);
-?> 
+<?
+if(!isset($_GET['action'])) {
+    if(!isset($_GET['folder'])) {
+        $folder = "1";
+    }
+    ?> 
       <div id="fileBrowser_tabView">
       <div class="dhtmlgoodies_aTab">
           <div>
-            <?
+            <?php
             include("fileBrowser.php");
-             ?>
+            ?>
           </div>
 
       </div>
       <script type="text/javascript">
-initTabs('fileBrowser_tabView',Array('Universe'),0,"","",Array(false,true));
+        initTabs('fileBrowser_tabView',Array('Universe'),0,"","",Array(false,true));
       </script>
       <footer class="footer">
           
@@ -51,6 +47,5 @@ initTabs('fileBrowser_tabView',Array('Universe'),0,"","",Array(false,true));
 </div>
 </div>
 <?
-} 
-if(!isset($_GET['reload'])){
- } ?>
+}
+?>

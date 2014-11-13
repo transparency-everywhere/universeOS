@@ -58,7 +58,12 @@ switch($action){
 			//create signature
 			$sig = new signatures();
 			$sig->create('user', $userid, $privateKey, $publicKey);
-			mysql_query("UPDATE user SET password='$password', cypher='sha512' WHERE userid='$userid'");
+                        
+                        
+                        $db = new db();
+                        $values['password'] = $password;
+                        $values['cypher'] = 'sha512';
+                        $db->update('user', $values, array('userid', $userid));
 			echo "1";
 		}
 	break;
@@ -72,8 +77,9 @@ switch($action){
 			$result = updateUserPassword($_POST['oldPassword'], $_POST['newPassword'], $_POST['saltAuthNew'],  $_POST['saltKeyNew'], $_POST['newPrivateKey'], $userid);
 			if($result == true){
 				
-				mysql_query("UPDATE `user` SET `cypher`='sha512_2' WHERE userid='$userid'");
-				
+                                $db = new db();
+                                $values['cypher'] = 'sha512_2';
+                                $db->update('user', $values, array('userid', $userid));
 			}else{
 				echo $result;
 			}

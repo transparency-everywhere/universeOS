@@ -1,22 +1,27 @@
 <?php
-error_reporting(0);
-@ini_set('display_errors', 0);
-session_start();
-
 include_once("inc/functions.php");
 include_once("inc/config.php");
-universe::init();
+
+$universe = new universe();
+$universe->init();
 $timestamp = time();
-$usersql = mysql_query("SELECT * FROM user WHERE userid='".getUser()."'");
-$userdata = mysql_fetch_array($usersql);
+if(getUser()){
+    $userClass = new user(getUser());
+    $userData = $userClass->getData();
+    $login = true;
+}else{
+    
+    $login = false;
+    $userData['startLink'] = ''; //otherwise notice 'undefined index'
+}
 
 
 include("inc/header.php");
-?>
-    <body onclick="clearMenu()" onload="clock()<?=$startLink;?>">
-<?
-if(!isset($_SESSION["userid"])) {
+echo '<body onclick="clearMenu()" onload="clock()'.$userData['startLink'].'">';
+
+if(!$login) {
     $_SESSION['loggedOut'] = true;
+    
     include("guest.php");
     
     die();
@@ -67,10 +72,11 @@ if(!isset($_SESSION["userid"])) {
                 ?>
             </div>
         </div>
-<?
-    gui::showDock();
+<?php
+$gui = new gui();
+$gui->showDock();
 			
-    include("openFileFromLink.php");
+include('actions/openFileFromLink.php');
 ?>
 </body>
     

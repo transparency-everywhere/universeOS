@@ -2,12 +2,12 @@
 session_start();
 require_once("inc/config.php");
 require_once("inc/functions.php");
-$action = save("$_GET[action]");
-$subaction = save("$_GET[subaction]");
+$action = save($_GET['action']);
+$subaction = save($_GET['subaction']);
 //here should be a proof if the user is a admin
 
 switch($action){
-    case '':
+    default:
 ?>
         <div class="jqPopUp border-radius transparency" id="admin">
             <a style="position: absolute; top: 10px; right: 10px; color: #FFF;" id="closeAdmin">X</a>
@@ -70,16 +70,16 @@ case 'users':
                             $i++;
                             ?>
                             <tr border="0" bgcolor="#<?=$color;?>" width="100%" height="30">
-                                <td width="27">&nbsp;<?=showUserPicture($userData[userid], 20);?></td>
-                                <td style="color: #131313!important; font-color: #131313!important;"><?=date("d.m.y", $userData[regdate]);?></td>
-                                <td style="color: #131313!important; font-color: #131313!important;"><?=date("d.m.y", $userData[lastactivity]);?></td>
-                                <td style="color: #131313!important; font-color: #131313!important;"><?=$userData[username];?></td>
+                                <td width="27">&nbsp;<?=showUserPicture($userData['userid'], 20);?></td>
+                                <td style="color: #131313!important; font-color: #131313!important;"><?=date("d.m.y", $userData['regdate']);?></td>
+                                <td style="color: #131313!important; font-color: #131313!important;"><?=date("d.m.y", $userData['lastactivity']);?></td>
+                                <td style="color: #131313!important; font-color: #131313!important;"><?=$userData['username'];?></td>
                                 <td align="right">
                                     <div class="btn-toolbar">
                                         <div class="btn-group">
                                             <a class="btn" href="#"><i class="icon-ok-circle"></i></a>
-                                            <a class="btn" href="#" title="show info" onclick="$('#loader').load('admin.php?action=users&subaction=showInfo&user=<?=$userData[userid];?>');"><i class="icon-user"></i></a>
-                                            <a class="btn" href="#" title="delete" onclick="confirm('Are you sure to delete this user?');$('#loader').load('admin.php?action=users&userid=<?=$userData[userid];?>')" title="mark as seen"><i class="icon-ban-circle"></i></a>
+                                            <a class="btn" href="#" title="show info" onclick="$('#loader').load('admin.php?action=users&subaction=showInfo&user=<?=$userData['userid'];?>');"><i class="icon-user"></i></a>
+                                            <a class="btn" href="#" title="delete" onclick="confirm('Are you sure to delete this user?');$('#loader').load('admin.php?action=users&userid=<?=$userData['userid'];?>')" title="mark as seen"><i class="icon-ban-circle"></i></a>
                                         </div>
                                     </div>
                                 </td>
@@ -103,12 +103,15 @@ case 'users':
 <?
     }else if($_GET[subaction] == "showInfo"){
     	if($_POST[submit]){
-    		if(mysql_query("UPDATE `user` SET  `usergroup`= '$_POST[usergroup]' WHERE `userid` ='$_POST[user]'")){
+                $db = new db();
+                $values['usergroup'] = $_POST['usergroup'];
+                
+    		if($db->update('user', $values, array('userid',$_POST['user']))){
     			jsAlert("changes saved");
     		}
     	}
-    	$userSQL = mysql_query("SELECT * FROM user WHERE userid='".mysql_real_escape_string($_GET[user])."'");
-    	$userData = mysql_fetch_array($userSQL);
+        $userClass = new user($_GET['user']);
+    	$userData = $userClass->getData();
     	?>
         <div class="jqPopUp border-radius transparency" id="admin">
             <a style="position: absolute; top: 10px; right: 10px; color: #FFF;" id="closeAdmin">X</a>

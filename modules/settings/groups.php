@@ -2,12 +2,12 @@
       session_start();
   include_once("../../inc/config.php");
   include_once("../../inc/functions.php");
-    if($_GET[subaction] == "add"){
-    if(isset($_POST[submit])){
-        $description = $_POST[description];
-        $title = $_POST[title];
-        $privacy = $_POST[privacy];
-        $userlist = $_POST[users];
+    if($_GET['subaction'] == "add"){
+    if(isset($_POST['submit'])){
+        $description = $_POST['description'];
+        $title = $_POST['title'];
+        $privacy = $_POST['privacy'];
+        $userlist = $_POST['users'];
         if((isset($description)) && (isset($title)) && (isset($privacy))){
         mysql_query("INSERT INTO `groups` (`title`, `description`, `public`, `admin`) VALUES ('$title', '$description', '$public', '$userid');");
         $groupId = mysql_insert_id();
@@ -48,26 +48,25 @@
                      <div style="width: 200px; height: 100px; overflow: scroll;">
                          <table cellspacing="0">
         <?
-        $buddylistSql = mysql_query("SELECT * FROM buddylist WHERE owner='$_SESSION[userid]' && request='0'");
+        $buddylistSql = mysql_query("SELECT * FROM buddylist WHERE owner='".$_SESSION['userid']."' && request='0'");
         while($buddylistData = mysql_fetch_array($buddylistSql)) {
-            $blUserSql = mysql_query("SELECT userid, username FROM user WHERE userid='$buddylistData[buddy]'");
-            $blUserData = mysql_fetch_array($blUserSql);
-            if(!empty($buddylistData[alias])){
-                $username = $buddylistData[alias];
+            
+            $userClass = new user($buddylistData['buddy']);
+            if(!empty($buddylistData['alias'])){
+                $username = $buddylistData['alias'];
             } else{
-            $username = htmlspecialchars($blUserData[username]);
+                $username = $userClass->getUsername();
                 }
             if($i%2 == 0) {
                 $bgcolor="FFFFFF";
-
             } else {    
                 $bgcolor="e5f2ff";
             }
             $i++;
             ?>
                              <tr bgcolor="#<?=$bgcolor;?>">
-                                 <td><input type="checkbox" name="users[]" value="<?=$blUserData[userid];?>"></td>
-                                 <td><?=$blUserData[username];?></td>
+                                 <td><input type="checkbox" name="users[]" value="<?=$buddylistData['buddy'];?>"></td>
+                                 <td><?=$username;?></td>
                              </tr>
             <?}?> 
                          </table>
@@ -83,7 +82,7 @@
          </form>
      
      <?
-    }else if(empty($_GET[subaction])){
+    }else if(empty($_GET['subaction'])){
 ?>
      
          <h2>Groups</h2>

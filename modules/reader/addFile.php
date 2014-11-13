@@ -15,7 +15,7 @@ if(empty($error)){
     $customEdit = $_POST[privacyCustomEdit];
     
     $privacy = exploitPrivacy("$_POST[privacyPublic]", "$_POST[privacyHidden]", $customEdit, $customShow);
-    $user = $_SESSION[userid];
+    $user = getUser();
     $element = save("$_POST[element]");
     $folder = save("$_POST[folder]");
     $file = $_FILES['uploadedfile'];

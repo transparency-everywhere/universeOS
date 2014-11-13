@@ -490,6 +490,8 @@ class contextMenu{
 						$target = 'target="'.$option['target'].'"';
 					
 				}
+                                if(!isset($target))
+                                    $target = '';
 				$list .= "<li><a $href $onclick $target>".$option['title'].'</a></li>';  
 					
 				}
@@ -526,6 +528,8 @@ class contextMenu{
 						$target = 'target="'.$option['target'].'"';
 					
 				}
+                                if(!isset($target))
+                                    $target = '';
 				$list .= "<li><a $href $onclick $target>".$option['title'].'a</a></li>';  
 					
 				}
