@@ -24,8 +24,8 @@ if(isset($_SESSION[$intWindows])){
 }else{
     $lockIcon = "lock.png";
 }
-
-markMessageAsRead($buddyid, $userid);
+$messageClass = new message();
+$messageClass->markAsRead($buddyid, $userid);
 if(empty($_GET['initter'])){
  ?>
       <div class="chatMainFrame">
@@ -47,7 +47,7 @@ if(empty($_GET['initter'])){
 		  </script>
           <div class="chatMainFrame_<?=$buddyName;?>">
 			  <?
-			  showMessages($userid, $buddyid, "0,10");
+			  $messageClass->showMessages($userid, $buddyid, "0,10");
 		      unset($intWindows);?>
               <div onclick="chatLoadMore('<?=$buddyid;?>', '1');">...load more</div>
           </div>

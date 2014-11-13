@@ -7,7 +7,7 @@ include_once("../../inc/functions.php");
         $documentData = mysql_fetch_array($documentSQL); 
 		if(authorize($documentData['privacy'], "show", $documentData['owner'])){
                     $fileClass = new file($_GET['fileId']);
-                    $downloadfile = $fileClass->getFilePath();
+                    $downloadfile = $fileClass->getPath();
                     $filename = $documentData['filename'];
                     $downloadfile = "../../$downloadfile";
                     $filesize = filesize($downloadfile);

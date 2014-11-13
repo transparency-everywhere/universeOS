@@ -29,7 +29,14 @@
 	                        			<tr>
 	                        				<td width="40" valign="bottom"><?=showUserPicture($mailUserData['userid'], "30",1);?></td>
 	                        				<td width="150" valign="bottom" style="font-size: 23px;"><?=$mailUserData['username'];?></td>
-	                        				<td valign="bottom" align="right"><a href="#" style="margin-top:5px;"><?=universeTime($mailData['timestamp']);?></a></td>
+	                        				<td valign="bottom" align="right">
+                                                                    <a href="#" style="margin-top:5px;">
+                                                                    <?php
+                                                                    $guiClass = new gui();
+                                                                    $guiClass->universeTime($mailData['timestamp']);
+                                                                    ?>
+                                                                    </a>
+                                                                </td>
 	                        			</tr>
 	                        		</table>
 	                        	</div>

@@ -4,7 +4,8 @@ include("inc/config.php");
 include("inc/functions.php");
 $time = time();
 if($_GET['action'] == "showScore"){
-    echo showScore($_GET['type'], $_GET['typeid'], 1);
+    $item = new item($_GET['type'], $_GET['typeid']);
+    echo showScore(1);
 } 
 if($_GET['action'] == "scorePlus"){
     $type = $_GET['type'];
@@ -124,8 +125,8 @@ else if($_GET['action'] == "download"){
         $documentSQL = mysql_query("SELECT id, title, type, filename, privacy, owner FROM files WHERE id='".save($_GET['fileId'])."'");
         $documentData = mysql_fetch_array($documentSQL); 
 		if(authorize($documentData['privacy'], "show", $documentData['owner'])){
-                $file = new file();
-	        $downloadfile = $file->getFilePath($_GET['fileId']);
+                $file = new file($_GET['fileId']);
+	        $downloadfile = $file->getPath();
 	        $downloadfile = substr($downloadfile, 1);
 	        $filename = $documentData['filename'];
 	        $downloadfile = "upload/$downloadfile/$filename";
@@ -518,7 +519,8 @@ else if($_GET['action'] == "joinGroup"){
      	
 		
 		$group = save($_GET['group']);
-		$groupData = getGroupData($group);
+                $groupsClass = new groups();
+		$groupData = $groupsClass->getGroupData($group);
 		if($groupData["public"] == "1"){
 			//if group is public add group attachment
          	$time = time();
@@ -598,7 +600,8 @@ else if($_GET['action'] == "addFolder"){
                     $privacy = exploitPrivacy("".$_POST['privacyPublic']."", "".$_POST['privacyHidden']."", $customEdit, $customShow);
                     $user = $_SESSION['userid'];
                 if(!empty($_POST['folder']) AND !empty($_POST['name'])){
-                $answer = createFolder($_POST['folder'], $_POST['name'], $user, $privacy);
+                    $folder = new folder();
+                $answer = $folder->create($_POST['folder'], $_POST['name'], $user, $privacy);
 				}
                 
                 if(!empty($answer)){
@@ -769,7 +772,8 @@ else if($_GET['action'] == "addElement"){
                     <td align="right">Language:&nbsp;</td>
                     <td>
                     	<?php
-                    	echo showLanguageDropdown();
+                        $guiClass = new gui();
+                    	echo $guiClass->showLanguageDropdown();
 						?>
                     </td>
                 </tr>
@@ -1224,10 +1228,11 @@ else if($_GET['action'] == "groupInviteUsers"){
          $time = time();
          if($_POST['submit']){
          $userlist = $_POST['users'];
+         $groupsClass = new groups();
          if(isset($userlist)){
-	         foreach ($userlist as &$value) {
-	         	userJoinGroup($group, $value);
-			 }
+                    foreach ($userlist as &$value) {
+	         	$groupsClass->userJoinGroup($group, $value);
+                    }
 		 }
 		 jsAlert("worked:)");
          }
@@ -1293,8 +1298,8 @@ else if($_GET['action'] == "groupInviteUsers"){
      }
 else if($_GET['action'] == "groupMakeUserAdmin"){
      	
-		
-     	echo groupMakeUserAdmin($_GET['groupId'], $_GET['userId']);
+	$groupsClass = new groups();
+     	echo $groupsClass->makeUserAdmin($_GET['groupId'], $_GET['userId']);
 		
 		
      }
@@ -1303,12 +1308,14 @@ else if($_GET['action'] == "groupremoveAdmin"){
      }
 else if($_GET['action'] == "groupLeave"){
          $group = $_GET['id'];
-     	if(deleteUserFromGroup(getUser(), $group)){
+        $groupsClass = new groups();
+     	if($groupsClass->deleteUserFromGroup(getUser(), $group)){
          jsAlert("You left the group");
 		}
      }
 else if($_GET['action'] == "deleteUserFromGroup"){
-     	if(deleteUserFromGroup($_GET['userid'], $_GET['groupid'])){
+        $groupsClass = new groups();
+     	if($groupsClass->deleteUserFromGroup($_GET['userid'], $_GET['groupid'])){
 			echo'<script>parent.$(".groupMember_'.$_GET['groupid'].'_'.$_GET['userid'].'").hide();</script>';
      		jsAlert('The user left the group.');
      	}
@@ -1321,8 +1328,8 @@ else if($_GET['action'] == "deleteUserFromGroup"){
      
      
 else if($_GET['action'] == "chatSendMessage"){
-     	
-		if(sendMessage($_GET['buddy'], $_POST['message'], $_POST['cryption'])){
+                $messageClass = new message();
+		if($messageClass->send($_GET['buddy'], $_POST['message'], $_POST['cryption'])){
 			
 	        echo"<script>";
 				?>
@@ -1339,7 +1346,8 @@ else if($_GET['action'] == "updateMessageStatus"){
         	//updates if the message was seen, after the receiver clicked the input in the textarea
 	        $user = getUser();
 	        $buddy = $_GET['buddy'];
-		    markMessageAsRead($buddy, $user);
+                    $messageClass = new message();
+		    $messageClass->markAsRead($buddy, $user);
 			echo "1";
 		
         }
@@ -1347,13 +1355,14 @@ else if($_GET['action'] == "chatReload"){
         	
 		  $buddyName = $_GET['buddyName'];
 		  $buddy = user::usernameToUserid($buddyName);
-			
+                  $messageClass = new message();
 			
           echo'<script>';
 		   	echo"chatEncrypt('$buddyName');";
 		  echo'</script>';
           echo"<div class=\"chatMainFrame_<?=$buddyName;?>\">";
-			  showMessages(getUser(), $buddy, "0,10");
+          
+                $messageClass->showMessages(getUser(), $buddy, "0,10");
           echo"<div onclick=\"chatLoadMore('<?=$buddyName;?>', '1');\">...load more</div>";
           echo'</div>';
         }
@@ -1373,8 +1382,8 @@ else if($_GET['action'] == "chatLoadMore"){
             
             
 	
-	
-           		showMessages($userid, $buddy, $limit);
+                $messageClass = new message();
+           	$messageClass->showMessages($userid, $buddy, $limit);
 				
 				
 				
@@ -1385,17 +1394,17 @@ else if($_GET['action'] == "chatLoadMore"){
 else if($_GET['action'] == "chatSendItem"){
         	if(isset($_POST['submit'])){
         		
-				
-					$message = "[itemThumb type=".$_POST['type']." typeId=".$_POST['typeId']."]";
-					if(sendMessage($_POST['buddy'], $message, $_POST['cryption'])){
-						jsAlert("message");
-				        echo"<script>";
-							?>
-				            parent.$('.chatInput').val('');
-				            parent.$('#test_<?=str_replace(" ","_",$_POST['buddyName']);?>').load('modules/chat/chatt.php?buddy=<?=urlencode($_POST['buddyName']);?>&initter=1');
-				        	<?
-				        echo"</script>";
-					}
+                    $messageClass = new message();
+                    $message = "[itemThumb type=".$_POST['type']." typeId=".$_POST['typeId']."]";
+                    if($messageClass->send($_POST['buddy'], $message, $_POST['cryption'])){
+                            jsAlert("message");
+                    echo"<script>";
+                                    ?>
+                        parent.$('.chatInput').val('');
+                        parent.$('#test_<?=str_replace(" ","_",$_POST['buddyName']);?>').load('modules/chat/chatt.php?buddy=<?=urlencode($_POST['buddyName']);?>&initter=1');
+                            <?
+                    echo"</script>";
+                    }
         	}
         	$buddy = $_GET['buddy'];
 			$buddyName = useridToUsername($buddy);
@@ -1581,7 +1590,8 @@ else if($_GET['action'] == "showSingleImage"){
          $file = $_GET['file'];
          //maybe dont works with strange letters etc.
          $title = $_GET['title'];
-        $path = getFilePath($file);
+         $fileClass = new file($file);
+        $path = $fileClass->getPath();
         $path = "$path/$title";
         ?>
         <div style="position: absolute; top: 57px; right: 0px; bottom: 100px; left: 0px; overflow: auto;" id="<?=$elementName;?>">
@@ -1596,8 +1606,8 @@ else if($_GET['action'] == "addGroup"){
             $title = $_POST['title'];
             $privacy = $_POST['privacy'];
             $users = $_POST['users'];
-
-           	if(createGroup($title, $privacy, $description, $users)){
+                $groupsClass = new groups();
+           	if($groupsClass->createGroup($title, $privacy, $description, $users)){
            		echo"<script>";
 				echo"parent.$('.jqPopUp').hide();";
 				echo"parent.updateDashbox('group');";
@@ -2023,7 +2033,8 @@ else if($_GET['action'] == "deleteItem"){
                 $checkFolderSql = mysql_query("SELECT  privacy, creator, folder FROM folders WHERE id='$itemId'");
                 $checkFolderData = mysql_fetch_array($checkFolderSql);
                 if(authorize($checkFolderData['privacy'], "delete", $checkFolderData['creator'])){
-                    deleteFolder("$itemId");
+                    $classFolder = new folder($itemId);
+                    $classFolder->delete();
 					?>
                	    <script>
                     	parent.addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=<?=$checkFolderData['folder'];?>&reload=1');
@@ -2052,8 +2063,8 @@ else if($_GET['action'] == "deleteItem"){
                 $fileSql = mysql_query("SELECT * FROM files WHERE id='$fileId'");
                 $fileData = mysql_fetch_array($fileSql);
                 if(authorize($fileData['privacy'], "edit", $fileData['owner'])){
-				
-                    if(deleteFile($fileId) OR true){
+                    $fileClass = new file($fileId);
+                    if($fileClass->delete()){
                             $fileElementSql = mysql_query("SELECT id, title FROM elements WHERE id='".$fileData['folder']."'");
                             $fileElementData = mysql_fetch_array($fileElementSql);
                             jsAlert("File has been deleted :( ");
@@ -2063,6 +2074,8 @@ else if($_GET['action'] == "deleteItem"){
                                     </script>
                                 <?
                         
+                    }else{
+                        jsAlert('error');
                     }
 				}
             }else if($type == "internLink"){
@@ -2273,7 +2286,8 @@ else if($_GET['action'] == "editItem"){
                         $checkFolderSql = mysql_query("SELECT * FROM folders WHERE id='$itemId'");
                         $checkFolderData = mysql_fetch_array($checkFolderSql);
                         if(authorize($checkFolderData['privacy'], "edit", $checkFolderData['creator'])){
-                            $parentFolderPath = getFolderPath($checkFolderData['folder']);
+                            $folderClass = new folder($checkFolderData['folder']);
+                            $parentFolderPath = $folderClass->getPath();
 							
 							//check if folder exists
 							if (!file_exists("$parentFolderPath".urldecode($_POST['name']))) {
@@ -2370,6 +2384,7 @@ else if($_GET['action'] == "editItem"){
                     $editData = mysql_fetch_array($editSQL);
                     $title = $editData['title'];
                     $headTitle = "element $title";
+                    $guiClass = new gui();
                     $edit = "
                     <tr>
                         <td>Name:</td>
@@ -2409,7 +2424,7 @@ else if($_GET['action'] == "editItem"){
 	                <tr>
 	                    <td>Language:</td>
 	                    <td>
-	                    	".showLanguageDropdown($editData['language'])."
+	                    	".$guiClass->showLanguageDropdown($editData['language'])."
 	                    </td>
 	                </tr>
                         ";
@@ -2638,9 +2653,9 @@ else if($_GET['action'] == "manageUpload"){
             			$file = $_FILES['Filedata'];
 						
 						$user = getUser();
-						
-						$id = uploadTempfile($file, $_POST['element'], '', $privacy, $user);
                                                 $filesClass = new files();
+						$id = $filesClass->uploadTempfile($file, $_POST['element'], '', $privacy, $user);
+                                                
 						$li = "<li data-fileid=\"$id\">     <img src=\"gfx/icons/fileIcons/".$filesClass->getFileIcon($filesClass->getMime($file['name']))."\" height=\"16\">     ".$file['name']."      <input type=\"hidden\" name=\"uploadedFiles[]\" value=\"$id\">    <i class=\"icon-remove pointer pull-right\" onclick=\"$(this).parent(\\'li\\').remove()\"></i></li>";
 						
 						//add file to filelist in the uploader
@@ -2770,7 +2785,8 @@ else if($_GET['action'] == "deleteFile"){
                 if(proofLogin()){
                     
                     $fileId = save($_GET['fileId']);
-                    if(deleteFile($fileId)){
+                    $fileClass = new file($fileId);
+                    if($fileClass->delete()){
                         $fileSql = mysql_query("SELECT * FROM files WHERE id='$fileId'");
                         $fileData = mysql_fetch_array($fileSql);
                             $fileElementSql = mysql_query("SELECT id, title FROM elements WHERE id='$fileData[folder]'");
@@ -2798,23 +2814,25 @@ else if($_GET['action'] == "deleteLink"){
                 }
             }
 else if($_GET['action'] == "protectFileSystemItems"){
-            	
-            	protectFilesystemItem($_GET['type'], $_GET['itemId']);
+    $item = new item($_GET['type'], $_GET['itemId']);
+            	$item->protectFilesystemItem($_GET['type'], $_GET['itemId']);
 				jsAlert("This Item can not be edited anymore.");
             }
 else if($_GET['action'] == "removeProtectionFromFileSystemItems"){
-            	
-            	removeProtectionFromFilesystemItem($_GET['type'], $_GET['itemId']);
+            	$item = new item($_GET['type'], $_GET['itemId']);
+            	$item->removeProtection($_GET['type'], $_GET['itemId']);
 				jsAlert("This Item can be edited again.");
             }
 else if($_GET['action'] == "makeFileSystemItemUndeletable"){
             	
-            	makeFilesystemItemUndeletable($_GET['type'], $_GET['itemId']);
+            	$item = new item($_GET['type'], $_GET['itemId']);
+            	$item->makeUndeletable($_GET['type'], $_GET['itemId']);
 				jsAlert("This Item can not be deleted anymore.");
             }
 else if($_GET['action'] == "makeFileSystemItemDeletable"){
             	
-            	makeFilesystemItemDeletable($_GET['type'], $_GET['itemId']);
+            	$item = new item($_GET['type'], $_GET['itemId']);
+            	$item->makeDeletable($_GET['type'], $_GET['itemId']);
 				jsAlert("This Item can be deleted again.");
             }
             
@@ -2900,8 +2918,8 @@ else if($_GET['action'] == "createNewUFF"){
 					
 					    
             			$title10 = addslashes(substr($elementData['title'], 0, 10));
-                        
-                        $path = universeBasePath.'/'.getFolderPath($elementData['folder']);
+                        $folderClass = new folder($elementData['folder']);
+                        $path = universeBasePath.'/'.$folderClass->getPath();
                         $filename = "$filename.UFF";
                         $folder = $element;
                         $timestamp = time();
@@ -3029,7 +3047,8 @@ else if($_GET['action'] == "tester"){
 //				$array['three'] = 'quatro';
 //				
 //				echo $db->insert('table', $array);
-    echo getFolderPath(1);
+    $folderClass = new folder(1);
+    echo $folderClass->getPath(1);
 	     		
             }
 ?>

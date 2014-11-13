@@ -58,7 +58,8 @@ class element {
 
 					//delete all Files
 					foreach($files AS &$fileId){
-						deleteFile($fileId);
+                                            $fileClass = new file($fileId);
+						$fileClass->delete();
 					}
 					
 					//delete all links
@@ -73,8 +74,8 @@ class element {
                                         $feedClass = new feed();
                                         $feedClass->deleteFeeds("element", $elementId);
                                 //delete all shortcuts
-                                $shortcutClass = new shortcut();
-                                $shortcutClass->deleteShortcuts("element", $elementId);
+                                $shortcutClass = new shortcut("element", $elementId);
+                                $shortcutClass->delete();
 
 
                         if(mysql_query("DELETE FROM elements WHERE id='$elementId'")){
@@ -203,7 +204,11 @@ class element {
                                         echo $contextMenu->showItemSettings();
                                     }?>
                             </td>
-                            <td width="50"><?=showScore(file, $fileListData['id']);?></td>
+                            <td width="50">
+                                    <?php
+                                    $item = new item('file', $fileListData['id']);
+                                    echo $item->showScore();
+                                    ?></td>
                         </tr>
                         <?php
                         if(!$git){
@@ -247,7 +252,12 @@ class element {
                             }
                             ?>
                             </td>
-                        <td><?=showScore(link, $linkListData['id']);?></td>
+                        
+                            <td width="50">
+                                    <?php
+                                    $item = new item('file', $fileListData['id']);
+                                    echo $item->showScore();
+                                    ?></td>
                     </tr>
                     <?php
                         if(!$git){

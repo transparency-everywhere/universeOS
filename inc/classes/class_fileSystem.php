@@ -75,7 +75,8 @@ class fileSystem {
                             $name = $filefdata['name'];
                     //special folder handlers
                     if($folder == 3){
-                            $name = getGroupName($filefdata['name']).'´s Files';
+                            $groupsClass = new groups();
+                            $name = $groupsClass->getGroupName($filefdata['name']).'´s Files';
                             }
 
             ?>
@@ -93,7 +94,10 @@ class fileSystem {
                             }
                             ?>
                     </td>
-                    <td width="50px"><?=showScore("folder", $filefdata['id']);?></td>
+                    <td width="50px">
+                            <?php
+                            $item = new item("folder", $filefdata['id']);
+                            echo $item->showScore();?></td>
                 </tr>
                 <?php
                 }}}
@@ -107,6 +111,7 @@ class fileSystem {
                     $title15 = substr("$title", 0, 25);
 
                     if(authorize($fileddata['privacy'], "show", $fileddata['author'])){
+                        $item = new item("element", $fileddata['id']);
                         echo "<tr class=\"strippedRow\" oncontextmenu=\"showMenu('element".$fileddata['id']."'); return false;\" height=\"30\">";
                                 echo "<td width=\"30\">&nbsp;<img src=\"$subpath"."gfx/icons/filesystem/element.png\" height=\"22\"></td>";
                                 echo "<td><a href=\"$subpath"."out/?element=".$fileddata['id']."\" onclick=\"openElement('".$fileddata['id']."', '".addslashes($title10)."'); return false;\">$title15</a></td>";
@@ -116,7 +121,7 @@ class fileSystem {
                                                 echo $contextMenu->showItemSettings();
                                                             }
                                 echo "</td>";
-                                echo "<td width=\"50px\">".showScore("element", $fileddata['id'])."</td>";
+                                echo "<td width=\"50px\">".$item->showScore()."</td>";
                         echo "</tr>";
                         if($rightClick){
                             echo $contextMenu->showRightClick();
@@ -362,252 +367,8 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 	}
 
 }
-	
-function protectFilesystemItem($type, $typeId){
-		if(hasRight('protectFileSystemItems')){
-			$type = save($type);
-			$typeId = save($typeId);
-			
-			switch($type){
-				case 'folder':
-					
-					$folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
-					$folderData = mysql_fetch_array($folderSQL);
-					
-					$privacy = $folderData['privacy'];
-					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
-					$privacy .= ";PROTECTED";
-					}
-					
-					mysql_query("UPDATE `folders` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-					
-					
-					break;
-				case 'element':
-					
-					$elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
-					$elementData = mysql_fetch_array($elementSQL);
-					$privacy = $elementData['privacy'];
-					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
-					$privacy .= ";PROTECTED";
-					}
-					
-					
-					mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-					
-					
-					break;
-				case 'file':
-					$fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
-					$fileData = mysql_fetch_array($fileSQL);
-					$privacy = $fileData['privacy'];
-					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
-					$privacy .= ";PROTECTED";
-					}
-					
-					mysql_query("UPDATE `files` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-					break;
-				case 'link':
-					$linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
-					$linkData = mysql_fetch_array($linkSQL);
-					
-					
-					$privacy = $linkData['privacy'];
-					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
-					$privacy .= ";PROTECTED";
-					}
-					
-					
-					mysql_query("UPDATE `links` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-					break;
-			}
-		}else{
-			jsAlert("You dont have the rights to protect an Item.");
-		}
-	}
-function removeProtectionFromFilesystemItem($type, $typeId){
-		
-		if(hasRight('editProtectedFilesystemItem')){
-			$type = save($type);
-			$typeId = save($typeId);
-			
-			switch($type){
-				case 'folder':
-					
-					$folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
-					$folderData = mysql_fetch_array($folderSQL);
-					
-					$privacy = $folderData['privacy'];
-					$privacy = str_replace(";PROTECTED", "", $privacy);
-					
-					
-					mysql_query("UPDATE `folders` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-					
-					
-					break;
-				case 'element':
-					
-					$elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
-					$elementData = mysql_fetch_array($elementSQL);
-					
-					$privacy = $elementData['privacy'];
-					$privacy = str_replace(";PROTECTED", "", $privacy);
-					
-					
-					mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-					
-					
-					break;
-				case 'file':
-					$fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
-					$fileData = mysql_fetch_array($fileSQL);
-					$privacy = $fileData['privacy'];
-					$privacy = str_replace(";PROTECTED", "", $privacy);
-					
-					
-					mysql_query("UPDATE `files` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-					break;
-				case 'link':
-					$linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
-					$linkData = mysql_fetch_array($linkSQL);
-					
-					
-					$privacy = $linkData['privacy'];
-					$privacy = str_replace(";PROTECTED", "", $privacy);
-					
-					
-					mysql_query("UPDATE `links` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-					break;
-			}
-		}else{
-			jsAlert("You do not have the rights to edit protected files.");
-		}
-	}
 
-function makeFilesystemItemUndeletable($type, $typeId){
-		
-		if(hasRight('undeletableFilesystemItems')){
-			$type = save($type);
-			$typeId = save($typeId);
-			switch($type){
-				case folder:
-					
-					$folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
-					$folderData = mysql_fetch_array($folderSQL);
-					
-					$privacy = $folderData['privacy'];
-					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
-						$privacy .= ";UNDELETABLE";
-					}
-					
-					
-					mysql_query("UPDATE `folders` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-					
-					
-					break;
-				case element:
-					
-					$elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
-					$elementData = mysql_fetch_array($elementSQL);
-					$privacy = $elementData['privacy'];
-					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
-						$privacy .= ";UNDELETABLE";
-					}
-					
-					
-					mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-					
-					
-					break;
-				case file:
-					$fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
-					$fileData = mysql_fetch_array($fileSQL);
-					$privacy = $fileData['privacy'];
-					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
-						$privacy .= ";UNDELETABLE";
-					}
-					
-					
-					mysql_query("UPDATE `files` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-					break;
-				case link:
-					$linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
-					$linkData = mysql_fetch_array($linkSQL);
-					
-					
-					$privacy = $linkData['privacy'];
-					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
-						$privacy .= ";UNDELETABLE";
-					}
-					
-					
-					mysql_query("UPDATE `links` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-					break;
-			}
-		}else{
-			jsAlert("You do not have the right to make Items undeletable.");
-		}
-	}
-function makeFilesystemItemDeletable($type, $typeId){
-		if(hasRight("editUndeletableFilesystemItems")){
-		$type = save($type);
-		$typeId = save($typeId);
-		
-		switch($type){
-			case 'folder':
-				
-				$folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
-				$folderData = mysql_fetch_array($folderSQL);
-				
-				$privacy = $folderData[privacy];
-				$privacy = str_replace(";UNDELETABLE", "", $privacy);
-				
-				
-				mysql_query("UPDATE `folders` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-				
-				
-				break;
-			case 'element':
-				
-				$elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
-				$elementData = mysql_fetch_array($elementSQL);
-				
-				$privacy = $elementData['privacy'];
-				$privacy = str_replace(";UNDELETABLE", "", $privacy);
-				
-				
-				mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-				
-				
-				break;
-			case 'file':
-				$fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
-				$fileData = mysql_fetch_array($fileSQL);
-				$privacy = $fileData['privacy'];
-				$privacy = str_replace(";UNDELETABLE", "", $privacy);
-				
-				
-				mysql_query("UPDATE `files` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-				break;
-			case 'link':
-				$linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
-				$linkData = mysql_fetch_array($linkSQL);
-				
-				
-				$privacy = $linkData['privacy'];
-				$privacy = str_replace(";UNDELETABLE", "", $privacy);
-				
-				
-				mysql_query("UPDATE `links` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-				break;
-		}
-		}else{
-			jsAlert("You dont have the right to edit undeletable Items.");
-		}
-	}
-	
-        
-    
+
 function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo=NULL, $extraInfo1=NULL, $extraInfo2=NULL,  $extraInfo3=NULL, $extraInfo4=NULL, $extraInfo5=NULL, $subpath){
         
         
@@ -644,10 +405,11 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 				$download = "<a href=\"./out/download/?fileId=$fileId\" target=\"submitter\" class=\"btn btn-mini\" title=\"download file\"><img src=\"$subpath"."./gfx/icons/download.png\" alt=\"download\" height=\"10\"></a>";
 			}
             $filename = $fileData['filename'];
-            $path = $subpath.getFilePath($fileId);
+            $fileClass = new file($fileId);
+            $path = $subpath.$fileClass->getPath();
             
-			
-    		$score = showScore("file", $fileId);
+                $item = new item("file", $fileId);
+    		$score = $item->showScore();
             
             //check type if type is undefined get type from db
             if($type == NULL){
@@ -673,8 +435,8 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 			
 		            
 		            $title = $linkData['title'];
-		            
-    				$score = showScore("link", $linkId);
+		            $item = new item("link", $linkId);
+                            $score = $item->showScore();
 					
 		            
 		            //define type if type is undefined
@@ -902,11 +664,13 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 	        				if(authorize($documentData['privacy'], "show", $documentData['owner'])){
 						        //$documentFolderSQL = mysql_query("SELECT path FROM folders WHERE id='$elementData[folder]'");
 						        //$documentFolderData = mysql_fetch_array($documentFolderSQL);
+                                                        $folderClass = new folder($elementData['folder']);
 						        if($elementData['title'] == "profile pictures"){
-						        	$thumbPath = $subpath.getFolderPath($elementData['folder']);    
+                                                                
+						        	$thumbPath = $subpath.$folderClass->getPath();    
 						        	$thumbPath = "$thumbPath/thumb/300/";
 						        }else{
-						        	$thumbPath = $subpath.getFolderPath($elementData['folder'])."thumbs/";
+						        	$thumbPath = $subpath.$folderClass->getPath()."thumbs/";
 						        }
 								
 								

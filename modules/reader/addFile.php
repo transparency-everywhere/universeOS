@@ -65,8 +65,8 @@ $title10 = substr("$elementdata[title]", 0, 10);
         <td>
         	
         	<?
-        	
-        	showLanguageDropdown();
+        	$guiClass = new gui();
+        	$guiClass->showLanguageDropdown();
         	
         	?>
         	

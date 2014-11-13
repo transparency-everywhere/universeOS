@@ -56,9 +56,10 @@ switch($_GET[type]){
         $documentFolderSQL = mysql_query("SELECT * FROM folders WHERE id='$documentElementData[folder]'");
         $documentFolderData = mysql_fetch_array($documentFolderSQL);
         $folderPath = urldecode($documentFolderData[path]);
-        $path = getFolderPath($documentFolderData[id]);
+        $folderClass = new folder($documentFolderData['id']);
+        $path = $folderClass->getPath();
             $score = "file";
-            $title = $documentElementData[title];
+            $title = $documentElementData['title'];
             $bar = "<a href=\"javascript: zoomIn();\" id=\"zoomIn\" class=\"btn\" title=\"zoom in\"><img src=\"./gfx/icons/zoomIn.png\" height=\"10\" border=\"0\"></a>&nbsp;<a id=\"zoomOut\" href=\"javascript: zoomOut();\" class=\"btn\" style=\"\" title=\"zoom out\"><img src=\"./gfx/icons/zoomOut.png\" height=\"10\" border=\"0\"></a>&nbsp;$download";
 
         break;
@@ -85,9 +86,10 @@ if($_GET[type] == "link"){
 	  $documentFolderSQL = mysql_query("SELECT * FROM folders WHERE id='$documentElementData[folder]'");
 	  $documentFolderData = mysql_fetch_array($documentFolderSQL);
 	  $folderPath = urldecode($documentFolderData[path]);
-	  $path = getFolderPath($documentFolderData[id]);
+          $folderClass = new folder($documentFolderData['id']);
+	  $path = $folderClass->getPath();
 	    $score = "file";
-	    $title = $documentElementData[title];
+	    $title = $documentElementData['title'];
 	    $bar = $download;
 	}
 }
@@ -104,7 +106,8 @@ if($_GET[type] == "link"){
         <td width="10%">
 <?
 if($_GET[type] !== "youTube" && !isset($_GET[external])){
-showScore($score, $_GET[id]);
+    $item = new item($score, $_GET['id']);   
+    echo $item->showScore();
 }?>
         </td>
         
@@ -152,7 +155,8 @@ if($_GET[type] == "document"){
                         $folderPath = urldecode($documentFolderData['path']);
                         $folderPath = "http://universeos.org/upload$folderPath/thumb/300/";
                     }else{
-                    $path = getFolderPath($documentElementData['folder'])."thumbs/";
+                        $folderClass = new folder($documentElementData['folder']);
+                        $path = $folderClass->getPath()."thumbs/";
                     }?>
                         <td oncontextmenu="showMenu('image<?=$documentData['id'];?>'); return false;"><div id="viewerClick<?=$documentData[id];?>"><a href="#" onclick="addAjaxContentToTab('Open <?=substr("$documentElementData[title]",0,10);?>','./modules/reader/showfile.php?type=image&id=<?=$documentData[id];?>');return false"><img src="<?=$path;?><?=$documentData[title];?>" height="100px"></a></div></td>   
                    <?php

@@ -4,7 +4,7 @@ if(empty($_SESSION['userid'])){
 }
 
 //request limitator untill reload.php is tidy
-if(!isset($global_userGroupData) && $_SESSION['personalFeed'] > (time()-60)){
+if(!proofLogin() && $_SESSION['personalFeed'] > (time()-60)){
 	die();
 }
 

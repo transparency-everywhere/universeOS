@@ -86,8 +86,8 @@ class feed {
             
             switch($feedData['type']){
                 case 'showThumb':
-                
-                $attachment = showItemThumb($feedData['attachedItem'], $feedData['attachedItemId']);
+                $item = new item($feedData['attachedItem'], $feedData['attachedItemId']);
+                $attachment = $item->showItemThumb();
                 break;
             }
             
@@ -106,7 +106,10 @@ class feed {
             </div>
             <div style="padding: 15px;">
                 <div>
-                    <?=showScore("feed", $feedData['id']);?>
+                    <?php
+                    $item = new item("feed", $feedData['id']);
+                    echo $item->showScore();
+                    ?>
                     <div style="float:right; position: absolute; margin-top: -24px; margin-left: 108px;">
                         <?=$contextMenu->showItemSettings();?>
                     </div>

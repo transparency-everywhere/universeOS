@@ -30,10 +30,11 @@
                         if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
                         	
                             $classFiles = new files();
+                            $imageClass = new image();
                             $type = $classFiles->getMime($imgName);
-                        mkthumb("$imgName",25,25,$path,$thumbPath25); 
-                        mkthumb("$imgName",40,40,$path,$thumbPath40); 
-                        mkthumb("$imgName",300,300,$path,$thumbPath300);
+                        $imageClass->mkthumb("$imgName",25,25,$path,$thumbPath25); 
+                        $imageClass->mkthumb("$imgName",40,40,$path,$thumbPath40); 
+                        $imageClass->mkthumb("$imgName",300,300,$path,$thumbPath300);
 
                         mysql_query("INSERT INTO `files` (`folder`, `title`, `type`, `filename`, `owner`, `timestamp`, `privacy`) VALUES ( '$imgData[profilepictureelement]', '$imgName', '$type',  '$imgName', '$_SESSION[userid]', '$time', 'p');");
                         mysql_query("UPDATE user SET userPicture='$imgName' WHERE userid='$_SESSION[userid]'");

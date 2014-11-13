@@ -51,7 +51,7 @@ $folder = $_GET[folder];
 				echo $fileSystem->showMiniFileBrowser("1", '', '', true, "element");
 			}else{
 				$element = new element($_GET['element']);
-				$elementData = $element->getElementData();
+				$elementData = $element->getData();
 				
 				echo '<h3>You will add the files to this element:<br>';
 				echo '<img src="gfx/icons/filesystem/element.png">&nbsp;';
@@ -73,7 +73,8 @@ $folder = $_GET[folder];
 			<h3>Choose Settings</h3>
 			<p>Please choose a language:</p>
 			<?php
-			showLanguageDropdown();
+                        $guiClass = new gui();
+			$guiClass->showLanguageDropdown();
 			?>
 			<h3>Privacy</h3>
 			<p>Please justify the privacy of the files you want to upload</p>

@@ -12,50 +12,43 @@
  * @author niczem
  */
 class message{
-    //put your code here
-}
+    function send($receiver, $text, $crypted, $sender=NULL){
 
-function sendMessage($receiver, $text, $crypted, $sender=NULL){
-	
-    if($sender == NULL)
-            $sender = getUser();
+        if($sender == NULL)
+                $sender = getUser();
 
-            updateActivity($sender);
-    $buddy = $receiver;
-    if($crypted == "true"){
-        $crypt = "1";
-    }else{
-        $crypt = "0";
+                updateActivity($sender);
+        $buddy = $receiver;
+        if($crypted == "true"){
+            $crypt = "1";
+        }else{
+            $crypt = "0";
+        }
+
+                $message = addslashes($text);
+        if(mysql_query("INSERT INTO `messages` (`sender`,`receiver`,`timestamp`,`text`,`read`,`crypt`) VALUES('$sender', '$buddy', '".time()."', '$text', '0', '$crypt');")){
+                return mysql_insert_id();
+        }
+        $postCheck = 1;
     }
+    function markAsRead($buddy, $user){
 
-            $message = addslashes($text);
-    if(mysql_query("INSERT INTO `messages` (`sender`,`receiver`,`timestamp`,`text`,`read`,`crypt`) VALUES('$sender', '$buddy', '".time()."', '$text', '0', '$crypt');")){
-            return mysql_insert_id();
+                    $user = save($user);
+                    $buddy = save($buddy);
+
+                    mysql_query("UPDATE `messages` SET `read`='1' WHERE `sender` ='$buddy' AND `receiver` ='$user';");
+    }	
+    function getLast($userid){
+            $userid = save($userid);
+            updateActivity($userid);
+            $chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' OR receiver='$userid' ORDER BY timestamp DESC LIMIT 1");
+            $chatData =  mysql_fetch_array($chatSQL);
+
+
+            if($chatData['read'] == 0){
+                    return $chatData['id'];
+            }
     }
-    $postCheck = 1;
-}
-function markMessageAsRead($buddy, $user){
-			
-		$user = save($user);
-		$buddy = save($buddy);
-		
-	        mysql_query("UPDATE `messages` SET `read`='1' WHERE `sender` ='$buddy' AND `receiver` ='$user';");
-	}
-	
-		
-	function getLastMessage($userid){
-		$userid = save($userid);
-		updateActivity($userid);
-		$chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' OR receiver='$userid' ORDER BY timestamp DESC LIMIT 1");
-		$chatData =  mysql_fetch_array($chatSQL);
-		
-		
-		if($chatData['read'] == 0){
-			return $chatData['id'];
-		}
-		
-	}
-	
 	function getUnseenMessageAuthors($userid){;
 		$chatSQL = mysql_query("SELECT * FROM `messages` WHERE (`sender`='$userid' AND `seen`='0') OR (`read`='0' AND `receiver`='$userid')");
 		while($chatData =  mysql_fetch_array($chatSQL)){
@@ -70,7 +63,6 @@ function markMessageAsRead($buddy, $user){
 		}
 		return $return;
 	}
-	
 	function getMessages($userid, $buddyId, $limit){
 		$chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' && receiver='$buddyId' OR sender='$buddyId' && receiver='$userid' ORDER BY timestamp DESC LIMIT $limit");
 		while($chatData =  mysql_fetch_array($chatSQL)){
@@ -79,8 +71,6 @@ function markMessageAsRead($buddy, $user){
 		}
 		return $return;
 	}
-	
-	
 	function showMessages($userid, $buddyId, $limit){
 		
 		$buddyData = getUserData($buddyId);
@@ -133,14 +123,13 @@ function markMessageAsRead($buddy, $user){
 						echo showUserPicture($authorid, "15");
 						echo $authorName;
 		              	echo "</span>";
-		              	echo'<span class="timestamp pull-right">'.universeTime($chatData['timestamp']).'</span>';
+                                $guiClass = new gui();
+		              	echo'<span class="timestamp pull-right">'.$guiClass->universeTime($chatData['timestamp']).'</span>';
 		              	echo'<span class="chatMessage_'.$buddyId.' '.$messageClasses.'" data-sender="'.$authorid.'" data-receiver="'.$receiver.'" data-id="'.$chatData['id'].'" data-decrypted="false">'.$message.'</span>';
 		              echo'</div>';
 			}
 	
 	}
-        
-        
    //gets all unseen messages for receiver=user
    function getLastMessages($user=NULL){
    	if($user == NULL){
@@ -181,8 +170,18 @@ function markMessageAsRead($buddy, $user){
 	return $returner;
 	
    }
-   
+        
    function getMessageData($messageId){
    	$newMessagesSql = mysql_query("SELECT * FROM  `messages` WHERE  id='".mysql_real_escape_string($messageId)."'");
 	return mysql_fetch_array($newMessagesSql);
    }
+   
+}
+
+	
+	
+	
+	
+	
+	
+        

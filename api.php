@@ -191,16 +191,17 @@ switch($action){
 		
 		
 		if(proofLoginMobile($_POST['userid'], $_POST['hash'])){
-			echo json_encode(getMessages($userid, $receiver, $limit));
+                        $messageClass = new message();
+			echo json_encode($messageClass->getMessages($userid, $receiver, $limit));
 		}
 		break;
 	case 'markMessageAsRead':
 		
 		
 		if(proofLoginMobile($_POST['userid'], $_POST['hash'])){
-			
+			$messageClass = new message();
 			echo $_POST['buddy'].$_POST['userid'];
-			markMessageAsRead($_POST['buddy'], $_POST['userid']);
+			$messageClass->markAsRead($_POST['buddy'], $_POST['userid']);
 			
 		}
 		
@@ -210,14 +211,16 @@ switch($action){
 		// to store the last message which is received. If this var is not equal to the
 		// value which is echoed by this action the chat can reload.
 		if(proofLoginMobile($_POST['userid'], $_POST['hash'])){
-			echo getLastMessage($_POST['userid']);
+                    $messageClass = new message();
+			echo $messageClass->getLast($_POST['userid']);
 		}
 		
 		break;
 	case 'getUnseenMessageAuthors':
 		// To load dialoges with unseen messages the authorid's of those messages are needed
 		if(proofLoginMobile($_POST['userid'], $_POST['hash'])){
-			echo json_encode(getUnseenMessageAuthors($_POST['userid']));
+                    $messageClass = new message();
+                    echo json_encode($messageClass->getUnseenMessageAuthors($_POST['userid']));
 		}
 		
 		break;
@@ -228,7 +231,8 @@ switch($action){
 		
 		
 		if(proofLoginMobile($_POST['userid'], $_POST['hash'])){
-			$message = sendMessage($receiver, $message, '0', $sender);
+                        $messageClass = new message();
+			$message = $messageClass->send($receiver, $message, '0', $sender);
 			if($message)
 				echo $message;
 		}
@@ -665,7 +669,8 @@ switch($action){
 		echo $element->getName();
 		break;
 	case 'folderIdToFolderTitle':
-		echo folderIdToFolderTitle($_POST['folderId']);
+                $classFolder = new folder($_POST['folderId']);
+		echo $classFolder->getTitle();
 		break;
 		
 //groups

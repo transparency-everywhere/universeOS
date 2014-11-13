@@ -144,11 +144,10 @@ function getUser(){
 
 function hasRight($type){
 	  //checks if user has right to ...
-	  //gets information from $global_userGroupData
 	  //whis is defined in config.php
 	  
-	  $userData = mysql_fetch_array(mysql_query("SELECT `usergroup` FROM `user` WHERE `userid`='$_SESSION[userid]'"));
-	  $userGroupData = mysql_fetch_array(mysql_query("SELECT * FROM `userGroups` WHERE `id`='$userData[usergroup]'"));
+	  $userData = mysql_fetch_array(mysql_query("SELECT `usergroup` FROM `user` WHERE `userid`='".$_SESSION['userid']."'"));
+	  $userGroupData = mysql_fetch_array(mysql_query("SELECT * FROM `userGroups` WHERE `id`='".$userData['usergroup']."'"));
 	  
 	  if($userGroupData["$type"] == "1"){
 	  	return true;
@@ -225,7 +224,13 @@ function userSignature($userid, $timestamp, $subpath = NULL, $reverse=NULL){
                         <td style="font-size: 10pt;line-height: 17px;">&nbsp;<a href="#" onclick="showProfile(<?=$feedUserData['userid'];?>);"><?=$feedUserData['username'];?></a></td>
                     </tr>             
                     <tr>
-                        <td style="font-size: 15pt;line-height: 23px;">&nbsp;<i><?=universeTime($timestamp);?></i></td>
+                        <td style="font-size: 15pt;line-height: 23px;">
+                            &nbsp;<i>
+                            <?php
+                            $guiClass = new gui();
+                            $guiClass->universeTime($timestamp);?>
+                            </i>
+                        </td>
                     </tr>
                 </table>
             </td>
@@ -238,7 +243,11 @@ function userSignature($userid, $timestamp, $subpath = NULL, $reverse=NULL){
                         <td style="font-size: 10pt;">&nbsp;<?=$feedUserData['username'];?></td>
                     </tr>             
                     <tr>
-                        <td style="font-size: 08pt;">&nbsp;<i><?=universeTime($timestamp);?></i></td>
+                        <td style="font-size: 08pt;">&nbsp;<i>
+                        <?php
+                        $guiClass = new gui();
+                        $gui->universeTime($timestamp);?></i>
+                        </td>
                     </tr>
                 </table>
             </td>
@@ -271,10 +280,11 @@ function createUser($username, $password, $authSalt, $keySalt, $privateKey, $pub
 		$sig->create('user', $userid, $privateKey, $publicKey);
 		
         //create user folder(name=userid) in folder userFiles
-        $userFolder = createFolder("2", $userid, $userid, "h");
+        $folderClass = new folder();
+        $userFolder = $folderClass->createFolder("2", $userid, $userid, "h");
         
         //create folder for userpics in user folder
-        $pictureFolder = createFolder($userFolder, "userPictures", $userid, "h");
+        $pictureFolder = $folderClass->createFolder($userFolder, "userPictures", $userid, "h");
         
         //create thumb folders || NOT LISTED IN DB!
         $path3 = universeBasePath."//upload//userFiles//$userid//userPictures//thumb";
@@ -332,7 +342,8 @@ function deleteUser($userid, $reason){
           //delete all files
           $fileSQL = mysql_query("SELECT id FROM files WHERE owner='$userid'");
           while($fileData = mysql_fetch_array($fileSQL)){
-              deleteFile($fileData['id']);
+              $fileClass = new file($fileData['id']);
+              $fileClass->deleteFile();
               
           }
           
@@ -355,7 +366,8 @@ function deleteUser($userid, $reason){
           //folders
           $folderSQL = mysql_query("SELECT id FROM folders creator='$userid'");
           while($folderData = mysql_fetch_array($folderSQL)){
-              deleteFolder($folderData['id']);
+              $classFolder = new folder($folderData['id']);
+              $classFolder->delete();
           }
           
           //comments

@@ -22,10 +22,4 @@ $timestamp = time();
 	}
 
 
-//get userdata
-if(isset($_SESSION['userid'])){
-	$userid = $_SESSION['userid'];
-	$global_userData = mysql_fetch_array(mysql_query("SELECT * FROM user WHERE userid='$userid'"));
-	$global_userGroupData = mysql_fetch_array(mysql_query("SELECT * FROM userGroups WHERE id='$global_userData[usergroup]'"));
-}
 ?>

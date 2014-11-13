@@ -86,7 +86,8 @@ class dashBoard{
 	function showGroupBox($grid=true){
 		
 		//groups
-		$groups = getGroups();
+                $groupsClass = new groups();
+		$groups = $groupsClass->getGroups();
 		
 		$title = "Your Groups";
 		
@@ -105,7 +106,7 @@ class dashBoard{
 						$output .="</span>";
 						$output .="<span>";
 							$output .="<a href=\"#\" onclick=\"showGroup('$group');\">";
-							$output .= getGroupName($group);
+							$output .= $groupsClass->getGroupName($group);
 							$output .="</a>";
 						$output .="</span>";
 					$output .="</li>";
@@ -165,7 +166,8 @@ class dashBoard{
 	}
 	function showMessageBox($grid=true){
 			//unseenMessages
-			$lastMessages = getLastMessages();
+                        $messageClass = new message();
+			$lastMessages = $messageClass->getLastMessages();
 		
 			$title = "Your Messages";
 			

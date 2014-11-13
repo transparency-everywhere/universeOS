@@ -11,22 +11,27 @@
  *
  * @author niczem
  */
-class newPHPClass {
-    //put your code here
-}
-
-
-function createFolder($superiorFolder, $title, $user, $privacy){
+class folder {
+    
+    public $id;
+    
+    function __construct($id=NULL){
+        if($id != NULL){
+            $this->id = $id;
+        }
+            
+    }
+    function create($superiorFolder, $title, $user, $privacy){
 		
 		if(strpos($title, '/') == false){
-			$titleURL = urlencode($title);
+                    $titleURL = urlencode($title);
 			
-			$title = mysql_real_escape_string($title);
+                    $title = mysql_real_escape_string($title);
 		    
 		    $foldersql = mysql_query("SELECT * FROM folders WHERE id='$superiorFolder'");
 		    $folderData = mysql_fetch_array($foldersql);
-		
-		    $folderpath = universeBasePath.'/'.getFolderPath($superiorFolder).urldecode("$titleURL");
+                    $folderClass = new folder($superiorFolder);
+		    $folderpath = universeBasePath.'/'.$folderClass->getPath().urldecode("$titleURL");
 			if (!file_exists("$folderpath")) {
 		    mkdir($folderpath);
 		    $time = time();
@@ -46,87 +51,68 @@ function createFolder($superiorFolder, $title, $user, $privacy){
 			jsAlert("The title contains forbidden characters.");
 		}
     }
-function showFolderPath($folder, $class=NULL){
-        
-        $folders = loadFolderArray("path", $folder);
-        
-        $return .= "<ul>";
-        $i = 0;
-        $folderNames = $folders['names'];
-        foreach($folders['ids'] AS &$folder){
-            $return .= "<li>$folderNames[$i]</li>";
-            $i++;
-        }
-        
-        $return .=  "</li>";
-        
-        return $return;
-    }
-    
-    
-	
-function getFolderData($folderId){
-		$query = mysql_query("SELECT * FROM `folders` WHERE id='".save($folderId)."'");
-		$data = mysql_fetch_array($query);
-		return $data;
-	}
-        
-        
-function loadFolderArray($type, $folder){
-        switch($type){
-            
-            //loads all subordinated folders of $folder
-            
-            case 'children':
-                
-                $folderSQL = mysql_query("SELECT id FROM folders WHERE folder='".mysql_real_escape_string($folder)."'");
-                while($folderData = mysql_fetch_array($folderSQL)){
-                    $return[] = $folderData['id'];
-                }
-                break;
-                
-            case 'path':
-                
-                //maximum while 
-                $maxqueries = 150;
-                $i = 0;
-                
-               	while($folder != "0" || $folder != "0"){
-               		if(!empty($folder) && $i < $maxqueries){
-		                $folderSQL = mysql_query("SELECT name, folder FROM folders WHERE id='$folder'");
-		                $folderData = mysql_fetch_array($folderSQL);
-		
-		                
-		                $folder = $folderData['folder'];
-		                if($folder!=0){
-		                $returnFolder[] = $folder;
-		                $returnName[] = $folderData['name'];
-		                }
-		                
-		                    
-		                    $i++;
-					}
-                }
-                
-                $return['ids'] = $returnFolder;
-                $return['names'] = $returnName;
-                break;
-        }
-        
-        return $return;
-    }
+    function loadFolderArray($type){
+        $folder = $this->id;
+            switch($type){
+
+                //loads all subordinated folders of $folder
+
+                case 'children':
+
+                    $folderSQL = mysql_query("SELECT id FROM folders WHERE folder='".mysql_real_escape_string($folder)."'");
+                    while($folderData = mysql_fetch_array($folderSQL)){
+                        $return[] = $folderData['id'];
+                    }
+                    break;
+
+                case 'path':
+
+                    //maximum while 
+                    $maxqueries = 150;
+                    $i = 0;
+
+                    while($folder != "0" || $folder != "0"){
+                            if(!empty($folder) && $i < $maxqueries){
+                                    $folderSQL = mysql_query("SELECT name, folder FROM folders WHERE id='$folder'");
+                                    $folderData = mysql_fetch_array($folderSQL);
 
 
-function folderIdToFolderTitle($folderId){
-		$folderData = getFolderData($folderId);
+                                    $folder = $folderData['folder'];
+                                    if($folder!=0){
+                                    $returnFolder[] = $folder;
+                                    $returnName[] = $folderData['name'];
+                                    }
+
+
+                                        $i++;
+                                            }
+                    }
+
+                    $return['ids'] = $returnFolder;
+                    $return['names'] = $returnName;
+                    break;
+            }
+
+            return $return;
+    }	
+    function getFolderData(){
+        $folderId = $this->id;
+        $query = mysql_query("SELECT * FROM `folders` WHERE id='".save($folderId)."'");
+        $data = mysql_fetch_array($query);
+        return $data;
+    }
+
+        function getTitle(){
+            $folderId = $this->id;
+		$folderData = $this->getFolderData();
 		return $folderData['name'];
 		
 	}
         
-function getFolderPath($folderId){
-		
+function getPath(){
+            $folderId = $this->id;
             $path = "upload/";
-            $folderArray = loadFolderArray("path", $folderId);
+            $folderArray = $this->loadFolderArray("path");
             $folderArray = array_reverse($folderArray['names'], true);
             foreach($folderArray as &$folder){
                 $folder = urldecode($folder);
@@ -134,4 +120,42 @@ function getFolderPath($folderId){
             }
             
             return $path;
-	}
+	} 
+function delete(){
+        $folderId = $this->id;
+                $foldersql = mysql_query("SELECT * FROM folders WHERE id='$folderId'");
+                $folderData = mysql_fetch_array($foldersql);
+                
+                
+                //select and delete folders which are children of this folder
+                $childrenFolderSQL = mysql_query("SELECT id FROM folders WHERE folder='$folderId'");
+                while($childrenFolderData = mysql_fetch_array($childrenFolderSQL)){
+                    $folder = new folder($childrenFolderData['id']);
+                    $folder->delete();
+                }
+                //select and delete element which are children of this folder
+                $childrenElementSQL = mysql_query("SELECT id FROM elements WHERE folder='$folderId'");
+                while($childrenElementData = mysql_fetch_array($childrenElementSQL)){
+                    $element = new element($childrenElementData['id']);
+                    $element->delete();
+                }
+                $folderClass = new folder($folderId);
+                $folderpath = universeBasePath.'/'.$folderClass->getPath();
+                mysql_query("DELETE FROM folders WHERE id='$folderId'");
+                system('/bin/rm -rf ' . escapeshellarg($folderpath));
+                
+                //delete comments, feeds and shortcuts
+                $commentClass = new comments();
+                $commentClass->deleteComments("folder", $folderId);
+                
+                $classFeed = new feed();
+                $classFeed->deleteFeeds("folder", $folderId);
+                
+                $shortcutClass = new shortcut();
+                $shortcutClass->deleteInternLinks("folder", $folderId);
+				
+				jsAlert("The folder has been deleted.");
+				return true;
+        
+    }
+}
