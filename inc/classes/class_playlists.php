@@ -81,7 +81,7 @@ class playlists {
         $playListData = mysql_fetch_array($playListSql);
 		?>
 		<table cellspacing="0" width="100%">                
-                            <?
+                            <?php
                             $i = 0;
                             $query = commaToOr("$playListData[folders]", "id");
                             $playListFolderSql = mysql_query("SELECT * FROM folders WHERE $query");
@@ -94,7 +94,7 @@ class playlists {
                                         <td>&nbsp;<?=$playListFolderData['name']?></td>
                                     </tr>
 
-                            <? 
+                            <?php 
                             $i++;
 
                             }}
@@ -109,7 +109,7 @@ class playlists {
                                         <td><img src="./modules/filesystem/icons/file.png" width="30px"></td>
                                         <td>&nbsp;e_<?=$playListFolderData['title']?></td>
                                     </tr>
-                        <? 
+                        <?php 
                             $i++;
 
                             }}
@@ -127,7 +127,7 @@ class playlists {
                                         <td>&nbsp;<?=$playListFolderData['title']?></td>
                                         <?=$deleteRow;?>
                                     </tr>
-                            <?
+                            <?php
                             $i++; }}
                             $query = commaToOr($playListData['links'], "id");
                             $playListFolderSql = mysql_query("SELECT * FROM links WHERE $query");
@@ -148,7 +148,7 @@ class playlists {
                                         <td>&nbsp;<a href="javascript: nextPlaylistItem('<?=$playListData[id];?>', '<?=$i;?>')"><?=$playListFolderData[title]?></a></td>
                                         <?=$deleteRow;?>
                                     </tr>
-                        <?
+                        <?php
                             $i++; }}
                             $videos = explode(";", $playListData['youTube'], -1);
                             foreach($videos as &$vId){
@@ -161,12 +161,12 @@ class playlists {
                                         <td>&nbsp;<a href="javascript: nextPlaylistItem('<?=$playListData[id];?>', '<?=$i;?>')">Youtube Video</a></td>
                                         <?=$deleteRow;?>
                                     </tr>
-                            <?
+                            <?php
                             $i++;
 
                             }?>
                                 </table>
-		<?
+		<?php
 	}
 	
 	

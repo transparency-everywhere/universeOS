@@ -1,4 +1,4 @@
-<?
+<?php
 if(empty($_SESSION['userid'])){
 session_start();
 require_once("inc/config.php");
@@ -140,7 +140,7 @@ if(isset($newMessagesOn)){
             $("title").text(oldTitle);
            $('#loader').load("doit.php?action=updateMessageStatus&buddy=<?=$newMessageUserData['userid'];?>");
         });
-<? }
+<?php }
 
 
 $personalEventSql = mysql_query("SELECT * FROM personalEvents WHERE owner='$_SESSION[userid]' AND seen='0'");
@@ -161,6 +161,7 @@ if(!empty($newMessages) OR !empty($newFriends) OR !empty($newGroup) OR !empty($p
 }else{
 	
 	
-	//reload page if session is expired
-	universe::proofSession();
+    //reload page if session is expired
+    $class_universe = new universe();
+    $class_universe->proofSession();
 } ?>

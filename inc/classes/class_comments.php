@@ -156,7 +156,7 @@ function showFeedComments($feedid){
           </form>
       </center>
     </div>
-        <? }else{
+        <?php }else{
             echo"Please log in to write a comment";
         } ?>
 
