@@ -232,11 +232,11 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 	            <li class="strippedRow" <?=$style;?>>
 	                <span>&nbsp;<img src="./gfx/icons/filesystem/folder.png" height="14"></span>
 	                <span><a href="#" onclick="<?=$action['folders'];?>"><?=$filefdata['name'];?>/</a></span>
-	            <?
+	            <?php
 	            if($showFolderButton){
 	            ?>
 	                <span class="trigger"><a href="#" onclick="<?=$trigger['folders'];?>" class="btn btn-mini"><i class="icon-ok"></i></a>&nbsp;</span>
-				<? } ?>
+				<?php } ?>
 	            </li>
 	            <!-- frame in which the folder data is loaded, if loadFolderDataIntoMiniBrowser() is called -->
 	            <li class="folder<?=$filefdata[id];?>LoadingFrame" style="display: none;"></li>
@@ -265,11 +265,11 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 		            <li class="strippedRow" <?=$style;?>>
 		                <span>&nbsp;<img src="./gfx/icons/filesystem/element.png" height="14"></span>
 		                <span><a href="#" onclick="<?=$action['elements'];?>"><?=$title15;?></a></span>
-		        		<?
+		        		<?php
 	           			 if($showElementButton){
 	            		?>
 	                    <span class="trigger"><a href="#" onclick="<?=$trigger['elements'];?>" class="btn btn-mini"><i class="icon-ok"></i></a>&nbsp;</span>
-	                    <? } ?>
+	                    <?php } ?>
 		            </li>
 		            <!-- frame in which the element data is loaded, if loadElementDataIntoMiniBrowser() is called -->
 		            <li class="element<?=$fileddata[id];?>LoadingFrame" style="display: none;"></li>
@@ -307,11 +307,11 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 	                        <span>&nbsp;<img src="./gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData['type'];?>" height="14px"></span>
 	                        <span><a href="#" onclick="<?=$action['files'];?>"><?=substr($fileListData['title'],0,30);?></a></span>
 	                        
-			        		<?
+			        		<?php
 		           			 if($showFileButton){
 		            		?>
 	                        <span class="trigger"><a href="#" onclick="<?=$trigger['files'];?>" class="btn btn-mini"><i class="icon-ok"></i></a>&nbsp;</span>
-	                        <? } ?>
+	                        <?php } ?>
 	                    </li>
 	                    
 	                    <?php
@@ -337,11 +337,11 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 	                <li class="strippedRow" <?=$style;?>>
 	                    <span>&nbsp;<img src="./gfx/icons/fileIcons/<?=$image;?>" alt="<?=$linkListData['type'];?>" height="14px"></span>
 	                    <span><a href="#" onclick="<?=$action['links'];?>"><?=substr($linkListData['title'],0,30);?></a></span>
-			        	<?
+			        	<?php
 		           			 if($showFileButton){
 		            	?>
 	                    <span class="trigger"><a href="#" onclick="<?=$trigger['files'];?>" class="btn btn-mini"><i class="icon-ok icon-white"></i></a></span>
-	                    <? } ?>
+	                    <?php } ?>
 	                </li>
 	                <?php
 	                } 
