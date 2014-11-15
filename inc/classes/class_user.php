@@ -319,15 +319,16 @@ function createUser($username, $password, $authSalt, $keySalt, $privateKey, $pub
 
 
 function getUserFavs($userid=NULL){
-  	if(empty($userid)){
-  		$userid=$_SESSION['userid'];
-  	}
-  	$favSQL = mysql_query("SELECT * FROM fav WHERE user='$userid'");
-		while($favData = mysql_fetch_array($favSQL)){
-			$return[] = $favData;
-		}
-		
-		return $return;
+    $return;
+    if(empty($userid)){
+            $userid=$_SESSION['userid'];
+    }
+    $favSQL = mysql_query("SELECT * FROM fav WHERE user='$userid'");
+    while($favData = mysql_fetch_array($favSQL)){
+            $return[] = $favData;
+    }
+
+    return $return;
   }
 
 function getUserFavOutput($user){
