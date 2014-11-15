@@ -286,10 +286,10 @@ function createUser($username, $password, $authSalt, $keySalt, $privateKey, $pub
 		
         //create user folder(name=userid) in folder userFiles
         $folderClass = new folder();
-        $userFolder = $folderClass->createFolder("2", $userid, $userid, "h");
+        $userFolder = $folderClass->create("2", $userid, $userid, "h");
         
         //create folder for userpics in user folder
-        $pictureFolder = $folderClass->createFolder($userFolder, "userPictures", $userid, "h");
+        $pictureFolder = $folderClass->create($userFolder, "userPictures", $userid, "h");
         
         //create thumb folders || NOT LISTED IN DB!
         $path3 = universeBasePath."//upload//userFiles//$userid//userPictures//thumb";

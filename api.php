@@ -1,5 +1,7 @@
 <?php
-session_start();
+if(!isset($_SESSION)){
+    session_start();
+}
 include_once("inc/config.php");
 include_once("inc/functions.php");
 header('Access-Control-Allow-Origin: *');
