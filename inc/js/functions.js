@@ -3249,7 +3249,7 @@ function updatePictureStatus(userId, borderColor){
 
 function showContent(content, title){
   showApplication('reader');
-  reader.tabs.addTab(title, '',browser.loadPage('showContent.php?content='+content));
+  reader.tabs.addTab(title, '',gui.loadPage('showContent.php?content='+content));
 }
 
 function mousePop(type, id, html){
@@ -3428,7 +3428,7 @@ function reloadFeed(type){
 function openUploadTab(element){
 	
         showApplication('filesystem');
-        fileystem.tabs.addTab('title', '',browser.loadPage('modules/filesystem/upload.php?element='+element));
+        fileystem.tabs.addTab('title', '',gui.loadPage('modules/filesystem/upload.php?element='+element));
 }
 
 function initUploadify(id, uploader, element, timestamp, token){
@@ -3477,7 +3477,7 @@ function openFolder(folderId){
 function openElement(elementId, title){
         showApplication('filesystem');
         
-        fileystem.tabs.addTab(title, '',browser.loadPage('modules/filesystem/showElement.php?element='+elementId));
+        fileystem.tabs.addTab(title, '',gui.loadPage('modules/filesystem/showElement.php?element='+elementId));
 }
 
 function openFile(type, typeId, title, typeInfo, extraInfo1, extraInfo2){
@@ -3750,7 +3750,7 @@ function openChatDialoge(username){
           if($("#test_"+ username +"").length == 0){
           	
           	userid = usernameToUserid(username);
-                reader.tabs.addTab(username, '',gui.loadPage("modules/chat/chatreload.php?buddy="+username+""));
+                chat.tabs.addTab(username, '',gui.loadPage("modules/chat/chatreload.php?buddy="+username+""));
               
               openDialogueInterval = window.setInterval("chatDecrypt(userid)", 500);
           }else{
