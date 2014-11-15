@@ -89,7 +89,7 @@ class dashBoard{
 		//groups
                 $groupsClass = new groups();
 		$groups = $groupsClass->getGroups();
-		
+		$output;
 		$title = "Your Groups";
 		
 		if(count($groups) == 0){
