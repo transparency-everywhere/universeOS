@@ -53,7 +53,8 @@ class tasks{
 		return $data;
 	}
 	public function get($user=NULL, $startStamp, $stopStamp, $privacy=NULL){
-		
+		$arr = array();
+                $privacyQuery;
 		if($privacy != NULL){
 			$privacy = explode(';', $privacy);
 			$privacy = implode('|', $privacy);

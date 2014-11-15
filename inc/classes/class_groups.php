@@ -14,14 +14,15 @@
 
 class groups{
 	public function get($userid=NULL){
-		if(empty($userid))
-			$userid = getUser();
-		
-		$sql = mysql_query("SELECT `group` FROM `groupAttachments` WHERE `item`='user' AND `validated`='1' AND `itemId`='".mysql_real_escape_string($userid)."'");
-		while($data = mysql_fetch_array($sql)){
-			$groups[] = $data['group'];
-		}
-		return $groups;
+            $groups;
+            if(empty($userid))
+                    $userid = getUser();
+
+            $sql = mysql_query("SELECT `group` FROM `groupAttachments` WHERE `item`='user' AND `validated`='1' AND `itemId`='".mysql_real_escape_string($userid)."'");
+            while($data = mysql_fetch_array($sql)){
+                    $groups[] = $data['group'];
+            }
+            return $groups;
 	}
 	public function getTitle($groupId){
 		$data = mysql_fetch_array(mysql_query("SELECT `title` FROM `groups` WHERE id='".save($groupId)."'"));
