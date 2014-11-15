@@ -24,7 +24,7 @@ class dashBoard{
 	}
 	
 	function showDashBox($title, $content, $footer=NULL, $id=NULL, $grid=true){
-                $output;
+                $output = '';
 		if($grid){
 			$output .= "<div class=\"dashBox\" id=\"$id"."Box\">";
 		}
@@ -89,7 +89,7 @@ class dashBoard{
 		//groups
                 $groupsClass = new groups();
 		$groups = $groupsClass->getGroups();
-		$output;
+		$output = '';
 		$title = "Your Groups";
 		
 		if(count($groups) == 0){
@@ -125,7 +125,7 @@ class dashBoard{
 		
 	}
 	function showPlaylistBox($grid=true){
-		$output;
+		$output = '';
                 //playlists
                 $playlistClass = new playlists();
                 $playlists = $playlistClass->getPlaylists();
@@ -209,7 +209,7 @@ class dashBoard{
 	}
 
 	function showFavBox($grid=true){
-                        $output;
+                        $output = '';
                         $favClass = new fav();
 			$title = "Your Favorites";
 			
