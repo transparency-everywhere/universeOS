@@ -14,16 +14,17 @@
 class playlists {
     
 	function getPlaylists($userid=NULL){
-		if(empty($userid))
-			$userid = getUser();
-		
-		$sql = mysql_query("SELECT `id` FROM playlist WHERE `user`='".mysql_real_escape_string($userid)."'");
-		while($data = mysql_fetch_array($sql)){
-			$playlists[] = $data[id];
-		}
-		
-		return $playlists;
+            $playlists;
+            if(empty($userid))
+                    $userid = getUser();
+
+            $sql = mysql_query("SELECT `id` FROM playlist WHERE `user`='".mysql_real_escape_string($userid)."'");
+            while($data = mysql_fetch_array($sql)){
+                    $playlists[] = $data[id];
+            }
+            return $playlists;
 	}
+        
 	function getPlaylistTitle($playlistId){
 		$sql = mysql_query("SELECT `title` FROM playlist WHERE id='".mysql_real_escape_string($playlistId)."'");
 		$data = mysql_fetch_array($sql);

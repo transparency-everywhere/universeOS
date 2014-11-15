@@ -24,6 +24,7 @@ class dashBoard{
 	}
 	
 	function showDashBox($title, $content, $footer=NULL, $id=NULL, $grid=true){
+                $output;
 		if($grid){
 			$output .= "<div class=\"dashBox\" id=\"$id"."Box\">";
 		}
@@ -88,7 +89,7 @@ class dashBoard{
 		//groups
                 $groupsClass = new groups();
 		$groups = $groupsClass->getGroups();
-		
+		$output;
 		$title = "Your Groups";
 		
 		if(count($groups) == 0){
@@ -124,36 +125,36 @@ class dashBoard{
 		
 	}
 	function showPlaylistBox($grid=true){
-		
-			//playlists
-                        $playlistClass = new playlists();
-			$playlists = $playlistClass->getPlaylists();
-			
-			$title = "Your Playlists";
-			if(count($playlists) == 0){
-			
-				$output .= '<p style="padding: 5px; padding-top: 12px;">';
-				$output .= 'You don\'t have any playlists so far.';
-				$output .= '</p>';
-			
-			}else{
-				
-				$output .= "<ul>";
-					foreach($playlists AS $playlist){
-						$output .= "<li>";
-							$output .= "<span class=\"marginRight\">";
-								$output .= "<img src=\"./gfx/icons/playlist.png\" height=\"14\">";
-							$output .= "</span>";
-							$output .= "<span>";
-								$output .= "<a href=\"#\" onclick=\"showPlaylist('$playlist');\">";
-								$output .=  $playlistClass->getPlaylistTitle($playlist);
-								$output .= "</a>";
-							$output .= "</span>";
-						$output .= "</li>";
-					}
-				$output .= "</ul>";
-				
-			}
+		$output;
+                //playlists
+                $playlistClass = new playlists();
+                $playlists = $playlistClass->getPlaylists();
+
+                $title = "Your Playlists";
+                if(count($playlists) == 0){
+
+                        $output .= '<p style="padding: 5px; padding-top: 12px;">';
+                        $output .= 'You don\'t have any playlists so far.';
+                        $output .= '</p>';
+
+                }else{
+
+                        $output .= "<ul>";
+                                foreach($playlists AS $playlist){
+                                        $output .= "<li>";
+                                                $output .= "<span class=\"marginRight\">";
+                                                        $output .= "<img src=\"./gfx/icons/playlist.png\" height=\"14\">";
+                                                $output .= "</span>";
+                                                $output .= "<span>";
+                                                        $output .= "<a href=\"#\" onclick=\"showPlaylist('$playlist');\">";
+                                                        $output .=  $playlistClass->getPlaylistTitle($playlist);
+                                                        $output .= "</a>";
+                                                $output .= "</span>";
+                                        $output .= "</li>";
+                                }
+                        $output .= "</ul>";
+
+                }
 			
 		$footer = "<a href=\"#addPlaylist\" onclick=\"popper('doit.php?action=addPlaylist')\" title=\"Create a new Playlist\"><i class=\"icon icon-plus\"></i></a>";
 			
@@ -208,6 +209,7 @@ class dashBoard{
 	}
 
 	function showFavBox($grid=true){
+                        $output;
                         $favClass = new fav();
 			$title = "Your Favorites";
 			

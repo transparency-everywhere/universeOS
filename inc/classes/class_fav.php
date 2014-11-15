@@ -19,6 +19,7 @@ class fav {
 
                             $userFavs = getUserFavs($user);
                                                     $i = 0;
+                                                    $output;
                                             foreach($userFavs AS $filefdata){
                                                             $item = $filefdata['item'];
                                 $type = $filefdata['type'];

@@ -116,7 +116,7 @@ class buddylist {
             $user= getUser();
         }
         
-        
+        $buddies = array();
         $buddylistSql = mysql_query("SELECT buddy FROM buddylist WHERE owner='$user' && (request='$request')");
         while($buddylistData = mysql_fetch_array($buddylistSql)) {
             $buddies[] = $buddylistData['buddy'];
