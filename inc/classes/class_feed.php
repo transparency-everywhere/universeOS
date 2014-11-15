@@ -97,7 +97,7 @@ class feed {
                 
         $commentClass = new comments();
         $contextMenu = new contextMenu('feed', $feedData['id']);
-        if($needStructure == "1"){ ?><div id="add"></div><? } ?>
+        if($needStructure == "1"){ ?><div id="add"></div><?php } ?>
         <div id="realFeed" class="feedNo<?=$feedData['id'];?>">
             <?=userSignature($feedData['author'], $feedData['timestamp']);?>
             <div style="padding: 10px;"><?=nl2br(universe::universeText(htmlspecialchars($feedData['feed'])));?><?=$text;?></div><br>
