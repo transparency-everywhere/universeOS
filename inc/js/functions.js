@@ -3180,18 +3180,33 @@ var tabs = function(parentIdentifier){
 		this.addTab = function(title, contentType, content){
                     parentIdentifier = this.parentIdentifier;
 			var numberOfTabs = $(parentIdentifier+' .tabFrame .tab').length;
-			$(parentIdentifier+' .tabFrame header ul').append('<li data-tab="'+(numberOfTabs+1)+'" data-parent-identifier="'+parentIdentifier+'" class="active">'+title+'<span class="close">x</span></li>');
+			$(parentIdentifier+' .tabFrame header ul').append('<li data-tab="'+(numberOfTabs+1)+'" data-parent-identifier="'+parentIdentifier+'" data-title="'+title+'" class="active">'+title+'<span class="close">x</span></li>');
 
                         $(parentIdentifier+' .tabFrame .tab').hide();
                         $(parentIdentifier+' .tabFrame').append('<div class="tab tab_'+(numberOfTabs+1)+'">'+content+'</div>');
                         this.initClicks();
 		};
+                this.getTabByTitle = function(tabTitle){
+                    parentIdentifier = this.parentIdentifier;
+                    var ret;
+                    $(parentIdentifier+' .tabFrame header ul li').each(function(){
+                        console.log($(this).attr('data-title'));
+                        if($(this).attr('data-title') == tabTitle){
+                            ret = $(this).attr('data-tab');
+                        }
+                    });
+                            return ret;
+                };
 		this.showTab = function(tab){
                     parentIdentifier = this.parentIdentifier;
                     $(parentIdentifier+' .tabFrame .tab').hide();
                     $(parentIdentifier+' .tabFrame .tab.tab_'+tab).show();
 		};
 		this.updateTabContent = function(tab_identifier ,content){
+                    if(parseInt(tab_identifier) != tab_identifier){
+                        alert('oaoaoa');
+                        tab_identifier = this.getTabByTitle(tab_identifier);
+                    }
                     parentIdentifier = this.parentIdentifier;
                     $(parentIdentifier+' .tabFrame .tab.tab_'+tab_identifier).html(content);
 			
@@ -3234,8 +3249,7 @@ function updatePictureStatus(userId, borderColor){
 
 function showContent(content, title){
   showApplication('reader');
-  createNewTab('reader_tabView', title,'','showContent.php?content='+content,true);return true;
-    
+  reader.tabs.addTab(title, '',browser.loadPage('showContent.php?content='+content));
 }
 
 function mousePop(type, id, html){
@@ -3414,8 +3428,8 @@ function reloadFeed(type){
 function openUploadTab(element){
 	
         showApplication('filesystem');
-        createNewTab('fileBrowser_tabView', 'Upload File','','modules/filesystem/upload.php?element='+element,true);return true;
-	}
+        fileystem.tabs.addTab('title', '',browser.loadPage('modules/filesystem/upload.php?element='+element));
+}
 
 function initUploadify(id, uploader, element, timestamp, token){
 		
@@ -3462,8 +3476,9 @@ function openFolder(folderId){
 
 function openElement(elementId, title){
         showApplication('filesystem');
-        createNewTab('fileBrowser_tabView', title,'','modules/filesystem/showElement.php?element='+elementId,true);return true;
-    }
+        
+        fileystem.tabs.addTab(title, '',browser.loadPage('modules/filesystem/showElement.php?element='+elementId));
+}
 
 function openFile(type, typeId, title, typeInfo, extraInfo1, extraInfo2){
         
@@ -3490,46 +3505,48 @@ function openFile(type, typeId, title, typeInfo, extraInfo1, extraInfo2){
         	var vId = typeInfo;
         	var linkId = typeId;
         	if(linkId.length == 0){
-            	createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=youTube&linkId='+linkId+'&typeInfo='+vId+'&extraInfo1='+playlist+'&extraInfo2='+row+'&external=1',true);	
+                         
+                reader.tabs.addTab(title, '',gui.loadPage('./modules/reader/openFile.php?type=youTube&linkId='+linkId+'&typeInfo='+vId+'&extraInfo1='+playlist+'&extraInfo2='+row+'&external=1'));
+ 	
         	}else{
         		
-            	createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=youTube&linkId='+linkId+'&typeInfo='+vId+'&extraInfo1='+playlist+'&extraInfo2='+row+'&external=1',true);
-            
+                reader.tabs.addTab(title, '',gui.loadPage('./modules/reader/openFile.php?type=youTube&linkId='+linkId+'&typeInfo='+vId+'&extraInfo1='+playlist+'&extraInfo2='+row+'&external=1'));
+ 
         	}return false;
         }
         
         if(type == 'RSS'){
-            createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=RSS&linkId='+typeId,true);
+            
+            reader.tabs.addTab(title, '',gui.loadPage('./modules/reader/openFile.php?type=RSS&linkId='+typeId));
             return false;
         }
         
         if(type == 'wikipedia'){
         	//typeId needs to be changed to title
-            createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=wiki&title='+typeId,true);
+            reader.tabs.addTab(title, '',gui.loadPage('./modules/reader/openFile.php?type=wiki&title='+typeId));
             return false;
         }
         
         //real files
         if(type == 'UFF'){
-            createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=UFF&fileId='+typeId,true);
+            reader.tabs.addTab(title, '',gui.loadPage('./modules/reader/openFile.php?type=UFF&fileId='+typeId));
             return false;
         }
         if(type == 'document' ||type == 'application/pdf' ||type == 'text/plain'){
-            createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?fileId='+typeId,true);
+            reader.tabs.addTab(title, '',gui.loadPage('./modules/reader/openFile.php?fileId='+typeId));
             return false;
         }
         if(type == 'video' ||type == 'video/mp4' ||type == 'video/quicktime'  ){
-            createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=video&fileId='+typeId,true);
+            reader.tabs.addTab(title, '',gui.loadPage('./modules/reader/openFile.php?type=video&fileId='+typeId));
             return false;
         }
         if(type == 'audio' ||type == 'audio/wav' ||type == 'audio/mpeg'  ){
-            createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=audio&fileId='+typeId,true);
+            reader.tabs.addTab(title, '',gui.loadPage('./modules/reader/openFile.php?type=audio&fileId='+typeId));
             return false;
         }
         if(type == 'image/png' ||type == 'image/jpeg' || type == 'image'){
-            createNewTab('reader_tabView',title,'','./modules/reader/openFile.php?type=image&fileId='+typeId,true);
+            reader.tabs.addTab(title, '',gui.loadPage('./modules/reader/openFile.php?type=image&fileId='+typeId));
             return false;
-            
         }else{
             alert(type);
             return false;
@@ -3608,7 +3625,8 @@ function openUniverseWikiArticle(title){
 function openURL(url, title){
     		url = encodeURI(url);
     		url = 'modules/reader/browser/?url='+url;
-            createNewTab('reader_tabView',title,'',url,true);
+                
+            reader.tabs.addTab(title, '',gui.loadPage(url));
             showApplication('reader');   
             return false;
     }
@@ -3732,7 +3750,7 @@ function openChatDialoge(username){
           if($("#test_"+ username +"").length == 0){
           	
           	userid = usernameToUserid(username);
-              createNewTab('chat_tabView1',username,'',"modules/chat/chatreload.php?buddy="+username+"",true);
+                reader.tabs.addTab(username, '',gui.loadPage("modules/chat/chatreload.php?buddy="+username+""));
               
               openDialogueInterval = window.setInterval("chatDecrypt(userid)", 500);
           }else{
@@ -3943,7 +3961,8 @@ function deleteFromPersonals(id){
               
 function showGroup(groupId){
                   showApplication('reader');
-                  createNewTab('reader_tabView',"" + groupId + "",'',"./group.php?id=" + groupId + "",true);
+                    reader.tabs.addTab("" + groupId + "", '',gui.loadPage("./group.php?id=" + groupId + ""));
+              
                   return false;
               }
 

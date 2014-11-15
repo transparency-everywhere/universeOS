@@ -609,7 +609,7 @@ else if($_GET['action'] == "addFolder"){
                 jsAlert($message);
                 ?>
                 <script>
-                    parent.addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=<?=$_POST['folder'];?>&reload=1');
+                    parent.filesystem.tabs.updateTabContent(1 ,parent.gui.loadPage('modules/filesystem/fileBrowser.php?folder=<?=$_POST['folder'];?>&reload=1'));
                 </script>
                 <?
 				}
@@ -718,7 +718,9 @@ else if($_GET['action'] == "addElement"){
         }
         ?>
         <script>
-            parent.addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=<?=$_POST['folder'];?>&reload=1');
+            
+                    parent.filesystem.tabs.updateTabContent(1 ,parent.gui.loadPage('modules/filesystem/fileBrowser.php?folder=<?=$_POST['folder'];?>&reload=1'));
+                
         </script>
         <?
         echo jsAlert("you just added an element :)");
@@ -831,14 +833,14 @@ else if($_GET['action'] == "addInternLink"){
                                 if($_POST['parentType'] == "folder"){
                                 ?>
                                 <script>
-                                    parent.addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=<?=$_POST['parentId'];?>&reload=1');
+                                    parent.filesystem.tabs.updateTabContent(1 ,parent.gui.loadPage('modules/filesystem/fileBrowser.php?folder=<?=$_POST['parentId'];?>&reload=1'));
                                 </script>
                                 <?
                                 }else if($_POST['parentType'] == "element"){
                                     $parentData = mysql_fetch_array(mysql_query("SELECT title FROM elements WHERE id='".mysq_real_escape_string("".$_POST['parentId']."")."'"));
                                     ?>
                                     <script>
-                                        parent.addAjaxContentToTab('<?=substr($parentData['title'], 0, 10);?>', 'modules/filesystem/showElement.php?element=<?=$_POST['parentId'];?>&reload=1');
+                                    parent.filesystem.tabs.updateTabContent('<?=substr($parentData['title'], 0, 10);?>' ,parent.gui.loadPage('modules/filesystem/showElement.php?element=<?=$_POST['parentId'];?>&reload=1'));
                                     </script>
                                     <?
                                 }
@@ -933,7 +935,9 @@ else if($_GET['action'] == "addLink"){
                             if($linkClass->addLink($_POST['folder'], $_POST['title'], $_POST['type'], $privacy, $_POST['link'])){
                                 ?>
 			                <script>
-			                    parent.addAjaxContentToTab('<?=$_POST['tabTitle'];?>', 'modules/filesystem/showElement.php?element=<?=$_POST['folder'];?>&reload=1');
+                                            
+                                            parent.filesystem.tabs.updateTabContent('<?=$_POST['tabTitle'];?>' ,parent.gui.loadPage('modules/filesystem/showElement.php?element=<?=$_POST['folder'];?>&reload=1'));
+                                   
 			                </script>
 	                	<?
                             }
@@ -2037,7 +2041,8 @@ else if($_GET['action'] == "deleteItem"){
                     $classFolder->delete();
 					?>
                	    <script>
-                    	parent.addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=<?=$checkFolderData['folder'];?>&reload=1');
+                        parent.filesystem.tabs.updateTabContent(1 ,parent.gui.loadPage('modules/filesystem/fileBrowser.php?folder=<?=$checkFolderData['folder'];?>&reload=1'));
+                                
                 	</script>
                 	<?
                 }
@@ -2052,7 +2057,8 @@ else if($_GET['action'] == "deleteItem"){
                         jsAlert("The Element has been deleted");
                     ?>
                         <script>
-                            parent.addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?reload=1&folder=<?=$checkElementData['folder'];?>');
+                        parent.filesystem.tabs.updateTabContent(1 ,parent.gui.loadPage('modules/filesystem/fileBrowser.php?reload=1&folder=<?=$checkElementData['folder'];?>'));
+                                
                         </script>
                     <?
                 }
@@ -2070,7 +2076,9 @@ else if($_GET['action'] == "deleteItem"){
                             jsAlert("File has been deleted :( ");
                                 ?>
                                     <script>
-                                        parent.addAjaxContentToTab('<?=substr($fileElementData['title'], 0, 10);?>', 'modules/filesystem/showElement.php?element=<?=$fileElementData['id'];?>&reload=1');
+                                        
+                                        parent.filesystem.tabs.updateTabContent('<?=$_POST['tabTitle'];?>' ,parent.gui.loadPage('modules/filesystem/showElement.php?element=<?=$fileElementData['id'];?>&reload=1'));
+                                
                                     </script>
                                 <?
                         
@@ -2111,14 +2119,17 @@ else if($_GET['action'] == "deleteItem"){
                                 if($checkInternLinkData['parentType'] == "folder"){
                                     ?>
                                     <script>
-                                      parent.addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=<?=$checkInternLinkData['parentId'];?>&reload=1');
+                                    parent.filesystem.tabs.updateTabContent(1 ,parent.gui.loadPage('modules/filesystem/fileBrowser.php?folder=<?=$checkInternLinkData['parentId'];?>&reload=1'));
+                                
                                     </script>
                                     <?
                                 }else if($checkInternLinkData['parentType'] == "element"){
                                     $parentData = mysql_fetch_array(mysql_query("SELECT title FROM elements WHERE id='".mysq_real_escape_string($checkInternLinkData['parentId'])."'"));
                                     ?>
                                     <script>
-                                        parent.addAjaxContentToTab('<?=substr($parentData['title'], 0, 10);?>', 'modules/filesystem/showElement.php?element=<?=$checkInternLinkData['parentId'];?>&reload=1');
+                                        
+                                        parent.filesystem.tabs.updateTabContent('<?=substr($parentData['title'], 0, 10);?>' ,parent.gui.loadPage('modules/filesystem/showElement.php?element=<?=$checkInternLinkData['parentId'];?>&reload=1'));
+                                
                                     </script>
                                     <?
                                 }
@@ -2300,7 +2311,7 @@ else if($_GET['action'] == "editItem"){
 									//close modal, updatefilebrowser.
 									echo"<script>";
 									echo"parent.$('.jqPopUp').slideUp();";
-									echo"parent.addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=".$checkFolderData['folder']."&reload=1');";
+                                                                        echo"parent.filesystem.tabs.updateTabContent(1 ,parent.gui.loadPage('modules/filesystem/fileBrowser.php?folder=".$checkInternLinkData['parentId']."&reload=1'));";
 									echo"</script>";
 								
 								}
@@ -2318,8 +2329,8 @@ else if($_GET['action'] == "editItem"){
                             jsAlert("Saved :)");
 							echo"<script>";
 							echo"parent.$('.jqPopUp').slideUp();";
-							echo"parent.addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=".$checkElementData['folder']."&reload=1');";
-							echo"</script>";
+                                                                        echo"parent.filesystem.tabs.updateTabContent(1 ,parent.gui.loadPage('modules/filesystem/fileBrowser.php?folder=".$checkElementData['folder']."&reload=1'));";
+									echo"</script>";
                         }
                     }else if($type == "file"){
 
@@ -2794,7 +2805,9 @@ else if($_GET['action'] == "deleteFile"){
                             jsAlert("File has been deleted :( ");
                                 ?>
                                     <script>
-                                        parent.addAjaxContentToTab('<?=substr($fileElementData['title'], 0, 10);?>', 'modules/filesystem/showElement.php?element=<?=$fileElementData[id];?>&reload=1');
+                                       
+                                       parent.filesystem.tabs.updateTabContent('<?=substr($fileElementData['title'], 0, 10);?>' ,parent.gui.loadPage('modules/filesystem/showElement.php?element=<?=$fileElementData[id];?>&reload=1'));
+                                
                                     </script>
                                 <?
                         
@@ -2942,9 +2955,10 @@ else if($_GET['action'] == "createNewUFF"){
                             jsAlert("your file has been created");
                             ?>
                             <script>
-			                parent.addAjaxContentToTab('<?=$title10;?>', 'modules/filesystem/showElement.php?element=<?=$element;?>&reload=1');
-			               
-                           	</script>
+			        
+                                       parent.filesystem.tabs.updateTabContent('<?=$title10;?>' ,parent.gui.loadPage('modules/filesystem/showElement.php?element=<?=$element;?>&reload=1'));
+                                
+                            </script>
 			                <?
                         }
                 }else{

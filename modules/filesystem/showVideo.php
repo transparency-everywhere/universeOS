@@ -27,7 +27,7 @@ $title10 = substr("$elementData[title]", 0, 10);
             $link = "$link?id=$fileListData[id]";
             $title10 = substr("$fileListData[title]", 0, 10);
             ?>
-            <a href="#" onclick="createNewTab('reader_tabView','<?=$title10;?>','','./modules/reader/<?=$link;?>',true);return false"><?=$fileListData[title];?></a><br>
+            <a href="#" onclick="reader.tabs.addTab('<?=$title10;?>', '',gui.loadPage('./modules/reader/<?=$link;?>'));return false"><?=$fileListData[title];?></a><br>
         <?
             
         } ?>

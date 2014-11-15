@@ -1,4 +1,6 @@
 <?
+require_once("inc/config.php");
+require_once("inc/functions.php");
 if(empty($_SESSION['userid'])){
     session_start();
 }
@@ -8,8 +10,6 @@ if(!proofLogin() && $_SESSION['personalFeed'] > (time()-60)){
 	die();
 }
 
-require_once("inc/config.php");
-require_once("inc/functions.php");
 ?>
 <style>
     #personalFeed{
@@ -65,7 +65,7 @@ while($newGroupData = mysql_fetch_array($newGroupSql)){
 ?>
     <script>
         if($("#groupRequest_<?=$newGroupData['id'];?>").length == 0){
-            $('#systemAlerts').append('<li id="groupRequest_<?=$newGroupData[id];?>"><?=showUserPicture("$newGroupData3[userid]", '15', '', true);?><div class="messageMain"><a href="#" onclick="showProfile(\'<?=$newGroupData3[userid];?>\');"><?=$newGroupData3[username];?></a> Invited you into the  group <a href="#" onclick="createNewTab(\'reader_tabView\',\'<?=$newGroupData2[title];?>\',\'\',\'group.php?id=<?=$newGroupData2[id];?>\',true);return false"><?=$newGroupData2[title];?></a></div><div class="messageButton"><a href="doit.php?action=joinGroup&id=<?=$newGroupData[id];?>" class="btn btn-info btn-mini" target="submitter" style="margin-right:25px;" onclick="$(\'#groupRequest_<?=$newGroupData[id];?>\').remove();">Join</a><a href="doit.php?action=declineGroup&id=<?=$newGroupData[id];?>" class="btn btn-mini" target="submitter" onclick="$(\'#groupRequest_<?=$newGroupData[id];?>\').remove();">Decline</a></div></li>');
+            $('#systemAlerts').append('<li id="groupRequest_<?=$newGroupData[id];?>"><?=showUserPicture("$newGroupData3[userid]", '15', '', true);?><div class="messageMain"><a href="#" onclick="showProfile(\'<?=$newGroupData3[userid];?>\');"><?=$newGroupData3[username];?></a> Invited you into the  group <a href="#" onclick="reader.tabs.addTab(\'<?=$newGroupData2[title];?>\', \'\',gui.loadPage(\'group.php?id=<?=$newGroupData2['id'];?>\')); return false;"><?=$newGroupData2[title];?></a></div><div class="messageButton"><a href="doit.php?action=joinGroup&id=<?=$newGroupData[id];?>" class="btn btn-info btn-mini" target="submitter" style="margin-right:25px;" onclick="$(\'#groupRequest_<?=$newGroupData[id];?>\').remove();">Join</a><a href="doit.php?action=declineGroup&id=<?=$newGroupData[id];?>" class="btn btn-mini" target="submitter" onclick="$(\'#groupRequest_<?=$newGroupData[id];?>\').remove();">Decline</a></div></li>');
         }
     </script>
 <? 
@@ -82,7 +82,7 @@ while($personalEventData = mysql_fetch_array($personalEventSql)){
     if($personalEventData['event'] == "comment"){
         if($personalEventData['info'] == "feed"){
             $description = "Has commented your post.";
-            $link = "createNewTab(\'reader_tabView\',\'Comment\','\',\'modules/reader/showComment.php?type=$personalEventData[info]&itemid=$personalEventData[eventId]\',true);";
+            $link = "reader.tabs.addTab(\'Comment\', \'\',gui.loadPage(\'modules/reader/showComment.php?type=$personalEventData[info]&itemid=$personalEventData[eventId]\')); return false";
         }else if($personalEventData['info'] == "profile"){
             $description = "Has commented in your profile.";
             $link = "showProfile(\'".$_SESSION['userid']."\');";
