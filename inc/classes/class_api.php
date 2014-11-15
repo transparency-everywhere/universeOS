@@ -19,19 +19,17 @@ limitations under the License.
 
 class api{
 	public function useridToUsername($request){
-		if(is_numeric($request))
+		if(is_numeric($request)){
 			//only a single request
 			return useridToUsername($request);
-		else {
+                }else {
 			//array of requests
 			$userids = json_decode($request,true);
 			
 			foreach($userids as $userid){
 				$ret[$userid] = useridToUsername($userid);
 			}
-			
 			return json_encode($ret);
-			
 		}
 	}
 	public function useridToRealname($request){

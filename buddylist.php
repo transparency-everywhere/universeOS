@@ -6,11 +6,6 @@ require_once("inc/config.php");
 require_once("inc/functions.php");
 if(empty($_GET['reload'])){
 ?>
-<div class="fenster" id="buddylist" style="display: none;">
-    <header class="titel">
-        <p>Buddylist&nbsp;</p><p class="windowMenu"><a href="javascript: toggleApplication('buddylist');" style="color: #FFF;"><img src="./gfx/icons/close.png" width="16"></a></p>
-    </header>
-    <div class="inhalt">
         <div id="buddyListFrame">
         <? } ?>
             <table width="100%" cellspacing="0">
@@ -48,14 +43,11 @@ if(empty($i)){
                 <div style="font-size: 12pt;">
                     search for the user- or realname of your friends, to add them to your buddylist.
                 </div>
-    <?
+<?
 }?>
         </div>
-   </div>
-   
    	<?
         
 	$buddyListClass->showBuddySuggestions();
 	?>
-</div>
 <? } ?>

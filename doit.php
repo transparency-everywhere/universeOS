@@ -462,7 +462,7 @@ else if($_GET['action'] == "showUserGroups"){ ?>
                            ?>
                                <tr height="30" class="strippedRow">
                                    <td width="27">&nbsp;<img src="./gfx/icons/group.png" height="15"></td>
-                                   <td width="300">&nbsp;<a href="#" onclick="createNewTab('reader_tabView','<?=$title10;?>','','group.php?id=<?=$groupData['id'];?>',true);return false"><?=$title15;?></a></td>
+                                   <td width="300">&nbsp;<a href="#" onclick="reader.tabs.addTab('<?=$title10;?>', '',browser.loadPage('group.php?id=<?=$groupData['id'];?>'));"><?=$title15;?></a></td>
                                    <td align="right"><?=countGroupMembers($groupData['id']);?>&nbsp;&nbsp;</td>
                                </tr>
                        <?}
@@ -498,7 +498,7 @@ else if($_GET['action'] == "showUserGroups"){
                            ?>
                                <tr height="30" class="strippedRow">
                                    <td width="27">&nbsp;<img src="./gfx/icons/group.png" height="15"></td>
-                                   <td width="300">&nbsp;<a href="#" onclick="createNewTab('reader_tabView','<?=$title10;?>','','group.php?id=<?=$groupData['id'];?>',true);return false"><?=$title15;?></a></td>
+                                   <td width="300">&nbsp;<a href="#" onclick="reader.tabs.addTab('<?=$title10;?>', '',gui.loadPage('group.php?id=<?=$groupData['id'];?>')); return false"><?=$title15;?></a></td>
                                    <td><?=countGroupMembers($groupData['id']);?></td>
                                </tr>
                        <?}

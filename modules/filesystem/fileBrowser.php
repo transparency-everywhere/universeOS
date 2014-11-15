@@ -1,9 +1,7 @@
 <?
-if(isset($_GET['reload'])) {
     session_start();
     include_once("../../inc/config.php");
     include_once("../../inc/functions.php");
-}
 
 
 	
@@ -83,7 +81,7 @@ $pathdata = mysql_fetch_array($pathsql);
     <div class="underFrame" style="overflow: none;">
         <div class="grayBar" style="top: 0px; left:0px; right: 0px; height: 20px; overflow: none;">
             	<? if($folder !== "1") {?>
-            	<a href="#" onclick="addAjaxContentToTab('Universe', 'modules/filesystem/fileBrowser.php?folder=<?=$pathdata['folder'];?>&reload=1');return false" title="parent folder" class="btn btn-mini" style="margin-right:3px;"><i class="icon-arrow-up"></i></a>
+            	<a href="#" onclick="filesystem.openFolder(<?=$pathdata['folder'];?>);return false" title="parent folder" class="btn btn-mini" style="margin-right:3px;"><i class="icon-arrow-up"></i></a>
                 <? }
                 if(proofLogin() && !empty($folder)){ 
             		echo"<a href=\"#\" onclick=\"$('.fileBrowserSettings$folder').slideToggle('slow'); return false\" title=\"more...\" class=\"btn btn-mini\"><i class=\"icon-cog\"></i></a>";

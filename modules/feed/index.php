@@ -1,13 +1,7 @@
 <?php
-if(!isset($_SESSION['userid'])){
-    session_start();
-}
-?>  
-<div class="fenster" id="feed" style="display: none;">
-    <header class="titel">
-        <p>Feed&nbsp;</p><p class="windowMenu"><a href="javascript:hideApplication('feed');"><img src="./gfx/icons/close.png" width="16"></a></p>
-    </header>
-    <div class="inhalt autoFlow">
+include_once("../../inc/config.php");
+include(universeBasePath.'/inc/functions.php');
+?>
         <div class="windowHeader" id="feedheader">
             <form id="feedInputForm" method="post" action=" doit.php?action=createFeed" target="submitter">
             <div style="margin: 15px;">
@@ -136,5 +130,3 @@ if(!isset($_SESSION['userid'])){
             $('#submitVote').show();
             });
             </script>
-    </div>
-</div>

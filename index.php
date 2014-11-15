@@ -42,20 +42,6 @@ if(!$login) {
             <div id="suggest">
             </div>
 
-            <div id="invisiblefeed">
-                <? include("modules/feed/index.php") ?>
-            </div>
-            
-            <? include("modules/reader/index.php") ?>
-            
-            <div id="invisiblebuddylist">
-                <? include("buddylist.php"); ?>
-            </div>
-            
-            <div id="invisiblefilesystem">
-                <? include("modules/filesystem/filesystem.php") ?>
-            </div>
-            
             <? include("modules/chat/chat.php") ?>
             
             

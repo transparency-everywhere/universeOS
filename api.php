@@ -13,6 +13,9 @@ switch($action){
                 $user = new user();
 		echo $user->login($_POST['username'], $_POST['password']);
 		break;
+        case 'proofLogin':
+            echo proofLogin();
+            break;
 	case 'getUserCypher':
 			if(empty($_POST['userid'])){
 				$userid = usernameToUserid($_POST['username']);

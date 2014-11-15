@@ -1,15 +1,9 @@
 <?php
 session_start();
-if($_GET['reload'] == "1"){
-    $includepath = "../../inc";
-}else{
-$includepath = "inc";
-}
-$includepath = "$path$includepath";
-include("$includepath/config.php");
-include_once("$includepath/functions.php");
+include("../../inc/config.php");
+include_once("../../inc/functions.php");
 
-$userSql = mysql_query("SELECT username FROM user WHERE userid='$_SESSION[userid]'");
+$userSql = mysql_query("SELECT username FROM user WHERE userid='".getUser()."'");
 $userData = mysql_fetch_array($userSql);
 
 if($_GET['action'] == "add"){

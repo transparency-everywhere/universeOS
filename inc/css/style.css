@@ -1567,6 +1567,42 @@ color:#FFFFFF;
 		float:left;
 	}
         
+        .tabFrame>header{
+            position: absolute!important;
+            height: auto!important;
+            padding: 0!important;
+            z-index: 2;
+            background: none!important;
+        }
+        
+        .tabFrame>header ul{
+            
+        }
+        
+        .tabFrame>header li{
+            float: left;
+            padding: 3px 15px;
+            padding-bottom: 0;
+            background: #FFF;
+            margin-right: 3px;
+            border: 1px solid #767676;
+            border-bottom: 0;
+            cursor:pointer;
+        }
+        
+        
+        .tabFrame>header li.active{
+            background:#c9c9c9;
+        }
+        
+        
+        
+        .tabFrame>.tab{
+            background: #FFF;
+            top: 0px;
+            border-top: 1px solid #c9c9c9;
+        }
+        
 /*Dock*/
 /*Dock*/
 /*Dock*/
@@ -3152,6 +3188,10 @@ background: #4D4545;
 			bottom: 0px;
 			left: 0px;
 		}
+                
+                .browser .tabFrame{
+                    top:35px;
+                }
 		
 		.browser iframe{
 			width:100%;

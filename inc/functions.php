@@ -43,6 +43,8 @@ function commaToOr($string, $type){
         return $return;
     }
  
+include('classes/class_api.php');
+
 include('classes/class_image.php');
  
 include('classes/class_xml.php');

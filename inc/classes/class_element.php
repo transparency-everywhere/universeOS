@@ -153,7 +153,8 @@ class element {
 
                         //define openFile function
                         $link = "openFile('$openFileType', '$fileListData[id]', '$title10');";
-                        $rightLink = "createNewTab('reader_tabView','See $title10','','./modules/reader/player.php?id=$fileListData[id]',true);return false";
+                        
+                        $rightLink = "reader.tabs.addTab('See $title10', '',gui.loadPage('./modules/reader/player.php?id='".$fileListData['id']."')); return false";
                     }
                     else if($fileListData['type'] == "UFF"){
                     //standard from know on (19.02.2013)
