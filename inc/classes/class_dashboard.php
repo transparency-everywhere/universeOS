@@ -24,6 +24,7 @@ class dashBoard{
 	}
 	
 	function showDashBox($title, $content, $footer=NULL, $id=NULL, $grid=true){
+                $output;
 		if($grid){
 			$output .= "<div class=\"dashBox\" id=\"$id"."Box\">";
 		}
