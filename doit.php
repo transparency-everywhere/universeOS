@@ -142,7 +142,8 @@ else if($_GET['action'] == "download"){
      }
 else if($_GET['action'] == "showPlaylist"){
         $playListId = save($_GET['id']);
-        $playListSql = mysql_query("SELECT * FROM playlist WHERE id='$playListId'");
+        $classDb = new db();
+        $playListSql = $classDb->select('playlist', array('id', $playListId));
         $playListData = mysql_fetch_array($playListSql);
         if($playListData['user'] == getUser()){
             $delete = TRUE;
@@ -335,7 +336,8 @@ else if($_GET['action'] == "addPlaylist"){
      }
 else if($_GET['action'] == "copyPlaylist"){
          $playList = save($_GET['playlist']);
-         $playlistData = mysql_query("SELECT * FROM playlist WHERE id='$playList'");
+         $classDb = new db();
+         $playListData = $classDb->select('playlist', array('id', $playList));
          $playlistData = mysql_fetch_array($playlistData);
          
          if(isset($_POST['submit'])){
@@ -454,8 +456,9 @@ else if($_GET['action'] == "showUserGroups"){ ?>
                            $i++;
                            $groupSql = mysql_query("SELECT id, title FROM groups WHERE id='$attData[group]'");
                            $groupData = mysql_fetch_array($groupSql);
-                       $result = mysql_query("SELECT * FROM groupAttachments WHERE group='2'");
-                       $num_rows = mysql_num_rows($result);
+                           $classDb = new db();
+                           $result = $classDb->select('groupAttachments', array('group', '2'));
+                           $num_rows = mysql_num_rows($result);
                            $title = $groupData['title'];
                            $title10 = substr("$title", 0, 10);
                            $title15 = substr("$title", 0, 25);
@@ -490,7 +493,8 @@ else if($_GET['action'] == "showUserGroups"){
                            $i++;
                            $groupSql = mysql_query("SELECT id, title FROM groups WHERE id='".$attData['group']."'");
                            $groupData = mysql_fetch_array($groupSql);
-                       $result = mysql_query("SELECT * FROM groupAttachments WHERE group='2'");
+                       $classDb = new db();
+                           $result = $classDb->select('groupAttachments', array('group', '2'));
                        $num_rows = mysql_num_rows($result);
                            $title = $groupData['title'];
                            $title10 = substr("$title", 0, 10);
@@ -680,7 +684,8 @@ else if($_GET['action'] == "addFolder"){
 else if($_GET['action'] == "addElement"){
          
          if(proofLogin()){
-            $selectsql = mysql_query("SELECT * FROM folders WHERE id='$_GET[folder]'");
+            $classDb = new db();
+            $selectsql = $classDb->select('folders', array('oid', $_GET['folder']));
             $selectdata = mysql_fetch_array($selectsql);
             if($_POST['submit']) {
     
@@ -710,7 +715,8 @@ else if($_GET['action'] == "addElement"){
         $feedClass->create($user, $feed, "", "showThumb", $privacy, "element", $elementId);
     
         if($_POST['type'] == "image"){
-            $filefolderSQL = mysql_query("SELECT * FROM folders WHERE id='".$_POST['folder']."'");
+            $dbClass = new db();
+            $filefolderSQL = $dbclass->select('folders', array('id', $_POST['folder']);
             $fileFolderData = mysql_fetch_array($filefolderSQL);
             //here could be a fail but Its workin right o0
             $folderpath = $folderData['path'];
@@ -1029,7 +1035,8 @@ else if($_GET['action'] == "addLink"){
 else if($_GET['action'] == "changeBackgroundImage"){
         if(proofLogin()){
         if($_GET['type'] == "file"){
-            $fileSql = mysql_query("SELECT * FROM files WHERE id='$_GET[id]'");
+            $dbClass = new db();
+            $fileSql = $dbclass->select('files', array('id', $_GET['id']);
             $fileData = mysql_fetch_array($fileSql);
                 $documentElementSQL = mysql_query("SELECT id, folder FROM elements WHERE id='$documentData[folder]'");
                 $documentElementData = mysql_fetch_array($documentElementSQL);
@@ -1125,7 +1132,8 @@ else if($_GET['action'] == "groupAdmin"){
              mysql_query("UPDATE groups SET public='".save($_POST['privacy'])."', description='".save($_POST['description'])."', membersInvite='".save($_POST['membersInvite'])."' WHERE id='$group'");
          jsAlert("Saved :)");
          }
-         $groupSql = mysql_query("SELECT * FROM groups WHERE id='$group'");
+         $dbClass = new db();
+         $groupSql = $dbclass->select('groups', array('id', $group);
          $groupData = mysql_fetch_array($groupSql);
          if($groupData['membersInvite'] == "1"){
              $membersInvite = "checked=\"checked\"";
@@ -1236,7 +1244,8 @@ else if($_GET['action'] == "groupInviteUsers"){
 		 }
 		 jsAlert("worked:)");
          }
-         $groupSql = mysql_query("SELECT * FROM groups WHERE id='$group'");
+         §dbClass = new db();
+         $groupSql = $dbClass->select('groups, array('id', $group));
          $groupData = mysql_fetch_array($groupSql);
 		 
 		 

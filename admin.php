@@ -23,7 +23,7 @@ switch($action){
                     <tr>
                         <td onclick="$('#loader').load('admin.php?action=messages')">Messages</td>
                         
-                        <td>FAQ´</td>
+                        <td>FAQ</td>
                     </tr>
                     <tr>
                         <td onclick="$('#loader').load('admin.php?action=contents')">Contents</td>
@@ -250,9 +250,10 @@ case 'messages':
                               <td style="color: #131313!important; font-color: #131313!important;">Message</td>
                               <td align="right" style="color: #131313!important; font-color: #131313!important;">Actions</td>
                           </tr>
-                            <?PHP
-                            unset($i);
-                    $messageSql = mysql_query("SELECT * FROM  `adminMessages`");
+                            <?php
+                    unset($i);
+                    $dbClass = new db();
+                    $messageSql = $dbClass->select('adminMessages');
                     while($messageData = mysql_fetch_array($messageSql)){
                             if($i%2 == 0){
                                 $color="FFFFFF";
@@ -276,7 +277,7 @@ case 'messages':
                                     
                                 </td>
                             </tr>
-                            <?PHP
+                            <?php
                             } 
                             if(empty($i)){
                                 echo"no messages...";
@@ -334,9 +335,10 @@ case 'contents':
                               <td align="right" style="color: #131313!important; font-color: #131313!important;">Comments</td>
                               <td>Action</td>
                           </tr>
-                            <?PHP
-                            unset($i);
-                    $contentSql = mysql_query("SELECT * FROM  `staticContents`");
+                    <?php
+                    unset($i);
+                    $dbClass = new db();
+                    $contentSql = $dbclass->select('staticContents');
                     while($contentData = mysql_fetch_array($contentSql)){
                             if($i%2 == 0){
                                 $color="FFFFFF";
@@ -359,7 +361,7 @@ case 'contents':
                                     </div>
                                 </td>
                             </tr>
-                            <?PHP
+                            <?php
                             } 
                             if(empty($i)){
                                 echo"no messages...";
@@ -451,7 +453,8 @@ case 'contents':
                     <?
                }
            }
-           $contentSQL = mysql_query("SELECT * FROM staticContents WHERE id='$_GET[content]'");
+           $classDb = new db();
+           $contentSQL = $classDb->select('staticContents', array('id', $_GET[content]));
            $contentData = mysql_fetch_array($contentSQL);
         ?>
         <form action="admin.php?action=contents&subaction=edit&content=<?=$_GET[content];?>" method="post" target="submitter">
