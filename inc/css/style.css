@@ -757,11 +757,6 @@ border-bottom: 1px solid #292929;
 	top:0;
 	right:7px;
 }
-
-#feed {
-    min-width: 180px;
-    min-height: 200px;
-}
     
 #feedheader {
     position: absolute;

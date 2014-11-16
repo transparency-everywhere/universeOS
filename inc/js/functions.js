@@ -14,15 +14,7 @@ var focus = true;
 
 $(document).ready(function(){
         
-        
-        //init draggable windows
-        init.GUI();
-        
-        //init bootstrap popover
-        $('.bsPopOver').popover();
-        
-        //init bootstrap alert
-        $(".alert").alert();
+        universe.init();
     
 });
 //privacy
@@ -180,47 +172,47 @@ var init = new function(){
       
       
       
-              
-          $("#buddylist").css({
-          'top' : offsetTop,
-          'right' : offsetRight+20,
-          'width' : widthSm,
-          'height' : heightBig,
-          'z-index' : '9998'
-              });
-          
-          $("#feed").css({
-          'top' : offsetTop+20,
-          'right' : offsetRight,
-          'width' : widthSm,
-          'height' : heightBig,
-          'z-index' : '9997'
-              });
-              
-              
-          $("#chat").css({
-          'top' : offsetTop,
-          'left' : offsetLeft,
-          'width' : widthBig,
-          'height' : heightBig,
-          'z-index' : '997'
-              });
-              
-          $("#filesystem").css({
-          'top' : offsetTop+20,
-          'left' : offsetLeft+20,
-          'width' : widthBig,
-          'height' : heightBig,
-          'z-index' : '998'
-              });
-              
-          $("#reader").css({
-          'top' : offsetTop+40,
-          'left' : offsetLeft+40,
-          'width' : widthBig,
-          'height' : heightBig,
-          'z-index' : '999'
-              });
+//              
+//          $("#buddylist").css({
+//          'top' : offsetTop,
+//          'right' : offsetRight+20,
+//          'width' : widthSm,
+//          'height' : heightBig,
+//          'z-index' : '9998'
+//              });
+//          
+//          $("#feed").css({
+//          'top' : offsetTop+20,
+//          'right' : offsetRight,
+//          'width' : widthSm,
+//          'height' : heightBig,
+//          'z-index' : '9997'
+//              });
+//              
+//              
+//          $("#chat").css({
+//          'top' : offsetTop,
+//          'left' : offsetLeft,
+//          'width' : widthBig,
+//          'height' : heightBig,
+//          'z-index' : '997'
+//              });
+//              
+//          $("#filesystem").css({
+//          'top' : offsetTop+20,
+//          'left' : offsetLeft+20,
+//          'width' : widthBig,
+//          'height' : heightBig,
+//          'z-index' : '998'
+//              });
+//              
+//          $("#reader").css({
+//          'top' : offsetTop+40,
+//          'left' : offsetLeft+40,
+//          'width' : widthBig,
+//          'height' : heightBig,
+//          'z-index' : '999'
+//              });
 	};
 	
 	this.dashBox = function(){
@@ -361,6 +353,7 @@ function proofLogin(){
               }
 }
 
+//class is required because gui.loadScript is used to load reader.js, chat.js etc
 var gui = new function(){
     this.initWysiwyg = false; //is used in generateField and createForm to check if wysiwyg needs to be initialized
     this.initializeUploadify = false;
@@ -620,13 +613,36 @@ var gui = new function(){
 	}
     };
     this.loadScript = function(url){
-            var s = document.createElement('script');
-            s.type = 'text/javascript';
-            s.async = true;
-            s.src = url;
-            var x = document.getElementsByTagName('head')[0];
-            x.appendChild(s);
+        // get some kind of XMLHttpRequest
+        var xhrObj = new XMLHttpRequest();
+        // open and send a synchronous request
+        xhrObj.open('GET', url, false);
+        xhrObj.send('');
+        // add the returned content to a newly created script tag
+        var se = document.createElement('script');
+        se.type = "text/javascript";
+        se.text = xhrObj.responseText;
+        document.getElementsByTagName('head')[0].appendChild(se);
+        
     };
+    this.getRasterWidth = function(numberOfFields){
+        var gutterWidth = $(document).width()/49;
+        return ((numberOfFields*3)+(numberOfFields-1))*gutterWidth;
+    };
+    this.getRasterHeight = function(numberOfFields){
+        var gutterHeight = $(document).height()/49;
+        return ((numberOfFields*3)+(numberOfFields-1))*gutterHeight;
+    };
+    this.getRasterMarginLeft = function(numberOfFields){
+        var gutterWidth = $(document).width()/49;
+        return ((numberOfFields*3)+(numberOfFields+1))*gutterWidth;
+    };
+    this.getRasterMarginTop = function(numberOfFields){
+        var gutterHeight = $(document).height()/49;
+        return ((numberOfFields*3)+(numberOfFields+1))*gutterHeight;
+        
+    };
+    
     this.initUploadify = function($selector, inputName){
               
 	            $($selector).uploadify({
@@ -844,10 +860,27 @@ var gui = new function(){
               
 var universe = new function(){
     this.init = function(){
-        buddylist.init();
-        feed.init();
+        if(proofLogin()){
+            gui.loadScript('inc/js/buddylist.js');
+            gui.loadScript('inc/js/feed.js');
+            buddylist.init();
+            feed.init();
+        }
+        gui.loadScript('inc/js/filesystem.js');
+        gui.loadScript('inc/js/reader.js');
+        
         filesystem.init();
         reader.init();
+        
+        
+        //init draggable windows
+        init.GUI();
+        
+        //init bootstrap popover
+        $('.bsPopOver').popover();
+        
+        //init bootstrap alert
+        $(".alert").alert();
     };
 };
               
@@ -872,12 +905,48 @@ var application = function(id){
             
 		var windowStyle = '';
 		
+                
+                //check if style parameters are set
+                //for width, height, top, left
+                //if value is not nummeric(eg '222px') use value,
+                //otherwise use pixelraster(see gui class)
 		if(typeof style['width'] != 'undefined'){
+                    if(isNaN(style['width'])){
 			windowStyle +='width:'+style['width']+';';
+                    }else{
+                        windowStyle +='width:'+gui.getRasterWidth(style['width'])+'px;';
+                    }
 		}
                 
 		if(typeof style['height'] != 'undefined'){
-			windowStyle +='height:'+style['height']+';';
+                    if(isNaN(style['width'])){
+			windowStyle +='height:'+style['width']+';';
+                    }else{
+                        windowStyle +='height:'+gui.getRasterHeight(style['height'])+'px;';
+                    }
+		}
+                
+		if(typeof style['top'] != 'undefined'){
+                    if(isNaN(style['top'])){
+			windowStyle +='top:'+style['top']+';';
+                    }else{
+                        windowStyle +='top:'+gui.getRasterMarginTop(style['top'])+'px;';
+                    }
+		}
+                
+		if(typeof style['left'] != 'undefined'){
+                    if(isNaN(style['left'])){
+			windowStyle +='left:'+style['left']+';';
+                    }else{
+                        windowStyle +='left:'+gui.getRasterMarginLeft(style['left'])+'px;';
+                    }
+		}
+                
+		if(typeof style['hidden'] != 'undefined'){
+                    if(style['hidden'] === true){
+                        
+                        windowStyle +='display:none;';
+                    }
 		}
                 
 		
@@ -1337,40 +1406,7 @@ var User = new function(){
         
     };
 };
-			  
-var buddylist = new function(){
-  this.getBuddies = function(){
-                                   var res;
-			  		$.ajax({
-				      url:"api.php?action=getBuddylist",
-				      async: false,  
-					  type: "POST",
-				      success:function(data) {
-				         res = $.parseJSON(data); 
-				      }
-				   });
-				   return res;
-			  	};
-  this.addBuddy = function(){
-                                
-                            };
-  this.init = function(){
-	
-        this.applicationVar = new application('buddylist');
-	this.applicationVar.create('Buddylist', 'url', 'buddylist.php',{width: ($(document).width()*0.2)+"px", height:  ($(document).height()*0.8)+"px"});
-	
-  };
-};
-
-var feed = new function(){
-    this.init = function(){
-        
-        this.applicationVar = new application('feed');
-	this.applicationVar.create('Feed', 'url', 'modules/feed/index.php',{width: ($(document).width()*0.2)+"px", height:  ($(document).height()*0.8)+"px"});
-	
-    };
-}
-			  
+		
 var browser = new function(){
 	this.tabs;
         this.applicationVar;
@@ -1407,1090 +1443,7 @@ var browser = new function(){
                                             this.tabs.updateTabContent(tabIdentifier ,browser.loadPage(url));
 			  	};
 };
-                          
-var calendar = new function(){
-	
-	this.todayTimeObject = new Date();
-	this.ShownDay; //defines the starttime of shown intervall(first day of month, first day of week, day)
-	this.view = 'month'; //defines type of view(month, week or day)
-	this.listType = 'boxes';
-	this.shownTimeObject;
-	this.loader;
-	this.showDoneTasks = false; // defines if tasks with status "done" are shown
-	this.applicationVar;
-	this.show = function(){
-			  		if($('#calendarFenster').length === 0){
-			  			calendar.init();
-			  		}else{
-			  			this.applicationVar.show();
-			  		}
-			  	};
-	
-	this.init = function(){
-			  		
-			  		var html = '<div id="calendar">';
-			  				html += '<header>';
-			  					html += '<div class="btn-group pull-right" id="calendarViewDetail">';
-			  						html += '<a href="#" class="btn" id="prev">&lt;&lt;</a>';
-			  						html += '<a href="#" class="btn" id="text"></a>';
-			  						html += '<a href="#" class="btn" id="next">>></a>';
-			  					html += '</div>';
-			  					html += '<div class="btn-group pull-left" id="calendarView">';
-			  						html += '<a href="#" class="btn" id="day">Day</a>';
-			  						html += '<a href="#" class="btn" id="week">Week</a>';
-			  						html += '<a href="#" class="btn" id="month">Month</a>';
-			  					html += '</div>';
-			  					html += '<div class="btn-group pull-left" id="calendarListType" style="margin-left:30px;">';
-			  						html += '<a href="#" class="btn active" id="boxes"><i class="icon-th"></i></a>';
-			  						html += '<a href="#" class="btn" id="list"><i class="icon-th-list"></i></a>';
-			  					html += '</div>';
-			  					html += '<div class="btn pull-right" id="headerToday" style="margin-right:30px;">Today</div>';
-			  				html += '</header>';
-				  			html += '<div id="main">';
-								html += '<header>';
-									html += '<span>Monday</span>';
-									html += '<span>Tuesday</span>';
-									html += '<span>Wednesday</span>';
-									html += '<span>Thursday</span>';
-									html += '<span>Friday</span>';
-									html += '<span>Saturday</span>';
-									html += '<span>Sunday</span>';
-								html += '</header>';
-								html += '<div class="calendarFrame">';
-						
-								html += '</div>';
-							html += '</div>';
-							html += '<div id="side" class="leftNav">';
-							
-								html += '<ul id="calendars">';
-									html += '<li class="header">Calendars</li>';
-									
-									html += '<li><input type="checkbox" data-value="h" checked>&nbsp;Me</li>';
-									html += '<li><input type="checkbox" data-value="p">&nbsp;Public</li>';
-									html += '<li><input type="checkbox" data-value="f" checked>&nbsp;Friends</li>';
-									
-									//load groups into calendar list
-									var userGroups = groups.get();
-									if(userGroups){
-										$.each(groups.get(), function( index, value ) {
-											html += '<li><input type="checkbox" data-value="'+value+'">&nbsp;<img src="./gfx/icons/group.png" height="14">'+groups.getTitle(value)+'</li>';
-										});
-									}
-								html += '</ul>';
-								html += '<ul id="taskList">';
-									html += '<li class="header"><input type="checkbox" id="showTasks" onclick="calendar.toggleTasks();">&nbsp;Show Tasks<a href="#" class="pull-right" onclick="tasks.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon-plus icon-white"></i></a></li>';
-									html += '<li style="display:none;"><input type="checkbox" id="hideDoneTasks" onclick="calendar.toggleDoneTasks();" checked>&nbsp;hide done</li>';
-								html += '</ul>';
-								html += '<ul id="events">';
-									html += '<li class="header">Events<a href="#" class="pull-right" onclick="events.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon-plus icon-white"></i></a></li>';
-									//events will apend to this list
-								html += '</ul>';
-								
-							html += '</div>';
-						html += '</div>';
-						
-                                                this.applicationVar = new application('calendarFenster');
-			  			this.applicationVar.create('Calendar', 'html', html,{width: ($(document).width()*0.9)+"px", height:  ($(document).height()*0.8)+"px"});
-			  			
-			  			
-						$('#calendars .header').click(function(){
-							$('#side #calendars li').not('.header').slideToggle();
-						});
-			  			
-			  			$('#calendars input[type=checkbox]').click(function(){
-			  				calendar.loadEvents();
-			  			});
-			  			
-			  			$('#calendarListType #boxes').click(function(){
-			  				calendar.toggleListType('boxes');
-			  			});
-			  			
-			  			$('#calendarListType #list').click(function(){
-			  				calendar.toggleListType('list');
-			  			});
-			  			
-			  			
-			  			this.loadMonth();
-			  	};
-	
-	this.toggleListType = function(type){
-			  		
-			  		//show days as boxes
-			  		if(type == 'boxes'){
-			  			
-			  			$('#main').mouseenter(function(){
-			  				$(this).children('header').slideDown();
-			  			});
-			  			
-			  			$('#main').mouseleave(function(){
-			  				$(this).children('header').slideUp();
-			  			});
-			  			
-			  			
-			  			$('.calendarFrame').removeClass('list');
-			  			$('#calendarListType #list').removeClass('active');
-			  			
-			  			$('.calendarFrame').addClass('boxes');
-			  			$('#calendarListType #boxes').addClass('active');
-			  			this.listType = 'boxes';
-			  			
-			  		//show days in list
-			  		}else if(type == 'list'){
-			  			
-			  			$('#main').unbind('mouseenter mouseleave');
-			  			
-			  			$('#main>header').hide();
-			  			
-			  			$('.calendarFrame').removeClass('boxes');
-			  			$('#calendarListType #boxes').removeClass('active');
-			  			
-			  			$('.calendarFrame').addClass('list');
-			  			$('#calendarListType #list').addClass('active');
-			  			this.listType = 'list';
-			  		}else if(type == 'day'){
-			  			
-			  			$('#main').unbind('mouseenter mouseleave');
-			  			$('#main>header').hide();
-			  			
-			  			$('.calendarFrame').removeClass('boxes');
-			  			$('.calendarFrame').removeClass('list');
-			  			$('#calendarListType #boxes').removeClass('active');
-			  			$('#calendarListType #list').removeClass('active');
-			  			
-			  			$('.calendarFrame').addClass('day');
-			  			//$('#calendarListType #list').addClass('active');
-			  			
-			  			
-			  		}
-			  	};
-	
-	this.getPrivacy = function(){
-			  		var privacy = [];
-			  		$('#calendars input[type=checkbox]:checked').each(function(){
-			  			 privacy.push($(this).data('value'));
-			  		});
-			  		
-			  		return privacy.join(';');
-			  	};
-	
-	this.loadTasks = function(){
-			  		$('.calendarFrame .day').each(function(){
-			  			var startstamp = $(this).data("timestamp");
-			  			
-			  			var taskList = tasks.get(startstamp, startstamp+86400, calendar.getPrivacy());
-						var list = '';
-					
-							if(taskList){
-								$.each( taskList, function( key, value ) {
-									  if($('#taskDetail_'+value.id).length === 0){
-									  	  var style = '';
-									  	  var taskClass = 'task_'+value.id;
-									  	  var checked;
-									  	  if(value.status == 'done'){
-									  	  	if(!calendar.showDoneTasks)
-									  	  		style = 'display:none;';
-									  	  	taskClass += ' doneTask';
-									  	  	checked = 'checked="checked"';
-									  	  }else{
-									  	  	checked = '';
-									  	  }
-										  var d = new Date(value.timestamp*1000);
-										  list += '<li data-taskId="'+value.id+'" style="'+style+'" class="'+taskClass+' task">&nbsp;<input type="checkbox" class="eventBox" data-eventid="'+value.id+'" '+checked+'>&nbsp;'+value.title+'<br>'+d.getHours()+':'+d.getMinutes()+'<span class="caret" onclick="$(\'#taskDetail_'+value.id+'\').toggle();"></span></li>';
-										  list += '<li class="taskDetail '+taskClass+'" id="taskDetail_'+value.id+'" style="'+style+'"><i class="icon-pencil icon-white" onclick="tasks.show('+value.id+', '+value.editable+');"></i>'+value.description+'</li>';
-										
-									  }
-								 });
-							}
-							
-						$(this).children('.eventList').append(list);
-			  			
-			  			
-			  		});
-			  		
-			  		$('.task .eventBox').click(function(){
-			  			if($(this).is(':checked')){
-			  				tasks.markAsDone($(this).data('eventid'));
-			  			}else{
-			  				tasks.markAsPending($(this).data('eventid'));
-			  			}
-			  			console.log($(this).is(':checked'));
-			  		});
-			  		
-			  		console.log('tasks loaded');
-			  	};
-	
-	this.toggleTasks = function(){
-			  		if($('#showTasks').is(':checked')){
-						$('#side #taskList li').not('.header').slideDown();
-			  			calendar.loadTasks();
-			  		}else{
-			  			
-						$('#side #taskList li').not('.header').slideUp();
-			  			$('.task').remove();
-			  			$('.taskDetail').remove();
-			  		}
-			  	};
-	
-	this.toggleDoneTasks = function(){
-			  		if($('#hideDoneTasks').is(':checked')){
-			  			$('.doneTask').hide();
-			  			calendar.showDoneTasks = false;
-			  		}else{
-			  			$('.doneTask').show();
-			  			calendar.showDoneTasks = true;
-			  		}
-			  	};
-	
-	this.loadEvents = function(){
-			  		if($('#showTasks').is(':checked')){
-			  			calendar.loadTasks();
-			  		}
-			  		$('.calendarFrame .day').each(function(){
-			  			var startstamp = $(this).data("timestamp");
-			  			
-			  			var appointments = events.get(startstamp, startstamp+86400, calendar.getPrivacy());
-						var list = '';
-					
-							if(appointments){
-								$.each( appointments, function( key, value ) {
-								  if($('#eventDetail_'+value.id).length === 0){
-								  	
-								  	  //create date objects
-									  var startDate = new Date(value.startStamp*1000);
-									  var endDate = new Date(value.stopStamp*1000);
-									  
-									  var startTime = calendar.beautifyDate(startDate.getHours())+':'+calendar.beautifyDate(startDate.getMinutes());
-									  var stopTime = calendar.beautifyDate(endDate.getHours())+':'+calendar.beautifyDate(endDate.getMinutes());
-									  
-									  var title = startTime+'&nbsp;'+value.title;
-									  
-									  if(startTime == '00:00' && stopTime == '23:59'){
-									  	title = value.title;
-									  	startTime = 'All Day';
-									  	stopTime = '';
-									  }
-									  
-									  
-									  list += '<li data-eventId="'+value.id+'" onclick="$(\'#eventDetail_'+value.id+'\').toggle();">'+title+'</li>';
-									  list += '<li class="eventDetail" id="eventDetail_'+value.id+'" onclick="events.show('+value.id+', '+privacy.authorize(value.privacy, value.user)+');"><i class="icon-pencil"></i>'+startTime+' - '+stopTime+'<br>'+value.place+'</li>';
-									
-								  }
-								 });
-							}
-							
-						$(this).children('.eventList').append(list);
-			  			
-			  			
-			  			
-			  		});
-			  		
-			  		console.log('events loaded into mainframe..');
-			  	};
-	
-	this.appendDayToCalender = function(time){
-				
-					var selection;
-					var dayDateObject = new Date(time * 1000);
-					
-					var today = new Date();
-						today.setHours(0,0,0,0);
-						
-					var month = this.beautifyDate(dayDateObject.getMonth()+1);
-					var date = this.beautifyDate(dayDateObject.getDate());
-					
-					var dayClass = ''; //css class that is added to .day
-					
-					
-						if(today.getTime()/1000 == time){
-							dayClass = 'today';
-						}else{
-							dayClass = '';
-						}
-						
-						if(dayDateObject.getDay() == 0 || dayDateObject.getDay() == 6){
-							dayClass += ' weekend';
-						}
-						
-					var day  = '<div class="day '+dayClass+'" data-timestamp="'+dayDateObject.getTime()/1000+'">';
-							day += '<header>';
-								day += date+'.'+month;
-								day += '<div class="dropdown">';
-									day += '<a class="dropdown-toggle" data-toggle="dropdown" href="#">';
-										day += '<i class=\"icon-cog\"></i>';
-										day += '<span class="caret"></span>';
-									day += '</a>';
-									day += '<ul class="dropdown-menu">';
-										day += '<li><a href="#" class="header">Options</a></li>';
-										day += '<li><a href="#" title="Add Event" onclick="events.addForm('+time+')">Add Event</a></li>';
-									
-										day += '<li><a href="#" title="Add Task" onclick="tasks.addForm('+time+')">Add Task</a></li>';
-									day += '</ul>';
-								day += '</div>';
-							day += '</header>';
-						day += '<ul class="eventList"></ul>';
-						day += '</div>';
-					
-					$('.calendarFrame').append(day);
-				};
-	 
-	this.loadMonth = function(date){
-					
-			  		//tidy up calendar
-					$('.calendarFrame').html('');
-					$('.calendarFrame').removeClass('dayView');
-					$('.calendarFrame').removeClass('weekView');
-					
-					//add class for monthview
-					$('.calendarFrame').addClass('monthView');
-					
-					//add class for boxes
-					$('.calendarFrame').addClass('boxes');
-					
-					
-					
-					
-					if(!date){
-						var d = new Date();
-					}else if(typeof date == 'object'){
-						var d = date;
-					}else{
-						var d = new Date(date);
-					}
-					this.shownTimeObject = d;
-					
-					var firstDayOfMonth = new Date(d.getFullYear(), d.getMonth(), 1, 0, 0, 0);
-					var lastSecondOfMonth = new Date(d.getFullYear(), d.getMonth() + 1, 0, 0, 0, 0);
-					var month = lastSecondOfMonth.getMonth();
-					clearTimeout(this.loader);
-					this.loader = setTimeout(function(){calendar.loadEventsIntoSide(firstDayOfMonth);}, 1000);
-					this.updateViewDetail('month', this.getMonthName(d.getMonth()));
-					
-					var firstDayOfMonthWeekday = firstDayOfMonth.getDay();
-					
-						firstSecondOfMonth = (firstDayOfMonth.getTime()/1000);
-						lastSecondOfMonth = (lastSecondOfMonth.getTime()/1000);
-						this.shownDay = firstSecondOfMonth;
-					//get unixtime of today, 0:00
-					var today = new Date(d.getFullYear(),d.getMonth(), d.getDate(),0,0,0);
-					var unixTimeToday = today.getTime()/1000;
-					var daysInMonth = (lastSecondOfMonth-firstSecondOfMonth)/86400;
-					
-					//define offset of days of the last month
-					var offset = new Array("6", "0", "1", "2", "3", "4", "5");
-					
-					var loadedDays = 0;
-					var offSetStartTime = firstSecondOfMonth-(offset[firstDayOfMonthWeekday]*86400); //get starttime for first offset day
-					
-					
-					//append offset
-					while(loadedDays < offset[firstDayOfMonthWeekday]){
-						this.appendDayToCalender(offSetStartTime);
-						loadedDays++;
-						offSetStartTime = offSetStartTime+86400;
-					}
-					
-					daysInCalender = 30; //forgets day offset if first of month is not a monday
-					loadedDays = 0;
-					var whileTime = firstSecondOfMonth;
-					while(loadedDays < daysInCalender){
-						
-						
-						this.appendDayToCalender(whileTime);
-						whileTime = whileTime+86400;
-						loadedDays++;
-					}
-					$('.dropdown-toggle').dropdown();//init day dropdowns
-					this.loader = setTimeout(calendar.loadEvents, 1000);
-			  };
-	
-	this.loadWeek = function(startStamp){
-			  		//tidy up calendar
-					$('.calendarFrame').html('');
-					$('.calendarFrame').removeClass('dayView');
-					$('.calendarFrame').removeClass('monthView');
-					
-					//add class for weekview
-					$('.calendarFrame').addClass('weekView');
-					
-					
-					
-					if(startStamp == undefined){
-						var d = new Date(); //now
-					}else{
-						var d = new Date(startStamp*1000);
-					}
-					
-					this.shownTimeObject = d;
-			  		this.updateViewDetail('week', d);
-			  		
-					var firstSecondOfWeek = this.getMonday(d);
-					var lastSecondOfWeek = new Date(((firstSecondOfWeek.getTime()/1000)+604799)*1000);
-					
-			  		
-					
-					var loadTime = firstSecondOfWeek.getTime()/1000;
-					
-					
-					var html = '';
-					for(var daysLoaded = 0; daysLoaded < 7; daysLoaded++){
-						
-						this.appendDayToCalender(loadTime);
-						loadTime = loadTime+86400;
-					}
-					this.loader = setTimeout(function() {calendar.loadEvents();}, 1000);
-			  		
-			  };
-	
-	this.loadDay = function(date){
-			  		//tidy up calendar
-					$('.calendarFrame').html('');
-					$('.calendarFrame').removeClass('weeView');
-					$('.calendarFrame').removeClass('monthView');
-					
-					//add class for dayview
-					$('.calendarFrame').addClass('dayView');
-					
-					calendar.toggleListType('day');
-					
-			  		date.setHours(0);
-			  		date.setMinutes(0);
-			  		date.setSeconds(0);
-			  		date.setMilliseconds(0);
-					
-					var startStamp = date.getTime()/1000;
-					var stopStamp = date.getTime()/1000;
-					
-					var html = '';
-					
-					html += '<ul class="eventList">';
-					for (var i=0;i<=23;i++){
-						html += '<li>'+i+'</li>';
-					}
-					
-					
-					
-					
-			  			var appointments = events.get(startStamp, startStamp+86400);
-						var list = '';
-					
-							if(appointments){
-								$.each( appointments, function( key, value ) {
-								  if($('#eventDetailDay_'+value.id).length === 0){
-								  	
-									  var startDate = new Date(value.startStamp*1000);
-									  var endDate = new Date(value.stopStamp*1000);
-									  
-									  
-									  var top = ((value.startStamp-startStamp)/3600)*30;
-									  
-									  var height = ((value.stopStamp-value.startStamp)/3600)*30;
-									  
-									  
-									  
-									  list += '<li class="event" data-eventId="'+value.id+'" onclick="$(\'#eventDetail_'+value.id+'\').toggle();" style="top: '+top+'px; height: '+height+'">'+startDate.getHours()+':'+startDate.getMinutes()+'&nbsp;'+value.title+'</li>';
-									  
-								  }
-								 });
-							}
-							
-							html += list;
-							
-					
-					
-					html += '</ul>';
-					
-					$('.calendarFrame').html(html);
-					
-					clearTimeout(this.loader);
-					this.loader = setTimeout(function() {calendar.loadEvents();}, 1000);
-					this.updateViewDetail('day', this.shownTimeObject);
-			  	};
-	
-	this.updateViewDetail = function(type, dateObj){
-			  		
-			  		if(type == 'month'){
-			  			
-			  			
-				  		$('#calendarView .btn').removeClass('active');
-				  		$('#month').addClass('active');
-			  			
-			  			
-			  			$('#calendarViewDetail .btn').unbind('click');
-			  			
-						$('#calendarViewDetail #prev').click(function(){
-							calendar.shownTimeObject.setMonth(calendar.shownTimeObject.getMonth()-1);
-			  				calendar.loadMonth(calendar.shownTimeObject);
-						});
-						
-						$('#calendarViewDetail #next').click(function(){
-							calendar.shownTimeObject.setMonth(calendar.shownTimeObject.getMonth()+1);
-			  				calendar.loadMonth(calendar.shownTimeObject);
-							
-						});
-			  			
-						$('#calendarViewDetail #text').text(this.getMonthName(calendar.shownTimeObject.getMonth()));
-						
-						
-			  		}else if(type == 'week'){
-			  			
-				  		$('#calendarView .btn').removeClass('active');
-				  		$('#week').addClass('active');
-				  		
-						
-						
-			  			$('#calendarViewDetail .btn').unbind('click');
-			  			
-						$('#calendarViewDetail #prev').click(function(){
-							calendar.shownTimeObject.setSeconds(-(7*86400));
-							console.log('prev');
-			  				calendar.loadWeek(calendar.shownTimeObject.getTime()/1000);
-						});
-						
-						$('#calendarViewDetail #next').click(function(){
-							calendar.shownTimeObject.setSeconds(+(7*86400));
-			  				calendar.loadWeek(calendar.shownTimeObject.getTime()/1000);
-							
-						});
-						console.log(calendar.shownTimeObject);
-						var nextWeek = new Date(calendar.shownTimeObject.getTime()+(7*86400000));
-						
-						$('#calendarViewDetail #text').html(calendar.shownTimeObject.getDate()+'.'+calendar.shownTimeObject.getMonth()+1+' - '+nextWeek.getDate()+'.'+nextWeek.getMonth()+1);
-						
-			  		}else if(type == 'day'){
-			  			
-				  		$('#calendarView .btn').removeClass('active');
-				  		$('#day').addClass('active');
-				  		
-						$('#calendarViewDetail #text').html(calendar.shownTimeObject.getDate()+'.'+calendar.shownTimeObject.getMonth()+1);
-						
-						
-						
-			  			$('#calendarViewDetail .btn').unbind('click');
-			  			
-						$('#calendarViewDetail #prev').click(function(){
-							calendar.shownTimeObject.setSeconds(-86400);
-			  				calendar.loadDay(calendar.shownTimeObject);
-						});
-						
-						$('#calendarViewDetail #next').click(function(){
-							calendar.shownTimeObject.setSeconds(+86400);
-			  				calendar.loadDay(calendar.shownTimeObject);
-						});
-						
-			  		}
-			  		
-			  		$('#headerAdd').click(function(){
-			  			events.addForm(calendar.shownTimeObject.getTime()/1000);
-			  		});
-			  		
-					$('#headerToday').click(function(){
-						var d = new Date();
-						
-						if(calendar.view == 'month'){
-							calendar.loadMonth(d);
-						}else if(calendar.view == 'week'){
-			  				calendar.loadWeek(d.getTime()/1000);
-						}else if(calendar.view == 'day'){
-							
-						}
-					});
-					
-					
-			  		$('#calendarView .btn').unbind('click');
-			  		
-			  		
-			  		$('#calendarView #month').click(function(){
-			  				calendar.loadMonth(calendar.shownTimeObject);
-			  				
-			  		});
-			  		
-			  		$('#calendarView #week').click(function(){
-			  			
-			  			calendar.loadWeek(calendar.shownTimeObject.getTime()/1000);
-			  			
-			  		});
-			  		
-			  		$('#calendarView #day').click(function(){
-			  			
-			  			calendar.loadDay(calendar.shownTimeObject);
-			  			
-			  		});
-			  		
-			  	};
-	
-	this.getMonthName = function(month){
-					var monthName = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
-					return monthName[month];
-					
-			  	};
-	
-	this.loadMonthsIntoSide = function(date){
-			  		var d = new Date(date);
-			  		d.setMonth(0);
-			  		d.setDate(1);
-			  		d.setHours(0);
-			  		d.setMinutes(0);
-			  		d.setSeconds(0);
-			  		d.setMilliseconds(0);
-			  		
-					var monthHTML = '<li class="header">Events</header>';
-					
-					
-					for(var monthCounter=0; monthCounter < 12; monthCounter++){
-						var monthClass = '';
-						if(monthCounter === month){
-							monthClass = 'current';
-						}
-						monthHTML += '<li class="'+monthClass+'" onclick="calendar.loadMonth('+d.getTime()+');">'+this.getMonthName(monthCounter)+'</li>';
-						
-						d.setMonth( d.getMonth( ) + 1 );
-					}
-					
-					//apend month and trigger to load month into sidebar
-					$('#side #events').html(monthHTML);
-					
-					$('#months .header').click(function(){
-						$('#side #events li').not('.header').slideToggle();
-					});
-			  		
-			  		
-			  	};
-	
-	this.loadEventsIntoSide = function(date){
-			  		console.log('side');
-			  		var d = new Date(date);
-			  		d.setMonth(0);
-			  		d.setDate(1);
-			  		d.setHours(0);
-			  		d.setMinutes(0);
-			  		d.setSeconds(0);
-			  		d.setMilliseconds(0);
-			  		
-			  		//first sec of year
-			  		var startStamp = d.getTime()/1000;
-			  		
-			  		
-			  		//last sec of year
-			  		d.setFullYear(d.getFullYear()+1);
-			  		d.setSeconds(-1);
-			  		var stopStamp = d.getTime()/1000;
-			  		
-			  		
-			  			var appointments = events.get(startStamp, stopStamp);
-						var list = '';
-					
-							if(appointments){
-								$.each( appointments, function( key, value ) {
-									console.log(value);
-								  if($('#sideEvent_'+value.id).length === 0){
-								  	
-									  var startDate = new Date(value.startStamp*1000);
-									  var endDate = new Date(value.stopStamp*1000);
-									  list += '<li data-eventId="'+value.id+'" onclick="events.show('+value.id+', '+privacy.authorize(value.privacy, value.user)+');" id="sideEvent_'+value.id+'">'+calendar.beautifyDate(startDate.getDate())+'.'+calendar.beautifyDate(startDate.getMonth()+1)+'&nbsp;'+value.title+'</li>';
-									
-								  }
-								 });
-							}
-					//apend month and trigger to load month into sidebar
-					$('#side #events').append(list);
-					$('#events .header').unbind('click');
-					$('#events .header').click(function(){
-						$('#side #events li').not('.header').not('.eventDetail').slideToggle();
-					});
-			  		
-			  		
-			  	};
-	
-	this.beautifyDate =function(value){
-			  		if(value < 10){
-			  			value = '0'+value;
-			  		}
-			  		return value;
-				};
-	
-	this.getAppointmentsForDay = function(time){
-					var array = [];
-					array[0] = 'startStamp';
-					
-					return array;
-				};
-	
-	
-	this.getNextMonth = function(month){
-					var ret;
-					switch(month){
-						default: 
-							ret = month+1;
-						break;
-						case 11:
-							ret = 0;
-						break;
-							
-					}
-					return ret;
-				};
-	
-	this.getLastMonth = function(month){
-					var ret;
-					switch(month){
-						default: 
-							ret = month-1;
-						break;
-						case 0:
-							ret = 11;
-						break;
-							
-					}
-					return ret;
-				};
-	this.getMonday = function(d){
-				  d = new Date(d);
-				  var d = new Date(d.setHours(0));
-				  var d = new Date(d.setMinutes(0));
-				  var d = new Date(d.setSeconds(0));
-				  var d = new Date(d.setMilliseconds(0));
-				  var day = d.getDay(),
-				      diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
-				  return new Date(d.setDate(diff));
-				};
-	
-	
-};
-var events = new function(){
-	
-	this.getData = function(eventId){
-			  		var res;
-			  		$.ajax({
-				      url:"api.php?action=getEventData",
-				      async: false,  
-					  type: "POST",
-					  data: { 
-					  	eventId : eventId
-					  	 },
-				      success:function(data) {
-				         res = $.parseJSON(data); 
-				      }
-				   });
-				   return res;
-			  	};
-	
-	this.create = function(startStamp, stopStamp, title, place, privacyShow, privacyEdit){
-			  		
-				    $.ajax({
-				      url:"doit.php?action=loadPrivacySettings",
-				      async: false,  
-					  type: "POST",
-					  data: { 
-					  	startStamp : startStamp,
-					  	stopStamp : stopStamp,
-					  	title : title,
-					  	place : place,
-					  	privacyShow : privacyShow,
-					  	privacyEdit : privacyEdit
-					  	 },
-				      success:function(data) {
-				         result = data; 
-				      }
-				   });
-				   
-			  	};
-	this.addForm = function(startstamp){
-			  		var d = new Date(startstamp*1000);
-			  		console.log(d.getMonth());
-			  		var formattedDate = calendar.beautifyDate((d.getMonth())+1)+'/'+calendar.beautifyDate(d.getDate())+'/'+d.getFullYear();
-			  		
-			  		var content  = '<form id="createEvent" method="post">';
-			  				content += '<table class="formTable">';
-					  		    content += '<tr>';
-					  		    	content += '<td style="width:65px;">';
-					  		    	content += 'Title:';
-					  		    	content += '</td>';
-					  		    	content += '<td>';
-					  		    	content += '<input type="text" name="title" id="eventTitle">';
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'Place:';
-					  		    	content += '</td>';
-					  		    	content += '<td>';
-					  		    	content += '<input type="text" name="place" id="eventPlace">';
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'Day:';
-					  		    	content += '</td>';
-					  		    	content += '<td>';
-					  		    	content += '<input type="text" name="startDate" id="startDate" class="startDate datepicker" value="'+formattedDate+'" style="width: 72px;">';
-					  		    	content += '&nbsp;<input type="text" name="startTime" id="startTime" class="startTime eventTime" value="15:30" style="width: 37px;"><span class="endDate eventTime">&nbsp;to&nbsp;</span>';
-					  		    	content += '&nbsp;<input type="text" name="endTime" id="endTime" class="endTime eventTime" value="16:30" style="width: 37px;">';
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'All-Day:';
-					  		    	content += '</td>';
-					  		    	content += '<td>';
-					  		    	content += '<input type="checkbox" name="allDay" id="eventAllDay" value="true" onclick="$(\'.eventTime\').toggle();">';
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'Privacy:';
-					  		    	content += '</td>';
-					  		    	content += '<td>';
-					  		    	content += privacy.show('f//f', true);
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td valign="top" style="padding-top: 15px;">';
-					  		    	content += 'Users:';
-					  		    	content += '</td>';
-					  		    	content += '<td style="padding-top: 15px;">';
-					  		    	content += '<div class="userSelectionInput"></div>';
-					  		    	content += '</td>';
-			  		    	content += '</table>';
-			  		    content += '</form>';
-			  		var onSubmit = function() {
-			  			$('#createEvent').submit();
-  					};
-  					
-  					//create modal
-              		modal.create('Create New Event', content, [onSubmit, 'Save']);
-              		
-              		//init datepicker in modal
-              		$('.datepicker').datepicker();
-              		
-              		$('.userSelectionInput').userSearch();
-              		
-              		
-              		$('#createEvent').submit(function(e){
-              			e.preventDefault();
-              			console.log($(this).serialize());
-              			if($('#eventTitle').val().length > 0 && $('#startDate').val().length > 0 && $('#endTime').val().length > 0){
-              				
-	              			$.post("api.php?action=createEvent",$(this).serialize(),function(data){
-					            if(data.length === 0){
-					            	calendar.loadEvents();
-					            	calendar.loadEventsIntoSide(new Date(calendar.shownTimeObject.getFullYear(), calendar.shownTimeObject.getMonth(), 1, 0, 0, 0));
-					            	jsAlert('','The Event has been added');
-					            	$('.blueModal').slideUp();
-					            }else{
-					            	jsAlert('', data);
-					            }
-							});
-
-              			}else{
-              				jsAlert('', 'You need to fill out all the fields.');
-              			}
-              			
-              			
-              			return false;
-              		});
-			  	};
-	
-	this.join = function(originalEventId, addToVisitors){
-			  		var result;
-				    $.ajax({
-				      url:"api.php?action=joinEvent",
-				      async: false,  
-					  type: "POST",
-					  data: { 
-					  	 originalEventId: originalEventId,
-					  	 addToVisitors: addToVisitors
-					  	 },
-				      success:function(data) {
-				      	if(data){
-				        	result = $.parseJSON(data); 
-				      	}
-				      }
-				   });
-				   
-				   return result;
-			  		
-			  	};
-	
-	this.joinForm = function(originalEventId){
-			  		
-			  		var eventData = events.getData(originalEventId);
-			  		
-			  		var content  = '<form id="joinEvent" method="post">';
-			  				content += '<table class="formTable">';
-					  		    content += '<tr>';
-					  		    	content += '<td style="width:65px;">';
-					  		    	content += '';
-					  		    	content += '</td>';
-					  		    	content += '<td>';
-					  		    	content += '<input type="hidden" id="originalEventId" value='+originalEventId+'>';
-					  		    	content += 'If you join an event the even will be added to your personal calendar.';
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td>&nbsp;</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td align="right">';
-					  		    	content += '<input type="checkbox" checked="checked" id="addToVisitors">';
-					  		    	content += '</td>';
-					  		    	content += '<td>';
-					  		    	content += 'Add yourself to the <b>public</b> guest list.';
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    	
-			  		    	content += '</table>';
-			  		    content += '</form>';
-			  		    
-			  		var onSubmit = function(){
-			  									events.join($('#joinEvent #originalEventId').val(), $('#joinEvent #addToVisitors').is(':checked'));
-			  									};
-  					//create modal
-              		modal.create('Join the event "'+eventData.title+'"', content, [onSubmit, 'Save']);
-			  	};
-	
-	this.show = function(eventId, editable){
-			  		var eventData = events.getData(eventId);
-			  		
-			  		var startDate = new Date(eventData.startStamp*1000);
-			  		var  stopDate = new Date(eventData.stopStamp*1000);
-			  		console.log('hours:'+startDate.getHours()+'	min:'+startDate.getMinutes());
-			  		console.log('hours:'+stopDate.getHours()+'	min:'+stopDate.getMinutes());
-			  		
-			  		
-			  		var allDay, 	//contains checkbox or check-image
-			  			editableToken;
-			  		
-			  		//generate formstuff from eventdata
-			  		if(editable){
-			  			editableToken = 'contentEditable';
-			  			var checked;
-			  			if(editable == 'true')
-			  				checked = 'checked="checked"';
-			  			
-			  			allDay = '<input type="checkbox" name="allDay" id="eventAllDay" value="true" onclick="$(\'.eventTime\').toggle();" '+checked+'>';
-			  		}else{
-			  			if(editable != 'true')
-			  				allDay = 'x';
-			  			else
-			  				allDay = '';
-			  			
-			  		}
-			  		
-			  		var startTime = calendar.beautifyDate(startDate.getHours())+':'+calendar.beautifyDate(startDate.getMinutes());
-			  		var stopTime  = calendar.beautifyDate(stopDate.getHours())+':'+calendar.beautifyDate(stopDate.getMinutes());
-			  		
-			  		var content  = '<table class="formTable">';
-			  				content += '<form id="updateEvent" method="post">';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'Title:';
-					  		    	content += '</td>';
-					  		    	content += '<td '+editableToken+' id="title">';
-					  		    	content += eventData.title;
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'Place:';
-					  		    	content += '</td>';
-					  		    	content += '<td '+editableToken+' id="place">';
-					  		    	content += eventData.place;
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'Day:';
-					  		    	content += '</td>';
-					  		    	content += '<td><span id="startDate" '+editableToken+' class="datepicker">';
-					  		    	content += startDate.getMonth()+1+'/'+startDate.getDate()+'/'+startDate.getFullYear();
-					  		    	content += '</span>&nbsp;<span id="startTime" '+editableToken+'>'+startTime+'</span>&nbsp;to&nbsp;<span '+editableToken+' id="stopDate" class="datepicker">';
-					  		    	content += stopDate.getMonth()+1+'/'+stopDate.getDate()+'/'+stopDate.getFullYear();
-					  		    	content += '</span>&nbsp;<span id="stopTime" '+editableToken+'>'+stopTime+'</span>';
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'All-Day:';
-					  		    	content += '</td>';
-					  		    	content += '<td>';
-					  		    	content += allDay;
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'Privacy:';
-					  		    	content += '</td>';
-					  		    	content += '<td>';
-					  		    	content += privacy.show(eventData.privacy, editable);
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-			  		    	content += '</form>';
-			  		    content += '</table>';
-			  		var onSubmit = function() {
-			  			$('#updateEvent').submit();
-  					};
-  					
-  					//create modal
-              		modal.create('Event '+eventData.title, content, [onSubmit, 'Save']);
-              		
-              		//init datepicker in modal
-              		$('.datepicker').datepicker();
-              		
-              		$('#updateEvent').submit(function(e){
-              			e.preventDefault();
-              			if($('#title').text().length > 0 && $('#startDate').text().length > 0){
-              				
-              				var privacy = $('.blueModal .privacySettings  :input').serialize();
-              				
-              				var searchString  = 'eventId='+encodeURIComponent(eventId);
-              					searchString += '&title='+encodeURIComponent($('.blueModal #title').text());
-              					searchString += '&place='+encodeURIComponent($('.blueModal #place').text());
-              					searchString += '&startDate='+encodeURIComponent($('.blueModal #startDate').text());
-              					searchString += '&startTime='+encodeURIComponent($('.blueModal #startTime').text());
-              					searchString += '&endTime='+encodeURIComponent($('.blueModal #stopTime').text());
-              					searchString += '&allDay='+encodeURIComponent($('.blueModal #eventAllDay').is(':checked'));
-              					searchString += '&'+privacy;
-              					
-	              			$.post("api.php?action=updateEvent",searchString,function(data){
-					            if(empty(data)){
-					            	jsAlert('', 'The event has been updated.');
-					            	$('.blueModal').slideUp();
-					            }else{
-					            	jsAlert('', data);
-					            }
-					        });
-
-              			}else{
-              				jsAlert('', 'You need to fill out all the fields.');
-              			}
-              			
-              			
-              			return false;
-              		});
-			  		
-			  	};
-	
-	this.get = function(startStamp, stopStamp, privacy){
-			  		var result;
-				    $.ajax({
-				      url:"api.php?action=getEvents",
-				      async: false,  
-					  type: "POST",
-					  data: { 
-					  	 startStamp: startStamp,
-					  	 stopStamp: stopStamp,
-					  	 privacy: privacy
-					  	 },
-				      success:function(data) {
-				      	if(data){
-				        	result = $.parseJSON(data); 
-				      	}
-				      }
-				   });
-				   
-				   return result;
-			  	};
-};
+           
 var playlists = new function(){
 	this.create = function(){
 			  		
@@ -2806,81 +1759,6 @@ var folders = new function(){
               	};
               	
               };
-
-var reader = new function(){
-    this.tabs;
-    this.init = function(){
-        this.applicationVar = new application('reader');
-        this.applicationVar.create('Reader', 'url', 'modules/reader/index.php',{width: ($(document).width()*0.9)+"px", height:  ($(document).height()*0.8)+"px"});
-        
-        
-	this.tabs = new tabs('#readerFrame');
-        this.tabs.init();
-	this.tabs.addTab('Home', '',gui.loadPage('modules/reader/fav.php'));
-    };
-};
-
-var filesystem =  new function() {
-    this.init = function(){
-        
-        this.applicationVar = new application('filesystem');
-        this.applicationVar.create('Filesystem', 'url', 'modules/filesystem/filesystem.php',{width: ($(document).width()*0.9)+"px", height:  ($(document).height()*0.8)+"px"});
-			  			
-        
-	this.tabs = new tabs('#fileBrowserFrame');
-        this.tabs.init();
-	this.tabs.addTab('universe', '',gui.loadPage('modules/filesystem/fileBrowser.php'));
-			  	
-    };
-    this.openShareModal = function(type, typeId){
-              		
-              		var title;
-              		var content;
-              		var kickstarterURL;
-              		var embedURL;
-              		switch(type){
-              			case 'file':
-              				var fileTitle = files.fileIdToFileTitle(typeId);
-              				title = 'Share "'+fileTitle+'"';
-              				kickstarterURL = sourceURL+'/out/kickstarter/files/?id='+typeId;
-              				embedURL = sourceURL+'/out/?file='+typeId; //should be the same like fileBrowserURL 
-              			break;
-              			case 'element':
-              				var elementTitle = elements.elementIdToElementTitle(typeId);
-              				title = 'Share "'+elementTitle+'"';
-              				kickstarterURL = sourceURL+'/out/kickstarter/elements/?id='+typeId;
-              				embedURL = sourceURL+'/out/?element='+typeId; //should be the same like fileBrowserURL 
-              			break;
-              		}
-              		
-              		var facebook = 'window.open(\'http://www.facebook.com/sharer/sharer.php?u='+kickstarterURL+'&t='+fileTitle+'\', \'facebook_share\', \'height=320, width=640, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, directories=no, status=no\');';
-              		var twitter = 'window.open(\'http://www.twitter.com/share?url='+kickstarterURL+'\', \'twitter_share\', \'height=320, width=640, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, directories=no, status=no\');';
-					var googleplus = "window.open('https://plus.google.com/share?url="+kickstarterURL+"','', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;";
-              		
-              		content = '<ul class="shareList">';
-	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #facebook\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">Facebook <img src="gfx/startPage/facebook.png"></li>';
-	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #twitter\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">Twitter <img src="gfx/startPage/twitter.png"></li>';
-	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #googleplus\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">Google+ <img src="gfx/startPage/googleplus.png"></li>';
-	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #embed\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">Embed Code <img src="gfx/startPage/wikipedia.png"></li>';
-	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #url\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">URL <img src="gfx/startPage/wikipedia.png"></li>';
-              		content += '</ul>';
-              		
-              		content += '<ul class="shareBox">';
-              			content += '<li id="facebook"><center><a target="_blank" href="#" onclick="'+facebook+'" class="btn btn-success"><img src="gfx/startPage/facebook.png" height="20"> Click Here To Share</a></center></li>';
-              			content += '<li id="url"><center><textarea>'+kickstarterURL+'</textarea></center>Just place the HTML code for your Filebrowser wherever<br> you want the Browser to appear on your site.</li>';
-              			content += '<li id="embed"><center><textarea><iframe src="'+embedURL+'"></iframe></textarea></center>Just place the HTML code for your Filebrowser wherever<br> you want the Browser to appear on your site.</li>';
-              			content += '<li id="googleplus"><center><a href="#" onclick="'+googleplus+'" class="btn btn-success"><img src="gfx/startPage/googleplus.png" height="20"> Click Here To Share</a></center></li>';
-              			content += '<li id="twitter"><center><a href="#" onclick="'+twitter+'" class="btn btn-success"><img src="gfx/startPage/twitter.png" height="20"> Click Here To Share</a></center></li>';
-              		content += '</ul>';
-              		
-              		
-              		modal.create(title, content);
-              	};
-    this.openFolder = function(folderId){
-        this.tabs.updateTabContent(1, gui.loadPage('modules/filesystem/fileBrowser.php?reload=1&folder='+folderId));
-    };
-              	
-};
 
 
 var modal =  new function() {
@@ -3428,7 +2306,7 @@ function reloadFeed(type){
 function openUploadTab(element){
 	
         showApplication('filesystem');
-        fileystem.tabs.addTab('title', '',gui.loadPage('modules/filesystem/upload.php?element='+element));
+        filesystem.tabs.addTab('title', '',gui.loadPage('modules/filesystem/upload.php?element='+element));
 }
 
 function initUploadify(id, uploader, element, timestamp, token){
@@ -3477,7 +2355,7 @@ function openFolder(folderId){
 function openElement(elementId, title){
         showApplication('filesystem');
         
-        fileystem.tabs.addTab(title, '',gui.loadPage('modules/filesystem/showElement.php?element='+elementId));
+        filesystem.tabs.addTab(title, '',gui.loadPage('modules/filesystem/showElement.php?element='+elementId));
 }
 
 function openFile(type, typeId, title, typeInfo, extraInfo1, extraInfo2){
