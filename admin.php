@@ -253,8 +253,7 @@ case 'messages':
                             <?php
                     unset($i);
                     $dbClass = new db();
-                    $messageSql = $dbClass->select('adminMessages');
-                    while($messageData = mysql_fetch_array($messageSql)){
+                    while($messageData = $dbClass->select('adminMessages')){
                             if($i%2 == 0){
                                 $color="FFFFFF";
                             }else{
@@ -338,8 +337,7 @@ case 'contents':
                     <?php
                     unset($i);
                     $dbClass = new db();
-                    $contentSql = $dbclass->select('staticContents');
-                    while($contentData = mysql_fetch_array($contentSql)){
+                    while($contentData = $dbclass->select('staticContents')){
                             if($i%2 == 0){
                                 $color="FFFFFF";
                             }else{
@@ -454,8 +452,7 @@ case 'contents':
                }
            }
            $classDb = new db();
-           $contentSQL = $classDb->select('staticContents', array('id', $_GET[content]));
-           $contentData = mysql_fetch_array($contentSQL);
+           $contentData = $classDb->select('staticContents', array('id', $_GET[content]));
         ?>
         <form action="admin.php?action=contents&subaction=edit&content=<?=$_GET[content];?>" method="post" target="submitter">
             <div class="jqPopUp border-radius transparency" id="admin">
