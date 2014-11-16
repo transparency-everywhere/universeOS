@@ -125,7 +125,7 @@ class files {
         }
         ?>
             <script>
-                parent.addAjaxContentToTab('<?=substr($FileElementData['title'], 0, 10);?>', 'modules/filesystem/showElement.php?element=<?=$element;?>&reload=1');
+                filesystem.tabs.updateTabContent('<?=substr($FileElementData['title'], 0, 10);?>' ,gui.loadPage('modules/filesystem/showElement.php?element=<?=$element;?>&reload=1'));
             </script>
         <?php
         $time = time();

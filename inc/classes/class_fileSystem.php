@@ -674,7 +674,7 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 						        }
 								
 								
-						        $output .= "<td onmouseup=\"showMenu('image$documentData[id]')\" oncontextmenu=\"showMenu('image$documentData[id]'); return false;\"><div id=\"viewerClick$documentData[id]\"><a href=\"#\" onclick=\"addAjaxContentToTab('Open ".substr("$elementTitle", 0, 10)."','./modules/reader/openFile.php?type=image&fileId=$documentData[id]');return false\"><img src=\"$thumbPath$documentData[title]\" height=\"100px\"></a></div></td>";   
+						        $output .= "<td onmouseup=\"showMenu('image$documentData[id]')\" oncontextmenu=\"showMenu('image$documentData[id]'); return false;\"><div id=\"viewerClick$documentData[id]\"><a href=\"#\" onclick=\"filesystem.tabs.updateTabContent('Open ".substr("$elementTitle", 0, 10)."' ,gui.loadPage('./modules/reader/openFile.php?type=image&fileId=$documentData[id]'));return false\"><img src=\"$thumbPath$documentData[title]\" height=\"100px\"></a></div></td>";   
 				       		}
 				        }
 						$output .= "</tr>";
