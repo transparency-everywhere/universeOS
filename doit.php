@@ -1946,7 +1946,8 @@ else if($_GET['action'] == "deleteFromPlaylist"){
              $itemId = $_GET['itemId'];
              $playlist = save($_GET['playlist']);
              jsAlert("$type-$itemId-$playlist");
-             $checkPlaylistSql = mysql_query("SELECT * FROM playlist WHERE id='$playlist'");
+             $dbClass = new db();
+             $checkPlaylistSql = $dbClass->select('playlist', array('id', $playlist);
              $checkPlaylistData = mysql_fetch_array($checkPlaylistSql);
              if($checkPlaylistData['user'] == "$_SESSION[userid]"){
                  if($type == "file"){
@@ -2000,7 +2001,8 @@ else if($_GET['action'] == "deleteItem"){
             $itemId = $_GET['itemId'];
             
             if($type == "feed"){
-                $feedCheckSql = mysql_query("SELECT * FROM feed WHERE id='$itemId'");
+                $dbClass = new db();
+                $feedCheckSql = $dbClass->select('feed', array('id', $itemId));
                 $feedCheckData = mysql_fetch_array($feedCheckSql);
                 if(authorize($feedCheckData['privacy'], "edit", $feedCheckData['author'])){
                     mysql_query("DELETE FROM feed WHERE id='$itemId'");
@@ -2076,7 +2078,8 @@ else if($_GET['action'] == "deleteItem"){
                 
             }else if($type == "file"){
                 $fileId = $itemId;
-                $fileSql = mysql_query("SELECT * FROM files WHERE id='$fileId'");
+                $dbClass = new db();
+                $fileSql = $dbClass->select('files', array('id', $fileId);
                 $fileData = mysql_fetch_array($fileSql);
                 if(authorize($fileData['privacy'], "edit", $fileData['owner'])){
                     $fileClass = new file($fileId);
@@ -2097,7 +2100,8 @@ else if($_GET['action'] == "deleteItem"){
                     }
 				}
             }else if($type == "internLink"){
-                $checkInternLinkData = mysql_fetch_array(mysql_query("SELECT * FROM internLinks WHERE id='$itemId'"));
+                $dbClass = new db();
+                $checkInternLinkData = mysql_fetch_array($dbClass->select('internLinks', array('id', $itemId)));
                 
                     if($checkInternLinkData['type'] == "folder"){
 
@@ -2304,7 +2308,8 @@ else if($_GET['action'] == "editItem"){
 					
 					//folders
                     if($type == "folder"){
-                        $checkFolderSql = mysql_query("SELECT * FROM folders WHERE id='$itemId'");
+                        $dbClass = new db();
+                        $checkFolderSql = $dbClass->select('folders', array('id', $itemId));
                         $checkFolderData = mysql_fetch_array($checkFolderSql);
                         if(authorize($checkFolderData['privacy'], "edit", $checkFolderData['creator'])){
                             $folderClass = new folder($checkFolderData['folder']);
@@ -2332,7 +2337,8 @@ else if($_GET['action'] == "editItem"){
 						
 					//elements
                     }else if($type == "element"){
-                        $checkElementSql = mysql_query("SELECT * FROM elements WHERE id='$itemId'");
+                        $dbClass = new db();
+                        $checkElementSql = $dbClass->select('elements', array('id', $itemId));
                         $checkElementData = mysql_fetch_array($checkElementSql);
                         if($checkElementData['author'] == getUser()){
                             mysql_query("UPDATE elements SET title='".save($_POST['title'])."', type='".save($_POST['type'])."', creator='".save($_POST['creator'])."', name='".save($_POST['name'])."', year='".save($_POST['year'])."', originalTitle='".save($_POST['originalTitle'])."' WHERE id='$itemId'");
@@ -2347,7 +2353,8 @@ else if($_GET['action'] == "editItem"){
 
 					//links
                     }else if($type == "link"){
-                    	$checkLinkData = mysql_fetch_array(mysql_query("SELECT * FROM links WHERE id='$itemId'"));
+                    	$dbClass = new db();
+                        $checkLinkData = $dbClass->select('links', array('id', $itemId));
                     	
                         if(authorize($checkLinkData['privacy'], "edit", $checkLinkData['creator'])){
                         			
@@ -2695,8 +2702,9 @@ else if($_GET['action'] == "feedUpload"){
             if(empty($_FILES['feedFile']['tmp_name'])){
                 $error = "please select a file";
             }
-            if(true){    
-            $userSql = mysql_query("SELECT * FROM user WHERE userid='".getUser()."'");
+            if(true){
+            $dbClass = new db();
+            $userSql = $dbClass->select('user', array('userid', getUser()));
             $userData = mysql_fetch_array($userSql);
             
             $element = $userData['myFiles'];
@@ -2808,7 +2816,8 @@ else if($_GET['action'] == "deleteFile"){
                     $fileId = save($_GET['fileId']);
                     $fileClass = new file($fileId);
                     if($fileClass->delete()){
-                        $fileSql = mysql_query("SELECT * FROM files WHERE id='$fileId'");
+                        $dbClass = new db();
+                        $fileSql = $dbClass->select('files', array('id', $fileId));
                         $fileData = mysql_fetch_array($fileSql);
                             $fileElementSql = mysql_query("SELECT id, title FROM elements WHERE id='$fileData[folder]'");
                             $fileElementData = mysql_fetch_array($fileElementSql);
