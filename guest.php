@@ -109,14 +109,11 @@ include_once("inc/config.php");
         	<h2>Beta Test Run</h2>
         	<p>Currently we are still in the beta phase of our project. Therefore we cannot guarantee 100% of security but we are well on the way to it. So you shouldn’t handle highly sensitive data in the filesystem and chat and excuse if there are little issues in the workflow. We appreciate criticism and error reports because it helps us to improve the universeOS. So have fun with the universeOS.</p>
         </div>
-        <? include("modules/reader/index.php") ?>
-        
-        <div id="invisiblefilesystem"><? include("modules/filesystem/filesystem.php") ?></div></div>
         <div id="alerter" class="container"></div><div id="loader"></div><iframe name="submitter" style="display:none;" id="submitter"></iframe>
         <div id="suggest">
         </div>
         
-        
+    </div>
         
     <div id="dockplayer" style="display: none">
 	    <?

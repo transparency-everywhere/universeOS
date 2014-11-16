@@ -38,11 +38,11 @@ if(!$login) {
         	<ul id="systemAlerts">
         		
         	</ul>
-            <div id="loader"></div><div id="popper"></div><iframe name="submitter" style="display:none;" id="submitter"></iframe>
-            <div id="suggest">
-            </div>
+            <div id="loader"></div>
+            <div id="popper"></div>
+            <iframe name="submitter" style="display:none;" id="submitter"></iframe>
+            <div id="suggest"></div>
 
-            <? include("modules/chat/chat.php") ?>
             
             
             <div id="personalFeed" style="display: none; z-index: 99999;">
