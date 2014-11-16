@@ -1864,7 +1864,8 @@ else if($_GET['action'] == "showStartMessage"){
                 </h2>
                 <div>
                 	<?php
-                    $AccSetSql = mysql_query("SELECT * FROM user WHERE userid='".getUser()."'");
+                    $dbClass = new db();
+                    $AccSetSql = $dbClass->select('user', array('userid', getUser()));
                     $AccSetData = mysql_fetch_array($AccSetSql);
                     if($AccSetData['birthdate']){
                     $birth_day = date("d", $AccSetData['birthdate']);
