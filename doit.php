@@ -143,8 +143,7 @@ else if($_GET['action'] == "download"){
 else if($_GET['action'] == "showPlaylist"){
         $playListId = save($_GET['id']);
         $classDb = new db();
-        $playListSql = $classDb->select('playlist', array('id', $playListId));
-        $playListData = mysql_fetch_array($playListSql);
+        $playListData = $classDb->select('playlist', array('id', $playListId));
         if($playListData['user'] == getUser()){
             $delete = TRUE;
         }
@@ -338,7 +337,6 @@ else if($_GET['action'] == "copyPlaylist"){
          $playList = save($_GET['playlist']);
          $classDb = new db();
          $playListData = $classDb->select('playlist', array('id', $playList));
-         $playlistData = mysql_fetch_array($playlistData);
          
          if(isset($_POST['submit'])){
                         
@@ -707,8 +705,7 @@ else if($_GET['action'] == "addElement"){
 
                 if($_POST['type'] == "image"){
                     $dbClass = new db();
-                    $filefolderSQL = $dbclass->select('folders', array('id', $_POST['folder']));
-                    $fileFolderData = mysql_fetch_array($filefolderSQL);
+                    $fileFolderData = $dbclass->select('folders', array('id', $_POST['folder']));
                     //here could be a fail but Its workin right o0
                     $folderpath = $folderData['path'];
                     mkdir("./upload$folderpath/thumbs");
@@ -1031,8 +1028,7 @@ else if($_GET['action'] == "changeBackgroundImage"){
         if(proofLogin()){
         if($_GET['type'] == "file"){
             $dbClass = new db();
-            $fileSql = $dbclass->select('files', array('id', $_GET['id']));
-            $fileData = mysql_fetch_array($fileSql);
+            $fileData = $dbclass->select('files', array('id', $_GET['id']));
                 $documentElementSQL = mysql_query("SELECT id, folder FROM elements WHERE id='$documentData[folder]'");
                 $documentElementData = mysql_fetch_array($documentElementSQL);
                 $documentFolderSQL = mysql_query("SELECT id, path FROM folders WHERE id='$documentElementData[folder]'");
@@ -1128,8 +1124,7 @@ else if($_GET['action'] == "groupAdmin"){
          jsAlert("Saved :)");
          }
          $dbClass = new db();
-         $groupSql = $dbclass->select('groups', array('id', $group));
-         $groupData = mysql_fetch_array($groupSql);
+         $groupData = $dbclass->select('groups', array('id', $group));
          if($groupData['membersInvite'] == "1"){
              $membersInvite = "checked=\"checked\"";
          }
@@ -1240,8 +1235,7 @@ else if($_GET['action'] == "groupInviteUsers"){
 		 jsAlert("worked:)");
          }
          $dbClass = new db();
-         $groupSql = $dbClass->select('groups', array('id', $group));
-         $groupData = mysql_fetch_array($groupSql);
+         $groupData = $dbClass->select('groups', array('id', $group));
 		 
 		 
 		 //query to slow needs to be replaced
@@ -1856,8 +1850,7 @@ else if($_GET['action'] == "showStartMessage"){
                 <div>
                 	<?php
                     $dbClass = new db();
-                    $AccSetSql = $dbClass->select('user', array('userid', getUser()));
-                    $AccSetData = mysql_fetch_array($AccSetSql);
+                    $AccSetData = $dbClass->select('user', array('userid', getUser()));
                     if($AccSetData['birthdate']){
                     $birth_day = date("d", $AccSetData['birthdate']);
                     $birth_month = date("m", $AccSetData['birthdate']);
@@ -1992,8 +1985,7 @@ else if($_GET['action'] == "deleteItem"){
             
             if($type == "feed"){
                 $dbClass = new db();
-                $feedCheckSql = $dbClass->select('feed', array('id', $itemId));
-                $feedCheckData = mysql_fetch_array($feedCheckSql);
+                $feedCheckData = $dbClass->select('feed', array('id', $itemId));
                 if(authorize($feedCheckData['privacy'], "edit", $feedCheckData['author'])){
                     mysql_query("DELETE FROM feed WHERE id='$itemId'");
                     ?>
@@ -2090,7 +2082,7 @@ else if($_GET['action'] == "deleteItem"){
 				}
             }else if($type == "internLink"){
                 $dbClass = new db();
-                $checkInternLinkData = mysql_fetch_array($dbClass->select('internLinks', array('id', $itemId)));
+                $checkInternLinkData = $dbClass->select('internLinks', array('id', $itemId));
                 
                     if($checkInternLinkData['type'] == "folder"){
 
@@ -2298,8 +2290,7 @@ else if($_GET['action'] == "editItem"){
 					//folders
                     if($type == "folder"){
                         $dbClass = new db();
-                        $checkFolderSql = $dbClass->select('folders', array('id', $itemId));
-                        $checkFolderData = mysql_fetch_array($checkFolderSql);
+                        $checkFolderData = $dbClass->select('folders', array('id', $itemId));
                         if(authorize($checkFolderData['privacy'], "edit", $checkFolderData['creator'])){
                             $folderClass = new folder($checkFolderData['folder']);
                             $parentFolderPath = $folderClass->getPath();
@@ -2327,8 +2318,7 @@ else if($_GET['action'] == "editItem"){
 					//elements
                     }else if($type == "element"){
                         $dbClass = new db();
-                        $checkElementSql = $dbClass->select('elements', array('id', $itemId));
-                        $checkElementData = mysql_fetch_array($checkElementSql);
+                        $checkElementData = $dbClass->select('elements', array('id', $itemId));
                         if($checkElementData['author'] == getUser()){
                             mysql_query("UPDATE elements SET title='".save($_POST['title'])."', type='".save($_POST['type'])."', creator='".save($_POST['creator'])."', name='".save($_POST['name'])."', year='".save($_POST['year'])."', originalTitle='".save($_POST['originalTitle'])."' WHERE id='$itemId'");
                             jsAlert("Saved :)");
@@ -2693,8 +2683,7 @@ else if($_GET['action'] == "feedUpload"){
             }
             if(true){
             $dbClass = new db();
-            $userSql = $dbClass->select('user', array('userid', getUser()));
-            $userData = mysql_fetch_array($userSql);
+            $userData = $dbClass->select('user', array('userid', getUser()));
             
             $element = $userData['myFiles'];
             $folder = $userData['homefolder'];
@@ -2806,8 +2795,7 @@ else if($_GET['action'] == "deleteFile"){
                     $fileClass = new file($fileId);
                     if($fileClass->delete()){
                         $dbClass = new db();
-                        $fileSql = $dbClass->select('files', array('id', $fileId));
-                        $fileData = mysql_fetch_array($fileSql);
+                        $fileData = $dbClass->select('files', array('id', $fileId));
                             $fileElementSql = mysql_query("SELECT id, title FROM elements WHERE id='$fileData[folder]'");
                             $fileElementData = mysql_fetch_array($fileElementSql);
                             jsAlert("File has been deleted :( ");
