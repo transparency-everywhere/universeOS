@@ -86,7 +86,8 @@ class contextMenu{
 				$options[] = $privacy;
 				break;
 			case 'internLink':
-				$checkInternLinkData = mysql_fetch_array(mysql_query("SELECT * FROM internLinks WHERE id='$itemId'"));
+                                $dbClass = new db();
+                                $checkInternLinkData = $dbClass->select('internLinks', array('id', $itemId));
             
                 if($checkInternLinkData['type'] == "folder"){
                     $shortCutItemData = mysql_fetch_array(mysql_query("SELECT name, privacy, creator FROM folders WHERE id='$checkInternLinkData[typeId]'"));
