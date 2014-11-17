@@ -1938,8 +1938,7 @@ else if($_GET['action'] == "deleteFromPlaylist"){
              $playlist = save($_GET['playlist']);
              jsAlert("$type-$itemId-$playlist");
              $dbClass = new db();
-             $checkPlaylistSql = $dbClass->select('playlist', array('id', $playlist);
-             $checkPlaylistData = mysql_fetch_array($checkPlaylistSql);
+             $checkPlaylistData = $dbClass->select('playlist', array('id', $playlist));
              if($checkPlaylistData['user'] == "$_SESSION[userid]"){
                  if($type == "file"){
                      $files = explode(";", $checkPlaylistData['files']);
@@ -2070,8 +2069,7 @@ else if($_GET['action'] == "deleteItem"){
             }else if($type == "file"){
                 $fileId = $itemId;
                 $dbClass = new db();
-                $fileSql = $dbClass->select('files', array('id', $fileId);
-                $fileData = mysql_fetch_array($fileSql);
+                $fileData = $dbClass->select('files', array('id', $fileId));
                 if(authorize($fileData['privacy'], "edit", $fileData['owner'])){
                     $fileClass = new file($fileId);
                     if($fileClass->delete()){
