@@ -40,6 +40,8 @@ return(!i||i!==r&&!b.contains(r,i))&&(e.type=o.origType,n=o.handler.apply(this,a
                 callback();
         });
     }
+    
+
 //crypto js
 	/*
 	CryptoJS v3.1.2

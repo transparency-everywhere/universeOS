@@ -685,8 +685,7 @@ else if($_GET['action'] == "addElement"){
          
          if(proofLogin()){
             $classDb = new db();
-            $selectsql = $classDb->select('folders', array('oid', $_GET['folder']));
-            $selectdata = mysql_fetch_array($selectsql);
+            $selectdata = $classDb->select('folders', array('id', $_GET['folder']));
             if($_POST['submit']) {
     
                  
@@ -698,38 +697,30 @@ else if($_GET['action'] == "addElement"){
                     $privacy = exploitPrivacy("".$_POST['privacyPublic']."", "".$_POST['privacyHidden']."", $customEdit, $customShow);
                     $user = $_SESSION['userid'];
 
-        $time = time();
-        $title = save($_POST['elementName']);
-        $name = save($_POST['name']);
-		
-		$originalTitle = save($_POST['originalTitle']);
-		$language = save($_POST['language']);
-		
-        mysql_query("INSERT INTO `elements` (`title`, `folder`, `creator`, `name`, `year`, `originalTitle`, `language`, `type`, `author`, `timestamp`, `privacy`) VALUES('$title', '".$_POST['folder']."', '".$_POST['creator']."', '$name', '".save($_POST['year'])."', '$originalTitle', '$language', '".save($_POST['type'])."', '$user', '$time', '$privacy');");
-		
-        //add feed
-        $elementId = mysql_insert_id();
-        $feed = "has created an element";
-        
-        $feedClass = new feed();
-        $feedClass->create($user, $feed, "", "showThumb", $privacy, "element", $elementId);
-    
-        if($_POST['type'] == "image"){
-            $dbClass = new db();
-            $filefolderSQL = $dbclass->select('folders', array('id', $_POST['folder']);
-            $fileFolderData = mysql_fetch_array($filefolderSQL);
-            //here could be a fail but Its workin right o0
-            $folderpath = $folderData['path'];
-            mkdir("./upload$folderpath/thumbs");
-        }
-        ?>
-        <script>
-            
-                    parent.filesystem.tabs.updateTabContent(1 ,parent.gui.loadPage('modules/filesystem/fileBrowser.php?folder=<?=$_POST['folder'];?>&reload=1'));
-                
-        </script>
-        <?
-        echo jsAlert("you just added an element :)");
+                $elementClass = new element();
+                //add feed
+                $elementId = $elementClass->create($_POST['folder'], $_POST['elementName'], $_POST['type'], $_POST['creator'], $privacy);
+                $feed = "has created an element";
+
+                $feedClass = new feed();
+                $feedClass->create(getUser(), $feed, "", "showThumb", $privacy, "element", $elementId);
+
+                if($_POST['type'] == "image"){
+                    $dbClass = new db();
+                    $filefolderSQL = $dbclass->select('folders', array('id', $_POST['folder']));
+                    $fileFolderData = mysql_fetch_array($filefolderSQL);
+                    //here could be a fail but Its workin right o0
+                    $folderpath = $folderData['path'];
+                    mkdir("./upload$folderpath/thumbs");
+                }
+                ?>
+                <script>
+
+                            parent.filesystem.tabs.updateTabContent(1 ,parent.gui.loadPage('modules/filesystem/fileBrowser.php?folder=<?=$_POST['folder'];?>&reload=1'));
+
+                </script>
+                <?
+                echo jsAlert("you just added an element :)");
         } else {
         ?>
        <form action="./doit.php?action=addElement" method="post" target="submitter">  
@@ -938,7 +929,7 @@ else if($_GET['action'] == "addLink"){
 	                    $customEdit = $_POST['privacyCustomEdit'];
 	                    $privacy = exploitPrivacy("".$_POST['privacyPublic']."", "".$_POST['privacyHidden']."", $customEdit, $customShow);
                             $linkClass = new link();
-                            if($linkClass->addLink($_POST['folder'], $_POST['title'], $_POST['type'], $privacy, $_POST['link'])){
+                            if($linkClass->create($_POST['folder'], $_POST['title'], $_POST['type'], $privacy, $_POST['link'])){
                                 ?>
 			                <script>
                                             
@@ -1040,7 +1031,7 @@ else if($_GET['action'] == "changeBackgroundImage"){
         if(proofLogin()){
         if($_GET['type'] == "file"){
             $dbClass = new db();
-            $fileSql = $dbclass->select('files', array('id', $_GET['id']);
+            $fileSql = $dbclass->select('files', array('id', $_GET['id']));
             $fileData = mysql_fetch_array($fileSql);
                 $documentElementSQL = mysql_query("SELECT id, folder FROM elements WHERE id='$documentData[folder]'");
                 $documentElementData = mysql_fetch_array($documentElementSQL);
@@ -1137,7 +1128,7 @@ else if($_GET['action'] == "groupAdmin"){
          jsAlert("Saved :)");
          }
          $dbClass = new db();
-         $groupSql = $dbclass->select('groups', array('id', $group);
+         $groupSql = $dbclass->select('groups', array('id', $group));
          $groupData = mysql_fetch_array($groupSql);
          if($groupData['membersInvite'] == "1"){
              $membersInvite = "checked=\"checked\"";
@@ -1232,7 +1223,7 @@ else if($_GET['action'] == "groupAdmin"){
             $('#groupAdmin').slideUp();
             });
         </script>
-        <?
+        <?php
      }
 else if($_GET['action'] == "groupInviteUsers"){
          if(proofLogin()){
@@ -1248,8 +1239,8 @@ else if($_GET['action'] == "groupInviteUsers"){
 		 }
 		 jsAlert("worked:)");
          }
-         §dbClass = new db();
-         $groupSql = $dbClass->select('groups, array('id', $group));
+         $dbClass = new db();
+         $groupSql = $dbClass->select('groups', array('id', $group));
          $groupData = mysql_fetch_array($groupSql);
 		 
 		 

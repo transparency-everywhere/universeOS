@@ -18,8 +18,6 @@ $(document).ready(function(){
     
 });
 //privacy
-
-
 function initPrivacy(){
 	
 
@@ -306,6 +304,8 @@ var init = new function(){
 	
 };
 
+
+
 function Tab(parentId) {
 		  this.parentId = parentId; //id in which tabs are loaded
 		  this.index = 1;
@@ -367,6 +367,8 @@ var gui = new function(){
         }
     };
     this.generateField = function(fieldData, tr_class){
+        
+        
         if((typeof fieldData['value'] === 'undefined')||(fieldData['value'] == 'html')){
             fieldData['value'] = '';
         }else{
@@ -379,14 +381,8 @@ var gui = new function(){
             fieldData['appendix'] = '';
         }
             
-        if(fieldData['type'] === 'text')
-            fieldData['type'] = 'textarea';
-            
         var mainHTML = '';
         mainHTML += '<tr class='+tr_class+'>';
-        
-        
-        console.log(fieldData['type']+fieldData['value']);
         
                     //caption
                     switch(fieldData['type']){
@@ -413,6 +409,8 @@ var gui = new function(){
                          
                     }
 
+        mainHTML += '</tr>';
+        mainHTML += '<tr>';
                     //body
                     switch(fieldData['type']){
                         case 'text':
@@ -427,7 +425,7 @@ var gui = new function(){
                                     disabled = '';
                                 }
                             }
-                            mainHTML += '<td><input type="text" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '" value="' + fieldData['value'] + '" '+disabled+'/></td><td>'+fieldData['appendix']+'</td>';
+                            mainHTML += '<td colspan="3"><input type="text" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '" value="' + fieldData['value'] + '" style="width:100%;" '+disabled+'/></td><td>'+fieldData['appendix']+'</td>';
                             break;
                         case 'textarea':
                             if(!fieldData['value']){
@@ -491,7 +489,6 @@ var gui = new function(){
         //reset init var
         this.initWysiwyg = false;
         $.each(fields, function(index, fieldData){
-            console.log(fieldData['advanced']);
             if((typeof fieldData['advanced'] === 'undefined')||fieldData['advanced'] === false){
                 mainHTML += gui.generateField(fieldData, '');
             }
@@ -517,11 +514,26 @@ var gui = new function(){
             html += advancedHTML;
             html += '</table>';
         }
-        html += '</td></tr>';
-        html += '<tr><td colspan="3"><a href="panel.html" onclick="" class="btn btn-primary" style="margin-right:15px;">Back</a><input type="submit" value="' + options['buttonTitle'] + '" name="submit" id="submitButton" class="btn btn-success"></td></tr>';
-        html += '</form>';
+        
+            if(options['noButtons'] != true){
+                html += '</td></tr>';
+                html += '<tr><td colspan="3"><a href="panel.html" onclick="" class="btn btn-primary" style="margin-right:15px;">Back</a><input type="submit" value="' + options['buttonTitle'] + '" name="submit" id="submitButton" class="btn btn-success"></td></tr>';
+                html += '</form>';
+            }
         
         $($selector).html(html);
+        
+        //iniitialize onchange events
+        $.each(fields, function(index, fieldData){
+            if(typeof fieldData['onChange'] === 'function'){
+                $('#dynForm #'+fieldData['inputName']).change(function(){
+                    fieldData['onChange']();
+                });
+            }
+           
+        });
+        
+        
         if (typeof options['action'] == 'function'){
             $('#dynForm').submit(function(e){
                 e.preventDefault();
@@ -641,6 +653,39 @@ var gui = new function(){
         var gutterHeight = $(document).height()/49;
         return ((numberOfFields*3)+(numberOfFields+1))*gutterHeight;
         
+    };
+    
+    this.modal = function(){
+        this.html;
+        this.init = function (title, content, options) {
+			    	this.html = '';
+			    	this.html += '<div class="blueModal border-radius container">';
+	            		this.html += '<header>';
+	            			this.html += title;
+	            			this.html += '<a class="modalClose" onclick="$(\'.blueModal\').remove();">X</a>';
+	            		this.html += '</header>';
+	            		this.html += '<div class="content">';
+	            		this.html += content;
+	            		this.html += '</div>';
+	            		this.html += '<footer>';
+	            		
+	                 		this.html += '<a href="#" onclick="$(\'.blueModal\').remove(); return false;" class="btn pull-left">Close</a>';
+	                 		if(typeof options['action'] !== 'undefined'){
+	                			this.html += '<a href="#" id="action" class="btn btn-primary pull-right">&nbsp;&nbsp;'+options['buttonTitle']+'&nbsp;&nbsp;</a>';
+	                 		}
+	            		
+	            		this.html += '</footer>';
+	            		
+                                this.html += '</div>';
+                                $('.blueModal').remove();
+                                $('#popper').append(this.html);
+
+                                if(typeof options['action'] !== 'undefined'){
+                                        $('.blueModal #action').click(function(){
+                                                options['action']();
+                                        });
+                                }
+	};
     };
     
     this.initUploadify = function($selector, inputName){
@@ -1553,7 +1598,8 @@ var groups = new function(){
 			  	};
 	
 };
-			  
+
+
 
 function getUserPicture(request){
 			            var post;
@@ -1739,7 +1785,7 @@ var elements = new function(){
 				   return result;
               	};
               	
-              };
+};
 
 var folders = new function(){
               	
@@ -1782,15 +1828,15 @@ var modal =  new function() {
 	            		
 	            		this.html += '</footer>';
 	            		
-	            	this.html += '</div>';
-            		$('.blueModal').remove();
-            		$('#popper').append(this.html);
-            		
-            		if(typeof action !== 'undefined'){
-	            		$('.blueModal #action').click(function(){
-	            			action[0]();
-	            		});
-            		}
+                                this.html += '</div>';
+                                $('.blueModal').remove();
+                                $('#popper').append(this.html);
+
+                                if(typeof action !== 'undefined'){
+                                        $('.blueModal #action').click(function(){
+                                                action[0]();
+                                        });
+                                }
 			    };
 			};
        
@@ -3395,4 +3441,8 @@ function addUserToInputTagBar(userid){
 		$('.inputTagBar').append('<li class="userTag_'+userid+'" data-user="'+userid+'">'+username+'<a onclick="removeUserFromInputTagBar(\''+userid+'\');">x</a></li>');
 	}
 			 
+}
+
+function isYouTubeUrl(url){
+    return /((http|https):\/\/)?(www\.)?(youtube\.com)(\/)?([a-zA-Z0-9\-\.]+)\/?/.test(url);
 }
