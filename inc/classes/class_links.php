@@ -12,16 +12,14 @@
  * @author niczem
  */
 class link {
-	function addLink($folder, $title, $type, $privacy, $link){
-             
-             
-    
+	function create($folder, $title, $type, $privacy, $link){
+            
                 $user = getUser();
 
                 $time = time();
                 if(mysql_query("INSERT INTO `links` (`folder`, `type`, `title`, `link`, `privacy`, `author`, `timestamp`) VALUES ( '".save($folder)."', '".save($type)."', '".save($title)."', '".save($link)."', '$privacy', '$user', '$time');")){
                 	
-                	$feedText = "has created the link $title in the folder";
+                    $feedText = "has created the link $title in the folder";
                     $feedLink1 = mysql_insert_id();
                     $feedLink2 = $folder;
                     $feedClass = new feed();

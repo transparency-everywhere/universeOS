@@ -19,13 +19,7 @@ body {
 	margin: 0;
 	padding: 0;
 	word-wrap: break-word;
-	background:
-	radial-gradient(black 15%, transparent 16%) 0 0,
-	radial-gradient(black 15%, transparent 16%) 8px 8px,
-	radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 0 1px,
-	radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 8px 9px;
-	background-color:#282828;
-	background-size:16px 16px;
+        background: url('../../img/bg.jpg') no-repeat 100%;
 	/*http://lea.verou.me/css3patterns/#carbon-fibre*/
 }
 
@@ -50,39 +44,30 @@ h3{
 
 /*describes the drag and drop window */
 .fenster {
-	-moz-border-radius:1px;
-	-webkit-border-radius:1px;
-	border-radius:1px;
-   padding: 0px 0 29px 0px;
-	position:absolute;
-	z-index:1;
-	background: rgba(255,255,255,0.9);
-	min-width: 250px;
-	min-height: 260px;
+    padding: 0px 0 23px 0px;
+    position: absolute;
+    z-index: 1;
+    background: #FFF;
+    min-width: 250px;
+    min-height: 260px;
 }
 .fenster > header {
-    color:#454545;
-	cursor:move;
-	height:16px;
-	overflow:hidden;
-	padding:3px 0 4px 5px;
-	text-overflow:ellipsis;
-	font-size: 16pt;
-	white-space:nowrap;
+    color: #454545;
+    cursor: move;
+    height: 40px;
+    overflow: hidden;
+    padding: 10px 0 0 10px;
+    text-overflow: ellipsis;
+    font-size: 18pt;
+    white-space: nowrap;
+    box-sizing: border-box;
+    border-bottom: 1px solid #dcdcdc;
 }
 .fenster .inhalt {
-	-moz-border-radius:1px;
-	-webkit-border-radius:1px;
-	-o-border-radius:1px;
-	-ms-border-radius:1px;
-	border-radius:1px;
-	background-color:#FFF;
-	border: 1px solid rgba(223, 223, 223, 0.9);
-	color:#58585A;
-	height:100%;
-	margin:0 3px;
-	overflow:auto;
-	position:relative;
+	background-color: #FFF;
+        height: 100%;
+        overflow: auto;
+        position: relative;
 }
 .inhalt p {
 	margin-bottom:0px;
@@ -593,28 +578,29 @@ font-size: 19px;
 
 .leftNav{
     position: absolute;
-    width: 150px;
+    width: 170px;
     top: 0px;
     bottom: 0px;
     left: 0px;
     overflow: auto;
-    background: #3E3E3E;
-	color: #E2E2E2;
+    background: #dcdcdc;
+    color: #323232;
 }
 
 .leftNav a, leftNav a:link{
-	color: #E2E2E2;
+	color: #323232;
 }
 
 .leftNav > ul > li{
     list-style: none;
     margin: 0px;
-    padding: 5px;
-    cursor:pointer;font-size: 20px;
+    padding: 10px;
+    cursor:pointer;
+    font-size: 20px;
 }
 
 .leftNav > ul > li:hover {
-background: #383838;
+    background: #C7C7C7;
 }
 
 .leftNav > ul > li.header{
@@ -635,10 +621,10 @@ border-bottom: 1px solid #292929;
 
 .frameRight{
     position: absolute;
-    top: 0px;
+    top: 30px;
     right: 0px;
     bottom: 0px;
-    left: 150px;
+    left: 170px;
     padding-right: 0px;
     margin-right: 0px;
     overflow: auto;
@@ -764,17 +750,8 @@ border-bottom: 1px solid #292929;
     right: 0px;
     height: 60;
     overflow: none;
-    border-bottom: 1px solid #c9c9c9;
-    
-    background: #f4f4f4; /* Old browsers */
-    background: -moz-linear-gradient(top, #f4f4f4 0%, #e5e5e5 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f4f4f4), color-stop(100%,#e5e5e5)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, #f4f4f4 0%,#e5e5e5 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, #f4f4f4 0%,#e5e5e5 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, #f4f4f4 0%,#e5e5e5 100%); /* IE10+ */
-    background: linear-gradient(to bottom, #f4f4f4 0%,#e5e5e5 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4f4f4', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
-    
+    border-bottom: 1px solid #dcdcdc;
+     
 }  
 
 #feedheader > center { 
@@ -2708,7 +2685,7 @@ background: #4D4545;
 					padding-top: 12px;
 					padding-bottom: 12px;
 					margin-left: 0px;
-					color: rgba(115, 115, 115, 1) border: 0px;
+					color: rgba(115, 115, 115, 1); border: 0px;
 					border-top: #3C3C3B 1px solid;
 					width: 159px;
 					cursor: pointer;

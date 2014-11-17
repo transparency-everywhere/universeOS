@@ -9,7 +9,7 @@ include(universeBasePath.'/inc/functions.php');
                         <div style="display: none; width: 86%; margin-left: 7%; margin-bottom: 0px;" id="feedInputBar">
                                 <div class="btn-toolbar" style="float: left;">
                                     <div class="btn-group">
-                                        <a class="btn btn-mini" href="#" onclick="$('#feedInput').focus(); $('#addFeedFile').hide('slow'); $('#addFeedPrivacy').slideToggle(500);" title="privacy"><i class="icon-eye-open"></i></a>
+                                        <a class="btn btn-mini" href="#" onclick="$('#feedInput').focus(); $('#addFeedFile').hide('slow'); $('#addFeedPrivacy').slideToggle(500);" title="privacy"> Privacy </a>
                                     </div>
                                 </div>
                                 <input type="submit" style="float:right; margin-top: 10px; margin-right:-13px;" value="submit" class="btn btn-success btn-mini">
