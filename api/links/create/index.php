@@ -1,5 +1,4 @@
 <?php
-
 //This file is published by transparency-everywhere with the best deeds.
 //Check transparency-everywhere.com for further information.
 //Licensed under the CC License, Version 4.0 (the "License");
@@ -20,21 +19,9 @@ include('../../../inc/config.php');
 include('../../../inc/functions.php');
 
 
-$checkSQL = mysql_query("SELECT privacy, creator FROM folders WHERE id='".mysql_real_escape_string($_POST['folder'])."'");
-$checkData = mysql_fetch_array($checkSQL);
-if(authorize($checkData['privacy'], "edit", $checkData['creator'])){
-             
-    //set privacy
-    $customShow = $_POST['privacyCustomSee'];
-    $customEdit = $_POST['privacyCustomEdit'];
-
-
-    $privacy = exploitPrivacy("".$_POST['privacyPublic']."", "".$_POST['privacyHidden']."", $customEdit, $customShow);
-    $user = getUser();
-    if(!empty($_POST['folder']) AND !empty($_POST['name'])){
-        $folder = new folder();
-        $answer = $folder->create($_POST['folder'], $_POST['name'], $user, $privacy);
-
-    }
-}
-?>
+//set privacy
+$customShow = $_POST['privacyCustomSee'];
+$customEdit = $_POST['privacyCustomEdit'];
+$privacy = exploitPrivacy("".$_POST['privacyPublic']."", "".$_POST['privacyHidden']."", $customEdit, $customShow);
+$linkClass = new link();
+echo $linkClass->create($_POST['folder'], $_POST['title'], $_POST['type'], $privacy, $_POST['link']);

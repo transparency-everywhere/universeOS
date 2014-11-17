@@ -28,6 +28,4 @@ $privacy = exploitPrivacy("".$_POST['privacyPublic']."", "".$_POST['privacyHidde
 $elementClass = new element();
 $elementClass->create($_POST['folder'], $_POST['title'],  $_POST['type'],  getUser(), $privacy);
 
-
-var_dump($_POST);
 ?>
