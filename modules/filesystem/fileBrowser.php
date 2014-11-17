@@ -84,7 +84,7 @@ $pathdata = mysql_fetch_array($pathsql);
             	<a href="#" onclick="filesystem.openFolder(<?=$pathdata['folder'];?>);return false" title="parent folder" class="btn btn-mini" style="margin-right:3px;"><i class="icon-arrow-up"></i></a>
                 <? }
                 if(proofLogin() && !empty($folder)){ 
-            		echo"<a href=\"#\" onclick=\"$('.fileBrowserSettings$folder').slideToggle('slow'); return false\" title=\"more...\" class=\"btn btn-mini\"><i class=\"icon-cog\"></i></a>";
+            		echo"<a href=\"#\" onclick=\"$('.fileBrowserSettings$folder').slideToggle('slow'); return false\" title=\"more...\" class=\"btn btn-mini\"><i class=\"glyphicon glyphicon-cog\"></i></a>";
                  }?>
         </div>
         <div class="fileBrowser">

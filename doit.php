@@ -5,7 +5,7 @@ include("inc/functions.php");
 $time = time();
 if($_GET['action'] == "showScore"){
     $item = new item($_GET['type'], $_GET['typeid']);
-    echo showScore(1);
+    echo $item->showScore(1);
 } 
 if($_GET['action'] == "scorePlus"){
     $type = $_GET['type'];

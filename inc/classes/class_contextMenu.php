@@ -539,7 +539,7 @@ class contextMenu{
 				if(!empty($list)){
 					
 			        $return = "
-			        <a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"btn btn-mini\"><i class=\"icon-cog\"></i></a>
+			        <a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"btn btn-mini\"><i class=\"glyphicon glyphicon-cog\"></i></a>
 			        <div class=\"itemSettingsWindow\">
 			            <ul>
 			                $list

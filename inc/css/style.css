@@ -19,13 +19,7 @@ body {
 	margin: 0;
 	padding: 0;
 	word-wrap: break-word;
-	background:
-	radial-gradient(black 15%, transparent 16%) 0 0,
-	radial-gradient(black 15%, transparent 16%) 8px 8px,
-	radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 0 1px,
-	radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 8px 9px;
-	background-color:#282828;
-	background-size:16px 16px;
+        background: url('../../img/bg.jpg') no-repeat 100%;
 	/*http://lea.verou.me/css3patterns/#carbon-fibre*/
 }
 
@@ -584,7 +578,7 @@ font-size: 19px;
 
 .leftNav{
     position: absolute;
-    width: 180px;
+    width: 170px;
     top: 0px;
     bottom: 0px;
     left: 0px;
@@ -627,7 +621,7 @@ border-bottom: 1px solid #292929;
 
 .frameRight{
     position: absolute;
-    top: 0px;
+    top: 30px;
     right: 0px;
     bottom: 0px;
     left: 170px;
@@ -2691,7 +2685,7 @@ background: #4D4545;
 					padding-top: 12px;
 					padding-bottom: 12px;
 					margin-left: 0px;
-					color: rgba(115, 115, 115, 1) border: 0px;
+					color: rgba(115, 115, 115, 1); border: 0px;
 					border-top: #3C3C3B 1px solid;
 					width: 159px;
 					cursor: pointer;

@@ -119,9 +119,9 @@ class item {
 
                                $output .= '<div class="btn-toolbar" style="margin: 0px;">';
                                $output .= '<div class="btn-group">';
-                               $output .="<a class=\"btn btn-mini\" href=\"doit.php?action=scoreMinus&type=$type&typeid=$typeid\" target=\"submitter\"><i class=\"icon-thumbs-down\"></i></a>";
+                               $output .="<a class=\"btn btn-mini\" href=\"doit.php?action=scoreMinus&type=$type&typeid=$typeid\" target=\"submitter\"><i class=\"glyphicon glyphicon-thumbs-down\"></i></a>";
                                $output .= "<p class=\"btn btn-mini $class\" href=\"#\">$scoreData[score]</p>";
-                               $output .= "<a class=\"btn btn-mini\" href=\"doit.php?action=scorePlus&type=$type&typeid=$typeid\" target=\"submitter\"><i class=\"icon-thumbs-up\"></i></a>";
+                               $output .= "<a class=\"btn btn-mini\" href=\"doit.php?action=scorePlus&type=$type&typeid=$typeid\" target=\"submitter\"><i class=\"glyphicon glyphicon-thumbs-up\"></i></a>";
                                $output .= '</div>';
                                $output .= '</div>';
                    if(!isset($reload)){
@@ -318,7 +318,7 @@ class item {
                     <tr height=\"22px\">
                         <td bgcolor=\"#F2F2F2\">".$contextMenu->showItemSettings()."</td>
                         <td bgcolor=\"#F2F2F2\" align=\"right\">
-                            <a href=\"#\" class=\"btn btn-mini disabled\" style=\"float: right; margin-right: 30px; color: #606060;\"><i class=\"icon-comment\"></i>&nbsp;(".$classComments->countComment($itemType, $itemId).")</a>
+                            <a href=\"#\" class=\"btn btn-mini disabled\" style=\"float: right; margin-right: 30px; color: #606060;\"><i class=\"glyphicon glyphicon-comment\"></i>&nbsp;(".$classComments->countComment($itemType, $itemId).")</a>
                         </td>
                     </tr>
                 </table>
