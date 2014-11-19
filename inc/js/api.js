@@ -19,6 +19,30 @@
 var api = new function(){
     this.basePath = 'http://localhost/universe';
     
+    this.query = function(action, parameters, callback){
+        var async;
+        if(typeof callback !== 'undefined'){
+            async = true;
+        }else{
+            async = false;
+        };
+        
+        var className = this.className;
+        var ajax_parameters = JSON.stringify(parameters);
+        $.ajax({
+            type: 'POST',
+            url: "api.php?action=callPluginApi",
+            data: { className: className, plugin_action: action, parameters: ajax_parameters},
+            success:function(data){
+                if(!async)
+                    result = JSON.parse(data);
+                else
+                    result = callback(data);
+            },
+            async:async
+        });
+        return result;
+    };
     
     
     

@@ -182,13 +182,16 @@ function usernameToUserid($username){
   }
 
 function useridToUsername($userid){
-        $loginSQL = mysql_query("SELECT userid, username FROM user WHERE userid='".save($userid)."'");
+        $loginSQL = mysql_query("SELECT username FROM user WHERE userid='".save($userid)."'");
         $loginData = mysql_fetch_array($loginSQL);
         return $loginData['username'];
   }
 function useridToRealname($userid){
         $loginSQL = mysql_query("SELECT realname FROM user WHERE userid='".save($userid)."'");
         $loginData = mysql_fetch_array($loginSQL);
+        if(empty($loginData['realname']))
+            return 'no realname';
+        
         return $loginData['realname'];
   }
 
@@ -223,13 +226,14 @@ function userSignature($userid, $timestamp, $subpath = NULL, $reverse=NULL){
         <tr width="100%">
             <?php
             if(empty($reverse)){ ?>
+            <td style="width:50px; padding:0 10px;"><?=showUserPicture($feedUserData['userid'], "30", $subpath);?></td>
             <td>
                 <table>
                     <tr>
-                        <td style="font-size: 10pt;line-height: 17px;">&nbsp;<a href="#" onclick="showProfile(<?=$feedUserData['userid'];?>);"><?=$feedUserData['username'];?></a></td>
+                        <td style="font-size: 16px;line-height: 17px;" align="left">&nbsp;<a href="#" onclick="showProfile(<?=$feedUserData['userid'];?>);"><?=$feedUserData['username'];?></a></td>
                     </tr>             
                     <tr>
-                        <td style="font-size: 15pt;line-height: 23px;">
+                        <td style="font-size: 12px;line-height: 23px;">
                             &nbsp;<i>
                             <?php
                             $guiClass = new gui();
@@ -239,9 +243,7 @@ function userSignature($userid, $timestamp, $subpath = NULL, $reverse=NULL){
                     </tr>
                 </table>
             </td>
-            <td align="right"><span class="pictureInSignature"><?=showUserPicture($feedUserData['userid'], "30", $subpath);?></span></td>
             <?}else{?>
-            <td><?=showUserPicture($feedUserData['userid'], "30", $subpath);?></td>
             <td>
                 <table>
                     <tr>
@@ -256,6 +258,7 @@ function userSignature($userid, $timestamp, $subpath = NULL, $reverse=NULL){
                     </tr>
                 </table>
             </td>
+            <td><span class="pictureInSignature"><?=showUserPicture($feedUserData['userid'], "30", $subpath);?></span></td>
             <?}?>
         </tr>
     </table>
