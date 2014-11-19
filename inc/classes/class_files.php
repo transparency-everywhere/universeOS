@@ -23,39 +23,39 @@ class files {
     function uploadTempfile($file, $element, $folder, $privacy, $user, $lang=NULL, $download=true){
 	 	
 	 	//upload file
-        $target_path = basename( $file['tmp_name']);
-        $filename = $file['name'];
-        $thumbname = "$filename.thumb";
-        $size = $file['size'];
-        $time = time();
-        $classFiles = new files();
-	$type = $classFiles->getMime($filename);
-        
-		
-        $FileElementSQL = mysql_query("SELECT title, folder FROM elements WHERE id='$element'");
-        $FileElementData = mysql_fetch_array($FileElementSQL);
+                $target_path = basename( $file['tmp_name']);
+                $filename = $file['name'];
+                $thumbname = "$filename.thumb";
+                $size = $file['size'];
+                $time = time();
+                $classFiles = new files();
+                $type = $classFiles->getMime($filename);
+
+
+                $FileElementSQL = mysql_query("SELECT title, folder FROM elements WHERE id='$element'");
+                $FileElementData = mysql_fetch_array($FileElementSQL);
 		
 		if(empty($folder)){
 			$folder = $FileElementData['folder'];
 		}
 		
-        $filefolderSQL = mysql_query("SELECT * FROM folders WHERE id='".$FileElementData['folder']."'");
-        $fileFolderData = mysql_fetch_array($filefolderSQL);
-            $folderClass = new folder($folder);
-            $folderpath = $folderClass->getPath();
+                $dbClass = new db();
+                $FileElementData = $dbClass->select('folders', array('id', $FileElementData['folder']));
+                $folderClass = new folder($folder);
+                $folderpath = $folderClass->getPath();
 			
 			
-            $thumbPath = $folderpath."thumbs/";
-            $imgName = basename($FileElementData['title']."_".$file['name']);
-            $elementName = rawurlencode($FileElementData['title'].'_');
-            $finalName = $FileElementData['title']."_".$file['name'];
- 
+                $thumbPath = $folderpath."thumbs/";
+                $imgName = basename($FileElementData['title']."_".$file['name']);
+                $elementName = rawurlencode($FileElementData['title'].'_');
+                $finalName = $FileElementData['title']."_".$file['name'];
+
+
+                //move uploaded file to choosen folder and add .temp 
+                move_uploaded_file($file['tmp_name'], universeBasePath.'/'.$folderpath.$file['name']);
+                rename(universeBasePath.'/'.$folderpath.$file['name'], universeBasePath.'/'.$folderpath.$finalName);
 			
-			//move uploaded file to choosen folder and add .temp 
-            move_uploaded_file($file['tmp_name'], universeBasePath.'/'.$folderpath.$file['name']);
-            rename(universeBasePath.'/'.$folderpath.$file['name'], universeBasePath.'/'.$folderpath.$finalName);
-			
-			//if type is image => create thumbnail before .temp suffix is added
+                //if type is image => create thumbnail before .temp suffix is added
 	        if($type == "image/jpg" || $type == "image/jpeg" || $type == "image/png"){
 	                    $thumbPath= "$thumbPath";
 	                    $path = "$folderpath";
@@ -87,25 +87,24 @@ class files {
         $time = time();
         
         $classFiles = new files();
-	    $type = $classFiles->getMime($filename);
-        
-        $filefolderSQL = mysql_query("SELECT * FROM folders WHERE id='$folder'");
-            $fileFolderData = mysql_fetch_array($filefolderSQL);
-            $FileElementSQL = mysql_query("SELECT title FROM elements WHERE id='$element'");
-            $FileElementData = mysql_fetch_array($FileElementSQL);
-            $folderClass = new folder($folder);
-            $folderpath = universeBasePath.'/'.$folderClass->getPath();
-			
-			
-            $thumbPath = universeBasePath.'/'.$folderpath."thumbs/";
-            $imgName = basename($file['name']);
-            $elementName = "$FileElementData[title]_";
-            $imgName = "$elementName$imgName";
- 
+        $type = $classFiles->getMime($filename);
+        $dbClass = new db();
+        $fileFolderData = $dbClass->select('folders', array('id', $folder));
+        $FileElementSQL = mysql_query("SELECT title FROM elements WHERE id='$element'");
+        $FileElementData = mysql_fetch_array($FileElementSQL);
+        $folderClass = new folder($folder);
+        $folderpath = universeBasePath.'/'.$folderClass->getPath();
 
 
-            move_uploaded_file($file['tmp_name'], $folderpath.$file['name']);
-            rename($folderpath.$filename, $folderpath.$imgName);
+        $thumbPath = universeBasePath.'/'.$folderpath."thumbs/";
+        $imgName = basename($file['name']);
+        $elementName = "$FileElementData[title]_";
+        $imgName = "$elementName$imgName";
+
+
+
+        move_uploaded_file($file['tmp_name'], $folderpath.$file['name']);
+        rename($folderpath.$filename, $folderpath.$imgName);
         if($type == "image/jpg" || $type == "image/jpeg" || $type == "image/png"){
                     $thumbPath= "$thumbPath";
                     $path = "../../$folderpath";
@@ -359,24 +358,21 @@ class file{
             $folderArray = $folderClass->loadFolderArray("path");
             $folderArray = array_reverse($folderArray['names'], true);
             foreach($folderArray as &$folder){
-                
                 $path .= "$folder/";
             }
-            
-            
-                $documentFolderSQL = mysql_query("SELECT * FROM folders WHERE id='".save($documentElementData['folder'])."'");
-                $documentFolderData = mysql_fetch_array($documentFolderSQL);
-
-                $path = urldecode($path);
-                $filePath = $path.$documentData['filename'];
-                return $filePath;
+            $dbClass = new db();
+            $documentFolderData = $dbClass->select('folders', array('id', save($documentElementData['folder'])));
+            $path = urldecode($path);
+            $filePath = $path.$documentData['filename'];
+            return $filePath;
     }
 
 function getFileData(){
     $fileId = $this->id;
-		$fileData = mysql_fetch_array(mysql_query("SELECT * FROM files WHERE id='".save($fileId)."'"));
-		return $fileData;
-	}
+    $dbClass = new db();
+    $documentFolderData = $dbClass->select('files', array('id', save($fileId)));
+    return $fileData;
+}
 
 function getTitle(){
 		$fileData = $this->getFileData();
@@ -384,67 +380,67 @@ function getTitle(){
 	}
 
 
-function getFileType($fileId){
-    $fileId = $this->id;
-        $fileData = mysql_fetch_array(mysql_query("SELECT type FROM files WHERE id='".save($fileId)."'"));
-        return $fileData['type'];
-    }
-function delete(){
-    $fileId = $this->id;
-                $fileSql = mysql_query("SELECT * FROM files WHERE id='$fileId'");
-                $fileData = mysql_fetch_array($fileSql);
-                    $fileElementSql = mysql_query("SELECT id, title, folder FROM elements WHERE id='$fileData[folder]'");
-                    $fileElementData = mysql_fetch_array($fileElementSql);
-                    
-                    $type = $fileData['type'];
-                    
-                    //for all standard files
-                    $title = $fileData['filename'];
-                    
-                    
-                   
-                    
-                //file can only be deleted if uploader = deleter
-               	if(authorize($fileData['privacy'], "edit")){
-                    $folderClass = new folder($fileElementData['folder']);
-                    $folderPath = $folderClass->getPath();
-                    $fileClass = new file($fileId);
-                    $filePath = $fileClass->getFullFilePath($fileId);
-                    $thumbPath = $folderPath.'thumbs/'.$title;
-                    echo $filePath.'asd';
-                    if(unlink(universeBasePath.'/'.$filePath)){
-                    	if(mysql_query("DELETE FROM files WHERE id='$fileId'")){
-                           
-                           //delete comments
-                           $commentClass = new comments();
-                           $commentClass->deleteComments("file", $fileId);
-                           
-                           $classFeed = new feed();
-                           $classFeed->deleteFeeds("file", $fileId);
-                           
-                           $classShortcut = new shortcut();
-                           $classShortcut->deleteInternLinks("file", $fileId);
-                           
-                           //delete thumbnails
-                           if($type == "image/jpg" || $type == "image/jpeg" || $type == "image/png"){
-                               
-                                $thumbPath = $folderPath.'thumbs/'.$title;
-                               if(unlink(universeBasePath.'/'.$thumbPath)){
-                                   return true;
-                               }else{
-                                   return false;
-                               }
-                               
-                           }else{
-                               return true;
-                           }
+    function getFileType($fileId){
+        $fileId = $this->id;
+            $fileData = mysql_fetch_array(mysql_query("SELECT type FROM files WHERE id='".save($fileId)."'"));
+            return $fileData['type'];
+        }
+    function delete(){
+        $fileId = $this->id;
+        $dbClass = new db();
+        $fileData = $dbClass->select('files', array('id', $fileId));
+        $fileElementSql = mysql_query("SELECT id, title, folder FROM elements WHERE id='$fileData[folder]'");
+        $fileElementData = mysql_fetch_array($fileElementSql);
+
+        $type = $fileData['type'];
+
+        //for all standard files
+        $title = $fileData['filename'];
+
+
+
+
+        //file can only be deleted if uploader = deleter
+        if(authorize($fileData['privacy'], "edit")){
+            $folderClass = new folder($fileElementData['folder']);
+            $folderPath = $folderClass->getPath();
+            $fileClass = new file($fileId);
+            $filePath = $fileClass->getFullFilePath($fileId);
+            $thumbPath = $folderPath.'thumbs/'.$title;
+            echo $filePath.'asd';
+            if(unlink(universeBasePath.'/'.$filePath)){
+                if(mysql_query("DELETE FROM files WHERE id='$fileId'")){
+
+                   //delete comments
+                   $commentClass = new comments();
+                   $commentClass->deleteComments("file", $fileId);
+
+                   $classFeed = new feed();
+                   $classFeed->deleteFeeds("file", $fileId);
+
+                   $classShortcut = new shortcut();
+                   $classShortcut->deleteInternLinks("file", $fileId);
+
+                   //delete thumbnails
+                   if($type == "image/jpg" || $type == "image/jpeg" || $type == "image/png"){
+
+                        $thumbPath = $folderPath.'thumbs/'.$title;
+                       if(unlink(universeBasePath.'/'.$thumbPath)){
+                           return true;
+                       }else{
+                           return false;
                        }
-                    }else{
-                        return false;
-                    }
-                }else{
-                    return false;
-                }
+
+                   }else{
+                       return true;
+                   }
+               }
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
     }
     
 }

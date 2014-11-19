@@ -47,8 +47,8 @@ class fav {
                                     $img = "fileIcons/".$filesClass->getFileIcon($fileType);
 
                                 }
-                                $favFolderSql = mysql_query("SELECT * FROM $typeTable WHERE id='$item'");
-                                $favFolderData = mysql_fetch_array($favFolderSql);
+                                $dbClass = new db();
+                                $favFolderData = $dbClass->select($typeTable, array('id', $item));
                                 if($filefdata['type'] == "folder"){
                                 $filefdata['title'] = $filefdata['name'];
                                 }
