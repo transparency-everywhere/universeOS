@@ -2728,25 +2728,26 @@ var dashBoard = new function(){
 	
 	};
 	
-	this.slideDown = function(){
-		
-			$('#dashBoard').animate({top: 190}, 750, function() {
+	this.slideUp = function(){
+                        $('#dashBoard').show();
+			$('#dashBoard').animate({bottom: 0}, 1000, function() {
 				$('#dashBoard').removeClass('up');
 				$('#dashBoardBG').removeClass('up');
 				$('#dashBoard footer a i').removeClass('icon-arrow-down');
 				$('#dashBoard footer a i').addClass('icon-arrow-up');
 			});
-			this.view = 'down';
+			this.view = 'up';
 	};
-	this.slideUp = function(){
+	this.slideDown = function(){
 		
-			$('#dashBoard').animate({top: 0}, 750, function() {
+			$('#dashBoard').animate({bottom: -250}, 750, function() {
 				$('#dashBoard').addClass('up');
 				$('#dashBoardBG').addClass('up');
 				$('#dashBoard footer a i').removeClass('icon-arrow-up');
 				$('#dashBoard footer a i').addClass('icon-arrow-down');
+                                $('#dashBoard').hide();
 			});
-			this.view = 'up';
+			this.view = 'down';
 	};
 	this.toggle = function(){
 		if(this.view === 'up'){

@@ -71,22 +71,22 @@ if(isset($_GET['folder'])){
 $folder = "1";
 }}
 
-$pathsql = mysql_query("SELECT id, folder, path, privacy, creator FROM folders WHERE id='".mysql_real_escape_string($folder)."'");
-$pathdata = mysql_fetch_array($pathsql);
+$folderClass = new folder($folder);
+$pathdata = $folderClass->getFolderData();
+
 	if($pathdata['folder'] == 2){
 		$pathdata['folder'] = "1";
 	}
 } ?>
-<div class="border-box frameRight fileBrowser_<?=$folder;?>">
+<div class="frameRight fileBrowser_<?=$folder;?>">
+    <div class="path">
+            <?php
+            echo 'universe/'.$folderClass->getPath(false);
+            if(proofLogin() && !empty($folder)){ 
+        		echo"<a href=\"#\" id=\"settingsButton\" onclick=\"$('.fileBrowserSettings$folder').slideToggle('slow'); return false\" title=\"more...\" class=\"btn btn-mini\"><i class=\"glyphicon glyphicon-cog\"></i></a>";
+             }?>
+    </div>
     <div class="underFrame" style="overflow: none;">
-        <div class="grayBar" style="top: 0px; left:0px; right: 0px; height: 20px; overflow: none;">
-            	<? if($folder !== "1") {?>
-            	<a href="#" onclick="filesystem.openFolder(<?=$pathdata['folder'];?>);return false" title="parent folder" class="btn btn-mini" style="margin-right:3px;"><i class="icon-arrow-up"></i></a>
-                <? }
-                if(proofLogin() && !empty($folder)){ 
-            		echo"<a href=\"#\" onclick=\"$('.fileBrowserSettings$folder').slideToggle('slow'); return false\" title=\"more...\" class=\"btn btn-mini\"><i class=\"glyphicon glyphicon-cog\"></i></a>";
-                 }?>
-        </div>
         <div class="fileBrowser">
         	<?
         	if(!empty($folder)){

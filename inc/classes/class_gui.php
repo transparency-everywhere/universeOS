@@ -20,12 +20,14 @@ class gui {
         echo "        <div id=\"dock\">\n";
         echo "            <table>\n";
         echo "                <tr>\n";
-        echo "                    <td>\n";
-        echo "                        <a class=\"module\" id=\"startButton\" title=\"toggle Dashboard\" href=\"#dashBoard\">".showUserPicture(getUser(), 24)."<i class=\"icon-retweet icon-white\" style=\"margin-left:15px;\"><span class=\"iconAlert\" id=\"appAlerts\"></span></i><i class=\"icon-user icon-white\"><span class=\"iconAlert\" id=\"openFriendRequests\"></span></i><i class=\"icon-envelope icon-white\"><span class=\"iconAlert\" id=\"newMessages\" onclick=\"showApplication(\'chat\'); return false\"></span></i></a><td>\n";
+        echo "                    <td>\n<img src=\"img/arrow_up_bright.png\" alt=\"toggle dashboard\" onclick=\"dashBoard.toggle();\">";
+        echo "                          <a id=\"startButton\" title=\"toggle Dashboard\" href=\"#dashBoard\">"
+           . "                              <img src=\"img/eye_bright.png\"><span class=\"iconAlert\" id=\"appAlerts\"></span><img src=\"img/user_bright.png\"><span class=\"iconAlert\" id=\"openFriendRequests\"></span><img src=\"img/mail_bright.png\"><span class=\"iconAlert\" id=\"newMessages\" onclick=\"showApplication(\'chat\'); return false\"></span>"
+           . "                          </a><td>\n";
         echo "                    <!-- <td><div id=\"modulePlayer\" class=\"module\">&nbsp;&nbsp;Player</div>   </td> -->\n";
-        echo "                    <td><a href=\"doit.php?action=logout\" target=\"submitter\" class=\"module\" style=\"tex-decoration: none; color: #797979; min-width:10px;\" title=\"logout\">&nbsp;<i class=\"icon-white icon-off\"></i>&nbsp;</a></td>\n";
+        echo "                    <td><a href=\"doit.php?action=logout\" target=\"submitter\" style=\"tex-decoration: none; color: #FFF; min-width:10px;\" title=\"logout\">&nbsp;<i class=\"glyphicon glyphicon-off\"></i>&nbsp;</a></td>\n";
         echo "                    <td align=\"right\" id=\"clockDiv\" style=\"color: #FFFFFF; float: right\"></td>\n";
-        echo "                    <td align=\"right\"><input type=\"text\" name=\"searchField\" id=\"searchField\" class=\"border-radius\" placeholder=\"search\"></td>\n";
+        echo "                    <td align=\"right\"><input type=\"text\" name=\"searchField\" id=\"searchField\" placeholder=\"search\"></td>\n";
         echo "                </tr>\n";
         echo "            </table>\n";
         echo "        </div>\n";

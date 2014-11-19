@@ -59,7 +59,7 @@ class fileSystem {
                             if($parentFolderData['folder'] !== 1)
                                     $parentFolderData = mysql_fetch_array(mysql_query("SELECT folder FROM folders WHERE id='".mysql_real_escape_string($folder)."'"));
                             ?>
-                        <tr class="strippedRow" height="30">
+                        <tr height="30">
                             <td width="30">&nbsp;<img src="<?=$subpath;?>gfx/icons/filesystem/folder.png" height="22"></td>
                             <td><a href="<?=$subpath;?>out/?folder=<?=$parentFolderData['folder'];?>" onclick="openFolder('<?=$parentFolderData['folder'];?>'); return false;">...</a></td>
                             <td width="50px">
@@ -80,24 +80,25 @@ class fileSystem {
                             }
 
             ?>
-                <tr class="strippedRow" oncontextmenu="showMenu('folder<?=$filefdata['id'];?>'); return false;" height="30">
+                <tr oncontextmenu="showMenu('folder<?=$filefdata['id'];?>'); return false;" height="30">
                     <td width="30"><?php
                     if($rightClick){
                         $contextMenu = new contextMenu("folder", $filefdata['id'], $filefdata['name'], $filefdata['creator']);
                         echo $contextMenu->showRightClick();
-                    }?>&nbsp;<img src="<?=$subpath;?>gfx/icons/filesystem/folder.png" height="22"></td>
+                    }?>&nbsp;<img src="<?=$subpath;?>img/folder_dark.png"></td>
                     <td><a href="<?=$subpath;?>out/?folder=<?=$filefdata['id'];?>" onclick="openFolder('<?=$filefdata['id'];?>'); return false;"><?=$name;?></a></td>
-                    <td width="50px">
+                    <td width="80px">
+                            <?php
+                            $item = new item("folder", $filefdata['id']);
+                            echo $item->showScore();?>
+                    </td>
+                    <td width="30px">
                             <?php
                             if($rightClick){
                                 echo $contextMenu->showItemSettings();
                             }
                             ?>
                     </td>
-                    <td width="50px">
-                            <?php
-                            $item = new item("folder", $filefdata['id']);
-                            echo $item->showScore();?></td>
                 </tr>
                 <?php
                 }}}
@@ -112,16 +113,17 @@ class fileSystem {
 
                     if(authorize($fileddata['privacy'], "show", $fileddata['author'])){
                         $item = new item("element", $fileddata['id']);
-                        echo "<tr class=\"strippedRow\" oncontextmenu=\"showMenu('element".$fileddata['id']."'); return false;\" height=\"30\">";
+                        echo "<tr oncontextmenu=\"showMenu('element".$fileddata['id']."'); return false;\" height=\"30\">";
                                 echo "<td width=\"30\">&nbsp;<img src=\"$subpath"."gfx/icons/filesystem/element.png\" height=\"22\"></td>";
                                 echo "<td><a href=\"$subpath"."out/?element=".$fileddata['id']."\" onclick=\"openElement('".$fileddata['id']."', '".addslashes($title10)."'); return false;\">$title15</a></td>";
-                                echo "<td width=\"80px\">";
+
+                                echo "<td width=\"80px\">".$item->showScore()."</td>";
+                                echo "<td width=\"30px\">";
                                             if($rightClick){
                                                 $contextMenu = new contextMenu("element", $fileddata['id'], $title10, $fileddata['author']);
                                                 echo $contextMenu->showItemSettings();
                                                             }
                                 echo "</td>";
-                                echo "<td width=\"50px\">".$item->showScore()."</td>";
                         echo "</tr>";
                         if($rightClick){
                             echo $contextMenu->showRightClick();

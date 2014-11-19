@@ -8,7 +8,7 @@ html {
 	width:100%;
 }
 body {
-	color: #FFFFFF;
+	color: #313131;
 	font:normal print, arial,sans-serif;
 	font-family: print;
 	font-style: normal;
@@ -28,6 +28,10 @@ ul {
 } 
 
 li {
+}
+
+a{
+    color: #313131;
 }
 
 .strippedRow{
@@ -621,7 +625,7 @@ border-bottom: 1px solid #292929;
 
 .frameRight{
     position: absolute;
-    top: 30px;
+    top: 40px;
     right: 0px;
     bottom: 0px;
     left: 170px;
@@ -824,12 +828,38 @@ border: 1px solid rgba(0,0,0,0.05);
     
 }
 
+#filesystem .tabFrame>header{
+    left:170px;
+}
+
+#filesystem .tabFrame>.tab{
+    top:0;
+}
 
 #filesystem .leftNav li img{
 	height: 16px;
 	margin-bottom: -2px;
 }
 
+#filesystem .path {
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    height: 40px;
+    overflow: none;
+    border-bottom: 1px solid #dcdcdc;
+    color: #313131;
+    padding-top: 10px;
+    padding-left: 10px;
+}
+
+#filesystem .path #settingsButton{
+    float:right;margin-top: -5px;
+}
+
+#filesystem td{
+    padding-top:2px;
+}
 #filelist {
     position: relative;
     height: 60%;
@@ -1459,120 +1489,46 @@ color:#FFFFFF;
 
 
 /* Tabs */
-
-.dhtmlgoodies_tabPane{
-		height:20px;	/* Height of tabs */
-		border-bottom:1px solid #BCBCBC;
-                background: #f4f4f4; /* Old browsers */
-                background: -moz-linear-gradient(top, #f4f4f4 0%, #e5e5e5 100%); /* FF3.6+ */
-                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f4f4f4), color-stop(100%,#e5e5e5)); /* Chrome,Safari4+ */
-                background: -webkit-linear-gradient(top, #f4f4f4 0%,#e5e5e5 100%); /* Chrome10+,Safari5.1+ */
-                background: -o-linear-gradient(top, #f4f4f4 0%,#e5e5e5 100%); /* Opera 11.10+ */
-                background: -ms-linear-gradient(top, #f4f4f4 0%,#e5e5e5 100%); /* IE10+ */
-                background: linear-gradient(to bottom, #f4f4f4 0%,#e5e5e5 100%); /* W3C */
-                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4f4f4', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
-        }
-	.dhtmlgoodies_aTab{
-            
-		position: absolute;
-		top: 21px;
-		right: 0px;
-		bottom: 0px;
-		left: 0px;
-		overflow: auto;
-	}
-	.dhtmlgoodies_tabPane DIV{
-            
-                background: rgb(239,239,239); /* Old browsers */
-                /* IE9 SVG, needs conditional override of 'filter' to 'none' */
-                background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2VmZWZlZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjQ2JSIgc3RvcC1jb2xvcj0iI2VmZWZlZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlNWU1ZTUiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-                background: -moz-linear-gradient(top, rgba(239,239,239,1) 0%, rgba(239,239,239,1) 46%, rgba(229,229,229,1) 100%); /* FF3.6+ */
-                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(239,239,239,1)), color-stop(46%,rgba(239,239,239,1)), color-stop(100%,rgba(229,229,229,1))); /* Chrome,Safari4+ */
-                background: -webkit-linear-gradient(top, rgba(239,239,239,1) 0%,rgba(239,239,239,1) 46%,rgba(229,229,229,1) 100%); /* Chrome10+,Safari5.1+ */
-                background: -o-linear-gradient(top, rgba(239,239,239,1) 0%,rgba(239,239,239,1) 46%,rgba(229,229,229,1) 100%); /* Opera 11.10+ */
-                background: -ms-linear-gradient(top, rgba(239,239,239,1) 0%,rgba(239,239,239,1) 46%,rgba(229,229,229,1) 100%); /* IE10+ */
-                background: linear-gradient(to bottom, rgba(239,239,239,1) 0%,rgba(239,239,239,1) 46%,rgba(229,229,229,1) 100%); /* W3C */
-                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#efefef', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-8 */
-            
-            
-            
-            
-                
-                z-index:1;
-		float:left;
-		height:20px;	/* Height of tabs */
-		padding-left:3px;
-		vertical-align:middle;
-		background-repeat:no-repeat;
-		background-position:bottom left;
-		cursor:pointer;
-		position:relative;
-                padding-right: 05px;
-                -moz-box-shadow:0px 0px 0px rgb(0, 0, 0);
-                -webkit-box-shadow:0px 0px 0px rgb(0, 0, 0);
-                border-right: 1px solid #c9c9c9;
-                
-	}
-	.dhtmlgoodies_tabPane .tabActive{
-                background: rgb(220,220,220); /* Old browsers */
-                z-index: 10;
-	}
-	.dhtmlgoodies_tabPane .tabInactive{
-	}
-
-	.dhtmlgoodies_tabPane .inactiveTabOver{
-	}
-	.dhtmlgoodies_tabPane span{
-		vertical-align:top;
-		font-size:10pt;
-		padding-left:3px;
-		padding-right:3px;
-		line-height:20px;
-		float:left;
-	}
-	.dhtmlgoodies_tabPane .tabActive span{
-		padding-bottom:1px;
-		line-height:20px;
-	}
-	
-	.dhtmlgoodies_tabPane img{
-		float:left;
-	}
-        
-        .tabFrame>header{
+        .tabFrame>header {
             position: absolute!important;
-            height: auto!important;
+            left: 0;
+            right: 0;
             padding: 0!important;
             z-index: 2;
-            background: none!important;
+            background: #dcdcdc!important;
+            color: #313131;
+            font-size: 16px;
+            font-weight: 300;
+            height: 40px;
         }
         
         .tabFrame>header ul{
             
         }
-        
-        .tabFrame>header li{
+        .tabFrame>header li {
             float: left;
-            padding: 3px 15px;
+            padding: 10px 15px;
             padding-bottom: 0;
-            background: #FFF;
-            margin-right: 3px;
-            border: 1px solid #767676;
+            background: #eee;
             border-bottom: 0;
-            cursor:pointer;
+            cursor: pointer;
+            height: 40px;
         }
         
         
         .tabFrame>header li.active{
-            background:#c9c9c9;
+            background:#fff;
         }
         
         
         
-        .tabFrame>.tab{
-            background: #FFF;
-            top: 0px;
+        .tabFrame>.tab {
+            position: absolute;
+            top: 40px;
             border-top: 1px solid #c9c9c9;
+            left: 0;
+            right: 0;
+            bottom: 0;
         }
         
 /*Dock*/
@@ -1580,52 +1536,42 @@ color:#FFFFFF;
 /*Dock*/
     #dock{
         position: absolute;
-        height:40px;
+        height: 40px;
         width: 100%;
-        bottom:0px;
-        margin-bottom:0px;
+        bottom: 0px;
+        margin-bottom: 0px;
         padding-bottom: 0px;
-        float: bottom;
-        border-top: #3d3d3d 1px solid;
-
-
-        background: rgb(40,40,40); /* Old browsers */
-        /* IE9 SVG, needs conditional override of 'filter' to 'none' */
-        background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzI4MjgyOCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUxJSIgc3RvcC1jb2xvcj0iIzIzMjMyMyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9Ijk5JSIgc3RvcC1jb2xvcj0iIzE0MTQxNCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2dyYWQtdWNnZy1nZW5lcmF0ZWQpIiAvPgo8L3N2Zz4=);
-        background: -moz-linear-gradient(top, rgba(40,40,40,1) 0%, rgba(35,35,35,1) 51%, rgba(20,20,20,1) 99%); /* FF3.6+ */
-        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(40,40,40,1)), color-stop(51%,rgba(35,35,35,1)), color-stop(99%,rgba(20,20,20,1))); /* Chrome,Safari4+ */
-        background: -webkit-linear-gradient(top, rgba(40,40,40,1) 0%,rgba(35,35,35,1) 51%,rgba(20,20,20,1) 99%); /* Chrome10+,Safari5.1+ */
-        background: -o-linear-gradient(top, rgba(40,40,40,1) 0%,rgba(35,35,35,1) 51%,rgba(20,20,20,1) 99%); /* Opera 11.10+ */
-        background: -ms-linear-gradient(top, rgba(40,40,40,1) 0%,rgba(35,35,35,1) 51%,rgba(20,20,20,1) 99%); /* IE10+ */
-        background: linear-gradient(to bottom, rgba(40,40,40,1) 0%,rgba(35,35,35,1) 51%,rgba(20,20,20,1) 99%); /* W3C */
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#282828', endColorstr='#141414',GradientType=0 ); /* IE6-8 */
-
+        background: #000;
     }
     
-    #dock .userPicture{
-        margin:7px 5px auto 5px;
         
-    }
+        #dock #startButton{
+            border-left: 1px solid #FFF;
+            border-right: 1px solid #FFF;
+            padding-right: 5px;
+            margin: 0 5px;
+            height: 30px;
+            padding-bottom: 15px;
+        }
         
-        #dock #personalButton{
-            position: relative;
-            float: left;
+        #dock td img {
+            margin-top: 10px;
+            margin-left:5px;
+        }#dock td a .glyphicon{
+            margin-top: 15px;
         }
         
         
         
-        #dock #searchField{
-			border-radius: 22px;
-			bottom: -3px;
-			font-size: 17px;
-			height: 21px;
-			position: absolute;
-			right: 7px;
-			vertical-align: bottom;
-			text-align: right;
-			width: 180px;
-			padding: 3px 6px 0px 6px;
-        }    
+    #dock #searchField {
+        bottom: 5px;
+        font-size: 17px;
+        position: absolute;
+        right: 5px;
+        vertical-align: bottom;
+        width: 180px;
+        height: 30px;
+    }    
         
         #dock #clockDiv{
         	position: absolute;
@@ -2478,46 +2424,31 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 	}
 
 	#dashGrid{
-		position: absolute;
-		top: -190px;
-		right: 0;
-		left: 0;
-		height: 390px;
+            position: absolute;
+            bottom: 40px;
+            right: 0;
+            left: 0;
+            height: 250px;
 	}
 
 	#dashBoard{
-		top: -190px;
+		bottom: -250px;
 		z-index: 99999;
 		position: absolute;
-		height: 179px;
+		height: 250px;
 		padding: 10px;
 		right: 5px;
 		left: 0;
 		right: 0;
-                    background: #303030; /* Old browsers */
-                    background: -moz-linear-gradient(top, #303030 0%, #212121 100%); /* FF3.6+ */
-                    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#303030), color-stop(100%,#212121)); /* Chrome,Safari4+ */
-                    background: -webkit-linear-gradient(top, #303030 0%,#212121 100%); /* Chrome10+,Safari5.1+ */
-                    background: -o-linear-gradient(top, #303030 0%,#212121 100%); /* Opera 11.10+ */
-                    background: -ms-linear-gradient(top, #303030 0%,#212121 100%); /* IE10+ */
-                    background: linear-gradient(to bottom, #303030 0%,#212121 100%); /* W3C */
-                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#303030', endColorstr='#212121',GradientType=0 ); /* IE6-9 */
-
-
-					background: #212121; /* Old browsers */
-					background: -moz-linear-gradient(top, #212121 0%, #262626 49%, #212121 100%); /* FF3.6+ */
-					background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#212121), color-stop(49%,#262626), color-stop(100%,#212121)); /* Chrome,Safari4+ */
-					background: -webkit-linear-gradient(top, #212121 0%,#262626 49%,#212121 100%); /* Chrome10+,Safari5.1+ */
-					background: -o-linear-gradient(top, #212121 0%,#262626 49%,#212121 100%); /* Opera 11.10+ */
-					background: -ms-linear-gradient(top, #212121 0%,#262626 49%,#212121 100%); /* IE10+ */
-					background: linear-gradient(to bottom, #212121 0%,#262626 49%,#212121 100%); /* W3C */
-					filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#212121', endColorstr='#212121',GradientType=0 ); /* IE6-9 */
+                background: rgba(0,0,0,0.85); /* Old browsers */
+                    
 		-moz-box-pack: center;
 		-moz-box-align: center;
 		display: -webkit-box;
 		-webkit-box-pack: center;
 		-webkit-box-align: center;
 		display: box;
+                display:none;
 		box-pack: center;
 		box-align: center;                 
 	}
@@ -2562,37 +2493,25 @@ margin: 0;
 	}
 
 	.dashBox{
-		color: rgba(115, 115, 115, 1);
-		font-size: 15pt;
-		width: 170px;
-		background: #323232;
-		margin: 0 4px;
-				position: relative;
-		float: left;
-		height: 180px;
+            color: #FFF;
+            width: 170px;
+            margin: 0 4px;
+            position: relative;
+            float: left;
+            height: 180px;
 	}
 	
 	.dashBox .content{
-		overflow: auto;
-height: 144px;
-border-left: 1px solid #424242;
-border-right: 1px solid #424242;
+            overflow: auto;
+            height: 144px;
 	}
 	
 	.dashBox header{
-		padding: 5px;
-font-size: 16pt;
-line-height: 15px;
-text-align: right;
-height: 12px;
-border-bottom: 2px solid #3a3a3a;
-color: #9D9D9D;
-padding-top: 10px;
-background: #3f72a6;
-border-bottom: none;
-background: #4D4545;
-		
-    }
+            padding: 5px;
+            font-size: 22px;
+            line-height: 15px;
+            font-weight:300;
+        }
 	
 	.dashBox footer{
 		position: absolute;
@@ -2600,8 +2519,6 @@ background: #4D4545;
 		left: 0px;
 		right: 0px;
 		height: 23px;
-		background: #2A2A2A;
-		border: #424242 1px solid;
 		margin-bottom: 0!important;
 		border-top: 0;
 	}
@@ -2666,37 +2583,54 @@ background: #4D4545;
 	.marginRight{
 		margin-right: 5px;
 	}
-	
+        #dashBoard #appBox{
+            width: 440px;
+        }
 	
                 #dashBoard .appList{
                     border-right: none;
                 }
             
                 #dashBoard li{
-					background: #303030;
-					background: -moz-linear-gradient(top, #303030 0%, #212121 100%);
-					background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#303030), color-stop(100%,#212121));
-					background: -webkit-linear-gradient(top, #303030 0%,#212121 100%);
-					background: -o-linear-gradient(top, #303030 0%,#212121 100%);
-					background: -ms-linear-gradient(top, #303030 0%,#212121 100%);
-					background: linear-gradient(to bottom, #303030 0%,#212121 100%);
-					filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#303030', endColorstr='#212121',GradientType=0 );
 					padding: 5px;
 					padding-top: 12px;
 					padding-bottom: 12px;
-					margin-left: 0px;
-					color: rgba(115, 115, 115, 1); border: 0px;
-					border-top: #3C3C3B 1px solid;
-					width: 159px;
 					cursor: pointer;
 					float: left;
-					font-size: 25px;
+					font-size: 14px;
+                                        width:130px!important;
+                                        height: 40px!important;
+                                        background: #1a1b1b;
+                                        margin-bottom: 15px;
+                                        margin-right: 15px;
+                }
+                
+                #dashBoard tr{
+                    display:list-item;
+                    padding: 5px;
+					padding-top: 12px;
+					padding-bottom: 12px;
+					cursor: pointer;
+					float: left;
+					font-size: 14px;
+                                        width:130px!important;
+                                        height: 40px!important;
+                                        background: #1a1b1b;
+                                        margin-bottom: 15px;
+                                        margin-right: 15px;
                 }
                 
                 #dashBoard a:link, #dashBoard a:visited{
 					color:rgba(115, 115, 115, 1);
 									}
                 
+                #dashBoard #appBox li{
+                    width:130px!important;
+                    height: 40px!important;
+                    background: #1a1b1b;
+                    margin-bottom: 15px;
+                    margin-right: 15px;
+                }
                 #dashBoard .appList > li > img{
                     margin-right:5px;
                     margin-left:5px;

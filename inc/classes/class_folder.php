@@ -109,9 +109,12 @@ class folder {
 		
 	}
         
-function getPath(){
+function getPath($showRealPath=true){
             $folderId = $this->id;
-            $path = "upload/";
+            if($showRealPath)
+                $path = "upload/";
+            else
+                $path = '';
             $folderArray = $this->loadFolderArray("path");
             $folderArray = array_reverse($folderArray['names'], true);
             foreach($folderArray as &$folder){

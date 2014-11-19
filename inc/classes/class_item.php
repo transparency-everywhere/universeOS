@@ -119,9 +119,9 @@ class item {
 
                                $output .= '<div class="btn-toolbar" style="margin: 0px;">';
                                $output .= '<div class="btn-group">';
-                               $output .="<a class=\"btn btn-mini\" href=\"doit.php?action=scoreMinus&type=$type&typeid=$typeid\" target=\"submitter\"><i class=\"glyphicon glyphicon-thumbs-down\"></i></a>";
-                               $output .= "<p class=\"btn btn-mini $class\" href=\"#\">$scoreData[score]</p>";
-                               $output .= "<a class=\"btn btn-mini\" href=\"doit.php?action=scorePlus&type=$type&typeid=$typeid\" target=\"submitter\"><i class=\"glyphicon glyphicon-thumbs-up\"></i></a>";
+                               $output .="<a class=\"btn btn-xs\" href=\"doit.php?action=scoreMinus&type=$type&typeid=$typeid\" target=\"submitter\"><i class=\"glyphicon glyphicon-thumbs-down\"></i></a>";
+                               $output .= "<a class=\"btn btn-xs $class\" href=\"#\">$scoreData[score]</a>";
+                               $output .= "<a class=\"btn btn-xs\" href=\"doit.php?action=scorePlus&type=$type&typeid=$typeid\" target=\"submitter\"><i class=\"glyphicon glyphicon-thumbs-up\"></i></a>";
                                $output .= '</div>';
                                $output .= '</div>';
                    if(!isset($reload)){

@@ -457,9 +457,9 @@ function showUserPicture($userid, $size, $subpath = NULL, $small = NULL /*define
 
         if($subpath !== "total"){
             
-            $return="<div class=\"userPicture userPicture_$userid $class\" onload=\"updatePictureStatus('$userid', '$color');\" onclick=\"showProfile('$userid');\" style=\"width: $size; height: $size; border-color: $color; $style\"></div>";
+            $return="<div class=\"userPicture userPicture_$userid $class\" onload=\"updatePictureStatus('$userid', '$color');\" onclick=\"showProfile('$userid');\" style=\"width: $size; border-radius:".(int)($size/2)."px; height: $size; border-color: $color; $style\"></div>";
         }else{
-            $return="<div class=\"userPicture userPicture_$userid $class\" onload=\"updatePictureStatus('$userid', '$color');\" onclick=\"showProfile('$userid;');\" style=\"width: $size; height: $size; $style border-color: $color; $style\"></div>";
+            $return="<div class=\"userPicture userPicture_$userid $class\" onload=\"updatePictureStatus('$userid', '$color');\" onclick=\"showProfile('$userid;');\" style=\"width: $size; border-radius:".(int)($size/2)."px; height: $size; $style border-color: $color; $style\"></div>";
         }
       
       
@@ -473,7 +473,7 @@ function showUserPicture($userid, $size, $subpath = NULL, $small = NULL /*define
 				}
 			}
 			
-            $return="<div class=\"userPicture userPicture_$userid $class\" onload=\"updatePictureStatus(\'jjj$userid\', \\'$color\\');\" onclick=\"showProfile(\\'$userid\\');\" style=\"$style width: $size; height: $size; border-color: $color;\"></div>";
+            $return="<div class=\"userPicture userPicture_$userid $class\" onload=\"updatePictureStatus(\'jjj$userid\', \\'$color\\');\" onclick=\"showProfile(\\'$userid\\');\" style=\"$style width: $size; height: $size; border-radius:".(int)($size/2)."px;border-color: $color;\"></div>";
 
             return $return;
         }else{

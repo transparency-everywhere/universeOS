@@ -117,7 +117,7 @@ class dashBoard{
 			$output .= "</ul>";
 		}
 		
-		$footer = "<a href=\"#addGroup\" onclick=\"popper('doit.php?action=addGroup')\" title=\"Create a new Group\"><i class=\"icon icon-plus\"></i></a>";
+		$footer = "<a href=\"#addGroup\" onclick=\"popper('doit.php?action=addGroup')\" title=\"Create a new Group\"><i class=\"glyphicon glyphicon-plus\" style=\"color:#FFF\"></i></a>";
 		
 		$output = $this->showDashBox($title, $output, $footer, "group", $grid);
 		
@@ -156,7 +156,7 @@ class dashBoard{
 
                 }
 			
-		$footer = "<a href=\"#addPlaylist\" onclick=\"popper('doit.php?action=addPlaylist')\" title=\"Create a new Playlist\"><i class=\"icon icon-plus\"></i></a>";
+		$footer = "<a href=\"#addPlaylist\" onclick=\"popper('doit.php?action=addPlaylist')\" title=\"Create a new Playlist\"><i class=\"glyphicon glyphicon-plus\" style=\"color:#FFF\"></i></a>";
 			
 		
 		$output = $this->showDashBox($title, $output, $footer, "playlist", $grid);
@@ -239,7 +239,7 @@ class dashBoard{
 		$output .= '</ul>';
 		
 		
-		$footer = "<a href=\"#addTask\" onclick=\"tasks.addForm();\" title=\"Create a new Task\"><i class=\"icon icon-plus\"></i></a>";
+		$footer = "<a href=\"#addTask\" onclick=\"tasks.addForm();\" title=\"Create a new Task\"><i class=\"glyphicon glyphicon-plus\" style=\"color:#FFF\"></i></a>";
 			
 		
 		
