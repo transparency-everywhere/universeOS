@@ -33,8 +33,8 @@ class element {
         if($elementId == NULL)
             $elementId = $this->id;
         
-        $query = mysql_query("SELECT * FROM `elements` WHERE id='".save($elementId)."'");
-        $data = mysql_fetch_array($query);
+        $dbClass = new db();
+        $data = $dbClass->select('elements', array('id', save($elementId)));
 		
         return $data;
     }

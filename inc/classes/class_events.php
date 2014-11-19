@@ -79,9 +79,10 @@ class events{
 	}
 	
 	public function getData($eventId){
-		$sql = mysql_query("SELECT * FROM `events` WHERE id='".save($eventId)."'");
-		$data = mysql_fetch_array($sql);
+	
+            $dbClass = new db();
+            $data = $dbClass->select('events', array('id', save($eventId)));
 		
-		return $data;
+            return $data;
 	}
 }

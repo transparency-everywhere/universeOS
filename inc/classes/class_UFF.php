@@ -98,8 +98,8 @@ class uff {
                         //add user to active users list
 
 
-                        $fileData = mysql_query("SELECT * FROM files WHERE id='$fileId'");
-                        $fileData = mysql_fetch_array($fileData);
+                        $dbClass = new db();
+                        $fileData = $dbClass->select('files', array('id', $fileId));
 
                         //var1 with UFFs is used to 
                         $activeUserArray = explode(";", $fileData['var1']);

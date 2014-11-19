@@ -30,8 +30,8 @@ class buddylist {
 				//buddy = user
                 $message = false;
             }
-            $requestSQL = mysql_query("SELECT * FROM user WHERE userid='$buddy'");
-            $requestData = mysql_fetch_array($requestSQL);
+            $dbClass = new db();
+            $requestData = $dbClass->select('user', array('userid', $buddy));
 			
             if($requestData['priv_buddyRequest'] == "1"){
                 $request = "1";
