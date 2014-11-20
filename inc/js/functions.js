@@ -2919,20 +2919,25 @@ function updateUserActivity() {
                 }
   
 function clock() {
+    
+    var dayNames=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
+    var monthNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
                 var now = new Date();
 
                     var hours = now.getHours();
                     var minutes = now.getMinutes();
                     var pad = "00";
+                    var day =  now.getDay();
+                    var month =  now.getMonth();
 
                     var minutesRoundedOne = "" + minutes;
                     var minutesRoundedTwo = pad.substring(0, pad.length - minutesRoundedOne.length)+''+minutesRoundedOne;
                     var hoursRoundedOne = "" + hours;
                     var hoursRoundedTwo = pad.substring(0, pad.length - hoursRoundedOne.length) + hoursRoundedOne;
 
-                var outStr = hoursRoundedTwo+':'+minutesRoundedTwo;
+                var outStr = dayNames[day]+', '+monthNames[month]+'. '+now.getDate()+'.&nbsp;&nbsp;'+hoursRoundedTwo+':'+minutesRoundedTwo;
                 $('#clockDiv').html(outStr);
-                setTimeout('clock()',1000);
+                setTimeout('clock()',36000);
               }
 
 var settings =  new function() {

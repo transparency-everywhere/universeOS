@@ -48,7 +48,7 @@ h3{
 
 /*describes the drag and drop window */
 .fenster {
-    padding: 0px 0 23px 0px;
+    padding: 0px 0 35px 0px;
     position: absolute;
     z-index: 1;
     background: #FFF;
@@ -885,12 +885,13 @@ border-bottom: 1px solid #292929;
     line-height:0px;
 }
 
-.filetable{
-	
-}
-
 .filetable tr{
 	clear:both;
+}
+
+.filetable tr td:first-of-type img{
+    margin-right: 5px;
+    margin-left: 5px;
 }
 
 .autoFlow{
@@ -1554,16 +1555,17 @@ color:#FFFFFF;
             border-left: 1px solid #FFF;
             border-right: 1px solid #FFF;
             padding-right: 5px;
-            margin: 0 5px;
+            margin-top: 11px;
             height: 30px;
-            padding-bottom: 15px;
+            padding-top: 1px;
+            padding-bottom: 11px;
         }
         
         #dock td img {
-            margin-top: 10px;
-            margin-left:5px;
+            margin-top: 6px;
+            margin-left: 10px;
         }#dock td a .glyphicon{
-            margin-top: 15px;
+            margin-top: 12px;
         }
         
         
@@ -1582,9 +1584,9 @@ color:#FFFFFF;
         	position: absolute;
 			right: 205px;
 			bottom: 10px;
-			width: 75px;
+			width: 210px;
 			height: 20px;
-			font-size: 23pt;
+			font-size: 20px;
         }
         
         #dockplayer{
@@ -1929,11 +1931,22 @@ font-weight:bold;
    border-radius: 3px;
    width: 35px;
 }
-.scoreCase > a{
+
+.score .counter{
+    height: 16px;
+    width: 22px;
+    border: 1px solid #dcdcdc;
+    border-radius: 0;
+    line-height: 14px;
+}
+
+
+/*.scoreCase > a{
     font-size: 9px;
     margin-top: -3px;
-}
-.scoreButton{ 
+}*/
+
+/*.scoreButton{ 
    position:relative; 
    text-align:center; 
    float: left; 
@@ -1942,7 +1955,7 @@ font-weight:bold;
    float: left;
    margin: 0px;
    padding: 0px;
-}
+}*/
 
 .text-shadow{
    text-shadow:0 0 1px #000000, 3px 3px 5px #000000, -3px -3px 5px #000000, -3px 3px 5px #000000, 3px -3px 5px #000000;

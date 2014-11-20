@@ -112,14 +112,12 @@ function showComments($type, $itemid) {
     $contextMenu = new contextMenu('comment', $comment_data['id']);
     $item = new item('comment', $comment_data['id']);
     ?>
-    <br><?=$comment_data['text'];?><br><br>
+    <?=$contextMenu->showItemSettings();?>
+    <?=$comment_data['text'];?>
         <div style="padding: 15px; margin-bottom: 20px;">
             <div>
                 <div style="float:left;">
                 <?=$item->showScore();?>
-                </div>
-                <div style="float:left; margin-left: 10px;">
-                    <?=$contextMenu->showItemSettings();?>
                 </div>
             </div>
             <a href="javascript:showSubComment(<?=$jsId;?>);" class="btn btn-mini" style="float: right; margin-right: 30px; color: #606060;">
