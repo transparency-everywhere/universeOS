@@ -105,8 +105,8 @@ class fileSystem {
                 $filedsql = mysql_query("SELECT * FROM elements $query2");
                 while($fileddata = mysql_fetch_array($filedsql)) {
 
-                    $filefolderSQL = mysql_query("SELECT * FROM folders WHERE id='$folder'");
-                    $fileFolderData = mysql_fetch_array($filefolderSQL);
+                    $dbClass = new db();
+                    $fileFolderData = $dbClass->select('folder', array('id', $folder));
                     $title = $fileddata['title'];
                     $title10 = substr("$title", 0, 10);
                     $title15 = substr("$title", 0, 25);
@@ -251,11 +251,11 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 	        $filedsql = mysql_query("SELECT * FROM elements $query2");
 	        while($fileddata = mysql_fetch_array($filedsql)) {
 	
-	        $filefolderSQL = mysql_query("SELECT * FROM folders WHERE id='$folder'");
-	        $fileFolderData = mysql_fetch_array($filefolderSQL);
-	        $title = $fileddata['title'];
-	        $title10 = substr("$title", 0, 10);
-	        $title15 = substr("$title", 0, 25);
+                    $dbClass = new db();
+                    $fileFolderData = $dbClass->select('folders', array('id', $folder));
+                    $title = $fileddata['title'];
+                    $title10 = substr("$title", 0, 10);
+                    $title15 = substr("$title", 0, 25);
 	
 		        if(authorize($fileddata[privacy], "show", $fileddata[author])){
 		        	
@@ -391,21 +391,22 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 		
        	if($isFile){
             //get filedata
-            $fileQuery = mysql_query("SELECT * FROM files WHERE id='$fileId'");
-            $fileData = mysql_fetch_array($fileQuery);
+            $dbClass = new db();
+            $fileData = $dbClass->select('files', array('id', $fileId));
 			
-			$privacy = $fileData['privacy'];
-			$user = $fileData['owner'];
-			
-			$elementQuery = mysql_query("SELECT * FROM elements WHERE id='$fileData[folder]'");
-			$elementData = mysql_fetch_array($elementQuery);
+            $privacy = $fileData['privacy'];
+            $user = $fileData['owner'];
+            $dbClass = new db();
+            $elementData = $dbClass->select('elements', array('id', $fileData['folder']));
             
-          	$title = $fileData['title'];
-			$element = $fileData['folder'];
-			$elementTitle = $elementData['title'];
-			if($fileData['download']){
-				$download = "<a href=\"./out/download/?fileId=$fileId\" target=\"submitter\" class=\"btn btn-mini\" title=\"download file\"><img src=\"$subpath"."./gfx/icons/download.png\" alt=\"download\" height=\"10\"></a>";
-			}
+            $title = $fileData['title'];
+            $element = $fileData['folder'];
+            $elementTitle = $elementData['title'];
+            
+            if($fileData['download']){
+                    $download = "<a href=\"./out/download/?fileId=$fileId\" target=\"submitter\" class=\"btn btn-mini\" title=\"download file\"><img src=\"$subpath"."./gfx/icons/download.png\" alt=\"download\" height=\"10\"></a>";
+            }
+            
             $filename = $fileData['filename'];
             $fileClass = new file($fileId);
             $path = $subpath.$fileClass->getPath();
@@ -429,22 +430,23 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 				$extarnal = true;
 			
 				if(!$extarnal){
-		            //get linkdata
-		            $linkQuery = mysql_query("SELECT * FROM links WHERE id='$linkId'");
-		            $linkData = mysql_fetch_array($linkQuery);
-					$privacy = $linkData['privacy'];
-					$user = $linkData['author'];
-			
-		            
-		            $title = $linkData['title'];
-		            $item = new item("link", $linkId);
-                            $score = $item->showScore();
-					
-		            
-		            //define type if type is undefined
-		            if(empty($type)){
-		            $type = $linkData['type'];
-		            }
+                                    //get linkdata
+                                    $linkQuery = mysql_query("SELECT * FROM links WHERE id='$linkId'");
+                                    $dbClass = new db();
+                                    $linkData = $dbClass->select('links', array('id', $linkId));
+                                    $privacy = $linkData['privacy'];
+                                    $user = $linkData['author'];
+
+
+                                    $title = $linkData['title'];
+                                    $item = new item("link", $linkId);
+                                    $score = $item->showScore();
+
+
+                                    //define type if type is undefined
+                                    if(empty($type)){
+                                    $type = $linkData['type'];
+                                }
 					if($type == "youTube"){
 						//generate link out of youtubelink
                                                 $youtubeClass = new youtube($linkData[link]);

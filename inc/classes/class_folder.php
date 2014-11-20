@@ -27,9 +27,8 @@ class folder {
                     $titleURL = urlencode($title);
 			
                     $title = mysql_real_escape_string($title);
-		    
-		    $foldersql = mysql_query("SELECT * FROM folders WHERE id='$superiorFolder'");
-		    $folderData = mysql_fetch_array($foldersql);
+		    $dbClass = new db();
+                    $folderData = $dbClass->select('folders', array('id', $superiorFolder));
                     $folderClass = new folder($superiorFolder);
 		    $folderpath = universeBasePath.'/'.$folderClass->getPath().urldecode("$titleURL");
 			if (!file_exists("$folderpath")) {
@@ -97,8 +96,8 @@ class folder {
     }	
     function getFolderData(){
         $folderId = $this->id;
-        $query = mysql_query("SELECT * FROM `folders` WHERE id='".save($folderId)."'");
-        $data = mysql_fetch_array($query);
+        $dbClass = new db();
+        $data = $dbClass->select('folders', array('id', save($folderId)));
         return $data;
     }
 
@@ -126,39 +125,39 @@ function getPath($showRealPath=true){
 	} 
 function delete(){
         $folderId = $this->id;
-                $foldersql = mysql_query("SELECT * FROM folders WHERE id='$folderId'");
-                $folderData = mysql_fetch_array($foldersql);
-                
-                
-                //select and delete folders which are children of this folder
-                $childrenFolderSQL = mysql_query("SELECT id FROM folders WHERE folder='$folderId'");
-                while($childrenFolderData = mysql_fetch_array($childrenFolderSQL)){
-                    $folder = new folder($childrenFolderData['id']);
-                    $folder->delete();
-                }
-                //select and delete element which are children of this folder
-                $childrenElementSQL = mysql_query("SELECT id FROM elements WHERE folder='$folderId'");
-                while($childrenElementData = mysql_fetch_array($childrenElementSQL)){
-                    $element = new element($childrenElementData['id']);
-                    $element->delete();
-                }
-                $folderClass = new folder($folderId);
-                $folderpath = universeBasePath.'/'.$folderClass->getPath();
-                mysql_query("DELETE FROM folders WHERE id='$folderId'");
-                system('/bin/rm -rf ' . escapeshellarg($folderpath));
-                
-                //delete comments, feeds and shortcuts
-                $commentClass = new comments();
-                $commentClass->deleteComments("folder", $folderId);
-                
-                $classFeed = new feed();
-                $classFeed->deleteFeeds("folder", $folderId);
-                
-                $shortcutClass = new shortcut();
-                $shortcutClass->deleteInternLinks("folder", $folderId);
-				
-				jsAlert("The folder has been deleted.");
-				return true;
+        $dbClass = new db();
+        $folderData = $dbClass->select('folders', array('id', $folderId));
+
+
+        //select and delete folders which are children of this folder
+        $childrenFolderSQL = mysql_query("SELECT id FROM folders WHERE folder='$folderId'");
+        while($childrenFolderData = mysql_fetch_array($childrenFolderSQL)){
+            $folder = new folder($childrenFolderData['id']);
+            $folder->delete();
+        }
+        //select and delete element which are children of this folder
+        $childrenElementSQL = mysql_query("SELECT id FROM elements WHERE folder='$folderId'");
+        while($childrenElementData = mysql_fetch_array($childrenElementSQL)){
+            $element = new element($childrenElementData['id']);
+            $element->delete();
+        }
+        $folderClass = new folder($folderId);
+        $folderpath = universeBasePath.'/'.$folderClass->getPath();
+        mysql_query("DELETE FROM folders WHERE id='$folderId'");
+        system('/bin/rm -rf ' . escapeshellarg($folderpath));
+
+        //delete comments, feeds and shortcuts
+        $commentClass = new comments();
+        $commentClass->deleteComments("folder", $folderId);
+
+        $classFeed = new feed();
+        $classFeed->deleteFeeds("folder", $folderId);
+
+        $shortcutClass = new shortcut();
+        $shortcutClass->deleteInternLinks("folder", $folderId);
+
+        jsAlert("The folder has been deleted.");
+        return true;
         
     }
 }
