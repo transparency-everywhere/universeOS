@@ -16,14 +16,14 @@ $dashboard = new dashBoard();
 	
 	echo $dashboard->showPlaylistBox();
 	
-	//echo $dashboard->showMessageBox();
+	echo $dashboard->showMessageBox();
 	
 	
 $userSql = mysql_query("SELECT username, myFiles FROM user WHERE userid='".getUser()."'");
 $userData = mysql_fetch_array($userSql);
-		//echo $dashboard->showFavBox();
+		echo $dashboard->showFavBox();
 	
-		//echo $dashboard->showTaskBox();
+		echo $dashboard->showTaskBox();
 	?></div>
 	</div>
 	<footer>

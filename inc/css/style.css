@@ -794,7 +794,7 @@ border-bottom: 1px solid #292929;
 
 #feedFrame{
     position: absolute;
-    top: 61px;
+    top: 57px;
     right: 0px;
     bottom: 0px;
     left: 0px;
@@ -2458,6 +2458,7 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 		right: 5px;
 		left: 0;
 		right: 0;
+                
                 background: rgba(0,0,0,0.85); /* Old browsers */
                     
 		-moz-box-pack: center;
@@ -2486,13 +2487,12 @@ margin: 0;
 	}
 	
 	#dashBoxFrame{
-		max-width:700px;
 		overflow-x:auto;
 		overflow-y:hidden;
 	}
 	
-	#dashBoxFrame{
-		min-width:1000px;
+	#dashBoxFrame #scrollFrame{
+		min-width:1340px;
 	}
 	
 	.dashBox:hover .content{

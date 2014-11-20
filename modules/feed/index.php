@@ -39,10 +39,10 @@ include(universeBasePath.'/inc/functions.php');
         <script>
             $('#feedInput').html(function(){
                  $(this).focus(function(){
-                    $( "#feedheader" ).animate({ height: "80px" }, 500 );
-                    $( "#feedFrame" ).animate({ top: "81px" }, 500 );
+                    $( "#feedheader" ).animate({ height: "100px" }, 500 );
+                    $( "#feedFrame" ).animate({ top: "100px" }, 500 );
                     $('#feedInputBar').slideDown(500);
-                    $( "#addFeedPrivacy" ).animate({ top: "81px" }, 500 );
+                    $( "#addFeedPrivacy" ).animate({ top: "100px" }, 500 );
                     initPrivacy();
                 });
                     $(this).focusout(function(){
@@ -96,11 +96,11 @@ include(universeBasePath.'/inc/functions.php');
                         'display' : 'none'
                         }
                     var headera = {
-                        'height' : '60'
+                        'height' : '110px'
                         }
                     
                     var framea = {
-                        'top' : '60'
+                        'top' : '110px'
                         }   
                     $("#feedheader").css(headera);
                     $("#feedFrame").css(framea);    

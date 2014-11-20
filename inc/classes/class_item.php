@@ -191,7 +191,7 @@ class item {
                     $link = "openFolder('$itemId')";
 
                     //define icon
-                    $img = "img/folder_dark.png";
+                    $img = "../../img/folder_dark.png";
 
                     //define info 1
                     $info[0] = "path";
@@ -295,7 +295,7 @@ class item {
              //add icon/thumbnail
              $return .= "<tr>
                         <td style=\"min-width: 34px;\" valign=\"top\" $imgColumnStyle>
-                            <img src=\"$img\"/>
+                            <img src=\"gfx/icons/$img\"/>
                         </td>";
 
                     //add information
