@@ -97,25 +97,29 @@ class feed {
                 
         $commentClass = new comments();
         $contextMenu = new contextMenu('feed', $feedData['id']);
-        if($needStructure == "1"){ ?><div id="add"></div><?php } ?>
-        <div id="realFeed" class="feedNo<?=$feedData['id'];?>">
-            <?=userSignature($feedData['author'], $feedData['timestamp']);?>
-            <div style="padding: 10px;"><?=nl2br(universe::universeText(htmlspecialchars($feedData['feed'])));?><?=$text;?></div><br>
-            <div style="padding: 15px;">
-                <?=$attachment;?>
-            </div>
+        
+        if($needStructure == "1")
+            echo'<div id="add"></div>';
+        
+        echo '<div class="feedEntry feedNo'.$feedData['id'].'">';
+            echo userSignature($feedData['author'], $feedData['timestamp']);
+            echo $contextMenu->showItemSettings();
+            echo '<div style="padding: 10px;">'.nl2br(universe::universeText(htmlspecialchars($feedData['feed']))).$text.'</div>';
+            
+            if(!empty($attachment)){
+                echo '<div style="padding: 10px;padding-top: 0;">';
+                echo $attachment;
+                echo '</div>';
+            }?>
             <div style="padding: 15px;">
                 <div>
                     <?php
                     $item = new item("feed", $feedData['id']);
                     echo $item->showScore();
                     ?>
-                    <div style="float:right; position: absolute; margin-top: -24px; margin-left: 108px;">
-                        <?=$contextMenu->showItemSettings();?>
-                    </div>
                 </div>
             </div>
-            <a href="javascript:showfeedComment(<?=$feedData['id'];?>);" class="btn btn-mini" style="float: right; margin-top: -38px; margin-right: 15px; color: #606060"><i class="glyphicon glyphicon-comment"></i>&nbsp;(<?=$commentClass->countComment("feed", $feedData[id]);?>)</a>
+            <a href="javascript:showfeedComment(<?=$feedData['id'];?>);" class="btn btn-mini" style="float: right; margin-top: -38px; margin-right: 15px; color: #606060"><i class="glyphicon glyphicon-comment"></i></a>
             <div class="shadow" id="feed<?=$feedData['id'];?>" style="display:none;"></div>
             
         </div>

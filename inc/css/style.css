@@ -146,13 +146,18 @@ li.notHidden{
 }
 
 .itemThumb{
-    border: 1px solid #C9C9C9;
     max-width: 250px;
     overflow: hidden;
+    color:#006d67;
+}
+
+.itemThumb a{
+    color:#006d67;
 }
 
 .signature{
-    height: 40px;
+    height: 60px;
+    padding: 10px;
 }
 
 /*is used to float the user picture right in the signature*/
@@ -799,10 +804,10 @@ border-bottom: 1px solid #292929;
     
 }
 
-#realFeed {
-margin: 5px;
-margin-bottom: 20px;
-border: 1px solid rgba(0,0,0,0.05);
+.feedEntry .itemSettingsButton{
+    position: absolute;
+    right: 10px;
+    margin-top: -43px;
 }
 
 #feedInput{

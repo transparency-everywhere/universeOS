@@ -226,18 +226,18 @@ function userSignature($userid, $timestamp, $subpath = NULL, $reverse=NULL){
         <tr width="100%">
             <?php
             if(empty($reverse)){ ?>
-            <td style="width:50px; padding:0 10px;"><?=showUserPicture($feedUserData['userid'], "30", $subpath);?></td>
+            <td style="width:50px; padding-right:10px;"><?=showUserPicture($feedUserData['userid'], "40", $subpath);?></td>
             <td>
                 <table>
                     <tr>
-                        <td style="font-size: 16px;line-height: 17px;" align="left">&nbsp;<a href="#" onclick="showProfile(<?=$feedUserData['userid'];?>);"><?=$feedUserData['username'];?></a></td>
+                        <td style="font-size: 16px;line-height: 17px;" align="left"><a href="#" onclick="showProfile(<?=$feedUserData['userid'];?>);"><?=$feedUserData['username'];?></a></td>
                     </tr>             
                     <tr>
                         <td style="font-size: 12px;line-height: 23px;">
-                            &nbsp;<i>
+                            <i>
                             <?php
                             $guiClass = new gui();
-                            $guiClass->universeTime($timestamp);?>
+                            echo $guiClass->universeTime($timestamp);?>
                             </i>
                         </td>
                     </tr>
@@ -258,7 +258,7 @@ function userSignature($userid, $timestamp, $subpath = NULL, $reverse=NULL){
                     </tr>
                 </table>
             </td>
-            <td><span class="pictureInSignature"><?=showUserPicture($feedUserData['userid'], "30", $subpath);?></span></td>
+            <td><span class="pictureInSignature"><?=showUserPicture($feedUserData['userid'], "40", $subpath);?></span></td>
             <?}?>
         </tr>
     </table>

@@ -12,6 +12,8 @@
  * @author niczem
  */
 class item {
+    public $type;
+    public $typeid;
     function __construct($type, $typeid){
            $this->type = $type;
            $this->typeid = $typeid;
@@ -167,8 +169,8 @@ class item {
         }
     //shows a box with item title, item link and settings
     function showItemThumb(){
-           $type = $this->type;
-           $typeid = $this->typeid;
+           $itemType = $this->type;
+           $itemId = $this->typeid;
             $itemId = save($itemId);
 
             switch($itemType){
@@ -192,7 +194,7 @@ class item {
                     $link = "openFolder('$itemId')";
 
                     //define icon
-                    $img = "filesystem/folder.png";
+                    $img = "img/folder_dark.png";
 
                     //define info 1
                     $info[0] = "path";
@@ -285,10 +287,7 @@ class item {
 
 
             $return = "<div class=\"itemThumb\">
-                <table width=\"100%\" cellspacing=\"0\">
-                    <tr style=\"height: 30px;\" bgcolor=\"#F2F2F2\">
-                        <td colspan=\"4\">&nbsp;<a href=\"#\" onclick=\"$link;return false;\" title=\"$title\"><strong>$shortTitle</strong></a></td>
-                    </tr>";
+                <table width=\"100%\" cellspacing=\"0\">";
 
                     //add spacer
                     if(!empty($info[0]) || !empty($info[1])){
@@ -298,14 +297,17 @@ class item {
                     }
              //add icon/thumbnail
              $return .= "<tr>
-                        <td style=\"min-width: 34px;\" $imgColumnStyle>
-                            <img src=\"./gfx/icons/$img\"/>
+                        <td style=\"min-width: 34px;\" valign=\"top\" $imgColumnStyle>
+                            <img src=\"$img\"/>
                         </td>";
 
                     //add information
                     if(!empty($info[0]) || !empty($info[1])){
                     $return .=  "<td>
-                            <table class=\"eightPt\">
+                            <table>
+                                <tr>
+                                    <td colspan=\"2\"><a href=\"#\" onclick=\"$link;return false;\" title=\"$title\"><strong>$shortTitle</strong></a></td>
+                                </tr>
                                 <tr>
                                     <td style=\"text-align: right\">$info[0]:&nbsp;</td>
                                     <td class=\"ellipsis\"><span class=\"ellipsis\">$info[1]</span></td>
@@ -315,12 +317,6 @@ class item {
                     $contextMenu = new contextMenu($itemType, $itemId);
                     $classComments = new comments();
                     $return .=  "</tr>
-                    <tr height=\"22px\">
-                        <td bgcolor=\"#F2F2F2\">".$contextMenu->showItemSettings()."</td>
-                        <td bgcolor=\"#F2F2F2\" align=\"right\">
-                            <a href=\"#\" class=\"btn btn-mini disabled\" style=\"float: right; margin-right: 30px; color: #606060;\"><i class=\"glyphicon glyphicon-comment\"></i>&nbsp;(".$classComments->countComment($itemType, $itemId).")</a>
-                        </td>
-                    </tr>
                 </table>
             </div>";
             return $return;
