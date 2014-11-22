@@ -18,7 +18,7 @@ $timestamp = time();
 //start session
 if(!isset($_SESSION)){ 
     session_start(); 
-} 
+}
 
 //mysql connect	or die
 	mysql_connect("$server","$user","$password");

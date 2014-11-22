@@ -59,7 +59,7 @@ class fileSystem {
                             if($parentFolderData['folder'] !== 1)
                                     $parentFolderData = mysql_fetch_array(mysql_query("SELECT folder FROM folders WHERE id='".mysql_real_escape_string($folder)."'"));
                             ?>
-                        <tr height="30">
+                        <tr height="30" class="greyHover">
                             <td width="30">&nbsp;<img src="<?=$subpath;?>gfx/icons/filesystem/folder.png" height="22"></td>
                             <td><a href="<?=$subpath;?>out/?folder=<?=$parentFolderData['folder'];?>" onclick="openFolder('<?=$parentFolderData['folder'];?>'); return false;">...</a></td>
                             <td width="50px">
@@ -80,7 +80,7 @@ class fileSystem {
                             }
 
             ?>
-                <tr oncontextmenu="showMenu('folder<?=$filefdata['id'];?>'); return false;" height="30">
+                <tr oncontextmenu="showMenu('folder<?=$filefdata['id'];?>'); return false;" height="30" class="greyHover">
                     <td width="30"><?php
                     if($rightClick){
                         $contextMenu = new contextMenu("folder", $filefdata['id'], $filefdata['name'], $filefdata['creator']);
@@ -426,8 +426,8 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 			
 				//check if link is "external" or if data needs to be taken out of the db
 				//if $type = wiki, linkId is empty but its still an external source
-				if(is_int($linkId) || $type == "wiki")  
-				$extarnal = true;
+				if(!is_int($linkId) || $type == "wiki")  
+                                    $extarnal = true;
 			
 				if(!$extarnal){
                                     //get linkdata
@@ -445,11 +445,11 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 
                                     //define type if type is undefined
                                     if(empty($type)){
-                                    $type = $linkData['type'];
-                                }
+                                        $type = $linkData['type'];
+                                    }
 					if($type == "youTube"){
 						//generate link out of youtubelink
-                                                $youtubeClass = new youtube($linkData[link]);
+                                                $youtubeClass = new youtube($linkData['link']);
 						$vId = $youtubeClass->getId();
                                                 
 					}
@@ -459,15 +459,10 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 		if($type == "youTube"){
 			
 			//GET YOUTUBE VIDEO ID
+			if(!empty($typeInfo)){
+                            $vId = $typeInfo;
+                        }
 			
-			if(!empty($vId)){
-			$vId = "$typeInfo";
-			}
-			//if $vId is still empty the youtube videoId is passed
-			//through $typeInfo
-			else{
-			$vId = "$typeInfo";
-			}
 			
 			//get title from youtube server
 			if(empty($title)){
@@ -511,7 +506,7 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 				//title needs to contain span with playlistid, so it can
 				//be updated from the iframe, in which the youtubevideo
 				//is located(doit => showYoutube)
-	            $title = "<span id=\"togglePlayListTitle_$extraInfo1\" class=\"readerPlayListTitle\">".addslashes($title)."</span>";
+                                $title = "<span id=\"togglePlayListTitle_$extraInfo1\" class=\"readerPlayListTitle\">".addslashes($title)."</span>";
 			
 			
 				$bar .= "<div id=\"togglePlayList_$extraInfo1\" class=\"readerPlayListToggle\"></div>";
@@ -532,19 +527,20 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 			
 			if($type == "audio/mpeg")
 				$type = 'audio';
+                        
 			$classFiles = new files();
-	        $icon = $classFiles->getFileIcon($type);
-	        $icon = "<img src=\"$subpath"."gfx/icons/fileIcons/$icon\" height=\"20\">";
+                        $icon = $classFiles->getFileIcon($type);
+                        $icon = "<img src=\"$subpath"."gfx/icons/fileIcons/$icon\" height=\"20\">";
 	        
-	        $output .= "<header class=\"gray-gradient\">";
-	        $output .= $icon;
-	        $output .= "<span class=\"title\">$title $type</span>";
+                        $output .= "<header class=\"gray-gradient\">";
+                        $output .= $icon;
+                        $output .= "<span class=\"title\">$title $type</span>";
 			$output .= "<span class=\"controls\">$controls</span>";
 			$output .= "<span class=\"bar\">$bar</span>";
 			$output .= "<span class=\"score\">$score</span>";
-	        $output .= "<span class=\"download\">$download</span>";
-	        $output .= "</header>";
-	        $output .= "<div class=\"fileWindow\" id=\"$fileWindowId\">";
+                        $output .= "<span class=\"download\">$download</span>";
+                        $output .= "</header>";
+                        $output .= "<div class=\"fileWindow\" id=\"$fileWindowId\">";
 	        
 	        switch($type){
 	            //link types
@@ -552,12 +548,12 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 				  
 				      
 					  
-					  //DISPLAY VIDEO
-					  //define content
-				      $output .= '<div class="iframeFrame" style="background: #000000;">';
-					  //show an iframe which loads the openyoutube...() function via the doit.php
-				      $output .= "<iframe src=\"doit.php?action=showYoutube&id=$vId&playList=$playlist&row=$row\" id=\"$iframeId\" name=\"playListLoaderFrame\" frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"auto\"></iframe>";
-				      $output .= '</div>';
+					//DISPLAY VIDEO
+					//define content
+                                        $output .= '<div class="iframeFrame" style="background: #000000;">';
+                                        //show an iframe which loads the openyoutube...() function via the doit.php
+                                        $output .= "<iframe src=\"doit.php?action=showYoutube&id=$vId&playList=$playlist&row=$row\" id=\"$iframeId\" name=\"playListLoaderFrame\" frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"auto\"></iframe>";
+                                        $output .= '</div>';
 					
 					
 					
@@ -565,12 +561,12 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 	            case wiki:
 					
 		       		$title = urlencode($title);
-		            $wikiUrl = "http://en.wikipedia.org/w/index.php?title=$title&printable=yes";
+                                $wikiUrl = "http://en.wikipedia.org/w/index.php?title=$title&printable=yes";
 					
 					
-	                $output .= "<div class=\"iframeFrame\">";
-		            $output .= "<iframe frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"auto\"  src=\"$wikiUrl\"></iframe>";
-		            $output .= "</div>";
+                                $output .= "<div class=\"iframeFrame\">";
+                                $output .= "<iframe frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"auto\"  src=\"$wikiUrl\"></iframe>";
+                                $output .= "</div>";
 	                break;
 	            case RSS:
 					

@@ -75,6 +75,68 @@ var filesystem =  new function() {
         this.tabs.updateTabContent(1, gui.loadPage('modules/filesystem/fileBrowser.php?reload=1&folder='+folderId));
     };
     
+    this.createUFF = function(element, title, filename, privacy, callback){
+        var result="";
+	$.ajax({
+            url:"api/files/uff/create/",
+            async: false,  
+            type: "POST",
+            data: $.param({element : element, title: title, filename: filename})+'&'+privacy,
+            success:function(data) {
+               result = data;
+               if(typeof callback === 'function'){
+                   callback(); //execute callback if var callback is function
+               }
+            }
+	});
+	return result;
+    };
+    this.showCreateUFFForm = function(element){
+        var formModal = new gui.modal();
+        
+        var fieldArray = [];
+        var options = [];
+        options['headline'] = '';
+        options['buttonTitle'] = 'Save';
+        options['noButtons'] = true;
+        
+        var field0 = [];
+        field0['caption'] = 'Title';
+        field0['inputName'] = 'title';
+        field0['type'] = 'text';
+        fieldArray[0] = field0;
+        
+        var field1 = [];
+        field1['caption'] = 'Filename';
+        field1['inputName'] = 'filename';
+        field1['type'] = 'text';
+        fieldArray[1] = field1;
+        
+        var field2 = [];
+        field2['caption'] = 'Privacy';
+        field2['inputName'] = 'privacy';
+        field2['type'] = 'html';
+        field2['value'] = "<div id=\'privacyField\'></div>";
+        fieldArray[2] = field2;
+        
+        
+        var modalOptions = {};
+        modalOptions['buttonTitle'] = 'Create Document';
+        
+        modalOptions['action'] = function(){
+            var callback = function(){
+                jsAlert('', 'The document has been added');
+                $('.blueModal').remove();
+                //filesystem.tabs.updateTabContent(1 , gui.loadPage('modules/filesystem/fileBrowser.php?folder='+parent_folder));
+            };
+            filesystem.createUFF(element, $('#createDocumentFormContainer #title').val(),$('#createDocumentFormContainer #filename').val(), $('#createDocumentFormContainer #privacyField :input').serialize(),callback);
+        };
+        privacy.load('#privacyField', '', true);
+        formModal.init('Create Document', '<div id="createDocumentFormContainer"></div>', modalOptions);
+        gui.createForm('#createDocumentFormContainer',fieldArray, options);
+    };
+    
+    
     this.createLink = function(element, title,  type, privacy, link, callback){
         var result="";
 	$.ajax({
@@ -108,7 +170,9 @@ var filesystem =  new function() {
           var value = $('#link').val();
           //check if type is youtube
           if(isYoutubeURL(value)){
-              //set type -> youtube
+              //get youtube id
+              $('#link_title').val(getYoutubeTitle(youtubeURLToVideoId(value)));
+              $('#createLinkFormContainer #type').val('youTube');
           }
           
         };
@@ -116,7 +180,7 @@ var filesystem =  new function() {
         
         var field1 = [];
         field1['caption'] = 'Title';
-        field1['inputName'] = 'title';
+        field1['inputName'] = 'link_title';
         field1['type'] = 'text';
         fieldArray[1] = field1;
         
@@ -147,14 +211,15 @@ var filesystem =  new function() {
             var callback = function(){
                 jsAlert('', 'The links has been added');
                 $('.blueModal').remove();
-                filesystem.tabs.updateTabContent(1 , gui.loadPage('modules/filesystem/fileBrowser.php?folder='+parent_folder));
+                filesystem.tabs.updateTabContent(2 , gui.loadPage('modules/filesystem/showElement.php?element='+element+'&reload=1'));
             };
-            filesystem.createElement(parent_folder, $('#createLinkFormContainer #title').val(), $('#createLinkFormContainer #type').val(),  $('#createLinkFormContainer #privacyField :input').serialize(),callback);
+            filesystem.createLink(element, $('#createLinkFormContainer #link_title').val(), $('#createLinkFormContainer #type').val(),  $('#createLinkFormContainer #privacyField :input').serialize(), $('#createLinkFormContainer #link').val(),callback);
         };
         privacy.load('#privacyField', '', true);
         formModal.init('Add Link To Element', '<div id="createLinkFormContainer"></div>', modalOptions);
         gui.createForm('#createLinkFormContainer',fieldArray, options);
     };
+    
     this.createElement = function(folder, title,  type, privacy, callback){
         var result="";
 	$.ajax({
@@ -221,6 +286,7 @@ var filesystem =  new function() {
         formModal.init('Create Element', '<div id="createElementFormContainer"></div>', modalOptions);
         gui.createForm('#createElementFormContainer',fieldArray, options);
     };
+    
     this.createFolder = function(parent_folder, name, privacy, callback){
         var result="";
 	$.ajax({
@@ -272,7 +338,7 @@ var filesystem =  new function() {
             filesystem.createFolder(parent_folder, $('#createElementFormContainer #title').val(), $('#createElementFormContainer #privacyField :input').serialize(),callback);
         };
         privacy.load('#privacyField', '', true);
-        formModal.init('Create Element', '<div id="createElementFormContainer"></div>', modalOptions);
+        formModal.init('Create Folder', '<div id="createElementFormContainer"></div>', modalOptions);
         gui.createForm('#createElementFormContainer',fieldArray, options);
     };
 };

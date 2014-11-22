@@ -1490,10 +1490,59 @@ var browser = new function(){
 };
            
 var playlists = new function(){
-	this.create = function(){
-			  		
-			  	};
-	this.addForm = function(){
+	this.create = function(title, privacy, callback){
+            var result="";
+            $.ajax({
+                url:"api/playlists/create/",
+                async: false,  
+                type: "POST",
+                data: $.param({title: title})+'&'+privacy,
+                success:function(data) {
+                   result = data;
+                   if(typeof callback === 'function'){
+                       callback(); //execute callback if var callback is function
+                   }
+                }
+            });
+            return result;  		
+	};
+	this.showCreationForm = function(){
+        var formModal = new gui.modal();
+        
+        var fieldArray = [];
+        var options = [];
+        options['headline'] = '';
+        options['buttonTitle'] = 'Save';
+        options['noButtons'] = true;
+        
+        var field0 = [];
+        field0['caption'] = 'Title';
+        field0['inputName'] = 'title';
+        field0['type'] = 'text';
+        fieldArray[0] = field0;
+        
+        var field1 = [];
+        field1['caption'] = 'Privacy';
+        field1['inputName'] = 'privacy';
+        field1['type'] = 'html';
+        field1['value'] = "<div id=\'privacyField\'></div>";
+        fieldArray[1] = field1;
+        
+        
+        var modalOptions = {};
+        modalOptions['buttonTitle'] = 'Create Playlist';
+        
+        modalOptions['action'] = function(){
+            var callback = function(){
+                jsAlert('', 'The playlist has been added');
+                $('.blueModal').remove();
+                //filesystem.tabs.updateTabContent(1 , gui.loadPage('modules/filesystem/fileBrowser.php?folder='+parent_folder));
+            };
+            playlists.create($('#createPlaylistFormContainer #title').val(), $('#createPlaylistFormContainer #privacyField :input').serialize(),callback);
+        };
+        privacy.load('#privacyField', '', true);
+        formModal.init('Create Playlist', '<div id="createPlaylistFormContainer"></div>', modalOptions);
+        gui.createForm('#createPlaylistFormContainer',fieldArray, options);
 			  		
 			  	};
 };
@@ -2434,7 +2483,7 @@ function openFile(type, typeId, title, typeInfo, extraInfo1, extraInfo2){
  	
         	}else{
         		
-                reader.tabs.addTab(title, '',gui.loadPage('./modules/reader/openFile.php?type=youTube&linkId='+linkId+'&typeInfo='+vId+'&extraInfo1='+playlist+'&extraInfo2='+row+'&external=1'));
+                reader.tabs.addTab(title, '',gui.loadPage('./modules/reader/openFile.php?type=youTube&linkId='+linkId+'&extraInfo1='+playlist+'&extraInfo2='+row+'&external=1'));
  
         	}return false;
         }
@@ -3449,6 +3498,37 @@ function addUserToInputTagBar(userid){
 			 
 }
 
-function isYouTubeUrl(url){
+function isYoutubeURL(url){
     return /((http|https):\/\/)?(www\.)?(youtube\.com)(\/)?([a-zA-Z0-9\-\.]+)\/?/.test(url);
+}
+
+function youtubeURLToVideoId(url){
+    var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+    var match = url.match(regExp);
+    if (match&&match[7].length==11){
+        return match[7];
+    }else{
+        return false;
+    }
+}
+
+function getYoutubeData(videoId){
+    var result;
+    	$.ajax(
+	{
+		url: "https://gdata.youtube.com/feeds/api/videos/"+videoId+"?v=2&alt=json",
+                async:false,
+		success: function(data)
+		{
+			result = data;
+		}
+	});
+        
+        return result.entry;
+    
+}
+
+function getYoutubeTitle(videoId){
+    var data = getYoutubeData(videoId);
+    return data.title.$t;
 }

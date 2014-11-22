@@ -24,9 +24,7 @@ class youtube {
             $this->getId();
     }
     function getId() {
-        if(!empty($this->id))
-            return $this->id;
-        $text = $this->url();
+        $text = $this->url;
         $text = preg_replace('~
             # Match non-linked youtube URL in the wild. (Rev:20111012)
             https?://         # Required scheme. Either http or https.

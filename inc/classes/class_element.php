@@ -197,19 +197,19 @@ class element {
                             <td width="30px">&nbsp;<img src="<?=$subpath;?>gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData['type'];?>" height="22"></td>
                             <td><a href="<?=$subpath;?>out/?file=<?=$fileListData[id];?>" onclick="<?=$link;?> return false"><?=substr($fileListData[title],0,30);?></a></td>
                             <td width="80" align="right">
-                                    <? if($fileListData['download']){ ?>
+                                    
+                                    <?php
+                                    $item = new item('file', $fileListData['id']);
+                                    echo $item->showScore();
+                                    ?>
+                            </td>
+                            <td width="50"><? if($fileListData['download']){ ?>
                                         <a href="./out/download/?fileId=<?=$fileListData['id'];?>" target="submitter" class="btn btn-mini" title="download file"><i class="icon-download"></i></a>
                                     <? } 
                                     if(!$git){
                                         $contextMenu = new contextMenu('file', "$fileListData[id]");
                                         echo $contextMenu->showItemSettings();
-                                    }?>
-                            </td>
-                            <td width="50">
-                                    <?php
-                                    $item = new item('file', $fileListData['id']);
-                                    echo $item->showScore();
-                                    ?></td>
+                                    }?></td>
                         </tr>
                         <?php
                         if(!$git){
@@ -224,9 +224,7 @@ class element {
 
                     $link = "$link&id=$linkListData[id]";
                     if($linkListData['type'] == "youTube"){
-                        $youtubeClass = new youtube($linkListData['link']);
-                        $vId = $youtubeClass->getId();
-                        $link = "openFile('youTube', '$linkListData[id]', '$title10', '$vId');";
+                        $link = "openFile('youTube', '$linkListData[id]', '$title10', '');";
                     }
 
                     if($linkListData['type'] == "audio/mp3"){
@@ -246,19 +244,19 @@ class element {
                         <td width="65px">&nbsp;<img src="<?=$subpath;?>gfx/icons/fileIcons/<?=$image;?>" alt="<?=$linkListData['type'];?>" height="22px"></td>
                         <td><a href="#" onclick="<?=$link;?>"><?=substr($linkListData['title'],0,30);?></a></td>
                         <td width="70" align="right">
+                                    <?php
+                                    $item = new item('file', $fileListData['id']);
+                                    echo $item->showScore();
+                                    ?>
+                            </td>
+                        
+                            <td width="50">
                             <?php
                             if(!$git){
                                     $contextMenu = new contextMenu('link', $linkListData['id']);
                                     $contextMenu->showItemSettings();
                             }
-                            ?>
-                            </td>
-                        
-                            <td width="50">
-                                    <?php
-                                    $item = new item('file', $fileListData['id']);
-                                    echo $item->showScore();
-                                    ?></td>
+                            ?></td>
                     </tr>
                     <?php
                         if(!$git){

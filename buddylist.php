@@ -17,7 +17,7 @@ if(empty($_GET['reload'])){
 				$username =  useridToUsername($buddy);
 			
     ?>
-                <tr class="height60">
+                <tr class="height60 greyHover">
 	                 <td style="padding:0 10px; width: 43px;"><?=showUserPicture($buddy, "40");?></td>
 	                 <td><a href="#" onclick="openChatDialoge('<?=$username;?>');"><?=$username;?></a><br><a href="#" onclick="openChatDialoge('<?=$username;?>');" class="realname"><?=useridToRealname($buddy);?>&nbsp;</a></td>
 	                 <td align="right" style="padding: 0 10px;">

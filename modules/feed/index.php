@@ -3,16 +3,15 @@ include_once("../../inc/config.php");
 include(universeBasePath.'/inc/functions.php');
 ?>
         <div class="windowHeader" id="feedheader">
+            <img src="img/write_bright.png" style="height:19px; position: absolute; top: 20px;right: 220px;">
             <form id="feedInputForm" method="post" action=" doit.php?action=createFeed" target="submitter">
             <div style="margin: 15px;">
-                        <textarea style="" id="feedInput" name="feedInput"></textarea>
-                        <div style="display: none; width: 86%; margin-left: 7%; margin-bottom: 0px;" id="feedInputBar">
+                        <textarea id="feedInput" name="feedInput" onclick="$(this).val('');">What's Up?</textarea>
+                        <div style="" id="feedInputBar">
                                 <div class="btn-toolbar" style="float: left;">
-                                    <div class="btn-group">
-                                        <a class="btn btn-mini" href="#" onclick="$('#feedInput').focus(); $('#addFeedFile').hide('slow'); $('#addFeedPrivacy').slideToggle(500);" title="privacy"> Privacy </a>
-                                    </div>
+                                        <a class="privacyButton" href="#" onclick="$('#feedInput').focus(); $('#addFeedFile').hide('slow'); $('#addFeedPrivacy').slideToggle(500);" title="privacy"> Privacy </a>
                                 </div>
-                                <input type="submit" style="float:right; margin-top: 10px; margin-right:-13px;" value="submit" class="btn btn-success btn-mini">
+                                <input type="submit" style="float:right;" value="submit" class="btn">
                         </div>
                     </div>
                     <div id="addFeedPrivacy" class="coolGradient">
