@@ -22,6 +22,42 @@ class uff {
             
     }
     
+    function create($element, $title, $filename, $privacy){
+        $user = getUser();
+
+
+        //upload file
+        $elementSQL = mysql_query("SELECT folder, title FROM elements WHERE id='$element'");
+        $elementData = mysql_fetch_array($elementSQL);
+        
+        $folderClass = new folder($elementData['folder']);
+        $path = universeBasePath.'/'.$folderClass->getPath();
+        
+        $filename = "$filename.UFF";
+        $folder = $element;
+        $timestamp = time();
+        
+        
+        $ourFileName = "$path$filename";
+        
+        $ourFileHandle = fopen($ourFileName, 'w') or jsAlert("can\'t open file");
+        fclose($ourFileHandle);
+        
+        if(mysql_query("INSERT INTO `files` (`id`, `folder`, `title`, `size`, `timestamp`, `filename`, `language`, `type`, `owner`, `votes`, `score`, `privacy`) VALUES (NULL, '$folder', '$title', '', '$timestamp', '$filename', '', 'UFF', '$user', '0', '0', '$privacy');")){
+          
+            //add feed
+            $fileId = mysql_insert_id();
+            $feed = "has created a new UFF-file";
+            
+            $feedClass = new feed();
+            $feedClass->create($user, $feed, "", "showThumb", $privacy, "file", $fileId);
+            
+            return $fileId;
+        }else{
+            return false;
+        }
+                        
+    }
 
     function addChecksumToUffCookie($checksum){
         $fileId = $this->fileId;
@@ -72,7 +108,7 @@ class uff {
                     }
         }
         
-        function removeUFFcookie(){
+    function removeUFFcookie(){
             $fileId = $this->fileId;
                 //removes checksum and caller from $_SESSION so that the 
                 //reload.php dont handels and empty request

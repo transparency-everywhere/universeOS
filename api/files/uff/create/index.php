@@ -27,38 +27,12 @@ include('../../../../inc/functions.php');
                     $customEdit = $_POST['privacyCustomEdit'];
                     
                     $privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
-                    $user = getUser();
-
-
-                    //upload file
-                    $elementSQL = mysql_query("SELECT folder, title FROM elements WHERE id='$element'");
-                    $elementData = mysql_fetch_array($elementSQL);
-					
+                   
 					    
                     $title10 = addslashes(substr($elementData['title'], 0, 10));
-                    echo 'inititalizing class: <br>';
-                    $folderClass = new folder($elementData['folder']);
-                    echo 'path: <br>';
-                    $path = universeBasePath.'/'.$folderClass->getPath();
-                    echo $path;
-                    $filename = "$filename.UFF";
-                    $folder = $element;
-                    $timestamp = time();
                     
-                    
-                    $ourFileName = "$path$filename";
-                    
-                    $ourFileHandle = fopen($ourFileName, 'w') or jsAlert("can\'t open file");
-                    fclose($ourFileHandle);
-                    if(mysql_query("INSERT INTO `files` (`id`, `folder`, `title`, `size`, `timestamp`, `filename`, `language`, `type`, `owner`, `votes`, `score`, `privacy`) VALUES (NULL, '$folder', '$title', '', '$timestamp', '$filename', '', 'UFF', '$user', '0', '0', '$privacy');")){
-                      
-                        //add feed
-                        $fileId = mysql_insert_id();
-                        $feed = "has created a new UFF-file";
-                        
-                        $feedClass = new feed();
-                        $feedClass->create($user, $feed, "", "showThumb", $privacy, "file", $fileId);
-                        
+                    $uffClass = new uff();
+                    if($uffClass->create($element, $title, $filename, $privacy)){
                        
                         jsAlert("your file has been created");
                         ?>

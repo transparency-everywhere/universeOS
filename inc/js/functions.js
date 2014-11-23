@@ -908,8 +908,10 @@ var universe = new function(){
         if(proofLogin()){
             gui.loadScript('inc/js/buddylist.js');
             gui.loadScript('inc/js/feed.js');
+            gui.loadScript('inc/js/settings.js');
             buddylist.init();
             feed.init();
+            //settings.init();
         }
         gui.loadScript('inc/js/filesystem.js');
         gui.loadScript('inc/js/reader.js');
@@ -1488,6 +1490,8 @@ var browser = new function(){
                                             this.tabs.updateTabContent(tabIdentifier ,browser.loadPage(url));
 			  	};
 };
+
+
            
 var playlists = new function(){
 	this.create = function(title, privacy, callback){

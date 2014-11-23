@@ -19,17 +19,18 @@ include('../../../inc/config.php');
 include('../../../inc/functions.php');
 
            
-                    //set privacy
-                    $customShow = $_POST['privacyCustomSee'];
-                    $customEdit = $_POST['privacyCustomEdit'];
-                    
-                    $privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
-                    $user = $_SESSION['userid'];
-                    
-             mysql_query("INSERT INTO playlist (user, title, privacy) VALUES('$user', '".$_POST['title']."', '$privacy')");   
-             jsAlert("Your playlist has been added.");
-             ?>
-            <script>
-            parent.updateDashbox('playlist');
-            parent.$('#favTab_playList').load('doit.php?action=showUserPlaylists');
-            </script>
+//set privacy
+$customShow = $_POST['privacyCustomSee'];
+$customEdit = $_POST['privacyCustomEdit'];
+
+$privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
+
+$playlistClass = new playlists();
+$playlistClass->createPlaylist($_POST['title'], $privacy);
+
+jsAlert("Your playlist has been added.");
+?>
+<script>
+parent.updateDashbox('playlist');
+parent.$('#favTab_playList').load('doit.php?action=showUserPlaylists');
+</script>

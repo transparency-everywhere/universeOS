@@ -13,6 +13,14 @@
  */
 class playlists {
     
+        function createPlaylist($title, $privacy, $user=null){
+            if(empty($user)){
+                $user = getUser();
+            }
+            mysql_query("INSERT INTO playlist (user, title, privacy) VALUES('$user', '".$title."', '$privacy')");   
+            return mysql_insert_id();
+        }
+    
 	function getPlaylists($userid=NULL){
             $playlists;
             if(empty($userid))

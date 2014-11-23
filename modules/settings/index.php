@@ -3,15 +3,6 @@
   include_once("../../inc/config.php");
   include_once("../../inc/functions.php");
 ?>
-<script type="text/javascript">
-   init.draggableApplications();
-</script>
-<div id="invisibleSettings">
-<div class="fenster" id="settings">
-    <header class="titel">
-        <p>Settings</p><p class="windowMenu"><a href="#" onclick="$('#invisibleSettings').remove();"><img src="./gfx/icons/close.png" width="16"></a>
-    </header>
-    <div class="inhalt autoflow">
 		<div>
 		    <div class="leftNav" style="top: 0;">
 		    <ul>
@@ -121,4 +112,3 @@
 		                </div>
 		         </div>
        </div>
-   </div>
