@@ -29,6 +29,19 @@ class element {
         return mysql_insert_id();
     }
     
+    function update($folder, $title, $type, $privacy){
+        if($elementId == NULL)
+            $elementId = $this->id;
+        $values['folder'] = $folder;
+        $values['title'] = $title;
+        $values['type'] = $type;
+        $values['privacy'] = $privacy;
+        
+        $db = new db();
+        return $db->update('elements', $values, array('id', $elementId));
+        
+    }
+    
     function getData($elementId=NULL){
         if($elementId == NULL)
             $elementId = $this->id;

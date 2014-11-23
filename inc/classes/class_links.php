@@ -28,6 +28,17 @@ class link {
 					return true;
                 }
 	}
+        
+        function update($linkId, $element, $title, $link, $type, $privacy){
+            $values['folder'] = $element;
+            $values['title'] = $title;
+            $values['link'] = $link;
+            $values['type'] = $type;
+            $values['privacy'] = $privacy;
+            
+            $db = new db();
+            return $db->update('links', $values, array('id', $linkId));
+        }
     
     function deleteLink($linkId){
         
@@ -58,6 +69,11 @@ class link {
                 }else{
                     return false;
                 }
+    }
+    
+    function select($linkId){
+        $db = new db();
+        return $db->select('links', array('id', $linkId));
     }
 }
 

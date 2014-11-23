@@ -53,7 +53,7 @@ class db{
             foreach($options AS $row=>$value){
 
                     //only add row to query if value is not empty
-                    if(!empty($value) ||($value == 0)){
+                    if(!empty($value)||($value == 0)){
                             $query[] = " $row='".save($value)."'";
                     }
             }

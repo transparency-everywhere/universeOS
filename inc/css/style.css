@@ -2063,6 +2063,8 @@ margin-bottom: -5px;
 }
 
 .itemSettingsWindow > ul > li, .rightclick > ul > li, .fileBrowserSettings > li{
+        height: 22px;
+        line-height: 20px;
 	border-bottom:1px solid rgb(53,53,53);
 	padding:2px;
 }

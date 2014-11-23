@@ -50,6 +50,38 @@ class folder {
 			jsAlert("The title contains forbidden characters.");
 		}
     }
+    function select(){
+        $db = new db();
+        return $db->select('folders', array('id', $this->id));
+    }
+    function update($parent_folder, $title, $privacy){
+        
+        $db = new db();
+        $checkFolderData = $db->select('folders', array('id', $this->id));
+        
+            $folderClass = new folder($checkFolderData['folder']);
+            $parentFolderPath = universeBasePath.'/'.$folderClass->getPath();
+					
+            //check if folder exists
+            if (!file_exists($parentFolderPath.urldecode($title))) {
+		//rename folder
+	        if(rename($parentFolderPath.$checkFolderData['name'], $parentFolderPath.urldecode(save($title)))){
+	            	//update db
+                        $values['name'] = $title;
+                        $db->update('folders', $values, array('id', $this->id));
+                }
+            }else{
+                echo 'A folder with this title already exists';
+                return false;
+            }
+        
+            $values['privacy'] = $privacy;
+
+            $db->update('folders', $values, array('id', $this->id));
+            return true;
+    }
+    
+    
     function loadFolderArray($type){
         $folder = $this->id;
             switch($type){
@@ -100,15 +132,13 @@ class folder {
         $data = $dbClass->select('folders', array('id', save($folderId)));
         return $data;
     }
-
-        function getTitle(){
+    function getTitle(){
             $folderId = $this->id;
 		$folderData = $this->getFolderData();
 		return $folderData['name'];
 		
 	}
-        
-function getPath($showRealPath=true){
+    function getPath($showRealPath=true){
             $folderId = $this->id;
             if($showRealPath)
                 $path = "upload/";
@@ -123,7 +153,7 @@ function getPath($showRealPath=true){
             
             return $path;
 	} 
-function delete(){
+    function delete(){
         $folderId = $this->id;
         $dbClass = new db();
         $folderData = $dbClass->select('folders', array('id', $folderId));

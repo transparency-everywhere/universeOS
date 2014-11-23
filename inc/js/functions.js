@@ -688,6 +688,74 @@ var gui = new function(){
 	};
     };
     
+    this.generateId = function(){
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for( var i=0; i < 5; i++ )
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
+    };
+    
+    this.alert = function(message, title, type){
+        var alertClass;
+        switch(type){
+            default:
+                alertClass = 'alert-info';
+                break;
+        }
+        $('#alerter').append('<div class="alert '+alertClass+'"><button type="button" class="close" data-dismiss="alert">&times;</button>'+message+'</div>');
+        $('.alert').delay(8000).fadeOut(function(){
+	    $(this).remove();
+	});
+    };
+    this.confirm = function(parameters){
+        var confirmID = gui.generateId();
+        var confirmClass = confirmID+' ';
+        var buttons = '';
+        
+        if(typeof parameters['type'] !== 'undefined'){
+            switch(parameters['type']){
+                default:
+                    confirmClass += 'alert-info';
+                    break;
+            }
+        }
+        
+        if(typeof parameters['submitButtonTitle'] !== 'undefined'){
+            buttons += '<button type="button" class="btn btn-default submitButton">Or do this</button>';
+        }
+        
+        if(typeof parameters['cancelButtonTitle'] !== 'undefined'){
+            buttons += '<button type="button" class="btn btn-danger cancelButton">Take this action</button>';
+        }
+        
+        var html =  '<div class="alert '+confirmClass+' alert-dismissible fade in" role="alert">'+
+                    '      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>'+
+                    '      <h4>'+parameters.title+'</h4>'+
+                    '      <p>'+parameters.text+'</p>'+
+                    '      <p>'+buttons+'</p>'+
+                    '</div>';
+            
+            
+        $('#alerter').append(html);
+        
+        if(typeof parameters['submitFunction'] === 'function'){
+            $('.'+confirmID+' .btn-default').click(function(){
+                parameters['submitFunction']();
+            });
+        }
+        
+        if(typeof parameters['cancelFunction'] === 'undefined'){
+            $('.'+confirmID+' .btn-danger').click(function(){
+                parameters['submitFunction']();
+            });
+        }
+	
+
+    };
+    
     this.initUploadify = function($selector, inputName){
               
 	            $($selector).uploadify({
@@ -928,6 +996,15 @@ var universe = new function(){
         
         //init bootstrap alert
         $(".alert").alert();
+        
+        
+        gui.loadScript('inc/js/links.js');
+        
+        gui.loadScript('inc/js/folders.js');
+        
+        gui.loadScript('inc/js/elements.js');
+        
+        gui.loadScript('inc/js/fav.js');
     };
 };
               
@@ -1490,8 +1567,6 @@ var browser = new function(){
                                             this.tabs.updateTabContent(tabIdentifier ,browser.loadPage(url));
 			  	};
 };
-
-
            
 var playlists = new function(){
 	this.create = function(title, privacy, callback){
@@ -1550,6 +1625,7 @@ var playlists = new function(){
 			  		
 			  	};
 };
+
 var privacy = new function(){
 	
 	this.load = function(selector, val, editable){
@@ -1583,6 +1659,68 @@ var privacy = new function(){
 				   	});
 				   return result;
 			  	};
+                                
+        this.showUpdatePrivacyForm = function(type, item_id){
+            var title;
+            switch(type){
+                case 'folder':
+                    var itemData = folders.getData(item_id);
+                    title = 'Folder '+itemData['name'];
+                    break;
+                case 'element':
+                    var itemData = elements.getData(item_id);
+                    title = 'Element '+ itemData['title'];
+                    break;
+                case 'comment':
+                    title = 'Comment';
+                    break;
+                case 'feed':
+                    title = 'Feed';
+                    break;
+                case 'file':
+                    
+                    title = 'File '+files.fileIdToFolderTitle(item_id);
+                    break;
+                case 'link':
+                    var itemData = links.getData(item_id);
+                    title = 'Link '+linkData['title'];
+                    break;
+            }
+            
+            
+        var formModal = new gui.modal();
+        
+        var fieldArray = [];
+        var options = [];
+        options['headline'] = '';
+        options['buttonTitle'] = 'Save';
+        options['noButtons'] = true;
+        
+        var field0 = [];
+        field0['caption'] = 'Privacy';
+        field0['inputName'] = 'privacy';
+        field0['type'] = 'html';
+        field0['value'] = "<div id=\'privacyField\'></div>";
+        fieldArray[0] = field0;
+        
+        
+        
+        var modalOptions = {};
+        modalOptions['buttonTitle'] = title;
+        
+        modalOptions['action'] = function(){
+            var callback = function(){
+                jsAlert('', 'The links has been added');
+                $('.blueModal').remove();
+                filesystem.tabs.updateTabContent(2 , gui.loadPage('modules/filesystem/showElement.php?element='+element+'&reload=1'));
+            };
+            links.create(element, $('#createLinkFormContainer #link_title').val(), $('#createLinkFormContainer #type').val(),  $('#createLinkFormContainer #privacyField :input').serialize(), $('#createLinkFormContainer #link').val(),callback);
+        };
+        privacy.load('#privacyField', itemData['privacy'], true);
+        formModal.init(title, '<div id="createLinkFormContainer"></div>', modalOptions);
+        gui.createForm('#createLinkFormContainer',fieldArray, options);
+            
+        };
 	
 	//checks if user is authorized, to edit an item with privacy.
 	this.authorize = function(privacy, author){
@@ -1611,6 +1749,7 @@ var privacy = new function(){
 			  	};
 	
 };
+
 var groups = new function(){
 	
 	this.get = function(){
@@ -1801,6 +1940,7 @@ function jsAlert(type, message){
 	              		$(this).remove();
 	              	});
               }
+      
 
 var files = new function(){
               	
@@ -1820,45 +1960,6 @@ var files = new function(){
               	};
               	
               };
-
-var elements = new function(){
-              	
-              	this.elementIdToElementTitle = function(elementId){
-				    var result="";
-				    
-				    $.ajax({
-				      url:"api.php?action=elementIdToElementTitle",
-				      async: false,  
-					  type: "POST",
-					  data: { elementId : elementId },
-				      success:function(data) {
-				         result = data; 
-				      }
-				   });
-				   return result;
-              	};
-              	
-};
-
-var folders = new function(){
-              	
-              	this.folderIdToFolderTitle = function(folderId){
-				    var result="";
-				    
-				    $.ajax({
-				      url:"api.php?action=folderIdToFolderTitle",
-				      async: false,  
-					  type: "POST",
-					  data: { folderId : folderId },
-				      success:function(data) {
-				         result = data; 
-				      }
-				   });
-				   return result;
-              	};
-              	
-              };
-
 
 var modal =  new function() {
 			    this.html;
@@ -2909,6 +3010,7 @@ function playFileDock(fileId){
 function nextPlaylistItem(playList, row){
              	  $("#playListPlayer").load("playListplayer.php?playList=" + playList +"&row=" + row +"");
               }
+
 
 function removeFav(type, typeId){
 			  	if($.post("doit.php?action=removeFav", { type: type, typeId: typeId } )){

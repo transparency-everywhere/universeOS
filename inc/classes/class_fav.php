@@ -94,16 +94,19 @@ class fav {
        echo $typeTable;
     }
 
-    function addFav($type, $typeid, $userid){
-        $type = $_GET['type'];
-        $check = mysql_query("SELECT type,item FROM fav WHERE type='$_GET[type]' && item='$_GET[item]'");
+    function addFav($type, $typeid, $userid=NULL){
+        
+        if(empty($userid))
+            $userid = getUser();
+        
+        $check = mysql_query("SELECT type FROM fav WHERE type='$type' && item='$typeid'");
         $checkData = mysql_fetch_array($check);
-        if(isset($checkData[type])){
-            echo"allready your favourite";
+        if(isset($checkData['type'])){
+            echo "allready your favourite";
+            return false;
         } else {
-            $time = time();
-            mysql_query("INSERT INTO fav (`type` ,`item` ,`user` ,`timestamp`) VALUES('$_GET[type]', '$_GET[item]', '$_SESSION[userid]', '$time');"); 
-            echo"worked :)";
+            mysql_query("INSERT INTO fav (`type` ,`item` ,`user` ,`timestamp`) VALUES('".save($type)."', '".save($typeid)."', '".$userid."', '".time()."');"); 
+            return false;
         }
     }
 
