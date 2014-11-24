@@ -211,8 +211,7 @@ class contextMenu{
 					$edit['onclick'] = "popper('doit.php?action=editItem&type=element&itemId=$itemId')";
 				
 					$delete['title'] = 'Delete';
-					$delete['href'] = "doit.php?action=deleteItem&type=element&itemId=$itemId";
-					$delete['target'] = 'submitter';
+					$delete['href'] = "javascript: elements.verifyRemoval('$itemId');";
 		      	}
 			 
 			 	if(proofLogin()){

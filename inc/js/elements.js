@@ -169,6 +169,41 @@ var elements = new function(){
         gui.createForm('#createElementFormContainer',fieldArray, options);
     };
     
+    this.delete = function(elementId, callback){
+        var result="";
+	$.ajax({
+            url:"api/elements/delete/",
+            async: false,  
+            type: "POST",
+            data: {element_id : elementId},
+            success:function(data) {
+               result = data;
+               if(typeof callback === 'function'){
+                   callback(); //execute callback if var callback is function
+               }
+            }
+	});
+	return result;
+    };
+    this.verifyRemoval = function(elementId){
+        var confirmParameters = {};
+        
+        confirmParameters['title'] = 'Delete Element';
+        confirmParameters['text'] = 'Are you sure to delete this element?';
+        confirmParameters['submitButtonTitle'] = 'Delete';
+        confirmParameters['submitFunction'] = function(){
+            elements.delete(elementId);
+            gui.alert('The element has been deleted');
+        };
+        confirmParameters['cancelButtonTitle'] = 'Cancel';
+        confirmParameters['cancelFunction'] = function(){
+            //alert('cancel');
+        };
+        
+        gui.confirm(confirmParameters);
+        
+    };
+    
     this.elementIdToElementTitle = function(elementId){
 				    var result="";
 				    

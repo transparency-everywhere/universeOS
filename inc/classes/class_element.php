@@ -51,7 +51,6 @@ class element {
 		
         return $data;
     }
-        
     
     function delete($elementId=NULL){
         if($elementId == NULL)
@@ -104,28 +103,28 @@ class element {
                
     }
 	
-	function getFiles($elementId){
-        if($elementId == NULL)
-            $elementId = $this->id;
-		$fileSQL = mysql_query("SELECT id FROM files WHERE folder='".mysql_real_escape_string($elementId)."'");
-		while($fileData = mysql_fetch_array($fileSQL)){
-			$return[] = $fileData[id];
-		}
-		
-		return $return;
-	}
-	
-	function getLinks($elementId){
+    function getFiles($elementId){
             if($elementId == NULL)
                 $elementId = $this->id;
-		$linkSQL = mysql_query("SELECT id FROM links WHERE folder='".mysql_real_escape_string($elementId)."'");
-		while($linkData = mysql_fetch_array($linkSQL)){
-			$return[] = $linkData[id];
-		}
-		
-		return $return;
-	}
-	function getName($elementId=NULL){
+                    $fileSQL = mysql_query("SELECT id FROM files WHERE folder='".mysql_real_escape_string($elementId)."'");
+                    while($fileData = mysql_fetch_array($fileSQL)){
+                            $return[] = $fileData[id];
+                    }
+
+                    return $return;
+            }
+
+    function getLinks($elementId){
+                if($elementId == NULL)
+                    $elementId = $this->id;
+                    $linkSQL = mysql_query("SELECT id FROM links WHERE folder='".mysql_real_escape_string($elementId)."'");
+                    while($linkData = mysql_fetch_array($linkSQL)){
+                            $return[] = $linkData[id];
+                    }
+
+                    return $return;
+            }
+    function getName($elementId=NULL){
             if($elementId == NULL)
                 $elementId = $this->id;
             
