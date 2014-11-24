@@ -304,38 +304,6 @@ var init = new function(){
 	
 };
 
-
-
-function Tab(parentId) {
-		  this.parentId = parentId; //id in which tabs are loaded
-		  this.index = 1;
-		  this.init = function(firstTitle, firstType, firstContent) {
-		  
-		  	var content =  '<div class="tabs">';
-		  			content += '<ul class="tabBar">';
-		  				content += '<li class="active" id="1">'+firstTitle+'</li>';
-		  			content += '</ul>';
-		  		
-		  			content += '<div class="tab active" id="1">';
-		  			content += '</div>';
-		  		content += '</div>';
-		  
-		  };
-		  
-		  this.addTab = function(title, type, content){
-		  	this.index++;
-		  	$(this.parentSelector).children('.tabs .tabBar').append('<li class="active" id="1">'+firstTitle+'</li>');
-		  	$(this.parentSelector).children('.tabs').append('<div class="tab active" id="'+this.index+'"></div>');
-		  };
-		  
-		  this.updateTab = function(id, title, type, content){
-		  	
-		  };
-		  this.deleteTab = function(id){
-		  	
-		  };
-};
-
 function proofLogin(){
     var result;
     $.ajax({
@@ -1005,6 +973,8 @@ var universe = new function(){
         gui.loadScript('inc/js/elements.js');
         
         gui.loadScript('inc/js/fav.js');
+        
+        gui.loadScript('inc/js/playlists.js');
     };
 };
               
@@ -1568,63 +1538,6 @@ var browser = new function(){
 			  	};
 };
            
-var playlists = new function(){
-	this.create = function(title, privacy, callback){
-            var result="";
-            $.ajax({
-                url:"api/playlists/create/",
-                async: false,  
-                type: "POST",
-                data: $.param({title: title})+'&'+privacy,
-                success:function(data) {
-                   result = data;
-                   if(typeof callback === 'function'){
-                       callback(); //execute callback if var callback is function
-                   }
-                }
-            });
-            return result;  		
-	};
-	this.showCreationForm = function(){
-        var formModal = new gui.modal();
-        
-        var fieldArray = [];
-        var options = [];
-        options['headline'] = '';
-        options['buttonTitle'] = 'Save';
-        options['noButtons'] = true;
-        
-        var field0 = [];
-        field0['caption'] = 'Title';
-        field0['inputName'] = 'title';
-        field0['type'] = 'text';
-        fieldArray[0] = field0;
-        
-        var field1 = [];
-        field1['caption'] = 'Privacy';
-        field1['inputName'] = 'privacy';
-        field1['type'] = 'html';
-        field1['value'] = "<div id=\'privacyField\'></div>";
-        fieldArray[1] = field1;
-        
-        
-        var modalOptions = {};
-        modalOptions['buttonTitle'] = 'Create Playlist';
-        
-        modalOptions['action'] = function(){
-            var callback = function(){
-                jsAlert('', 'The playlist has been added');
-                $('.blueModal').remove();
-                //filesystem.tabs.updateTabContent(1 , gui.loadPage('modules/filesystem/fileBrowser.php?folder='+parent_folder));
-            };
-            playlists.create($('#createPlaylistFormContainer #title').val(), $('#createPlaylistFormContainer #privacyField :input').serialize(),callback);
-        };
-        privacy.load('#privacyField', '', true);
-        formModal.init('Create Playlist', '<div id="createPlaylistFormContainer"></div>', modalOptions);
-        gui.createForm('#createPlaylistFormContainer',fieldArray, options);
-			  		
-			  	};
-};
 
 var privacy = new function(){
 	
@@ -2320,7 +2233,7 @@ function maxLength(string, maxlength){
 	  	}
 	  }
 	  
-	  //updates 
+//updates 
 function updatePictureStatus(userId, borderColor){
     $('.userPicture_'+userId).css('border-color', borderColor);
 }
@@ -2503,11 +2416,6 @@ function reloadFeed(type){
     }
 
 //filesystem
-function openUploadTab(element){
-	
-        showApplication('filesystem');
-        filesystem.tabs.addTab('title', '',gui.loadPage('modules/filesystem/upload.php?element='+element));
-}
 
 function initUploadify(id, uploader, element, timestamp, token){
 		
@@ -2976,21 +2884,6 @@ function showMenu(id) {
                     }
                 }
                 
-                
-	//the rest
-var standardModules = function(){
-    this.showSettings = function(){
-                    $.get("modules/settings/index.php",function(data){
-                          $('#bodywrap').append(data);
-                          applicationOnTop('settings');
-                    },'html');
-                    
-        
-    };
-    
-    
-};
-
 function updateUserActivity() {
               	$("#loader").load("doit.php?action=updateUserActivity");
               }
@@ -3019,9 +2912,6 @@ function removeFav(type, typeId){
 			  	}
 			  }
 	  
-function addBuddy(userId) {
-              	$("#loader").load("addbuddy.php?user=" + userId +"");
-              }
   
 function showSubComment(commentId) {
                   $("#comment" + commentId + "").load("showComment.php?id=" + commentId +"");

@@ -15,7 +15,7 @@
         
 
 var buddylist = new function(){
-  this.getBuddies = function(){
+    this.getBuddies = function(){
                                    var res;
 			  		$.ajax({
 				      url:"api.php?action=getBuddylist",
@@ -27,13 +27,14 @@ var buddylist = new function(){
 				   });
 				   return res;
 			  	};
-  this.addBuddy = function(){
+    this.addBuddy = function(){
                                 
+              	$("#loader").load("addbuddy.php?user=" + userId +"");
                             };
-  this.init = function(){
+    this.init = function(){
 	
         this.applicationVar = new application('buddylist');
 	this.applicationVar.create('Buddylist', 'url', 'buddylist.php',{width: 2, height:  5, top: 0, left: 9});
 	
-  };
+    };
 };

@@ -202,5 +202,10 @@ var filesystem =  new function() {
         gui.createForm('#createElementFormContainer',fieldArray, options);
     };
     
+    
+    this.openUploadTab = function(element){
+        showApplication('filesystem');
+        filesystem.tabs.addTab('Upload', '',gui.loadPage('modules/filesystem/upload.php?element='+element));
+    }
 };
 

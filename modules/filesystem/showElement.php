@@ -71,12 +71,12 @@ if($elementData['type'] == "image"){
 	    	<?
 	    	if(proofLogin() && $bar){
 	    	?>
-	        <a href="#" onclick="openUploadTab('<?=$_GET[element];?>');" class="btn btn-info"><i class="icon-file icon-white"></i>&nbsp;upload File</a>&nbsp;
+	        <a href="#" onclick="filesystem.openUploadTab('<?=$_GET[element];?>');" class="btn btn-info"><i class="icon-file icon-white"></i>&nbsp;upload File</a>&nbsp;
 	        <a href="#" onclick="links.showCreateLinkForm('<?=$_GET['element'];?>');" class="btn btn-info"><i class="icon-globe icon-white"></i>&nbsp;add Link</a>
 			<? }
 			
 			if($changeUserPicture){ ?>
-				<a href="#" onclick="standardModules.showSettings();" class="btn btn-info">&nbsp;change Userpicture&nbsp;</a>
+				<a href="#" onclick="settings.show();" class="btn btn-info">&nbsp;change Userpicture&nbsp;</a>
 			<? }
 			?>
 	    </center>
@@ -156,7 +156,7 @@ if($elementData['type'] == "image"){
     	if(proofLogin()){
     	?>
     	<a class="btn btn-info" href="#" onclick="filesystem.showCreateUFFForm('<?=$element;?>'); " target="submitter"><i class="icon-file icon-white"></i> Create Document</a>
-        <a href="#" onclick="openUploadTab('<?=$_GET['element'];?>');" class="btn btn-info"><i class="icon-file icon-white"></i>&nbsp;Upload File</a>
+        <a href="#" onclick="filesystem.openUploadTab('<?=$_GET['element'];?>');" class="btn btn-info"><i class="icon-file icon-white"></i>&nbsp;Upload File</a>
         &nbsp;<a href="javascript: links.showCreateLinkForm('<?=$_GET['element'];?>');" class="btn btn-info"><i class="icon-globe icon-white"></i>&nbsp;Add Link</a>
 		<?}?>
     </center>
