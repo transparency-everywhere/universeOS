@@ -13,6 +13,15 @@
  */
 class playlists {
     
+        public $id;
+
+        function __construct($id=NULL){
+            if($id != NULL){
+                $this->id = $id;
+            }
+
+        }
+        
         function createPlaylist($title, $privacy, $user=null){
             if(empty($user)){
                 $user = getUser();
@@ -33,14 +42,17 @@ class playlists {
             return $playlists;
 	}
         
-	function getPlaylistTitle($playlistId){
+        function select(){
+            $db = new db();
+            return $db->select('playlist', array('id', $this->id));
+        }
+        
+	function getPlaylistTitle($playlistId=NULL){
+            if(empty($playlistId))
+                $playlistId = $this->id;
 		$sql = mysql_query("SELECT `title` FROM playlist WHERE id='".mysql_real_escape_string($playlistId)."'");
 		$data = mysql_fetch_array($sql);
 		return $data['title'];
-		
-		
-		
-		
 	}
 	
 	function getUserPlaylistArray($userId=null, $type='show'){
@@ -178,6 +190,12 @@ class playlists {
 		<?php
 	}
 	
-	
+	function update($title, $privacy){
+            $values['title'] = $title;
+            $values['privacy'] = $privacy;
+            
+            $db = new db();
+            return $db->update('playlist', $values, array('id', $this->id));
+        }
 	
 }
