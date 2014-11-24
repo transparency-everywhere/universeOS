@@ -266,8 +266,8 @@ class element {
                             <td width="50">
                             <?php
                             if(!$git){
-                                    $contextMenu = new contextMenu('link', $linkListData['id']);
-                                    $contextMenu->showItemSettings();
+                                    $contextMenu = new contextMenu('link', $linkListData['id'], $title10, $linkListData['type']);
+                                    echo $contextMenu->showItemSettings();
                             }
                             ?></td>
                     </tr>

@@ -715,21 +715,19 @@ var gui = new function(){
         var confirmClass = confirmID+' ';
         var buttons = '';
         
-        if(typeof parameters['type'] !== 'undefined'){
             switch(parameters['type']){
                 default:
                     confirmClass += 'alert-info';
                     break;
             }
-        }
-        
-        if(typeof parameters['submitButtonTitle'] !== 'undefined'){
-            buttons += '<button type="button" class="btn btn-default submitButton">Or do this</button>';
-        }
         
         if(typeof parameters['cancelButtonTitle'] !== 'undefined'){
-            buttons += '<button type="button" class="btn btn-danger cancelButton">Take this action</button>';
+            buttons += '<button type="button" class="btn btn-danger cancelButton">'+parameters['cancelButtonTitle']+'</button>';
         }
+        if(typeof parameters['submitButtonTitle'] !== 'undefined'){
+            buttons += '<button type="button" class="btn btn-default submitButton">'+parameters['submitButtonTitle']+'</button>';
+        }
+        
         
         var html =  '<div class="alert '+confirmClass+' alert-dismissible fade in" role="alert">'+
                     '      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>'+
@@ -741,17 +739,19 @@ var gui = new function(){
             
         $('#alerter').append(html);
         
-        if(typeof parameters['submitFunction'] === 'function'){
             $('.'+confirmID+' .btn-default').click(function(){
-                parameters['submitFunction']();
+                $('.'+confirmID).remove();
+                if(typeof parameters['submitFunction'] === 'function'){
+                    parameters['submitFunction']();
+                }
             });
-        }
         
-        if(typeof parameters['cancelFunction'] === 'undefined'){
             $('.'+confirmID+' .btn-danger').click(function(){
-                parameters['submitFunction']();
+                $('.'+confirmID).remove();
+                if(typeof parameters['cancelFunction'] === 'function'){
+                        parameters['cancelFunction']();
+                }
             });
-        }
 	
 
     };

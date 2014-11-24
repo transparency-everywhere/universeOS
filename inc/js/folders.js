@@ -158,4 +158,40 @@ var folders = new function(){
         formModal.init('Create Folder', '<div id="createElementFormContainer"></div>', modalOptions);
         gui.createForm('#createElementFormContainer',fieldArray, options);
     };
+    
+    
+    this.delete = function(folderId, callback){
+        var result="";
+	$.ajax({
+            url:"api/folders/delete/",
+            async: false,  
+            type: "POST",
+            data: {folder_id : folderId},
+            success:function(data) {
+               result = data;
+               if(typeof callback === 'function'){
+                   callback(); //execute callback if var callback is function
+               }
+            }
+	});
+	return result;
+    };
+    this.verifyRemoval = function(folderId){
+        var confirmParameters = {};
+        
+        confirmParameters['title'] = 'Delete Folder';
+        confirmParameters['text'] = 'Are you sure to delete this folder?';
+        confirmParameters['submitButtonTitle'] = 'Delete';
+        confirmParameters['submitFunction'] = function(){
+            folders.delete(folderId);
+            gui.alert('The folder has been deleted');
+        };
+        confirmParameters['cancelButtonTitle'] = 'Cancel';
+        confirmParameters['cancelFunction'] = function(){
+            //alert('cancel');
+        };
+        
+        gui.confirm(confirmParameters);
+        
+    };
 };

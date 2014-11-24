@@ -32,7 +32,8 @@ class contextMenu{
 	}
 	function getOptions(){
 		$itemId = $this->itemId;
-		
+		$title = $this->title;
+		$info1 = $this->info1;
 				//init vars
 	            $open[] = '';
 	            $fav[] = '';
@@ -139,7 +140,7 @@ class contextMenu{
 					$edit['onclick'] = "popper('doit.php?action=editItem&type=folder&itemId=$itemId')";
 					
 					$delete['title'] = 'Delete';
-					$delete['href'] = "doit.php?action=deleteItem&type=folder&itemId=$itemId";
+					$delete['href'] = "javascript: folders.verifyRemoval('$itemId');";
 					$delete['target'] = 'submitter';
 					
 				}
@@ -407,7 +408,7 @@ class contextMenu{
 					$edit['onclick'] = "popper('doit.php?action=editItem&type=link&itemId=$itemId')";
 				
 					$delete['title'] = 'Delete';
-					$delete['href'] = "doit.php?action=deleteItem&type=link&itemId=$itemId";
+					$delete['href'] = "javascript:links.verifyRemoval('$itemId');";
 					$delete['target'] = 'submitter';
 		      	}
 			 
@@ -537,7 +538,7 @@ class contextMenu{
 			}
 		}
 		
-				if(!empty($list)){
+				if(true){
 					
 			        $return = "
 			        <a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"btn btn-mini itemSettingsButton\"><i class=\"glyphicon glyphicon-cog\"></i></a>

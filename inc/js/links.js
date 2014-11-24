@@ -201,18 +201,39 @@ var links = new function(){
         formModal.init('Update Link', '<div id="createLinkFormContainer"></div>', modalOptions);
         gui.createForm('#createLinkFormContainer',fieldArray, options);
     };
-    
-    this.delete = function(linkId){
+    this.delete = function(linkId, callback){
+        
+        var result="";
+	$.ajax({
+            url:"api/links/delete/",
+            async: false,  
+            type: "POST",
+            data: {link_id : linkId},
+            success:function(data) {
+               result = data;
+               if(typeof callback === 'function'){
+                   callback(); //execute callback if var callback is function
+               }
+            }
+	});
+	return result;
+    };
+    this.verifyRemoval = function(linkId){
         var confirmParameters = {};
+        
+        confirmParameters['title'] = 'Delete Link';
+        confirmParameters['text'] = 'Are you sure to delete this link?';
         confirmParameters['submitButtonTitle'] = 'Delete';
-        confirmParameters['submitButtonFunction'] = function(){
-            alert('delete');
+        confirmParameters['submitFunction'] = function(){
+            links.delete(linkId);
+            gui.alert('The link has been deleted');
         };
         confirmParameters['cancelButtonTitle'] = 'Cancel';
-        confirmParameters['cancelButtonFunction'] = function(){
-            alert('cancel');
+        confirmParameters['cancelFunction'] = function(){
+            //alert('cancel');
         };
         
+        gui.confirm(confirmParameters);
         
     };
 };
