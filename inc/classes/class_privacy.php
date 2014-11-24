@@ -267,7 +267,7 @@ class privacy {
         		</ul>
         	</div>
                                 <script>
-									initPrivacy();
+									privacy.init();
                                 </script>
        <?php
        }

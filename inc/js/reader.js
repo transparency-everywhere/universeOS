@@ -17,6 +17,7 @@
         
 
 var reader = new function(){
+    this.applicationVar;
     this.tabs;
     this.init = function(){
         this.applicationVar = new application('reader');
@@ -26,5 +27,8 @@ var reader = new function(){
 	this.tabs = new tabs('#readerFrame');
         this.tabs.init();
 	this.tabs.addTab('Home', '',gui.loadPage('modules/reader/fav.php'));
+    };
+    this.show = function(){
+        reader.applicationVar.show();
     };
 };

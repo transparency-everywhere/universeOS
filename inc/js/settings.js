@@ -21,4 +21,7 @@ var settings = new function(){
 	this.applicationVar.create('Settings', 'url', 'modules/settings/index.php',{width: 2, height:  5, top: 0, left: 0});
 	
     };
+    this.show = function(){
+        settings.applicationVar.show();
+    };
 };

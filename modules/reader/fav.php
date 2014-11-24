@@ -67,7 +67,7 @@ if($_GET['action'] == "add"){
                                <tr height="30" class="strippedRow">
                                    <td width="27">&nbsp;<img src="./gfx/icons/group.png" height="15"></td>
                                    <td width="300">&nbsp;<a href="#" onclick="reader.tabs.addTab('<?=$title10;?>', '',gui.loadPage('group.php?id=<?=$groupData['id'];?>'));return false"><?=$title15;?></a></td>
-                                   <td align="right"><?=countGroupMembers($groupData['id']);?>&nbsp;&nbsp;</td>
+                                   <td align="right"><?=groups::countGroupMembers($groupData['id']);?>&nbsp;&nbsp;</td>
                                </tr>
                        <?}
                        if($i < 1){

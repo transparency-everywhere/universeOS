@@ -54,6 +54,7 @@ h3{
     background: #FFF;
     min-width: 250px;
     min-height: 260px;
+    box-shadow: 1px 3px 8px 0.00px rgba(0, 0, 0, 0.3);
 }
 .fenster > header {
     color: #454545;
@@ -630,7 +631,7 @@ border-bottom: 1px solid #292929;
 
 .frameRight{
     position: absolute;
-    top: 40px;
+    top: 0px;
     right: 0px;
     bottom: 0px;
     left: 170px;
@@ -851,6 +852,10 @@ border-bottom: 1px solid #292929;
 
 #filesystem {
     
+}
+
+#filesystem .frameRight{
+    top: 40px;
 }
 
 #filesystem .tabFrame>header{
@@ -1132,7 +1137,7 @@ border-bottom: 1px solid #292929;
 	
 	.favTab{
 		position: absolute;  
-		top: 130px;
+		top: 105px;
 		right: 0px; 
 		bottom: 0px;
 		left: 0px; 

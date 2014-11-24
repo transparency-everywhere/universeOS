@@ -17,89 +17,6 @@ $(document).ready(function(){
         universe.init();
     
 });
-//privacy
-function initPrivacy(){
-	
-
-                            $('.privacyPublicTrigger').click(function(){
-
-                                if($(this).is(':checked')){
-
-                                    $('.uncheckPublic').prop('checked', false);
-
-                                }
-
-                            });
-
-                            $('.privacyCustomTrigger').click(function(){
-                                if($(this).is(':checked')){
-                                    $('.uncheckCustom').prop('checked', false);
-                                }
-                            });
-
-
-                            $('.privacyHiddenTrigger').click(function(){
-                                if($(this).is(':checked')){
-                                    $('.uncheckHidden').prop('checked', false);
-                                }
-                            });
-                            
-                            $('.privacyOnlyMeTrigger').click(function(){
-                                if($(this).is(':checked')){
-                                    $('.uncheckOnlyMe').prop('checked', false);
-                                }
-                            });
-                            
-                            $('.privacyBuddyTrigger').click(function(){
-                            	
-                            	var buddyTriggerId = '.privacyBuddyTrigger';
-                                if($(this).is(':checked')){
-                                	if($(this).data('privacytype') == "edit")
-                                    	$(buddyTriggerId+'_see').prop('checked', true);
-                                }else{
-                                	if($(this).data('privacytype') == "see")
-                                    	$(buddyTriggerId+'_edit').prop('checked', false);
-                                	if($(this).data('privacytype') == "edit")
-                                    	$(buddyTriggerId+'_see').prop('checked', false);
-                                }
-                            	$('.privacyShowBuddy').show();
-                            });
-                            
-                            $('.privacyGroupTrigger').click(function(){
-                            	$('.privacyShowGroups').show();
-                            	var groupTriggerId = '.privacyGroupTrigger_'+$(this).data('groupid');
-                                if($(this).is(':checked')){
-                                	if($(this).data('privacytype') == "edit")
-                                    	$(groupTriggerId+'_see').prop('checked', true);
-                                }else{
-                                	if($(this).data('privacytype') == "see")
-                                    	$(groupTriggerId+'_edit').prop('checked', false);
-                                	if($(this).data('privacytype') == "edit")
-                                    	$(groupTriggerId+'_see').prop('checked', false);
-                                }
-                            });
-                            
-                            $('.uncheckOnlyMe').click(function(){
-                                if($(this).is(':checked')){
-                                    $('.privacyOnlyMeTrigger').prop('checked', false);
-                                }
-                            });
-                            $('.privacyHiddenTrigger').click(function(){
-                                if($(this).is(':checked')){
-                                    $('.uncheckHidden').prop('checked', false);
-                                }
-                            });
-                            $('.privacyCustomTrigger').click(function(){
-                                if($(this).is(':checked')){
-                                    $('.uncheckCustom').prop('checked', false);
-                                }
-                            });
-                            
-                            $('.checkPrev').click(function(){
-                                //prev see check
-                            });
-
-}
 
 //window functions
 var init = new function(){
@@ -1660,6 +1577,10 @@ var privacy = new function(){
 				   else
 				   		return false;
 			  	};
+                                
+        this.init = function(){
+            
+        };
 	
 };
 

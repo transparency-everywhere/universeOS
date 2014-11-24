@@ -42,7 +42,7 @@ include(universeBasePath.'/inc/functions.php');
                     $( "#feedFrame" ).animate({ top: "100px" }, 500 );
                     $('#feedInputBar').slideDown(500);
                     $( "#addFeedPrivacy" ).animate({ top: "100px" }, 500 );
-                    initPrivacy();
+                    privacy.init();
                 });
                     $(this).focusout(function(){
                         
