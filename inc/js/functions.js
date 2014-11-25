@@ -966,8 +966,8 @@ var application = function(id){
 			output += '<header class="titel">';
 			output += '<p>'+title+'&nbsp;</p>';
 			output += '<p class="windowMenu">';
-				output += '<a href="javascript:hideApplication(\''+id+'\');"><img src="./gfx/icons/close.png" width="16"></a>';
-				output += '<a href="#" onclick="moduleFullscreen(\''+id+'\');" class="fullScreenIcon"><img src="./gfx/icons/fullScreen.png" width="16"></a>';
+				output += '<a href="javascript:'+id+'.applicationVar.hide();"><img src="./gfx/icons/close.png" width="16"></a>';
+				output += '<a href="#" onclick="'+id+'.applicationVar.fullscreen();" class="fullScreenIcon"><img src="./gfx/icons/fullScreen.png" width="16"></a>';
 			output += '</p>';
 		output += '</header>';
 		output += '<div class="inhalt autoflow" id="'+id+'Main">'+content+'</div>';
@@ -1003,13 +1003,30 @@ var application = function(id){
 	};
 	
 	this.fullscreen = function(){
-            var id = this.id;
-          $("#" + id +"").toggle();
+            var moduleId = this.id;
+              	//$('#'+moduleId+' .fullScreenIcon').html('rofl');
+              	$('#'+moduleId+' .fullScreenIcon').attr("onClick",moduleId+".applicationVar.returnFromFullScreen()");
+              	 window.fullScreenOldX = $('#'+moduleId).width();
+              	 window.fullScreenOldY = $('#'+moduleId).height();
+              	 var position = $('#'+moduleId).position();
+              	 window.fullScreenOldMarginX = position.left;
+              	 window.fullScreenOldMarginY = position.top;
+                  
+                  var fullscreenCss = {
+                        'position' : 'absolute',
+                        'top' : '5px',
+                        'bottom' : '10px',
+                        'left' : '5px',
+                        'right' : '5px',
+                        'width' : 'auto',
+                        'height' : 'auto'
+                       };
+                  $("#" + moduleId + "").css(fullscreenCss);
 	};
 	
 	this.returnFromFullScreen = function(){
           var id = this.id;
-          $('#'+id+' .fullScreenIcon').attr("onClick","moduleFullscreen('"+id+"')");
+          $('#'+id+' .fullScreenIcon').attr("onClick",id+".applicationVar.fullscreen()");
             var returnFullScreenCSS = {
                   'position' : 'absolute',
                   'top' : window.fullScreenOldMarginY,
@@ -1715,49 +1732,7 @@ function showApplication(id){
                   applicationOnTop(id);
                   $("#" + id +"").show();
               }
-function hideApplication(id){
-                  $("#" + id +"").hide();
-              }
-function toggleApplication(id){
-                  $("#" + id +"").toggle();
-              }
 
-function moduleFullscreen(moduleId){
-              	
-              	//$('#'+moduleId+' .fullScreenIcon').html('rofl');
-              	$('#'+moduleId+' .fullScreenIcon').attr("onClick","moduleReturnFullScreen('"+moduleId+"')");
-              	
-              	 window.fullScreenOldX = $('#'+moduleId).width();
-              	 window.fullScreenOldY = $('#'+moduleId).height();
-              	 var position = $('#'+moduleId).position();
-              	 window.fullScreenOldMarginX = position.left;
-              	 window.fullScreenOldMarginY = position.top;
-                  
-                  var fullscreenCss = {
-                        'position' : 'absolute',
-                        'top' : '5px',
-                        'bottom' : '10px',
-                        'left' : '5px',
-                        'right' : '5px',
-                        'width' : 'auto',
-                        'height' : 'auto'
-                       };
-                  $("#" + moduleId + "").css(fullscreenCss);
-              }
-
-function moduleReturnFullScreen(moduleId){
-              	$('#'+moduleId+' .fullScreenIcon').attr("onClick","moduleFullscreen('"+moduleId+"')");
-                  var returnFullScreenCSS = {
-                        'position' : 'absolute',
-                        'top' : window.fullScreenOldMarginY,
-                        'left' : window.fullScreenOldMarginX,
-                        'width' : window.fullScreenOldX,
-                        'height' : window.fullScreenOldY
-                       };
-                  $("#" + moduleId + "").css(returnFullScreenCSS);
-                  
-              	
-              }
 
 function jsAlert(type, message){
 	              	var alertClass;
