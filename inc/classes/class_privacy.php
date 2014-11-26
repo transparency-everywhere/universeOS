@@ -169,7 +169,7 @@ class privacy {
                                                             }else{
                                                                 $color="383838";
                                                             }
-                                                            if(in_array("$groupData[id]", $customEdit)){
+                                                            if(in_array($groupData['id'], $customEdit)){
                                                                 $checked['editGroup'] = 'checked="checked"';
                                                             }else{
                                                                 $checked['editGroup'] = '';
@@ -206,7 +206,7 @@ class privacy {
 					<li style="padding-left: 10px;"><input type="checkbox" name="privacyCustomSee[]" value="f" class="privacyCustomTrigger uncheckPublic uncheckHidden" <?=$checked[privacyCustomShowF];?> <?=$disabled;?>> All your Friends</li>
 
                                                         <?                            
-                                                        $attSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='$_SESSION[userid]' AND validated='1'");
+                                                        $attSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='".$_SESSION['userid']."' AND validated='1'");
                                                         while($attData = mysql_fetch_array($attSql)){
                                                             $i++;
                                                             $groupSql = mysql_query("SELECT id, title FROM groups WHERE id='$attData[group]'");
@@ -226,7 +226,7 @@ class privacy {
                                                                 $checked['showGroup'] = '';
                                                             }
                                                             ?>
-                                                            <li style="padding-left:10px;"><input type="checkbox" name="privacyCustomSee[]" value="<?=$groupData[id];?>" class="privacyCustomTrigger uncheckPublic uncheckHidden" <?=$checked[showGroup];?> <?=$disabled;?>><img src="./gfx/icons/group.png" height="15">&nbsp;<a href="#" onclick="reader.tabs.addTab('<?=$title10;?>', '',gui.loadPage('group.php?id=<?=$groupData['id'];?>'));return false"><?=$title15;?></a></li>
+                                                            <li style="padding-left:10px;"><input type="checkbox" name="privacyCustomSee[]" value="<?=$groupData['id'];?>" class="privacyCustomTrigger uncheckPublic uncheckHidden" <?=$checked[showGroup];?> <?=$disabled;?>><img src="./gfx/icons/group.png" height="15">&nbsp;<a href="#" onclick="reader.tabs.addTab('<?=$title10;?>', '',gui.loadPage('group.php?id=<?=$groupData['id'];?>'));return false"><?=$title15;?></a></li>
        
                                                         <?}
                                                         if($i < 1){
@@ -236,7 +236,7 @@ class privacy {
                      <li style="padding-left:5px;"><input type="checkbox" name="privacyCustomEdit[]" value="f" class="privacyCustomTrigger uncheckPublic uncheckOnlyMe uncheckHidden"<?=$checked[privacyCustomEditF];?> <?=$disabled;?>>All your Friends</li>
 
                                                         <?                            
-                                                        $attSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='$_SESSION[userid]' AND validated='1'");
+                                                        $attSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='".getUser()."' AND validated='1'");
                                                         while($attData = mysql_fetch_array($attSql)){
                                                             $i++;
                                                             $groupSql = mysql_query("SELECT id, title FROM groups WHERE id='$attData[group]'");
@@ -255,14 +255,14 @@ class privacy {
                                                                 $checked['editGroup'] = '';
                                                             }
                                                             ?>
-                                                                <li style="padding-left:10px;"><input type="checkbox" name="privacyCustomEdit[]" value="<?=$groupData[id];?>" class="privacyCustomTrigger uncheckOnlyMe uncheckPublic uncheckHidden" <?=$checked[editGroup];?> <?=$disabled;?>><img src="./gfx/icons/group.png" height="15">&nbsp;<a href="#" onclick="reader.tabs.addTab('<?=$title10;?>', '',gui.loadPage('group.php?id=<?=$groupData['id'];?>')); return false"><?=$title15;?></a></li>
+                                                                <li style="padding-left:10px;"><input type="checkbox" name="privacyCustomEdit[]" value="<?=$groupData['id'];?>" class="privacyCustomTrigger uncheckOnlyMe uncheckPublic uncheckHidden" <?=$checked[editGroup];?> <?=$disabled;?>><img src="./gfx/icons/group.png" height="15">&nbsp;<a href="#" onclick="reader.tabs.addTab('<?=$title10;?>', '',gui.loadPage('group.php?id=<?=$groupData['id'];?>')); return false"><?=$title15;?></a></li>
                                                         <?}
                                                         if($i < 1){
                                                             echo'<li style="padding-left:10px;">Your are in no group</li>';
                                                         }?>
                                                         <li style="padding-left:10px;"><input type="checkbox" name="privacyCustomEdit[]" value="h" class="privacyCustomTrigger privacyOnlyMeTrigger uncheckPublic uncheckHidden" <?=$checked[privacyCustomEditH];?> <?=$disabled;?>>Only Me</li>
 	
-                                        <li><input type="checkbox" class="privacyHiddenTrigger uncheckPublic uncheckCustom" name="privacyHidden" value="true" <?=$checked[privacyHidden];?> <?=$disabled;?>>Hidden:</li>
+                                        <li><input type="checkbox" class="privacyHiddenTrigger uncheckPublic uncheckCustom" name="privacyHidden" value="true" <?=$checked['privacyHidden'];?> <?=$disabled;?>>Hidden:</li>
 					<?php }?>
         		</ul>
         	</div>
@@ -289,7 +289,7 @@ class privacy {
 	  *
 	  * @return bool 
 	  */
-	function authorize($privacy, $type, $author=NULL){
+function authorize($privacy, $type, $author=NULL){
         
         $privacies = explode(";", $privacy);
         $endExplode = end($privacies);
@@ -429,7 +429,7 @@ class privacy {
     }
 	
     
-    function exploitPrivacy($public, $hidden, $customEdit, $customShow){
+function exploitPrivacy($public, $hidden, $customEdit, $customShow){
     	if(!empty($public) OR !empty($hidden) OR !empty($customEdit) OR !empty($customShow)){
 	        if($public == "true"){
 	            $privacy = "p";

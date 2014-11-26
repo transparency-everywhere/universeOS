@@ -89,10 +89,10 @@ class message{
 		while($chatData = mysql_fetch_array($chatSQL)) {
 	    
 		    if($chatData['receiver'] == getUser() && $chatData['read'] == "0"){
-		    mysql_query("UPDATE `messages` SET  `read`='1' WHERE  id='$chatData[id]'");
+		    mysql_query("UPDATE `messages` SET  `read`='1' WHERE  id='".$chatData['id']."'");
 		    }
 		    if($chatData['sender'] == $_SESSION['userid'] && $chatData['seen'] == "0"){
-		    mysql_query("UPDATE `messages` SET  `seen`='1' WHERE  id='$chatData[id]'");
+		    mysql_query("UPDATE `messages` SET  `seen`='1' WHERE  id='".$chatData['id']."'");
 		    }
 		    
 		    $sender = $chatData['sender'];
@@ -146,7 +146,7 @@ class message{
    	$listedUsers[] = $user;
 	$newMessagesSql = mysql_query("SELECT * FROM  `messages` WHERE  receiver='$user' OR sender='$user' ORDER BY timestamp DESC LIMIT 0, 5");
 	while($newMessagesData = mysql_fetch_array($newMessagesSql)){
-		$session .= "newMessage $newMessagesData[id]";
+		$session .= "newMessage ".$newMessagesData['id'];
 		
 		
 		//each sender is only listed once

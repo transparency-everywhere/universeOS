@@ -108,7 +108,7 @@ class element {
                 $elementId = $this->id;
                     $fileSQL = mysql_query("SELECT id FROM files WHERE folder='".mysql_real_escape_string($elementId)."'");
                     while($fileData = mysql_fetch_array($fileSQL)){
-                            $return[] = $fileData[id];
+                            $return[] = $fileData['id'];
                     }
 
                     return $return;
@@ -119,7 +119,7 @@ class element {
                     $elementId = $this->id;
                     $linkSQL = mysql_query("SELECT id FROM links WHERE folder='".mysql_real_escape_string($elementId)."'");
                     while($linkData = mysql_fetch_array($linkSQL)){
-                            $return[] = $linkData[id];
+                            $return[] = $linkData['id'];
                     }
 
                     return $return;
@@ -154,9 +154,9 @@ class element {
                     $i++;
                     if(authorize($fileListData['privacy'], "show", $fileListData['owner'])){
                     $title10 = substr("$fileListData[title]", 0, 10);
-                    $link = "openFile('$fileListData[type]', '$fileListData[id]', '$title10');";
+                    $link = "openFile('".$fileListData['type']."', '".$fileListData['id']."', '$title10');";
                     if($fileListData['type'] == "audio/mpeg"){
-                        $rightLink = "startPlayer('file', '$fileListData[id]')";
+                        $rightLink = "startPlayer('file', '".$fileListData['id']."')";
                         $image = "../music.png";
                     }
                     else if($fileListData['type'] == "video/mp4"){
@@ -164,7 +164,7 @@ class element {
                         $openFileType = "video";
 
                         //define openFile function
-                        $link = "openFile('$openFileType', '$fileListData[id]', '$title10');";
+                        $link = "openFile('$openFileType', '".$fileListData['id']."', '$title10');";
                         
                         $rightLink = "reader.tabs.addTab('See $title10', '',gui.loadPage('./modules/reader/player.php?id='".$fileListData['id']."')); return false";
                     }
@@ -175,7 +175,7 @@ class element {
                         $openFileType = "UFF";
 
                         //define openFile function
-                        $link = "openFile('$openFileType', '$fileListData[id]', '$title10');";
+                        $link = "openFile('$openFileType', '".$fileListData['id']."', '$title10');";
                     }
                     else if($fileListData['type'] == "text/plain" OR $fileListData['type'] == "application/pdf" OR $fileListData['type'] == "text/x-c++"){
                     //standard from know on (19.02.2013)
@@ -184,14 +184,14 @@ class element {
                         $openFileType = "document";
 
                         //define openFile function
-                        $link = "openFile('$openFileType', '$fileListData[id]', '$title10');";
+                        $link = "openFile('$openFileType', '".$fileListData['id']."', '$title10');";
                     }
                     else if($fileListData['type'] == "image/jpeg" OR $fileListData['type'] == "image/png" OR $fileListData['type'] == "image/gif"){
                     //if a image is opened the tab is not named after the file
                     //it is named after the parent element, because images are
                     //shown in a gallery with all the images listed in the parent
                     //element
-                    $elementData = mysql_fetch_array(mysql_query("SELECT title FROM elements WHERE id='$fileListData[folder]'"));
+                    $elementData = mysql_fetch_array(mysql_query("SELECT title FROM elements WHERE id='".$fileListData['folder']."'"));
                     $elementTitle10 = substr("$elementData[title]", 0,10);
 
 
@@ -200,14 +200,14 @@ class element {
                         $openFileType = "image";
 
                         //define openFile function
-                        $link = "openFile('$openFileType', '$fileListData[id]', '$elementTitle10');";
+                        $link = "openFile('$openFileType', '".$fileListData['id']."', '$elementTitle10');";
                     }
                     $filesClass = new files();
                     $image = $filesClass->getFileIcon($fileListData['type']);
                         ?>
-                        <tr class="strippedRow file_<?=$fileListData[id];?>" oncontextmenu="showMenu('file<?=$fileListData['id'];?>'); return false;" height="40px">
+                        <tr class="strippedRow file_<?=$fileListData['id'];?>" oncontextmenu="showMenu('file<?=$fileListData['id'];?>'); return false;" height="40px">
                             <td width="30px">&nbsp;<img src="<?=$subpath;?>gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData['type'];?>" height="22"></td>
-                            <td><a href="<?=$subpath;?>out/?file=<?=$fileListData[id];?>" onclick="<?=$link;?> return false"><?=substr($fileListData[title],0,30);?></a></td>
+                            <td><a href="<?=$subpath;?>out/?file=<?=$fileListData['id'];?>" onclick="<?=$link;?> return false"><?=substr($fileListData[title],0,30);?></a></td>
                             <td width="80" align="right">
                                     
                                     <?php
@@ -219,7 +219,7 @@ class element {
                                         <a href="./out/download/?fileId=<?=$fileListData['id'];?>" target="submitter" class="btn btn-mini" title="download file"><i class="icon-download"></i></a>
                                     <? } 
                                     if(!$git){
-                                        $contextMenu = new contextMenu('file', "$fileListData[id]");
+                                        $contextMenu = new contextMenu('file', $fileListData['id']);
                                         echo $contextMenu->showItemSettings();
                                     }?></td>
                         </tr>
@@ -234,17 +234,17 @@ class element {
                 while($linkListData = mysql_fetch_array($linkListSQL)) {
                     $title10 = substr($linkListData['title'], 0, 10);
 
-                    $link = "$link&id=$linkListData[id]";
+                    $link = "$link&id=".$linkListData['id'];
                     if($linkListData['type'] == "youTube"){
-                        $link = "openFile('youTube', '$linkListData[id]', '$title10', '');";
+                        $link = "openFile('youTube', '".$linkListData['id']."', '$title10', '');";
                     }
 
                     if($linkListData['type'] == "audio/mp3"){
-                        $rightLink = "startPlayer('file', '$fileListData[id]')";
+                        $rightLink = "startPlayer('file', '".$fileListData['id']."')";
                     }
 
                     if($linkListData['type'] == "RSS"){
-                        $link = "openFile('RSS', '$linkListData[id]', '$title10');";
+                        $link = "openFile('RSS', '".$linkListData['id']."', '$title10');";
                     }
                     $fileClass = new files();
                     $image = $fileClass->getFileIcon($linkListData['type']);
@@ -284,7 +284,7 @@ class element {
                         $i++;
                         if($shortCutData['type'] == "file"){
 
-                            $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy, type FROM files WHERE id='$shortCutData[typeId]'"));
+                            $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy, type FROM files WHERE id='".$shortCutData['typeId']."'"));
                             $title10 = substr($shortCutItemData['title'], 0,10);
                             $title = $shortCutItemData['title'];
                             if($shortCutItemData['type'] == "UFF"){
@@ -294,7 +294,7 @@ class element {
                                 $openFileType = "UFF";
 
                                 //define openFile function
-                                $link = "openFile('$openFileType', '$shortCutItemData[typeId]', '$title10');";
+                                $link = "openFile('$openFileType', '".$shortCutItemData['typeId']."', '$title10');";
                             }
                             else if($shortCutItemData['type'] == "text/plain" OR $shortCutItemData['type'] == "application/pdf"){
                             //standard from know on (19.02.2013)
@@ -303,7 +303,7 @@ class element {
                                 $openFileType = "document";
 
                                 //define openFile function
-                                $link = "openFile('$openFileType', '$shortCutItemData[typeId]', '$title10');";
+                                $link = "openFile('$openFileType', '".$shortCutItemData['typeId']."', '$title10');";
                             }
 
 
@@ -313,7 +313,7 @@ class element {
 
                         }else if($shortCutData['type'] == "link"){
 
-                            $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, link, privacy, type FROM links WHERE id='$shortCutData[typeId]'"));
+                            $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, link, privacy, type FROM links WHERE id='".$shortCutData['typeId']."'"));
                             $title10 = substr($shortCutItemData['title'], 0,10);
                             $title = $shortCutItemData['title'];
                             if($shortCutItemData['type'] == "youTube"){
@@ -323,7 +323,7 @@ class element {
                             }
 
                             if($shortCutItemData['type'] == "RSS"){
-                                $link = "openFile('RSS', '$shortCutData[typeId]', '$title10');";
+                                $link = "openFile('RSS', '".$shortCutData['typeId']."', '$title10');";
                             }
                         }
 
@@ -335,7 +335,7 @@ class element {
                                 echo"&nbsp;<img src=\"$subpath"."gfx/icons/fileIcons/$image\" height=\"22\"><i class=\"shortcutMark\"> </i>";
                             echo"</td>";
                             echo'<td colspan="3">';
-                                echo"<a href=\"./out/?$shortCutData[type]=$shortCutData[typeId]\" onclick=\"$link return false\">$title</a>";
+                                echo'<a href=\"./out/?'.$shortCutData['type'].'='.$shortCutData['typeId']." onclick=\"$link return false\">$title</a>";
                             echo"</td>";
                         echo'</tr>';
                     }

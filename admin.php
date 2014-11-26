@@ -39,7 +39,7 @@ switch($action){
 <?
 break;
 case 'users':
-    if(empty($_GET[subaction])){?>
+    if(empty($_GET['subaction'])){?>
         <div class="jqPopUp border-radius transparency" id="admin">
             <a style="position: absolute; top: 10px; right: 10px; color: #FFF;" id="closeAdmin">X</a>
             <hgroup>

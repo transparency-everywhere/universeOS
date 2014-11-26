@@ -146,7 +146,7 @@ class fileSystem {
 
                     }else if($shortCutData['type'] == "element"){
 
-                        $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy FROM elements WHERE id='".save($shortCutData[typeId])."'"));
+                        $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy FROM elements WHERE id='".save($shortCutData['typeId'])."'"));
 
                         $title = $shortCutItemData['title'];
                         $image = "element.png";
@@ -160,7 +160,7 @@ class fileSystem {
                             echo"&nbsp;<img src=\"$subpath"."/gfx/icons/filesystem/$image\" height=\"22\"><i class=\"shortcutMark\"> </i>";
                         echo"</td>";
                         echo"<td>";
-                            echo"<a href=\"$subpath"."out/?$shortCutData[type]=$shortCutData[typeId]\" onclick=\"$link\">$title</a>";
+                            echo"<a href=\"$subpath"."out/?".$shortCutData['type']."=".$shortCutData['typeId']."\" onclick=\"$link\">$title</a>";
                         echo"</td>";
                         echo"<td>";
                             echo $contextMenu->showItemSettings();
@@ -227,8 +227,8 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 	        while($filefdata = mysql_fetch_array($filefsql)) {
 	        	
 		        if(authorize($filefdata['privacy'], "show", $filefdata['creator'])){
-				$action['folders'] = "$('.folder$filefdata[id]LoadingFrame').loadOuter('doit.php?action=loadMiniBrowser&folder=$filefdata[id]&level=$level&select=$select');return false;";
-		        $trigger['folders'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/filesystem/folder.png\' alt=\'folder\' height=\'32px\'>&nbsp;$filefdata[name]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'folder\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$filefdata[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+				$action['folders'] = "$('.folder".$filefdata['id']."LoadingFrame').loadOuter('doit.php?action=loadMiniBrowser&folder=".$filefdata['id']."&level=$level&select=$select');return false;";
+		        $trigger['folders'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/filesystem/folder.png\' alt=\'folder\' height=\'32px\'>&nbsp;$filefdata[name]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'folder\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'".$filefdata['id']."\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
 				
 					
 		        ?>
@@ -242,7 +242,7 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 				<?php } ?>
 	            </li>
 	            <!-- frame in which the folder data is loaded, if loadFolderDataIntoMiniBrowser() is called -->
-	            <li class="folder<?=$filefdata[id];?>LoadingFrame" style="display: none;"></li>
+	            <li class="folder<?=$filefdata['id'];?>LoadingFrame" style="display: none;"></li>
 	            <!-- keep strippedrow working-->
 	            <li class="strippedRow" style="display: none;"></li>
 	            <?php
@@ -261,8 +261,8 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 		        if(authorize($fileddata[privacy], "show", $fileddata[author])){
 		        	
 				
-				$action['elements'] = "$('.element$fileddata[id]LoadingFrame').loadOuter('doit.php?action=loadMiniBrowser&element=$fileddata[id]&level=$level&select=$select');return false;";
-		        $trigger['elements'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/filesystem/element.png\' alt=\'folder\' height=\'32px\'>&nbsp;$title<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'element\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$fileddata[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+				$action['elements'] = "$('.element".$fileddata['id']."LoadingFrame').loadOuter('doit.php?action=loadMiniBrowser&element=".$fileddata['id']."&level=$level&select=$select');return false;";
+		        $trigger['elements'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/filesystem/element.png\' alt=\'folder\' height=\'32px\'>&nbsp;$title<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'element\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'".$fileddata['id']."\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
 						
 		        ?>
 		            <li class="strippedRow" <?=$style;?>>
@@ -275,7 +275,7 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 	                    <?php } ?>
 		            </li>
 		            <!-- frame in which the element data is loaded, if loadElementDataIntoMiniBrowser() is called -->
-		            <li class="element<?=$fileddata[id];?>LoadingFrame" style="display: none;"></li>
+		            <li class="element<?=$fileddata['id'];?>LoadingFrame" style="display: none;"></li>
 		            <!-- keep strippedrow working-->
 		            <li class="strippedRow" style="display: none;"></li>
 		            <?php
@@ -300,8 +300,8 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
                         $classFiles = new files();
 	                $image = $classFiles->getFileIcon($fileListData['type']);
 					
-					$action['files'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$fileListData[title]<input type=\'hidden\' class=\'choosenType\' name=\'type\' value=\'file\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$fileListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
-					$trigger['files'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$fileListData[title]<input type=\'hidden\' class=\'choosenType\' name=\'type\' value=\'file\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$fileListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+					$action['files'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'".$fileListData['type']."\' height=\'32px\'>&nbsp;$fileListData[title]<input type=\'hidden\' class=\'choosenType\' name=\'type\' value=\'file\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'".$fileListData['id']."\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+					$trigger['files'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'".$fileListData['type']."\' height=\'32px\'>&nbsp;$fileListData[title]<input type=\'hidden\' class=\'choosenType\' name=\'type\' value=\'file\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'".$fileListData['id']."\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
 					
 					
 					
@@ -331,8 +331,8 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 			$classFiles = new files();
 	                $image = $classFiles->getFileIcon($linkListData['type']);
 	                
-					$action['links'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$linkListData[type]\' height=\'32px\'>&nbsp;$linkListData[title]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'link\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$linkListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
-					$trigger['links'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$linkListData[title]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'link\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'$linkListData[id]\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+					$action['links'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$linkListData[type]\' height=\'32px\'>&nbsp;$linkListData[title]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'link\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'".$linkListData['id']."\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+					$trigger['links'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/fileIcons/$image\' alt=\'$fileListData[type]\' height=\'32px\'>&nbsp;$linkListData[title]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'link\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'".$linkListData['id']."\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
 					
 					
 	                    
@@ -660,7 +660,7 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 						$output .= '<tr>';
 						
 						
-				        $documentSQL = mysql_query("SELECT id, title, folder, privacy, owner FROM files WHERE folder='$elementData[id]' AND type IN('image/png','image/jpeg','image')");
+				        $documentSQL = mysql_query("SELECT id, title, folder, privacy, owner FROM files WHERE folder='".$elementData['id']."' AND type IN('image/png','image/jpeg','image')");
 				        while($documentData = mysql_fetch_array($documentSQL)){
 	        				if(authorize($documentData['privacy'], "show", $documentData['owner'])){
 						        //$documentFolderSQL = mysql_query("SELECT path FROM folders WHERE id='$elementData[folder]'");
@@ -675,7 +675,7 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 						        }
 								
 								
-						        $output .= "<td onmouseup=\"showMenu('image$documentData[id]')\" oncontextmenu=\"showMenu('image$documentData[id]'); return false;\"><div id=\"viewerClick$documentData[id]\"><a href=\"#\" onclick=\"filesystem.tabs.updateTabContent('Open ".substr("$elementTitle", 0, 10)."' ,gui.loadPage('./modules/reader/openFile.php?type=image&fileId=$documentData[id]'));return false\"><img src=\"$thumbPath$documentData[title]\" height=\"100px\"></a></div></td>";   
+						        $output .= "<td onmouseup=\"showMenu('image".$documentData['id']."')\" oncontextmenu=\"showMenu('image".$documentData['id']."'); return false;\"><div id=\"viewerClick".$documentData['id']."\"><a href=\"#\" onclick=\"filesystem.tabs.updateTabContent('Open ".substr("$elementTitle", 0, 10)."' ,gui.loadPage('./modules/reader/openFile.php?type=image&fileId=".$documentData['id']."'));return false\"><img src=\"$thumbPath$documentData[title]\" height=\"100px\"></a></div></td>";   
 				       		}
 				        }
 						$output .= "</tr>";

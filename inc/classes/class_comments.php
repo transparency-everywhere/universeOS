@@ -63,7 +63,7 @@ function showComments($type, $itemid) {
                   <td><input type="submit" value="send" class="btn btn-small" name="submitComment" style="margin-left:13px;"></td>
               </tr>
                 <input type="hidden" name="itemid" value="<?=$itemid;?>">
-                <input type="hidden" name="user" value="<?=$_SESSION[userid];?>">
+                <input type="hidden" name="user" value="<?=$_SESSION['userid'];?>">
                 <input type="hidden" name="type" value="<?=$type;?>">
           </table>
       </form>

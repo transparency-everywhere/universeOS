@@ -42,7 +42,8 @@ class fav {
 
                                 }else if($type == "link"){
                                     $typeTable = "links";
-                                    $fileType = linkIdToFileType($item);
+                                    $classLinks = new link();
+                                    $fileType = $classLinks->getType($item);
                                     $filesClass = new files();
                                     $img = "fileIcons/".$filesClass->getFileIcon($fileType);
 
@@ -59,7 +60,7 @@ class fav {
                                 }
                                 $i++;
 
-                                                            $output .= "<tr class=\"strippedRow\" onmouseup=\"showMenu('folder$filefdata[id]')\">";
+                                                            $output .= "<tr class=\"strippedRow\" onmouseup=\"showMenu('folder".$filefdata['id']."')\">";
                                                                     $output .= "<td onmouseup=\"showMenu(".$favFolderData['id'].")\" width=\"35\">&nbsp;<img src=\"./gfx/icons/$img\" height=\"20\"></td>";
                                                                     $output .= "<td onmouseup=\"showMenu(".$favFolderData['id'].")\"><a href=\"#\" onclick=\"$link\">".$favFolderData['name'].""."".$favFolderData['title']."/</a></td>";
                                         if($user == getUser()){
@@ -112,7 +113,7 @@ class fav {
 
     function remove($type, $item){
 		
-			if(mysql_query("DELETE FROM fav WHERE type='".mysql_real_escape_string($type)."' AND user='$_SESSION[userid]' AND item='".mysql_real_escape_string($item)."'")){
+			if(mysql_query("DELETE FROM fav WHERE type='".mysql_real_escape_string($type)."' AND user='".getUser()."' AND item='".mysql_real_escape_string($item)."'")){
 				return true;
 			}
 		

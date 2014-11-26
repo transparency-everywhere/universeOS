@@ -10,7 +10,6 @@ if(getUser()){
     $userData = $userClass->getData();
     $login = true;
 }else{
-    
     $login = false;
     $userData['startLink'] = ''; //otherwise notice 'undefined index'
 }

@@ -261,7 +261,7 @@ class item {
                     $shortTitle = $linkData['title'];
 
                     //define link
-                    $link = "openFile('$linkData[type]', '$linkData[typeId]', '$shortTitle')";
+                    $link = "openFile('$linkData[type]', '".$linkData['typeId']."', '$shortTitle')";
 
                     //define linkIcon
                     $img = "fileIcons/";

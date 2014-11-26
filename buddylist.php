@@ -24,7 +24,7 @@ if(empty($_GET['reload'])){
 						    <a href="#" onclick="openChatDialoge('<?=$username;?>'); return false" title="write Message"><i class="glyphicon glyphicon-envelope" style="font-size:12px"></i></a>
 						    <a href="#" onclick="openChatDialoge('<?=$username;?>'); return false" title="write Message"><i class="glyphicon glyphicon-cog" style="font-size:12px"></i></a>
                                                    
-					 </td>
+			</td>
                 </tr>
 <?
 $i++;

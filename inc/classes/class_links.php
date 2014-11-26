@@ -75,6 +75,14 @@ class link {
         $db = new db();
         return $db->select('links', array('id', $linkId));
     }
+    
+    
+    
+    function getType($linkId){
+        
+        $fileData = mysql_fetch_array(mysql_query("SELECT type FROM links WHERE id='".save($fileId)."'"));
+        return $fileData['type'];
+    }
 }
 
 

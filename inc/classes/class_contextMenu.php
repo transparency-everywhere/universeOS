@@ -91,16 +91,16 @@ class contextMenu{
                                 $checkInternLinkData = $dbClass->select('internLinks', array('id', $itemId));
             
                 if($checkInternLinkData['type'] == "folder"){
-                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT name, privacy, creator FROM folders WHERE id='$checkInternLinkData[typeId]'"));
+                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT name, privacy, creator FROM folders WHERE id='".$checkInternLinkData['typeId']."'"));
                     $user = $shortCutItemData['creator'];
                 }else if($checkInternLinkData['type'] == "element"){
-                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy, creator FROM elements WHERE id='$checkInternLinkData[typeId]'"));
+                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy, creator FROM elements WHERE id='".$checkInternLinkData['typeId']."'"));
                     $user = $shortCutItemData['creator'];
                 }else if($checkInternLinkData['type'] == "file"){
-                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy, type, owner FROM files WHERE id='$checkInternLinkData[typeId]'"));
+                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy, type, owner FROM files WHERE id='".$checkInternLinkData['typeId']."'"));
                     $user = $shortCutItemData['owner'];
                 }else if($checkInternLinkData['type'] == "link"){
-                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, link, privacy, type, author FROM links WHERE id='$checkInternLinkData[typeId]'"));
+                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, link, privacy, type, author FROM links WHERE id='".$checkInternLinkData['typeId']."'"));
                     $user = $shortCutItemData['author'];
                 }
                 

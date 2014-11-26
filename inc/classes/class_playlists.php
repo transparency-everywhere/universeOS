@@ -37,7 +37,7 @@ class playlists {
 
             $sql = mysql_query("SELECT `id` FROM playlist WHERE `user`='".mysql_real_escape_string($userid)."'");
             while($data = mysql_fetch_array($sql)){
-                    $playlists[] = $data[id];
+                    $playlists[] = $data['id'];
             }
             return $playlists;
 	}
@@ -140,7 +140,7 @@ class playlists {
 
                             if(checkAuthorisation($playListFolderData['privacy'])){
                             if($delete){
-                                $deleteRow = "<td><a href=\"doit.php?action=deleteFromPlaylist&playlist=$playListId&type=file&itemId=$playListFolderData[id]\" target=\"submitter\"><img src=\"./gfx/icons/minus.png\" height=\"32\" border=\"0\"></a></td>";
+                                $deleteRow = "<td><a href=\"doit.php?action=deleteFromPlaylist&playlist=$playListId&type=file&itemId=".$playListFolderData['id']."\" target=\"submitter\"><img src=\"./gfx/icons/minus.png\" height=\"32\" border=\"0\"></a></td>";
                             }
                             ?>
                                     <tr class="strippedRow playListfileNo<?=$playListFolderData['id'];?>">
@@ -159,14 +159,14 @@ class playlists {
 
                                 }
                             if($delete){
-                                $deleteRow = "<td><a href=\"doit.php?action=deleteFromPlaylist&playlist=$playListId&type=link&itemId=$playListFolderData[id]\" target=\"submitter\"><img src=\"./gfx/icons/minus.png\" height=\"32\" border=\"0\"></a></td>";
+                                $deleteRow = "<td><a href=\"doit.php?action=deleteFromPlaylist&playlist=$playListId&type=link&itemId=".$playListFolderData['id']."\" target=\"submitter\"><img src=\"./gfx/icons/minus.png\" height=\"32\" border=\"0\"></a></td>";
                             }
 
                             ?>
 
-                                    <tr class="strippedRow playListlinkNo<?=$playListFolderData[id];?>">
+                                    <tr class="strippedRow playListlinkNo<?=$playListFolderData['id'];?>">
                                         <td><img src="./gfx/icons/fileIcons/youTube.png" width="20px" style="margin: 5px;"></td>
-                                        <td>&nbsp;<a href="javascript: nextPlaylistItem('<?=$playListData[id];?>', '<?=$i;?>')"><?=$playListFolderData[title]?></a></td>
+                                        <td>&nbsp;<a href="javascript: nextPlaylistItem('<?=$playListData['id'];?>', '<?=$i;?>')"><?=$playListFolderData['title']?></a></td>
                                         <?=$deleteRow;?>
                                     </tr>
                         <?php
@@ -179,7 +179,7 @@ class playlists {
                             ?>
                                     <tr class="strippedRow playListyouTubeNo<?=$vId;?> tooltipper" onmouseover="mousePop('youTube', '<?=$vId;?>', '');" onmouseout="$('.mousePop').hide();">
                                         <td><img src="./gfx/icons/fileIcons/youTube.png" width="20px" style="margin: 5px;"></td>
-                                        <td>&nbsp;<a href="javascript: nextPlaylistItem('<?=$playListData[id];?>', '<?=$i;?>')">Youtube Video</a></td>
+                                        <td>&nbsp;<a href="javascript: nextPlaylistItem('<?=$playListData['id'];?>', '<?=$i;?>')">Youtube Video</a></td>
                                         <?=$deleteRow;?>
                                     </tr>
                             <?php

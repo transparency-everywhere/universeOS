@@ -128,7 +128,7 @@ class feed {
                 if($feedData['validity'] == TRUE) {
                 $time = time();
                 if($feedData['validity'] < $time){
-                    mysql_query("DELETE FROM feed WHERE id='$feedData[id]'");
+                    mysql_query("DELETE FROM feed WHERE id='".$feedData['id']."'");
                 }}
                 unset($text);
     }
