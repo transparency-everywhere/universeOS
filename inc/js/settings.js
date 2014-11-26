@@ -24,4 +24,16 @@ var settings = new function(){
     this.show = function(){
         settings.applicationVar.show();
     };
+    
+			    this.submitPassword = function () {
+			    	if($('#newPassword').val() === $('#newPasswordRepeat').val() && $('#newPassword').val().length > 0){ 
+			    		updatePassword($('#oldPassword').val(), $('#newPassword').val(), localStorage.currentUser_userid);
+			    		$('.changePassword').slideUp();
+			    	}else if($('#newPassword').val().length === 0){
+			    		jsAlert('', 'The password is to short');
+			    	}else{
+			    		jsAlert('The passwords dont match');
+			    	}
+			    };
+    
 };

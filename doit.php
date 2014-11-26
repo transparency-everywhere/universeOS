@@ -926,7 +926,7 @@ else if($_GET['action'] == "groupAdmin"){
 												  </button>
 												  <ul class="dropdown-menu">
 												    <li>&nbsp;<a href="doit.php?action=deleteUserFromGroup&groupid=<?=$group;?>&userid=<?=$groupUseData['itemId'];?>" target="submitter">delete</a></li>
-												    <li>&nbsp;<a href="#" onclick="groupMakeUserAdmin('<?=$group;?>', '<?=$groupUseData['itemId'];?>'); return false">make Admin</a></li>
+												    <li>&nbsp;<a href="#" onclick="groups.makeUserAdmin('<?=$group;?>', '<?=$groupUseData['itemId'];?>'); return false">make Admin</a></li>
 												  </ul>
 												</div>
 												&nbsp;
@@ -2482,11 +2482,6 @@ else if($_GET['action'] == "reportFile"){
                 });
             </script>
                 <?
-            }
-else if($_GET['action'] == "updateUserActivity"){
-                if(proofLogin()){
-                updateActivity("$_SESSION[userid]");
-                }
             }
 else if($_GET['action'] == "reportBug"){
                 if(isset($_POST['submit'])){

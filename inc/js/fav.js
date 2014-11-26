@@ -28,4 +28,11 @@ var fav = new function(){
 	});
 	return result;
     };
+    
+this.remove = function(type, typeId){
+    if($.post("doit.php?action=removeFav", { type: type, typeId: typeId } )){
+	jsAlert('', 'Your favorite has been removed.');
+	updateDashbox('fav');
+    }
+}
 };

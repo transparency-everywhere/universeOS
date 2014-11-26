@@ -1639,6 +1639,14 @@ var groups = new function(){
 				   	}
 			  		
 			  	};
+                               
+        this.makeUserAdmin = function(groupId, userId){
+                $.post( "doit.php?action=groupMakeUserAdmin&groupId="+groupId+"&userId="+userId, function( data ) {
+                  if(data == true){
+                        jsAlert('', 'The admin has been added.');
+                  }
+                });
+        };
 	
 };
 
@@ -2730,22 +2738,8 @@ function toggleDashboard(){
 	$('#dashboard:visible').slideUp();
 	$('#dashboard:hidden').slideDown();
 }
-    
-    
-//group - needs to be put in own var
-function groupMakeUserAdmin(groupId, userId){
-	
-	$.post( "doit.php?action=groupMakeUserAdmin&groupId="+groupId+"&userId="+userId, function( data ) {
-	  if(data == true){
-	  	jsAlert('', 'The admin has been added.');
-	  }
-	});
-	
-}
-//old index functions
 
-
-	//rightclick
+//rightclick
 function clearMenu() { //used to make the menu disappear
                     //this function should be used at the beginning of any function that is called from the menu
                     var cssObj = {
@@ -2779,10 +2773,6 @@ function showMenu(id) {
                         $(".rightclick").css('z-index', '99999');
                     }
                 }
-                
-function updateUserActivity() {
-              	$("#loader").load("doit.php?action=updateUserActivity");
-              }
 
 
    
@@ -2801,12 +2791,6 @@ function nextPlaylistItem(playList, row){
               }
 
 
-function removeFav(type, typeId){
-			  	if($.post("doit.php?action=removeFav", { type: type, typeId: typeId } )){
-			  		jsAlert('', 'Your favorite has been removed.');
-			  		updateDashbox('fav');
-			  	}
-			  }
 	  
   
 function showSubComment(commentId) {
@@ -2820,6 +2804,10 @@ function showfeedComment(feedId) {
 function loader(id, link){
                   $("#" + id + "").load("" + link + "");
               }
+              
+function popper(url) {
+              $("#loader").load("" + url +"");
+                }
               
 function deleteFromPersonals(id){
                   $("#loader").load("doit.php?action=deleteFromPersonals&id=" + id + "");
@@ -2846,18 +2834,9 @@ function showPlaylist(id){
 function startPlayer(type, typeid){
               $("#dockplayer").load("player/dockplayer.php?reload=1&" + type +"=" + typeid + "");
               }
-
-function popper(url) {
-              $("#loader").load("" + url +"");
-                }
-
 function closeDockMenu(){
                 $("#dockMenu").hide("fast");
               }
-
-function updateUserActivity() {
-              $("#loader").load("doit.php?action=updateUserActivity");
-                }
   
 function clock() {
     
@@ -2880,22 +2859,6 @@ function clock() {
                 $('#clockDiv').html(outStr);
                 setTimeout('clock()',36000);
               }
-
-var settings =  new function() {
-			    this.userid = localStorage.currentUser_userid;
-			    
-			    this.submitPassword = function () {
-			    	if($('#newPassword').val() === $('#newPasswordRepeat').val() && $('#newPassword').val().length > 0){ 
-			    		updatePassword($('#oldPassword').val(), $('#newPassword').val(), this.userid);
-			    		$('.changePassword').slideUp();
-			    	}else if($('#newPassword').val().length === 0){
-			    		jsAlert('', 'The password is to short');
-			    	}else{
-			    		jsAlert('The passwords dont match');
-			    	}
-			    };
-			};
-              
 
 //PLUGINS
 //PLUGINS

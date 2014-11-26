@@ -7,9 +7,8 @@ require_once("inc/functions.php");
 if(empty($_GET['reload'])){
 ?>
         <div id="buddyListFrame">
-        <? } ?>
-            <table width="100%" cellspacing="0">
-            <?
+        <? } 
+            echo'<table width="100%" cellspacing="0">';
             $buddyListClass = new buddylist();
             $buddies = $buddyListClass->buddyListArray();
 			foreach($buddies AS $buddy){
@@ -31,20 +30,15 @@ if(empty($_GET['reload'])){
 $i++;
 }
 $_SESSION['reloadBuddylist'] = "$userRow";
-?>
-            </table>
-        <?
+
+            echo '</table>';
 if(empty($_GET['reload'])){
 if(empty($i)){
-    ?>
-                <div style="font-size: 12pt;">
-                    search for the user- or realname of your friends, to add them to your buddylist.
-                </div>
-<?
-}?>
-        </div>
-   	<?
+    echo'<div style="font-size: 12pt;">';
+        echo'search for the user- or realname of your friends, to add them to your buddylist.';
+    echo '</div>';
+}
+echo'</div>';
         
-	$buddyListClass->showBuddySuggestions();
-	?>
-<? } ?>
+$buddyListClass->showBuddySuggestions();
+} ?>
