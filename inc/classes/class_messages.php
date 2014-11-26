@@ -16,8 +16,10 @@ class message{
 
         if($sender == NULL)
                 $sender = getUser();
-
-                updateActivity($sender);
+        
+        $userClass = new user();
+        $userClass->updateActivity($sender);
+        
         $buddy = $receiver;
         if($crypted == "true"){
             $crypt = "1";
@@ -40,7 +42,9 @@ class message{
     }	
     function getLast($userid){
             $userid = save($userid);
-            updateActivity($userid);
+            
+            $userClass = new user();
+            $userClass->updateActivity($userid);
             $chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' OR receiver='$userid' ORDER BY timestamp DESC LIMIT 1");
             $chatData =  mysql_fetch_array($chatSQL);
 
@@ -72,9 +76,11 @@ class message{
 		return $return;
 	}
 	function showMessages($userid, $buddyId, $limit){
-		
-		$buddyData = getUserData($buddyId);
-		$userData = getUserData($userid);
+		$buddyClass =  new user($buddyId);
+		$buddyData = $buddyClass->getData();
+                
+                $userClass = new user($userid);
+		$userData = $userClass->getData($userid);
 		
 				
 		

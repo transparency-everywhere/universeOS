@@ -12,12 +12,12 @@
  * @author niczem
  */
 class fav {
-    function show($user=NULL){ 
+    function show($user=NULL){
                             if($user == NULL){
                                     $user = getUser();
                             }
-
-                            $userFavs = getUserFavs($user);
+                            $userClass = new user($user);
+                            $userFavs = $userClass->getFav();
                                                     $i = 0;
                                                     $output;
                                             foreach($userFavs AS $filefdata){

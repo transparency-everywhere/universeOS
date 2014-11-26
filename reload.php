@@ -7,7 +7,9 @@ require_once("inc/functions.php");
 $userid = getUser();
 if(proofLogin()){
 echo"<script>";
-updateActivity($userid);
+
+$userClass = new user();
+$userClass->updateActivity($userid);
 $time = time();
 
 //UFF Viewer

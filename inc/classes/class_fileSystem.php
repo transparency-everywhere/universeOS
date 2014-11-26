@@ -31,7 +31,8 @@ class fileSystem {
             }else{
 
                             //get userfolder
-                            $userData = getUserData();
+                            $userClass = new user(getUser());
+                            $userData = $userClass->getData();
                             $userfolder = $userData['homefolder'];
 
 

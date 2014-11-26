@@ -13,7 +13,7 @@
  */
 class user {
     var $userid;
-   function __construct($userid=NULL) {
+    function __construct($userid=NULL) {
         $this->userid = $userid;
     }
     public function login($username, $password){
@@ -43,7 +43,9 @@ class user {
 
             $feedClass = new feed();
             $feedClass->create($_SESSION['userid'], "is logged in", "60", "feed", "p");
-            updateActivity($_SESSION['userid']);
+            
+            $userClass = new user();
+            $userClass->updateActivity($_SESSION['userid']);
 
 
             return 1;
@@ -76,12 +78,143 @@ class user {
 	return $userData;
         
     }
+    public function updateActivity($userid){
+          $time = time();
+          mysql_query("UPDATE user SET lastactivity='$time' WHERE userid='$userid'");
+    }
+    
+    public function getFav($userid=NULL){
+        $return;
+        if(empty($userid)){
+                $userid=$this->userid;
+        }
+        $favSQL = mysql_query("SELECT * FROM fav WHERE user='$userid'");
+        while($favData = mysql_fetch_array($favSQL)){
+                $return[] = $favData;
+        }
+
+        return $return;
+    }
+
+    function getUserFavOutput($user){
+		if(empty($user)){
+			$user = $_SESSION['userid'];
+		}
+		
+		
+    }
+    
+    public function getUsername(){
+        $userData = $this->getData();
+        return $userData['username'];
+    }
+  
+    public function create($username, $password, $authSalt, $keySalt, $privateKey, $publicKey){
+
+        $username = save($_POST['username']);
+        $sql = mysql_query("SELECT username FROM user WHERE username='$username'");
+        $data = mysql_fetch_array($sql);
+
+        if(empty($data['username'])){
+            $time = time();
+            mysql_query("INSERT INTO `user` (`password`, `cypher`, `username`, `email`, `regdate`, `lastactivity`) VALUES ('$password', 'sha512_2', '$username', '', '$time', '$time')");
+            $userid = mysql_insert_id();
+
+                    //store salts
+                    $saltClass = new salt();
+                    $saltClass->create('auth', $userid, 'user', $userid, $authSalt);
+                    $saltClass->create('privateKey', $userid, 'user', $userid, $keySalt);
+
+                    //create signature
+                    $sig = new signatures();
+                    $sig->create('user', $userid, $privateKey, $publicKey);
+
+            //create user folder(name=userid) in folder userFiles
+            $folderClass = new folder();
+            $userFolder = $folderClass->create("2", $userid, $userid, "h");
+
+            //create folder for userpics in user folder
+            $pictureFolder = $folderClass->create($userFolder, "userPictures", $userid, "h");
+
+            //create thumb folders || NOT LISTED IN DB!
+            $path3 = universeBasePath."//upload//userFiles//$userid//userPictures//thumb";
+            $path4 = universeBasePath."//upload//userFiles//$userid//userPictures//thumb//25";
+            $path5 = universeBasePath."//upload//userFiles//$userid//userPictures//thumb//40";
+            $path6 = universeBasePath."//upload//userFiles//$userid//userPictures//thumb//300";
+            mkdir($path3);  //Creates Thumbnail Folder
+            mkdir($path4); //Creates Thumbnail Folder
+            mkdir($path5); //Creates Thumbnail Folder
+            mkdir($path6); //Creates Thumbnail Folder
+
+
+            //create Element "myFiles" in userFolder
+            $element = new element();
+            $myFiles = $element->create($userFolder, "myFiles", "myFiles", $userid, "h");
+
+            //create Element "user pictures" to collect profile pictures
+            $pictureElement = $element->create($pictureFolder, "profile pictures", "image", $userid, "p");
+
+
+            mysql_query("UPDATE user SET homefolder='$userFolder', myFiles='$myFiles', profilepictureelement='$pictureElement' WHERE userid='$userid'");
+
+            return true;
+        }
+    }
+    
+    
+    //not in use so far
+    function delete($userid, $reason){
+          $authorization = true;
+          if($authorization){
+
+              //delete all files
+              $fileSQL = mysql_query("SELECT id FROM files WHERE owner='$userid'");
+              while($fileData = mysql_fetch_array($fileSQL)){
+                  $fileClass = new file($fileData['id']);
+                  $fileClass->deleteFile();
+
+              }
+
+              //delete all links
+              $linkClass = new link();
+              $linkSQL = mysql_query("SELECT id FROM links WHERE author='$userid'");
+              while($linkData = mysql_fetch_array($linkSQL)){
+                $linkClass->deleteLink($linkData['userid']);
+              }
+
+
+              //elements
+              $elementSQL = mysql_query("SELECT id FROM elements WHERE author='$userid'");
+              while($elementData = mysql_fetch_array($elementSQL)){
+                  $element = new element($elementData['id']);
+                  $element->delete();
+              }
+
+
+              //folders
+              $folderSQL = mysql_query("SELECT id FROM folders creator='$userid'");
+              while($folderData = mysql_fetch_array($folderSQL)){
+                  $classFolder = new folder($folderData['id']);
+                  $classFolder->delete();
+              }
+
+              //comments
+
+
+              //buddy
+              mysql_query("DELETE FROM buddylist WHERE buddy='$userid' OR owner='$userid'");
+
+              //delete user
+              mysql_query("DELETE FROM user WHERE userid='$userid'");
+
+
+              //log userid, username, reason
+
+          }
+    }
+
 }
 
-function getUsername(){
-    $userData = $this->getData();
-    return $userData['username'];
-}
 
 
 function updateUserPassword($oldPassword, $newPassword, $newAuthSalt=NULL, $newKeySalt=NULL, $privateKey=NULL, $userid=NULL){
@@ -89,8 +222,9 @@ function updateUserPassword($oldPassword, $newPassword, $newAuthSalt=NULL, $newK
   		$userid = getUser();
   	}
 	
-	
-	$userData = getUserData($userid);
+	$userClass = new user($userid);
+	$userData = $userClass->getData($userid);
+        
 	if($userData['password'] == $oldPassword){
 		
                 $saltClass = new salt();
@@ -125,7 +259,8 @@ function proofLogin(){
 
 function proofLoginMobile($user, $hash){
   	
-	$userData = getUserData($user);
+        $userClass = new user($user);
+	$userData = $userClass->getData($user);
 	
 	if($userData['password'] == $hash){
 		return true;
@@ -195,22 +330,6 @@ function useridToRealname($userid){
         return $loginData['realname'];
   }
 
-function getUserData($userid=NULL){
-  	if(empty($userid)){
-  		$userid = getUser();
-  	}
-	
-	$userData = mysql_fetch_array(mysql_query("SELECT * FROM `user` WHERE userid='$userid'"));
-	return $userData;
-  }
-  
-  
-function updateActivity($userid){
-      $time = time();
-      mysql_query("UPDATE user SET lastactivity='$time' WHERE userid='$userid'");
-  }
-//shows online status
-   
 function userSignature($userid, $timestamp, $subpath = NULL, $reverse=NULL){
     $feedUserSql = mysql_query("SELECT userid, username, userPicture FROM user WHERE userid='$userid'");
     $feedUserData = mysql_fetch_array($feedUserSql);
@@ -266,134 +385,8 @@ function userSignature($userid, $timestamp, $subpath = NULL, $reverse=NULL){
       <?php
   }
   
-  
-function createUser($username, $password, $authSalt, $keySalt, $privateKey, $publicKey){
-    
-    $username = save($_POST['username']);
-    $sql = mysql_query("SELECT username FROM user WHERE username='$username'");
-    $data = mysql_fetch_array($sql);
-    
-    if(empty($data['username'])){
-        $time = time();
-        mysql_query("INSERT INTO `user` (`password`, `cypher`, `username`, `email`, `regdate`, `lastactivity`) VALUES ('$password', 'sha512_2', '$username', '', '$time', '$time')");
-        $userid = mysql_insert_id();
-		
-		//store salts
-                $saltClass = new salt();
-		$saltClass->create('auth', $userid, 'user', $userid, $authSalt);
-		$saltClass->create('privateKey', $userid, 'user', $userid, $keySalt);
-			
-		//create signature
-		$sig = new signatures();
-		$sig->create('user', $userid, $privateKey, $publicKey);
-		
-        //create user folder(name=userid) in folder userFiles
-        $folderClass = new folder();
-        $userFolder = $folderClass->create("2", $userid, $userid, "h");
-        
-        //create folder for userpics in user folder
-        $pictureFolder = $folderClass->create($userFolder, "userPictures", $userid, "h");
-        
-        //create thumb folders || NOT LISTED IN DB!
-        $path3 = universeBasePath."//upload//userFiles//$userid//userPictures//thumb";
-        $path4 = universeBasePath."//upload//userFiles//$userid//userPictures//thumb//25";
-        $path5 = universeBasePath."//upload//userFiles//$userid//userPictures//thumb//40";
-        $path6 = universeBasePath."//upload//userFiles//$userid//userPictures//thumb//300";
-        mkdir($path3);  //Creates Thumbnail Folder
-        mkdir($path4); //Creates Thumbnail Folder
-        mkdir($path5); //Creates Thumbnail Folder
-        mkdir($path6); //Creates Thumbnail Folder
-        
-        
-        //create Element "myFiles" in userFolder
-        $element = new element();
-        $myFiles = $element->create($userFolder, "myFiles", "myFiles", $userid, "h");
-        
-        //create Element "user pictures" to collect profile pictures
-        $pictureElement = $element->create($pictureFolder, "profile pictures", "image", $userid, "p");
-
-
-        mysql_query("UPDATE user SET homefolder='$userFolder', myFiles='$myFiles', profilepictureelement='$pictureElement' WHERE userid='$userid'");
-
-        return true;
-    }
-      
-  }
-
-
-function getUserFavs($userid=NULL){
-    $return;
-    if(empty($userid)){
-            $userid=$_SESSION['userid'];
-    }
-    $favSQL = mysql_query("SELECT * FROM fav WHERE user='$userid'");
-    while($favData = mysql_fetch_array($favSQL)){
-            $return[] = $favData;
-    }
-
-    return $return;
-  }
-
-function getUserFavOutput($user){
-		if(empty($user)){
-			$user = $_SESSION['userid'];
-		}
-		
-		
-	}
 
         
-
-function deleteUser($userid, $reason){
-      $authorization = true;
-      if($authorization){
-          
-          //delete all files
-          $fileSQL = mysql_query("SELECT id FROM files WHERE owner='$userid'");
-          while($fileData = mysql_fetch_array($fileSQL)){
-              $fileClass = new file($fileData['id']);
-              $fileClass->deleteFile();
-              
-          }
-          
-          //delete all links
-          $linkClass = new link();
-          $linkSQL = mysql_query("SELECT id FROM links WHERE author='$userid'");
-          while($linkData = mysql_fetch_array($linkSQL)){
-            $linkClass->deleteLink($linkData['userid']);
-          }
-          
-          
-          //elements
-          $elementSQL = mysql_query("SELECT id FROM elements WHERE author='$userid'");
-          while($elementData = mysql_fetch_array($elementSQL)){
-              $element = new element($elementData['id']);
-              $element->delete();
-          }
-          
-          
-          //folders
-          $folderSQL = mysql_query("SELECT id FROM folders creator='$userid'");
-          while($folderData = mysql_fetch_array($folderSQL)){
-              $classFolder = new folder($folderData['id']);
-              $classFolder->delete();
-          }
-          
-          //comments
-          
-          
-          //buddy
-          mysql_query("DELETE FROM buddylist WHERE buddy='$userid' OR owner='$userid'");
-          
-          //delete user
-          mysql_query("DELETE FROM user WHERE userid='$userid'");
-         
-          
-          //log userid, username, reason
-          
-      }
-  }
-
 function showUserPicture($userid, $size, $subpath = NULL, $small = NULL /*defines if functions returns or echos and if script with bordercolor is loaded*/){
     $picSQL = mysql_query("SELECT userid, lastactivity, userPicture, priv_profilePicture FROM user WHERE userid='".mysql_real_escape_string($userid)."'");
     $picData = mysql_fetch_array($picSQL);

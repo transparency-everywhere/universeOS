@@ -18,7 +18,8 @@ class sec{
 	}
 	
 	function validateUserSignature($userid, $signature){
-		$userData = getUserData($password);
+                $userClass = new user($userid);
+		$userData = $userClass->getData($password);
 		if($signature == $userData['password'])
 			return true;
 		else

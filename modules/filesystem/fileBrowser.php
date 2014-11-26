@@ -58,7 +58,9 @@ if(isset($_GET['folder'])){
 			//userFolder
 		if($folder == "2"){
 			if(proofLogin()){
-				$userData = getUserData();
+                                $userClass = new user(getUser());
+				$userData = $userClass->getData();
+                                
 				$folder = $userData['homefolder'];
 				$showFileBrowser = true;
 			}else{

@@ -24,8 +24,8 @@ switch($action){
 			}else{
 				$userid = $_POST['userid'];
 			}
-				
-				$userData = getUserData($userid);
+				$userClass = new user($userid);
+				$userData = $userClass->getData();
 			
 				echo $userData['cypher'];
 			
@@ -36,8 +36,8 @@ switch($action){
 			}else{
 				$userid = $_POST['userid'];
 			}
-				
-				$userData = getUserData($userid);
+				$userClass = new user($userid);
+				$userData = $userClass->getData();
 			
 				echo $userData['salt'];
 			
@@ -45,7 +45,8 @@ switch($action){
 	case 'updatePasswordAndCreateSignatures':
 		
 		$userid = save($_POST['userid']);
-		$userData = getUserData($userid);
+                $userClass = new user($userid);
+		$userData = $userClass->getData();
 		$password = save($_POST['password']);
 		$oldPassword = save($_POST['oldPassword']);
 		$salt = save($_POST['salt']);
@@ -74,7 +75,8 @@ switch($action){
 	break;
 	case 'update_sha512TOsha512_2':
 		$userid = save($_POST['userid']);
-		$userData = getUserData($userid);
+                $userClass = new user($userid);
+		$userData = $userClass->getData($userid);
 		
 		if($userData['cypher'] == 'sha512'){
 			
@@ -373,21 +375,22 @@ switch($action){
     case 'processSiteRegistration':
     
 	    if(validateCapatcha($_POST['captcha'])){
-	        createUser($_POST['username'], $_POST['password'], $_POST['authSalt'], $_POST['keySalt'], $_POST['privateKey'], $_POST['publicKey']);
+                $classUser = new user();
+	        $classUser->create($_POST['username'], $_POST['password'], $_POST['authSalt'], $_POST['keySalt'], $_POST['privateKey'], $_POST['publicKey']);
 			
 			
-			echo "1";
-	   	}else{
+		echo "1";
+            }else{
 	    	echo "The Captcha was wrong";
-	   	}
+            }
         
     break;
 	
     //is used for universeIM registration form
     case 'processSiteRegistrationMobile':
-    
-	        createUser($_POST['username'], $_POST['password'], $_POST['authSalt'], $_POST['keySalt'], $_POST['privateKey'], $_POST['publicKey']);
-			echo "1";
+            $classUser = new user();
+	    $classUser->create($_POST['username'], $_POST['password'], $_POST['authSalt'], $_POST['keySalt'], $_POST['privateKey'], $_POST['publicKey']);
+            echo "1";
 			
     break;
 	

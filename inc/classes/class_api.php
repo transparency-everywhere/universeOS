@@ -81,8 +81,8 @@ class api{
 			$userids = json_decode($request,true);
 		}
 			foreach($userids AS $userid){
-				
-				$userData = getUserData($userid);
+				$userClass = new user($userid);
+				$userData = $userClass->getData();
 			
 				//check if user is standard user
 				if(empty($userData['userPicture'])){

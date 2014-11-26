@@ -14,7 +14,8 @@ $buddyid = user::usernameToUserid($buddyName);
 
 $buddyData = user::getData($buddyid);
 
-$userData = getUserData($userid);
+$userClass = new user();
+$userData = $userClass->getData($userid);
 $buddy = $buddyid;
 
 $intWindows = "$buddyid.key";
