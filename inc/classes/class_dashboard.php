@@ -172,7 +172,7 @@ class dashBoard{
 		
 			$title = "Your Messages";
 			
-			$output .= "<ul id=\"messageList\">";
+			$output = "<ul id=\"messageList\">";
 			$i = 0;
 			foreach($lastMessages AS $message){
 				

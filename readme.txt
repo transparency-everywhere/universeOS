@@ -76,8 +76,7 @@ Files and the use of them
 		inc/style.css		//all the css stuff
 	
 	Will be deleted
-		function showActivity =>  deprecated due integration in showUserPicture()
-		function checkAuthorisation => deprecated
+		function checkAuthorisation => deprecated?
 		function showYoutubeVideo => no use at all
 		
 		

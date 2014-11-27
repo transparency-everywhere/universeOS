@@ -380,7 +380,7 @@ function getTitle(){
 	}
 
 
-    function getFileType($fileId){
+    function getFileType(){
         $fileId = $this->id;
             $fileData = mysql_fetch_array(mysql_query("SELECT type FROM files WHERE id='".save($fileId)."'"));
             return $fileData['type'];

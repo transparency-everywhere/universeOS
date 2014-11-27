@@ -19,7 +19,7 @@ class fav {
                             $userClass = new user($user);
                             $userFavs = $userClass->getFav();
                                                     $i = 0;
-                                                    $output;
+                                                    $output = '';
                                             foreach($userFavs AS $filefdata){
                                                             $item = $filefdata['item'];
                                 $type = $filefdata['type'];
@@ -50,9 +50,12 @@ class fav {
                                 }
                                 $dbClass = new db();
                                 $favFolderData = $dbClass->select($typeTable, array('id', $item));
-                                if($filefdata['type'] == "folder"){
-                                $filefdata['title'] = $filefdata['name'];
-                                }
+                                    if(isset($favFolderData['name'])){
+                                        $favFolderData['title'] = $favFolderData['name'];
+                                    }else{
+                                        $favFolderData['name'] = ''; //fix so the notice 'undefined index' won't be shown anymore
+                                    }
+                                    
                                 if($i%2 == 0){
                                     $color="FFFFFF";
                                 }else {

@@ -143,7 +143,10 @@ class message{
    	}else{
    		$user = save($user);
    	}
+        
+        $returner = array();
    	$listedUsers[] = $user;
+        $session = '';
 	$newMessagesSql = mysql_query("SELECT * FROM  `messages` WHERE  receiver='$user' OR sender='$user' ORDER BY timestamp DESC LIMIT 0, 5");
 	while($newMessagesData = mysql_fetch_array($newMessagesSql)){
 		$session .= "newMessage ".$newMessagesData['id'];
