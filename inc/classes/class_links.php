@@ -14,10 +14,16 @@
 class link {
 	function create($folder, $title, $type, $privacy, $link){
             
-                $user = getUser();
 
-                $time = time();
-                if(mysql_query("INSERT INTO `links` (`folder`, `type`, `title`, `link`, `privacy`, `author`, `timestamp`) VALUES ( '".save($folder)."', '".save($type)."', '".save($title)."', '".save($link)."', '$privacy', '$user', '$time');")){
+                $values['folder'] = $folder;
+                $values['type'] = $type;
+                $values['title'] = $title;
+                $values['link'] = $link;
+                $values['privacy'] = $privacy;
+                $values['author'] =  getUser();
+                $values['timestamp'] = time();
+                $db = new db();
+                if($db->insert('links', $values)){
                 	
                     $feedText = "has created the link $title in the folder";
                     $feedLink1 = mysql_insert_id();

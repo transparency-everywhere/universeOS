@@ -1,4 +1,5 @@
 <?php
+
 //This file is published by transparency-everywhere with the best deeds.
 //Check transparency-everywhere.com for further information.
 //Licensed under the CC License, Version 4.0 (the "License");
@@ -15,10 +16,11 @@
 //
 //@author nicZem for Tranpanrency-everywhere.com
 
-include('../../../inc/config.php');
-include('../../../inc/functions.php');
-
-
-//set privacy
-$favClass = new fav();
-echo $favClass->addFav($_POST['type'], $_POST['typeid']);
+include('../../../../inc/config.php');
+include('../../../../inc/functions.php');
+ 
+$type = $_POST['type'];
+$typeid = $_POST['item'];//
+$item = new item($type, $typeid);
+$item->plusOne();
+?>

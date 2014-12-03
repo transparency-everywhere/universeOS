@@ -23,10 +23,17 @@ class element {
     //put your code here
     
     function create($folder, $title, $type, $user, $privacy){
-    	$title = mysql_real_escape_string($title);
-        $time = time();
-        mysql_query("INSERT INTO `elements` (`title`, `folder`, `type`, `author`, `timestamp`, `privacy`) VALUES ('$title', '$folder', '$type', '$user', '$time', '$privacy');");
-        return mysql_insert_id();
+        
+        
+        $values['title'] = $title;
+        $values['folder'] = $folder;
+        $values['type'] = $type;
+        $values['author'] = $user;
+        $values['timestamp'] = time();
+        $values['privacy'] =  $privacy;
+        
+        $db = new db();
+        return $db->insert('elements', $values);
     }
     
     function update($folder, $title, $type, $privacy){

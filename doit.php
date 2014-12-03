@@ -6,54 +6,6 @@ $time = time();
 if($_GET['action'] == "showScore"){
     $item = new item($_GET['type'], $_GET['typeid']);
     echo $item->showScore(1);
-} 
-if($_GET['action'] == "scorePlus"){
-    $type = $_GET['type'];
-    $typeid = $_GET['typeid'];
-    $item = new item($type, $typeid);
-    $item->plusOne();
-    ?>
-    <script>
-        parent.$('.score<?=$type;?><?=$typeid;?>').load('doit.php?action=showScore&type=<?=$type;?>&typeid=<?=$typeid;?>');
-    </script>
-    <?
-}
-else if($_GET['action'] == "scoreMinus"){
-        $type = $_GET['type'];
-        $typeid = $_GET['typeid'];
-        $item = new item($type, $typeid);
-        $item->minusOne();
-        ?>
-        <script>
-            parent.$('.score<?=$type;?><?=$typeid;?>').load('doit.php?action=showScore&type=<?=$type;?>&typeid=<?=$typeid;?>');
-        </script>
-        <?
-}
-else if($_GET['action'] == "addFav"){
-        $type = $_GET['type'];
-        $check = mysql_query("SELECT type,item FROM fav WHERE type='".$_GET['type']."' && item='".$_GET['item']."' && user='".$_SESSION['userid']."'");
-        $checkData = mysql_fetch_array($check);
-        if(isset($checkData['type'])){
-            jsAlert("allready your favourite :/");
-        } else {
-            $time = time();
-            if(mysql_query("INSERT INTO fav (`type` ,`item` ,`user` ,`timestamp`) VALUES('".$_GET['type']."', '".$_GET['item']."', '".$_SESSION['userid']."', '$time');")){ 
-            jsAlert("worked :)");
-            $insertId = mysql_insert_id();
-            $favSQL = mysql_query("SELECT item FROM fav WHERE id='$insertId'");
-            $favData = mysql_fetch_array($favSQL);
-                            $favLinkSql = mysql_query("SELECT id, title, link FROM links WHERE id='".$favData['item']."'");
-                            $favLinkData = mysql_fetch_array($favLinkSql);
-                            $title = substr($favLinkData['title'], '0', '15');
-            ?>
-            <script>
-            
-            	parent.updateDashbox('fav');
-                parent.$('#rssFavList').append('<li><img src="./gfx/icons/rss.png" height="10">&nbsp;<a href="#" onclick="loader(\'newsContentFrame\',\'doit.php?action=showSingleRssFeed&id=<?=$favData['item'];?>\');"><?=$title;?></a></li>');
-            </script>
-            <?
-            }
-        }
 }
 else if($_GET['action'] == "removeFav"){
         $classFav = new fav();
@@ -79,30 +31,6 @@ else if($_GET['action'] == "requestnegative"){
 			
         }
     }
-else if($_GET['action'] == "addbuddy"){
-    	
-        $buddyListClass = new buddylist();
-    
-	$buddy = save($_GET['buddy']);
-		
-    	$check = $buddyListClass->addBuddy($buddy);
-		if($check){
-		$message = "The Buddy was added.";
-		$_SESSION['personalFeed'] = 0;
-        jsAlert($message);
-		?>
-		<script>
-			parent.$('.friendButton_<?=$buddy;?>').html('request sent');
-			parent.$('.friendButton_<?=$buddy;?>').addClass("disabled");
-			parent.$('#buddySuggestions').load('doit.php?action=showBuddySuggestList');
-		</script>
-		<?
-		}else{
-			
-			$message = "There was an error.";
-	        jsAlert($message);
-		}
-     }
 else if($_GET['action'] == "addToNotSuggestList"){
                 $buddylistClass = new buddylist();
 		$buddylistClass->addToNotSuggestList($_GET['user']);

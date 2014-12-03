@@ -12,29 +12,32 @@
 //        See the License for the specific language governing permissions and
 //        limitations under the License.
 //        @author nicZem for Tranpanrency - everywhere.com
-        
 
-var fav = new function(){
-    this.add = function(type,typeid){
-	$.ajax({
-            url:"api/fav/add/",
-            async: false,  
-            type: "POST",
-            data: {type : type, typeid:typeid},
-            success:function(data) {
-               if(data == '1'){
-                    gui.alert('The favorite has been added.', 'Add Favorite');
-               }else{
-                    gui.alert(data, 'Add Favorite');
-               }
-            }
-	});
+var item = new function(){
+    this.plusOne = function(type, itemId){
+        
+        
+        $.ajax({
+              url: 'api/item/score/scorePlus/',
+              type: "POST",
+              data: {type: type, item:itemId},
+              async: false,
+              success: function(data) {
+                $('.score'+type+itemId).load('doit.php?action=showScore&type='+type+'&typeid='+itemId+'');
+              }
+        });
+        
     };
-    
-this.remove = function(type, typeId){
-    if($.post("api/fav/remove/", { type: type, typeId: typeId } )){
-	gui.alert('Your favorite has been removed.', 'Remove Favorite');
-	updateDashbox('fav');
-    }
-}
+    this.minusOne = function(type, itemId){
+        $.ajax({
+              url: 'api/item/score/scoreMinus/',
+              type: "POST",
+              data: {type: type, item:itemId},
+              async: false,
+              success: function(data) {
+                $('.score'+type+itemId).load('doit.php?action=showScore&type='+type+'&typeid='+itemId+'');
+              }
+        });
+    };
 };
+        

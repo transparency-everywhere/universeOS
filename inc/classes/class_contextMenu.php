@@ -124,8 +124,8 @@ class contextMenu{
 				if(proofLogin()){
 					
 					$fav['title'] = 'Add to Fav';
-					$fav['href'] = "doit.php?action=addFav&type=folder&item=$itemId";
-					$fav['target'] = 'submitter';
+					$fav['href'] = "#";
+					$fav['onclick'] = "fav.add('folder', '$itemId');";
 					
 				}
 				
@@ -216,8 +216,8 @@ class contextMenu{
 			 
 			 	if(proofLogin()){
 			 		$fav['title'] = 'Add to Fav';
-					$fav['href'] = "doit.php?action=addFav&type=element&item=$itemId";
-					$fav['target'] = "submitter";
+					$fav['href'] = "#";
+					$fav['onclick'] = "fav.add('element', '$itemId');";
 			 	}
 			 
                                 $privacyClass = new privacy($checkElementData['privacy']);
@@ -273,8 +273,8 @@ class contextMenu{
 			  
 			  	if(proofLogin()){
 			  		$fav['title'] = 'Add to Fav';
-					$fav['href'] = "doit.php?action=addFav&type=file&item=$itemId";
-					$fav['target'] = 'submitter';
+					$fav['href'] = "#";
+					$fav['onclick'] = "fav.add('file', '$itemId');";
 				
 					$playlist['title'] = 'Add to Playlist';
 					$playlist['href'] = '#';
@@ -359,8 +359,8 @@ class contextMenu{
 			  	$download['target'] = 'submitter';
 			  	if(proofLogin()){
 			  		$fav['title'] = 'Add to Fav';
-					$fav['href'] = "doit.php?action=addFav&type=file&item=$itemId";
-					$fav['target'] = 'submitter';
+					$fav['href'] = "#";
+					$fav['onclick'] = "fav.add('file', '$itemId');";
 				
 					$background['title'] = 'Set as Background';
 					$background['href'] = "doit.php?action=changeBackgroundImage&type=file&id=$itemId";
@@ -389,8 +389,8 @@ class contextMenu{
 			  	if(proofLogin()){
 			  	
 			  		$fav['title'] = 'Add to Fav';
-					$fav['href'] = "doit.php?action=addFav&type=link&item=$itemId";
-					$fav['target'] = 'submitter';
+					$fav['href'] = "#";
+					$fav['onclick'] = "fav.add('link', '$itemId');";
 				
 					$playlist['title'] = 'Add to Playlist';
 					$playlist['href'] = '#';

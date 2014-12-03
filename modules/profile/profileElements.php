@@ -22,7 +22,7 @@ if(isset($_POST[submitComment])) {
     <div>&nbsp;</div>
     <div class="border-radius shadow profileElement" id="profileInfo">
         <div style=" width:100px; float: left;"><?=showUserPicture($user, 100);?></div>
-        <div style="float: left;"><a href="./doit.php?action=addbuddy&buddy=<?=$profiledata['userid'];?>" target="submitter">Add to Buddylist</a></div>
+        <div style="float: left;"><a href="#" onclick="buddylist.addBuddy(<?=$profiledata['userid'];?>);" target="submitter">Add to Buddylist</a></div>
         <div><?=$profiledata['username'];?><br><?=$profiledata['realname'];?></div>
         <div>Born on the <?=$birth_day;?> of <?=$birth_month;?> <?=$birth_year;?>. From <?=$profiledata['home'];?>, lives in <?=$profiledata['place'];?>. Went to <?=$profiledata['school1'];?>.<br><br></div>
     </div>

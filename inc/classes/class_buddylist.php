@@ -40,13 +40,20 @@ class buddylist {
             }
 			
 	       if($message){
-	        mysql_query("INSERT INTO `buddylist` (`owner`, `buddy`,`timestamp`,`request`) VALUES('".$user."', '$buddy', '$timestamp', '$request');");
-	
+                   $values['owner'] = $user;
+                   $values['buddy'] = $buddy;
+                   $values['timestamp'] = $time;
+                   $values['request'] = $request;
 	        
 	        //if privacy settings dont need allowance, the user needs to be added on the buddies buddylist
 	        if($request == "0"){
-	        	mysql_query("INSERT INTO `buddylist` (`owner`, `buddy`,`timestamp`,`request`) VALUES('$buddy', '".$user."', '$timestamp', '$request');");
+                   $values['owner'] = $buddy;
+                   $values['buddy'] = $user;
+                   $values['timestamp'] = $time;
+                   $values['request'] = $request;
 	        }
+                $db = new db();
+                $db->insert('buddylist', $values);
 	        
 	        $message = true;
 	       }
@@ -70,10 +77,18 @@ class buddylist {
 		
         $value = "0";
 		$timestamp = time();
-		
-     	mysql_query("UPDATE buddylist SET request='$value' WHERE owner='".mysql_real_escape_string($buddy)."' && buddy='".$user."'");
- 		mysql_query("INSERT INTO `buddylist` (`owner`, `buddy`,`timestamp`,`request`) VALUES('".$user."', '".mysql_real_escape_string($buddy)."', '$timestamp', '0');");
-		return true;
+		$db = new db();
+                
+                mysql_query("UPDATE buddylist SET request='$value' WHERE owner='".mysql_real_escape_string($buddy)."' && buddy='".$user."'");
+                
+                $values['owner'] = $user;
+                $values['buddy'] = save($buddy);
+                $values['timestamp'] = $time;
+                $values['request'] = '0';
+                $db->insert('buddylist', $values);
+                
+                
+                return true;
 	}
 	function denyRequest($buddy, $user=false){
    		if(!$user){
@@ -231,7 +246,7 @@ class buddylist {
 				echo stripslashes(showUserPicture($mayKnow, 16, NULL, true));
 				echo"</span>";
 				echo useridToUsername($mayKnow);
-				echo'<a href="doit.php?action=addbuddy&buddy='.$mayKnow.'" class="btn btn-success btn-mini pull-right" target="submitter">add</a>';
+				echo'<a href="#" onclick="buddylist.addBuddy('.$mayKnow.');" class="btn btn-success btn-mini pull-right" target="submitter">add</a>';
 				echo'<a href="doit.php?action=addToNotSuggestList&user='.$mayKnow.'" class="btn btn-mini pull-right" style="margin-right:5px;" target="submitter">later</a>';
 				echo"</a>";
 			echo'</div>';

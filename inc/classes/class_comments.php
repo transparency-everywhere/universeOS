@@ -15,8 +15,15 @@ class comments {
 	
 function addComment($type, $itemid, $author, $message){
      $time = time();
-     mysql_query("INSERT INTO comments (`type`,`typeid`,`author`,`timestamp`,`text`, `privacy`) VALUES('$type','$itemid','$author','$time','$message', 'p');");
-     $commentId = mysql_insert_id();
+     $db = new db();
+     $values['type'] = $type;
+     $values['typeid'] = $itemid;
+     $values['author'] = $author;
+     $values['timestamp'] = time();
+     $values['text'] = $message;
+     $values['privacy'] = 'p';
+     $commentId = $db->insert('comments', $values);
+     
 	 $personalEvents = new personalEvents();
      	if($type == "feed"){
          //fügt Benachrichtigung für den Author des Feeds hinzu, falls ein anderer User einen Kommentar erstellt
@@ -157,6 +164,8 @@ function showFeedComments($feedid){
         <?php }else{
             echo"Please log in to write a comment";
         } ?>
+        
+
 
     <?php
 

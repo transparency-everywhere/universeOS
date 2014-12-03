@@ -27,10 +27,27 @@ var buddylist = new function(){
 				   });
 				   return res;
 			  	};
-    this.addBuddy = function(){
-                                
-              	$("#loader").load("addbuddy.php?user=" + userId +"");
-                            };
+    this.addBuddy = function(userid){
+        var res;
+	$.ajax({
+            url:"api/buddies/add/",
+            async: false,
+            data: {buddy:userid},
+            type: "POST",
+            success:function(data) {
+	      if(data == '1'){
+                  gui.alert('The request has been send.', 'Request Send');
+                  $('.friendButton_'+userid).html('request sent');
+                  $('.friendButton_'+userid).addClass("disabled");
+		  $('#buddySuggestions').load('doit.php?action=showBuddySuggestList');
+              }else{
+                  gui.alert('There was an error.', 'Error');
+                  
+              }
+            }
+	});
+	return res;
+    };
     this.init = function(){
 	
         this.applicationVar = new application('buddylist');

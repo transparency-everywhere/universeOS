@@ -14,12 +14,20 @@
 class salt {
     function create($type, $itemId, $receiverType, $receiverId, $salt){
             //stores encrypted salt in db
-
+            $db = new db();
+            
             //delete all old salts
             mysql_fetch_array(mysql_query("DELETE FROM `salts` WHERE `type`='$type' AND itemId='$itemId'"));
 
-
-                    if(mysql_query("INSERT INTO `salts` (`type`, `itemId`, `receiverType`, `receiverId`, `salt`) VALUES ('$type', '$itemId', '$receiverType', '$receiverId', '$salt')"))
+                $values['type'] = $type;
+                $values['itemId'] = $itemId;
+                $values['receiverType'] = $receiverType;
+                $values['receiverId'] = $receiverId;
+                $values['salt'] = $salt;
+                
+                
+            
+                    if($db->insert('salts', $values))
                             return true;
                     else 
                             return false;
@@ -28,11 +36,20 @@ class salt {
       
       
     function update($type, $itemId, $salt){
-            mysql_query("DELETE FROM `salts` WHERE `type`='".save($type)."' AND `itemId`='".save($itemId)."'");
+           
+            //stores encrypted salt in db
+            $db = new db();
+            
+            //delete all old salts
+            mysql_fetch_array(mysql_query("DELETE FROM `salts` WHERE `type`='$type' AND itemId='$itemId'"));
 
+                $values['type'] = $type;
+                $values['itemId'] = $itemId;
+                $values['receiverType'] = 'user';
+                $values['receiverId'] = $itemId;
+                $values['salt'] = $salt;
 
-
-                    if(mysql_query("INSERT INTO `salts` (`type`, `itemId`, `receiverType`, `receiverId`, `salt`) VALUES ('$type', '$itemId', 'user', '$itemId', '$salt')"))
+                    if($db->insert('salts', $values))
                             return true;
                     else 
                             return false;

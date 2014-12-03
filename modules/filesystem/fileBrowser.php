@@ -97,7 +97,7 @@ $pathdata = $folderClass->getFolderData();
         		<?
         		if(proofLogin()){
         			?>
-        			<li><a href="#" onclick="javascript: popper('doit.php?action=addFav&type=folder&item=<?=$folder;?>&reload=1');return false">Fav</a></li>
+        			<li><a href="#" onclick="fav.add('folder', <?=$folder;?>);">Fav</a></li>
         		<?
         		}
         		if(authorize($pathdata['privacy'], "edit", $pathdata['creator'])){ ?>

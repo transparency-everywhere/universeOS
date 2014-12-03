@@ -26,8 +26,13 @@ class playlists {
             if(empty($user)){
                 $user = getUser();
             }
-            mysql_query("INSERT INTO playlist (user, title, privacy) VALUES('$user', '".$title."', '$privacy')");   
-            return mysql_insert_id();
+            
+            $values['user'] = $user;
+            $values['title'] = $title;
+            $values['privacy'] = $privacy;
+            
+            $db = new db();
+            return $db->insert('playlist', $values);
         }
     
 	function getPlaylists($userid=NULL){

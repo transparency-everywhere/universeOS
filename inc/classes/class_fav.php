@@ -13,15 +13,16 @@
  */
 class fav {
     function show($user=NULL){
-                            if($user == NULL){
-                                    $user = getUser();
-                            }
-                            $userClass = new user($user);
-                            $userFavs = $userClass->getFav();
-                                                    $i = 0;
-                                                    $output = '';
-                                            foreach($userFavs AS $filefdata){
-                                                            $item = $filefdata['item'];
+        if($user == NULL){
+                $user = getUser();
+        }
+        $userClass = new user($user);
+        $userFavs = $userClass->getFav();
+        $i = 0;
+        $output = '';
+        
+        foreach($userFavs AS $filefdata){
+                                $item = $filefdata['item'];
                                 $type = $filefdata['type'];
 
                                 //derive the table and the image from fav-type
@@ -73,18 +74,15 @@ class fav {
                                         }
 
                                     $output .= "</tr>";
-                             }
-                                                       if($i == 0){
-                                                                    $output .="<tr>";
-                                                                            $output .="<td colspan=\"2\" style=\"padding: 5px; padding-top: 12px;\">";
-                                                                            $output .="You don't have any favourites so far. Add folders, elements, files, playlists or other items to your favourites and they will appear here.";
-                                                                            $output .="</td>";
-                                                                    $output .="</tr>";
-                                                       }
-
-                                                       return $output;
-
-
+        }
+        if($i == 0){
+            $output .="<tr>";
+                $output .="<td colspan=\"2\" style=\"padding: 5px; padding-top: 12px;\">";
+                $output .="You don't have any favourites so far. Add folders, elements, files, playlists or other items to your favourites and they will appear here.";
+                $output .="</td>";
+            $output .="</tr>";
+        }
+        return $output;
     }
     function favTable($type){
        if($type == "folder"){
@@ -110,7 +108,7 @@ class fav {
             return false;
         } else {
             mysql_query("INSERT INTO fav (`type` ,`item` ,`user` ,`timestamp`) VALUES('".save($type)."', '".save($typeid)."', '".$userid."', '".time()."');"); 
-            return false;
+            return true;
         }
     }
 

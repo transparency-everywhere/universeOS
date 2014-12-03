@@ -31,6 +31,15 @@ class sessionHashes{
 		
 		mysql_query("DELETE FROM `sessionHashes` WHERE timestamp>'".(time()-$this->validity)."' AND userid='".save($userid)."' AND uniqueSystemIdentifyer='".save($uniqueSystemIdentifyer)."'");
 		//save id, identifier and salt
+                $values[''] = $type; //???
+                $values['itemId'] = $itemId;
+                $values['privateKey'] = $privateKey;
+                $values['publicKey'] = $publicKey;
+                $values['timestamp'] = time();
+                
+                //mysql class is comment because first row of values array or the first field of query below is ``and the value is $type that should be checked
+                //return $db->insert('signatures', $values);
+                
 		mysql_query("INSERT INTO `signatures` (``, `itemId`, `privateKey`, `publicKey`, `timestamp`) VALUES ('$type', '$itemId', '$privateKey', '$publicKey', '".time()."')");
 		return mysql_insert_id();
 	}

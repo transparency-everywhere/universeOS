@@ -117,8 +117,16 @@ class user {
 
         if(empty($data['username'])){
             $time = time();
-            mysql_query("INSERT INTO `user` (`password`, `cypher`, `username`, `email`, `regdate`, `lastactivity`) VALUES ('$password', 'sha512_2', '$username', '', '$time', '$time')");
-            $userid = mysql_insert_id();
+            
+            $values['password'] = $password;
+            $values['cypher'] = 'sha512_2';
+            $values['username'] = $username;
+            $values['email'] = ''; //could be usefull for businesses
+            $values['regdate'] = $time;
+            $values['lastactivity'] = $time;
+            
+            $db = new db();
+            $userid = $db->insert('user', $values);
 
                     //store salts
                     $saltClass = new salt();

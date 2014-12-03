@@ -1,4 +1,5 @@
 <?php
+
 //This file is published by transparency-everywhere with the best deeds.
 //Check transparency-everywhere.com for further information.
 //Licensed under the CC License, Version 4.0 (the "License");
@@ -18,7 +19,17 @@
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
 
+    	
+        $buddyListClass = new buddylist();
+    
+    	$check = $buddyListClass->addBuddy($_POST['buddy']);
+	if($check){
+		$message = "The Buddy was added.";
+		$_SESSION['personalFeed'] = 0;
+                echo 1;
+	}else{
+			
+            echo 0;
+	}
 
-//set privacy
-$favClass = new fav();
-echo $favClass->addFav($_POST['type'], $_POST['typeid']);
+?>

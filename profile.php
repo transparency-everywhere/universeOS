@@ -63,7 +63,7 @@ if(!empty($checkData)){
     }
 }else{
     if($user !== $_SESSION['userid']){
-    $friendButton = "<a href=\"./doit.php?action=addbuddy&buddy=$user\" target=\"submitter\" class=\"btn friendButton_$user\">Add to Buddylist</a>";
+    $friendButton = "<a href=\"#\" onclick=\"buddylist.addBuddy('$user');\" target=\"submitter\" class=\"btn friendButton_$user\">Add to Buddylist</a>";
     }
     
 }
@@ -79,7 +79,7 @@ if(empty($friendButton)){
         }
     }else{
         if($user !== $_SESSION['userid']){
-        $friendButton = "<a href=\"./doit.php?action=addbuddy&buddy=$user\" target=\"submitter\" class=\"btn friendButton_<?=$user;?>\">Add to Buddylist</a>";
+        $friendButton = "<a href=\"#\" onclick=\"buddylist.addBuddy('$user');\" target=\"submitter\" class=\"btn friendButton_<?=$user;?>\">Add to Buddylist</a>";
     
         }
     }

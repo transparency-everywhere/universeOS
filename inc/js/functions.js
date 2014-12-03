@@ -1,4 +1,4 @@
-//initializeeader
+//initialize
 var sourceURL = 'http://localhost/universe';
 
 
@@ -220,23 +220,6 @@ var init = new function(){
 	};
 	
 };
-
-function proofLogin(){
-    var result;
-    $.ajax({
-          url: 'api.php?action=proofLogin',
-          type: "GET",
-          async: false,
-          success: function(data) {
-              result = data;
-          }
-    });
-              if(result == '1'){
-                  return true;
-              }else{
-                  return false;
-              }
-}
 
 //class is required because gui.loadScript is used to load reader.js, chat.js etc
 var gui = new function(){
@@ -862,6 +845,7 @@ var universe = new function(){
             gui.loadScript('inc/js/buddylist.js');
             gui.loadScript('inc/js/feed.js');
             gui.loadScript('inc/js/settings.js');
+            gui.loadScript('inc/js/item.js');
             buddylist.init();
             feed.init();
             //settings.init();
@@ -1650,7 +1634,75 @@ var groups = new function(){
 	
 };
 
+var files = new function(){
+              	
+              	this.fileIdToFileTitle = function(fileId){
+				    var result="";
+				    
+				    $.ajax({
+				      url:"api.php?action=fileIdToFileTitle",
+				      async: false,  
+					  type: "POST",
+					  data: { fileId : fileId },
+				      success:function(data) {
+				         result = data; 
+				      }
+				   });
+				   return result;
+              	};
+              	
+              };
 
+var modal =  new function() {
+			    this.html;
+			    this.create = function (title, content, action) {
+			    	this.html = '';
+			    	this.html += '<div class="blueModal border-radius container">';
+	            		this.html += '<header>';
+	            			this.html += title;
+	            			this.html += '<a class="modalClose" onclick="$(\'.blueModal\').remove();">X</a>';
+	            		this.html += '</header>';
+	            		this.html += '<div class="content">';
+	            		this.html += content;
+	            		this.html += '</div>';
+	            		this.html += '<footer>';
+	            		
+	                 		this.html += '<a href="#" onclick="$(\'.blueModal\').remove(); return false;" class="btn pull-left">Close</a>';
+	                 		if(typeof action !== 'undefined'){
+	                			this.html += '<a href="#" id="action" class="btn btn-primary pull-right">&nbsp;&nbsp;'+action[1]+'&nbsp;&nbsp;</a>';
+	                 		}
+	            		
+	            		this.html += '</footer>';
+	            		
+                                this.html += '</div>';
+                                $('.blueModal').remove();
+                                $('#popper').append(this.html);
+
+                                if(typeof action !== 'undefined'){
+                                        $('.blueModal #action').click(function(){
+                                                action[0]();
+                                        });
+                                }
+			    };
+			};
+       
+
+function proofLogin(){
+    var result;
+    $.ajax({
+          url: 'api.php?action=proofLogin',
+          type: "GET",
+          async: false,
+          success: function(data) {
+              result = data;
+          }
+    });
+              if(result == '1'){
+                  return true;
+              }else{
+                  return false;
+              }
+}
 
 function getUserPicture(request){
 			            var post;
@@ -1759,58 +1811,6 @@ function jsAlert(type, message){
               }
       
 
-var files = new function(){
-              	
-              	this.fileIdToFileTitle = function(fileId){
-				    var result="";
-				    
-				    $.ajax({
-				      url:"api.php?action=fileIdToFileTitle",
-				      async: false,  
-					  type: "POST",
-					  data: { fileId : fileId },
-				      success:function(data) {
-				         result = data; 
-				      }
-				   });
-				   return result;
-              	};
-              	
-              };
-
-var modal =  new function() {
-			    this.html;
-			    this.create = function (title, content, action) {
-			    	this.html = '';
-			    	this.html += '<div class="blueModal border-radius container">';
-	            		this.html += '<header>';
-	            			this.html += title;
-	            			this.html += '<a class="modalClose" onclick="$(\'.blueModal\').remove();">X</a>';
-	            		this.html += '</header>';
-	            		this.html += '<div class="content">';
-	            		this.html += content;
-	            		this.html += '</div>';
-	            		this.html += '<footer>';
-	            		
-	                 		this.html += '<a href="#" onclick="$(\'.blueModal\').remove(); return false;" class="btn pull-left">Close</a>';
-	                 		if(typeof action !== 'undefined'){
-	                			this.html += '<a href="#" id="action" class="btn btn-primary pull-right">&nbsp;&nbsp;'+action[1]+'&nbsp;&nbsp;</a>';
-	                 		}
-	            		
-	            		this.html += '</footer>';
-	            		
-                                this.html += '</div>';
-                                $('.blueModal').remove();
-                                $('#popper').append(this.html);
-
-                                if(typeof action !== 'undefined'){
-                                        $('.blueModal #action').click(function(){
-                                                action[0]();
-                                        });
-                                }
-			    };
-			};
-       
        
 //encryption functions
 
@@ -2011,42 +2011,6 @@ var sec =  new function() {
 			    	
 			    };
 };
-
-	
-function getPublicKey(type, itemId){
-			var key = '';
-			$.ajax({
-			  url:"api.php?action=getPublicKey",
-			  async: false,  
-			  type: "POST",
-			  data: { type : type, itemId : itemId },
-			  success:function(data) {
-			     key = data; 
-			  }
-			});
-	    	return key;
-	}
-	
-function storeMessageKey(messageId, key){
-        messageKeys[messageId] = key;
-    }
-
-function getStoredKey(messageId){
-        return messageKeys[messageId];
-    }
-    
-function isStored(messageId){
-        if(messageKeys[messageId] !== undefined){
-            return true;
-        }else{
-            return false;
-        }
-    }
-    
-    
-              
-//general functions
-        
 var tabs = function(parentIdentifier){
     this.parentIdentifier = parentIdentifier;
 		this.init = function(){
@@ -2119,6 +2083,42 @@ var tabs = function(parentIdentifier){
 			
 		};
 };
+
+	
+function getPublicKey(type, itemId){
+			var key = '';
+			$.ajax({
+			  url:"api.php?action=getPublicKey",
+			  async: false,  
+			  type: "POST",
+			  data: { type : type, itemId : itemId },
+			  success:function(data) {
+			     key = data; 
+			  }
+			});
+	    	return key;
+	}
+	
+function storeMessageKey(messageId, key){
+        messageKeys[messageId] = key;
+    }
+
+function getStoredKey(messageId){
+        return messageKeys[messageId];
+    }
+    
+function isStored(messageId){
+        if(messageKeys[messageId] !== undefined){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    
+              
+//general functions
+        
 
 function empty(value){
 	  	if(value.length == 0) {

@@ -14,8 +14,15 @@
 class personalEvents{
 		
 		function create($owner,$user,$event,$info,$eventId){
-			
-	         mysql_query("INSERT INTO personalEvents (`owner`,`user`,`event`,`info`,`eventId`,`timestamp`) VALUES('$owner','$user', '$event','$info','$eventId', '".time()."');");
+                    $values['owner'] = $owner;
+                    $values['user'] = $user;
+                    $values['event'] = $event;
+                    $values['info'] = $info;
+                    $values['eventId'] = $eventId;
+                    $values['timestamp'] = time();
+                    
+                    $db = new db();
+                    return $db->insert('personalEvents', $values);
 	        
 		}
 	}

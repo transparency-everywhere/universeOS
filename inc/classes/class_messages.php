@@ -27,8 +27,18 @@ class message{
             $crypt = "0";
         }
 
-                $message = addslashes($text);
-        if(mysql_query("INSERT INTO `messages` (`sender`,`receiver`,`timestamp`,`text`,`read`,`crypt`) VALUES('$sender', '$buddy', '".time()."', '$text', '0', '$crypt');")){
+        $message = addslashes($text);
+        $values['sender'] = $sender;
+        $values['receiver'] = $buddy;
+        $values['timestamp'] = time();
+        $values['text'] = $message;
+        $values['read'] = '0';
+        $values['crypt'] = $crypt;
+        $db = new db();
+        
+        
+        
+        if($db->insert('messages', $values)){
                 return mysql_insert_id();
         }
         $postCheck = 1;
