@@ -83,29 +83,27 @@ class item {
            $typeid = $this->typeid;
             if(proofLogin()){
                    if($type == "comment"){
-                   $scoreSql = mysql_query("SELECT id, votes, score FROM comments WHERE id='$typeid'");
-                   $scoreData = mysql_fetch_array($scoreSql);
+                       $table = 'comments';
                    }
                    else if($type == "feed"){
-                   $scoreSql = mysql_query("SELECT id, votes, score FROM feed WHERE id='$typeid'");
-                   $scoreData = mysql_fetch_array($scoreSql); 
+                       
+                       $table = 'feed';
                    }
                    else if($type == "folder"){
-                   $scoreSql = mysql_query("SELECT id, votes, score FROM folders WHERE id='$typeid'");
-                   $scoreData = mysql_fetch_array($scoreSql); 
+                       $table = 'folders';
                    }
                    else if($type == "element"){
-                   $scoreSql = mysql_query("SELECT id, votes, score FROM elements WHERE id='$typeid'");
-                   $scoreData = mysql_fetch_array($scoreSql); 
+                       $table = 'elements';
                    }
                    else if($type == "file"){
-                   $scoreSql = mysql_query("SELECT id, votes, score FROM files WHERE id='$typeid'");
-                   $scoreData = mysql_fetch_array($scoreSql); 
+                       $table = 'files';
                    }
                    else if($type == "link"){
-                   $scoreSql = mysql_query("SELECT id, votes, score FROM links WHERE id='$typeid'");
-                   $scoreData = mysql_fetch_array($scoreSql); 
+                       $table = 'links';
                    }
+                   $db = new db();
+                   $scoreData = $db->select($table, array('id', $typeid), array('id', 'votes', 'score'));
+                   
                    if(!isset($reload)){
                        $output =  "<div class=\"score$type$typeid\">";
                    }
@@ -348,10 +346,7 @@ function protect(){
 					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
 					$privacy .= ";PROTECTED";
 					}
-					
-					mysql_query("UPDATE `folders` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-					
-					
+					$table = 'folders';
 					break;
 				case 'element':
 					
@@ -361,9 +356,7 @@ function protect(){
 					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
 					$privacy .= ";PROTECTED";
 					}
-					
-					
-					mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+					$table = 'elements';
 					
 					
 					break;
@@ -374,8 +367,7 @@ function protect(){
 					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
 					$privacy .= ";PROTECTED";
 					}
-					
-					mysql_query("UPDATE `files` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+					$table = 'files';
 					break;
 				case 'link':
 					$linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
@@ -387,10 +379,16 @@ function protect(){
 					$privacy .= ";PROTECTED";
 					}
 					
-					
-					mysql_query("UPDATE `links` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+					$table = 'link';
 					break;
 			}
+                        
+			if(isset($table)){
+                            $values['privacy'] = $privacy;
+                            
+                            $db = new db();
+                            $db->update($table, $values, array('id', $typeId));
+                        }
 		}else{
 			jsAlert("You dont have the rights to protect an Item.");
 		}
@@ -411,9 +409,7 @@ function removeProtection(){
 					$privacy = $folderData['privacy'];
 					$privacy = str_replace(";PROTECTED", "", $privacy);
 					
-					
-					mysql_query("UPDATE `folders` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-					
+					$table = 'folders';
 					
 					break;
 				case 'element':
@@ -424,9 +420,7 @@ function removeProtection(){
 					$privacy = $elementData['privacy'];
 					$privacy = str_replace(";PROTECTED", "", $privacy);
 					
-					
-					mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-					
+					$table = 'elements';
 					
 					break;
 				case 'file':
@@ -435,8 +429,7 @@ function removeProtection(){
 					$privacy = $fileData['privacy'];
 					$privacy = str_replace(";PROTECTED", "", $privacy);
 					
-					
-					mysql_query("UPDATE `files` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+					$table = 'files';
 					break;
 				case 'link':
 					$linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
@@ -446,10 +439,17 @@ function removeProtection(){
 					$privacy = $linkData['privacy'];
 					$privacy = str_replace(";PROTECTED", "", $privacy);
 					
-					
-					mysql_query("UPDATE `links` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+                                        $table = 'links';
+                                        
+                                        
 					break;
 			}
+			if(isset($table)){
+                            $values['privacy'] = $privacy;
+                            
+                            $db = new db();
+                            $db->update($table, $values, array('id', $typeId));
+                        }
 		}else{
 			jsAlert("You do not have the rights to edit protected files.");
 		}
@@ -462,7 +462,7 @@ function makeUndeletable(){
                         $type = $this->type;
                         $typeid = $this->typeid;
 			switch($type){
-				case folder:
+				case 'folder':
 					
 					$folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
 					$folderData = mysql_fetch_array($folderSQL);
@@ -472,12 +472,9 @@ function makeUndeletable(){
 						$privacy .= ";UNDELETABLE";
 					}
 					
-					
-					mysql_query("UPDATE `folders` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-					
-					
+					$table = 'folders';
 					break;
-				case element:
+				case 'element':
 					
 					$elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
 					$elementData = mysql_fetch_array($elementSQL);
@@ -486,12 +483,9 @@ function makeUndeletable(){
 						$privacy .= ";UNDELETABLE";
 					}
 					
-					
-					mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-					
-					
+					$table = 'elements';
 					break;
-				case file:
+				case 'file':
 					$fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
 					$fileData = mysql_fetch_array($fileSQL);
 					$privacy = $fileData['privacy'];
@@ -500,9 +494,9 @@ function makeUndeletable(){
 					}
 					
 					
-					mysql_query("UPDATE `files` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+					$table = 'files';
 					break;
-				case link:
+				case 'link':
 					$linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
 					$linkData = mysql_fetch_array($linkSQL);
 					
@@ -513,9 +507,15 @@ function makeUndeletable(){
 					}
 					
 					
-					mysql_query("UPDATE `links` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
+					$table = 'links';
 					break;
 			}
+			if(isset($table)){
+                            $values['privacy'] = $privacy;
+                            
+                            $db = new db();
+                            $db->update($table, $values, array('id', $typeId));
+                        }
 		}else{
 			jsAlert("You do not have the right to make Items undeletable.");
 		}
@@ -535,10 +535,7 @@ function makeDeletable(){
 				$privacy = $folderData[privacy];
 				$privacy = str_replace(";UNDELETABLE", "", $privacy);
 				
-				
-				mysql_query("UPDATE `folders` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-				
-				
+				$table = 'folders';
 				break;
 			case 'element':
 				
@@ -548,10 +545,7 @@ function makeDeletable(){
 				$privacy = $elementData['privacy'];
 				$privacy = str_replace(";UNDELETABLE", "", $privacy);
 				
-				
-				mysql_query("UPDATE `elements` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-				
-				
+				$table = 'elements';
 				break;
 			case 'file':
 				$fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
@@ -559,9 +553,8 @@ function makeDeletable(){
 				$privacy = $fileData['privacy'];
 				$privacy = str_replace(";UNDELETABLE", "", $privacy);
 				
-				
-				mysql_query("UPDATE `files` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-				break;
+				$table = 'files';
+                                break;
 			case 'link':
 				$linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
 				$linkData = mysql_fetch_array($linkSQL);
@@ -571,9 +564,14 @@ function makeDeletable(){
 				$privacy = str_replace(";UNDELETABLE", "", $privacy);
 				
 				
-				mysql_query("UPDATE `links` SET `privacy`='$privacy' WHERE  `id`='$typeId'");
-				break;
+				$table = 'links';break;
 		}
+		if(isset($table)){
+                    $values['privacy'] = $privacy;
+                    
+                    $db = new db();
+                    $db->update($table, $values, array('id', $typeId));
+                }
 		}else{
 			jsAlert("You dont have the right to edit undeletable Items.");
 		}

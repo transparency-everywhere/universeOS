@@ -62,9 +62,8 @@ class element {
     function delete($elementId=NULL){
         if($elementId == NULL)
             $elementId = $this->id;
-         
-            $checkElementSql = mysql_query("SELECT privacy, folder, author FROM elements WHERE id='$elementId'");
-            $checkElementData = mysql_fetch_array($checkElementSql);
+            $db = new db();
+            $checkElementData = $db->select('elements', array('id', $elementId), array('privacy', 'folder', 'author'));
 			
 			//deleting all  atached items
 			//this should be after the deletion of the mysql row of the file
@@ -113,8 +112,9 @@ class element {
     function getFiles($elementId){
             if($elementId == NULL)
                 $elementId = $this->id;
-                    $fileSQL = mysql_query("SELECT id FROM files WHERE folder='".mysql_real_escape_string($elementId)."'");
-                    while($fileData = mysql_fetch_array($fileSQL)){
+                $db = new db();
+                $fileIds = $db->shiftResult($db->select('files', array('folder', $elementId), array('id')), 'id');
+                    foreach($fileIds AS $fileData){
                             $return[] = $fileData['id'];
                     }
 
@@ -124,21 +124,22 @@ class element {
     function getLinks($elementId){
                 if($elementId == NULL)
                     $elementId = $this->id;
-                    $linkSQL = mysql_query("SELECT id FROM links WHERE folder='".mysql_real_escape_string($elementId)."'");
-                    while($linkData = mysql_fetch_array($linkSQL)){
-                            $return[] = $linkData['id'];
-                    }
 
-                    return $return;
+                $db = new db();
+                $linkIds = $db->shiftResult($db->select('links', array('folder', $elementId), array('id')), 'id');
+                foreach($linkIds AS $linkData){
+                        $return[] = $linkData['id'];
+                }
+                return $return;
             }
     function getName($elementId=NULL){
             if($elementId == NULL)
                 $elementId = $this->id;
             
-            $checkElementSql = mysql_query("SELECT title FROM elements WHERE id='".mysql_real_escape_string($elementId)."'");
-            $checkElementData = mysql_fetch_array($checkElementSql);
-			
-			return $checkElementData['title'];
+            $db = new db();
+            $checkElementData = $db->select('elements', array('id', $elementId), array('title'));
+            
+            return $checkElementData['title'];
 	}
         
 	

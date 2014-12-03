@@ -75,11 +75,11 @@ class buddylist {
 		$buddy = save($buddy);
 		
 		
-        $value = "0";
 		$timestamp = time();
 		$db = new db();
                 
-                mysql_query("UPDATE buddylist SET request='$value' WHERE owner='".mysql_real_escape_string($buddy)."' && buddy='".$user."'");
+                $values['request'] = '0';
+                $db->update('buddylist', $values, array('owner', $buddy, '&&', 'buddy', $user));
                 
                 $values['owner'] = $user;
                 $values['buddy'] = save($buddy);

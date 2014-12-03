@@ -41,6 +41,13 @@ class db{
             
             return $return;
         }
+        public function shiftResult($result, $testColumn){
+            if(isset($result[$testColumn])){
+                $return[0] = $result;
+                return $return;
+            }
+            return $result;
+        }
         /**
         *Inserts record with $options into db $table 
         *@param string $table Name of table
