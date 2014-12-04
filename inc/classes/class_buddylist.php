@@ -21,6 +21,8 @@ class buddylist {
 		$user = save($user);
 		$buddy = save($buddyid);
 		$timestamp = time();
+                
+                
         $check = mysql_query("SELECT * FROM buddylist WHERE (owner='".$user."' && buddy='$buddy') OR (buddy='".$user."' && owner='$buddy')");
 		$checkData = mysql_fetch_array($check);
 		
@@ -97,27 +99,29 @@ class buddylist {
 		
 		$user = save($user);
 		$buddy = save($buddy);
-		
-                mysql_query("DELETE FROM buddylist WHERE owner='".$buddy."' && buddy='".$user."'");
-                mysql_query("DELETE FROM buddylist WHERE owner='".$user."' && buddy='".$buddy."'");
+		$db = new db();
+                $db->delete('buddylist', array('owner', $buddy, '&&', 'buddy', $user));
+                $db->delete('buddylist', array('buddy', $buddy, '&&', 'owner', $user));
+                
                 return true;
 	}
         function deleteBuddy($buddy, $user=false){
                      if(!$user){
                              $user = getUser();
                      }
-
-                     mysql_query("DELETE FROM `buddylist` WHERE owner='".save($user)."' AND buddy='".save($buddy)."'");
-                     mysql_query("DELETE FROM `buddylist` WHERE buddy='".save($user)."' AND owner='".save($buddy)."'");
+                    $db = new db();
+                    $db->delete('buddylist', array('owner', $buddy, '&&', 'buddy', $user));
+                    $db->delete('buddylist', array('buddy', $buddy, '&&', 'owner', $user));
 
         }
         function getOpenRequests($user=NULL){
              if(empty($user)){
                  $user= getUser();
              }
-
-                     $friendRequestSql = mysql_query("SELECT owner FROM buddylist WHERE buddy='".$user."' && request='1'");
-                     while($friendRequestData = mysql_fetch_array($friendRequestSql)){
+                    $db = new db();
+                    $friendRequests = select('buddylist', array('buddy', $user, '&&', 'request', '1'));
+                    
+                    foreach($friendRequests AS $friendRequestData){
                              $userid = $friendRequestData['owner'];
                              $return[$userid] = useridToUsername($userid);
                      }
@@ -131,9 +135,10 @@ class buddylist {
             $user= getUser();
         }
         
+        $buddyListQuery = $db->select('buddylist', array('owner', $user, '&&', 'request', $request));
+                    
         $buddies = array();
-        $buddylistSql = mysql_query("SELECT buddy FROM buddylist WHERE owner='$user' && (request='$request')");
-        while($buddylistData = mysql_fetch_array($buddylistSql)) {
+        foreach($buddyListQuery AS $buddylistData) {
             $buddies[] = $buddylistData['buddy'];
         }
         
@@ -184,9 +189,9 @@ class buddylist {
    }
 
 	function getNotSuggestList(){
-         $userSql = mysql_query("SELECT buddySuggestions FROM user WHERE userid='".getUser()."'");
-         $userData = mysql_fetch_array($userSql);
-		 $buddySuggestions = $userData['buddySuggestions'];
+            $db = new db();
+            $userData = $db->select('user', array('userid', getUser()), array('buddySuggestions'));
+            $buddySuggestions = $userData['buddySuggestions'];
 		 
 		 if(!empty($buddySuggestions)){
 		 	
@@ -205,15 +210,16 @@ class buddylist {
 		$user = save(intval($user));
 		
 		$notSuggest = $this->getNotSuggestList();
-		
 			if(!in_array($user, $notSuggest)){
 				
+                                $db = new db();
 				//script needs to access db again, to parse also timestamp
 				//into the json string. the timestamp will be used to delete
 				//old suggestions after a while
 				
-		        $userSql = mysql_query("SELECT buddySuggestions FROM user WHERE userid='".getUser()."'");
-		        $userData = mysql_fetch_array($userSql);
+		        
+                                $userData = $db->select('user', array('userid', getUser()), array('buddySuggestions'));
+                                $buddySuggestions = $userData['buddySuggestions'];
 				
 				$notSuggest = json_decode($userData['buddySuggestions'],true);
 			
@@ -222,9 +228,11 @@ class buddylist {
 				
 				$notSuggest[] = $userObj;
 				
-		        if(mysql_query("UPDATE user SET buddySuggestions='".json_encode($notSuggest)."' WHERE userid='".getUser()."'")){
-		        	return true;
-		       	}
+                                $values['buddySuggestions'] = json_encode($notSuggest);
+                                
+                                if($db->update('user', $values, array('userid', getUser()))){
+                                        return true;
+                                }
 			}
 	}
 	

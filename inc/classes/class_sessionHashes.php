@@ -39,16 +39,15 @@ class sessionHashes{
                 
                 //mysql class is comment because first row of values array or the first field of query below is ``and the value is $type that should be checked
                 //return $db->insert('signatures', $values);
-                
-		mysql_query("INSERT INTO `signatures` (``, `itemId`, `privateKey`, `publicKey`, `timestamp`) VALUES ('$type', '$itemId', '$privateKey', '$publicKey', '".time()."')");
-		return mysql_insert_id();
+                return $db->insert('signatures', $values);
 	}
 	
 	function get($id){
-		$data = mysql_fetch_array(mysql_query("SELECT * FROM `signatures` WHERE `type`='$type' AND `itemId`='$itemId'"));
-		return $data;
+                $db = new db();
+                return $db->select('signatur',  array('type', $type, '&&', 'itemId', $itemId));;
 	}
 	function delete($type, $itemId){
-		mysql_query("DELETE FROM `signatures` WHERE `type`='$type' AND `itemId`='$itemId'");
+                $db = new db();
+                $db->delete('signatures', array('type', $type, '&&', 'itemId', $itemId));
 	}
 }

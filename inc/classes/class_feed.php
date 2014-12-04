@@ -128,7 +128,8 @@ class feed {
                 if($feedData['validity'] == TRUE) {
                 $time = time();
                 if($feedData['validity'] < $time){
-                    mysql_query("DELETE FROM feed WHERE id='".$feedData['id']."'");
+                    $db = new db();
+                    $db->delete('feed', array('id', $feedData['id']));
                 }}
                 unset($text);
     }
@@ -139,7 +140,9 @@ class feed {
     
     
    function deleteFeeds($type, $itemid){
-       if(mysql_query("DELETE FROM feed WHERE attachedItem='$type' AND attachedItemId='$itemid'")){
+       $db = new db();
+      
+       if($db->delete('feed', array('attachedItem', $type, '&&', 'attachedItemId', $itemid))){
            return true;
        }
    }
@@ -159,8 +162,17 @@ class feed {
        if($validity == $time) {
            $validity = "0"; //otherwise validity = time() => feed will be deleted
        }
-       mysql_query("INSERT INTO `feed` (`id`, `author`, `feed`, `timestamp`, `validity`, `type`, `attachedItem`, `attachedItemId`, `privacy`) VALUES (NULL, '$author', '$feed', '$time', '$validity', '$type', '$attachedItem', '$attachedItemId', '$privacy');");
-       $id = mysql_insert_id();
+       
+       $values['author'] = $author;
+       $values['feed'];
+       $values['timestamp'];
+       $values['validity'];
+       $values['type'];
+       $values['attachedItem'];
+       $values['attachedItem'];
+       $values['privacy'];
+       
+       $id = $db->insert('feed', $values);
        
        return $id;
        
@@ -178,7 +190,16 @@ class feed {
        if(isset($groups)){
            $privacy = $groups;
        }
-       mysql_query("INSERT INTO userfeeds (`owner`,`timestamp`,`validity`,`feed`,`protocoll_type`,`feedLink1`,`feedLink2`,`privacy`) VALUES('$owner', '$time', '$validity', '$feed', '$type', '$feedLink1', '$feedLink2', '$privacy');");
+       $values['owner'] = $owner;
+       $values['timestamp'] = $time;
+       $values['validity'] = $validity;
+       $values['feed'] = $feed;
+       $values['protocoll_type'] = $type;
+       $values['feedLink1'] = $feedLink1;
+       $values['feedLink2'] = $feedLink2;
+       $values['privacy'] = $privacy;
+       $db = new db();
+       $db->insert('userfeeds', $values);
     }
     
     

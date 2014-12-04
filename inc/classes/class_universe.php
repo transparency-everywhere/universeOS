@@ -15,8 +15,9 @@ class universe {
     //put your code here
     public function init(){
 	if(proofLogin()){
-            $checkSql = mysql_query("SELECT userid, hash FROM user WHERE userid='".getUser()."'");
-            $checkData = mysql_fetch_array($checkSql);
+            $db = new db();
+            $checkData = $db->select('user', array('userid', getUser()), array('userid', 'hash'));
+            //sense?
 	}else{
 		
 		$_SESSION['loggedOut'] = true;

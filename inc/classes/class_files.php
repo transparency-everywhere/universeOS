@@ -31,15 +31,14 @@ class files {
                 $classFiles = new files();
                 $type = $classFiles->getMime($filename);
 
-
-                $FileElementSQL = mysql_query("SELECT title, folder FROM elements WHERE id='$element'");
-                $FileElementData = mysql_fetch_array($FileElementSQL);
+                $dbClass = new db();
+                
+                $FileElementData = $dbClass->select('elements', array('id', $element), array('title', 'folder'));
 		
 		if(empty($folder)){
 			$folder = $FileElementData['folder'];
 		}
 		
-                $dbClass = new db();
                 $FileElementData = $dbClass->select('folders', array('id', $FileElementData['folder']));
                 $folderClass = new folder($folder);
                 $folderpath = $folderClass->getPath();
@@ -69,8 +68,23 @@ class files {
 	        }
             rename(universeBasePath.'/'.$folderpath.$finalName, universeBasePath.'/'.$folderpath.$finalName.".temp");
 			//add db entry and add temp value
-			if(mysql_query("INSERT INTO `files` (`id` ,`folder` ,`title` ,`size` ,`timestamp` ,`filename` ,`language` ,`type` ,`owner` ,`votes` ,`score` ,`privacy` ,`var1` , `download`, `status`) VALUES (NULL ,  '$element',  '".mysql_real_escape_string($imgName)."',  '$size',  '$time',  '".mysql_real_escape_string($imgName)."',  '$lang',  '$type',  '$user',  '0',  '0',  '$privacy',  '', '$download', 'true');")){
-	        	$insertid = mysql_insert_id();
+                        $fileValues['folder'] = $element;
+                        $fileValues['title'] = $title;
+                        $fileValues['size'] = $size;
+                        $fileValues['timestamp'] = $time;
+                        $fileValues['filename'] = $imgName;
+                        $fileValues['language'] = $lang;
+                        $fileValues['type'] = $type;
+                        $fileValues['owner'] = $user;
+                        $fileValues['votes'] = '';
+                        $fileValues['score'] = '';
+                        $fileValues['privacy'] = $privacy;
+                        $fileValues['var1'] = '';
+                        $fileValues['download'] = $download;
+                        $fileValues['status'] = true;
+                        $insertid = $db->insert('files', $fileValues);
+                        
+		if($insertid){
 	        	return $insertid;
 	        }else{
 	        	return false;
@@ -90,8 +104,9 @@ class files {
         $type = $classFiles->getMime($filename);
         $dbClass = new db();
         $fileFolderData = $dbClass->select('folders', array('id', $folder));
-        $FileElementSQL = mysql_query("SELECT title FROM elements WHERE id='$element'");
-        $FileElementData = mysql_fetch_array($FileElementSQL);
+        
+        
+        $FileElementData = $dbClass->select('elements', array('id', $element), array('title'));
         $folderClass = new folder($folder);
         $folderpath = universeBasePath.'/'.$folderClass->getPath();
 
@@ -116,7 +131,24 @@ class files {
                         $imageClass -> mkthumb("$imgName",300,300,$path,"$thumbPath");
                     }
         }
-		if(mysql_query("INSERT INTO `files` (`id` ,`folder` ,`title` ,`size` ,`timestamp` ,`filename` ,`language` ,`type` ,`owner` ,`votes` ,`score` ,`privacy` ,`var1` , `download`) VALUES (NULL ,  '$element',  '".mysql_real_escape_string($imgName)."',  '$size',  '$time',  '".mysql_real_escape_string($imgName)."',  '$lang',  '$type',  '$user',  '0',  '0',  '$privacy',  '', '$download');")){
+        
+        //add db entry and add temp value
+                        $fileValues['folder'] = $element;
+                        $fileValues['title'] = $imgName;
+                        $fileValues['size'] = $size;
+                        $fileValues['timestamp'] = $time;
+                        $fileValues['filename'] = $imgName;
+                        $fileValues['language'] = $lang;
+                        $fileValues['type'] = $type;
+                        $fileValues['owner'] = $user;
+                        $fileValues['votes'] = '';
+                        $fileValues['score'] = '';
+                        $fileValues['privacy'] = $privacy;
+                        $fileValues['var1'] = '';
+                        $fileValues['download'] = $download;
+                        $fileValues['status'] = true;
+        
+        if($dbClass->insert('files', $fileValues)){
         	
         jsAlert("The file has been uploaded :)");
         }else{
@@ -323,11 +355,10 @@ class file{
 
     function getPath(){
         $fileId = $this->id;
+        $db = new db();
         
-        $documentSQL = mysql_query("SELECT id, folder, filename FROM files WHERE id='$fileId'");
-        $documentData = mysql_fetch_array($documentSQL);
-            $documentElementSQL = mysql_query("SELECT id, title, folder FROM elements WHERE id='$documentData[folder]'");
-            $documentElementData = mysql_fetch_array($documentElementSQL);
+        $documentData = $db->select('files', array('id', $fileId), array('id', 'folder', 'filename'));
+            $documentElementData = $db->select('elements', array('id', $documentData['folder']), array('id', 'title', 'folder'));
 			$folderClass = new folder($documentElementData['folder']);
 			$path = $folderClass->getPath();
 			$path .= $documentData['filename'];
@@ -339,7 +370,11 @@ class file{
 	 	$path = $this->getPath();
 		$oldpath = $path.'.temp';
 		if(rename(universeBasePath.'/'.$oldpath, universeBasePath.'/'.$path)){
-		 	if(mysql_query("UPDATE `files` SET `temp`='0', `status`='1', `privacy`='$privacy' WHERE id='".save($fileId)."'")){
+                        $db = new db();
+                        $values['temp'] = '0';
+                        $values['satus'] = '1';
+                        $values['privacy'] = $privacy;
+		 	if($db->update('files', $values, array('id', $fileId))){
 		 		return true;
 		 	}else{
 		 		return false;

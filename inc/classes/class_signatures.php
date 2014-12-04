@@ -20,22 +20,33 @@ limitations under the License.
 class signatures{
 	
 	function create($type, $itemId, $privateKey, $publicKey){
-		mysql_query("DELETE FROM `signatures` WHERE type='".save($type)."' AND itemId='".save($itemId)."'");
-		mysql_query("INSERT INTO `signatures` (`type`, `itemId`, `privateKey`, `publicKey`, `timestamp`) VALUES ('$type', '$itemId', '$privateKey', '$publicKey', '".time()."')");
-	}
+                $db = new db();
+                
+                $db->delete('signatures', array('type', $type, '&&', 'itemId', $itemId));
+                
+                $values['type'] = $type;
+                $values['itemId'] = $itemId;
+                $values['privateKey'] = $privateKey;
+                $values['publicKey'] = $publicKey;
+                $values['timestamp'] = time();
+                $db->insert('signatures', $values);}
 	
 	function get($type, $itemId){
-		$data = mysql_fetch_array(mysql_query("SELECT * FROM `signatures` WHERE `type`='$type' AND `itemId`='$itemId'"));
+                $db = new db();
+		$data = $db->select('signatures', array('type', $type, '&&', 'itemId', $itemId));
 		return $data;
 	}
 	
 	function updatePrivateKey($type, $itemId, $privateKey){
 		if(!empty($privateKey)){
-			mysql_query("UPDATE `signatures` SET privateKey='".save($privateKey)."' WHERE `type`='".save($type)."' AND `itemId`='".save($itemId)."'");
+                        $db = new db();
+                        $values['priavateKey'] = $privateKey;
+                        $db->update('signatures', $values, array('type', $type, '&&', 'itemId', $itemId));
 		}
 	}
 	
 	function delete($type, $itemId){
-		mysql_query("DELETE FROM `signatures` WHERE `type`='$type' AND `itemId`='$itemId'");
+            $db = new db();
+            $db->delete('signature', array('type', $type, '&&', 'itemId', $itemId));
 	}
 }

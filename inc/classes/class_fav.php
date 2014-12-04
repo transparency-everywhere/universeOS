@@ -101,23 +101,31 @@ class fav {
         if(empty($userid))
             $userid = getUser();
         
-        $check = mysql_query("SELECT type FROM fav WHERE type='$type' && item='$typeid'");
-        $checkData = mysql_fetch_array($check);
+        
+        $db = new db();
+        $checkData = $db->insert('fav', array('type', $type, '&&', 'item', $typeid), array('type'));
+        
         if(isset($checkData['type'])){
             echo "allready your favourite";
             return false;
         } else {
-            mysql_query("INSERT INTO fav (`type` ,`item` ,`user` ,`timestamp`) VALUES('".save($type)."', '".save($typeid)."', '".$userid."', '".time()."');"); 
+            $db = new db();
+            
+            $values['type'] = $type;
+            $values['item'] = $typeid;
+            $values['user'] = $userid;
+            $values['timestamp'] = time();
+            
+            $db->insert('fav', $values);
             return true;
         }
     }
 
     function remove($type, $item){
-		
-			if(mysql_query("DELETE FROM fav WHERE type='".mysql_real_escape_string($type)."' AND user='".getUser()."' AND item='".mysql_real_escape_string($item)."'")){
-				return true;
-			}
-		
+        $db = new db();
+        if($db->delete('table', array('type', $type, '&&', 'item', $item))){
+            return true;
+        }	
     }
 }
 

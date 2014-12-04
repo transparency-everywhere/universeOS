@@ -19,8 +19,9 @@ class user {
     public function login($username, $password){
   
         $username = mysql_real_escape_string($username);
-        $sql = mysql_query("SELECT userid, password, hash, cypher FROM user WHERE username='$username'");
-        $data = mysql_fetch_array($sql);
+        $db = new db();
+        $data = $db->select('user', array('username', $username), array('userid', 'password', 'hash', 'cypher'));
+
         $userid = $data['userid'];
 
         $timestamp = time();
@@ -39,7 +40,8 @@ class user {
             $_SESSION['userhash'] = $hash;
 
             //update db
-            mysql_query("UPDATE user SET hash='$hash' WHERE userid='".$_SESSION['userid']."'");
+            $values['hash'] = $hash;
+            $db->update('user', $values, array('userid', $userid));
 
             $feedClass = new feed();
             $feedClass->create($_SESSION['userid'], "is logged in", "60", "feed", "p");
@@ -55,9 +57,9 @@ class user {
         
     }
     public function usernameToUserid($username){
-        $loginSQL = mysql_query("SELECT userid, username FROM user WHERE username='".save($username)."'");
-        $loginData = mysql_fetch_array($loginSQL);
-        return $loginData['userid'];
+        $db = new db();
+        $userData = $db->select('user', array('username', $username), array('userid', 'username'));
+        return $userData['userid'];
     }
     public function getData($selector=NULL){
         if($selector == NULL){
@@ -73,14 +75,16 @@ class user {
   	if(empty($userid)){
   		$userid = getUser();
   	}
-	
-	$userData = mysql_fetch_array(mysql_query("SELECT * FROM `user` WHERE userid='$userid'"));
+	$db = new db();
+	$userData = $db->select('user', array('userid', $userid));
 	return $userData;
         
     }
     public function updateActivity($userid){
           $time = time();
-          mysql_query("UPDATE user SET lastactivity='$time' WHERE userid='$userid'");
+          $values['lastactivity'] = $time;
+          $db = new db();
+          $db->update('user', $values, array('userid', $userid));
     }
     
     public function getFav($userid=NULL){
@@ -88,8 +92,9 @@ class user {
         if(empty($userid)){
                 $userid=$this->userid;
         }
-        $favSQL = mysql_query("SELECT * FROM fav WHERE user='$userid'");
-        while($favData = mysql_fetch_array($favSQL)){
+        $db = new db();
+        $favs = $db->select('favs', array('user', $userid));
+        foreach($favs AS $favData){
                 $return[] = $favData;
         }
 
@@ -112,8 +117,8 @@ class user {
     public function create($username, $password, $authSalt, $keySalt, $privateKey, $publicKey){
 
         $username = save($_POST['username']);
-        $sql = mysql_query("SELECT username FROM user WHERE username='$username'");
-        $data = mysql_fetch_array($sql);
+        $db = new db();
+        $data = $db->select('user', array('username', $username), array('username'));
 
         if(empty($data['username'])){
             $time = time();
@@ -162,9 +167,12 @@ class user {
             //create Element "user pictures" to collect profile pictures
             $pictureElement = $element->create($pictureFolder, "profile pictures", "image", $userid, "p");
 
-
-            mysql_query("UPDATE user SET homefolder='$userFolder', myFiles='$myFiles', profilepictureelement='$pictureElement' WHERE userid='$userid'");
-
+            $updateValues['homefolder'] = $userFolder;
+            $updateValues['myFiles'] = $myFiles;
+            $updateValues['profilepictureelement'] = $pictureElement;
+            
+            $db->update('user', $updateValues, array('userid', $userid));
+            
             return true;
         }
     }
@@ -172,36 +180,36 @@ class user {
     
     //not in use so far
     function delete($userid, $reason){
+          $db = new db();
           $authorization = true;
           if($authorization){
 
               //delete all files
-              $fileSQL = mysql_query("SELECT id FROM files WHERE owner='$userid'");
-              while($fileData = mysql_fetch_array($fileSQL)){
+              $files = $db->select('files', array('owner', $userid), array('id'));
+              foreach($files AS $fileData){
                   $fileClass = new file($fileData['id']);
                   $fileClass->deleteFile();
-
               }
 
               //delete all links
               $linkClass = new link();
-              $linkSQL = mysql_query("SELECT id FROM links WHERE author='$userid'");
-              while($linkData = mysql_fetch_array($linkSQL)){
-                $linkClass->deleteLink($linkData['userid']);
+              $links = $db->query('links', array('author', $userid), array('id'));
+              foreach($links AS $linkData){
+                $linkClass->deleteLink($linkData['id']);
               }
 
 
               //elements
-              $elementSQL = mysql_query("SELECT id FROM elements WHERE author='$userid'");
-              while($elementData = mysql_fetch_array($elementSQL)){
+              $elements = $db->select('elements', array('author', $userid), array('id'));
+              foreach($elements AS $elementData){
                   $element = new element($elementData['id']);
                   $element->delete();
               }
 
 
               //folders
-              $folderSQL = mysql_query("SELECT id FROM folders creator='$userid'");
-              while($folderData = mysql_fetch_array($folderSQL)){
+              $folders = $db->select('folders', array('creator', $userid), array('id'));
+              foreach($folders AS $folderData){
                   $classFolder = new folder($folderData['id']);
                   $classFolder->delete();
               }
@@ -210,10 +218,10 @@ class user {
 
 
               //buddy
-              mysql_query("DELETE FROM buddylist WHERE buddy='$userid' OR owner='$userid'");
+              $db->delete('buddylist', array('buddy', $userid, 'OR', 'owner', $userid));
 
               //delete user
-              mysql_query("DELETE FROM user WHERE userid='$userid'");
+              $db->delete('user', array('userid', $userid));
 
 
               //log userid, username, reason
@@ -248,9 +256,10 @@ function updateUserPassword($oldPassword, $newPassword, $newAuthSalt=NULL, $newK
 		//create signature
 		$sig = new signatures();
 		$sig->updatePrivateKey('user', $userid, $privateKey); //store encrypted private key
-		
-		mysql_query("UPDATE `user` SET  `password`='".save($newPassword)."' WHERE userid='$userid'");
-	
+		$db = new db();
+                $values['password'] = $newPassword;
+                $db->update('user', $values, array('user', $userid));
+                
   		return $newPassword;
 	}else{
 		return 'Old Password was wrong';
@@ -293,10 +302,11 @@ function getUser(){
 function hasRight($type){
 	  //checks if user has right to ...
 	  //whis is defined in config.php
-	  
-	  $userData = mysql_fetch_array(mysql_query("SELECT `usergroup` FROM `user` WHERE `userid`='".$_SESSION['userid']."'"));
-	  $userGroupData = mysql_fetch_array(mysql_query("SELECT * FROM `userGroups` WHERE `id`='".$userData['usergroup']."'"));
-	  
+	  $db = new db();
+          
+	  $userData = $db->select('user', array('userid', getUser()), array('usergroup'));
+          $db->select('userGroups', array('id', $userData['usergroup']));
+          
 	  if($userGroupData["$type"] == "1"){
 	  	return true;
 	  }else{
@@ -310,8 +320,9 @@ function checkMobileAuthentification($username, $hash){
         $username = $username;
         $hash = $hash;
         
-        $loginSQL = mysql_query("SELECT userid, username, password FROM user WHERE username='$username'");
-        $loginData = mysql_fetch_array($loginSQL);
+        $db = new db();
+        
+        $loginData = $db->select('user', array('username', $username), array('userid', 'username', 'password'));
         $dbPassword = $loginData['password'];
         $dbPassword = hash('sha1', $dbPassword);
         if($hash == $dbPassword){
@@ -325,13 +336,14 @@ function usernameToUserid($username){
   }
 
 function useridToUsername($userid){
-        $loginSQL = mysql_query("SELECT username FROM user WHERE userid='".save($userid)."'");
-        $loginData = mysql_fetch_array($loginSQL);
+        $db = new db();
+        
+        $loginData = $db->select('user', array('userid', $userid), array('username'));
         return $loginData['username'];
   }
 function useridToRealname($userid){
-        $loginSQL = mysql_query("SELECT realname FROM user WHERE userid='".save($userid)."'");
-        $loginData = mysql_fetch_array($loginSQL);
+        $db = new db();
+        $loginData = $db->select('user', array('userid', $userid), array('realname'));
         if(empty($loginData['realname']))
             return 'no realname';
         
@@ -339,8 +351,8 @@ function useridToRealname($userid){
   }
 
 function userSignature($userid, $timestamp, $subpath = NULL, $reverse=NULL){
-    $feedUserSql = mysql_query("SELECT userid, username, userPicture FROM user WHERE userid='$userid'");
-    $feedUserData = mysql_fetch_array($feedUserSql);
+    $db = new db();
+    $feedUserData =  $db->select('user', array('userid', $userid), array('userid', 'username', 'userPicture'));
     if(isset($subpath)){
         $path = "./../.";
         $subPath = 1;
@@ -396,8 +408,9 @@ function userSignature($userid, $timestamp, $subpath = NULL, $reverse=NULL){
 
         
 function showUserPicture($userid, $size, $subpath = NULL, $small = NULL /*defines if functions returns or echos and if script with bordercolor is loaded*/){
-    $picSQL = mysql_query("SELECT userid, lastactivity, userPicture, priv_profilePicture FROM user WHERE userid='".mysql_real_escape_string($userid)."'");
-    $picData = mysql_fetch_array($picSQL);
+    
+    $db = new db();
+    $picData = $db->select('user', array('userid', $userid), array('userid', 'lastactivity', 'userPicture', 'priv_profilePicture'));
     $time = time();
     
     $difference = ($time - $picData['lastactivity']);

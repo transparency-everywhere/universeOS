@@ -95,10 +95,9 @@ class element {
                                 $shortcutClass = new shortcut("element", $elementId);
                                 $shortcutClass->delete();
 
-
-                        if(mysql_query("DELETE FROM elements WHERE id='$elementId'")){
-
-
+                        $db = new db();
+                        
+                        if($db->delete('elements', array('id', $elementId))){
                             return true;
                         }else{
                             return false;
@@ -155,8 +154,10 @@ class element {
                 $query = "folder='".mysql_real_escape_string($element)."'";
                 $shortCutQuery = "WHERE parentType='element' AND parentId='$element'";
             }
+                $db = new db();
 
-                    $i = 0;
+                $i = 0;
+                
                 $fileListSQL = mysql_query("SELECT * FROM files WHERE $query");
                 while($fileListData = mysql_fetch_array($fileListSQL)) {
                     $i++;
@@ -199,8 +200,8 @@ class element {
                     //it is named after the parent element, because images are
                     //shown in a gallery with all the images listed in the parent
                     //element
-                    $elementData = mysql_fetch_array(mysql_query("SELECT title FROM elements WHERE id='".$fileListData['folder']."'"));
-                    $elementTitle10 = substr("$elementData[title]", 0,10);
+                        $elementData = $db->select('elements', array('id', $fileListData['folder']), array('title'));
+                        $elementTitle10 = substr($elementData['title'], 0,10);
 
 
 
@@ -291,8 +292,8 @@ class element {
                     while($shortCutData = mysql_fetch_array($shortCutSql)){
                         $i++;
                         if($shortCutData['type'] == "file"){
-
-                            $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy, type FROM files WHERE id='".$shortCutData['typeId']."'"));
+                            
+                            $shortCutItemData = $db->select('files', array('id', $shortCutData['typeId']), array('title', 'privacy', 'type'));
                             $title10 = substr($shortCutItemData['title'], 0,10);
                             $title = $shortCutItemData['title'];
                             if($shortCutItemData['type'] == "UFF"){
@@ -320,8 +321,8 @@ class element {
 
 
                         }else if($shortCutData['type'] == "link"){
-
-                            $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, link, privacy, type FROM links WHERE id='".$shortCutData['typeId']."'"));
+                                                
+                            $shortCutItemData = $db->select('links', array('id', $shortCutData['typeId']), array('title', 'link', 'privacy', 'type'));
                             $title10 = substr($shortCutItemData['title'], 0,10);
                             $title = $shortCutItemData['title'];
                             if($shortCutItemData['type'] == "youTube"){

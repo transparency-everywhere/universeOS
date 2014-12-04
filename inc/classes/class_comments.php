@@ -26,12 +26,13 @@ function addComment($type, $itemid, $author, $message){
      
 	 $personalEvents = new personalEvents();
      	if($type == "feed"){
-         //fügt Benachrichtigung für den Author des Feeds hinzu, falls ein anderer User einen Kommentar erstellt
-         $feedSql = mysql_query("SELECT owner FROM userfeeds WHERE feedid='$itemid'");
-         $feedData = mysql_fetch_array($feedSql);
-         if($_SESSION['userid'] !== $feedData['owner']){
-         	$personalEvents->create($feedData['owner'],$_SESSION['userid'],'comment','feed',$itemId);
-		 }
+                $db = new db();
+                //fügt Benachrichtigung für den Author des Feeds hinzu, falls ein anderer User einen Kommentar erstellt
+                
+                $feedData = $db->select('userfeeds', array('feedid', $itemid));
+                if($_SESSION['userid'] !== $feedData['owner']){
+                    $personalEvents->create($feedData['owner'],$_SESSION['userid'],'comment','feed',$itemId);
+		}
 	   }
 	   else if($type == "profile"){
 	   	
@@ -41,7 +42,9 @@ function addComment($type, $itemid, $author, $message){
 
    
     function deleteComments($type, $itemid){
-           if(mysql_query("DELETE FROM `comments` WHERE `type`='$type' AND `typeid`='$itemid'")){
+        $db = new db();
+        
+           if($db->delete('comments', array('type', $type, '&&', 'typeid', $itemid))){
                return true;
            }
     }

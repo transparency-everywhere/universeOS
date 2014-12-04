@@ -58,7 +58,7 @@ class fileSystem {
             if(!empty($query)){
                     if(!empty($folder) && ($folder !== "1")){
                             if($parentFolderData['folder'] !== 1)
-                                    $parentFolderData = mysql_fetch_array(mysql_query("SELECT folder FROM folders WHERE id='".mysql_real_escape_string($folder)."'"));
+                                    $parentFolderData = $db->select('folders', array('id', $folder), array('folder'));
                             ?>
                         <tr height="30" class="greyHover">
                             <td width="30">&nbsp;<img src="<?=$subpath;?>gfx/icons/filesystem/folder.png" height="22"></td>
@@ -134,11 +134,11 @@ class fileSystem {
                 
                 }
 
+                $db = new db();
                 $shortCutSql = mysql_query("SELECT * FROM internLinks $shortCutQuery");
                 while($shortCutData = mysql_fetch_array($shortCutSql)){
                     if($shortCutData['type'] == "folder"){
-
-                        $shortCutItemData = mysql_fetch_array(mysql_query("SELECT name, privacy FROM folders WHERE id='".$shortCutData['typeId']."'"));
+                        $shortCutItemData = $db->select('folders', array('id', $shortCutData['typeId']), array('name', 'privacy'));
 
                         $title = $shortCutItemData['name'];
                         $image = "folder.png";
@@ -146,7 +146,7 @@ class fileSystem {
 
                     }else if($shortCutData['type'] == "element"){
 
-                        $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy FROM elements WHERE id='".save($shortCutData['typeId'])."'"));
+                        $shortCutItemData = $db->select('elements', array('id', $shortCutData['typeId']), array('title', 'privacy'));
 
                         $title = $shortCutItemData['title'];
                         $image = "element.png";

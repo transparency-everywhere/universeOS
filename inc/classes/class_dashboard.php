@@ -18,8 +18,9 @@ class dashBoard{
 	function __construct() {
 
 		$user = getUser();
-      	$this->userid = $user;
-		$this->userdata = mysql_fetch_array(mysql_query("SELECT username FROM user WHERE userid='$user'"));
+                $this->userid = $user;
+                $userClass = new user($user);
+		$this->userdata = $userClass->getData();
 
 	}
 	

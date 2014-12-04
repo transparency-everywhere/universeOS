@@ -120,7 +120,9 @@ class api{
 			foreach($userids AS $userid){
 				
 				$userid = save($userid);
-		        $data = mysql_fetch_array(mysql_query("SELECT lastactivity FROM user WHERE userid='$userid'"));
+                                $db = new db();
+                                $data = $db->select('user', array('userid', $userid), array('lastactivity'));
+                                
 				$diff = time() - $data['lastactivity'];
 				if($diff < 90){
 					$return[$userid] =  1;

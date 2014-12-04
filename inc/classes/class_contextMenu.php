@@ -44,44 +44,42 @@ class contextMenu{
 				$protect[] = '';
 				$undeletable[] = '';
 				
+                $db = new db();
 		switch($this->type){
 			case 'feed':
-	        	$feedCheck = mysql_query("SELECT author, privacy FROM feed WHERE id='$itemId'");
-	            $feedData = mysql_fetch_array($feedCheck);
-	            if(authorize('p', "edit", $feedData['author'])){
-	            	$privacy['title'] = 'Privacy';
-					$privacy['href'] = '#';
-					$privacy['onclick'] = "javascript: popper('doit.php?action=changePrivacy&type=feed&itemId=$itemId')";
+                            $feedData = $db->select('feed', array('id', $itemId), array('author', 'privacy'));
+                            if(authorize('p', "edit", $feedData['author'])){
+                                $privacy['title'] = 'Privacy';
+				$privacy['href'] = '#';
+				$privacy['onclick'] = "javascript: popper('doit.php?action=changePrivacy&type=feed&itemId=$itemId')";
 					
 
-				  	$delete['title'] = 'Delete';
-					$delete['href'] = "doit.php?action=deleteItem&type=feed&itemId=$itemId";
-					$delete['target'] = 'submitter'; 
-	            }
+				$delete['title'] = 'Delete';
+				$delete['href'] = "doit.php?action=deleteItem&type=feed&itemId=$itemId";
+				$delete['target'] = 'submitter'; 
+                            }
 				
 				$options[] = $privacy;
 				$options[] = $delete;
  				break;
 			case 'comment':
-	        	$commentCheck = mysql_query("SELECT author, type, typeid, privacy FROM comments WHERE id='$itemId'");
-	            $commentData = mysql_fetch_array($commentCheck);
+                            $commentData = $db->select('comments', array('id', $itemId), array('author', 'type', 'typeid', 'privacy'));
 	            
-	            //allow profile owner to delete comments that other users made in his profile
-	            if($commentData['type'] == "profile" && $commentData['typeid'] == getUser()){
-	            	$delete['title'] = 'Delete';
+                            //allow profile owner to delete comments that other users made in his profile
+                            if($commentData['type'] == "profile" && $commentData['typeid'] == getUser()){
+                                        $delete['title'] = 'Delete';
 					$delete['href'] = "doit.php?action=deleteItem&type=comment&itemId=$itemId";
 					$delete['target'] = 'submitter'; 
-				}
-	            if(authorize('p', "edit", $commentData['author'])){
-	                $privacy['title'] = 'Privacy';
+                            }
+                            if(authorize('p', "edit", $commentData['author'])){
+                                        $privacy['title'] = 'Privacy';
 					$privacy['href'] = '#';
 					$privacy['onclick'] = "javascript: popper('doit.php?action=changePrivacy&type=comment&itemId=$itemId')";
 					
-
 				  	$delete['title'] = 'Delete';
 					$delete['href'] = "doit.php?action=deleteItem&type=comment&itemId=$itemId";
 					$delete['target'] = 'submitter'; 
-	            }
+                            }
 				
 				$options[] = $delete;
 				$options[] = $privacy;
@@ -91,16 +89,17 @@ class contextMenu{
                                 $checkInternLinkData = $dbClass->select('internLinks', array('id', $itemId));
             
                 if($checkInternLinkData['type'] == "folder"){
-                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT name, privacy, creator FROM folders WHERE id='".$checkInternLinkData['typeId']."'"));
+                    
+                    $shortCutItemData = $dbClass->select('folders', array('id', $checkInternLinkData['typeId']), array('name', 'privacy', 'creator'));
                     $user = $shortCutItemData['creator'];
                 }else if($checkInternLinkData['type'] == "element"){
-                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy, creator FROM elements WHERE id='".$checkInternLinkData['typeId']."'"));
+                    $shortCutItemData = $dbClass->select('elements', array('id', $checkInternLinkData['typeId']), array('title', 'privacy', 'creator'));
                     $user = $shortCutItemData['creator'];
                 }else if($checkInternLinkData['type'] == "file"){
-                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, privacy, type, owner FROM files WHERE id='".$checkInternLinkData['typeId']."'"));
+                    $shortCutItemData = $dbClass->select('files', array('id', $checkInternLinkData['typeId']), array('title', 'privacy', 'type', 'owner'));
                     $user = $shortCutItemData['owner'];
                 }else if($checkInternLinkData['type'] == "link"){
-                    $shortCutItemData = mysql_fetch_array(mysql_query("SELECT title, link, privacy, type, author FROM links WHERE id='".$checkInternLinkData['typeId']."'"));
+                    $shortCutItemData = $dbClass->select('files', array('id', $checkInternLinkData['typeId']), array('title', 'link', 'privacy', 'type', 'author'));
                     $user = $shortCutItemData['author'];
                 }
                 
@@ -112,11 +111,9 @@ class contextMenu{
                 $options[] = $delete;
 				break;
 			case "folder":
+                                
+                                $checkFolderData = $db->select('folder', array('id', $itemId),array('privacy', 'creator'));
 				
-				
-		    	$checkFolderSql = mysql_query("SELECT `privacy`, `creator` FROM `folders` WHERE id='$itemId'");
-		        $checkFolderData = mysql_fetch_array($checkFolderSql);
-				  
 				$open['title'] = 'open';
 				$open['href'] = '#';
 				$open['onclick'] = "openFolder('$itemId')";
@@ -192,9 +189,8 @@ class contextMenu{
 				
 		      break;
 		   	case "element":
-			  
-		    	$checkElementSql = mysql_query("SELECT privacy, author FROM elements WHERE id='$itemId'");
-		      	$checkElementData = mysql_fetch_array($checkElementSql);
+                            
+                            $checkElementData = $db->select('elements', array('id', $itemId), array('privacy', 'author'));
 			 
 			 
 			 	$open['title'] = 'Open';
@@ -264,8 +260,8 @@ class contextMenu{
 			
 				break;
 		   	case "file":
-		    	$checkFileSql = mysql_query("SELECT privacy, owner FROM files WHERE id='$itemId'");
-		       	$checkFileData = mysql_fetch_array($checkFileSql);
+                            
+                                $checkFileData =  $db->select('files', array('id', $itemId), array('privacy', 'owner'));
 			  
 			  	$open['title'] = 'Open';
 			  	$open['href'] = '#';
@@ -345,8 +341,7 @@ class contextMenu{
 			
 		   		break;
 		   	case "image":
-		    	$checkFileSql = mysql_query("SELECT privacy, owner FROM files WHERE id='$itemId'");
-		       	$checkFileData = mysql_fetch_array($checkFileSql);
+		       	$checkFileData = $db->select('files', array('id', $itemId), array('privacy', 'owner'));
 		       
 			  
 			  	$open['title'] = 'Open';
@@ -379,8 +374,7 @@ class contextMenu{
 				$options[] = $delete;
 		   		break;
 		   	case "link":
-		    	$checkLinkSql = mysql_query("SELECT privacy, author FROM links WHERE id='$itemId'");
-	           	$checkLinkData = mysql_fetch_array($checkLinkSql);
+	           	$checkLinkData = $db->select('links', array('id', $itemId), array('privacy', 'author'));
 	           
 			  	$open['title'] = 'Open';
 			  	$open['href'] = '#';

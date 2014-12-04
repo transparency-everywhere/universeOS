@@ -25,10 +25,9 @@ class uff {
     function create($element, $title, $filename, $privacy){
         $user = getUser();
 
-
+        $elementClass = new element($element);
         //upload file
-        $elementSQL = mysql_query("SELECT folder, title FROM elements WHERE id='$element'");
-        $elementData = mysql_fetch_array($elementSQL);
+        $elementData = $elementClass->getData();
         
         $folderClass = new folder($elementData['folder']);
         $path = universeBasePath.'/'.$folderClass->getPath();
@@ -43,8 +42,20 @@ class uff {
         $ourFileHandle = fopen($ourFileName, 'w') or jsAlert("can\'t open file");
         fclose($ourFileHandle);
         
-        if(mysql_query("INSERT INTO `files` (`id`, `folder`, `title`, `size`, `timestamp`, `filename`, `language`, `type`, `owner`, `votes`, `score`, `privacy`) VALUES (NULL, '$folder', '$title', '', '$timestamp', '$filename', '', 'UFF', '$user', '0', '0', '$privacy');")){
-          
+        $db = new db();
+        
+        $values['folder'] = $folder;
+        $values['title'] = $title;
+        $values['timestamp'] = time();
+        $values['filename'] = $filename;
+        $values['type'] = 'UFF';
+        $values['owner'] = $user;
+        $values['votes'] = '0';
+        $values['score'] = '0';
+        $values['privacy'] = $privacy;
+        
+        if($db->insert('files', $values)){
+        
             //add feed
             $fileId = mysql_insert_id();
             $feed = "has created a new UFF-file";
@@ -89,9 +100,8 @@ class uff {
                     }
                     //add user to active users list
 
-
-                    $fileData = mysql_query("SELECT var1 FROM files WHERE id='$fileId'");
-                    $fileData = mysql_fetch_array($fileData);
+                    $db = new db();
+                    $fileData =$db->select('files', array('id', $fileId), array('var1'));
 
                     //var1 with UFFs is used to 
                     $activeUserArray = explode(";", $fileData['var1']);
@@ -104,7 +114,8 @@ class uff {
                         $activeUserArray = implode(";", $activeUserArray);
 
                         //update db
-                        mysql_query("UPDATE files SET var1='$activeUserArray' WHERE id='$fileId'");
+                        $values['var1'] = $activeUserArray;
+                        $db->update('files', $values, array('id', $fileId));
                     }
         }
         
@@ -148,7 +159,9 @@ class uff {
                         //parse array
                         $newArray = implode(";", $newArray);
                         //update db
-                        mysql_query("UPDATE files SET var1='$newArray' WHERE id='$fileId'");
+                        $db = new db();
+                        $values['var1'] = $newArray;
+                        $db->update('files', $values, array('id', $fileId));
                         
                     }
     }

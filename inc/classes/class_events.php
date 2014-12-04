@@ -23,8 +23,18 @@ class events{
 	
 	public function create($user, $startStamp, $stopStamp, $title, $place, $privacy, $users, $originalEventId=0){
 		$invitedUsers = $users;
-		mysql_query("INSERT INTO `events` (`user`, `startStamp`, `stopStamp`, `title`, `place`, `privacy`, `invitedUsers`, `originalEventId`) VALUES ('".save($user)."', '".save($startStamp)."', '".save($stopStamp)."', '".save($title)."', '".save($place)."', '$privacy', '".save($invitedUsers)."', '".save($originalEventId)."');");
-		
+                $db = new db();
+                $values['user'] = $user;
+                $values['startStamp'] = $startStamp;
+                $values['stopStamp'] = $stopStamp;
+                $values['title'] = $title;
+                $values['place'] = $place;
+                $values['privacy'] = $privacy;
+                $values['invitedUsers'] = $users;
+                $values['originalEventId'] = $originalEventId;
+                
+                $db->insert('events', $values);
+                
 		//add personalEvents for each user in array $users
 		if(!empty($users)){
 			$users = explode(',', $users);
