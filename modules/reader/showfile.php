@@ -66,7 +66,7 @@ switch($_GET[type]){
 }
 
 if($_GET[type] !== "youTube"){
-$download = "<a href=\"doit.php?action=download&fileId=$_GET[id]\" target=\"submitter\" class=\"btn\" title=\"download file\"><img src=\"./gfx/icons/download.png\" alt=\"download\" height=\"10\"></a>";
+$download = "<a href=\"#\" onclick=\"filesystem.downloadFile($_GET[id]);\" target=\"submitter\" class=\"btn\" title=\"download file\"><img src=\"./gfx/icons/download.png\" alt=\"download\" height=\"10\"></a>";
 }
 
 if($_GET[type] == "link"){

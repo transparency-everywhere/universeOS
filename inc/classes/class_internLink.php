@@ -17,25 +17,34 @@ class shortcut {
 	//creates shortcut
 		
 		//check if link allready exists
-		$linkCheckData = mysql_fetch_array(mysql_query("SELECT type FROM internLinks WHERE type='$type' AND typeId='$typeId'"));
-		if(empty($linkCheckData[type])){
+                $db = new db();
+                $linkCheckData = $db->select('internLinks', array('type', $type, 'AND', 'typeId', $typeId), array('type'));
+		if(empty($linkCheckData['type'])){
+                        $values['parentType'] = $parentType;
+                        $values['parentId'] = $parentId;
+                        $values['type'] = $type;
+                        $values['typeId'] = $typeId;
+                        $values['title'] = $title;
 			
-			if(mysql_query("INSERT INTO `internLinks` (`id`, `parentType`, `parentId`, `type`, `typeId`, `title`) VALUES (NULL, '$parentType', '$parentId', '$type', '$typeId', '$title');")){
+			if($db->insert('internLinks', $values)){
 				return true;
 			}
 			
 		}
 	}
     function delete($linkId){
+        
+        $db = new db();
     	//deletes single shortcut
-        if(mysql_query("DELETE FROM internLinks WHERE id='$linkId'")){
+        if($db->delete('internLinks', array('id', $linkId))){
             return true;
         }
     }
     
     function deleteInternLinks($parentType, $parentId){
+        $db = new db();
         //is used when element which the shortcut is linked to is deleted
-        if(mysql_query("DELETE FROM internLinks WHERE type='$parentType' AND typeId='$parentId'")){
+        if($db->delete('internLinks', array('type', $parentType, '&&', 'typeId', $parentId))){
             return true;
         }
     }

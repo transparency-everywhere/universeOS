@@ -22,59 +22,63 @@ class item {
     function plusOne(){
            $type = $this->type;
            $typeid = $this->typeid;
+           
            if($type == "comment"){
-               mysql_query("UPDATE comments SET votes = votes + 1, score = score + 1 WHERE id='$typeid'");
+               $tableName = 'comments';
            }else if($type == "feed"){
-               mysql_query("UPDATE feed SET votes = votes + 1, score = score + 1 WHERE id='$typeid'");
+               $tableName = 'feed';
            }
            if($type == "file"){
-               mysql_query("UPDATE files SET votes = votes + 1, score = score + 1 WHERE id='$typeid'"); 
+               $tableName = 'files';
            }
            if($type == "folder"){
-               mysql_query("UPDATE folders SET votes = votes + 1, score = score + 1 WHERE id='$typeid'"); 
+               $tableName = 'folders';
            }
            if($type == "element"){
-               mysql_query("UPDATE elements SET votes = votes + 1, score = score + 1 WHERE id='$typeid'"); 
+               $tableName = 'elements';
 
            }
            if($type == "file"){
-               mysql_query("UPDATE file SET votes = votes + 1, score = score + 1 WHERE id='$typeid'"); 
+               $tableName = 'file';
 
            }
            if($type == "link"){
-               mysql_query("UPDATE links SET votes = votes + 1, score = score + 1 WHERE id='$typeid'"); 
+               $tableName = 'links'; 
 
            }
            //score++
+           $db = new db();
+           mysql_query("UPDATE `$tableName` SET votes = votes + 1, score = score + 1 WHERE id='$typeid'");
            }
     function minusOne(){
 
-           $type = $this->type;
-           $typeid = $this->typeid;
-           if($type == "comment"){
-               mysql_query("UPDATE comments SET votes = votes + 1, score = score - 1 WHERE id='$typeid'");
-
+                     if($type == "comment"){
+               $tableName = 'comments';
            }else if($type == "feed"){
-               mysql_query("UPDATE feed SET votes = votes + 1, score = score - 1 WHERE id='$typeid'");
+               $tableName = 'feed';
            }
            if($type == "file"){
-               mysql_query("UPDATE files SET votes = votes + 1, score = score - 1 WHERE id='$typeid'"); 
+               $tableName = 'files';
            }
            if($type == "folder"){
-               mysql_query("UPDATE folders SET votes = votes + 1, score = score - 1 WHERE id='$typeid'"); 
+               $tableName = 'folders';
            }
            if($type == "element"){
-               mysql_query("UPDATE elements SET votes = votes + 1, score = score - 1 WHERE id='$typeid'"); 
+               $tableName = 'elements';
+
            }
            if($type == "file"){
-               mysql_query("UPDATE file SET votes = votes + 1, score = score - 1 WHERE id='$typeid'"); 
+               $tableName = 'file';
 
            }
            if($type == "link"){
-               mysql_query("UPDATE links SET votes = votes + 1, score = score - 1 WHERE id='$typeid'"); 
+               $tableName = 'links'; 
 
            }
-           } //score--
+           //score--
+           $db = new db();
+           mysql_query("UPDATE `$tableName` SET votes = votes + 1, score = score - 1 WHERE id='$typeid'");
+           }
 
 
     function showScore($reload=NULL) {
@@ -134,20 +138,21 @@ class item {
     function showThumb(){
            $type = $this->type;
            $typeid = $this->typeid;
+           
+           $db = new db();
             switch($type){
                 case 'folder':
                     $elementSQL = mysql_query("SELECT id FROM elements WHERE folder='$itemId' ORDER BY RAND() LIMIT 0,1");
                     $elementData = mysql_fetch_array($elementSQL);
-
+                    
                     $path = showThumb("element", $elementData['id']);
 
 
                 break;
                 case 'element':
 
-                    $elementSQL = mysql_query("SELECT title, privacy FROM elements WHERE id='$itemId'");
-                    $elementData = mysql_fetch_array($elementSQL);
-                    if(authorize("$elementData[privacy]", "show")){
+                    $elementData = $db->select('elements', array('id', $itemId), array('title','privacy'));
+                    if(authorize($elementData['privacy'], "show")){
 
                         //select random picture and show thumb of it
                         $fileSQL = mysql_query("SELECT * FROM files WHERE type IN ('image/jpeg', 'image/png') AND title LIKE '%thumb%' AND folder='$itemId' ORDER BY RAND() LIMIT 0,1");
@@ -166,7 +171,7 @@ class item {
     function showItemThumb(){
            $itemType = $this->type;
            $itemId = $this->typeid;
-            $itemId = save($itemId);
+           $itemId = save($itemId);
 
             switch($itemType){
                 case 'folder':

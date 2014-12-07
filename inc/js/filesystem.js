@@ -207,5 +207,8 @@ var filesystem =  new function() {
         showApplication('filesystem');
         filesystem.tabs.addTab('Upload', '',gui.loadPage('modules/filesystem/upload.php?element='+element));
     }
+    this.downloadFile = function(fileId){
+        $('#submitter').attr('src','out/download/?fileId='+fileId);
+    };
 };
 

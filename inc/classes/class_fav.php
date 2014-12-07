@@ -76,8 +76,8 @@ class fav {
                                     $output .= "</tr>";
         }
         if($i == 0){
-            $output .="<tr>";
-                $output .="<td colspan=\"2\" style=\"padding: 5px; padding-top: 12px;\">";
+            $output .="<tr style=\"display:table-row; background: none; padding-top: 0px;\">";
+                $output .="<td colspan=\"2\" style=\"padding: 5px; padding-top: 0px;\">";
                 $output .="You don't have any favourites so far. Add folders, elements, files, playlists or other items to your favourites and they will appear here.";
                 $output .="</td>";
             $output .="</tr>";

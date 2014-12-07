@@ -195,13 +195,13 @@ class dashBoard{
 				$output .= "</li>";
 				$i++;
 			}
-			if($i == 0){
-				$output .= "<li>";
-				$output .= "You don't have any messages so far. Search for friends, add them to your buddylist and open a chat dialoge to write a message.";
-				$output .= "</li>";
-			}
 			
 			$output .= "</ul>";
+			if($i == 0){
+				$output .= "<span>";
+				$output .= "You don't have any messages so far. Search for friends, add them to your buddylist and open a chat dialoge to write a message.";
+				$output .= "</span>";
+			}
 		
 			$output = $this->showDashBox($title, $output,"", "message", $grid);
 			

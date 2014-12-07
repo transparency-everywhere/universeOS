@@ -119,7 +119,7 @@ class buddylist {
                  $user= getUser();
              }
                     $db = new db();
-                    $friendRequests = select('buddylist', array('buddy', $user, '&&', 'request', '1'));
+                    $friendRequests = $db->shiftResult($db->select('buddylist', array('buddy', $user, '&&', 'request', '1')), 'owner');
                     
                     foreach($friendRequests AS $friendRequestData){
                              $userid = $friendRequestData['owner'];
@@ -134,9 +134,8 @@ class buddylist {
         if(empty($user)){
             $user= getUser();
         }
-        
-        $buddyListQuery = $db->select('buddylist', array('owner', $user, '&&', 'request', $request));
-                    
+        $db = new db();
+        $buddyListQuery = $db->shiftResult($db->select('buddylist', array('owner', $user, '&&', 'request', $request)));
         $buddies = array();
         foreach($buddyListQuery AS $buddylistData) {
             $buddies[] = $buddylistData['buddy'];

@@ -44,15 +44,15 @@ class message{
         $postCheck = 1;
     }
     function markAsRead($buddy, $user){
-
+                $db = new db();
                     $user = save($user);
                     $buddy = save($buddy);
-
-                    mysql_query("UPDATE `messages` SET `read`='1' WHERE `sender` ='$buddy' AND `receiver` ='$user';");
+                    $values['read'] = '1';
+                    $db->update('messages', $values, array('sender', $buddy, '&&', 'receiver', $user));
     }	
     function getLast($userid){
             $userid = save($userid);
-            
+            $db = new db();
             $userClass = new user();
             $userClass->updateActivity($userid);
             $chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' OR receiver='$userid' ORDER BY timestamp DESC LIMIT 1");
@@ -92,17 +92,17 @@ class message{
                 $userClass = new user($userid);
 		$userData = $userClass->getData($userid);
 		
-				
+		$db = new db();
 		
 		
 		$chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' && receiver='$buddyId' OR sender='$buddyId' && receiver='$userid' ORDER BY timestamp DESC LIMIT $limit");
 		while($chatData = mysql_fetch_array($chatSQL)) {
 	    
 		    if($chatData['receiver'] == getUser() && $chatData['read'] == "0"){
-		    mysql_query("UPDATE `messages` SET  `read`='1' WHERE  id='".$chatData['id']."'");
+                        $db->update('messages', array('read'=>'1'), array('id', $chatData['id']));
 		    }
 		    if($chatData['sender'] == $_SESSION['userid'] && $chatData['seen'] == "0"){
-		    mysql_query("UPDATE `messages` SET  `seen`='1' WHERE  id='".$chatData['id']."'");
+                        $db->update('messages', array('seen'=>'1'), array('id', $chatData['id']));
 		    }
 		    
 		    $sender = $chatData['sender'];
@@ -191,8 +191,8 @@ class message{
    }
         
    function getMessageData($messageId){
-   	$newMessagesSql = mysql_query("SELECT * FROM  `messages` WHERE  id='".mysql_real_escape_string($messageId)."'");
-	return mysql_fetch_array($newMessagesSql);
+       $db = new db();
+       return $db->select('messages',  array('id', $messageId));
    }
    
 }

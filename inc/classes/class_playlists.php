@@ -39,9 +39,10 @@ class playlists {
             $playlists;
             if(empty($userid))
                     $userid = getUser();
-
-            $sql = mysql_query("SELECT `id` FROM playlist WHERE `user`='".mysql_real_escape_string($userid)."'");
-            while($data = mysql_fetch_array($sql)){
+            $db = new db();
+            $playlists = $db->shiftResult($db->select('playlists', array('user', $userid)),'id');
+            
+            foreach($playlists AS $data){
                     $playlists[] = $data['id'];
             }
             return $playlists;
@@ -55,8 +56,8 @@ class playlists {
 	function getPlaylistTitle($playlistId=NULL){
             if(empty($playlistId))
                 $playlistId = $this->id;
-		$sql = mysql_query("SELECT `title` FROM playlist WHERE id='".mysql_real_escape_string($playlistId)."'");
-		$data = mysql_fetch_array($sql);
+                $db = new db();
+		$data = $db->select('playlist', array('id', $playlistId), array('title'));
 		return $data['title'];
 	}
 	
@@ -64,11 +65,14 @@ class playlists {
 		if($userId == null){
 			$userId = getUser();
 		}
-		
+		$db = new db();
+                $userGroupsQuery = $db->select('groupAttachments', array('item', 'user', '&&', 'itemId', $userId), array('group'));
+                
+                
+                
 		//get all the groups in which the current user is
-        $userGroupsSql = mysql_query("SELECT `group` FROM `groupAttachments` WHERE item='user' AND itemId='$userId'");
-        while($userGroupsData = mysql_fetch_array($userGroupsSql)){
-            $userGroups[] = "$userGroupsData[group]";
+        foreach($userGroupsQuery AS $userGroupsData){
+            $userGroups[] = $userGroupsData['group'];
         }
         
         //add them to the query

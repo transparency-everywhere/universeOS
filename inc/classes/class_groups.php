@@ -17,16 +17,17 @@ class groups{
             $groups;
             if(empty($userid))
                     $userid = getUser();
-
-            $sql = mysql_query("SELECT `group` FROM `groupAttachments` WHERE `item`='user' AND `validated`='1' AND `itemId`='".mysql_real_escape_string($userid)."'");
-            while($data = mysql_fetch_array($sql)){
+            $db = new db();
+            $userGroups = $db->select('groupAttachments', array('item', 'user', '&&', 'validated','1','&&','itemId',$userid), array('group'));
+            foreach($userGroups AS $data){
                     $groups[] = $data['group'];
             }
             return $groups;
 	}
 	public function getTitle($groupId){
-		$data = mysql_fetch_array(mysql_query("SELECT `title` FROM `groups` WHERE id='".save($groupId)."'"));
-		return $data['title'];
+            $db = new db();
+            $data = $db->select('groups', array('id', $groupId), array('title'));
+            return $data['title'];
 	}
         function userJoinGroup($group, $user=NULL){
 
@@ -36,12 +37,20 @@ class groups{
                                 $user = $userid;
                         }
 
-                mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`) VALUES ('$group', 'user', '$user', '$time', '$userid');");
-
+                    $db = new db();
+                    $values['group'] = $group;
+                    $values['item'] = 'user';
+                    $values['itemId'] = $user;
+                    $values['timestamp'] = $time;
+                    $values['author'] = $userid;
+                    $db->insert('groupAttachments', $values);
                 }
 
         function userLeaveGroup($group, $user=NULL){
-                        if(mysql_query("DELETE FROM `groupAttachments` WHERE group='$group' AND item='user' AND itemId='".save($user)."'")){
+            
+                    $db = new db();
+                   
+                        if( $db->delete('groupAttachments', array('group', $group, '&&', 'item', $user))){
                                 return true;
                         }
                 }
@@ -54,13 +63,14 @@ class groups{
                 }
                 
         function getGroupData($groupId){
-                        $data = mysql_fetch_array(mysql_query("SELECT * FROM groups WHERE id='".mysql_real_escape_string($groupId)."'"));
-                        return $data;
+                    $db = new db();
+                    return $db->select('groups', array('id', $groupId));;
                 }
 
         function getGroupName($groupId){
-                        $data = mysql_fetch_array(mysql_query("SELECT title FROM groups WHERE id='".mysql_real_escape_string($groupId)."'"));
-                        return $data['title'];
+                    $db = new db();
+                    $data = $db->select('groups', array('id', $groupId), array('title'));
+                    return $data['title'];
                 }
 
         function countGroupMembers($groupId){
@@ -76,28 +86,45 @@ class groups{
 
                     //check if nessecary informations are given
                     if((isset($description)) && (isset($title)) && (isset($privacy))){
+                        $db = new db();
+                        $values['title'] = $title;
+                        $values['description'] = $description;
+                        $values['public'] = $privacy;
+                        $values['admin'] = $userid;
                     //insert group into db    
-                    mysql_query("INSERT INTO `groups` (`title`, `description`, `public`, `admin`) VALUES ('$title', '$description', '$privacy', '$userid');");
-                    $groupId = mysql_insert_id();
+                    $groupId = $db->insert('groups', $values);
 
                         //add users to group
                         if(isset($users)){
                         foreach ($users as &$user) {
-
-                        mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`) VALUES ('$groupId', 'user', '$user', '$time', '$userid');");
-
-
+                            unset($values);
+                            $values['group'] = $groupId;
+                            $values['item'] = 'user';
+                            $values['itemId'] = $user;
+                            $values['timestamp']= time();
+                            $values['author'] = $userid;
+                            $db->insert('groupAttachments', $values);
                         }}
                         $folderCLass = new folder();
                         $groupFolder = $folderCLass->create("3", $groupId, $userid, "$groupId//$groupId");
                         $element = new element();
                         $groupElement = $element->create($groupFolder, $title, "other", $userid,  "$groupId//$groupId");
-                        mysql_query("UPDATE `groups` SET `homeFolder`='$groupFolder', `homeElement`='$groupElement' WHERE id='$groupId'");
-
+                        
+                        unset($values);
+                        $values['homeFolder'] = $groupFolder;
+                        $values['homeElement'] = $groupElement;
+                        $db->update('groups', $values);
+                        
                                 //add user which added group to group and validate
-                                 mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`, `validated`) VALUES ('$groupId', 'user', '$userid', '$time', '$userid', '1');");
-
-                                        return true;
+                                unset($values);
+                                $values['group'] = $groupId;
+                                $values['item'] = 'user';
+                                $values['itemId'] = $userid;
+                                $values['timestamp'] = $time;
+                                $values['author'] = $userid;
+                                $values['validated'] = '1';
+                                $db->insert('groupAttachments', $values);
+                                return true;
 
                         }else{
                         jsAlert("please fill out everything");
@@ -106,21 +133,26 @@ class groups{
           }
 
         function deleteUserFromGroup($userid, $groupid){
-
-                if(mysql_query("DELETE FROM groupAttachments WHERE `group`='".save($groupid)."' AND `item`='user' AND `itemId`='".save($userid)."'")){
-                        return true;
-                }
+            $db = new db();
+            if($db->delete('groupAttachments', array('group', $groupid, 'AND', 'item', 'user', 'AND', 'itemId', $userid))){
+                    return true;
+            }
           }
 
         function update($groupId, $privacy, $description, $membersInvite){
-
-                        if(mysql_query("UPDATE groups SET public='$privacy', description='$description', membersInvite='$membersInvite' WHERE id='$groupId'")){
-                                return true;
-                        }
+                    $db = new db();
+                    $values['public'] = $privacy;
+                    $values['description'] = $description;
+                    $values['membersInvite'] = $membersInvite;
+                    
+                    if($db->update('groups', $values, array('id', $groupId))){
+                            return true;
+                    }
 
           }
 
         function makeUserAdmin($groupId, $userId){
+                    $db = new db();
                         $groupData = $this->getGroupData($groupId);
 
                         $adminString = $groupData['admin'];
@@ -129,8 +161,9 @@ class groups{
                         $admins = explode($adminString, ";");
                         if(!in_array("$userId", $admins)){
                                 $adminString = "$adminString;$userId";
-
-                                if(mysql_query("UPDATE `groups` SET `admin`='$adminString' WHERE id='".save($groupId)."'")){
+                                $values['admin'] = $adminString;
+                                
+                                if($db->update('groups', $values, array('id', $groupId))){
                                         return true;
                                 }
 

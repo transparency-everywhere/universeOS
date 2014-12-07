@@ -384,10 +384,10 @@ class file{
     
     
     function getFullFilePath($fileId){
-        $documentSQL = mysql_query("SELECT folder, filename FROM  `files` WHERE id='".save($fileId)."'");
-        $documentData = mysql_fetch_array($documentSQL);
-            $documentElementSQL = mysql_query("SELECT folder FROM elements WHERE id='".save($documentData['folder'])."'");
-            $documentElementData = mysql_fetch_array($documentElementSQL);
+        $db = new db();
+        $documentData = $db->select('files', array('id', $fileId), array('folder', 'filename'));
+            
+            $documentElementData = $db->select('elements', array('id', $documentData['folder']), array('folder'));
             $path = "upload/";
             $folderClass = new folder($documentElementData['folder']);
             $folderArray = $folderClass->loadFolderArray("path");
@@ -416,16 +416,19 @@ function getTitle(){
 
 
     function getFileType(){
-        $fileId = $this->id;
-            $fileData = mysql_fetch_array(mysql_query("SELECT type FROM files WHERE id='".save($fileId)."'"));
+            $fileId = $this->id;
+            $db = new db();
+        
+            $fileData = $db->select('files', array('id', $fileId), array('type'));
             return $fileData['type'];
         }
     function delete(){
         $fileId = $this->id;
         $dbClass = new db();
         $fileData = $dbClass->select('files', array('id', $fileId));
-        $fileElementSql = mysql_query("SELECT id, title, folder FROM elements WHERE id='$fileData[folder]'");
-        $fileElementData = mysql_fetch_array($fileElementSql);
+        
+        
+        $fileElementData =$db->select('elements', array('id', $fileData['folder']), array('id', 'title', 'folder'));
 
         $type = $fileData['type'];
 
@@ -444,7 +447,7 @@ function getTitle(){
             $thumbPath = $folderPath.'thumbs/'.$title;
             echo $filePath.'asd';
             if(unlink(universeBasePath.'/'.$filePath)){
-                if(mysql_query("DELETE FROM files WHERE id='$fileId'")){
+                if($db->delete('files', array('id', $fileId))){
 
                    //delete comments
                    $commentClass = new comments();

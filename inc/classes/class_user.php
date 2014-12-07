@@ -93,7 +93,7 @@ class user {
                 $userid=$this->userid;
         }
         $db = new db();
-        $favs = $db->select('favs', array('user', $userid));
+        $favs = $db->shiftResult($db->select('favs', array('user', $userid)),'user');
         foreach($favs AS $favData){
                 $return[] = $favData;
         }

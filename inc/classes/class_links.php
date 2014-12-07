@@ -47,14 +47,13 @@ class link {
         }
     
     function deleteLink($linkId){
-        
-                $linkSql = mysql_query("SELECT * FROM links WHERE id='$linkId'");
-                $linkData = mysql_fetch_array($linkSql);
+                $db = new db();
+                $linkData = $db->select('link', array('id', $linkId));
                     
                 //file can only be deleted if uploader = deleter
                 if(authorize($linkData['privacy'], "edit", $linkData['author'])){
-                    
-                       if(mysql_query("DELETE FROM links WHERE id='$linkId'")){
+                        
+                       if($db->delete('links', array('id', $linkId))){
                            
                            //delete comments
                            $classComments = new comments();
@@ -85,8 +84,8 @@ class link {
     
     
     function getType($linkId){
-        
-        $fileData = mysql_fetch_array(mysql_query("SELECT type FROM links WHERE id='".save($fileId)."'"));
+        $db = new db();
+        $fileData = $db->select('links', array('id', $fileId));
         return $fileData['type'];
     }
 }

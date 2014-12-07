@@ -34,8 +34,15 @@ class folder {
 			if (!file_exists("$folderpath")) {
 		    mkdir($folderpath);
 		    $time = time();
-		    mysql_query("INSERT INTO `folders` (`folder`, `name`, `path`, `creator`, `timestamp`, `privacy`) VALUES ( '$superiorFolder', '$title', '$folderpath', '$user', '$time', '$privacy');");
-		    $folderId = mysql_insert_id();
+                    
+                    $values['folder'] = $superiorFolder;
+                    $values['name'] = $title;
+                    $values['path'] = $folderpath;
+                    $values['creator'] = $user;
+                    $values['timestamp'] = $time;
+                    $values['privacy'] = $privacy;
+                    
+		    $folderId = $db->insert('folders', $values);
 		    $feed = "has created a folder";
                     
                     $feedClass = new feed();
@@ -84,14 +91,14 @@ class folder {
     
     function loadFolderArray($type){
         $folder = $this->id;
+            $db = new db();
             switch($type){
 
                 //loads all subordinated folders of $folder
 
                 case 'children':
-
-                    $folderSQL = mysql_query("SELECT id FROM folders WHERE folder='".mysql_real_escape_string($folder)."'");
-                    while($folderData = mysql_fetch_array($folderSQL)){
+                    $folders = $db->select('folders', array('folder', $folder), array('id'));
+                    foreach($folders AS $folderData){
                         $return[] = $folderData['id'];
                     }
                     break;
@@ -104,8 +111,7 @@ class folder {
 
                     while($folder != "0" || $folder != "0"){
                             if(!empty($folder) && $i < $maxqueries){
-                                    $folderSQL = mysql_query("SELECT name, folder FROM folders WHERE id='$folder'");
-                                    $folderData = mysql_fetch_array($folderSQL);
+                                    $folderData = $db->select('folders', array('id', $folder), array('name', 'folder'));
 
 
                                     $folder = $folderData['folder'];
@@ -160,20 +166,20 @@ class folder {
 
 
         //select and delete folders which are children of this folder
-        $childrenFolderSQL = mysql_query("SELECT id FROM folders WHERE folder='$folderId'");
-        while($childrenFolderData = mysql_fetch_array($childrenFolderSQL)){
+        $folders = $dbClass->select('folders', array('folder', $folderId), array('id'));
+        foreach($folders AS $folder){
             $folder = new folder($childrenFolderData['id']);
             $folder->delete();
         }
         //select and delete element which are children of this folder
-        $childrenElementSQL = mysql_query("SELECT id FROM elements WHERE folder='$folderId'");
-        while($childrenElementData = mysql_fetch_array($childrenElementSQL)){
+        $childElements = $db->select('elements', array('folder', $folderId), array('id'));
+        foreach($childElements AS $childrenElementData){
             $element = new element($childrenElementData['id']);
             $element->delete();
         }
         $folderClass = new folder($folderId);
         $folderpath = universeBasePath.'/'.$folderClass->getPath();
-        mysql_query("DELETE FROM folders WHERE id='$folderId'");
+        $db->delete('folders', array('id', $folderId));
         system('/bin/rm -rf ' . escapeshellarg($folderpath));
 
         //delete comments, feeds and shortcuts

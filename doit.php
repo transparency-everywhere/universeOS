@@ -48,26 +48,6 @@ else if($_GET['action'] == "deleteBuddy"){
 		jsAlert("The Buddy was removed from your Buddylist.");
 		echo "<script>parent.$('.buddy_$buddy').hide()</script>";
      }
-else if($_GET['action'] == "download"){
-     	
-        $documentSQL = mysql_query("SELECT id, title, type, filename, privacy, owner FROM files WHERE id='".save($_GET['fileId'])."'");
-        $documentData = mysql_fetch_array($documentSQL); 
-		if(authorize($documentData['privacy'], "show", $documentData['owner'])){
-                $file = new file($_GET['fileId']);
-	        $downloadfile = $file->getPath();
-	        $downloadfile = substr($downloadfile, 1);
-	        $filename = $documentData['filename'];
-	        $downloadfile = "upload/$downloadfile/$filename";
-	        $filesize = filesize($downloadfile);
-	        $filetype = end(explode('.', $filename));
-	        header("Content-type: application/$filetype");
-	        header("Content-Disposition: attachment; filename=".$filename."");
-	        readfile("$downloadfile");
-	        exit;
-	 	}else{
-	 		jsAlert("No rights, bro.");
-	 	}
-     }
 else if($_GET['action'] == "showPlaylist"){
         $playListId = save($_GET['id']);
         $classDb = new db();
@@ -2717,9 +2697,9 @@ else if($_GET['action'] == "tester"){
 //				$array['two'] = 'dos';
 //				$array['three'] = 'quatro';
 //				
-//				echo $db->insert('table', $array);
-    $folderClass = new folder(1);
-    echo $folderClass->getPath(1);
-	     		
-            }
+
+    $db = new db();
+    var_dump($db->select('user', array('userid', 1,'OR','userid',2,'OR','userid',3)));
+        
+}
 ?>
