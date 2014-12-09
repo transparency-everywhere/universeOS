@@ -17,8 +17,8 @@ class salt {
             $db = new db();
             
             //delete all old salts
-            mysql_fetch_array(mysql_query("DELETE FROM `salts` WHERE `type`='$type' AND itemId='$itemId'"));
-
+            $db->delete('salts', array('type', $type, 'AND', 'itemId', $itemId));
+            
                 $values['type'] = $type;
                 $values['itemId'] = $itemId;
                 $values['receiverType'] = $receiverType;
@@ -41,8 +41,8 @@ class salt {
             $db = new db();
             
             //delete all old salts
-            mysql_fetch_array(mysql_query("DELETE FROM `salts` WHERE `type`='$type' AND itemId='$itemId'"));
-
+            $db->delete('salts', array('type', $type, 'AND', 'itemId', $itemId));
+            
                 $values['type'] = $type;
                 $values['itemId'] = $itemId;
                 $values['receiverType'] = 'user';
@@ -57,8 +57,8 @@ class salt {
     function get($type, $itemId){
             $type = save($type);
             $itemId = save($itemId);
-
-            $data = mysql_fetch_array(mysql_query("SELECT * FROM `salts` WHERE `type`='$type' AND itemId='$itemId' LIMIT 1"));
+            $db = new db();
+            $data = $db->select('salts', array('type', $type, 'AND', 'itemId', $itemId), array('salt'));
             return $data['salt'];
     }
 }

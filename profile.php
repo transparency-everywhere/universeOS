@@ -6,11 +6,14 @@ session_start();
 include("inc/config.php");
 include("inc/functions.php");
 
-$budylistClass = new buddylist();
 
-$user = save("$_GET[user]");
-$profilesql = mysql_query("SELECT * FROM user WHERE userid='".mysql_real_escape_string($_GET['user'])."'");
-$profiledata = mysql_fetch_array($profilesql);
+
+$user = (int)$_GET['user'];
+
+$budylistClass = new buddylist();
+$userClass = new user($user);
+$profiledata = $userClass->getData();
+
 if($profiledata['priv_showProfile'] == 1 OR ($profiledata['priv_showProfile'] == 0 && $budylistClass->buddy($user))){
 $link = "profile.php?user=$user";
 

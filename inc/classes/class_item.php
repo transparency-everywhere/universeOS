@@ -530,51 +530,34 @@ function makeDeletable(){
 		
                 $type = $this->type;
                 $typeid = $this->typeid;
-		
 		switch($type){
 			case 'folder':
-				
-				$folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
-				$folderData = mysql_fetch_array($folderSQL);
-				
-				$privacy = $folderData[privacy];
-				$privacy = str_replace(";UNDELETABLE", "", $privacy);
-				
 				$table = 'folders';
 				break;
 			case 'element':
-				
-				$elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
-				$elementData = mysql_fetch_array($elementSQL);
-				
-				$privacy = $elementData['privacy'];
-				$privacy = str_replace(";UNDELETABLE", "", $privacy);
-				
 				$table = 'elements';
 				break;
 			case 'file':
-				$fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
-				$fileData = mysql_fetch_array($fileSQL);
-				$privacy = $fileData['privacy'];
-				$privacy = str_replace(";UNDELETABLE", "", $privacy);
-				
 				$table = 'files';
                                 break;
 			case 'link':
-				$linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
-				$linkData = mysql_fetch_array($linkSQL);
-				
-				
-				$privacy = $linkData['privacy'];
-				$privacy = str_replace(";UNDELETABLE", "", $privacy);
-				
-				
-				$table = 'links';break;
+				$table = 'links';
+                            break;
 		}
+                
+                
+                
+                
 		if(isset($table)){
-                    $values['privacy'] = $privacy;
                     
                     $db = new db();
+                    $itemData = $db->select($table, array('id', $typeId), array('privacy'));
+				
+                    $privacy = $itemData['privacy'];
+                    $privacy = str_replace(";UNDELETABLE", "", $privacy);
+                    
+                    $values['privacy'] = $privacy;
+                    
                     $db->update($table, $values, array('id', $typeId));
                 }
 		}else{

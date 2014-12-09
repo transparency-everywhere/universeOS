@@ -298,22 +298,20 @@ function getUser(){
   		return false;
   	}
 }
-
 function hasRight($type){
 	  //checks if user has right to ...
 	  //whis is defined in config.php
 	  $db = new db();
           
 	  $userData = $db->select('user', array('userid', getUser()), array('usergroup'));
-          $db->select('userGroups', array('id', $userData['usergroup']));
+          $userGroupData = $db->select('userGroups', array('id', $userData['usergroup']));
           
-	  if($userGroupData["$type"] == "1"){
+	  if($userGroupData[$type] == "1"){
 	  	return true;
 	  }else{
 	  	return false;
 	  }
-  	
-  }
+}
 
 function checkMobileAuthentification($username, $hash){
       
