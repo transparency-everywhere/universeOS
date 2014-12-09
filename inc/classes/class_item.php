@@ -172,12 +172,12 @@ class item {
            $itemType = $this->type;
            $itemId = $this->typeid;
            $itemId = save($itemId);
-
+           $db = new db();
+           
             switch($itemType){
                 case 'folder':
 
-                    $folderSQL = mysql_query("SELECT * FROM folders WHERE id='$itemId'");
-                    $folderData = mysql_fetch_array($folderSQL);
+                    $folderData = $db->select('folders', array('id', $itemId));
 
                     $title = $folderData['name'];
                     $shortTitle = $folderData['name'];
@@ -202,8 +202,7 @@ class item {
 
                 break;
                 case 'element':
-                    $elementSQL = mysql_query("SELECT title, type FROM elements WHERE id='$itemId'");
-                    $elementData = mysql_fetch_array($elementSQL);
+                    $elementData = $db->select('elements', array('id', $itemId), array('title', 'type'));
 
                     $title = $elementData['title'];
                     $shortTitle = $elementData['title'];
@@ -219,10 +218,7 @@ class item {
                     $info[1] = $elementData['type'];
                 break;
                 case 'file':
-
-                    $fileSQL = mysql_query("SELECT title, type, folder, size, filename FROM files WHERE id='$itemId'");
-                    $fileData = mysql_fetch_array($fileSQL);
-
+                    $fileData = $db->select('files', array('id', $itemId), array('title', 'type', 'folder', 'size', 'filename'));
 
                     $title = $fileData['title'];
                     $shortTitle = $fileData['title'];
@@ -257,8 +253,7 @@ class item {
 
                 break;
                 case 'link':
-                    $linkSQL = mysql_query("SELECT * FROM links WHERE id='$itemId'");
-                    $linkData = mysql_fetch_array($linkSQL);
+                    $linkData = $db->select('links', array('id', $itemId));
 
                     $title = $linkData['title'];
                     $shortTitle = $linkData['title'];

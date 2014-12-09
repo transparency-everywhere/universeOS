@@ -432,7 +432,6 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 			
 				if(!$extarnal){
                                     //get linkdata
-                                    $linkQuery = mysql_query("SELECT * FROM links WHERE id='$linkId'");
                                     $dbClass = new db();
                                     $linkData = $dbClass->select('links', array('id', $linkId));
                                     $privacy = $linkData['privacy'];
@@ -663,8 +662,6 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 				        $documentSQL = mysql_query("SELECT id, title, folder, privacy, owner FROM files WHERE folder='".$elementData['id']."' AND type IN('image/png','image/jpeg','image')");
 				        while($documentData = mysql_fetch_array($documentSQL)){
 	        				if(authorize($documentData['privacy'], "show", $documentData['owner'])){
-						        //$documentFolderSQL = mysql_query("SELECT path FROM folders WHERE id='$elementData[folder]'");
-						        //$documentFolderData = mysql_fetch_array($documentFolderSQL);
                                                         $folderClass = new folder($elementData['folder']);
 						        if($elementData['title'] == "profile pictures"){
                                                                 
