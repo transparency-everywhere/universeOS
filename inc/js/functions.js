@@ -868,6 +868,7 @@ var universe = new function(){
         
         
         gui.loadScript('inc/js/links.js');
+        gui.loadScript('inc/js/api.js');
         
         gui.loadScript('inc/js/folders.js');
         
@@ -1580,90 +1581,21 @@ var privacy = new function(){
 			  	};
                                 
         this.init = function(){
-             $('.privacyPublicTrigger').click(function(){
-
-                                        if($(this).is(':checked')){
-
-                                            $('.uncheckPublic').prop('checked', false);
-
-                                        }
-
-                                    });
-
-                                    $('.privacyCustomTrigger').click(function(){
-                                        if($(this).is(':checked')){
-                                            $('.uncheckCustom').prop('checked', false);
-                                        }
-                                    });
-
-
-                                    $('.privacyHiddenTrigger').click(function(){
-                                        if($(this).is(':checked')){
-                                            $('.uncheckHidden').prop('checked', false);
-                                        }
-                                    });
-                                    
-                                    $('.privacyOnlyMeTrigger').click(function(){
-                                        if($(this).is(':checked')){
-                                            $('.uncheckOnlyMe').prop('checked', false);
-                                        }
-                                    });
-                                    
-                                    $('.privacyBuddyTrigger').click(function(){
-                                    	
-                                    	var buddyTriggerId = '.privacyBuddyTrigger';
-                                        if($(this).is(':checked')){
-                                        	if($(this).data('privacytype') == "edit")
-                                            	$(buddyTriggerId+'_see').prop('checked', true);
-                                        }else{
-                                        	if($(this).data('privacytype') == "see")
-                                            	$(buddyTriggerId+'_edit').prop('checked', false);
-                                        	if($(this).data('privacytype') == "edit")
-                                            	$(buddyTriggerId+'_see').prop('checked', false);
-                                        }
-                                    	$('.privacyShowBuddy').show();
-                                    });
-                                    
-                                    $('.privacyGroupTrigger').click(function(){
-                                    	$('.privacyShowGroups').show();
-                                    	var groupTriggerId = '.privacyGroupTrigger_'+$(this).data('groupid');
-                                        if($(this).is(':checked')){
-                                        	if($(this).data('privacytype') == "edit")
-                                            	$(groupTriggerId+'_see').prop('checked', true);
-                                        }else{
-                                        	if($(this).data('privacytype') == "see")
-                                            	$(groupTriggerId+'_edit').prop('checked', false);
-                                        	if($(this).data('privacytype') == "edit")
-                                            	$(groupTriggerId+'_see').prop('checked', false);
-                                        }
-                                    });
-                                    
-                                    $('.uncheckOnlyMe').click(function(){
-                                        if($(this).is(':checked')){
-                                            $('.privacyOnlyMeTrigger').prop('checked', false);
-                                        }
-                                    });
-                                    $('.privacyHiddenTrigger').click(function(){
-                                        if($(this).is(':checked')){
-                                            $('.uncheckHidden').prop('checked', false);
-                                        }
-                                    });
-                                    $('.privacyCustomTrigger').click(function(){
-                                        if($(this).is(':checked')){
-                                            $('.uncheckCustom').prop('checked', false);
-                                        }
-                                    });
-                                    
-                                    $('.checkPrev').click(function(){
-                                        //prev see check
-                                    });
-
+            
         };
 	
 };
 
 var groups = new function(){
 	
+        this.create = function(title, type, description, invitedUsers){
+            var callback = function(data){
+                       if(data != '1'){
+                           gui.alert('The group could not be created', 'Create Group');
+                       };
+            };
+            api.query('api/groups/create/', { title : title, type: type, description: description, invitedUsers: JSON.stringify(invitedUsers) }, callback);
+        };
 	this.get = function(){
 			  		
 				    var result="";
@@ -1681,7 +1613,13 @@ var groups = new function(){
 				   	if(result != null){
 				   		return $.parseJSON(result);
 				   	}
-			  	};
+	};
+        this.getData = function(groupId){
+            
+            api.query('api/groups/getData/', { group_id : groupId });
+        
+            
+        }
 	this.getTitle = function(groupId){
 			  		
 				    var result="";
@@ -1700,7 +1638,7 @@ var groups = new function(){
 				   	}
 			  		
 			  	};
-                               
+                     
         this.makeUserAdmin = function(groupId, userId){
                 $.post( "doit.php?action=groupMakeUserAdmin&groupId="+groupId+"&userId="+userId, function( data ) {
                   if(data == true){
@@ -1708,27 +1646,62 @@ var groups = new function(){
                   }
                 });
         };
+        
+        this.showUpdateGroupForm = function(group_id){
+            var formModal = new gui.modal();
+            var groupData = groups.getData(group_id);
+
+            var fieldArray = [];
+            var options = [];
+            options['headline'] = '';
+            options['buttonTitle'] = 'Save';
+            options['noButtons'] = true;
+
+            var field0 = [];
+            field0['caption'] = 'Title';
+            field0['inputName'] = 'title';
+            field0['type'] = 'text';
+            field0['value'] = groupData['title'];
+            fieldArray[0] = field0;
+
+            var captions = ['Public', 'Private'];
+            var type_ids = ['1', '0'];
+
+            var field1 = [];
+            field1['caption'] = 'Type';
+            field1['inputName'] = 'type';
+            field1['values'] = type_ids;
+            field1['captions'] = captions;
+            field1['type'] = 'dropdown';
+            field1['preselected'] = groupData['public'];
+            fieldArray[1] = field1;
+
+            var field2 = [];
+            field2['caption'] = 'Description';
+            field2['inputName'] = 'description';
+            field2['type'] = 'text';
+            field2['value'] = groupData['description'];
+            fieldArray[2] = field2;
+
+
+
+            var modalOptions = {};
+            modalOptions['buttonTitle'] = 'Update Group';
+
+            modalOptions['action'] = function(){
+                var callback = function(){
+                    jsAlert('', 'The group has been updated');
+                    $('.blueModal').remove();
+                };
+                groups.update(element, elementData['folder'], $('#createElementFormContainer #title').val(), $('#createElementFormContainer #type').val(),  $('#createElementFormContainer #privacyField :input').serialize(),callback);
+            };
+            privacy.load('#privacyField', elementData['privacy'], true);
+            formModal.init('Update Element', '<div id="createElementFormContainer"></div>', modalOptions);
+            gui.createForm('#createElementFormContainer',fieldArray, options);
+        };
+
 	
 };
-
-var files = new function(){
-              	
-              	this.fileIdToFileTitle = function(fileId){
-				    var result="";
-				    
-				    $.ajax({
-				      url:"api.php?action=fileIdToFileTitle",
-				      async: false,  
-					  type: "POST",
-					  data: { fileId : fileId },
-				      success:function(data) {
-				         result = data; 
-				      }
-				   });
-				   return result;
-              	};
-              	
-              };
 
 var modal =  new function() {
 			    this.html;
@@ -2098,7 +2071,7 @@ var tabs = function(parentIdentifier){
                 this.initClicks = function(){
                     parentIdentifier = this.parentIdentifier;
                     var classVar = this;
-                    $('.tabFrame header li').click(function(){
+                    $('.tabFrame>header li').click(function(){
                             var tabId = $(this).attr('data-tab');
                             var tabParentIdentifier = $(this).attr('data-parent-identifier');
                             classVar.showTab(tabId);
@@ -2107,7 +2080,7 @@ var tabs = function(parentIdentifier){
                             $(this).addClass('active');
                     });
                     
-                    $('.tabFrame header li .close').click(function(){
+                    $('.tabFrame>header li .close').click(function(){
                         var tabId = $(this).parent('li').attr('data-tab');
                         var tabParentIdentifier = $(this).parent('li').attr('data-parent-identifier');
                         classVar.removeTab(tabId);

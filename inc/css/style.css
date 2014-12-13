@@ -642,16 +642,21 @@ border-bottom: 1px solid #292929;
 }
 
 .step{
-	position:absolute;
+    display:none;
+    position:absolute;
     top: 0px;
     right: 0px;
     bottom: 0px;
     left: 0px;
 }
 
+.step.stepOne{
+    display:block;
+}
+
 .step > div{
 	
-	position:absolute;
+    position:absolute;
     top: 0px;
     right: 0px;
     bottom: 28px;
@@ -758,7 +763,7 @@ border-bottom: 1px solid #292929;
     position: absolute;
     top: 0px;
     right: 0px;
-    height: 60;
+    height: 60px;
     overflow: none;
     border-bottom: 1px solid #dcdcdc;
      
@@ -795,7 +800,7 @@ border-bottom: 1px solid #292929;
 
 #feedFrame{
     position: absolute;
-    top: 57px;
+    top: 60px;
     right: 0px;
     bottom: 0px;
     left: 0px;
@@ -824,7 +829,7 @@ border-bottom: 1px solid #292929;
 
 #feedInputBar{
     position: absolute;
-    top: 55px;
+    top: 60px;
     right: 10px;
     width: 195px;
 }
@@ -1036,6 +1041,31 @@ border-bottom: 1px solid #292929;
 .readerStartItem{
     width: 70%;
     margin-left: 15%;
+}
+
+
+
+#reader .fileFrame header{
+    background: #e1e1e1;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding-top: 15px;
+    padding-left: 5px;
+    padding-right: 5px;
+    height: 50px;
+    font-size: 20px;
+}
+
+#reader .fileFrame header .right{
+    float: right;
+}
+
+#reader .fileFrame header ul li{
+    float:left;
+    cursor:pointer;
 }
 
 	.openFile header{

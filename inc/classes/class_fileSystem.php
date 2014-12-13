@@ -57,6 +57,7 @@ class fileSystem {
 
             if(!empty($query)){
                     if(!empty($folder) && ($folder !== "1")){
+                        $db = new db();
                             if($parentFolderData['folder'] !== 1)
                                     $parentFolderData = $db->select('folders', array('id', $folder), array('folder'));
                             ?>

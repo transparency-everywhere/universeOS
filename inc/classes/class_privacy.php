@@ -290,8 +290,9 @@ class privacy {
 	  * @return bool 
 	  */
 function authorize($privacy, $type, $author=NULL){
-        
-        $privacies = explode(";", $privacy);
+        if(empty($privacy))
+            $privacy = 'p';
+        $privacies = explode(';', $privacy);
         $endExplode = end($privacies);
 	if($endExplode == "UNDELETABLE"){
 		$undeletable = true;
@@ -308,12 +309,13 @@ function authorize($privacy, $type, $author=NULL){
 				$delete = false;
 			 }
         	
-        }else{
+        }
+        else{
              $show = false;
              $edit = false;
 			 $delete = false;
         
-	        if($privacy == "p"){
+	        if($privacy == 'p'){
 	            
 	            
 	             $show = true;
@@ -322,7 +324,8 @@ function authorize($privacy, $type, $author=NULL){
 				 	$delete = true;
 				 }
 	            
-	        }else if($privacy == "h"){
+	        }
+                else if($privacy == 'h'){
 	            
 	            if($author == $_SESSION['userid'] && proofLogin()){
 	            
@@ -338,7 +341,8 @@ function authorize($privacy, $type, $author=NULL){
 	                
 	            }
 	            
-	        }else{
+	        }
+                else{
 	            
 	
 	
@@ -410,11 +414,11 @@ function authorize($privacy, $type, $author=NULL){
 	        }
         }
         
-        if($type == "show"){
+        if($type == 'show'){
             return $show;
-        }else if($type == "edit"){
+        }else if($type == 'edit'){
             return $edit;
-        }else if($type == "delete"){
+        }else if($type == 'delete'){
         	if($undeletable){
         		if(hasRight("editUndeletableFilesystemItems")){
         			return true;

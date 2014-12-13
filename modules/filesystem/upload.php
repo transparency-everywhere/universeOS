@@ -38,6 +38,10 @@ $folder = $_GET[folder];
 		margin-top: 14px;
 		float: right;
 	}
+        
+        .uploadStep#uploadStepOne{
+            display:block;
+        }
 </style>
 <form action="doit.php?action=submitUploader" method="post" target="submitter">
 <div id="upload">
@@ -68,7 +72,7 @@ $folder = $_GET[folder];
 			<a href="#" onclick="$('#uploadStepOne').hide(); $('#uploadStepTwo').show(); initUploadify('#uploader_file', 'doit.php?action=manageUpload&type=uploadTemp', $('.choosenTypeId').val(), '<?=$timeStamp;?>', '<?=$salt;?>'); privacy.init();" class="btn btn-mini pull-right">Next</a>
 		</footer>
 	</div>
-	<div id="uploadStepTwo" class="hidden uploadStep step">
+	<div id="uploadStepTwo" class="uploadStep step">
 		<div>
 			<h3>Choose Settings</h3>
 			<p>Please choose a language:</p>
@@ -88,7 +92,7 @@ $folder = $_GET[folder];
 			<a href="#" onclick="$('#uploadStepTwo').hide(); $('#uploadStepThree').show();" class="btn btn-mini pull-right">Next</a>
 		</footer>
 	</div>
-	<div id="uploadStepThree" class="hidden uploadStep step">
+	<div id="uploadStepThree" class="uploadStep step">
 		<div>
 			<h3>Add Files</h3>
 			<p>Please add the Files you want to upload.</p>

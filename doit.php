@@ -244,7 +244,7 @@ else if($_GET['action'] == "copyPlaylist"){
 else if($_GET['action'] == "showUserPlaylists"){ ?>
                  
                     <h3 class="readerStartItem">
-                        <img src="./gfx/icons/playlist.png" height="14">&nbsp;Your Playlists<span style="float: right;"><a href="javascript: popper('doit.php?action=addPlaylist');" class="btn"><img src="./gfx/icons/playlist.png" height="14">&nbsp;Add Playlist</a></span>
+                        <img src="./gfx/icons/playlist.png" height="14">&nbsp;Your Playlists<span style="float: right;"><a href="javascript: playlists.showCreationForm();" class="btn"><img src="./gfx/icons/playlist.png" height="14">&nbsp;Add Playlist</a></span>
                     </h3>
                       <table class="border-top-radius border-box readerStartItem" cellspacing="0" style="border: 1px solid #c9c9c9; margin-top: -15px;">
                           <tr class="grayBar" height="35">

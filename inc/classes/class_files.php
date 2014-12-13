@@ -39,7 +39,10 @@ class files {
 			$folder = $FileElementData['folder'];
 		}
 		
-                $FileElementData = $dbClass->select('folders', array('id', $FileElementData['folder']));
+                //folderdata might be unesseccary
+                $fileFolderData = $dbClass->select('folders', array('id', $FileElementData['folder']));
+                
+                
                 $folderClass = new folder($folder);
                 $folderpath = $folderClass->getPath();
 			
@@ -69,7 +72,7 @@ class files {
             rename(universeBasePath.'/'.$folderpath.$finalName, universeBasePath.'/'.$folderpath.$finalName.".temp");
 			//add db entry and add temp value
                         $fileValues['folder'] = $element;
-                        $fileValues['title'] = $title;
+                        $fileValues['title'] = $imgName;
                         $fileValues['size'] = $size;
                         $fileValues['timestamp'] = $time;
                         $fileValues['filename'] = $imgName;
@@ -82,6 +85,7 @@ class files {
                         $fileValues['var1'] = '';
                         $fileValues['download'] = $download;
                         $fileValues['status'] = true;
+                        $db = new db();
                         $insertid = $db->insert('files', $fileValues);
                         
 		if($insertid){
@@ -404,8 +408,11 @@ class file{
 
 function getFileData(){
     $fileId = $this->id;
+    
     $dbClass = new db();
-    $documentFolderData = $dbClass->select('files', array('id', save($fileId)));
+    $fileData = $dbClass->select('files', array('id', save($fileId)));
+    $fileData['realpath'] = $this->getPath();
+    if(authorize($fileData['privacy'], 'show', $fileData['owner']))
     return $fileData;
 }
 

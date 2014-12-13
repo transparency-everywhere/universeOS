@@ -116,8 +116,8 @@ class folder {
 
                                     $folder = $folderData['folder'];
                                     if($folder!=0){
-                                    $returnFolder[] = $folder;
-                                    $returnName[] = $folderData['name'];
+                                        $returnFolder[] = $folder;
+                                        $returnName[] = $folderData['name'];
                                     }
 
 
