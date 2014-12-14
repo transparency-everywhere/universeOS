@@ -157,7 +157,7 @@ class dashBoard{
 
                 }
 			
-		$footer = "<a href=\"#addPlaylist\" onclick=\"popper('doit.php?action=addPlaylist')\" title=\"Create a new Playlist\"><i class=\"glyphicon glyphicon-plus\" style=\"color:#FFF\"></i></a>";
+		$footer = "<a href=\"#addPlaylist\" onclick=\"playlists.showCreationForm();\" title=\"Create a new Playlist\"><i class=\"glyphicon glyphicon-plus\" style=\"color:#FFF\"></i></a>";
 			
 		
 		$output = $this->showDashBox($title, $output, $footer, "playlist", $grid);

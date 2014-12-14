@@ -95,7 +95,6 @@ class element {
                                 $shortcutClass = new shortcut("element", $elementId);
                                 $shortcutClass->delete();
 
-                        $db = new db();
                         
                         if($db->delete('elements', array('id', $elementId))){
                             return true;

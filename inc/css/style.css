@@ -2499,6 +2499,7 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 	}
 
 	#dashGrid{
+            margin-bottom: -300px;
             position: absolute;
             bottom: 40px;
             right: 0;
@@ -2507,7 +2508,7 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 	}
 
 	#dashBoard{
-		bottom: -250px;
+		bottom: 0;
 		z-index: 99999;
 		position: absolute;
 		height: 250px;
@@ -2524,7 +2525,6 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 		-webkit-box-pack: center;
 		-webkit-box-align: center;
 		display: box;
-                display:none;
 		box-pack: center;
 		box-align: center;                 
 	}

@@ -98,7 +98,7 @@ var elements = new function(){
         gui.createForm('#createElementFormContainer',fieldArray, options);
     };
     
-    this.update = function(element_id, folder, title, type, privacy){
+    this.update = function(element_id, folder, title, type, privacy, callback){
         var result="";
 	$.ajax({
             url:"api/elements/update/",
@@ -160,7 +160,7 @@ var elements = new function(){
             var callback = function(){
                 jsAlert('', 'The element has been updated');
                 $('.blueModal').remove();
-                filesystem.tabs.updateTabContent(1 , gui.loadPage('modules/filesystem/fileBrowser.php?folder='+parent_folder));
+                filesystem.tabs.updateTabContent(1 , gui.loadPage('modules/filesystem/fileBrowser.php?folder='+elementData.folder));
             };
             elements.update(element, elementData['folder'], $('#createElementFormContainer #title').val(), $('#createElementFormContainer #type').val(),  $('#createElementFormContainer #privacyField :input').serialize(),callback);
         };
@@ -187,13 +187,15 @@ var elements = new function(){
     };
     this.verifyRemoval = function(elementId){
         var confirmParameters = {};
-        
+        var elementData = elements.getData(elementId);
         confirmParameters['title'] = 'Delete Element';
         confirmParameters['text'] = 'Are you sure to delete this element?';
         confirmParameters['submitButtonTitle'] = 'Delete';
         confirmParameters['submitFunction'] = function(){
             elements.delete(elementId);
             gui.alert('The element has been deleted');
+            filesystem.tabs.updateTabContent(1 , gui.loadPage('modules/filesystem/fileBrowser.php?folder='+elementData.folder));
+            
         };
         confirmParameters['cancelButtonTitle'] = 'Cancel';
         confirmParameters['cancelFunction'] = function(){

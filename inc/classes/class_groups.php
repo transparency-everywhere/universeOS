@@ -29,6 +29,10 @@ class groups{
             $data = $db->select('groups', array('id', $groupId), array('title'));
             return $data['title'];
 	}
+        public function getMembers($groupId){
+            $db = new db();
+            return $db->shiftResult($db->select('group_attachments', array('group', $groupId)), 'group');
+        }
         function userJoinGroup($group, $user=NULL){
 
                         $userid = getUser();

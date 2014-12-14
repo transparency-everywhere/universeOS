@@ -846,6 +846,8 @@ var universe = new function(){
             gui.loadScript('inc/js/feed.js');
             gui.loadScript('inc/js/settings.js');
             gui.loadScript('inc/js/item.js');
+            gui.loadScript('inc/js/chat.js');
+            chat.init();
             buddylist.init();
             feed.init();
             //settings.init();
@@ -1646,7 +1648,9 @@ var groups = new function(){
                   }
                 });
         };
-        
+        this.getUsers = function(group_id){
+            
+        };
         this.showUpdateGroupForm = function(group_id){
             var formModal = new gui.modal();
             var groupData = groups.getData(group_id);
@@ -1682,6 +1686,7 @@ var groups = new function(){
             field2['type'] = 'text';
             field2['value'] = groupData['description'];
             fieldArray[2] = field2;
+            
 
 
 
@@ -1693,11 +1698,84 @@ var groups = new function(){
                     jsAlert('', 'The group has been updated');
                     $('.blueModal').remove();
                 };
-                groups.update(element, elementData['folder'], $('#createElementFormContainer #title').val(), $('#createElementFormContainer #type').val(),  $('#createElementFormContainer #privacyField :input').serialize(),callback);
+                
+                
+                //needs to be done
+                
+                
+                
+                var invitedUsers;
+                groups.create($('.blueModal #title').val(), $('.blueModal #type').val(), $('.blueModal #description').val(), invitedUsers);
             };
             privacy.load('#privacyField', elementData['privacy'], true);
             formModal.init('Update Element', '<div id="createElementFormContainer"></div>', modalOptions);
             gui.createForm('#createElementFormContainer',fieldArray, options);
+        };
+        
+            
+        this.showCreateGroupForm = function(){
+            var formModal = new gui.modal();
+
+            var fieldArray = [];
+            var options = [];
+            options['headline'] = '';
+            options['buttonTitle'] = 'Save';
+            options['noButtons'] = true;
+
+            var field0 = [];
+            field0['caption'] = 'Title';
+            field0['inputName'] = 'title';
+            field0['type'] = 'text';
+            fieldArray[0] = field0;
+
+            var captions = ['Public', 'Private'];
+            var type_ids = ['1', '0'];
+
+            var field1 = [];
+            field1['caption'] = 'Type';
+            field1['inputName'] = 'type';
+            field1['values'] = type_ids;
+            field1['captions'] = captions;
+            field1['type'] = 'dropdown';
+            fieldArray[1] = field1;
+
+            var field2 = [];
+            field2['caption'] = 'Description';
+            field2['inputName'] = 'description';
+            field2['type'] = 'text';
+            fieldArray[2] = field2;
+
+            
+            var buddies = buddylist.getBuddies();
+            var html = '<ul>';
+            $.each(buddies,function(index, value){
+                html += "<li><input type='checkbox' class='invitedBuddy' value='"+value+"'> "+useridToUsername(value)+"</li>";
+            });
+            html += '<ul>';
+            var field3 = [];
+            field3['caption'] = 'Invite Users';
+            field3['type'] = 'html';
+            field3['value'] = html;
+            fieldArray[3] = field3;
+
+
+
+            var modalOptions = {};
+            modalOptions['buttonTitle'] = 'Create Group';
+
+            modalOptions['action'] = function(){
+                var callback = function(){
+                    jsAlert('', 'The group has been created');
+                    $('.blueModal').remove();
+                };
+                var invitedUsers = [];
+                $('.blueModal .invitedBuddy').each(function(){
+                   invitedUsers.push($(this).val()); 
+                });
+                groups.create($('.blueModal #title').val(), $('.blueModal #type').val(), $('.blueModal #description').val(), invitedUsers);
+            };
+            formModal.init('Update CreateGroup', '<div id="createGroupFormContainer"></div>', modalOptions);
+            gui.createForm('#createGroupFormContainer',fieldArray, options);
         };
 
 	
@@ -2728,11 +2806,11 @@ var dashBoard = new function(){
 	
 	
 	
-	this.view = 'up'; // up or down 
+	this.view = 'down'; // up or down 
 	
 	this.init = function(){
 		$('#dashBoard a, #dashBoard li').not('.disableToggling').click(function(){dashBoard.slideUp();});
-    	$("#dashBoard").draggable({
+                $("#dashBoard").draggable({
     		axis: "y", 
     		cancel : '#dashBoxFrame',
     		containment: "#dashGrid",
@@ -2740,13 +2818,12 @@ var dashBoard = new function(){
     			if(parseInt($('#dashBoard').css('top').replace(/[^-\d\.]/g, '')) > 191)
     				$('#dashBoard').css('top', '191px');
     		}
-    	});
+                });
 	
 	};
 	
 	this.slideUp = function(){
-                        $('#dashBoard').show();
-			$('#dashBoard').animate({bottom: 0}, 1000, function() {
+			$('#dashGrid').animate({marginBottom: 0}, 1000, function() {
 				$('#dashBoard').removeClass('up');
 				$('#dashBoardBG').removeClass('up');
 				$('#dashBoard footer a i').removeClass('icon-arrow-down');
@@ -2756,12 +2833,11 @@ var dashBoard = new function(){
 	};
 	this.slideDown = function(){
 		
-			$('#dashBoard').animate({bottom: -250}, 750, function() {
+			$('#dashGrid').animate({marginBottom: -300}, 750, function() {
 				$('#dashBoard').addClass('up');
 				$('#dashBoardBG').addClass('up');
 				$('#dashBoard footer a i').removeClass('icon-arrow-up');
 				$('#dashBoard footer a i').addClass('icon-arrow-down');
-                                $('#dashBoard').hide();
 			});
 			this.view = 'down';
 	};
@@ -2772,6 +2848,28 @@ var dashBoard = new function(){
 			this.slideUp();
 		}
 	};
+        
+        this.generateDashBox = function(title, content, footer, id){
+            var output = '';
+            if(id){
+                output += "<div class=\"dashBox\" id=\""+id+".Box\">";
+            }
+		
+			output += "<a class=\"dashClose\"></a>";
+			output += "<header>"+title+"</header>";
+		
+			output += "<div class=\"content\">"+content+"</div>";
+			
+			if(!empty(footer)){
+			output += "<footer>"+footer+"</footer>";
+			}
+			
+		if(id){
+			output += "</div>";
+		}
+		return output;
+        };
+        
 };
 
 function updateDashbox(type){
@@ -2779,9 +2877,6 @@ function updateDashbox(type){
 		
 		initDashClose();
 	});
-	
-	
-	
 }
 
 function toggleDashboard(){

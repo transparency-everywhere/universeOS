@@ -19,7 +19,6 @@ class folder {
         if($id != NULL){
             $this->id = $id;
         }
-            
     }
     function create($superiorFolder, $title, $user, $privacy){
 		
@@ -41,7 +40,7 @@ class folder {
                     $values['creator'] = $user;
                     $values['timestamp'] = $time;
                     $values['privacy'] = $privacy;
-                    
+                    $db = new db();
 		    $folderId = $db->insert('folders', $values);
 		    $feed = "has created a folder";
                     
@@ -75,11 +74,10 @@ class folder {
 	        if(rename($parentFolderPath.$checkFolderData['name'], $parentFolderPath.urldecode(save($title)))){
 	            	//update db
                         $values['name'] = $title;
-                        $db->update('folders', $values, array('id', $this->id));
                 }
             }else{
-                echo 'A folder with this title already exists';
-                return false;
+                $values['privacy'] = $privacy;
+                $db->update('folders', $values, array('id', $this->id));
             }
         
             $values['privacy'] = $privacy;
@@ -97,7 +95,7 @@ class folder {
                 //loads all subordinated folders of $folder
 
                 case 'children':
-                    $folders = $db->select('folders', array('folder', $folder), array('id'));
+                    $folders = $db->shiftResult($db->select('folders', array('folder', $folder), array('id')), 'id');
                     foreach($folders AS $folderData){
                         $return[] = $folderData['id'];
                     }
@@ -166,20 +164,20 @@ class folder {
 
 
         //select and delete folders which are children of this folder
-        $folders = $dbClass->select('folders', array('folder', $folderId), array('id'));
-        foreach($folders AS $folder){
+        $folders = $dbClass->shiftResult($dbClass->select('folders', array('folder', $folderId), array('id')), 'id');
+        foreach($folders AS $childrenFolderData){
             $folder = new folder($childrenFolderData['id']);
             $folder->delete();
         }
         //select and delete element which are children of this folder
-        $childElements = $db->select('elements', array('folder', $folderId), array('id'));
+        $childElements = $dbClass->shiftResult($dbClass->select('elements', array('folder', $folderId), array('id')),'id');
         foreach($childElements AS $childrenElementData){
             $element = new element($childrenElementData['id']);
             $element->delete();
         }
         $folderClass = new folder($folderId);
         $folderpath = universeBasePath.'/'.$folderClass->getPath();
-        $db->delete('folders', array('id', $folderId));
+        $dbClass->delete('folders', array('id', $folderId));
         system('/bin/rm -rf ' . escapeshellarg($folderpath));
 
         //delete comments, feeds and shortcuts

@@ -80,7 +80,7 @@ var folders = new function(){
             var callback = function(){
                 jsAlert('', 'The folder has been updated');
                 $('.blueModal').remove();
-                filesystem.tabs.updateTabContent(1 , gui.loadPage('modules/filesystem/fileBrowser.php?folder='+folder));
+                filesystem.tabs.updateTabContent(1 , gui.loadPage('modules/filesystem/fileBrowser.php?folder='+folderData['folder']));
             };
             console.log($('#createElementFormContainer #privacyField :input').serialize());
             folders.update(folder, folderData['folder'], $('#createElementFormContainer #title').val(), $('#createElementFormContainer #privacyField :input').serialize(),callback);
@@ -178,12 +178,14 @@ var folders = new function(){
     };
     this.verifyRemoval = function(folderId){
         var confirmParameters = {};
-        
+        var folderData = folders.getData(folderId);
         confirmParameters['title'] = 'Delete Folder';
         confirmParameters['text'] = 'Are you sure to delete this folder?';
         confirmParameters['submitButtonTitle'] = 'Delete';
         confirmParameters['submitFunction'] = function(){
             folders.delete(folderId);
+            filesystem.tabs.updateTabContent(1 , gui.loadPage('modules/filesystem/fileBrowser.php?folder='+folderData['folder']));
+           
             gui.alert('The folder has been deleted');
         };
         confirmParameters['cancelButtonTitle'] = 'Cancel';

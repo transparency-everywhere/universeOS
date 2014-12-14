@@ -4,8 +4,8 @@
 
 $dashboard = new dashBoard();
 ?>
-<div id="dashGrid">
-<div id="dashBoard" class="down" style="border-bottom: 1px solid #171717;">
+<div id="dashGrid" class="down">
+<div id="dashBoard" style="border-bottom: 1px solid #171717;">
 	<div id="dashBoxFrame">
 		<div id="scrollFrame">
 	<?php

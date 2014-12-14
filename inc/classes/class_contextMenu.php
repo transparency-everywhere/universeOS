@@ -112,7 +112,7 @@ class contextMenu{
 				break;
 			case "folder":
                                 
-                                $checkFolderData = $db->select('folder', array('id', $itemId),array('privacy', 'creator'));
+                                $checkFolderData = $db->select('folders', array('id', $itemId),array('privacy', 'creator'));
 				
 				$open['title'] = 'open';
 				$open['href'] = '#';
@@ -134,7 +134,7 @@ class contextMenu{
 					
 					$edit['title'] = 'Edit';
 					$edit['href'] = '#';
-					$edit['onclick'] = "popper('doit.php?action=editItem&type=folder&itemId=$itemId')";
+					$edit['onclick'] = "folders.showUpdateFolderForm($itemId);";
 					
 					$delete['title'] = 'Delete';
 					$delete['href'] = "javascript: folders.verifyRemoval('$itemId');";
@@ -204,7 +204,7 @@ class contextMenu{
 		         
 					$edit['title'] = 'Edit';
 					$edit['href'] = '#';
-					$edit['onclick'] = "popper('doit.php?action=editItem&type=element&itemId=$itemId')";
+					$edit['onclick'] = "elements.showUpdateElementForm($itemId)";
 				
 					$delete['title'] = 'Delete';
 					$delete['href'] = "javascript: elements.verifyRemoval('$itemId');";
@@ -265,7 +265,7 @@ class contextMenu{
 			  
 			  	$open['title'] = 'Open';
 			  	$open['href'] = '#';
-			  	$open['onclick'] = "openFile('$info1', '$itemId', '$title');";
+			  	$open['onclick'] = "reader.openFile($itemId), '$title');";
 			  
 			  	if(proofLogin()){
 			  		$fav['title'] = 'Add to Fav';

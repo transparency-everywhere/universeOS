@@ -171,7 +171,7 @@ class feed {
        $values['attachedItem'];
        $values['attachedItem'];
        $values['privacy'];
-       
+       $db = new db();
        $id = $db->insert('feed', $values);
        
        return $id;
