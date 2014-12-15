@@ -1,4 +1,5 @@
 <?php
+
 //This file is published by transparency-everywhere with the best deeds.
 //Check transparency-everywhere.com for further information.
 //Licensed under the CC License, Version 4.0 (the "License");
@@ -18,5 +19,6 @@
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
 
-$groupsClass = new groups();
-echo json_encode($groupsClass->getMembers($_POST['group_id']));
+$folder = new file($_POST['file_id']);
+echo json_encode($folder->getFileData());
+?>

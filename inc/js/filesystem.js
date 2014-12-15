@@ -202,6 +202,11 @@ var filesystem =  new function() {
         gui.createForm('#createElementFormContainer',fieldArray, options);
     };
     
+    this.getFileData = function(file_id){
+        
+        return api.query('api/files/select/', { file_id : file_id});
+        
+    };
     
     this.openUploadTab = function(element){
         showApplication('filesystem');
@@ -209,6 +214,35 @@ var filesystem =  new function() {
     }
     this.downloadFile = function(fileId){
         $('#submitter').attr('src','out/download/?fileId='+fileId);
+    };
+    this.deleteFile = function(fileId){
+        var fileData = filesystem.getFileData(fileId);
+        var elementData = elements.getData(fileData['folder']);
+        
+        var callback = function(){
+            $('.blueModal').hide();
+            gui.alert('The file has been removed');
+            console.log(elementData.title.substr(0,10));
+            filesystem.tabs.updateTabContent(elementData.title.substr(0,10) ,gui.loadPage('modules/filesystem/showElement.php?element='+elementData['id']+'&reload=1'));
+        };
+        api.query('api/files/delete/', { file_id : fileId }, callback);
+    };
+    
+    this.verifyFileRemoval = function(fileId){
+        var confirmParameters = {};
+        confirmParameters['title'] = 'Delete File';
+        confirmParameters['text'] = 'Are you sure to delete this file?';
+        confirmParameters['submitButtonTitle'] = 'Delete';
+        confirmParameters['submitFunction'] = function(){
+            filesystem.deleteFile(fileId);
+        };
+        confirmParameters['cancelButtonTitle'] = 'Cancel';
+        confirmParameters['cancelFunction'] = function(){
+            //alert('cancel');
+        };
+        
+        gui.confirm(confirmParameters);
+        
     };
 };
 

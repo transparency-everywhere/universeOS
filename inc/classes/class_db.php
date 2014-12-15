@@ -23,16 +23,16 @@ class db{
             
             //if array length is 2 the basic statement is used
             if(count($primary) == 2){
-                $return = "WHERE $primary[0]='".save($primary[1])."'";
+                $return = "WHERE `".$primary[0]."`='".save($primary[1])."'";
             }else if(count($primary)>2){
                 //use thrid item of primary array as seperator(OR or and)
-                $return = "WHERE $primary[0]='".save($primary[1])."' ".$primary[2]." ";
+                $return = "WHERE `".$primary[0]."`='".save($primary[1])."' ".$primary[2]." ";
                 
                 $arrayCounter = 3;
                 while(isset($primary[$arrayCounter])){
-                    $return .= $primary[$arrayCounter];
+                    $return .= '`'.$primary[$arrayCounter];
                     $arrayCounter++;
-                    $return .= "='".save($primary[$arrayCounter])."' ".$primary[$arrayCounter+1]." ";
+                    $return .= "`='".save($primary[$arrayCounter])."' ".$primary[$arrayCounter+1]." ";
                     $arrayCounter++;
                     $arrayCounter++;
                 }

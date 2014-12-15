@@ -52,7 +52,7 @@
         <script type="text/javascript" src="inc/js/functions.js"></script>
         
         <!-- <script type="inc/js/jquery.jplayer.min.js"></script> -->
-        <script src="inc/bootstrap/js/bootstrap.min.js"></script>
+        <script src="inc/js/bootstrap.min.js"></script>
                 <script type="text/javascript">
 
 

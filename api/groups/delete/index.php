@@ -19,4 +19,4 @@ include('../../../inc/config.php');
 include('../../../inc/functions.php');
 
 $groupsClass = new groups();
-echo json_encode($groupsClass->getMembers($_POST['group_id']));
+echo json_encode($groupsClass->delete($_POST['group_id']));

@@ -435,7 +435,7 @@ function getTitle(){
         $fileData = $dbClass->select('files', array('id', $fileId));
         
         
-        $fileElementData =$db->select('elements', array('id', $fileData['folder']), array('id', 'title', 'folder'));
+        $fileElementData =$dbClass->select('elements', array('id', $fileData['folder']), array('id', 'title', 'folder'));
 
         $type = $fileData['type'];
 
@@ -454,7 +454,7 @@ function getTitle(){
             $thumbPath = $folderPath.'thumbs/'.$title;
             echo $filePath.'asd';
             if(unlink(universeBasePath.'/'.$filePath)){
-                if($db->delete('files', array('id', $fileId))){
+                if($dbClass->delete('files', array('id', $fileId))){
 
                    //delete comments
                    $commentClass = new comments();

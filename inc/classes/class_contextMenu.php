@@ -284,8 +284,9 @@ class contextMenu{
 		         
 				
 					$delete['title'] = 'Delete';
-					$delete['href'] = "doit.php?action=deleteItem&type=file&itemId=$itemId";
-					$delete['target'] = 'submitter';
+					$delete['href'] = "#";
+					$delete['target'] = '';
+					$delete['onclick'] = 'filesystem.verifyFileRemoval('.$itemId.')';
 		       	}
 			 
                                 $privacyClass = new privacy($checkFileData['privacy']);

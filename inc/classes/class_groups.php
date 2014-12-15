@@ -31,7 +31,13 @@ class groups{
 	}
         public function getMembers($groupId){
             $db = new db();
-            return $db->shiftResult($db->select('group_attachments', array('group', $groupId)), 'group');
+            $users = $db->shiftResult($db->select('groupAttachments', array('group', $groupId, 'AND', 'validated', '1')), 'group');
+            
+            foreach($users AS $userData){
+                $members[] = $userData['itemId'];
+            }
+            
+            return $members;
         }
         function userJoinGroup($group, $user=NULL){
 
@@ -160,10 +166,10 @@ class groups{
                         $groupData = $this->getGroupData($groupId);
 
                         $adminString = $groupData['admin'];
-
                         //proof if user is allready admin
-                        $admins = explode($adminString, ";");
-                        if(!in_array("$userId", $admins)){
+                        $admins = explode(";",$adminString);
+                        if(!in_array("$userId", $admins)&& //check if $userId is allready admin
+                          (in_array(getUser(), $admins))){ //also check if current user is admin
                                 $adminString = "$adminString;$userId";
                                 $values['admin'] = $adminString;
                                 
@@ -180,9 +186,37 @@ class groups{
 
                         $adminString = $groupData['admin'];
 
-                        //proof if user is allready admin
-                        $admins = explode($adminString, ";");
+                        $admins = explode(";", $adminString);
+                        
+                        if(in_array(getUser(), $admins)){
+                            //proof if user is allready admin
+                            $newString = str_replace($userId, '', $adminString);
+                            $newString = str_replace(';;', ';', $newString);
+                            
+                            $db = new db();
+                            $values['admin'] = $newString;
+                            $db->update('groups', $values, array('id', $groupId));
+                            return true;
+                        }else{
+                            return false;
+                        }
           }
+          
+        function delete($groupId){
+                        $groupData = $this->getGroupData($groupId);
+
+                        $adminString = $groupData['admin'];
+
+                        $admins = explode(";", $adminString);
+                        
+                        if(in_array(getUser(), $admins)){
+                            $db = new db();
+                            $db->delete('groupAttachments', array('group', $groupId));
+                            
+                            $db->delete('groups', array('id', $groupId));
+                            
+                        }
+        }
 }
 
 

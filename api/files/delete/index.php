@@ -1,4 +1,5 @@
 <?php
+
 //This file is published by transparency-everywhere with the best deeds.
 //Check transparency-everywhere.com for further information.
 //Licensed under the CC License, Version 4.0 (the "License");
@@ -17,6 +18,18 @@
 
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
-
-$groupsClass = new groups();
-echo json_encode($groupsClass->getMembers($_POST['group_id']));
+                    
+                    
+error_reporting(E_ALL);
+                $fileId = $_POST['file_id'];
+                $dbClass = new db();
+                $fileData = $dbClass->select('files', array('id', $fileId));
+                if(authorize($fileData['privacy'], "edit", $fileData['owner'])){
+                    $fileClass = new file($fileId);
+                    if($fileClass->delete()){
+                        echo 1;
+                    }else{
+                        echo 0;
+                    }
+		}
+?>

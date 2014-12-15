@@ -225,6 +225,20 @@ var init = new function(){
 var gui = new function(){
     this.initWysiwyg = false; //is used in generateField and createForm to check if wysiwyg needs to be initialized
     this.initializeUploadify = false;
+    this.generateList = function(values, captions, preselected){
+        var html = '';
+        $.each(values, function( index, value ) {
+            var selected;
+            if(typeof preselected !== 'undefined'){
+                if(preselected == value)
+                    {selected = 'selected="selected"';}
+                else
+                    {selected = '';}
+            }
+            html += '<option value="' + value + '" '+selected+'>' + captions[index] + '</option>';
+        });
+        return html;
+    };
     this.toggleAdvanced = function(){
         if($('.advanced').hasClass('open')){
             $('.advanced .advancedField').hide();
@@ -1493,7 +1507,24 @@ var privacy = new function(){
 				   	});
 				   return result;
 			  	};
-                                
+         
+        this.updatePrivacy = function(type, item_id, privacy){
+            
+        var result="";
+	$.ajax({
+            url:"api/links/create/",
+            async: false,  
+            type: "POST",
+            data: $.param({type : type, item_id: item_id})+'&'+privacy,
+            success:function(data) {
+               result = data;
+               if(typeof callback === 'function'){
+                   callback(); //execute callback if var callback is function
+               }
+            }
+	});
+	return result;
+        };
         this.showUpdatePrivacyForm = function(type, item_id){
             var title;
             switch(type){
@@ -1544,11 +1575,10 @@ var privacy = new function(){
         
         modalOptions['action'] = function(){
             var callback = function(){
-                jsAlert('', 'The links has been added');
+                jsAlert('', 'The privacy has been added');
                 $('.blueModal').remove();
-                filesystem.tabs.updateTabContent(2 , gui.loadPage('modules/filesystem/showElement.php?element='+element+'&reload=1'));
             };
-            links.create(element, $('#createLinkFormContainer #link_title').val(), $('#createLinkFormContainer #type').val(),  $('#createLinkFormContainer #privacyField :input').serialize(), $('#createLinkFormContainer #link').val(),callback);
+            privacy.updatePrivacy(type, item_id, $('#createLinkFormContainer #privacyField :input').serialize());
         };
         privacy.load('#privacyField', itemData['privacy'], true);
         formModal.init(title, '<div id="createLinkFormContainer"></div>', modalOptions);
@@ -1618,10 +1648,21 @@ var groups = new function(){
 	};
         this.getData = function(groupId){
             
-            api.query('api/groups/getData/', { group_id : groupId });
-        
+            return api.query('api/groups/getData/', { group_id : groupId });
             
-        }
+        };
+        this.deleteUserFromGroup = function(groupId, userId){
+            
+            
+            callback = function(){
+              gui.alert('The user has been removed'); 
+              if($('#updateGroupFormContainer')){
+                  groups.showUpdateGrouForm(groupId);
+              }
+            };
+            api.query('api/groups/removeUser/', { group_id : groupId, user_id: userId },callback);
+            
+        };
 	this.getTitle = function(groupId){
 			  		
 				    var result="";
@@ -1642,18 +1683,80 @@ var groups = new function(){
 			  	};
                      
         this.makeUserAdmin = function(groupId, userId){
-                $.post( "doit.php?action=groupMakeUserAdmin&groupId="+groupId+"&userId="+userId, function( data ) {
-                  if(data == true){
-                        jsAlert('', 'The admin has been added.');
-                  }
-                });
+            callback = function(){
+              gui.alert('The admin has been added');
+              if($('#updateGroupFormContainer')){
+                  groups.showUpdateGrouForm(groupId);
+              }
+            };
+            api.query('api/groups/makeUserAdmin/', { group_id : groupId, user_id: userId },callback);
         };
-        this.getUsers = function(group_id){
+        this.removeFromAdmins = function(groupId, userId){
+            callback = function(){
+              gui.alert('The admin has been removed');
+              if($('#updateGroupFormContainer')){
+                  groups.showUpdateGrouForm(groupId);
+              }
+              
+            };
+            api.query('api/groups/removeFromAdmins/', { group_id : groupId, user_id: userId },callback);
             
+        };
+        this.getUsers = function(groupId){
+            
+            return api.query('api/groups/getUsers/', { group_id : groupId });
+        
+        };
+        
+        this.verifyGroupRemoval = function(groupId){
+            
+            var confirmParameters = {};
+            confirmParameters['title'] = 'Delete Group';
+            confirmParameters['text'] = 'Are you sure to delete this grouü?';
+            confirmParameters['submitButtonTitle'] = 'Delete';
+            confirmParameters['submitFunction'] = function(){
+                var callback = function(){
+                    $('.blueModal').hide();
+                    gui.alert('The group has been removed');
+                };
+                api.query('api/groups/delete/', { group_id : groupId }, callback);
+            };
+            confirmParameters['cancelButtonTitle'] = 'Cancel';
+            confirmParameters['cancelFunction'] = function(){
+                //alert('cancel');
+            };
+
+            gui.confirm(confirmParameters);
+        };
+        this.generateMemberOptionsButton = function(group_id, user_id, admins){
+            var output = '';
+            output += "<div class='btn-group'>";
+                output += "<button type='button' class='btn btn-default btn-sm dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>";
+                    output += "Action <span class='caret'></span>";
+                output += '</button>';
+             
+                output += "<ul class='dropdown-menu' role='menu'>";
+                    if($.inArray(''+user_id, admins) === -1){
+                      output += "<li><a href='#' onclick='groups.makeUserAdmin("+group_id+","+user_id+");'>Make Admin</a></li>";
+                    }else{
+                      output += "<li><a href='#' onclick='groups.removeFromAdmins("+group_id+","+user_id+");'>Remove from Admins</a></li>";
+                    }
+                    
+                    
+                  output += "<li class='divider'></li>";
+                    output += "<li><a href='#' onclick='groups.deleteUserFromGroup("+group_id+","+user_id+");'>Remove from group</a></li>";
+                output += '</ul>';
+            output += '</div>';
+            
+            
+            return output;
         };
         this.showUpdateGroupForm = function(group_id){
             var formModal = new gui.modal();
             var groupData = groups.getData(group_id);
+            var admins = groupData['admin'];
+            
+            var admins = admins.split(';');
 
             var fieldArray = [];
             var options = [];
@@ -1687,7 +1790,28 @@ var groups = new function(){
             field2['value'] = groupData['description'];
             fieldArray[2] = field2;
             
-
+            var buddies = groups.getUsers(group_id);
+            var html = '<ul>';
+            $.each(buddies,function(index, value){
+                html += "<li>"+useridToUsername(value)+" "+groups.generateMemberOptionsButton(group_id, value, admins)+"</li>";
+            });
+            html += '<ul>';
+            
+            var field3 = [];
+            field3['caption'] = 'Users';
+            field3['type'] = 'html';
+            field3['value'] = html;
+            fieldArray[3] = field3;
+            
+            var field4 = [];
+            field4['caption'] = 'Delete Group';
+            field4['inputName'] = 'deleteGroup';
+            field4['value'] = 'Delete Group';
+            field4['type'] = 'button';
+            field4['actionFunction'] = 'groups.verifyGroupRemoval(\''+group_id+'\')';
+            fieldArray[4] = field4;
+            
+            
 
 
             var modalOptions = {};
@@ -1707,9 +1831,9 @@ var groups = new function(){
                 var invitedUsers;
                 groups.create($('.blueModal #title').val(), $('.blueModal #type').val(), $('.blueModal #description').val(), invitedUsers);
             };
-            privacy.load('#privacyField', elementData['privacy'], true);
-            formModal.init('Update Element', '<div id="createElementFormContainer"></div>', modalOptions);
-            gui.createForm('#createElementFormContainer',fieldArray, options);
+            formModal.init('Update Group', '<div id="updateGroupFormContainter"></div>', modalOptions);
+            gui.createForm('#updateGroupFormContainter',fieldArray, options);
+            $('.dropdown-toggle').dropdown();
         };
         
             
@@ -2191,7 +2315,6 @@ var tabs = function(parentIdentifier){
 		};
 		this.updateTabContent = function(tab_identifier ,content){
                     if(parseInt(tab_identifier) != tab_identifier){
-                        alert('oaoaoa');
                         tab_identifier = this.getTabByTitle(tab_identifier);
                     }
                     parentIdentifier = this.parentIdentifier;
