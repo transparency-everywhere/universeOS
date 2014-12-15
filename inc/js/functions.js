@@ -1508,11 +1508,11 @@ var privacy = new function(){
 				   return result;
 			  	};
          
-        this.updatePrivacy = function(type, item_id, privacy){
+        this.updatePrivacy = function(type, item_id, privacy, callback){
             
         var result="";
 	$.ajax({
-            url:"api/links/create/",
+            url:"api/item/privacy/",
             async: false,  
             type: "POST",
             data: $.param({type : type, item_id: item_id})+'&'+privacy,

@@ -47,38 +47,40 @@ include('../../../inc/functions.php');
                     if(isset($_POST['publ'])){
                         $Groups = "p";
                     }
-                    if($_GET['type'] == "folder"){
-                        mysql_query("UPDATE folders SET privacy='$privacy' WHERE id='".save($_GET['itemId'])."'");
+                    if($_POST['type'] == "folder"){
+                        mysql_query("UPDATE folders SET privacy='$privacy' WHERE id='".save($_POST['itemId'])."'");
                         if(!empty($_POST['hidden'])){
-                            mysql_query("UPDATE folders SET creator='$user' WHERE id='".save($_GET['itemId'])."'");   
+                            mysql_query("UPDATE folders SET creator='$user' WHERE id='".save($_POST['itemId'])."'");   
                         }
-                        jsAlert("Saved :)");
+                        echo 1;
                     }
-                    else if($_GET['type'] == "element"){
-                        mysql_query("UPDATE elements SET privacy='$privacy' WHERE id='".save($_GET['itemId'])."'");
+                    else if($_POST['type'] == "element"){
+                        mysql_query("UPDATE elements SET privacy='$privacy' WHERE id='".save($_POST['itemId'])."'");
                         if(!empty($_POST['hidden'])){
-                            mysql_query("UPDATE elements SET author='$user' WHERE id='".save($_GET['itemId'])."'");   
+                            mysql_query("UPDATE elements SET author='$user' WHERE id='".save($_POST['itemId'])."'");   
                         }
-                        jsAlert("Saved :)");
+                        echo 1;
                     }
-                    else if($_GET['type'] == "comment"){
-                        mysql_query("UPDATE comments SET privacy='$privacy' WHERE id='".save($_GET['itemId'])."'");
+                    else if($_POST['type'] == "comment"){
+                        mysql_query("UPDATE comments SET privacy='$privacy' WHERE id='".save($_POST['itemId'])."'");
                         if(!empty($_POST['hidden'])){
-                            mysql_query("UPDATE commments SET author='$user' WHERE id='".save($_GET['itemId'])."'");   
+                            mysql_query("UPDATE commments SET author='$user' WHERE id='".save($_POST['itemId'])."'");   
                         }
-                        jsAlert("Saved :)");
+                        echo 1;
                     }
-                    else if($_GET['type'] == "feed"){
-                        mysql_query("UPDATE feed SET privacy='$privacy' WHERE id='".save($_GET['itemId'])."'");
-                        jsAlert("Saved :) $_GET[itemId] $privacy");
+                    else if($_POST['type'] == "feed"){
+                        mysql_query("UPDATE feed SET privacy='$privacy' WHERE id='".save($_POST['itemId'])."'");
+                       
+                        echo 1;
                     }
-                    else if($_GET['type'] == "file"){
-                        mysql_query("UPDATE files SET privacy='$privacy' WHERE id='".save($_GET['itemId'])."'");
-                        jsAlert("Saved :)");
+                    else if($_POST['type'] == "file"){
+                        mysql_query("UPDATE files SET privacy='$privacy' WHERE id='".save($_POST['itemId'])."'");
+                        
+                        echo 1;
                     }
-                    else if($_GET['type'] == "link"){
-                        mysql_query("UPDATE links SET privacy='$privacy' WHERE id='".save($_GET['itemId'])."'");
-                        jsAlert("Saved :)");
+                    else if($_POST['type'] == "link"){
+                        mysql_query("UPDATE links SET privacy='$privacy' WHERE id='".save($_POST['itemId'])."'");
+                        echo 1;
                     }
             }
             
@@ -86,34 +88,34 @@ include('../../../inc/functions.php');
             
             
             //get type
-            if($_GET['type'] == "folder"){
-                $privacySql = mysql_query("SELECT name, privacy FROM folders WHERE id='".save($_GET['itemId'])."'");
+            if($_POST['type'] == "folder"){
+                $privacySql = mysql_query("SELECT name, privacy FROM folders WHERE id='".save($_POST['itemId'])."'");
                 $privacyData = mysql_fetch_array($privacySql);
                 $title = "folder $privacyData[name]";
             }
-            if($_GET['type'] == "element"){
-                $privacySql = mysql_query("SELECT title, privacy FROM elements WHERE id='".save($_GET['itemId'])."'");
+            if($_POST['type'] == "element"){
+                $privacySql = mysql_query("SELECT title, privacy FROM elements WHERE id='".save($_POST['itemId'])."'");
                 $privacyData = mysql_fetch_array($privacySql);
                 $title = "element $privacyData[title]";
             }
             
-            if($_GET['type'] == "comment"){
-                $privacySql = mysql_query("SELECT privacy FROM comments WHERE id='".save($_GET['itemId'])."'");
+            if($_POST['type'] == "comment"){
+                $privacySql = mysql_query("SELECT privacy FROM comments WHERE id='".save($_POST['itemId'])."'");
                 $privacyData = mysql_fetch_array($privacySql);
                 $title = "one of your comments";
             }
-            if($_GET['type'] == "feed"){
-                $privacySql = mysql_query("SELECT privacy FROM feed WHERE id='".save($_GET['itemId'])."'");
+            if($_POST['type'] == "feed"){
+                $privacySql = mysql_query("SELECT privacy FROM feed WHERE id='".save($_POST['itemId'])."'");
                 $privacyData = mysql_fetch_array($privacySql);
                 $title = "one of your feeds";
             }
-            if($_GET['type'] == "file"){
-                $privacySql = mysql_query("SELECT privacy FROM files WHERE id='".save($_GET['itemId'])."'");
+            if($_POST['type'] == "file"){
+                $privacySql = mysql_query("SELECT privacy FROM files WHERE id='".save($_POST['itemId'])."'");
                 $privacyData = mysql_fetch_array($privacySql);
                 $title = "one of your files";
             }
-            if($_GET['type'] == "link"){
-                $privacySql = mysql_query("SELECT privacy FROM links WHERE id='".save($_GET['itemId'])."'");
+            if($_POST['type'] == "link"){
+                $privacySql = mysql_query("SELECT privacy FROM links WHERE id='".save($_POST['itemId'])."'");
                 $privacyData = mysql_fetch_array($privacySql);
                 $title = "one of your links";
             }

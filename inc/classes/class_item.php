@@ -122,7 +122,7 @@ class item {
                                }
                                $output .= '<div class="score">';
                                $output .= "<a class=\"btn btn-xs\" href=\"#\" onclick=\"item.minusOne('".$type."', '".$typeid."');\"><i class=\"glyphicon glyphicon-thumbs-down\"></i></a>";
-                               $output .= "<a class=\"btn btn-xs $class counter\" href=\"#\">$scoreData[score]</a>";
+                               $output .= "<a class=\"btn btn-xs $class counter\" href=\"#\">".$scoreData['score']."</a>";
                                $output .= "<a class=\"btn btn-xs\" href=\"#\" onclick=\"item.plusOne('".$type."', '".$typeid."');\"><i class=\"glyphicon glyphicon-thumbs-up\"></i></a>";
                                $output .= '</div>';
                    if(!isset($reload)){
