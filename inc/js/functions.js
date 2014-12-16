@@ -1543,7 +1543,6 @@ var privacy = new function(){
                     title = 'Feed';
                     break;
                 case 'file':
-                    
                     title = 'File '+files.fileIdToFolderTitle(item_id);
                     break;
                 case 'link':
@@ -1575,10 +1574,10 @@ var privacy = new function(){
         
         modalOptions['action'] = function(){
             var callback = function(){
-                jsAlert('', 'The privacy has been added');
+                jsAlert('', 'The privacy has been updated');
                 $('.blueModal').remove();
             };
-            privacy.updatePrivacy(type, item_id, $('#createLinkFormContainer #privacyField :input').serialize());
+            privacy.updatePrivacy(type, item_id, $('#createLinkFormContainer #privacyField :input').serialize(), callback);
         };
         privacy.load('#privacyField', itemData['privacy'], true);
         formModal.init(title, '<div id="createLinkFormContainer"></div>', modalOptions);
@@ -1613,7 +1612,83 @@ var privacy = new function(){
 			  	};
                                 
         this.init = function(){
-            
+               $('.privacyPublicTrigger').click(function(){
+
+                                        if($(this).is(':checked')){
+
+                                            $('.uncheckPublic').prop('checked', false);
+
+                                        }
+
+                                    });
+
+                                    $('.privacyCustomTrigger').click(function(){
+                                        if($(this).is(':checked')){
+                                            $('.uncheckCustom').prop('checked', false);
+                                        }
+                                    });
+
+
+                                    $('.privacyHiddenTrigger').click(function(){
+                                        if($(this).is(':checked')){
+                                            $('.uncheckHidden').prop('checked', false);
+                                        }
+                                    });
+                                    
+                                    $('.privacyOnlyMeTrigger').click(function(){
+                                        if($(this).is(':checked')){
+                                            $('.uncheckOnlyMe').prop('checked', false);
+                                        }
+                                    });
+                                    
+                                    $('.privacyBuddyTrigger').click(function(){
+                                    	
+                                    	var buddyTriggerId = '.privacyBuddyTrigger';
+                                        if($(this).is(':checked')){
+                                        	if($(this).data('privacytype') == "edit")
+                                            	$(buddyTriggerId+'_see').prop('checked', true);
+                                        }else{
+                                        	if($(this).data('privacytype') == "see")
+                                            	$(buddyTriggerId+'_edit').prop('checked', false);
+                                        	if($(this).data('privacytype') == "edit")
+                                            	$(buddyTriggerId+'_see').prop('checked', false);
+                                        }
+                                    	$('.privacyShowBuddy').show();
+                                    });
+                                    
+                                    $('.privacyGroupTrigger').click(function(){
+                                    	$('.privacyShowGroups').show();
+                                    	var groupTriggerId = '.privacyGroupTrigger_'+$(this).data('groupid');
+                                        if($(this).is(':checked')){
+                                        	if($(this).data('privacytype') == "edit")
+                                            	$(groupTriggerId+'_see').prop('checked', true);
+                                        }else{
+                                        	if($(this).data('privacytype') == "see")
+                                            	$(groupTriggerId+'_edit').prop('checked', false);
+                                        	if($(this).data('privacytype') == "edit")
+                                            	$(groupTriggerId+'_see').prop('checked', false);
+                                        }
+                                    });
+                                    
+                                    $('.uncheckOnlyMe').click(function(){
+                                        if($(this).is(':checked')){
+                                            $('.privacyOnlyMeTrigger').prop('checked', false);
+                                        }
+                                    });
+                                    $('.privacyHiddenTrigger').click(function(){
+                                        if($(this).is(':checked')){
+                                            $('.uncheckHidden').prop('checked', false);
+                                        }
+                                    });
+                                    $('.privacyCustomTrigger').click(function(){
+                                        if($(this).is(':checked')){
+                                            $('.uncheckCustom').prop('checked', false);
+                                        }
+                                    });
+                                    
+                                    $('.checkPrev').click(function(){
+                                        //prev see check
+                                    });
         };
 	
 };
@@ -1657,7 +1732,7 @@ var groups = new function(){
             callback = function(){
               gui.alert('The user has been removed'); 
               if($('#updateGroupFormContainer')){
-                  groups.showUpdateGrouForm(groupId);
+                  groups.showUpdateGroupForm(groupId);
               }
             };
             api.query('api/groups/removeUser/', { group_id : groupId, user_id: userId },callback);
@@ -1681,12 +1756,22 @@ var groups = new function(){
 				   	}
 			  		
 			  	};
+        this.update = function(groupId, title, description, type, membersInvite){
+            
+            callback = function(){
+              gui.alert('The group has been updated'); 
+              if($('#updateGroupFormContainer')){
+                  groups.showUpdateGroupForm(groupId);
+              };
+            };
+            api.query('api/groups/update/', { group_id : groupId, title: title, description: description, type: type, members_invite: membersInvite },callback);
+        };
                      
         this.makeUserAdmin = function(groupId, userId){
             callback = function(){
               gui.alert('The admin has been added');
               if($('#updateGroupFormContainer')){
-                  groups.showUpdateGrouForm(groupId);
+                  groups.showUpdateGroupForm(groupId);
               }
             };
             api.query('api/groups/makeUserAdmin/', { group_id : groupId, user_id: userId },callback);
@@ -1695,7 +1780,7 @@ var groups = new function(){
             callback = function(){
               gui.alert('The admin has been removed');
               if($('#updateGroupFormContainer')){
-                  groups.showUpdateGrouForm(groupId);
+                  groups.showUpdateGroupForm(groupId);
               }
               
             };
@@ -1782,13 +1867,24 @@ var groups = new function(){
             field1['type'] = 'dropdown';
             field1['preselected'] = groupData['public'];
             fieldArray[1] = field1;
-
+            
+            var checked = '';
+            if(groupData['membersInvite'] === '1'){
+                checked = 'checked';
+            }
+            
             var field2 = [];
-            field2['caption'] = 'Description';
-            field2['inputName'] = 'description';
-            field2['type'] = 'text';
-            field2['value'] = groupData['description'];
+            field2['caption'] = '';
+            field2['value'] = "<input type='checkBox' name='membersInvite' id='membersInvite' value='1' "+checked+"> Allow members to invite users";
+            field2['type'] = 'html';
             fieldArray[2] = field2;
+
+            var field3 = [];
+            field3['caption'] = 'Description';
+            field3['inputName'] = 'description';
+            field3['type'] = 'text';
+            field3['value'] = groupData['description'];
+            fieldArray[3] = field3;
             
             var buddies = groups.getUsers(group_id);
             var html = '<ul>';
@@ -1797,19 +1893,19 @@ var groups = new function(){
             });
             html += '<ul>';
             
-            var field3 = [];
-            field3['caption'] = 'Users';
-            field3['type'] = 'html';
-            field3['value'] = html;
-            fieldArray[3] = field3;
-            
             var field4 = [];
-            field4['caption'] = 'Delete Group';
-            field4['inputName'] = 'deleteGroup';
-            field4['value'] = 'Delete Group';
-            field4['type'] = 'button';
-            field4['actionFunction'] = 'groups.verifyGroupRemoval(\''+group_id+'\')';
+            field4['caption'] = 'Users';
+            field4['type'] = 'html';
+            field4['value'] = html;
             fieldArray[4] = field4;
+            
+            var field5 = [];
+            field5['caption'] = 'Delete Group';
+            field5['inputName'] = 'deleteGroup';
+            field5['value'] = 'Delete Group';
+            field5['type'] = 'button';
+            field5['actionFunction'] = 'groups.verifyGroupRemoval(\''+group_id+'\')';
+            fieldArray[5] = field5;
             
             
 
@@ -1829,7 +1925,7 @@ var groups = new function(){
                 
                 
                 var invitedUsers;
-                groups.create($('.blueModal #title').val(), $('.blueModal #type').val(), $('.blueModal #description').val(), invitedUsers);
+                groups.update(group_id, $('.blueModal #title').val(), $('.blueModal #description').val(), $('.blueModal #type').val(),  $('.blueModal #membersInvite').is(':checked'));
             };
             formModal.init('Update Group', '<div id="updateGroupFormContainter"></div>', modalOptions);
             gui.createForm('#updateGroupFormContainter',fieldArray, options);

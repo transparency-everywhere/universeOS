@@ -150,9 +150,14 @@ class groups{
           }
 
         function update($groupId, $privacy, $description, $membersInvite){
+            if(is_string($membersInvite)){
+                $membersInvite = ($membersInvite === 'true');
+            }
+            
                     $db = new db();
                     $values['public'] = $privacy;
                     $values['description'] = $description;
+                    
                     $values['membersInvite'] = $membersInvite;
                     
                     if($db->update('groups', $values, array('id', $groupId))){

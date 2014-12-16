@@ -130,7 +130,7 @@ class contextMenu{
 				
 					$privacy['title'] = 'Privacy';
 					$privacy['href'] = '#';
-					$privacy['onclick'] = "javascript: popper('doit.php?action=changePrivacy&type=folder&itemId=$itemId')";
+					$privacy['onclick'] = "privacy.showUpdatePrivacyForm('folder', $itemId);";
 					
 					$edit['title'] = 'Edit';
 					$edit['href'] = '#';
@@ -200,7 +200,7 @@ class contextMenu{
 		      	if(authorize($checkElementData['privacy'], "edit", $checkElementData['author'])){
 		      		$privacy['title'] = 'Privacy';
 					$privacy['href'] = '#';
-					$privacy['onclick'] = "javascript: popper('doit.php?action=changePrivacy&type=element&itemId=$itemId')";
+					$privacy['onclick'] = "privacy.showUpdatePrivacyForm('element', $itemId);";
 		         
 					$edit['title'] = 'Edit';
 					$edit['href'] = '#';
@@ -280,8 +280,7 @@ class contextMenu{
 		       	if(authorize($checkFileData['privacy'], "edit", $checkFileData['owner'])){
 		       		$privacy['title'] = 'Privacy';
 					$privacy['href'] = '#';
-					$privacy['onclick'] = "javascript: popper('doit.php?action=changePrivacy&type=file&itemId=$itemId')";
-		         
+					$privacy['onclick'] = "privacy.showUpdatePrivacyForm('file', $itemId);";
 				
 					$delete['title'] = 'Delete';
 					$delete['href'] = "#";
@@ -395,8 +394,8 @@ class contextMenu{
 		      	if(authorize($checkLinkData['privacy'], "edit", $checkLinkData['author'])){
 		      		$privacy['title'] = 'Privacy';
 					$privacy['href'] = '#';
-					$privacy['onclick'] = "javascript: popper('doit.php?action=changePrivacy&type=link&itemId=$itemId')";
-		         
+					$privacy['onclick'] = "privacy.showUpdatePrivacyForm('link', $itemId);";
+                                        
 					$edit['title'] = 'Edit';
 					$edit['href'] = '#';
 					$edit['onclick'] = "popper('doit.php?action=editItem&type=link&itemId=$itemId')";

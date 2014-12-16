@@ -18,7 +18,6 @@ class files {
         if($id != NULL){
             $this->id = $id;
         }
-            
     }
     function uploadTempfile($file, $element, $folder, $privacy, $user, $lang=NULL, $download=true){
 	 	
