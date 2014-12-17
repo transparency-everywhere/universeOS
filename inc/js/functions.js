@@ -1515,7 +1515,7 @@ var privacy = new function(){
             url:"api/item/privacy/",
             async: false,  
             type: "POST",
-            data: $.param({type : type, item_id: item_id})+'&'+privacy,
+            data: $.param({type : type, itemId: item_id})+'&'+privacy,
             success:function(data) {
                result = data;
                if(typeof callback === 'function'){
@@ -2034,6 +2034,24 @@ var modal =  new function() {
 			    };
 			};
        
+var feed = function(type){
+    
+    this.init = function(initType){
+        switch(initType){
+            case'global':
+                        break;
+            case'friends':
+                        break;
+            default: //type = group_id(s)
+                        break;
+        }
+    }
+    this.loadFeeds = function(){
+        
+    };
+    
+    
+}
 
 function proofLogin(){
     var result;

@@ -18,35 +18,13 @@
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
     if(proofLogin()){
-            if(isset($_POST['submit'])){
-                
-                    
                     //set privacy
                     $customShow = $_POST['privacyCustomSee'];
                     $customEdit = $_POST['privacyCustomEdit'];
                     
                     $privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
                 
-                    //setting privacy
-                    $groups = $_POST['groups'];
-                    foreach ($groups as $group){
-                        $Groups = "$group; $Groups";
-                    }
-                    if(empty($Groups)){
-                        $Groups = "p";
-                    }
-                    //checking if upload is anonymous
-                    if(!empty($_POST['anonymous'])){
-                        $user = "0";
-                    }else{
-                        $user = $userid;
-                    }
-                    if(isset($_POST['hidden'])){
-                        $Groups = "u";
-                    }
-                    if(isset($_POST['publ'])){
-                        $Groups = "p";
-                    }
+                   
                     if($_POST['type'] == "folder"){
                         mysql_query("UPDATE folders SET privacy='$privacy' WHERE id='".save($_POST['itemId'])."'");
                         if(!empty($_POST['hidden'])){
@@ -84,72 +62,3 @@ include('../../../inc/functions.php');
                     }
             }
             
-            
-            
-            
-            //get type
-            if($_POST['type'] == "folder"){
-                $privacySql = mysql_query("SELECT name, privacy FROM folders WHERE id='".save($_POST['itemId'])."'");
-                $privacyData = mysql_fetch_array($privacySql);
-                $title = "folder $privacyData[name]";
-            }
-            if($_POST['type'] == "element"){
-                $privacySql = mysql_query("SELECT title, privacy FROM elements WHERE id='".save($_POST['itemId'])."'");
-                $privacyData = mysql_fetch_array($privacySql);
-                $title = "element $privacyData[title]";
-            }
-            
-            if($_POST['type'] == "comment"){
-                $privacySql = mysql_query("SELECT privacy FROM comments WHERE id='".save($_POST['itemId'])."'");
-                $privacyData = mysql_fetch_array($privacySql);
-                $title = "one of your comments";
-            }
-            if($_POST['type'] == "feed"){
-                $privacySql = mysql_query("SELECT privacy FROM feed WHERE id='".save($_POST['itemId'])."'");
-                $privacyData = mysql_fetch_array($privacySql);
-                $title = "one of your feeds";
-            }
-            if($_POST['type'] == "file"){
-                $privacySql = mysql_query("SELECT privacy FROM files WHERE id='".save($_POST['itemId'])."'");
-                $privacyData = mysql_fetch_array($privacySql);
-                $title = "one of your files";
-            }
-            if($_POST['type'] == "link"){
-                $privacySql = mysql_query("SELECT privacy FROM links WHERE id='".save($_POST['itemId'])."'");
-                $privacyData = mysql_fetch_array($privacySql);
-                $title = "one of your links";
-            }
-            
-            //set values
-            if($privacyData['privacy'] == "p"){
-                $public = 'checked="checked"';
-            }else if($privacyData['privacy'] == "u"){
-                $hidden = 'checked="checked"';
-            }else{
-                $groupsArray = explode(";", $privacyData['privacy']);
-            }
-            ?>
-            <form action="doit.php?action=changePrivacy&type=<?=$_GET['type'];?>&itemId=<?=$_GET['itemId'];?>" target="submitter" method="post">
-            <div class="jqPopUp border-radius transparency" id="editPrivacy">
-                
-                <header>Set privacy of <?=$title;?><a class="jqClose" id="closePrivacy">X</a></header>
-                <div class="jqContent">
-                <?
-                $privacyClass = new privacy($privacyData['privacy']);
-                $privacyClass->showPrivacySettings();
-                ?>
-                </div>
-                <footer>
-                	<span class="pull-right"><input type="submit" name="submit" value="save" class="btn btn-info" style="margin-top: 15px;" id="submitPrivacy"></span>
-                </footer>
-            </div>
-            </form>
-            <script>
-                $("#submitPrivacy").click(function () {
-                $('#editPrivacy').slideUp();
-                });
-                $("#closePrivacy").click(function () {
-                $('#editPrivacy').slideUp();
-                });
-            </script>
-            <?}
