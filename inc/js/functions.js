@@ -2034,21 +2034,16 @@ var modal =  new function() {
 			    };
 			};
        
-var feed = function(type){
-    
-    this.init = function(initType){
-        switch(initType){
-            case'global':
-                        break;
-            case'friends':
-                        break;
-            default: //type = group_id(s)
-                        break;
-        }
-    }
-    this.loadFeeds = function(){
+var feeds = function(type){
+    this.initType = type;
+    this.init = function(initType, initTypeId, limit){
+        var loadedFeeds = this.loadFeeds(initType, initTypeId, limit);
         
+    }
+    this.loadFeeds = function(type, typeId, limit){
+        return api.query('api/feed/load/', { type : type, typeId: typeId, limit:limit});
     };
+    this.init(type);
     
     
 }

@@ -150,6 +150,24 @@ class db{
 
             return $return;
         }
+        
+        public function query($query){
+            $sql = mysql_query($query);
+                if($sql)
+                while($data = mysql_fetch_array($sql)){
+                    $return[] = $data;
+                }
+                if(empty($return)){
+                    return "the query '$query' didn't return any results";
+                }else{
+                    if(count($return) == 1){
+                        return $return[0];
+                    }else if(count($return) > 1){
+                        return $return;
+                    }
+                }
+
+        }
 
 
 

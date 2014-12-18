@@ -13,6 +13,48 @@
  */
 class feed {
     
+    function load($type, $typeId=NULL, $limit=NULL){
+        $type = save($type);
+        $typeId = save($typeId);
+        $limit = save($limit);
+        
+        
+        if(empty($limit)){
+            $limit = "0,30";
+        }
+        
+        switch($type){
+            case 'global':
+                $where = "ORDER BY timestamp DESC LIMIT $limit"; //defines Query
+                break;
+            case 'user':
+                $where = "WHERE author='$typeId' ORDER BY timestamp DESC LIMIT  $limit";
+                break;
+            case 'friends':
+                
+                
+                
+                //get all users which are in the buddylist
+                $buddylistClass = new buddylist();
+                $buddies = $buddylistClass->buddyListArray();
+                $buddies[] = getUser();
+                $buddies = join(',',$buddies);  
+                //push array with the user, which is logged in
+                
+                $where = "WHERE author IN ($buddies) ORDER BY timestamp DESC LIMIT  $limit";
+                
+                break;
+            case 'group':
+                
+                $group = $typeId; //$user is used in this cased to pass the groupId
+                $where = "WHERE INSTR(`privacy`, '{$group}') > 0 ORDER BY timestamp DESC limit $limit";
+                
+                break;
+        }
+        $db = new db();
+        return $db->shiftResult($db->query("SELECT * FROM feed $where"));
+    }
+    
     function show($type, $user=NULL, $limit=NULL, $feedId=NULL){
         
         if(empty($limit)){
