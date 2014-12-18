@@ -850,6 +850,12 @@ var gui = new function(){
             $('.file_'+file_id).remove();
 	};
         
+    };
+    
+    this.replaceLinks = function(){
+    	
+    	$('body').html($(this).html().replaceAll("/(b(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig","<a href='#' onclick='$1'>$1</a>"));
+        
     }
 };
               
@@ -1695,6 +1701,13 @@ var privacy = new function(){
 
 var groups = new function(){
 	
+        this.show = function(groupId){
+            
+                  reader.applicationVar.show();
+                    reader.tabs.addTab("" + groupId + "", '',gui.loadPage("./group.php?id=" + groupId + ""));
+              
+                  return false;
+        };
         this.create = function(title, type, description, invitedUsers){
             var callback = function(data){
                        if(data != '1'){
@@ -1932,7 +1945,7 @@ var groups = new function(){
             $('.dropdown-toggle').dropdown();
         };
         
-            
+        
         this.showCreateGroupForm = function(){
             var formModal = new gui.modal();
 
@@ -2034,11 +2047,34 @@ var modal =  new function() {
 			    };
 			};
        
+       
+function universeText(string){
+    
+    string = string.replace(":'(", '<a class="smiley smiley1"></a>');
+    string = string.replace(":'(", '<a class="smiley smiley1"></a>');//crying smilye /&#039; = '
+    string = string.replace(':|', '<a class="smiley smiley2"></a>');
+    string = string.replace(';)', '<a class="smiley smiley3"></a>');
+    string = string.replace(':P', '<a class="smiley smiley4"></a>');
+    string = string.replace(':-D', '<a class="smiley smiley5"></a>');
+    string = string.replace(':D', '<a class="smiley smiley5"></a>');
+    string = string.replace(':)', '<a class="smiley smiley6"></a>');
+    string = string.replace(':(', '<a class="smiley smiley7"></a>');
+    string = string.replace(':-*', '<a class="smiley smiley8"></a>');
+    string = string.replace("#(^|[^\"=]{1})(http://|ftp://|mailto:|https://)([^\s<>]+)([\s\n<>]|$)#sm","\\1<a target=\"_blank\" href=\"\\2\\3\">\\3</a>\\4");
+       // # Links
+        //$str = preg_replace_callback("#\[itemThumb type=(.*)\ typeId=(.*)\]#", 'showChatThumb' , $str);
+   return string;
+};
+       
 var feeds = function(type){
     this.initType = type;
     this.init = function(initType, initTypeId, limit){
         var loadedFeeds = this.loadFeeds(initType, initTypeId, limit);
         
+    }
+    this.generateSingleFeed = function(feedData){
+         var ouput = '<div class="feedEntry feedNo'+feedData['id']+'">';
+             ouput += '</div>';
     }
     this.loadFeeds = function(type, typeId, limit){
         return api.query('api/feed/load/', { type : type, typeId: typeId, limit:limit});
@@ -2142,18 +2178,6 @@ function searchUserByString(string, limit){
 	            });
     return result;
 }
-	        
-function applicationOnTop(id){
-                  $(".fenster").css('z-index', 999);
-                  $("#"+id+"").css('z-index', 9999);
-                  $("#"+id+"").css('position', 'absolute');
-              }
-
-function showApplication(id){
-                  applicationOnTop(id);
-                  $("#" + id +"").show();
-              }
-
 
 function jsAlert(type, message){
 	              	var alertClass;
@@ -2503,7 +2527,7 @@ function updatePictureStatus(userId, borderColor){
 }
 
 function showContent(content, title){
-  showApplication('reader');
+  reader.applicationVar.show();
   reader.tabs.addTab(title, '',gui.loadPage('showContent.php?content='+content));
 }
 
@@ -2718,14 +2742,14 @@ function toggleGroupTabs(id){
 
 
 function openFolder(folderId){
-        showApplication('filesystem');
+        filesystem.show();
         filesystem.openFolder(folderId);
         return false;
         
     }
 
 function openElement(elementId, title){
-        showApplication('filesystem');
+        filesystem.show();
         
         filesystem.tabs.addTab(title, '',gui.loadPage('modules/filesystem/showElement.php?element='+elementId));
 }
@@ -2735,7 +2759,7 @@ function openFile(type, typeId, title, typeInfo, extraInfo1, extraInfo2){
         title = 'Open '+title;
         
         //bring reader to front
-        showApplication('reader');
+        reader.applicationVar.show();
         
         
         //Link types
@@ -2877,7 +2901,7 @@ function openURL(url, title){
     		url = 'modules/reader/browser/?url='+url;
                 
             reader.tabs.addTab(title, '',gui.loadPage(url));
-            showApplication('reader');   
+            reader.applicationVar.show();
             return false;
     }
     
@@ -2994,7 +3018,7 @@ function chatDecrypt(userid){
 }
 
 function openChatDialoge(username){
-      showApplication('chat');   
+      chat.applicationVar.show();
       
       	//check if dialoge allready exists
           if($("#test_"+ username +"").length == 0){
@@ -3018,11 +3042,6 @@ function chatLoadMore(username, limit){
       },'html');
  }
  
-function replaceLinks(){
-    	
-    	$('body').html($(this).html().replaceAll("/(b(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig","<a href='#' onclick='$1'>$1</a>"));
-        
-    }
     
 function initDashClose(){
 	//init dashcloses
@@ -3190,17 +3209,11 @@ function deleteFromPersonals(id){
                   $("#loader").load("doit.php?action=deleteFromPersonals&id=" + id + "");
               }
               
-function showGroup(groupId){
-                  showApplication('reader');
-                    reader.tabs.addTab("" + groupId + "", '',gui.loadPage("./group.php?id=" + groupId + ""));
-              
-                  return false;
-              }
 
 function showProfile(userId){
     var username = useridToUsername(userId);
     reader.tabs.addTab(username, '',gui.loadPage("./profile.php?user=" + userId));
-    showApplication('reader');
+    reader.applicationVar.show();
     return false;
 };
   

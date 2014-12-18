@@ -107,7 +107,7 @@ class dashBoard{
 							$output .="<img src=\"./gfx/icons/group.png\" height=\"14\">";
 						$output .="</span>";
 						$output .="<span>";
-							$output .="<a href=\"#\" onclick=\"showGroup('$group');\">";
+							$output .="<a href=\"#\" onclick=\"groups.show('$group');\">";
 							$output .= $groupsClass->getGroupName($group);
 							$output .="</a>";
 						$output .="</span>";

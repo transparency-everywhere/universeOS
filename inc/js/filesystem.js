@@ -209,7 +209,7 @@ var filesystem =  new function() {
     };
     
     this.openUploadTab = function(element){
-        showApplication('filesystem');
+        filesystem.applicationVar.show();
         filesystem.tabs.addTab('Upload', '',gui.loadPage('modules/filesystem/upload.php?element='+element));
     }
     this.downloadFile = function(fileId){

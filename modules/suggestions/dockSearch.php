@@ -136,7 +136,7 @@ $k = 5;//limit
 			//icon
 			echo"<img src=\"gfx/icons/group.png\" height=\"16\" style=\"\">";
 			//title
-			echo"<a href=\"#\" onclick=\"showApplication('reader'); reader.tabs.addTab('".$suggestData['title']."', '',gui.loadPage('./group.php?id=".$suggestData['id']."'));return false\">$suggestData[title]</a>";
+			echo"<a href=\"#\" onclick=\"reader.applicationVar.show(); reader.tabs.addTab('".$suggestData['title']."', '',gui.loadPage('./group.php?id=".$suggestData['id']."'));return false\">$suggestData[title]</a>";
 			
 			echo"</li>";
 		}

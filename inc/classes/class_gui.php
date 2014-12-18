@@ -22,7 +22,7 @@ class gui {
         echo "                <tr>\n";
         echo "                    <td>\n<img src=\"img/arrow_up_bright.png\" alt=\"toggle dashboard\" onclick=\"dashBoard.toggle();\" style=\"margin-right:10px;\">";
         echo "                          <a id=\"startButton\" title=\"toggle Dashboard\" href=\"#dashBoard\">"
-           . "                              <img src=\"img/eye_bright.png\"><span class=\"iconAlert\" id=\"appAlerts\"></span><img src=\"img/user_bright.png\"><span class=\"iconAlert\" id=\"openFriendRequests\"></span><img src=\"img/mail_bright.png\"><span class=\"iconAlert\" id=\"newMessages\" onclick=\"showApplication(\'chat\'); return false\"></span>"
+           . "                              <img src=\"img/eye_bright.png\"><span class=\"iconAlert\" id=\"appAlerts\"></span><img src=\"img/user_bright.png\"><span class=\"iconAlert\" id=\"openFriendRequests\"></span><img src=\"img/mail_bright.png\"><span class=\"iconAlert\" id=\"newMessages\" onclick=\"chat.applicationVar.show(); return false\"></span>"
            . "                          </a><td>\n";
         echo "                    <!-- <td><div id=\"modulePlayer\" class=\"module\">&nbsp;&nbsp;Player</div>   </td> -->\n";
         echo "                    <td><a href=\"doit.php?action=logout\" target=\"submitter\" style=\"tex-decoration: none; color: #FFF; min-width:10px; margin-left:10px;\" title=\"logout\">&nbsp;<i class=\"glyphicon glyphicon-off\"></i>&nbsp;</a></td>\n";
