@@ -861,22 +861,8 @@ var gui = new function(){
               
 var universe = new function(){
     this.init = function(){
-        if(proofLogin()){
-            gui.loadScript('inc/js/buddylist.js');
-            gui.loadScript('inc/js/feed.js');
-            gui.loadScript('inc/js/settings.js');
-            gui.loadScript('inc/js/item.js');
-            gui.loadScript('inc/js/chat.js');
-            chat.init();
-            buddylist.init();
-            feed.init();
-            //settings.init();
-        }
-        gui.loadScript('inc/js/filesystem.js');
-        gui.loadScript('inc/js/reader.js');
-        
-        filesystem.init();
-        reader.init();
+        gui.loadScript('inc/js/item.js');
+        applications.init();
         
         
         //init draggable windows
@@ -900,6 +886,102 @@ var universe = new function(){
         
         gui.loadScript('inc/js/playlists.js');
     };
+};
+
+
+var applications = new function(){
+    this.getList = function(){
+        
+        var apps = [];
+        
+        
+        //reader
+        var app = [];
+        app['title'] = 'reader';
+        app['source'] = 'reader.js';
+        app['className'] = 'reader'; // name of the the javascript class object
+        app['active'] = true;
+        app['position'] = {width: 5, height:  4, top: 0, left: 4, hidden: true};
+        apps[0] = app;
+        
+        //filesystem
+        var app = [];
+        app['title'] = 'filesystem';
+        app['source'] = 'filesystem.js';
+        app['className'] = 'filesystem'; // name of the the javascript class object
+        app['active'] = true;
+        app['position'] = {width: 6, height:  5, top: 0, left: 3};
+        apps[1] = app;
+        
+        
+        //feed
+        var app = [];
+        app['title'] = 'feed';
+        app['source'] = 'feed.js';
+        app['active'] = true;
+        app['className'] = 'feed'; // name of the the javascript class object
+        app['position'] = {width: 2, height:  5, top: 0, left: 0};
+        apps[2] = app;
+        
+        
+        if(proofLogin()){
+            //chat
+            var app = [];
+            app['title'] = 'chat';
+            app['source'] = 'chat.js';
+            app['className'] = 'chat'; // name of the the javascript class object
+            app['active'] = false;
+            app['position'] = {width: 2, height:  2, top: 0, left: 5};
+            apps[3] = app;
+
+            //settings
+            var app = [];
+            app['title'] = 'settings';
+            app['source'] = 'settings.js';
+            app['className'] = 'settings'; // name of the the javascript class object
+            app['active'] = false;
+            app['position'] = {width: 2, height:  5, top: 0, left: 0};
+
+            apps[4] = app;
+
+            //calendar
+            var app = [];
+            app['title'] = 'calendar';
+            app['source'] = 'calendar.js';
+            app['className'] = 'calendar'; // name of the the javascript class object
+            app['active'] = false;
+            app['position'] = {width: 2, height:  2, top: 0, left: 9};
+            apps[5] = app;
+
+
+            //buddylist
+            var app = [];
+            app['title'] = 'buddylist';
+            app['className'] = 'buddylist'; // name of the the javascript class object
+            app['source'] = 'buddylist.js';
+            app['active'] = true;
+            app['position'] = {width: 2, height:  5, top: 0, left: 9};
+            apps[6] = app;
+        }
+        
+        return apps;
+    };
+    
+    this.init = function(){
+        var sessionApplications = this.getList();
+        
+        $.each(sessionApplications, function(index, value){
+            if(value['source']){
+                gui.loadScript('inc/js/'+value['source']);
+                if(value['active']){
+
+                    //eval is evil!!!!!!!! maybe we should look for another solution
+                    eval(value['className']).init();
+                };
+            }
+        });
+    };
+    
 };
               
 var application = function(id){
@@ -2073,6 +2155,14 @@ var feeds = function(type){
         
     }
     this.generateSingleFeed = function(feedData){
+        
+        
+                if(feedData['type'] === 'showThumb'){
+                    var item = new item(feedData['attachedItem'], feedData['attachedItemId']);
+                    var attachment = item.showItemThumb();
+                }
+        
+        
          var ouput = '<div class="feedEntry feedNo'+feedData['id']+'">';
              ouput += '</div>';
     }
