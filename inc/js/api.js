@@ -34,10 +34,18 @@ var api = new function(){
             data: $.param(parameters),
             success:function(data){
                 console.log(parameters);
-                if(!async)
-                    result = JSON.parse(data);
-                else
+                if(!async){
+                    try
+                    {
+                        result = JSON.parse(data);
+                    }
+                    catch(e)
+                    {
+                       result = data;
+                    }
+                }else{
                     result = callback(data);
+                }
             },
             async:async
         });

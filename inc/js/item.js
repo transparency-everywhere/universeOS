@@ -39,5 +39,8 @@ var item = new function(){
               }
         });
     };
+    this.showItemThumb = function(type, itemId){
+        return api.query('api/item/getItemThumb/', { type : type, itemId: itemId});
+    };
 };
         

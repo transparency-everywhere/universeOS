@@ -161,7 +161,7 @@ class feed {
                     ?>
                 </div>
             </div>
-            <a href="javascript:showfeedComment(<?=$feedData['id'];?>);" class="btn btn-mini" style="float: left; margin-top: -41px; margin-left: 80px; color: #dcdcdc"><i class="glyphicon glyphicon-comment"></i></a>
+            <a href="javascript:comments.loadFeedComments(<?=$feedData['id'];?>);" class="btn btn-mini" style="float: left; margin-top: -41px; margin-left: 80px; color: #dcdcdc"><i class="glyphicon glyphicon-comment"></i></a>
             <div class="shadow" id="feed<?=$feedData['id'];?>" style="display:none;"></div>
             
         </div>

@@ -914,17 +914,18 @@ var applications = new function(){
         apps[1] = app;
         
         
-        //feed
-        var app = [];
-        app['title'] = 'feed';
-        app['source'] = 'feed.js';
-        app['active'] = true;
-        app['className'] = 'feed'; // name of the the javascript class object
-        app['position'] = {width: 2, height:  5, top: 0, left: 0};
-        apps[2] = app;
         
         
         if(proofLogin()){
+            //feed
+            var app = [];
+            app['title'] = 'feed';
+            app['source'] = 'feed.js';
+            app['active'] = true;
+            app['className'] = 'feed'; // name of the the javascript class object
+            app['position'] = {width: 2, height:  5, top: 0, left: 0};
+            apps[2] = app;
+            
             //chat
             var app = [];
             app['title'] = 'chat';
@@ -2151,21 +2152,38 @@ function universeText(string){
 var feeds = function(type){
     this.initType = type;
     this.init = function(initType, initTypeId, limit){
-        var loadedFeeds = this.loadFeeds(initType, initTypeId, limit);
+        var output = '';
         
-    }
+        
+        var pointer = this;
+        var loadedFeeds = this.loadFeeds(initType, initTypeId, limit);
+        $.each(loadedFeeds,function(index, value){
+            output += pointer.generateSingleFeed(value);
+        });
+        
+        console.log(output);
+        
+        return output;
+        
+        
+    };
     this.generateSingleFeed = function(feedData){
         
-        
+        var feedContent = feedData['feed'];
                 if(feedData['type'] === 'showThumb'){
-                    var item = new item(feedData['attachedItem'], feedData['attachedItemId']);
-                    var attachment = item.showItemThumb();
+                    feedContent = item.showItemThumb(feedData['attachedItem'], feedData['attachedItemId']);
+   
                 }
         
+        //load comments
         
-         var ouput = '<div class="feedEntry feedNo'+feedData['id']+'">';
-             ouput += '</div>';
-    }
+        //load contextmenue(s)
+        
+        
+         var output = '<div class="feedEntry feedNo'+feedData['id']+'">'+feedContent;
+             output += '</div>';
+             return output;
+    };
     this.loadFeeds = function(type, typeId, limit){
         return api.query('api/feed/load/', { type : type, typeId: typeId, limit:limit});
     };
@@ -3277,16 +3295,18 @@ function nextPlaylistItem(playList, row){
               }
 
 
-	  
-  
-function showSubComment(commentId) {
-                  $("#comment" + commentId + "").load("showComment.php?id=" + commentId +"");
-                  $("#comment" + commentId + "").toggle("slow");
-              }
-function showfeedComment(feedId) {
-                  $("#feed" + feedId + "").load("showComment.php?type=feed&feedid=" + feedId +"");
-                  $("#feed" + feedId + "").toggle("slow");
-              }
+var comments = new function(){
+  this.loadSubComments = function(commentId){
+      
+    $("#comment" + commentId + "").load("showComment.php?id=" + commentId +"");
+    $("#comment" + commentId + "").toggle("slow");
+  };
+  this.loadFeedComments = function(feedId){
+      
+    $("#feed" + feedId + "").load("showComment.php?type=feed&feedid=" + feedId +"");
+    $("#feed" + feedId + "").toggle("slow");
+  };
+};
 function loader(id, link){
                   $("#" + id + "").load("" + link + "");
               }
