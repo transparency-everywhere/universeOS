@@ -452,6 +452,14 @@ class contextMenu{
 				$options[] = $undeletable;
 			  
 		   		break;
+                        case "user":
+                                $buddyListClass = new buddylist();
+                                if($buddyListClass->buddy($itemId)){
+                                            $delete['title'] = 'Delete Buddy';
+                                            $delete['href'] = "javascript:buddylist.removeBuddy('$itemId');";
+                                }
+                                $options[] = $delete;
+                            break;
 			
 		}
 		

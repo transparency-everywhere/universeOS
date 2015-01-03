@@ -112,7 +112,7 @@ class buddylist {
                     $db = new db();
                     $db->delete('buddylist', array('owner', $buddy, '&&', 'buddy', $user));
                     $db->delete('buddylist', array('buddy', $buddy, '&&', 'owner', $user));
-
+                    return true;
         }
         function getOpenRequests($user=NULL){
              if(empty($user)){
@@ -135,7 +135,7 @@ class buddylist {
             $user= getUser();
         }
         $db = new db();
-        $buddyListQuery = $db->shiftResult($db->select('buddylist', array('owner', $user, '&&', 'request', $request)));
+        $buddyListQuery = $db->shiftResult($db->select('buddylist', array('owner', $user, '&&', 'request', $request)), 'owner');
         $buddies = array();
         foreach($buddyListQuery AS $buddylistData) {
             $buddies[] = $buddylistData['buddy'];

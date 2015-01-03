@@ -48,10 +48,49 @@ var buddylist = new function(){
 	});
 	return res;
     };
+    this.removeBuddy = function(userid){
+        var res;
+	$.ajax({
+            url:"api/buddies/remove/",
+            async: false,
+            data: {buddy:userid},
+            type: "POST",
+            success:function(data) {
+	      if(data == '1'){
+                  jsAlert('The buddy was removed');
+              }else{
+                  gui.alert('There was an error.', 'Error');
+              }
+            }
+	});
+	return res;
+    };
+    
     this.init = function(){
+        var output="";
+        output += "<div id=\"buddyListFrame\">";
+        output += '<table width="100%" cellspacing="0">';
+
+        var buddies = this.getBuddies();
+        $.each(buddies, function(index, value){
+            var username = useridToUsername(value);
+            output += "                <tr class=\"height60 greyHover\">";
+            output += "	                 <td style=\"padding:0 10px; width: 43px;\">"+User.showPicture(value, undefined, 40)+"<\/td>";
+            output += "	                 <td><a href=\"#\" onclick=\"openChatDialoge('"+username+"');\">"+username+"<\/a><br><a href=\"#\" onclick=\"openChatDialoge('<?=$username;?>');\" class=\"realname\"><?=useridToRealname($buddy);?>&nbsp;<\/a><\/td>";
+            output += "	                 <td align=\"right\" style=\"padding: 0 10px;\">";
+            output += "						    <a href=\"#\" onclick=\"showProfile('"+value+"'); return false\" title=\"open Profile\"><i class=\"glyphicon glyphicon-user\" style=\"font-size:12px\"><\/i><\/a>";
+            output += "						    <a href=\"#\" onclick=\"openChatDialoge('"+username+"'); return false\" title=\"write Message\"><i class=\"glyphicon glyphicon-envelope\" style=\"font-size:12px\"><\/i><\/a>";
+            output += "						    <a href=\"#\" onclick=\"openChatDialoge('"+username+"'); return false\" title=\"write Message\"><i class=\"glyphicon glyphicon-cog\" style=\"font-size:12px\"><\/i><\/a>";
+            output += "			<\/td>";
+            output += "                <\/tr>";
+        });
+
+
+            output += "</table>";
+            output += "</div>";
 	
         this.applicationVar = new application('buddylist');
-	this.applicationVar.create('Buddylist', 'url', 'buddylist.php',{width: 2, height:  5, top: 0, left: 9});
+	this.applicationVar.create('Buddylist', 'html', output,{width: 2, height:  5, top: 0, left: 9});
 	
     };
 };

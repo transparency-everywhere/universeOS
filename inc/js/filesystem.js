@@ -244,5 +244,9 @@ var filesystem =  new function() {
         gui.confirm(confirmParameters);
         
     };
+    
+    this.show = function(){
+        this.applicationVar.show();
+    };
 };
 
