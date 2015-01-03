@@ -42,5 +42,69 @@ var item = new function(){
     this.showItemThumb = function(type, itemId){
         return api.query('api/item/getItemThumb/', { type : type, itemId: itemId});
     };
+    
+    this.getScore = function(type, itemId){
+        return api.query('api/item/getScore/', { type : type, itemId: itemId});
+    };
+    
+    this.showScoreButton = function(type, itemId){
+        
+        var score = this.getScore(type, itemId);
+        
+        
+        var output = '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+type+'\', \''+itemId+'\');"><i class="glyphicon glyphicon-thumbs-down"></i></a>';
+            output += '<a class="btn btn-xs btn-success counter" href="#">'+score+'</a>';
+            output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+type+'\', \''+itemId+'\');"><i class="glyphicon glyphicon-thumbs-up"></i></a>';
+        return output;
+    };
+    
+    this.getOptions = function(type, itemId){
+        return api.query('api/item/getOptions/', { type : type, itemId: itemId});
+    };
+    this.showItemSettings = function(type, itemId){
+        var options = this.getOptions(type, itemId);
+	var list = '';
+        var href = '';
+        var onclick = '';
+        var target = '';
+			$.each(options,function(index,option){
+                            
+                            
+				if(option['title']){
+					
+						onclick = '';
+                                }
+				if(option['href']){
+					href = 'href="'+option['href']+'"';
+					
+				}
+				if(option['onclick']){
+					if(href == 'href="#"'){
+						onclick = 'onclick="'+option['onclick']+'"';
+					}
+				}
+				if(option['target']){
+					if(href != 'href="#"'){
+						target = 'target="'+option['target']+'"';
+                                        }
+					
+				}
+                                
+				list += "<li><a "+href+" "+onclick+" "+target+">"+option['title']+'a</a></li>';  
+					
+				});
+					
+			        var html = "<a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"btn btn-mini itemSettingsButton\"><i class=\"glyphicon glyphicon-cog\"></i></a>\n\
+                                        <div class=\"itemSettingsWindow\">\n\
+                                            <ul>";
+                                    html += list;
+                                    
+                                    
+                                    html += "</ul>\n\
+                                        </div>";
+                        
+				return html;
+    };
+    
 };
         

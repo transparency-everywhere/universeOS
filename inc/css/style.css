@@ -810,10 +810,14 @@ border-bottom: 1px solid #292929;
     
 }
 
+.feedEntry .feedAttachment, .feedEntry .options, .feedEntry .commentLoadingArea{
+    padding: 15px;
+}
+
+
 .feedEntry .itemSettingsButton{
     position: absolute;
     right: 10px;
-    margin-top: -43px;
 }
 
 #feedInput{

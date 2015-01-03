@@ -80,12 +80,11 @@ class item {
            mysql_query("UPDATE `$tableName` SET votes = votes + 1, score = score - 1 WHERE id='$typeid'");
            }
 
-
-    function showScore($reload=NULL) {
-
+    function getScore(){
+        
            $type = $this->type;
            $typeid = $this->typeid;
-            if(proofLogin()){
+           
                    if($type == "comment"){
                        $table = 'comments';
                    }
@@ -105,24 +104,36 @@ class item {
                    else if($type == "link"){
                        $table = 'links';
                    }
+                   
                    $db = new db();
                    $scoreData = $db->select($table, array('id', $typeid), array('id', 'votes', 'score'));
+                   
+                   return $scoreData['score'];
+           
+    }
+           
+    function showScore($reload=NULL) {
+
+           $type = $this->type;
+           $typeid = $this->typeid;
+            if(proofLogin()){
+                   $score = $this->getScore();
                    
                    if(!isset($reload)){
                        $output =  "<div class=\"score$type$typeid\">";
                    }
 
 
-                               if($scoreData['score'] > 0){
+                               if($score > 0){
                                     $class = "btn-success";
-                               }else if($scoreData['score'] < 0){
+                               }else if($score < 0){
                                     $class = "btn-warning";
                                }else{
                                     $class = '';
                                }
                                $output .= '<div class="score">';
                                $output .= "<a class=\"btn btn-xs\" href=\"#\" onclick=\"item.minusOne('".$type."', '".$typeid."');\"><i class=\"glyphicon glyphicon-thumbs-down\"></i></a>";
-                               $output .= "<a class=\"btn btn-xs $class counter\" href=\"#\">".$scoreData['score']."</a>";
+                               $output .= "<a class=\"btn btn-xs $class counter\" href=\"#\">".$score."</a>";
                                $output .= "<a class=\"btn btn-xs\" href=\"#\" onclick=\"item.plusOne('".$type."', '".$typeid."');\"><i class=\"glyphicon glyphicon-thumbs-up\"></i></a>";
                                $output .= '</div>';
                    if(!isset($reload)){

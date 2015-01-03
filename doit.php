@@ -971,7 +971,6 @@ else if($_GET['action'] == "chatSendItem"){
         }
 else if($_GET['action'] == "createFeed"){
             
-            
             if(!empty($_POST['feedInput']) || !empty($_POST['feed1'])){
             
                     //set privacy
@@ -984,8 +983,7 @@ else if($_GET['action'] == "createFeed"){
                     
                     //create feed
                     $feedClass = new feed();
-                    $id = $feedClass->create($_SESSION['userid'], $feed, "", "feed", "p");
-                    // $Groups is privacy right now and not used => "p" is used instead
+                    $id = $feedClass->create(getUser(), $feed, "", "feed", "p");
             ?>
             <script>
             parent.reloadFeed('friends');

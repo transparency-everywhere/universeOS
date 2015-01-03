@@ -195,7 +195,7 @@ class feed {
 		
        //if privacy==h feed is not shown anyway so an insert would be jabberuserless
        if($privacy != "h"){
-           
+       $time = time();
        $time = time();
        if(empty($validity)){
            $validity = ($time + $validity); 
@@ -206,13 +206,13 @@ class feed {
        }
        
        $values['author'] = $author;
-       $values['feed'];
-       $values['timestamp'];
-       $values['validity'];
-       $values['type'];
-       $values['attachedItem'];
-       $values['attachedItem'];
-       $values['privacy'];
+       $values['feed'] = $feed;
+       $values['timestamp'] = $time;
+       $values['validity'] = $validity;
+       $values['type'] = $type;
+       $values['attachedItem'] = $attachedItem;
+       $values['attachedItem'] = $attachedItemId;
+       $values['privacy'] = $privacy;
        $db = new db();
        $id = $db->insert('feed', $values);
        

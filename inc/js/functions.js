@@ -862,6 +862,19 @@ var gui = new function(){
 var universe = new function(){
     this.init = function(){
         gui.loadScript('inc/js/item.js');
+        
+        gui.loadScript('inc/js/links.js');
+        gui.loadScript('inc/js/api.js');
+        
+        gui.loadScript('inc/js/folders.js');
+        
+        gui.loadScript('inc/js/elements.js');
+        
+        gui.loadScript('inc/js/fav.js');
+        
+        gui.loadScript('inc/js/playlists.js');
+        
+        
         applications.init();
         
         
@@ -874,17 +887,6 @@ var universe = new function(){
         //init bootstrap alert
         $(".alert").alert();
         
-        
-        gui.loadScript('inc/js/links.js');
-        gui.loadScript('inc/js/api.js');
-        
-        gui.loadScript('inc/js/folders.js');
-        
-        gui.loadScript('inc/js/elements.js');
-        
-        gui.loadScript('inc/js/fav.js');
-        
-        gui.loadScript('inc/js/playlists.js');
     };
 };
 
@@ -1468,14 +1470,20 @@ var User = new function(){
 
         return border;
     };
-    this.showPicture = function(userid, lastActivity){
+    this.showPicture = function(userid, lastActivity, size){
 	            
         var userpicture = getUserPicture(userid);
         if(typeof lastActivity === 'undefined')
             var lastActivity = User.getLastActivity(userid); //get last activity so the border of the userpicture can show if the user is online or offline
 
+        if(typeof size === 'undefined'){
+            var size = 20;
+        }
+        
+        var radius = radius/2;
+
         var ret;
-        ret = '<div class="userPicture userPicture_'+userid+'" style="background: url(\''+userpicture+'\'); '+User.getBorder(lastActivity)+'; width: 20px;height: 20px;background-size: 100%;"></div>';
+        ret = '<div class="userPicture userPicture_'+userid+'" style="background: url(\''+userpicture+'\'); '+User.getBorder(lastActivity)+'; width: '+size+'px;height:  '+size+'px;background-size: 100%;border-radius:'+radius+'px"></div>';
 
         $('.userPicture_'+userid).css('border', User.getBorder(lastActivity)); //update all shown pictures of the user
 
@@ -1521,6 +1529,53 @@ var User = new function(){
 		                return response
 		                console.log(response);
 		            }
+        
+    };
+    
+    this.showSignature = function(userid, timestamp, reverse){
+        
+        var username = useridToUsername(userid);
+        
+        var output="";
+            output += "<div class=\"signature\" style=\"background: #EDEDED; border-bottom: 1px solid #c9c9c9;\">";
+            output += "    <table width=\"100%\">";
+            output += "        <tr width=\"100%\">";
+            if(reverse){
+                output += "            <td style=\"width:50px; padding-right:10px;\">"+User.showPicture(userid, undefined, 40)+"<\/td>";
+                output += "            <td>";
+                output += "                <table>";
+                output += "                    <tr>";
+                output += "                        <td style=\"font-size: 16px;line-height: 17px;\" align=\"left\"><a href=\"#\" onclick=\"showProfile("+userid+");\">"+username+"<\/a><\/td>";
+                output += "                    <\/tr>             ";
+                output += "                    <tr>";
+                output += "                        <td style=\"font-size: 12px;line-height: 23px;\">";
+                output += "                            <i>";
+                output += universeTime(timestamp);
+                output += "                            <\/i>";
+                output += "                        <\/td>";
+                output += "                    <\/tr>";
+                output += "                <\/table>";
+                output += "            <\/td>";
+            }else{
+                output += "            <td>";
+                output += "                <table>";
+                output += "                    <tr>";
+                output += "                        <td style=\"font-size: 10pt;\">&nbsp;"+username+"<\/td>";
+                output += "                    <\/tr>             ";
+                output += "                    <tr>";
+                output += "                        <td style=\"font-size: 08pt;\">&nbsp;<i>";
+                output += universeTime(timestamp)+"<\/i>";
+                output += "                        <\/td>";
+                output += "                    <\/tr>";
+                output += "                <\/table>";
+                output += "            <\/td>";
+                output += "            <td><span class=\"pictureInSignature\">"+User.showPicture(userid, undefined, 40)+"<\/span><\/td>";
+            }
+            output += "        <\/tr>";
+            output += "    <\/table>";
+            output += "    <\/div>";
+
+            return output;
         
     };
 };
@@ -2130,6 +2185,30 @@ var modal =  new function() {
 			    };
 			};
        
+function universeTime(timestamp){
+    var time = Math.floor(Date.now() / 1000);
+    
+    var unTime;
+    
+     var difference = (time - timestamp);
+     if(difference < 60){
+         unTime = "just";
+     } else if(difference > 60 && difference < 600){
+         unTime = "some minutes ago";
+     } else if(difference > 600 && difference < 3600){
+         unTime = Math.floor(difference / 60);
+         unTime = unTime+" minutes ago";
+     } else if(difference > 3600 && difference < 3600*24){
+         unTime = "one day ago";
+     } else if(difference > 3600*24 && difference < 3600*24*31){
+         var udTime = round(difference / 86400);
+         unTime = udTime+" days ago";
+     } else if(difference > 3600*24*31){
+         unTime = "more than one month ago";
+     }
+     
+     return unTime;
+};
        
 function universeText(string){
     
@@ -2149,7 +2228,7 @@ function universeText(string){
    return string;
 };
        
-var feeds = function(type){
+var Feed = function(type, $selector){
     this.initType = type;
     this.init = function(initType, initTypeId, limit){
         var output = '';
@@ -2169,10 +2248,9 @@ var feeds = function(type){
     };
     this.generateSingleFeed = function(feedData){
         
-        var feedContent = feedData['feed'];
+        var feedContent = '<div class="feedContent">'+feedData['feed']+'</div>';
                 if(feedData['type'] === 'showThumb'){
-                    feedContent = item.showItemThumb(feedData['attachedItem'], feedData['attachedItemId']);
-   
+                    feedContent = '<div class="feedAttachment">'+item.showItemThumb(feedData['attachedItem'], feedData['attachedItemId'])+'</div>';
                 }
         
         //load comments
@@ -2180,17 +2258,26 @@ var feeds = function(type){
         //load contextmenue(s)
         
         
-         var output = '<div class="feedEntry feedNo'+feedData['id']+'">'+feedContent;
+         var output = '<div class="feedEntry feedNo'+feedData['id']+'">';
+             output += User.showSignature(feedData['author'], feedData['timestamp'])+feedContent;
+            
+             output += '<div class="options">';
+                output += item.showScoreButton('feed', feedData['id']);//load score button
+                
+                output += item.showItemSettings('feed', feedData['id']);
+                
+                output += '<a href="javascript:comments.loadFeedComments(\''+feedData['id']+'\');" class="btn btn-mini" style="color: #dcdcdc"><i class="glyphicon glyphicon-comment"></i></a>';
+             
+             output += '</div>';
+             output += '<div class="commentLoadingArea" id="feed'+feedData['id']+'" style="display:none;"></div>';
              output += '</div>';
              return output;
     };
     this.loadFeeds = function(type, typeId, limit){
         return api.query('api/feed/load/', { type : type, typeId: typeId, limit:limit});
     };
-    this.init(type);
-    
-    
-}
+    $($selector).html(this.init(type));
+};
 
 function proofLogin(){
     var result;
@@ -3886,4 +3973,8 @@ function getYoutubeData(videoId){
 function getYoutubeTitle(videoId){
     var data = getYoutubeData(videoId);
     return data.title.$t;
+}
+
+if (!Date.now) {
+    Date.now = function() { return new Date().getTime(); }
 }
