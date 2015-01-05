@@ -13,6 +13,11 @@
  */
 class feed {
     
+    function getData($feedId){
+        $db = new db();
+        return $db->select('feed', array('id', $feedId));
+    }
+    
     function load($type, $typeId=NULL, $limit=NULL){
         $type = save($type);
         $typeId = save($typeId);

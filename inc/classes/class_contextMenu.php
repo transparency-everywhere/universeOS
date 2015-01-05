@@ -55,7 +55,7 @@ class contextMenu{
 					
 
 				$delete['title'] = 'Delete';
-				$delete['href'] = "doit.php?action=deleteItem&type=feed&itemId=$itemId";
+				$privacy['onclick'] = "privacy.showUpdatePrivacyForm('feed', $itemId);";
 				$delete['target'] = 'submitter'; 
                             }
 				

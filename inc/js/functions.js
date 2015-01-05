@@ -1684,6 +1684,7 @@ var privacy = new function(){
                     title = 'Comment';
                     break;
                 case 'feed':
+                    var itemData = feed.getData(item_id);
                     title = 'Feed';
                     break;
                 case 'file':
@@ -2201,7 +2202,7 @@ function universeTime(timestamp){
      } else if(difference > 3600 && difference < 3600*24){
          unTime = "one day ago";
      } else if(difference > 3600*24 && difference < 3600*24*31){
-         var udTime = round(difference / 86400);
+         var udTime = Math.floor(difference / 86400);
          unTime = udTime+" days ago";
      } else if(difference > 3600*24*31){
          unTime = "more than one month ago";
@@ -3394,6 +3395,132 @@ var comments = new function(){
     $("#feed" + feedId + "").toggle("slow");
   };
 };
+
+
+//adding service to media class:
+//1. add regex to gettype
+
+var media = function(url){
+    this.URL = url;
+    this.type;
+    this.getType = function(){
+        var url = this.URL;
+        if(/((http|https):\/\/)?(www\.)?(youtube\.com)(\/)?([a-zA-Z0-9\-\.]+)\/?/.test(url)){
+            this.type = 'youtube';
+        }else if(/^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/.test(url)){
+            this.type = 'vimeo';
+        }else if(/^https?:\/\/(soundcloud.com|snd.sc)\/(.*)$/.test(url)){
+            this.type = 'soundcloud';
+        }
+    };
+    this.getType();
+    this.getId = function(){
+        var url = this.URL;
+      switch(this.type){
+          case 'youtube':
+                var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+                var match = url.match(regExp);
+                if (match&&match[7].length==11){
+                    return match[7];
+                }else{
+                    return false;
+                }
+                      break;
+          case 'vimeo':
+                var regExp = /http:\/\/(www\.)?vimeo.com\/(\d+)($|\/)/;
+
+                var match = url.match(regExp);
+
+                if (match){
+                    return match[2];
+                }else{
+                    return false;
+                }
+                      break;
+          case 'soundcloud':
+                      break;
+      };
+    };
+    this.getTitle = function(){
+        var data = this.getData();
+        switch(this.type){
+            case'youtube':
+                return data.title.$t;
+                break;
+            case'vimeo':
+                return data[0].title;
+                break;
+        }
+    };
+    this.getData = function(){
+        var videoId = this.getId();
+        switch(this.type){
+            case 'youtube':
+                var result;
+                    $.ajax(
+                    {
+                            url: "https://gdata.youtube.com/feeds/api/videos/"+videoId+"?v=2&alt=json",
+                            async:false,
+                            success: function(data)
+                            {
+                                    result = data;
+                            }
+                    });
+
+                    return result.entry;
+                break;
+            case 'vimeo':
+                var result;
+                    $.ajax(
+                    {
+                            url: "http://vimeo.com/api/v2/video/"+videoId+".json",
+                            async:false,
+                            success: function(data)
+                            {
+                                    result = data;
+                            }
+                    });
+
+                    return result;
+                break;
+        };
+    };
+}
+
+function isYoutubeURL(url){
+    return /((http|https):\/\/)?(www\.)?(youtube\.com)(\/)?([a-zA-Z0-9\-\.]+)\/?/.test(url);
+}
+
+function youtubeURLToVideoId(url){
+    var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+    var match = url.match(regExp);
+    if (match&&match[7].length==11){
+        return match[7];
+    }else{
+        return false;
+    }
+}
+
+function getYoutubeData(videoId){
+    var result;
+    	$.ajax(
+	{
+		url: "https://gdata.youtube.com/feeds/api/videos/"+videoId+"?v=2&alt=json",
+                async:false,
+		success: function(data)
+		{
+			result = data;
+		}
+	});
+        
+        return result.entry;
+    
+}
+
+function getYoutubeTitle(videoId){
+    var data = getYoutubeData(videoId);
+    return data.title.$t;
+}
 function loader(id, link){
                   $("#" + id + "").load("" + link + "");
               }
@@ -3940,40 +4067,6 @@ function addUserToInputTagBar(userid){
 			 
 }
 
-function isYoutubeURL(url){
-    return /((http|https):\/\/)?(www\.)?(youtube\.com)(\/)?([a-zA-Z0-9\-\.]+)\/?/.test(url);
-}
-
-function youtubeURLToVideoId(url){
-    var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
-    var match = url.match(regExp);
-    if (match&&match[7].length==11){
-        return match[7];
-    }else{
-        return false;
-    }
-}
-
-function getYoutubeData(videoId){
-    var result;
-    	$.ajax(
-	{
-		url: "https://gdata.youtube.com/feeds/api/videos/"+videoId+"?v=2&alt=json",
-                async:false,
-		success: function(data)
-		{
-			result = data;
-		}
-	});
-        
-        return result.entry;
-    
-}
-
-function getYoutubeTitle(videoId){
-    var data = getYoutubeData(videoId);
-    return data.title.$t;
-}
 
 if (!Date.now) {
     Date.now = function() { return new Date().getTime(); }

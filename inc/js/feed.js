@@ -150,6 +150,8 @@ var feed = new function(){
         return output;
 
     };
-    
+    this.getData = function(feedId){
+        return api.query('api/feed/select/', { feedId : feedId});
+    };
 };
 			  
