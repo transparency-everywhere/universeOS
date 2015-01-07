@@ -13,6 +13,7 @@ $title10 = substr("$elementData[title]", 0, 10);
             $link = "./modules/reader/showfile.php?type=".$elementData['type'];
 
             
+  include('leftNav.php');
 if($elementData['type'] == "image"){
   if($elementData['title'] == "profile pictures"){
   $title = "Userpictures";
@@ -29,7 +30,10 @@ if($elementData['type'] == "image"){
   
   $documentSQL = mysql_query("SELECT id, title, owner, privacy FROM files WHERE folder='".$elementData['id']."'");
   $fileNumbers = mysql_num_rows($documentSQL);
+  
+  
     ?>
+<div class="frameRight">
         <center>
                 <h2><?=$title;?></h2>
                 <h3>by <i><a href="#" onclick="showProfile('<?=$elementAuthorData['userid'];?>')"><?=$elementAuthorData['username'];?></a></i></h3>
@@ -90,7 +94,7 @@ if($elementData['type'] == "image"){
 <?    
 }else{
 ?>
-<div id="showElement">
+<div id="showElement" class="frameRight">
         <h2 style="margin-left: 5%; margin-bottom:0px; margin-top:5%;">
             <?=htmlspecialchars($elementData['title']);?>&nbsp;<i class="icon-info-sign" onclick="$('.elementInfo<?=$elementData['id'];?>').slideDown();"></i>
         </h2>
@@ -169,3 +173,4 @@ if($elementData['type'] == "image"){
     </div>
 </div>
 <? } ?>
+</div>
