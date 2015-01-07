@@ -2594,6 +2594,7 @@ var sec =  new function() {
 };
 var tabs = function(parentIdentifier){
     this.parentIdentifier = parentIdentifier;
+    this.tabHistory = [];
 		this.init = function(){
                     parentIdentifier = this.parentIdentifier;
 			$(parentIdentifier).append('<div class="tabFrame"><header><ul></ul></header></div>');
@@ -2623,6 +2624,8 @@ var tabs = function(parentIdentifier){
 			$(parentIdentifier+' .tabFrame header ul').append('<li data-tab="'+(numberOfTabs+1)+'" data-parent-identifier="'+parentIdentifier+'" data-title="'+title+'" class="active">'+title+'<span class="close">x</span></li>');
 
                         $(parentIdentifier+' .tabFrame .tab').hide();
+                        
+                        this.tabHistory.push(numberOfTabs+1);
                         $(parentIdentifier+' .tabFrame').append('<div class="tab tab_'+(numberOfTabs+1)+'">'+content+'</div>');
                         this.initClicks();
 		};
@@ -2638,10 +2641,37 @@ var tabs = function(parentIdentifier){
                             return ret;
                 };
 		this.showTab = function(tab){
+                    this.tabHistory.push(tab);
                     parentIdentifier = this.parentIdentifier;
                     $(parentIdentifier+' .tabFrame .tab').hide();
                     $(parentIdentifier+' .tabFrame .tab.tab_'+tab).show();
 		};
+                
+                //is used after closing a tab to show the last tab that was shown
+                this.showLastTab = function(current_tab){
+                    var last_tab;
+                    var i = this.tabHistory.length-1;
+                    
+                    
+                    //counts down until i = 0 (each array element)
+                    //proofs if tab exists
+                    //until last tab isnt the current tab or undefined 
+                    while((last_tab==current_tab||last_tab==undefined)&&i!==0){
+                        if(this.tabExists(this.tabHistory[i]))
+                            last_tab = this.tabHistory[i];
+                        console.log(last_tab)
+                        i--;
+                    }
+                    this.showTab(last_tab);
+                };
+                this.tabExists = function(tab_identifier){
+                    parentIdentifier = this.parentIdentifier;
+                    if($(parentIdentifier+' .tabFrame .tab.tab_'+tab_identifier).length > 0){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                };
 		this.updateTabContent = function(tab_identifier ,content){
                     if(parseInt(tab_identifier) != tab_identifier){
                         tab_identifier = this.getTabByTitle(tab_identifier);
@@ -2651,13 +2681,20 @@ var tabs = function(parentIdentifier){
 			
 		};
 		this.removeTab = function(tab_identifier){
-                    alert(tab_identifier);
                     parentIdentifier = this.parentIdentifier;
+                    
+                    
+                    if($(parentIdentifier+' .tabFrame header ul li').length === 1){
+                        return true;
+                    }
+                    
+                    this.showLastTab(tab_identifier);
                     $(parentIdentifier+' .tabFrame header ul li').each(function(){
                         if($(this).attr('data-tab') == tab_identifier)
                             $(this).remove();
                     });
                     $(parentIdentifier+' .tabFrame .tab.tab_'+tab_identifier).remove();
+                    
 		};
 		this.moveTab = function(parentIdentifier, tab){
 			
@@ -3396,13 +3433,17 @@ var comments = new function(){
   };
 };
 
-
+//requires jquery
 //adding service to media class:
 //1. add regex to gettype
 
 var media = function(url){
     this.URL = url;
     this.type;
+    this.authData = {
+        soundcloud_client_id:'84102f71034779ad4237c49fd95c388b',
+        soundcloud_client_secret:'e5d37909c2fb985d66421d5d253d172b'
+    };
     this.getType = function(){
         var url = this.URL;
         if(/((http|https):\/\/)?(www\.)?(youtube\.com)(\/)?([a-zA-Z0-9\-\.]+)\/?/.test(url)){
@@ -3438,6 +3479,9 @@ var media = function(url){
                 }
                       break;
           case 'soundcloud':
+                
+              
+              
                       break;
       };
     };
@@ -3452,7 +3496,61 @@ var media = function(url){
                 break;
         }
     };
-    this.getData = function(){
+    this.loadPlayer = function($element, options){
+        var videoID = this.getId();
+        switch(this.type){
+            case'youtube':
+                var playerID = randomString(5,'aA#');
+                //from https://developers.google.com/youtube/iframe_api_reference#Loading_a_Video_Player
+                $element.html('<div id='+playerID+'><iframe id="player" type="text/html" width="640" height="390" src="http://www.youtube.com/embed/'+videoID+'?enablejsapi=1&origin=http://example.com" frameborder="0"></iframe></div>');
+                // 2. This code loads the IFrame Player API code asynchronously.
+                var tag = document.createElement('script');
+
+                tag.src = "https://www.youtube.com/iframe_api";
+                var firstScriptTag = document.getElementsByTagName('script')[0];
+                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+                // 3. This function creates an <iframe> (and YouTube player)
+                //    after the API code downloads.
+                var player;
+                function onYouTubeIframeAPIReady() {
+                  player = new YT.Player(playerID, {
+                    height: '390',
+                    width: '640',
+                    videoId: videoID,
+                    events: {
+                      'onReady': onPlayerReady,
+                      'onStateChange': onPlayerStateChange
+                    }
+                  });
+                }
+
+                // 4. The API will call this function when the video player is ready.
+                function onPlayerReady(event) {
+                  if(options.autoplay)
+                    event.target.playVideo();
+                }
+
+                // 5. The API calls this function when the player's state changes.
+                //    The function indicates that when playing a video (state=1),
+                //    the player should play for six seconds and then stop.
+                var done = false;
+                function onPlayerStateChange(event) {
+                  if (event.data == YT.PlayerState.PLAYING && !done) {
+                    setTimeout(stopVideo, 6000);
+                    done = true;
+                  }
+                }
+                function stopVideo() {
+                  player.stopVideo();
+                }
+                break;
+        };
+        
+    };
+    //@param callback: soundcloud doesn't allow asynchronus tasks, so it requires a callback like media.getData(function(data){consoloe.log(data)});
+    this.getData = function(callback){
+        var authStuff = this.authData;
         var videoId = this.getId();
         switch(this.type){
             case 'youtube':
@@ -3483,9 +3581,19 @@ var media = function(url){
 
                     return result;
                 break;
+            case 'soundcloud':
+                console.log('get soundcloud data');
+    $.ajax({
+        'url': "https://api.soundcloud.com/resolve.json?url="+encodeURIComponent(url)+"&client_id="+authStuff.soundcloud_client_id+'&none=none',
+        'dataType': "json",
+        'success': function (data) {
+            callback(data);
+        }
+    });
+                break;
         };
     };
-}
+};
 
 function isYoutubeURL(url){
     return /((http|https):\/\/)?(www\.)?(youtube\.com)(\/)?([a-zA-Z0-9\-\.]+)\/?/.test(url);
