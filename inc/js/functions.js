@@ -888,6 +888,29 @@ var universe = new function(){
         $(".alert").alert();
         
     };
+    this.reload = function(){
+        //fetch request data like open filebrowsers & feeds
+        var requestData = {
+            buddy_checksum: buddylist.checksum,
+            uff_checksum: ''
+        };
+        
+        var response = api.query('api/reload/', requestData);
+        
+        $.each(response, function(value){
+            
+        });
+        
+    };
+    this.handleReloadTypes = function(responseElement){
+        switch(responseElement.action){
+            case'buddylist':
+                if(responseElement.subaction === 'reload'){
+                    buddylist.reload();
+                }
+                break;
+        };
+    };
 };
 
 
@@ -985,6 +1008,38 @@ var applications = new function(){
         });
     };
     
+};
+
+var notification = function(options){
+    
+    this.init = function(){
+        
+    };
+    this.push = function(){
+        
+    };
+    this.generateNotification = function(options){
+        
+        
+        //generate data attributes
+        var data = '';
+        $.each(options.data, function(key, value){
+            data = 'data-'+value.caption+'="'+value.value+'"';
+        });
+        
+        
+        var html = '<li id="'+options.id+'" '+data+'>\n\
+            <div class="messageMain">\n\
+                '+options.message+'\n\
+            </div>\n\
+            <div class="messageButton">\n\\n\
+                <a href="#" onclick="'+options.acceptButton.action+'" class="btn btn-info btn-mini" style="margin-right:25px;">'+options.acceptButton.value+'</a>\n\
+                <a href="#" onclick="'+options.cancelButton.action+'" class="btn btn-mini" style="margin-right:25px;">'+options.cancelButton.value+'</a>\n\
+            </div>\n\
+        </li>';
+        
+        return html;
+    };
 };
               
 var application = function(id){

@@ -66,9 +66,8 @@ var buddylist = new function(){
 	return res;
     };
     
-    this.init = function(){
+    this.generateBuddylist = function(){
         var output="";
-        output += "<div id=\"buddyListFrame\">";
         output += '<table width="100%" cellspacing="0">';
 
         var buddies = this.getBuddies();
@@ -86,11 +85,21 @@ var buddylist = new function(){
         });
 
 
-            output += "</table>";
-            output += "</div>";
+        output += "</table>";
+        return output;
+    };
+    this.init = function(){
+        var output="";
+        output += "<div id=\"buddyListFrame\">";
+        output += this.generateBuddylist();
+        output += "</div>";
 	
         this.applicationVar = new application('buddylist');
 	this.applicationVar.create('Buddylist', 'html', output,{width: 2, height:  5, top: 0, left: 9});
 	
+    };
+    this.reload = function(){
+        var html = this.generateBuddylist();
+        $('#buddyListFrame').html(html);
     };
 };
