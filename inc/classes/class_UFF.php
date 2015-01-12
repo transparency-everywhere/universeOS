@@ -171,7 +171,7 @@ class uff {
             $fileId = $this->fileId;
             $fileClass = new file($fileId);
                
-                $filePath = universeBasePath.'/'.$fileClass->getFullFilePath();
+                $filePath = universeBasePath.'/'.$fileClass->getFullFilePath($fileId);
                 $file = fopen($filePath, 'w');
 
                 fwrite($file, $input);

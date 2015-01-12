@@ -386,7 +386,10 @@ class file{
 	 }
     
     
-    function getFullFilePath($fileId){
+    function getFullFilePath($fileId=NULL){
+        if($fileId === NULL){
+            $fileId = $this->id;
+        }
         $db = new db();
         $documentData = $db->select('files', array('id', $fileId), array('folder', 'filename'));
             

@@ -2796,12 +2796,21 @@ var tabs = function(parentIdentifier){
                         classVar.removeTab(tabId);
                     });
                 };
-		this.addTab = function(title, contentType, content){
+		this.addTab = function(title, contentType, content, onClose){
                     parentIdentifier = this.parentIdentifier;
 			var numberOfTabs = $(parentIdentifier+' .tabFrame .tab').length;
-			$(parentIdentifier+' .tabFrame header ul').append('<li data-tab="'+(numberOfTabs+1)+'" data-parent-identifier="'+parentIdentifier+'" data-title="'+title+'" class="active">'+title+'<span class="close">x</span></li>');
+                        
+                        var headerId = randomString(6, '#aA');
+                        
+			$(parentIdentifier+' .tabFrame header ul').append('<li id='+headerId+' data-tab="'+(numberOfTabs+1)+'" data-parent-identifier="'+parentIdentifier+'" data-title="'+title+'" class="active">'+title+'<span class="close">x</span></li>');
 
                         $(parentIdentifier+' .tabFrame .tab').hide();
+                        
+                        if(typeof onClose === 'function'){
+                            $('#'+headerId+' .close').click(function(){
+                                onClose();
+                            });
+                        }
                         
                         this.tabHistory.push(numberOfTabs+1);
                         $(parentIdentifier+' .tabFrame').append('<div class="tab tab_'+(numberOfTabs+1)+'">'+content+'</div>');
@@ -3299,6 +3308,8 @@ function initUffReader(id, content, readOnly){
 		    
 		    $('.uffViewer_'+id).val(content);
 }
+
+
     
     
     

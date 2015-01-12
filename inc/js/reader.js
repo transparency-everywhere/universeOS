@@ -19,6 +19,9 @@
 var reader = new function(){
     this.applicationVar;
     this.tabs;
+    
+    this.uffChecksums = []; //var to store checksums for reload
+    
     this.init = function(){
         this.applicationVar = new application('reader');
         this.applicationVar.create('Reader', 'url', 'modules/reader/index.php',{width: 5, height:  4, top: 0, left: 4, hidden: true});
@@ -35,70 +38,84 @@ var reader = new function(){
         var fileData = filesystem.getFileData(file_id);
         
         
-        if(fileData['privacy']){
-            var output = '';
-            if(privacy.authorize(fileData['privacy'], "edit", fileData['owner'])){
-                var readOnly = "false";
-            }else{
-                var readOnly = "true";
-            }
+        switch(fileData['type']){
+            case 'UFF':
+                var output = '';
+                if(privacy.authorize(fileData['privacy'], "edit", fileData['owner'])){
+                    var readOnly = "false";
+                }else{
+                    var readOnly = "true";
+                }
 
-            var title = fileData['title'];
-            
-            
-            
-            var icon = "<img src=\"$subpath"+"gfx/icons/fileIcons/$icon\" height=\"20\">";
-	    
-            output += '<div class="openFile">';
-                output += "<header class=\"gray-gradient\">";
-                output += icon;
-                output += "<span class=\"title\">$title $type</span>";
-                output += "<span class=\"controls\">$controls</span>";
-                output += "<span class=\"bar\">$bar</span>";
-                output += "<span class=\"score\">$score</span>";
-                output += "<span class=\"download\">$download</span>";
-                output += "</header>";
-                output += "<div class=\"fileWindow\" id=\"fileWindowId\">";
+                var title = fileData['title'];
 
 
-                    //this iframe is used to handle all the onload, onsubmit, onkeyup events, its necessary because of the fact that the dhtml-goddies tab script parses the damn js
-                    //dirty solution!!!
-                    output += "<div class=\"uffViewerNav\">";
-                            output += "<div style=\"margin: 10px;\">";
-                                    output += "<ul>";
-                                output += '<li style="font-size: 11pt; margin-bottom: 05px;"><i class="icon-user"></i>&nbsp;<strong>Active Users</strong></li>';
-                                //show active users
-            //	            $.each($activeUsers AS &$activeUser){
-            //	                if(!empty($activeUser)){
-            //	                output += "<li onclick=\"openProfile($activeUser);\" style=\"cursor: pointer;\">";
-            //	                //$output .= showUserPicture($activeUser, "11");
-            //	                output +=  "&nbsp;";
-            //	                output +=  useridToUsername($activeUser);
-            //	                output += "</li>";
-            //	                }
-            //	            }
-                                    output += "</ul>";
-                            output += "</div>";
-                    output += "</div>";
-                    //document frame
-                    output += "<div class=\"uffViewerMain\">";
-                            output += "<textarea class=\"uffViewer_"+file_id+" WYSIWYGeditor\" id=\"editor1\">";
-                            output += "</textarea>";
-                    output += "</div>";
+
+                var icon = "<img src=\"$subpath"+"gfx/icons/fileIcons/$icon\" height=\"20\">";
+
+                output += '<div class="openFile">';
+                    output += "<header class=\"gray-gradient\">";
+                    output += icon;
+                    output += "<span class=\"title\">$title $type</span>";
+                    output += "<span class=\"controls\">$controls</span>";
+                    output += "<span class=\"bar\">$bar</span>";
+                    output += "<span class=\"score\">$score</span>";
+                    output += "<span class=\"download\">$download</span>";
+                    output += "</header>";
+                    output += "<div class=\"fileWindow\" id=\"fileWindowId\">";
+
+
+                        //this iframe is used to handle all the onload, onsubmit, onkeyup events, its necessary because of the fact that the dhtml-goddies tab script parses the damn js
+                        //dirty solution!!!
+                        output += "<div class=\"uffViewerNav\">";
+                                output += "<div style=\"margin: 10px;\">";
+                                        output += "<ul>";
+                                    output += '<li style="font-size: 11pt; margin-bottom: 05px;"><i class="icon-user"></i>&nbsp;<strong>Active Users</strong></li>';
+                                    //show active users
+                //	            $.each($activeUsers AS &$activeUser){
+                //	                if(!empty($activeUser)){
+                //	                output += "<li onclick=\"openProfile($activeUser);\" style=\"cursor: pointer;\">";
+                //	                //$output .= showUserPicture($activeUser, "11");
+                //	                output +=  "&nbsp;";
+                //	                output +=  useridToUsername($activeUser);
+                //	                output += "</li>";
+                //	                }
+                //	            }
+                                        output += "</ul>";
+                                output += "</div>";
+                        output += "</div>";
+                        //document frame
+                        output += "<div class=\"uffViewerMain\">";
+                                output += "<textarea class=\"uffViewer_"+file_id+" WYSIWYGeditor\" id=\"editor1\">";
+                                output += "</textarea>";
+                        output += "</div>";
+                    output += '</div>';
                 output += '</div>';
-            output += '</div>';
+            break;
         }
         
-        reader.tabs.addTab(title, 'html', output);
+        reader.tabs.addTab(title, 'html', output, function(){
+            alert('asdasd');
+            //onclose
+            delete reader.uffChecksums[file_id];
+        });
         
-        $(parent.document).ready(function(){
-                //load
+        
+        switch(fileData['type']){
+            case'UFF':
+                
+                //load uff file and init wysiqyg
                 $.get('doit.php?action=loadUff&id='+file_id, function(uffContent) {
                     initUffReader(file_id, uffContent, "false");
+                    
+                    
+                    //store hash
+                    reader.uffChecksums[file_id] = hash.MD5(uffContent);
+                    
                 });
                 
-                
-        });
+                break;
+        }
         
         
         reader.applicationVar.show();
