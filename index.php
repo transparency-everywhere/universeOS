@@ -26,7 +26,7 @@ if(!$login) {
     die();
        
 } ?>
-	<script>$('#reader').show();</script>
+	<script>User.userid = <?php echo getUser();?></script>
         <div id="reload"></div>
         <div id="alerter" class="container"></div>
             <?
