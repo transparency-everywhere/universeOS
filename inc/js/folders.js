@@ -30,6 +30,21 @@ var folders = new function(){
 	});
 	return result;
     };
+              	
+    this.getPath = function(folder_id){
+        
+        var result="";
+	$.ajax({
+            url:"api/folders/getPath/",
+            async: false,  
+            type: "POST",
+            data: {folder_id : folder_id},
+            success:function(data) {
+               result = JSON.parse(data);
+            }
+	});
+	return result;
+    };
     this.update = function(folderId, parent_folder, title, privacy, callback){
         
         var result="";

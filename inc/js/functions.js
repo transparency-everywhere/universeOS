@@ -1691,7 +1691,11 @@ var User = new function(){
 		            }
         
     };
-    
+    this.getAllData = function(userid){
+        //data will only be returned if getUser()==userid or userid is on buddylist of getUser()
+        
+            return api.query('api/user/getAllData/', { user_id:userid });
+    }
     this.showSignature = function(userid, timestamp, reverse){
         
         var username = useridToUsername(userid);
