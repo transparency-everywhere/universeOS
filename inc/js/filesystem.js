@@ -17,8 +17,12 @@
 var filesystem =  new function() {
     this.init = function(){
         
+        var html = '<div id="fileBrowserFrame"></div>';
+        
+        
+        
         this.applicationVar = new application('filesystem');
-        this.applicationVar.create('Filesystem', 'url', 'modules/filesystem/filesystem.php',{width: 6, height:  5, top: 0, left: 3});
+        this.applicationVar.create('Filesystem', 'html', html,{width: 6, height:  5, top: 0, left: 3});
 			  			
         
 	this.tabs = new tabs('#fileBrowserFrame');
