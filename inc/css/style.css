@@ -2472,10 +2472,24 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 	width: 1px;
 }
 
+#notifications{
+    position: absolute;
+    bottom: 0;
+}
+
+#notifications>ul>li {
+    /* position: absolute; */
+    background: #FFF;
+    width: 220px;
+    margin: 5px;
+    padding: 10px;
+}
+
 	#systemAlerts{
 		position: absolute;
 		bottom: 2px;
 		left: 0;
+                display:none;
 	}
 	
 	#systemAlerts li{

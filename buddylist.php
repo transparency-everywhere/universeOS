@@ -18,11 +18,11 @@ if(empty($_GET['reload'])){
     ?>
                 <tr class="height60 greyHover">
 	                 <td style="padding:0 10px; width: 43px;"><?=showUserPicture($buddy, "40");?></td>
-	                 <td><a href="#" onclick="openChatDialoge('<?=$username;?>');"><?=$username;?></a><br><a href="#" onclick="openChatDialoge('<?=$username;?>');" class="realname"><?=useridToRealname($buddy);?>&nbsp;</a></td>
+	                 <td><a href="#" onclick="im.openDialogue('<?=$username;?>');"><?=$username;?></a><br><a href="#" onclick="im.openDialogue('<?=$username;?>');" class="realname"><?=useridToRealname($buddy);?>&nbsp;</a></td>
 	                 <td align="right" style="padding: 0 10px;">
 						    <a href="#" onclick="showProfile('<?=$buddy;?>'); return false" title="open Profile"><i class="glyphicon glyphicon-user" style="font-size:12px"></i></a>
-						    <a href="#" onclick="openChatDialoge('<?=$username;?>'); return false" title="write Message"><i class="glyphicon glyphicon-envelope" style="font-size:12px"></i></a>
-						    <a href="#" onclick="openChatDialoge('<?=$username;?>'); return false" title="write Message"><i class="glyphicon glyphicon-cog" style="font-size:12px"></i></a>
+                                                    <a href="#" onclick="im.openDialogue('<?=$username;?>'); return false" title="write Message"><i class="glyphicon glyphicon-envelope" style="font-size:12px"></i></a>
+						    <a href="#" onclick="im.openDialogue('<?=$username;?>'); return false" title="write Message"><i class="glyphicon glyphicon-cog" style="font-size:12px"></i></a>
                                                    
 			</td>
                 </tr>

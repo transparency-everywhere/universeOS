@@ -14,7 +14,7 @@ include('../../inc/functions.php');
                 $mailUserSql = mysql_query("SELECT * FROM user WHERE userid='$mailData[sender]'");
                 $mailUserData = mysql_fetch_array($mailUserSql);
                         ?>
-                        <li onclick="openChatDialoge('<?=$mailUserData['username'];?>');">
+                        <li onclick="im.openDialogue('<?=$mailUserData['username'];?>');">
                         	<div>
 	                        	<div class="content">
 	                        		<table width="100%">

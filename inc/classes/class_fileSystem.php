@@ -588,7 +588,7 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 	            
 	            //real file types
 	            //documents
-				case UFF:
+                    case 'UFF':
 							if(authorize($fileData['privacy'], "edit", $fileData['owner'])){
 							    $readOnly = "false";
 							}else{

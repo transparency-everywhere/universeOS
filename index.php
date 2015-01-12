@@ -49,7 +49,9 @@ if(!$login) {
                 include("personalFeed.php");
                 ?>
             </div>
-            
+            <div id="notifications">
+                <ul></ul>
+            </div>
 
             <div id="playListPlayer">
                 <?

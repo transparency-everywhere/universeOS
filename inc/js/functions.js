@@ -860,6 +860,7 @@ var gui = new function(){
 };
               
 var universe = new function(){
+    this.notificationArray = [];
     this.init = function(){
         gui.loadScript('inc/js/item.js');
         
@@ -891,28 +892,113 @@ var universe = new function(){
     this.reload = function(){
         //fetch request data like open filebrowsers & feeds
         var requestData = {
-            buddy_checksum: buddylist.checksum,
-            uff_checksum: ''
+            request:{
+                0 : {
+                    action:'buddylist',
+                    subaction:'reload',
+                    data: {
+                        buddy_checksum: buddylist.checksum
+                    }
+                },
+                1 : {
+                    action : 'IM',
+                    subaction:'sync',
+                    data: {
+                        last_message_received:im.lastMessageReceived
+                    }
+                }
+            }
         };
         
         var response = api.query('api/reload/', requestData);
-        
-        $.each(response, function(value){
-            
+        var temp = this;
+        $.each(response, function(key, value){
+            temp.handleReloadTypes(value);
         });
         
     };
     this.handleReloadTypes = function(responseElement){
+        console.log(responseElement.action);
         switch(responseElement.action){
+            
+            
             case'buddylist':
                 if(responseElement.subaction === 'reload'){
                     buddylist.reload();
+                }else if(responseElement.subaction === 'openRequest'){
+                    var notificationId = this.notificationArray.length+1;
+                    this.notificationArray[notificationId]
+                            = new notification({
+                                                    message: User.showPicture(responseElement.data.userid)+useridToUsername(responseElement.data.userid)+' want\'s to be your friend',
+                                                    acceptButton:{
+                                                        action: 'buddylist.acceptBuddyRequest('+responseElement.data.userid+')',
+                                                        value: 'accept'
+                                                    },
+                                                    cancelButton:{
+                                                        action: 'buddylist.denyBuddyRequest('+responseElement.data.userid+')',
+                                                        value: 'decline'
+                                                    }
+                                                });
+                    this.notificationArray[notificationId].push();
+                    
+                }
+                break;
+                
+            case 'groups':
+                if(responseElement.subaction === 'openRequest'){
+                    
+                    var notificationId = this.notificationArray.length+1;
+                    this.notificationArray[notificationId]
+                            = new notification({
+                                                    message: User.showPicture(responseElement.data.author)+useridToUsername(responseElement.data.author)+' invited you into the group '+responseElement.data.group_title,
+                                                    acceptButton:{
+                                                        action: 'groups.join('+responseElement.data.group_id+')',
+                                                        value: 'join'
+                                                    },
+                                                    cancelButton:{
+                                                        action: 'groups.declineRequest('+responseElement.data.group_id+')',
+                                                        value: 'decline'
+                                                    }
+                                                });
+                    this.notificationArray[notificationId].push();
+                    
+                }
+                break;
+                
+            case 'IM':
+                if(responseElement.subaction === 'sync'){
+                    im.sync(responseElement.data);
                 }
                 break;
         };
     };
 };
 
+var im = new function(){
+    this.lastMessageReceived = 1;
+    this.openChatWindows = []; //array(userid1, userid2, userid3 etc...)
+    
+    //opens message either as a notification, as a chat window or updates the chatwindow
+    this.openMessage = function(messageData){
+        
+    };
+    this.openDialogue = function(parameter){
+        if(is_numeric(parameter)){
+            var username = usernameToUserid(parameter);
+        }else{
+            var username = parameter;
+        }
+        openChatDialoge(username);
+    };
+    
+    //proceeds data from reload function
+    this.sync = function(data){
+        $.each(data, function(key,value){
+            console.log(value);
+            im.openMessage(value);
+        });
+    };
+};
 
 var applications = new function(){
     this.getList = function(){
@@ -956,7 +1042,7 @@ var applications = new function(){
             app['title'] = 'chat';
             app['source'] = 'chat.js';
             app['className'] = 'chat'; // name of the the javascript class object
-            app['active'] = false;
+            app['active'] = true;
             app['position'] = {width: 2, height:  2, top: 0, left: 5};
             apps[3] = app;
 
@@ -1010,32 +1096,51 @@ var applications = new function(){
     
 };
 
+//options.data                  array( 0 => [caption=data-CAPTION, value]
+//options.id                    id of the notification
+//options.message               string notification message
+//options.acceptButton.action   action of accept button
+//options.acceptButton.value    value of accept button
+//options.cancelButton.action   action of cancel button
+//options.cancelButton.value    value of cancel button
 var notification = function(options){
-    
+    this.options = options;
     this.init = function(){
         
     };
     this.push = function(){
-        
+        var note = this.generateNotification();
+        console.log('note'+note);
+        $('#notifications>ul').append(note);
     };
-    this.generateNotification = function(options){
+    this.generateNotification = function(){
+        var options = this.options;
         
         
         //generate data attributes
         var data = '';
+        if(options.data)
         $.each(options.data, function(key, value){
             data = 'data-'+value.caption+'="'+value.value+'"';
         });
+        
+        
+        //if empty id => generate random id
+        if(!options.id)
+            options.id = randomString(6, '#aA');
+        
         
         
         var html = '<li id="'+options.id+'" '+data+'>\n\
             <div class="messageMain">\n\
                 '+options.message+'\n\
             </div>\n\
-            <div class="messageButton">\n\\n\
-                <a href="#" onclick="'+options.acceptButton.action+'" class="btn btn-info btn-mini" style="margin-right:25px;">'+options.acceptButton.value+'</a>\n\
-                <a href="#" onclick="'+options.cancelButton.action+'" class="btn btn-mini" style="margin-right:25px;">'+options.cancelButton.value+'</a>\n\
-            </div>\n\
+            <div class="messageButton">\n\
+                <a href="#" onclick="'+options.acceptButton.action+'" class="btn btn-success btn-mini" style="margin-right:25px;">'+options.acceptButton.value+'</a>';
+            if(options.cancelButton){
+                html += '<a href="#" onclick="'+options.cancelButton.action+'" class="btn btn-default btn-mini" style="margin-right:25px;">'+options.cancelButton.value+'</a>';
+            }
+            html += '</div>\n\
         </li>';
         
         return html;
@@ -2174,7 +2279,11 @@ var groups = new function(){
 
             
             var buddies = buddylist.getBuddies();
-            var html = '<ul>';
+            var html = '';
+            if(buddies.length === 0){
+                html += 'You have no user in your buddylist';
+            }
+            html += '<ul>';
             $.each(buddies,function(index, value){
                 html += "<li><input type='checkbox' class='invitedBuddy' value='"+value+"'> "+useridToUsername(value)+"</li>";
             });
@@ -2204,7 +2313,21 @@ var groups = new function(){
             formModal.init('Update CreateGroup', '<div id="createGroupFormContainer"></div>', modalOptions);
             gui.createForm('#createGroupFormContainer',fieldArray, options);
         };
-
+        
+        //join public group or accept invitation
+        this.join = function(group_id){
+            var callback = function(){
+                $('#profileWrap.group_'+group_id+' #joinButton .btn').hide();
+                $('#favTab_Group').load('doit.php?action=showUserGroups');
+                updateDashbox('group');
+            };
+            api.query('api/groups/join/', { group_id : group_id}, callback);
+        };
+        
+        //decline invitation
+        this.declineRequest = function(group_id){
+            alert('needs to be written');
+        };
 	
 };
 
@@ -3175,8 +3298,18 @@ function initUffReader(id, content, readOnly){
 		    initWysiwyg(id, readOnly);
 		    
 		    $('.uffViewer_'+id).val(content);
-		}
+}
     
+    
+    
+var uffEditor = function(file_id, $selector){
+    this.init = function(){
+        
+    };
+    this.updateFile = function(){
+        
+    };
+}    
     
 //opens articles out of the universe wiki
 //located in reader cause it will be placed there in future
@@ -3194,141 +3327,6 @@ function openURL(url, title){
     }
     
     
-//IM CHAT  
-//IM CHAT  
-//IM CHAT - needs to be put in own var
-function chatMessageSubmit(userid){
-    	
-    	var publicKey = getPublicKey('user', userid); //get public key of receiver
-    	
-    	var randKey = Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2); //generate random key
-   	
-    	var message = sec.symEncrypt(randKey, $('#chatInput_'+userid).val()); //encrypt message semitrically
-
-    	var symKey = sec.asymEncrypt(publicKey, randKey); //random generated key for symetric encryption
-   	
-    	var message = symKey+'////message////'+message; //message = symetric Key + sym encoded message with key = symKey
-
-    	$('#chatInput_'+userid).val(message);
-    	
-    	
-    	if(localStorage.key[userid]){
-    		console.log(localStorage.key[userid]);
-    		 $('#chatInput_'+userid).val(CryptoJS.AES.encrypt($('#chatInput_'+userid).val(), localStorage.key[userid]));
- 		     //set cryption marker true so the php script could mark the message as crypted
-    		 $('#chatCryptionMarker_'+userid).val('true'); 
-    		 
-    	}else{
-    		 $('#chatCryptionMarker_'+userid).val('false'); 
-    	}
-    	
-    	var message = $('#chatInput_'+userid).val();
-    	$.post("api.php?action=chatSendMessage", {
-           userid:localStorage.currentUser_userid,
-           receiver: userid,
-           message: message
-           }, 
-           function(result){
-                var res = result;
-                if(res.length !== 0){
-                    
-                    storeMessageKey(res, randKey);
-                    
-           			$('#chatInput_'+userid).val(message);
-           			var buddyName = useridToUsername(userid);
-           			
-           			$('#test_'+buddyName).load('modules/chat/chatreload.php?buddy='+buddyName+'&initter=1');
-           			$('#chatInput_'+userid).val('');
-                    
-                }else{
-                    alert('There was an error sending the message.');
-                }
-           }, "html");
- } 
-
-function chatDecrypt(userid){
-    	
-    	
-    $('.chatMessage_'+userid).each(function(){
-
-            //clear intervall which calls this function
-            if($('.chatMessage_'+userid).length !== 0){
-
-                    window.clearInterval(openDialogueInterval);
-
-            }
-
-            var content = $(this).html();
-            var id = $(this).data('id');
-
-
-
-            if(localStorage.key[userid]){
-                    content = CryptoJS.AES.decrypt(content, localStorage.key[userid]);
-                    content = content.toString(CryptoJS.enc.Utf8);
-                    $(this).removeClass('.cryptedChatMessage_'+userid);
-            }
-
-
-            //split content into key and message
-            var message = content.split("////message////");
-
-            //check if randKey is stored, if not get randKey from message, using the asym privateKey
-            if(isStored(id)){
-                    randKey = getStoredKey(id);
-            }else{
-
-
-            var privateKey = cypher.getPrivateKey('user', localStorage.currentUser_userid);
-
-
-            //encrypt random key with privateKey
-            var randKey = sec.asymDecrypt(privateKey, message[0]);
-
-
-            }
-
-
-    if(randKey !== null){
-        //encrypt message with random key
-                    console.log('sym');
-        var content = htmlentities(sec.symDecrypt(randKey, message[1]));
-
-            }else{
-                    content = 'The key is not stored anymore';
-            }
-
-
-            $(this).html(content);
-            $(this).removeClass('chatMessage_'+userid);
-    });
-    return true;
-}
-
-function openChatDialoge(username){
-      chat.applicationVar.show();
-      
-      	//check if dialoge allready exists
-          if($("#test_"+ username +"").length == 0){
-          	
-          	userid = usernameToUserid(username);
-                chat.tabs.addTab(username, '',gui.loadPage("modules/chat/chatreload.php?buddy="+username+""));
-              
-              openDialogueInterval = window.setInterval("chatDecrypt(userid)", 500);
-          }else{
-          	//if dialoge doesnt exists => bring dialoge to front..
-          	
-          	
-
-          }
- }
- 
-  
-function chatLoadMore(username, limit){
-     $.get("doit.php?action=chatLoadMore&buddy="+username+"&limit="+limit,function(data){
-              $('.chatMainFrame_'+username).append(data);
-      },'html');
- }
  
     
 function initDashClose(){

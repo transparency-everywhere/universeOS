@@ -39,6 +39,18 @@ class groups{
             
             return $members;
         }
+        
+        public function getOpenRequests($userid=NULL){
+            if(empty($userid))
+                    $userid = getUser();
+            $newGroupSql = mysql_query("SELECT * FROM  `groupAttachments` WHERE  item='user' AND  `validated`='0' AND itemId='$userid' ORDER BY timestamp DESC LIMIT 0, 3");
+            while($newGroupData = mysql_fetch_array($newGroupSql)){
+                $return[] = array('group_id'=>$newGroupData['group'],'author'=>$newGroupData['author']);
+            }
+            
+            return $return;
+        }
+        
         function userJoinGroup($group, $user=NULL){
 
                         $userid = getUser();
@@ -47,14 +59,47 @@ class groups{
                                 $user = $userid;
                         }
 
-                    $db = new db();
-                    $values['group'] = $group;
-                    $values['item'] = 'user';
-                    $values['itemId'] = $user;
-                    $values['timestamp'] = $time;
-                    $values['author'] = $userid;
-                    $db->insert('groupAttachments', $values);
+                        
+                        $groupsClass = new groups();
+                        $groupData = $groupsClass->getGroupData($group);
+
+                        $db = new db();
+                        if($groupData["public"] == "1"){
+                                $checkUpData = $db->select('groupAttachments', array('group', $group,'AND','item','user','AND','itemId',$user));
+                                if(is_array($checkUpData)){
+                                    
+                                    $db->update('groupAttachments', array('validated'=>1), array('group', $group,'AND','item','user','AND','itemId',$user));
+
+                                }else{
+                                    $values['group'] = $group;
+                                    $values['item'] = 'user';
+                                    $values['itemId'] = $user;
+                                    $values['timestamp'] = time();
+                                    $values['author'] = $user;
+                                    $values['validated'] = 1;
+                                    $db->insert('groupAttachments', $values);
+                                }
+
+                        }else{
+                                $db->update('groupAttachments',array('validated'=>1), array('group', $group,'AND','item','user','AND','itemId',$user));
+
+                        }
+                    
                 }
+                
+        function sendRequestToUser($group, $user, $userid){
+            $db = new db();
+        
+        
+            $values['group'] = $group;
+            $values['item'] = 'user';
+            $values['itemId'] = $user;
+            $values['timestamp'] = time();
+            $values['author'] = $userid;
+            $values['validated'] = 0;
+            $db->insert('groupAttachments', $values);
+
+        }
 
         function userLeaveGroup($group, $user=NULL){
             

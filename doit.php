@@ -761,7 +761,7 @@ else if($_GET['action'] == "groupInviteUsers"){
          $groupsClass = new groups();
          if(isset($userlist)){
                     foreach ($userlist as &$value) {
-	         	$groupsClass->userJoinGroup($group, $value);
+	         	$groupsClass->sendRequestToUser($group, $value,getUser());
                     }
 		 }
 		 jsAlert("worked:)");

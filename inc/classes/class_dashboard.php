@@ -188,7 +188,7 @@ class dashBoard{
 					$output .=  $message['senderUsername'].':';
 					$output .=  "</span>";
 					$output .=  "<span>";
-					$output .=  "<a href=\"#\" onclick=\"openChatDialoge('$message[senderUsername]');\">";
+					$output .=  "<a href=\"#\" onclick=\"im.openDialogue('$message[senderUsername]');\">";
 					$output .=  substr($message['text'], 0, 15);
 					$output .=  "</a>";
 					$output .=  "</span>";

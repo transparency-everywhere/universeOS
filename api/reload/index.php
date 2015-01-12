@@ -15,15 +15,57 @@
 //
 //@author nicZem for Tranpanrency-everywhere.com
 
-include('../../../inc/config.php');
-include('../../../inc/functions.php');
+include('../../inc/config.php');
+include('../../inc/functions.php');
 
-$action;
-$subaction;
-$data;
+function reload($requests){
+    $user = getUser();
+    
+    $buddylist = new buddylist();
+    $groups = new groups();
+    
+    foreach($requests AS $request){
+        switch($request['action']){
+            case'buddylist':
+                if($request['subaction'] == 'reload'){
+                    if($request['data']['buddy_checksum'] != $buddylist->getChecksum()){
+                        $result[] = array('action'=>'buddylist','subaction'=>'reload');
+                    }
+                }
+                break;
+                
+            case'IM':
+                if($request['subaction'] == 'sync'){
+                    $im = new im();
+                    $messagesToSync = $im->checkForMessages($request['data']['last_message_received']);
+                    
+                    $result[] = array('action'=>'IM','subaction'=>'sync', 'data'=>$messagesToSync);
+                }
+                break;
+        }
+    }
+    
+    foreach($groups->getOpenRequests() AS $openGroupRequestData){
+        $openGroupRequestData['group_title'] = $groups->getGroupName($openGroupRequestData['group_id']);
+        $result[] = array('action'=>'groups', 'subaction'=>'openRequest', 'data'=>$openGroupRequestData);
+    }
+    
+    
+    //check for open requests
+    $openBuddyRequests = $buddylist->getOpenRequests($user);
+    
+    //add open requests to result
+    if(count($openBuddyRequests > 1)){
+        foreach($openBuddyRequests AS $requestBuddyId=>$requestBUsername){
+            $result[] = array('action'=>'buddylist','subaction'=>'openRequest','data'=>array('userid'=>$requestBuddyId));
+        }
+    }
+    
+    return $result;
+    
+}
 
-//if buddylist hash isn't up to date 
-$response[] = array('action','buddylist','subaction','reload');
+echo json_encode(reload($_POST['request']));
 
 
 

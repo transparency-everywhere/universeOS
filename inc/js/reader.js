@@ -31,4 +31,50 @@ var reader = new function(){
     this.show = function(){
         reader.applicationVar.show();
     };
+    this.openFile = function(file_id){
+        var fileData = filesystem.getFileData(file_id);
+        
+        
+        if(fileData['privacy']){
+            var output = '';
+            if(privacy.authorize(fileData['privacy'], "edit", fileData['owner'])){
+                var readOnly = "false";
+            }else{
+                var readOnly = "true";
+            }
+
+            var title = fileData['title'];
+            //this iframe is used to handle all the onload, onsubmit, onkeyup events, its necessary because of the fact that the dhtml-goddies tab script parses the damn js
+            //dirty solution!!!
+            output += "<iframe src=\"modules/reader/UFF/javascript.php?fileId=$fileId&readOnly=$readOnly\" style=\"display:none;\"></iframe>";
+            output += "<div class=\"uffViewerNav\">";
+                    output += "<div style=\"margin: 10px;\">";
+                            output += "<ul>";
+                        output += '<li style="font-size: 11pt; margin-bottom: 05px;"><i class="icon-user"></i>&nbsp;<strong>Active Users</strong></li>';
+                        //show active users
+    //	            $.each($activeUsers AS &$activeUser){
+    //	                if(!empty($activeUser)){
+    //	                output += "<li onclick=\"openProfile($activeUser);\" style=\"cursor: pointer;\">";
+    //	                //$output .= showUserPicture($activeUser, "11");
+    //	                output +=  "&nbsp;";
+    //	                output +=  useridToUsername($activeUser);
+    //	                output += "</li>";
+    //	                }
+    //	            }
+                            output += "</ul>";
+                    output += "</div>";
+            output += "</div>";
+            //document frame
+            output += "<div class=\"uffViewerMain\">";
+                    output += "<textarea class=\"uffViewer_$fileId WYSIWYGeditor\" id=\"editor1\">";
+                    output += "</textarea>";
+            output += "</div>";   
+        }
+        return output;
+        
+    };
+    this.openLink = function(){
+        
+    };
+    
 };

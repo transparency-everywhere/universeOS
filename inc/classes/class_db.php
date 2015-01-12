@@ -20,23 +20,27 @@ function save($str){
 
 class db{
         public function generateWhere($primary){
-            
-            //if array length is 2 the basic statement is used
-            if(count($primary) == 2){
-                $return = "WHERE `".$primary[0]."`='".save($primary[1])."'";
-            }else if(count($primary)>2){
-                //use thrid item of primary array as seperator(OR or and)
-                $return = "WHERE `".$primary[0]."`='".save($primary[1])."' ".$primary[2]." ";
+            if(is_array($primary)){
                 
-                $arrayCounter = 3;
-                while(isset($primary[$arrayCounter])){
-                    $return .= '`'.$primary[$arrayCounter];
-                    $arrayCounter++;
-                    $return .= "`='".save($primary[$arrayCounter])."' ".$primary[$arrayCounter+1]." ";
-                    $arrayCounter++;
-                    $arrayCounter++;
+                //if array length is 2 the basic statement is used
+                if(count($primary) == 2){
+                    $return = "WHERE `".$primary[0]."`='".save($primary[1])."'";
+                }else if(count($primary)>2){
+                    //use thrid item of primary array as seperator(OR or and)
+                    $return = "WHERE `".$primary[0]."`='".save($primary[1])."' ".$primary[2]." ";
+
+                    $arrayCounter = 3;
+                    while(isset($primary[$arrayCounter])){
+                        $return .= '`'.$primary[$arrayCounter];
+                        $arrayCounter++;
+                        $return .= "`='".save($primary[$arrayCounter])."' ".$primary[$arrayCounter+1]." ";
+                        $arrayCounter++;
+                        $arrayCounter++;
+                    }
+
                 }
-                
+            }else{
+                return 'WHERE '.$primary;
             }
             
             return $return;
@@ -69,7 +73,8 @@ class db{
 
             mysql_query("INSERT INTO `$table` $query VALUES $values");
             return mysql_insert_id();
-	}        /**
+	}
+        /**
         *Updates record with $primary[0]=$primary[1] in db $table 
         *@param string $table Name of table
         *@param array $options Array with insert values mysql_field_name=>values

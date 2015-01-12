@@ -119,16 +119,25 @@ class buddylist {
                  $user= getUser();
              }
                     $db = new db();
-                    $friendRequests = $db->shiftResult($db->select('buddylist', array('buddy', $user, '&&', 'request', '1')), 'owner');
+                    $friendRequests = $db->shiftResult($db->select('buddylist', array('buddy', $user, '&&', 'request', '1')), 'buddy');
                     
                     foreach($friendRequests AS $friendRequestData){
                              $userid = $friendRequestData['owner'];
                              $return[$userid] = useridToUsername($userid);
                      }
 
-                     return $return; 
+                    return $return; 
         }
 
+   function getChecksum($user=NULL, $request=0){
+       $checksum = '';
+       foreach($this->buddyListArray() AS $data){
+            $checksum .= $data;
+           
+       }
+       return md5($checksum);
+   }
+        
    function buddyListArray($user=NULL, $request=0){
    //returns all buddies of $user
         if(empty($user)){

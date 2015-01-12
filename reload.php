@@ -52,46 +52,12 @@ $time = time();
         }
 
 
-
-//check if the buddylists needs to be reloaded
-$buddylistClass = new buddylist();
-$buddies = $buddylistClass->buddyListArray();
-
-if(!empty($buddies) && ($_SESSION['buddyListReload'] < (time()-60))){
-echo"$('#buddyListFrame').load('buddylist.php?reload=1');";
-$_SESSION['buddyListReload']  = time();
-}
-
-
-
 //check for new msg
 $newMessagesSql = mysql_query("SELECT sender FROM  `messages` WHERE  receiver='".$_SESSION['userid']."' AND  `read`='0'  ORDER BY timestamp DESC LIMIT 0, 3");
 $newMessagesData = mysql_fetch_array($newMessagesSql);
 
 
-$newMessagesSql2 = mysql_query("SELECT receiver FROM  `messages` WHERE  sender='".$_SESSION['userid']."' AND  `seen`='0'  ORDER BY timestamp DESC LIMIT 0, 3");
-$newMessagesData2 = mysql_fetch_array($newMessagesSql2);
-    if(isset($newMessagesData2['sender'])){
-        $UserSql = mysql_query("SELECT * FROM user WHERE userid='$newMessagesData2[receiver]'");
-        $UserData = mysql_fetch_array($UserSql);
-        $user = $UserData['username'];
-        $newMessageOn = $newMessagesData2['receiver'];
-    }
-    
-    if(isset($newMessagesData['sender'])){
-	    $checkUserSql = mysql_query("SELECT username, lastactivity FROM user WHERE userid='$newMessagesData[sender]'");
-	    $checkUserData = mysql_fetch_array($checkUserSql);
-	    $buddy = $checkUserData['username'];
-    }
-    
-    //see if the sender is still active or not
-    if(($time - $checkUserData['lastactivity']) < 60){
-        $newMessagesOn = $newMessagesData['sender'];
-        unset($newMessages);
-    }else{
-        $newMessages = $newMessagesData['sender'];
-        unset($newMessagesOn);
-    }
+
 //check for friend request
 $friendRequestSql = mysql_query("SELECT * FROM buddylist WHERE buddy='".$_SESSION['userid']."' && request='1' LIMIT 0, 3");
 $friendRequestData = mysql_fetch_array($friendRequestSql);
@@ -121,7 +87,7 @@ if(isset($newMessagesOn)){
         //check if dialoge exists
         if($("#test_<?=str_replace(" ","_",$newMessageUserData['username']);?>").length == 0){
         	
-        	openChatDialoge('<?=str_replace(" ","_",$newMessageUserData['username']);?>')	
+        	im.openDialogue('<?=str_replace(" ","_",$newMessageUserData['username']);?>')	
         }
        $("#chatInput_<?=$newMessageUserData['userid'];?>").click( function(){
            $('#loader').load("doit.php?action=updateMessageStatus&buddy=<?=$newMessageUserData['userid'];?>");
@@ -145,11 +111,7 @@ if(isset($newMessagesOn)){
 <?php }
 
 
-$personalEventSql = mysql_query("SELECT * FROM personalEvents WHERE owner='$_SESSION[userid]' AND seen='0'");
-$personalEvents = mysql_num_rows($personalEventSql);
-
-
-if(!empty($newMessages) OR !empty($newFriends) OR !empty($newGroup) OR !empty($personalEvents)){
+if(!empty($newMessages) OR !empty($newFriends) OR !empty($newGroup)){
         echo"$('#personalFeed').load('personalFeed.php')";
 }else{
     echo "$('#newMessages').html('');";

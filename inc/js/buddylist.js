@@ -15,6 +15,7 @@
         
 
 var buddylist = new function(){
+    this.checksum;
     this.getBuddies = function(){
                                    var res;
 			  		$.ajax({
@@ -48,6 +49,19 @@ var buddylist = new function(){
 	});
 	return res;
     };
+    this.acceptBuddyRequest = function(buddy_id){
+        
+            var callback = function(){
+//                $('#profileWrap.group_'+group_id+' #joinButton .btn').hide();
+//                $('#favTab_Group').load('doit.php?action=showUserGroups');
+//                updateDashbox('group');
+                buddylist.reload();
+            };
+            api.query('api/buddies/acceptRequest/', { buddy_id : buddy_id}, callback);
+    };
+    this.denyBuddyRequest = function(user){
+        alert('needs to be written');
+    };
     this.removeBuddy = function(userid){
         var res;
 	$.ajax({
@@ -71,19 +85,23 @@ var buddylist = new function(){
         output += '<table width="100%" cellspacing="0">';
 
         var buddies = this.getBuddies();
+        var checksum = '';
         $.each(buddies, function(index, value){
+            checksum += value;
             var username = useridToUsername(value);
             output += "                <tr class=\"height60 greyHover\">";
             output += "	                 <td style=\"padding:0 10px; width: 43px;\">"+User.showPicture(value, undefined, 40)+"<\/td>";
-            output += "	                 <td><a href=\"#\" onclick=\"openChatDialoge('"+username+"');\">"+username+"<\/a><br><a href=\"#\" onclick=\"openChatDialoge('<?=$username;?>');\" class=\"realname\"><?=useridToRealname($buddy);?>&nbsp;<\/a><\/td>";
+            output += "	                 <td><a href=\"#\" onclick=\"im.openDialogue('"+username+"');\">"+username+"<\/a><br><a href=\"#\" onclick=\"im.openDialogue('<?=$username;?>');\" class=\"realname\"><?=useridToRealname($buddy);?>&nbsp;<\/a><\/td>";
             output += "	                 <td align=\"right\" style=\"padding: 0 10px;\">";
             output += "						    <a href=\"#\" onclick=\"showProfile('"+value+"'); return false\" title=\"open Profile\"><i class=\"glyphicon glyphicon-user\" style=\"font-size:12px\"><\/i><\/a>";
-            output += "						    <a href=\"#\" onclick=\"openChatDialoge('"+username+"'); return false\" title=\"write Message\"><i class=\"glyphicon glyphicon-envelope\" style=\"font-size:12px\"><\/i><\/a>";
-            output += "						    <a href=\"#\" onclick=\"openChatDialoge('"+username+"'); return false\" title=\"write Message\"><i class=\"glyphicon glyphicon-cog\" style=\"font-size:12px\"><\/i><\/a>";
+            output += "						    <a href=\"#\" onclick=\"im.openDialogue('"+username+"'); return false\" title=\"write Message\"><i class=\"glyphicon glyphicon-envelope\" style=\"font-size:12px\"><\/i><\/a>";
+            output += "						    <a href=\"#\" onclick=\"im.openDialogue('"+username+"'); return false\" title=\"write Message\"><i class=\"glyphicon glyphicon-cog\" style=\"font-size:12px\"><\/i><\/a>";
             output += "			<\/td>";
             output += "                <\/tr>";
         });
-
+        
+        //used in universe.reload()
+        this.checksum = hash.MD5(checksum);
 
         output += "</table>";
         return output;

@@ -123,6 +123,8 @@ include('classes/class_events.php');
 
 include('classes/class_tasks.php');
 
+include('classes/class_im.php');
+
 
 
 
