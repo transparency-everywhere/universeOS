@@ -182,6 +182,11 @@ class uff {
                 return true;
     }
     
+    
+    function getChecksum(){
+        return md5($this->show());
+    }
+    
     function show(){
                 
                 $fileId = $this->fileId;
@@ -197,9 +202,6 @@ class uff {
                 $uff->addChecksumToUffCookie($checksum);
                 return $return;
     }
-
-    
-
 }
 
 

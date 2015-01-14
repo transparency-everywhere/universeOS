@@ -2409,6 +2409,8 @@ else if($_GET['action'] == "loadUff"){
                 
             }
 else if($_GET['action'] == "writeUff"){
+    
+    error_reporting(E_ALL);
                 $id = save($_POST['id']);
                 $input = $_POST['input'];
                 $uff = new uff($id);

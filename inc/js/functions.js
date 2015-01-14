@@ -891,23 +891,40 @@ var universe = new function(){
     };
     this.reload = function(){
         //fetch request data like open filebrowsers & feeds
-        var requestData = {
-            request:{
-                0 : {
+        var requests = [];
+        
+                $.each(reader.uffChecksums,function(index, value){
+                    if(typeof(value) != 'undefined'){
+                        requests.push({
+                                                            action : 'UFF',
+                                                            subaction:'sync',
+                                                            data: {
+                                                                file_id:index,
+                                                                checksum:value
+                                                            }
+                        });
+                    }
+                });
+        
+        requests.push({
                     action:'buddylist',
                     subaction:'reload',
                     data: {
                         buddy_checksum: buddylist.checksum
                     }
-                },
-                1 : {
-                    action : 'IM',
-                    subaction:'sync',
-                    data: {
-                        last_message_received:im.lastMessageReceived
-                    }
-                }
+                });
+                
+                
+        requests.push({
+            action : 'IM',
+            subaction:'sync',
+            data: {
+                last_message_received:im.lastMessageReceived
             }
+        });
+                
+        var requestData = {
+            request:requests
         };
         
         var response = api.query('api/reload/', requestData);
@@ -969,6 +986,21 @@ var universe = new function(){
                 if(responseElement.subaction === 'sync'){
                     im.sync(responseElement.data);
                 }
+                break;
+            case 'UFF':
+                if(responseElement.subaction === 'sync'){
+                    if($('.uffViewer_'+responseElement.data['file_id']).length > 0){
+                            $('.uffViewer_'+responseElement.data['file_id']).html(function(){
+                                
+                                var caretPosition = getCaretPosition(this);
+                                
+                                $.get('doit.php?action=loadUff&id='+responseElement.data['file_id']+'&noJq=true', function(uffContent) {
+                                    $('.uffViewer_'+responseElement.data['file_id']).val(uffContent);
+                                });
+                                
+                            });
+                    }
+                };
                 break;
         };
     };
@@ -3291,10 +3323,7 @@ function initWysiwyg(id, readOnly){
 		                                        //if changed update file
 		                                        // ich muss ein lastudated feld zur db und eine javascript-lastupdated variable erstellen, um konflike zu vermiden
 		                                        var input = $('.uffViewer_'+id).val();
-		                                        $.post("doit.php?action=writeUff", {
-		                                            id:id,
-		                                            input:input
-		                                            });
+                                                        UFF.write(id, input);
 		                                    });
 		                        }
 		                    }
@@ -3312,15 +3341,11 @@ function initUffReader(id, content, readOnly){
 
     
     
-    
-var uffEditor = function(file_id, $selector){
-    this.init = function(){
-        
+var UFF = new function(){
+    this.write = function(file_id, input){
+       api.query('api/files/uff/write/', {file_id:file_id, input:input},function(){reader.uffChecksums[file_id] = hash.MD5(input);});
     };
-    this.updateFile = function(){
-        
-    };
-}    
+};
     
 //opens articles out of the universe wiki
 //located in reader cause it will be placed there in future

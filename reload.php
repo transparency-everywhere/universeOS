@@ -13,7 +13,7 @@ $userClass->updateActivity($userid);
 $time = time();
 
 //UFF Viewer
-        if(!empty($_SESSION['openUffs'])){
+        if(!empty($_SESSION['openUffs'])&&false){
             $openUffs = $_SESSION['openUffs'];
             $openUffs = explode(";", $_SESSION["openUffs"]);
             foreach($openUffs AS &$file){

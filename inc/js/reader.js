@@ -95,7 +95,6 @@ var reader = new function(){
         }
         
         reader.tabs.addTab(title, 'html', output, function(){
-            alert('asdasd');
             //onclose
             delete reader.uffChecksums[file_id];
         });
