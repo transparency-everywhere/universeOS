@@ -69,7 +69,7 @@ class fav {
                                                                     $output .= "<td onmouseup=\"showMenu(".$favFolderData['id'].")\"><a href=\"#\" onclick=\"$link\">".$favFolderData['name'].""."".$favFolderData['title']."/</a></td>";
                                         if($user == getUser()){
 
-                                        $output .= "<td align=\"right\"><a class=\"btn btn-mini\" onclick=\"fav.remove('$type', '$item')\"><i class=\"icon-remove\"></i></a></td>";
+                                        $output .= "<td align=\"right\"><a class=\"btn btn-mini\" onclick=\"fav.remove('$type', '$item')\"><i class=\"icon icon-minus\"></i></a></td>";
 
                                         }
 

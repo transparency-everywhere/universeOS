@@ -4807,7 +4807,7 @@ var formClass = new function(){
         if(advancedHTML.length > 0){
             html += '<table class="advanced">';
             html += advancedHTML;
-            html += '<tr><td colspan="3" align="center"><a href="#" class="toggle" onclick="formClass.toggleAdvanced();"><i class="glyphicon glyphicon-chevron-down""></i><i class="glyphicon glyphicon-chevron-up""></i></a></td></tr>';
+            html += '<tr><td colspan="3" align="center"><a href="#" class="toggle" onclick="formClass.toggleAdvanced();"><i class="icon icon-chevron-down""></i><i class="icon icon-chevron-up""></i></a></td></tr>';
             html += '</table>';
         }
         html +=  '<h1>' + options['headline'] + '</h1>';
@@ -4872,10 +4872,10 @@ var formClass = new function(){
             var actionHTML = '';
             
             if(typeof actions['update'] !== 'undefined'){
-                actionHTML += '<a href="#" class="btn btn-default" onclick="'+actions['update']['onclick']+'('+value+')'+'"><span class="glyphicon glyphicon-pencil"></span></a>';
+                actionHTML += '<a href="#" class="btn btn-default" onclick="'+actions['update']['onclick']+'('+value+')'+'"><span class="icon icon-pencil"></span></a>';
             }
             if(typeof actions['delete'] !== 'undefined'){
-                actionHTML += '<a href="#" class="btn btn-default" onclick="'+actions['delete']['onclick']+'('+value+')'+'"><span class="glyphicon glyphicon-remove-circle"></span></a>';
+                actionHTML += '<a href="#" class="btn btn-default" onclick="'+actions['delete']['onclick']+'('+value+')'+'"><span class="icon icon-remove-circle"></span></a>';
             }
             if(actionHTML.length > 0){
                 actionHTML = '<div class="btn-group">'+actionHTML+'</div>';
@@ -4950,7 +4950,7 @@ var formClass = new function(){
         var fileArray = explode(',', fileStr);
         $.each(fileArray, function(key, value){
             if(value){
-                html += '<li class="file_'+value+'">'+files.idToTitle(value)+'<a href="#" class="btn btn-default" onclick="formClass.removeFileFromGallery('+value+', \''+fieldName+'\');"><span class="glyphicon glyphicon-remove-circle"></span></a></li>';
+                html += '<li class="file_'+value+'">'+files.idToTitle(value)+'<a href="#" class="btn btn-default" onclick="formClass.removeFileFromGallery('+value+', \''+fieldName+'\');"><span class="icon icon-minus"></span></a></li>';
             }});
         html += '</ul>';
         return html;

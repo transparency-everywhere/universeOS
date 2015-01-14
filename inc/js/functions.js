@@ -391,7 +391,7 @@ var gui = new function(){
         if(advancedHTML.length > 0){
             html += '<hr>';
             html += '<table class="advanced">';
-            html += '<tr><td colspan="3"><a href="#" class="toggle" onclick="gui.toggleAdvanced();" style="font-size: 20px;">Advanced Settings&nbsp;<i class="glyphicon glyphicon-chevron-down""></i><i class="glyphicon glyphicon-chevron-up""></i></a></td></tr>';
+            html += '<tr><td colspan="3"><a href="#" class="toggle" onclick="gui.toggleAdvanced();" style="font-size: 20px;">Advanced Settings&nbsp;<i class="icon icon-chevron-down""></i><i class="icon icon-chevron-up""></i></a></td></tr>';
             
             html += advancedHTML;
             html += '</table>';
@@ -469,10 +469,10 @@ var gui = new function(){
             var actionHTML = '';
             
             if(typeof actions['update'] !== 'undefined'){
-                actionHTML += '<a href="#" class="btn btn-default" onclick="'+actions['update']['onclick']+'('+value+')'+'"><span class="glyphicon glyphicon-pencil"></span></a>';
+                actionHTML += '<a href="#" class="btn btn-default" onclick="'+actions['update']['onclick']+'('+value+')'+'"><span class="icon icon-pencil"></span></a>';
             }
             if(typeof actions['delete'] !== 'undefined'){
-                actionHTML += '<a href="#" class="btn btn-default" onclick="'+actions['delete']['onclick']+'('+value+')'+'"><span class="glyphicon glyphicon-remove-circle"></span></a>';
+                actionHTML += '<a href="#" class="btn btn-default" onclick="'+actions['delete']['onclick']+'('+value+')'+'"><span class="icon icon-minus"></span></a>';
             }
             if(actionHTML.length > 0){
                 actionHTML = '<div class="btn-group">'+actionHTML+'</div>';
@@ -673,7 +673,7 @@ var gui = new function(){
         html += "    <div class=\"pull-right action-buttons\">";
         html += "        <div class=\"btn-group pull-right\">";
         html += "            <button type=\"button\" class=\"btn btn-default btn-xs dropdown-toggle\" data-toggle=\"dropdown\">";
-        html += "                <span class=\"glyphicon glyphicon-cog\" style=\"margin-right: 0px;\"><\/span>";
+        html += "                <span class=\"icon icon-cog\" style=\"margin-right: 0px;\"><\/span>";
         html += "            <\/button>";
 
         if((typeof actions['add'] !== 'undefined') ||(typeof actions[0] !== 'undefined')){
@@ -681,10 +681,10 @@ var gui = new function(){
             if(typeof actions[0] === 'object'){
                 $.each(actions, function(index, value){
                    
-                   html += "<li><a href=\"#\" onclick=\""+value['onclick']+"\"><span class=\"glyphicon glyphicon-pencil\"><\/span>"+value['caption']+"\<\/a><\/li>";
+                   html += "<li><a href=\"#\" onclick=\""+value['onclick']+"\"><span class=\"icon icon-pencil\"><\/span>"+value['caption']+"\<\/a><\/li>";
                 });
             }else{
-                html += "<li><a href=\"#\" onclick=\""+actions['add']['onclick']+"\"><span class=\"glyphicon glyphicon-pencil\"><\/span>"+actions['add']['caption']+"\<\/a><\/li>";
+                html += "<li><a href=\"#\" onclick=\""+actions['add']['onclick']+"\"><span class=\"icon icon-pencil\"><\/span>"+actions['add']['caption']+"\<\/a><\/li>";
             }
             html += "<\/ul>";
         }
@@ -713,10 +713,10 @@ var gui = new function(){
             var itemStyle = '';
             
             if(typeof actions['update'] !== 'undefined'){
-                actionHTML += '<a href="#" onclick="'+actions['update']['onclick']+'('+value+')'+'"><span class="glyphicon glyphicon-pencil"></span></a>';
+                actionHTML += '<a href="#" onclick="'+actions['update']['onclick']+'('+value+')'+'"><span class="icon icon-pencil"></span></a>';
             }
             if(typeof actions['delete'] !== 'undefined'){
-                actionHTML += '<a href="#" onclick="'+actions['delete']['onclick']+'('+value+')'+'"><span class="glyphicon glyphicon-remove-circle"></span></a>';
+                actionHTML += '<a href="#" onclick="'+actions['delete']['onclick']+'('+value+')'+'"><span class="icon icon-minus"></span></a>';
             }
             if(actionHTML.length > 0){
                 actionHTML = actionHTML+'';
@@ -835,7 +835,7 @@ var gui = new function(){
         var fileArray = explode(',', fileStr);
         $.each(fileArray, function(key, value){
             if(value){
-                html += '<li class="file_'+value+'">'+files.idToTitle(value)+'<a href="#" class="btn btn-default" onclick="gui.removeFileFromGallery('+value+', \''+fieldName+'\');"><span class="glyphicon glyphicon-remove-circle"></span></a></li>';
+                html += '<li class="file_'+value+'">'+files.idToTitle(value)+'<a href="#" class="btn btn-default" onclick="gui.removeFileFromGallery('+value+', \''+fieldName+'\');"><span class="icon icon-minus"></span></a></li>';
             }});
         html += '</ul>';
         return html;
@@ -1047,14 +1047,14 @@ var applications = new function(){
         app['position'] = {width: 5, height:  4, top: 0, left: 4, hidden: true};
         apps[0] = app;
         
-        //filesystem
-        var app = [];
-        app['title'] = 'filesystem';
-        app['source'] = 'filesystem.js';
-        app['className'] = 'filesystem'; // name of the the javascript class object
-        app['active'] = true;
-        app['position'] = {width: 6, height:  5, top: 0, left: 3};
-        apps[1] = app;
+//        //filesystem
+//        var app = [];
+//        app['title'] = 'filesystem';
+//        app['source'] = 'filesystem.js';
+//        app['className'] = 'filesystem'; // name of the the javascript class object
+//        app['active'] = true;
+//        app['position'] = {width: 6, height:  5, top: 0, left: 3};
+//        apps[1] = app;
         
         
         
@@ -1115,6 +1115,7 @@ var applications = new function(){
         var sessionApplications = this.getList();
         
         $.each(sessionApplications, function(index, value){
+            if(value)
             if(value['source']){
                 gui.loadScript('inc/js/'+value['source']);
                 if(value['active']){
@@ -2481,7 +2482,7 @@ var Feed = function(type, $selector){
                 
                 output += item.showItemSettings('feed', feedData['id']);
                 
-                output += '<a href="javascript:comments.loadFeedComments(\''+feedData['id']+'\');" class="btn btn-mini" style="color: #dcdcdc"><i class="glyphicon glyphicon-comment"></i></a>';
+                output += '<a href="javascript:comments.loadFeedComments(\''+feedData['id']+'\');" class="btn btn-mini" style="color: #dcdcdc"><i class="icon icon-comment"></i></a>';
              
              output += '</div>';
              output += '<div class="commentLoadingArea" id="feed'+feedData['id']+'" style="display:none;"></div>';

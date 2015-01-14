@@ -131,7 +131,7 @@ function showComments($type, $itemid) {
                 </div>
             </div>
             <a href="javascript:showSubComment(<?=$jsId;?>);" class="btn btn-mini" style="float: right; margin-right: 30px; color: #606060;">
-                <i class="glyphicon glyphicon-comment"></i>
+                <i class="icon icon-comment"></i>
             </a>
         </div>
         <div class="shadow subComment" id="comment<?=$jsId;?>" style="display: none;"></div>

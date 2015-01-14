@@ -542,7 +542,7 @@ class contextMenu{
 				if(true){
 					
 			        $return = "
-			        <a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"btn btn-mini itemSettingsButton\"><i class=\"glyphicon glyphicon-cog\"></i></a>
+			        <a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"btn btn-mini itemSettingsButton\"><i class=\"icon icon-gear\"></i></a>
 			        <div class=\"itemSettingsWindow\">
 			            <ul>
 			                $list

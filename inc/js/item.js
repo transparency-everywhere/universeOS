@@ -52,9 +52,9 @@ var item = new function(){
         var score = this.getScore(type, itemId);
         
         
-        var output = '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+type+'\', \''+itemId+'\');"><i class="glyphicon glyphicon-thumbs-down"></i></a>';
+        var output = '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+type+'\', \''+itemId+'\');"><i class="icon icon-dislike"></i></a>';
             output += '<a class="btn btn-xs btn-success counter" href="#">'+score+'</a>';
-            output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+type+'\', \''+itemId+'\');"><i class="glyphicon glyphicon-thumbs-up"></i></a>';
+            output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+type+'\', \''+itemId+'\');"><i class="icon icon-like"></i></a>';
         return output;
     };
     
@@ -94,7 +94,7 @@ var item = new function(){
 					
 				});
 					
-			        var html = "<a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"btn btn-mini itemSettingsButton\"><i class=\"glyphicon glyphicon-cog\"></i></a>\n\
+			        var html = "<a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"btn btn-mini itemSettingsButton\"><i class=\"icon icon-gear\"></i></a>\n\
                                         <div class=\"itemSettingsWindow\">\n\
                                             <ul>";
                                     html += list;
