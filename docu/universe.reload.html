@@ -1,0 +1,50 @@
+<h4>
+    universe.reload()
+</h4>
+        <div>
+            <table>
+                <tr>
+                    <td>Action</td>
+                    <td>Subaction</td>
+                    <td>Data request</td>
+                    <td>Data response</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Buddylist</td>
+                    <td>request</td>
+                    <td></td>
+                    <td>userid</td>
+                    <td>Will be added to response, if buddyrequest is available.<br>No request needed.</td>
+                </tr>
+                <tr>
+                    <td>Buddylist</td>
+                    <td>reload</td>
+                    <td>buddy_checksum</td>
+                    <td></td>
+                    <td>Compares buddy_checksum and checks if buddylist needs to be reloaded.<br>Only data in request required and no data needed in response</td>
+                </tr>
+                <tr class="firstRowOfType">
+                    <td>Groups</td>
+                    <td>openRequest</td>
+                    <td></td>
+                    <td>group_id<br>author(userid of the user who sended the request)</td>
+                    <td>Will be added to response, if buddyrequest is available.<br>No request needed.</td>
+                </tr>
+                <tr>
+                    <td>IM</td>
+                    <td>sync</td>
+                    <td>last_message_received</td>
+                    <td>for each message between client.last_message_received - client.highest id:<br>
+                        id(message_id),<br>receiver<br>sender</td>
+                    <td>Will be added to request if IM is active<br>Will be added to response if client last_message_received != last_message_received in the db</td>
+                </tr>
+                <tr>
+                    <td>UFF</td>
+                    <td>sync</td>
+                    <td>file_id (file_id of UFF file)<br>checksum (client checksum of UFF file)</td>
+                    <td>file_id<br>content</td>
+                    <td>Will be added to request if UFF file is open<br>Will be added to response if response.checksum != file checksum</td>
+                </tr>
+            </table>
+        </div>

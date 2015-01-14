@@ -12,7 +12,9 @@ Recent:
 			+signatures
 			+salts
 			
-		
+		_____
+                    ALTER TABLE  `buddylist` ADD PRIMARY KEY (  `owner` ,  `buddy` ) ;
+
 		UPDATE userpw cypher sha512(md5(pass)+username)
 		
 		Add standard rsa private and public key? 
