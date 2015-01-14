@@ -22,5 +22,5 @@ include('../../../../inc/functions.php');
 $type = $_POST['type'];
 $typeid = $_POST['item'];//
 $item = new item($type, $typeid);
-$item->plusOne();
+echo $item->plusOne();
 ?>

@@ -76,7 +76,7 @@ var filesystem =  new function() {
             if(proofLogin()){
                 html += '        			<li><a href="#" onclick="fav.add(\'folder\', ' + folderId + '">Fav</a></li>';
             }		  			
-            if(privacy.authorize()(folderData['privacy'], folderData['creator']){
+            if(privacy.authorize(folderData['privacy'], folderData['creator'])){
                 html += '        		<li><a href="#" onclick="javascript: popper(\'doit.php?action=addElement&folder=' + folderId + '&reload=1\');return false">Add Element</a></li>';
                 html += '                       <li><a href="#" onclick="javascript: folders.showCreateFolderForm(' + folderId + ');return false">Add Folder</a></li>';
                 html += '        		<li><a href="#" onclick="javascript: popper(\'doit.php?action=addInternLink&parentFolder=' + folderId + '&reload=1\');return false">Add Shortcut</a></li>';

@@ -22,8 +22,9 @@ var item = new function(){
               type: "POST",
               data: {type: type, item:itemId},
               async: false,
-              success: function(data) {
-                $('.score'+type+itemId).load('doit.php?action=showScore&type='+type+'&typeid='+itemId+'');
+              success: function(data){
+                  
+                $('span.scoreButton.'+type+'_'+itemId+' .counter').html(data);
               }
         });
         
@@ -35,7 +36,8 @@ var item = new function(){
               data: {type: type, item:itemId},
               async: false,
               success: function(data) {
-                $('.score'+type+itemId).load('doit.php?action=showScore&type='+type+'&typeid='+itemId+'');
+                  
+                $('span.scoreButton.'+type+'_'+itemId+' .counter').html(data);
               }
         });
     };
@@ -52,9 +54,11 @@ var item = new function(){
         var score = this.getScore(type, itemId);
         
         
-        var output = '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+type+'\', \''+itemId+'\');"><i class="icon icon-dislike"></i></a>';
-            output += '<a class="btn btn-xs btn-success counter" href="#">'+score+'</a>';
-            output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+type+'\', \''+itemId+'\');"><i class="icon icon-like"></i></a>';
+        var output = '<span class="scoreButton '+type+'_'+itemId+'">';
+                output += '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+type+'\', \''+itemId+'\');"><i class="icon icon-dislike"></i></a>';
+                output += '<a class="btn btn-xs btn-success counter" href="#">'+score+'</a>';
+                output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+type+'\', \''+itemId+'\');"><i class="icon icon-like"></i></a>';
+            output += '</span>';
         return output;
     };
     

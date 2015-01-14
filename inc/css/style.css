@@ -115,6 +115,13 @@ h3{
     top: 5px;
     
 }
+
+.windowMenu .icon{
+   width: 20px;
+height: 20px;
+}
+
+
 .footer {
     margin-bottom: 0px;
 }
@@ -816,8 +823,12 @@ border-bottom: 1px solid #292929;
     
 }
 
-.feedEntry .feedAttachment, .feedEntry .options, .feedEntry .commentLoadingArea{
+.feedEntry .feedAttachment, .feedEntry .options, .feedEntry .commentLoadingArea, .feedEntry .feedContent{
     padding: 15px;
+}
+
+.feedEntry .options>a>.icon {
+    margin-top: 5px;
 }
 
 
@@ -1382,8 +1393,8 @@ color:#FFFFFF;
 
 .icon{
     display: inline-block;
-    width: 12px;
-    height: 12px;
+    width: 15px;
+    height: 15px;
     background-size: 100%;
 }
 
@@ -1972,23 +1983,23 @@ font-weight:bold;
 	cursor:pointer;
 }
 
-.scoreCase{
-   height: 17px;
-   overflow: none;
-   font-size: 12px;
-   padding-top: 3px;
-   padding-right: 3px;
-   padding-bottom: 0px;
-   padding-left: 3px;
-   -webkit-border-radius: 3px;
-   -moz-border-radius: 3px;
-   border-radius: 3px;
-   width: 35px;
+.scoreButton{
+    margin-left:-7px;
 }
 
-.scoreCase:hover{
-   font-size: 12px;
+.scoreButton .icon{
+    width: 15px;
+    height: 15px;
+    margin-top: 5px;
 }
+
+.scoreButton .counter{
+width: 22px;
+border: 1px solid #dcdcdc;
+border-radius: 0;
+line-height: 14px;
+}
+
 
 .itemSettingsButton{
    height: 17px;

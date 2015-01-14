@@ -1047,14 +1047,14 @@ var applications = new function(){
         app['position'] = {width: 5, height:  4, top: 0, left: 4, hidden: true};
         apps[0] = app;
         
-//        //filesystem
-//        var app = [];
-//        app['title'] = 'filesystem';
-//        app['source'] = 'filesystem.js';
-//        app['className'] = 'filesystem'; // name of the the javascript class object
-//        app['active'] = true;
-//        app['position'] = {width: 6, height:  5, top: 0, left: 3};
-//        apps[1] = app;
+        //filesystem
+        var app = [];
+        app['title'] = 'filesystem';
+        app['source'] = 'filesystem.js';
+        app['className'] = 'filesystem'; // name of the the javascript class object
+        app['active'] = true;
+        app['position'] = {width: 6, height:  5, top: 0, left: 3};
+        apps[1] = app;
         
         
         
@@ -1251,8 +1251,9 @@ var application = function(id){
 			output += '<header class="titel">';
 			output += '<p>'+title+'&nbsp;</p>';
 			output += '<p class="windowMenu">';
-				output += '<a href="javascript:'+id+'.applicationVar.hide();"><img src="./gfx/icons/close.png" width="16"></a>';
-				output += '<a href="#" onclick="'+id+'.applicationVar.fullscreen();" class="fullScreenIcon"><img src="./gfx/icons/fullScreen.png" width="16"></a>';
+				output += '<a href="javascript:'+id+'.applicationVar.hide();"><span class="icon icon-minimize"></span></a>';
+				output += '<a href="#" onclick="'+id+'.applicationVar.fullscreen();" class="fullScreenIcon"><span class="icon icon-maximize"></span></a>';
+                                output += '<a href="#"><span class="icon icon-close"></span></a>'
 			output += '</p>';
 		output += '</header>';
 		output += '<div class="inhalt autoflow" id="'+id+'Main">'+content+'</div>';
@@ -1673,7 +1674,7 @@ var User = new function(){
             var size = 20;
         }
         
-        var radius = radius/2;
+        var radius = size/2;
 
         var ret;
         ret = '<div class="userPicture userPicture_'+userid+'" style="background: url(\''+userpicture+'\'); '+User.getBorder(lastActivity)+'; width: '+size+'px;height:  '+size+'px;background-size: 100%;border-radius:'+radius+'px"></div>';

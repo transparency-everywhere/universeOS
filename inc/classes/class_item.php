@@ -49,10 +49,14 @@ class item {
            //score++
            $db = new db();
            mysql_query("UPDATE `$tableName` SET votes = votes + 1, score = score + 1 WHERE id='$typeid'");
+           return $this->getScore();
            }
     function minusOne(){
 
-                     if($type == "comment"){
+           $type = $this->type;
+           $typeid = $this->typeid;
+           
+           if($type == "comment"){
                $tableName = 'comments';
            }else if($type == "feed"){
                $tableName = 'feed';
@@ -78,6 +82,8 @@ class item {
            //score--
            $db = new db();
            mysql_query("UPDATE `$tableName` SET votes = votes + 1, score = score - 1 WHERE id='$typeid'");
+           
+           return $this->getScore();
            }
 
     function getScore(){
