@@ -93,9 +93,9 @@ var buddylist = new function(){
             output += "	                 <td style=\"padding:0 10px; width: 43px;\">"+User.showPicture(value, undefined, 40)+"<\/td>";
             output += "	                 <td><a href=\"#\" onclick=\"im.openDialogue('"+username+"');\">"+username+"<\/a><br><a href=\"#\" onclick=\"im.openDialogue('<?=$username;?>');\" class=\"realname\"><?=useridToRealname($buddy);?>&nbsp;<\/a><\/td>";
             output += "	                 <td align=\"right\" style=\"padding: 0 10px;\">";
-            output += "						    <a href=\"#\" onclick=\"showProfile('"+value+"'); return false\" title=\"open Profile\"><i class=\"glyphicon glyphicon-user\" style=\"font-size:12px\"><\/i><\/a>";
-            output += "						    <a href=\"#\" onclick=\"im.openDialogue('"+username+"'); return false\" title=\"write Message\"><i class=\"glyphicon glyphicon-envelope\" style=\"font-size:12px\"><\/i><\/a>";
-            output += "						    <a href=\"#\" onclick=\"im.openDialogue('"+username+"'); return false\" title=\"write Message\"><i class=\"glyphicon glyphicon-cog\" style=\"font-size:12px\"><\/i><\/a>";
+            output += "						    <a href=\"#\" onclick=\"showProfile('"+value+"'); return false\" title=\"open Profile\"><span class=\"icon icon-user\"><\/span><\/a>";
+            output += "						    <a href=\"#\" onclick=\"im.openDialogue('"+username+"'); return false\" title=\"write Message\"><span class=\"icon icon-envelope\"><\/span><\/a>";
+            output += "						    <a href=\"#\" onclick=\"im.openDialogue('"+username+"'); return false\" title=\"write Message\"><span class=\"icon icon-gear\"><\/spant><\/a>";
             output += "			<\/td>";
             output += "                <\/tr>";
         });
