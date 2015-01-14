@@ -11,7 +11,7 @@
 //        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //        See the License for the specific language governing permissions and
 //        limitations under the License.
-//        @author nicZem for Tranpanrency - everywhere.com
+//        @author nicZem for transparency-everywhere.com
 
 
 var filesystem =  new function() {
@@ -24,12 +24,94 @@ var filesystem =  new function() {
         this.applicationVar = new application('filesystem');
         this.applicationVar.create('Filesystem', 'html', html,{width: 6, height:  5, top: 0, left: 3});
 			  			
+        html = '          <div class="leftNav">';		  			
+        html += '              <ul>';		  			
+        html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,gui.loadPage(\'modules/filesystem/fileBrowser.php?special=pupularity&reload=1\'));return false"><img src="gfx/icons/filesystem/side_suggestions.png"> Suggestions</a></li>';		  			
+        html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,gui.loadPage(\'modules/filesystem/fileBrowser.php?reload=1\'));return false"><img src="gfx/icons/filesystem/side_allFiles.png"> All Files</a></li>';		  			
+        html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,gui.loadPage(\'modules/filesystem/fileBrowser.php?special=document&reload=1\'));return false"><img src="gfx/icons/filesystem/side_documents.png"> Documents</a></li>';		  			
+        html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,gui.loadPage(\'modules/filesystem/fileBrowser.php?special=audio&reload=1\'));return false"><img src="gfx/icons/filesystem/side_audio.png"> Audio Files</a></li>';		  			
+        html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,gui.loadPage(\'modules/filesystem/fileBrowser.php?special=video&reload=1\'));return false"><img src="gfx/icons/filesystem/side_video.png"> Video Files</a></li>';		  			
+        if(proofLogin()){
+            html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,gui.loadPage(\'modules/filesystem/fileBrowser.php?special=fav&reload=1\'));return false"><img src="gfx/icons/filesystem/side_fav.png"> Fav</a></li>';		  			
+        }
+        html += '                  <!-- <li><i class="icon-warning-sign"></i> deleted</li> -->';		  			
+        html += '              </ul>';		  			
+        html += '          </div>';		  			
+        html += '';		  			
+        html += '';
         
 	this.tabs = new tabs('#fileBrowserFrame');
         this.tabs.init();
 	this.tabs.addTab('universe', '',gui.loadPage('modules/filesystem/fileBrowser.php'));
 			  	
     };
+    this.generateFileBrowser = function(folderId){
+        if(empty(folderId) || folderId === 0){
+            folderId = '1';
+        }else if(folderId === '2'){
+            if(proofLogin()){
+                var homefolder = User.getAllData(User.userid)['homefolder'];
+                var showFileBrowser = true;
+            }else{
+                var showFileBrowser = false;
+            }
+        }
+        var folderData = folders.getData(folderId);
+        if(folderData['folder'] === 2){
+            folderData['folder'] = "1";
+        }
+        
+        		  			
+        html = '<div class="frameRight fileBrowser_' + folderId + '">';		  			
+        html += '    <div class="path">';		  			
+        html += '         universe/' + folders.getPath(folderId);
+        if(proofLogin() && !empty(folderId)){
+            html += '         <a href=\"#\" id=\"settingsButton\" onclick=\"$(\'.fileBrowserSettings' + folderId + '\').slideToggle(\'slow\'); return false\" title=\"more...\" class=\"btn btn-mini\"><i class=\"glyphicon glyphicon-cog\"></i></a>';
+        }		  			
+        html += '    </div>';		  			
+        html += '    <div class="underFrame" style="overflow: none;">';		  			
+        html += '        <div class="fileBrowser">';		  			
+        if(!empty(folderId)){
+            html += '        	<ul class="fileBrowserSettings fileBrowserSettings' + folderId + '">';		  			
+            if(proofLogin()){
+                html += '        			<li><a href="#" onclick="fav.add(\'folder\', ' + folderId + '">Fav</a></li>';
+            }		  			
+            if(privacy.authorize()(folderData['privacy'], folderData['creator']){
+                html += '        		<li><a href="#" onclick="javascript: popper(\'doit.php?action=addElement&folder=' + folderId + '&reload=1\');return false">Add Element</a></li>';
+                html += '                       <li><a href="#" onclick="javascript: folders.showCreateFolderForm(' + folderId + ');return false">Add Folder</a></li>';
+                html += '        		<li><a href="#" onclick="javascript: popper(\'doit.php?action=addInternLink&parentFolder=' + folderId + '&reload=1\');return false">Add Shortcut</a></li>';
+            }		  			
+            html += '        	</ul>';
+        }		  			
+//bis hierher gekommen, mittwoch ab hier weitermachen mit den zeilen ausm comment weiter unten
+        html += '';		  			
+        html += '';		  			
+        html += '';		  			
+        html += '';		  			
+        html += '';		  			
+        html += '';      
+        
+    };
+    
+    			
+//				if($showFileBrowser){
+//                                    $fileSystem = new fileSystem();
+//                                    $fileSystem->showFileBrowser($folder, $folderQuery, $elementQuery);
+//				}
+//
+//				if($fav){
+//                                        $favClass = new fav();
+//					echo'<table width="100%">';
+//					echo $favClass->show(getUser());
+//					echo'</table>';
+//				}
+//				
+//				
+//                ?>
+//        </div>
+//    </div>
+//    </div>
+    
     this.openShareModal = function(type, typeId){
               		
               		var title;
