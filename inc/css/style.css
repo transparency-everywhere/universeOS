@@ -1380,6 +1380,13 @@ color:#FFFFFF;
 }
 
 
+.icon{
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background-size: 100%;
+}
+
 
 
 /* Resizeable */
