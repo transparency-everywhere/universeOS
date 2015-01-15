@@ -69,7 +69,7 @@ $folder = $_GET[folder];
 			?>
 		</div>
 		<footer>
-			<a href="#" onclick="$('#uploadStepOne').hide(); $('#uploadStepTwo').show(); initUploadify('#uploader_file', 'doit.php?action=manageUpload&type=uploadTemp', $('.choosenTypeId').val(), '<?=$timeStamp;?>', '<?=$salt;?>'); privacy.init();" class="btn btn-mini pull-right">Next</a>
+			<a href="#" onclick="$('#uploadStepOne').hide(); $('#uploadStepTwo').show(); initUploadify('#uploader_file', 'doit.php?action=manageUpload&type=uploadTemp', $('.choosenTypeId').val(), '<?=$timeStamp;?>', '<?=$salt;?>'); privacy.init();" class="btn btn-xs pull-right">Next</a>
 		</footer>
 	</div>
 	<div id="uploadStepTwo" class="uploadStep step">
@@ -88,8 +88,8 @@ $folder = $_GET[folder];
 			?>
 		</div>
 		<footer>
-			<a href="#" onclick="$('#uploadStepTwo').hide(); $('#uploadStepOne').show();" class="btn btn-mini pull-Left">Back</a>
-			<a href="#" onclick="$('#uploadStepTwo').hide(); $('#uploadStepThree').show();" class="btn btn-mini pull-right">Next</a>
+			<a href="#" onclick="$('#uploadStepTwo').hide(); $('#uploadStepOne').show();" class="btn btn-xs pull-Left">Back</a>
+			<a href="#" onclick="$('#uploadStepTwo').hide(); $('#uploadStepThree').show();" class="btn btn-xs pull-right">Next</a>
 		</footer>
 	</div>
 	<div id="uploadStepThree" class="uploadStep step">
@@ -105,8 +105,8 @@ $folder = $_GET[folder];
 		    </div>
 		</div>
 		<footer>
-			<a href="#" onclick="$('#uploadStepThree').hide(); $('#uploadStepTwo').show();" class="btn btn-mini pull-left">Back</a>
-			<input type="submit" value="Add Files to the Filesystem" class="btn btn-mini btn-success pull-right">
+			<a href="#" onclick="$('#uploadStepThree').hide(); $('#uploadStepTwo').show();" class="btn btn-xs pull-left">Back</a>
+			<input type="submit" value="Add Files to the Filesystem" class="btn btn-xs btn-success pull-right">
 		</footer>
 	</div>
 </div>

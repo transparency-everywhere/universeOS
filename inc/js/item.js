@@ -98,7 +98,7 @@ var item = new function(){
 					
 				});
 					
-			        var html = "<a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"btn btn-mini itemSettingsButton\"><i class=\"icon icon-gear\"></i></a>\n\
+			        var html = "<a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"btn btn-xs itemSettingsButton\"><i class=\"icon icon-gear\"></i></a>\n\
                                         <div class=\"itemSettingsWindow\">\n\
                                             <ul>";
                                     html += list;

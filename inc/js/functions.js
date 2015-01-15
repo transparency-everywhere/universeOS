@@ -211,11 +211,15 @@ var init = new function(){
 		
 		dashBoard.init();
 		//fade in applications
-      $("#filesystem:hidden").fadeIn(3000);
-      $("#buddylist:hidden").fadeIn(3000);
-      
-      $("#feed:hidden").fadeIn(3000);
-      $("#chat:hidden").fadeIn(3000);
+                $("#filesystem:hidden").fadeIn(3000);
+                $("#buddylist:hidden").fadeIn(3000);
+
+                $("#feed:hidden").fadeIn(3000);
+                $("#chat:hidden").fadeIn(3000);
+                
+                $('*').on('scroll',function(){
+                 $('.itemSettingsWindow, .rightClick').hide();
+                });
           
 	};
 	
@@ -1037,6 +1041,7 @@ var applications = new function(){
         
         var apps = [];
         
+        var standardIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAARNJREFUWMNjYBgFo2AUkAdEgTgTiKcC8RQgTgdiYXpYzAjEeUD8DYhfAfE2KH4DxJ+BOJXWDigD4t9AnA/ErEjibFC5v0CcTSvLVaCWJ+NRAwqdH0AsRwsHtALxVWg04ALMQHwPiGtp4YCdQDyZCHUxQBxECwccgYbCgAGQA1oGyvJIIP4IzWpviMB3gTiUWpazAPEXIJ4GjV9i8Eyog5mo4QAeIP4PxDZY5OyA2BqLuANUDwctHWAAFQdhrYFwgBIQ/wLin1gKHro4AAQWAvGcgYoCEDgMxPsG0gHrgHj1QDoAF6CJA+xI0OMM1cNOrUbIDWhNuIFIfB2IL1GzKJYH4k4gnkEk7gBi2dGW6ygYBcQAAHKhV6RVQmrvAAAAAElFTkSuQmCC';
         
         //reader
         var app = [];
@@ -1045,6 +1050,7 @@ var applications = new function(){
         app['className'] = 'reader'; // name of the the javascript class object
         app['active'] = true;
         app['position'] = {width: 5, height:  4, top: 0, left: 4, hidden: true};
+        app['icon'] = standardIcon;
         apps[0] = app;
         
         //filesystem
@@ -1054,6 +1060,7 @@ var applications = new function(){
         app['className'] = 'filesystem'; // name of the the javascript class object
         app['active'] = true;
         app['position'] = {width: 6, height:  5, top: 0, left: 3};
+        app['icon'] = standardIcon;
         apps[1] = app;
         
         
@@ -1067,6 +1074,7 @@ var applications = new function(){
             app['active'] = true;
             app['className'] = 'feed'; // name of the the javascript class object
             app['position'] = {width: 2, height:  5, top: 0, left: 0};
+            app['icon'] = standardIcon;
             apps[2] = app;
             
             //chat
@@ -1076,6 +1084,7 @@ var applications = new function(){
             app['className'] = 'chat'; // name of the the javascript class object
             app['active'] = true;
             app['position'] = {width: 2, height:  2, top: 0, left: 5};
+            app['icon'] = standardIcon;
             apps[3] = app;
 
             //settings
@@ -1085,6 +1094,7 @@ var applications = new function(){
             app['className'] = 'settings'; // name of the the javascript class object
             app['active'] = false;
             app['position'] = {width: 2, height:  5, top: 0, left: 0};
+            app['icon'] = standardIcon;
 
             apps[4] = app;
 
@@ -1095,6 +1105,7 @@ var applications = new function(){
             app['className'] = 'calendar'; // name of the the javascript class object
             app['active'] = false;
             app['position'] = {width: 2, height:  2, top: 0, left: 9};
+            app['icon'] = standardIcon;
             apps[5] = app;
 
 
@@ -1105,6 +1116,7 @@ var applications = new function(){
             app['source'] = 'buddylist.js';
             app['active'] = true;
             app['position'] = {width: 2, height:  5, top: 0, left: 9};
+            app['icon'] = standardIcon;
             apps[6] = app;
         }
         
@@ -1169,9 +1181,9 @@ var notification = function(options){
                 '+options.message+'\n\
             </div>\n\
             <div class="messageButton">\n\
-                <a href="#" onclick="'+options.acceptButton.action+'" class="btn btn-success btn-mini" style="margin-right:25px;">'+options.acceptButton.value+'</a>';
+                <a href="#" onclick="'+options.acceptButton.action+'" class="btn btn-success btn-xs" style="margin-right:25px;">'+options.acceptButton.value+'</a>';
             if(options.cancelButton){
-                html += '<a href="#" onclick="'+options.cancelButton.action+'" class="btn btn-default btn-mini" style="margin-right:25px;">'+options.cancelButton.value+'</a>';
+                html += '<a href="#" onclick="'+options.cancelButton.action+'" class="btn btn-default btn-xs" style="margin-right:25px;">'+options.cancelButton.value+'</a>';
             }
             html += '</div>\n\
         </li>';
@@ -2483,7 +2495,7 @@ var Feed = function(type, $selector){
                 
                 output += item.showItemSettings('feed', feedData['id']);
                 
-                output += '<a href="javascript:comments.loadFeedComments(\''+feedData['id']+'\');" class="btn btn-mini" style="color: #dcdcdc"><i class="icon icon-comment"></i></a>';
+                output += '<a href="javascript:comments.loadFeedComments(\''+feedData['id']+'\');" class="btn btn-xs" style="color: #dcdcdc"><i class="icon icon-comment"></i></a>';
              
              output += '</div>';
              output += '<div class="commentLoadingArea" id="feed'+feedData['id']+'" style="display:none;"></div>';
@@ -3398,6 +3410,15 @@ var dashBoard = new function(){
     				$('#dashBoard').css('top', '191px');
     		}
                 });
+                
+		var content = "<ul class=\"appList\">";
+                
+                $.each(applications.getList(),function(index,value){
+                    content+= "<li onclick=\""+value.className+".show()\" onmouseup=\"closeDockMenu()\"><img src=\""+value.icon+"\" border=\"0\" height=\"16\">"+value.title+"</li>";
+                });
+            
+                $('#dashBoard #scrollFrame').prepend(dashBoard.generateDashBox('Applications', content, '', 'appBox'));
+                
 	
 	};
 	

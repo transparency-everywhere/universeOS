@@ -2094,22 +2094,24 @@ margin-bottom: -5px;
 
 
 .rightclick, .itemSettingsWindow, .fileBrowserSettings{
-    background: #000000;
+    background: #FFFFFF;
     -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=85)";
     filter: alpha(opacity=85);
     -moz-opacity:0.85;
     -khtml-opacity: 0.85;
     opacity: 0.85;
+    
+    border: 1px 1px 0 1px solid #c9c9c9;
 }
 
 .itemSettingsWindow{
-    position: absolute;
+    position: fixed;
     min-width: 100px;
     color: #FFFFFF;
     z-index: 9999;
     display: none;
-    font-size:12pt;
-	text-align: left;
+    font-size: 12pt;
+    text-align: left;
 }
 
 .rightclick{
@@ -2125,11 +2127,15 @@ margin-bottom: -5px;
 	display: none;
 }
 
+.itemSettingsWindow ul, .rightclick ul{
+    margin-bottom: 0;
+}
+
 .itemSettingsWindow > ul > li, .rightclick > ul > li, .fileBrowserSettings > li{
         height: 22px;
         line-height: 20px;
-	border-bottom:1px solid rgb(53,53,53);
-	padding:2px;
+        border-bottom: 1px solid rgb(215, 215, 215);
+        padding: 2px;
 }
 
 .itemSettingsWindow > ul > li:hover, .rightclick > ul > li:hover, .fileBrowserSettings > li:hover{

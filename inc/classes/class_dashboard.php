@@ -81,8 +81,8 @@ class dashBoard{
 	    $content .= "</ul>";
 		
 		$output = $this->showDashBox($title, $content," ", "app", $grid);
-		
-		return $output;
+		//is deactivated, loaded threw js in dashboard.init()
+		//return $output;
 		
 	}
 	function showGroupBox($grid=true){
@@ -102,14 +102,12 @@ class dashBoard{
 			
 			$output .= "<ul class=\"\">";
 				foreach($groups AS $group){
-					$output .="<li>";
+					$output .="<li onclick=\"groups.show('$group');\">";
 						$output .="<span class=\"marginRight\">";
 							$output .="<img src=\"./gfx/icons/group.png\" height=\"14\">";
 						$output .="</span>";
 						$output .="<span>";
-							$output .="<a href=\"#\" onclick=\"groups.show('$group');\">";
 							$output .= $groupsClass->getGroupName($group);
-							$output .="</a>";
 						$output .="</span>";
 					$output .="</li>";
 					$i++;
