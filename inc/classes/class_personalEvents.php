@@ -17,6 +17,9 @@ class personalEvents{
                 function get(){
                     $personalEventSql = mysql_query("SELECT * FROM personalEvents WHERE owner='$_SESSION[userid]' AND seen='0'");
                     while($personalEventData = mysql_fetch_array($personalEventSql)){
+                        
+                        array('id'=>$personalEventData['id']);
+                        
                             $session .= "newPersonalEvent $personalEventData[id]";
                         $newEventSql2 = mysql_query("SELECT username FROM user WHERE userid='$personalEventData[user]'");
                         $newEventData2 = mysql_fetch_array($newEventSql2);
