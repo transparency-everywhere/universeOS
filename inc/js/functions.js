@@ -926,6 +926,19 @@ var universe = new function(){
                 last_message_received:im.lastMessageReceived
             }
         });
+        
+        var feedsArray = [];
+       $('.feedFrame').each( function(){
+            console.log('aaaaaaaa');
+            feedsArray.push({'type':$(this).data('type'),'last_feed_received':$(this).data('last')});
+        });
+        
+        requests.push({
+            action : 'feed',
+            subcation: 'sync',
+            data:feedsArray
+        });
+        console.log('asdasd');
                 
         var requestData = {
             request:requests
@@ -1004,6 +1017,25 @@ var universe = new function(){
                                 
                             });
                     }
+                };
+            case 'notification':
+                if(responseElement.subaction === 'push'){
+                    var notificationId = this.notificationArray.length+1;
+                    this.notificationArray[notificationId]
+                            = new notification({
+                                                    message: User.showPicture(responseElement.data.user)+useridToUsername(responseElement.data.user)+responseElement.data.description,
+                                                    acceptButton:{
+                                                        action: responseElement.data.link.replace(/\\/g,''),
+                                                        value: 'show'
+                                                    },
+                                                    cancelButton:{
+                                                        action: '',
+                                                        value: 'ignore'
+                                                    }
+                                                });
+                    this.notificationArray[notificationId].push();
+                    
+                    
                 };
                 break;
         };
@@ -1155,7 +1187,6 @@ var notification = function(options){
     };
     this.push = function(){
         var note = this.generateNotification();
-        console.log('note'+note);
         $('#notifications>ul').append(note);
     };
     this.generateNotification = function(){
@@ -2459,24 +2490,34 @@ function universeText(string){
        
 var Feed = function(type, $selector){
     this.initType = type;
+    this.lastFeedReceived;
+    this.frame_id; //generate rand id
+    this.updateLastFeedReceived = function(feedId){
+        if(parseInt(feedId)>parseInt(this.last_feed_received)){
+            this.last_feed_received = feedId;
+            
+        }
+    };
     this.init = function(initType, initTypeId, limit){
-        var output = '';
+        this.frame_id = gui.generateId();
         
+        this.last_feed_received = 0;
+        var output = '';
         
         var pointer = this;
         var loadedFeeds = this.loadFeeds(initType, initTypeId, limit);
+        
         $.each(loadedFeeds,function(index, value){
             output += pointer.generateSingleFeed(value);
         });
         
-        console.log(output);
         
-        return output;
         
+        return '<div class="feedFrame" id="'+this.frame_id+'" data-type="'+this.initType+'" data-last="'+this.last_feed_received+'">'+output+'</div>';
         
     };
     this.generateSingleFeed = function(feedData){
-        
+        this.updateLastFeedReceived(parseInt(feedData['id']));
         var feedContent = '<div class="feedContent">'+feedData['feed']+'</div>';
                 if(feedData['type'] === 'showThumb'){
                     feedContent = '<div class="feedAttachment">'+item.showItemThumb(feedData['attachedItem'], feedData['attachedItemId'])+'</div>';

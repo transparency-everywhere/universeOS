@@ -24,20 +24,19 @@ function addComment($type, $itemid, $author, $message){
      $values['privacy'] = 'p';
      $commentId = $db->insert('comments', $values);
      
-	 $personalEvents = new personalEvents();
+	$personalEvents = new personalEvents();
      	if($type == "feed"){
                 $db = new db();
                 //fügt Benachrichtigung für den Author des Feeds hinzu, falls ein anderer User einen Kommentar erstellt
                 
-                $feedData = $db->select('userfeeds', array('feedid', $itemid));
-                if($_SESSION['userid'] !== $feedData['owner']){
-                    $personalEvents->create($feedData['owner'],$_SESSION['userid'],'comment','feed',$itemId);
+                $feedData = $db->select('feed', array('id', $itemid));
+                if(getUser() !== $feedData['author']){
+                    $personalEvents->create($feedData['author'],getUser(),'comment','feed',$itemid);
 		}
-	   }
-	   else if($type == "profile"){
-	   	
-         	$personalEvents->create($itemid,$_SESSION['userid'],'comment','profile',$itemId);
-       }
+	}
+	else if($type == "profile"){
+         	$personalEvents->create($itemid,getUser(),'comment','profile',$itemid);
+        }
    }
 
    

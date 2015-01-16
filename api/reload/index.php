@@ -58,6 +58,11 @@ function reload($requests){
                     }
                 }
                 break;
+            case 'feed':
+                if($request['subaction'] == 'sync'){
+                    
+                }
+                break;
         }
     }
     
@@ -77,6 +82,15 @@ function reload($requests){
             $userCounter++;
             $result[] = array('action'=>'buddylist','subaction'=>'openRequest','data'=>array('userid'=>$requestBuddyId));
         }
+    }
+    
+    
+    //other notifications
+    $personalEvents = new personalEvents();
+    $otherNotifications = $personalEvents->get();
+    
+    foreach($otherNotifications AS $otherNotification){
+        $result[] = $otherNotification;
     }
     
     return $result;
