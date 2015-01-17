@@ -928,17 +928,16 @@ var universe = new function(){
         });
         
         var feedsArray = [];
-       $('.feedFrame').each( function(){
+        $('.feedFrame').each( function(){
             console.log('aaaaaaaa');
-            feedsArray.push({'type':$(this).data('type'),'last_feed_received':$(this).data('last')});
+            feedsArray.push({'type':$(this).data('type'), 'last_feed_received':$(this).data('last')});
         });
         
         requests.push({
             action : 'feed',
-            subcation: 'sync',
+            subaction: 'sync',
             data:feedsArray
         });
-        console.log('asdasd');
                 
         var requestData = {
             request:requests

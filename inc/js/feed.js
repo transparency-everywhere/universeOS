@@ -15,6 +15,10 @@
         
 
 var feed = new function(){
+    this.reload = function(type){
+        
+    };
+    
     this.init = function(){
         
         var html = this.generateHeader();

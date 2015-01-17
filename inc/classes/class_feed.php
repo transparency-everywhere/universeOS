@@ -13,12 +13,20 @@
  */
 class feed {
     
+    
+    function getHighestId($type){
+        $where = $this->generateWhere($type, getUser(), '0,1');
+        
+        $db = new db();
+        $data=$db->query("SELECT `id` FROM feed $where");
+        return $data['id'];
+    }
     function getData($feedId){
         $db = new db();
         return $db->select('feed', array('id', $feedId));
     }
     
-    function load($type, $typeId=NULL, $limit=NULL){
+    function generateWhere($type, $typeId=NULL, $limit=NULL){
         $type = save($type);
         $typeId = save($typeId);
         $limit = save($limit);
@@ -30,10 +38,10 @@ class feed {
         
         switch($type){
             case 'global':
-                $where = "ORDER BY timestamp DESC LIMIT $limit"; //defines Query
+                $where = "ORDER BY id DESC LIMIT $limit"; //defines Query
                 break;
             case 'user':
-                $where = "WHERE author='$typeId' ORDER BY timestamp DESC LIMIT  $limit";
+                $where = "WHERE author='$typeId' ORDER BY id DESC LIMIT  $limit";
                 break;
             case 'friends':
                 
@@ -46,16 +54,23 @@ class feed {
                 $buddies = join(',',$buddies);  
                 //push array with the user, which is logged in
                 
-                $where = "WHERE author IN ($buddies) ORDER BY timestamp DESC LIMIT  $limit";
+                $where = "WHERE author IN ($buddies) ORDER BY id DESC LIMIT  $limit";
                 
                 break;
             case 'group':
                 
                 $group = $typeId; //$user is used in this cased to pass the groupId
-                $where = "WHERE INSTR(`privacy`, '{$group}') > 0 ORDER BY timestamp DESC limit $limit";
+                $where = "WHERE INSTR(`privacy`, '{$group}') > 0 ORDER BY id DESC LIMIT $limit";
                 
                 break;
         }
+        return $where;
+    }
+    
+    function load($type, $typeId=NULL, $limit=NULL){
+        
+        $where = $this->generateWhere($type, $typeId, $limit);
+        
         $db = new db();
         return $db->shiftResult($db->query("SELECT * FROM feed $where"));
     }
