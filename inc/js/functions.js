@@ -459,8 +459,6 @@ var gui = new function(){
         if((typeof actions['add'] !== 'undefined') ||(typeof actions[0] !== 'undefined')){
             if(typeof actions[0] === 'object'){
                 $.each(actions, function(index, value){
-                   console.log(index);
-                   console.log(value);
                    html += '<a href="#" onclick="'+value['onclick']+'" class="btn btn-success pull-right">'+value['caption']+'</a>'; 
                 });
             }else{
@@ -802,7 +800,6 @@ var gui = new function(){
     };
     this.swapPanelPage = function(panelTitle, direction){
         var currentPage = parseInt($('.panel_'+panelTitle).attr('data-currentpage'));
-        console.log(currentPage);
         if(direction === 'down'){
             currentPage--;
         }else if(direction === 'up'){
@@ -1065,7 +1062,6 @@ var im = new function(){
     //proceeds data from reload function
     this.sync = function(data){
         $.each(data, function(key,value){
-            console.log(value);
             im.openMessage(value);
         });
     };
@@ -1876,7 +1872,6 @@ var browser = new function(){
           
 var debug = new function(){
   this.log = function(input){
-      console.log(input);
   };
 };
 
@@ -3201,7 +3196,7 @@ function feedLoadMore(destination ,type, user, limit){
 		},'html');
 	}
        
-//can be deletedet
+//can be deleted
 function del_reloadFeed(type){
         if(type === "friends"){
             $.post('api.php?action=checkForFeeds&type=friends', function(data) {
@@ -3746,7 +3741,6 @@ var media = function(url){
                     return result;
                 break;
             case 'soundcloud':
-                console.log('get soundcloud data');
     $.ajax({
         'url': "https://api.soundcloud.com/resolve.json?url="+encodeURIComponent(url)+"&client_id="+authStuff.soundcloud_client_id+'&none=none',
         'dataType': "json",

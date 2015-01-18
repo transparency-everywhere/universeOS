@@ -20,7 +20,6 @@ var api = new function(){
     this.basePath = 'http://localhost/universe';
     
     this.query = function(action, parameters, callback){
-        console.log(parameters);
         var async;
         if(typeof callback !== 'undefined'){
             async = true;
@@ -33,7 +32,6 @@ var api = new function(){
             url: action,
             data: $.param(parameters),
             success:function(data){
-                console.log(parameters);
                 if(!async){
                     try
                     {

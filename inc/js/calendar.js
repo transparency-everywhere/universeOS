@@ -219,10 +219,8 @@ var calendar = new function(){
 			  			}else{
 			  				tasks.markAsPending($(this).data('eventid'));
 			  			}
-			  			console.log($(this).is(':checked'));
 			  		});
 			  		
-			  		console.log('tasks loaded');
 			  	};
 	
 	this.toggleTasks = function(){
@@ -290,7 +288,6 @@ var calendar = new function(){
 			  			
 			  		});
 			  		
-			  		console.log('events loaded into mainframe..');
 			  	};
 	
 	this.appendDayToCalender = function(time){
@@ -548,7 +545,7 @@ var calendar = new function(){
 			  			
 						$('#calendarViewDetail #prev').click(function(){
 							calendar.shownTimeObject.setSeconds(-(7*86400));
-							console.log('prev');
+							
 			  				calendar.loadWeek(calendar.shownTimeObject.getTime()/1000);
 						});
 						
@@ -557,7 +554,7 @@ var calendar = new function(){
 			  				calendar.loadWeek(calendar.shownTimeObject.getTime()/1000);
 							
 						});
-						console.log(calendar.shownTimeObject);
+						
 						var nextWeek = new Date(calendar.shownTimeObject.getTime()+(7*86400000));
 						
 						$('#calendarViewDetail #text').html(calendar.shownTimeObject.getDate()+'.'+calendar.shownTimeObject.getMonth()+1+' - '+nextWeek.getDate()+'.'+nextWeek.getMonth()+1);
@@ -663,7 +660,6 @@ var calendar = new function(){
 			  	};
 	
 	this.loadEventsIntoSide = function(date){
-			  		console.log('side');
 			  		var d = new Date(date);
 			  		d.setMonth(0);
 			  		d.setDate(1);
@@ -687,7 +683,7 @@ var calendar = new function(){
 					
 							if(appointments){
 								$.each( appointments, function( key, value ) {
-									console.log(value);
+								
 								  if($('#sideEvent_'+value.id).length === 0){
 								  	
 									  var startDate = new Date(value.startStamp*1000);
@@ -802,7 +798,7 @@ var events = new function(){
 			  	};
 	this.addForm = function(startstamp){
 			  		var d = new Date(startstamp*1000);
-			  		console.log(d.getMonth());
+			  		
 			  		var formattedDate = calendar.beautifyDate((d.getMonth())+1)+'/'+calendar.beautifyDate(d.getDate())+'/'+d.getFullYear();
 			  		
 			  		var content  = '<form id="createEvent" method="post">';
@@ -873,7 +869,7 @@ var events = new function(){
               		
               		$('#createEvent').submit(function(e){
               			e.preventDefault();
-              			console.log($(this).serialize());
+              			
               			if($('#eventTitle').val().length > 0 && $('#startDate').val().length > 0 && $('#endTime').val().length > 0){
               				
 	              			$.post("api.php?action=createEvent",$(this).serialize(),function(data){
@@ -959,8 +955,6 @@ var events = new function(){
 			  		
 			  		var startDate = new Date(eventData.startStamp*1000);
 			  		var  stopDate = new Date(eventData.stopStamp*1000);
-			  		console.log('hours:'+startDate.getHours()+'	min:'+startDate.getMinutes());
-			  		console.log('hours:'+stopDate.getHours()+'	min:'+stopDate.getMinutes());
 			  		
 			  		
 			  		var allDay, 	//contains checkbox or check-image

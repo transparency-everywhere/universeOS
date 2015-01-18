@@ -46,7 +46,6 @@ function chatMessageSubmit(userid){
     	
     	
     	if(localStorage.key[userid]){
-    		console.log(localStorage.key[userid]);
     		 $('#chatInput_'+userid).val(CryptoJS.AES.encrypt($('#chatInput_'+userid).val(), localStorage.key[userid]));
  		     //set cryption marker true so the php script could mark the message as crypted
     		 $('#chatCryptionMarker_'+userid).val('true'); 
