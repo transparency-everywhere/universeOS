@@ -16,6 +16,8 @@
 //
 //@author nicZem for Tranpanrency-everywhere.com
 
+//returns data of multiple feeds
+
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
                     

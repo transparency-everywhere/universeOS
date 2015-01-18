@@ -13,35 +13,50 @@
  */
 class feed {
     
-    
-    function getHighestId($type){
-        $where = $this->generateWhere($type, getUser(), '0,1');
+    function loadFeedsFrom($startId, $type, $typeId=NULL){
+        
+        $where = $this->generateWhere($type, $typeId, '0', $startId);
+        $db = new db();
+        return $db->shiftResult($db->query("SELECT * FROM feed $where"), 'id');
+        
+    }
+    function getHighestId($type, $typeId=NULL){
+        
+        $where = $this->generateWhere($type, $typeId, '0,1');
         
         $db = new db();
         $data=$db->query("SELECT `id` FROM feed $where");
         return $data['id'];
+        
     }
     function getData($feedId){
         $db = new db();
         return $db->select('feed', array('id', $feedId));
     }
     
-    function generateWhere($type, $typeId=NULL, $limit=NULL){
+    function generateWhere($type, $typeId=NULL, $limit=NULL, $lowestId){
         $type = save($type);
         $typeId = save($typeId);
         $limit = save($limit);
-        
+        $lowestId = save($lowestId);
         
         if(empty($limit)){
             $limit = "0,30";
         }
         
+        $where = 'WHERE 1=1';
+        
+        if(!empty($lowestId)){
+            $where .= ' AND `id`>\''.$lowestId.'\'';
+        }
+        
         switch($type){
             case 'global':
-                $where = "ORDER BY id DESC LIMIT $limit"; //defines Query
+                
+                $where .= " ORDER BY id DESC LIMIT $limit"; //defines Query
                 break;
             case 'user':
-                $where = "WHERE author='$typeId' ORDER BY id DESC LIMIT  $limit";
+                $where .= " AND author='$typeId' ORDER BY id DESC LIMIT  $limit";
                 break;
             case 'friends':
                 
@@ -54,13 +69,13 @@ class feed {
                 $buddies = join(',',$buddies);  
                 //push array with the user, which is logged in
                 
-                $where = "WHERE author IN ($buddies) ORDER BY id DESC LIMIT  $limit";
+                $where .= " AND author IN ($buddies) ORDER BY id DESC LIMIT  $limit";
                 
                 break;
             case 'group':
                 
                 $group = $typeId; //$user is used in this cased to pass the groupId
-                $where = "WHERE INSTR(`privacy`, '{$group}') > 0 ORDER BY id DESC LIMIT $limit";
+                $where .= " AND INSTR(`privacy`, '{$group}') > 0 ORDER BY id DESC LIMIT $limit";
                 
                 break;
         }

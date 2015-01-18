@@ -17,8 +17,57 @@
 var feed = new function(){
     this.reload = function(type){
         
+        $('.feedFrame[data-type="'+type+'"]').each(function(){
+            
+            var last_feed_loaded = $(this).attr('data-last');
+            var typeId = 0;
+            var loadedFeeds = feed.loadFeedsFrom(last_feed_loaded, type, typeId);
+            var output = '';
+
+            
+            //if php select is empty it returns a string, 
+            //which js will handle as object 
+            //which fucks jQuery.each up. 
+            //.length was the easiest solution 
+            $.each(loadedFeeds,function(index, value){
+                output += feed.generateSingleFeed(value);
+            });
+            $(this).prepend(output);
+
+            
+        });
+        
     };
-    
+    this.generateSingleFeed = function(feedData){
+        debug.log('generateSingleFeedInitalized...');
+        
+        var feedContent = '<div class="feedContent">'+feedData['feed']+'</div>';
+                if(feedData['type'] === 'showThumb'){
+                    debug.log('     showItemThumb');
+                    feedContent = '<div class="feedAttachment">'+item.showItemThumb(feedData['attachedItem'], feedData['attachedItemId'])+'</div>';
+                }
+        
+        //load comments
+        
+        //load contextmenue(s)
+        
+        var output = '<div class="feedEntry feedNo'+feedData['id']+'">';
+            debug.log('     showSignature');
+            output += User.showSignature(feedData['author'], feedData['timestamp'])+feedContent;
+            output += '<div class="options">';
+                output += item.showScoreButton('feed', feedData['id']);//load score button
+                
+                output += item.showItemSettings('feed', feedData['id']);
+                
+                output += '<a href="javascript:comments.loadFeedComments(\''+feedData['id']+'\');" class="btn btn-xs" style="color: #dcdcdc"><i class="icon icon-comment"></i></a>';
+             
+            output += '</div>';
+            output += '<div class="commentLoadingArea" id="feed'+feedData['id']+'" style="display:none;"></div>';
+            output += '</div>';
+            
+        debug.log('...generateSingleFeed finished');
+        return output;
+    };
     this.init = function(){
         
         var html = this.generateHeader();
@@ -156,6 +205,9 @@ var feed = new function(){
     };
     this.getData = function(feedId){
         return api.query('api/feed/select/', { feedId : feedId});
+    };
+    this.loadFeedsFrom = function(startId, type, typeId){
+        return api.query('api/feed/loadFrom/', {start_id: startId, type : type, typeId: typeId});
     };
 };
 			  

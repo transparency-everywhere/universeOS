@@ -897,7 +897,7 @@ var universe = new function(){
         //fetch request data like open filebrowsers & feeds
         var requests = [];
         
-                $.each(reader.uffChecksums,function(index, value){
+        $.each(reader.uffChecksums,function(index, value){
                     if(typeof(value) != 'undefined'){
                         requests.push({
                                                             action : 'UFF',
@@ -929,7 +929,6 @@ var universe = new function(){
         
         var feedsArray = [];
         $('.feedFrame').each( function(){
-            console.log('aaaaaaaa');
             feedsArray.push({'type':$(this).data('type'), 'last_feed_received':$(this).data('last')});
         });
         
@@ -951,7 +950,6 @@ var universe = new function(){
         
     };
     this.handleReloadTypes = function(responseElement){
-        console.log(responseElement.action);
         switch(responseElement.action){
             
             
@@ -1035,6 +1033,12 @@ var universe = new function(){
                     this.notificationArray[notificationId].push();
                     
                     
+                };
+                break;
+            case 'feed':
+                
+                if(responseElement.subaction === 'sync'){
+                    feed.reload(responseElement.data.type, responseElement.data.typeId);
                 };
                 break;
         };
@@ -1184,9 +1188,15 @@ var notification = function(options){
     this.init = function(){
         
     };
+    this.initClicks = function(){
+      $('#notifications .messageButton .btn').click(function(){
+         $(this).parent('li').hide(); 
+      });
+    };
     this.push = function(){
         var note = this.generateNotification();
         $('#notifications>ul').append(note);
+        this.initClicks();
     };
     this.generateNotification = function(){
         var options = this.options;
@@ -1453,7 +1463,6 @@ var tasks = new function(){
 
               $('#createTask').submit(function(e){
                       e.preventDefault();
-                      console.log($(this).serialize());
                       if($('#taskTitle').val().length > 0 && $('#date').val().length > 0 && $('#time').val().length > 0){
 
                               $.post("api.php?action=createTask",$(this).serialize(),function(data){
@@ -1707,12 +1716,16 @@ var User = new function(){
         return border;
     };
     this.showPicture = function(userid, lastActivity, size){
-	            
+	 
+        debug.log('showPicture initialized...');           
         var userpicture = getUserPicture(userid);
-        if(typeof lastActivity === 'undefined')
+        if(typeof lastActivity === 'undefined'){
+            debug.log('     get user activity for user '+userid);
             var lastActivity = User.getLastActivity(userid); //get last activity so the border of the userpicture can show if the user is online or offline
-
+        }
         if(typeof size === 'undefined'){
+            
+            debug.log('     set size to standard size');
             var size = 20;
         }
         
@@ -1721,8 +1734,10 @@ var User = new function(){
         var ret;
         ret = '<div class="userPicture userPicture_'+userid+'" style="background: url(\''+userpicture+'\'); '+User.getBorder(lastActivity)+'; width: '+size+'px;height:  '+size+'px;background-size: 100%;border-radius:'+radius+'px"></div>';
 
+        debug.log('     update border for all other userpictures of this user');
         $('.userPicture_'+userid).css('border', User.getBorder(lastActivity)); //update all shown pictures of the user
 
+        debug.log('...showSignature finished');
         return ret;
 	            
     };
@@ -1763,7 +1778,6 @@ var User = new function(){
 		                return parseInt(response);
 		            }else{
 		                return response
-		                console.log(response);
 		            }
         
     };
@@ -1774,6 +1788,7 @@ var User = new function(){
     }
     this.showSignature = function(userid, timestamp, reverse){
         
+        debug.log('showSignature for user '+userid+' initialized...');
         var username = useridToUsername(userid);
         
         var output="";
@@ -1815,6 +1830,7 @@ var User = new function(){
             output += "    <\/table>";
             output += "    <\/div>";
 
+         debug.log('...showSignature finished');
             return output;
         
     };
@@ -1856,7 +1872,13 @@ var browser = new function(){
                                             this.tabs.updateTabContent(tabIdentifier ,browser.loadPage(url));
 			  	};
 };
-           
+          
+          
+var debug = new function(){
+  this.log = function(input){
+      console.log(input);
+  };
+};
 
 var privacy = new function(){
 	
@@ -2108,7 +2130,6 @@ var groups = new function(){
 				         result = data; 
 				      }
 				   	});
-				   	console.log(typeof result);
 				   	if(result != null){
 				   		return $.parseJSON(result);
 				   	}
@@ -2517,30 +2538,7 @@ var Feed = function(type, $selector){
     };
     this.generateSingleFeed = function(feedData){
         this.updateLastFeedReceived(parseInt(feedData['id']));
-        var feedContent = '<div class="feedContent">'+feedData['feed']+'</div>';
-                if(feedData['type'] === 'showThumb'){
-                    feedContent = '<div class="feedAttachment">'+item.showItemThumb(feedData['attachedItem'], feedData['attachedItemId'])+'</div>';
-                }
-        
-        //load comments
-        
-        //load contextmenue(s)
-        
-        
-         var output = '<div class="feedEntry feedNo'+feedData['id']+'">';
-             output += User.showSignature(feedData['author'], feedData['timestamp'])+feedContent;
-            
-             output += '<div class="options">';
-                output += item.showScoreButton('feed', feedData['id']);//load score button
-                
-                output += item.showItemSettings('feed', feedData['id']);
-                
-                output += '<a href="javascript:comments.loadFeedComments(\''+feedData['id']+'\');" class="btn btn-xs" style="color: #dcdcdc"><i class="icon icon-comment"></i></a>';
-             
-             output += '</div>';
-             output += '<div class="commentLoadingArea" id="feed'+feedData['id']+'" style="display:none;"></div>';
-             output += '</div>';
-             return output;
+        return feed.generateSingleFeed(feedData);
     };
     this.loadFeeds = function(type, typeId, limit){
         return api.query('api/feed/load/', { type : type, typeId: typeId, limit:limit});
@@ -2566,33 +2564,46 @@ function proofLogin(){
 }
 
 function getUserPicture(request){
+            debug.log('getUserPicture initizialized with request'+request);
 			            var post;
 			            var userid;
 			            if(is_numeric(request)){
+                                        debug.log('     numeric request');
 			                userid = request;
 			                //check if username is stored
 			                if(typeof userPictures[userid] !== 'undefined'){
 			                    //return stored username
-			                    console.log('should be defined..')
+                                            
+                                            debug.log('     username for userid '+userid+'is stored:'+userPictures[userid]);
 			                    return userPictures[userid];
 			                }else{
+                                            
 			                    post = request;
 			                }
 			            }else{
+                                        
+                                        debug.log('     string request - request should be a username');
 			                post = request;
 			            }
 			            
 			            //load data from sercer
 			            var result = '';
+                                    
+                                    debug.log('     ajax request initialized');
 			            $.ajax({
 			                url:sourceURL+"/api.php?action=getUserPicture",
 			                async: false,  
 					type: "POST",
 					data: { request : post },
-			                success:function(data) { result = data; console.log('network');}
+			                success:function(data) { result = data;
+                                        
+                                        debug.log('     userpicture request successfull');
+                                        }
 			            });
 			            
 			            if(is_numeric(request)){
+                                        
+                                        debug.log('     numeric request');
 			                if(result.length > 0){
 			                    
 			                }
@@ -2610,11 +2621,14 @@ function getUserPicture(request){
 			                
 			            }
 			            if(is_numeric(request)){
+                                        
+                                        debug.log('     return numeric response');
 			                return userPictures[userid];
 			            }else{
 			                return response;
-			                console.log(response);
 			            }
+                                    
+                                    
 				
 			}
 			
@@ -2759,7 +2773,6 @@ var cypher = new function(){
 	    var privateKey;
             var index = type+'_'+itemId;
             if(typeof privateKeys[index] === 'undefined'){
-                console.log(index);
                     var encryptedKey = '';
 			$.ajax({
 			  url:"api.php?action=getPrivateKey",
@@ -2774,9 +2787,7 @@ var cypher = new function(){
 				var shaPass = localStorage.currentUser_shaPass;
 			
 			var salt = getSalt('privateKey', itemId, shaPass);
-			console.log(salt);
 		    var keyHash = hash.SHA512(shaPass+salt);
-		    console.log(keyHash);
 			
 	    	privateKey = sec.symDecrypt(keyHash, encryptedKey); //encrypt private Key using password
                 privateKeys[index] = privateKey;
@@ -2910,7 +2921,6 @@ var tabs = function(parentIdentifier){
                     parentIdentifier = this.parentIdentifier;
                     var ret;
                     $(parentIdentifier+' .tabFrame header ul li').each(function(){
-                        console.log($(this).attr('data-title'));
                         if($(this).attr('data-title') == tabTitle){
                             ret = $(this).attr('data-tab');
                         }
@@ -2936,7 +2946,6 @@ var tabs = function(parentIdentifier){
                     while((last_tab==current_tab||last_tab==undefined)&&i!==0){
                         if(this.tabExists(this.tabHistory[i]))
                             last_tab = this.tabHistory[i];
-                        console.log(last_tab)
                         i--;
                     }
                     this.showTab(last_tab);
@@ -3192,9 +3201,8 @@ function feedLoadMore(destination ,type, user, limit){
 		},'html');
 	}
        
-       
-function reloadFeed(type){
-        console.log('reloadFeed - initialised...');
+//can be deletedet
+function del_reloadFeed(type){
         if(type === "friends"){
             $.post('api.php?action=checkForFeeds&type=friends', function(data) {
                 console.log('reloadFeed - check for new feeds');

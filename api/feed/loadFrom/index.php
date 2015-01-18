@@ -18,11 +18,11 @@
 
 
 
-//returns single feed data
+//returns feeds starting from $_POST['start_id']
 
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
 
 $feed = new feed();
-echo json_encode($feed->getData($_POST['feedId']));
+echo json_encode($feed->loadFeedsFrom($_POST['start_id'], $_POST['type'], $_POST['type_id']));
 ?>

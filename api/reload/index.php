@@ -62,9 +62,13 @@ function reload($requests){
                 if($request['subaction'] == 'sync'){
                     $feed = new feed();
                     foreach($request['data'] AS $requestData){
-                        $highest_id = $feed->getHighestId($requestData['type']);
+                        $highest_id = $feed->getHighestId($requestData['type'], $requestData['typeId']);
+                        
+                        if(empty($requestData['typeId'])){
+                            $requestData['typeId'] = 0;
+                        }
                         if($highest_id>$requestData['last_feed_received']){
-                            $result[] = array('action'=>'feed','subaction'=>'sync', 'data'=>array('type'=>$requestData['type'],'highest_id'=>$highest_id));
+                            $result[] = array('action'=>'feed','subaction'=>'sync', 'data'=>array('type'=>$requestData['type'],'typeId'=>$requestData['typeId'],'highest_id'=>$highest_id));
                         }
                     }
                 }
