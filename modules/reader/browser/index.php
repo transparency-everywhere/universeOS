@@ -60,7 +60,7 @@ $url = $_GET['url'];
 <div class="browser">
 <header>
 	<form onsubmit=" return false;">	
-		<span><a href="#" class="browserBack btn btn-small"><<</a> <a href="#" class="browserNext btn btn-small">>></a> <a href="#" class="browserToggleProxy btn btn-small" class="You are currently not using your proxy"><i class="icon icon-eye-open"></i></a> </span><input type="text" class="browserInput" placeholder="http://transparency-everywhere.com" value="<?=$url;?>">
+		<span><a href="#" class="browserBack btn btn-small"><<</a> <a href="#" class="browserNext btn btn-small">>></a> <a href="#" class="browserToggleProxy btn btn-small" class="You are currently not using your proxy"><i class="icon icon-eye"></i></a> </span><input type="text" class="browserInput" placeholder="http://transparency-everywhere.com" value="<?=$url;?>">
 
 		
 	</form>

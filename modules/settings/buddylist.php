@@ -32,7 +32,7 @@
 	                <input type="hidden" name="buddy" value="<?=$buddyEditData['buddy'];?>">
 	                	<?=$blUserData['username'];?>
 	                	<a href="#" onclick="deleteBuddy('<?=$buddy;?>');" title="delete user form Buddylist" class="btn btn-small" style="margin-left: 15px;">
-	                		<i class="icon-remove"></i>
+	                		<i class="icon icon-thrash"></i>
 	                	</a>
 	               </li>
 	         <?$i++; }

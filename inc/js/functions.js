@@ -671,11 +671,11 @@ var gui = new function(){
         var html="";
         html += "<div class=\"panel\">";
         html += "<div class=\"panel-heading\">";
-        html += "    <span class=\"glyphicon glyphicon-list\"><\/span>"+title;
+        html += "    <span class=\"icon icon-navicon\"><\/span>"+title;
         html += "    <div class=\"pull-right action-buttons\">";
         html += "        <div class=\"btn-group pull-right\">";
         html += "            <button type=\"button\" class=\"btn btn-default btn-xs dropdown-toggle\" data-toggle=\"dropdown\">";
-        html += "                <span class=\"icon icon-cog\" style=\"margin-right: 0px;\"><\/span>";
+        html += "                <span class=\"icon icon-gear\" style=\"margin-right: 0px;\"><\/span>";
         html += "            <\/button>";
 
         if((typeof actions['add'] !== 'undefined') ||(typeof actions[0] !== 'undefined')){
@@ -1299,9 +1299,9 @@ var application = function(id){
 			output += '<header class="titel">';
 			output += '<p>'+title+'&nbsp;</p>';
 			output += '<p class="windowMenu">';
-				output += '<a href="javascript:'+id+'.applicationVar.hide();"><span class="icon icon-minimize"></span></a>';
-				output += '<a href="#" onclick="'+id+'.applicationVar.fullscreen();" class="fullScreenIcon"><span class="icon icon-maximize"></span></a>';
-                                output += '<a href="#"><span class="icon icon-close"></span></a>'
+				output += '<a href="javascript:'+id+'.applicationVar.hide();"><span class="icon dark-minimize"></span></a>';
+				output += '<a href="#" onclick="'+id+'.applicationVar.fullscreen();" class="fullScreenIcon"><span class="icon dark-maximize"></span></a>';
+                                output += '<a href="#"><span class="icon dark-close"></span></a>'
 			output += '</p>';
 		output += '</header>';
 		output += '<div class="inhalt autoflow" id="'+id+'Main">'+content+'</div>';
@@ -1338,7 +1338,6 @@ var application = function(id){
 	
 	this.fullscreen = function(){
             var moduleId = this.id;
-              	//$('#'+moduleId+' .fullScreenIcon').html('rofl');
               	$('#'+moduleId+' .fullScreenIcon').attr("onClick",moduleId+".applicationVar.returnFromFullScreen()");
               	 window.fullScreenOldX = $('#'+moduleId).width();
               	 window.fullScreenOldY = $('#'+moduleId).height();
@@ -1841,7 +1840,7 @@ var browser = new function(){
 			  		var html = '<div class="browser">';
 							html += '<header>';
 								html += '<form onsubmit=" return false;" class="urlForm">';
-									html += '<span><a href="#" class="browserBack btn btn-small"><<</a> <a href="#" class="browserNext btn btn-small">>></a> <a href="#" class="browserToggleProxy btn btn-small" title="You are currently not using your proxy"><i class="icon icon-eye-open"></i></a> </span><input type="text" class="browserInput" placeholder="'+this.startUrl+'" value="'+this.startUrl+'">';
+									html += '<span><a href="#" class="browserBack btn btn-small"><<</a> <a href="#" class="browserNext btn btn-small">>></a> <a href="#" class="browserToggleProxy btn btn-small" title="You are currently not using your proxy"><i class="icon icon-eye"></i></a> </span><input type="text" class="browserInput" placeholder="'+this.startUrl+'" value="'+this.startUrl+'">';
 								html += '</form>';
 							html += '</header>';
 						html += '</div>';
@@ -3469,8 +3468,8 @@ var dashBoard = new function(){
 			$('#dashGrid').animate({marginBottom: 0}, 1000, function() {
 				$('#dashBoard').removeClass('up');
 				$('#dashBoardBG').removeClass('up');
-				$('#dashBoard footer a i').removeClass('icon-arrow-down');
-				$('#dashBoard footer a i').addClass('icon-arrow-up');
+				$('#dashBoard footer a i').removeClass('icon-chevron-down');
+				$('#dashBoard footer a i').addClass('icon-chevron-up');
 			});
 			this.view = 'up';
 	};
@@ -3479,8 +3478,8 @@ var dashBoard = new function(){
 			$('#dashGrid').animate({marginBottom: -300}, 750, function() {
 				$('#dashBoard').addClass('up');
 				$('#dashBoardBG').addClass('up');
-				$('#dashBoard footer a i').removeClass('icon-arrow-up');
-				$('#dashBoard footer a i').addClass('icon-arrow-down');
+				$('#dashBoard footer a i').removeClass('icon-chevron-up');
+				$('#dashBoard footer a i').addClass('icon-chevron-down');
 			});
 			this.view = 'down';
 	};

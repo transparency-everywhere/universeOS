@@ -71,13 +71,13 @@ class dashBoard{
 		$title = "Your Apps";
 		
 		$content = "<ul class=\"appList\">";
-	    	$content .= "<li onclick=\"feed.show()\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/feed.png\" border=\"0\" height=\"16\">Feed</li>";
-	    	$content .= "<li onclick=\"calendar.show();\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/feed.png\" border=\"0\" height=\"16\">Calendar</li>";
-			$content .= "<li onclick=\"filesystem.show()\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/filesystem.png\" border=\"0\" height=\"16\">Filesystem</li>";
+	    	$content .= "<li onclick=\"feed.show()\" onmouseup=\"closeDockMenu()\"><i class=\"icon icon-navicon\" style=\"height:16px;width:16px;\">Feed</li>";
+	    	$content .= "<li onclick=\"calendar.show();\" onmouseup=\"closeDockMenu()\"><i class=\"icon icon-calendar\" style=\"height:16px;width:16px;\">Calendar</li>";
+			$content .= "<li onclick=\"filesystem.show()\" onmouseup=\"closeDockMenu()\"><i class=\"icon icon-folder\" style=\"height:16px;width:16px;\">Filesystem</li>";
 	 		$content .= "<li onclick=\"javascript: reader.show();\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/viewer.png\" border=\"0\" height=\"16\">Reader</li>";
-	   		$content .= "<li onclick=\"javascript: buddylist.show()\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/buddylist.png\" border=\"0\" height=\"16\">Buddylist</li>";
-	    	$content .= "<li onclick=\"javascript: chat.init()\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/buddylist.png\" border=\"0\" height=\"16\">Chat</li>";
-	    	$content .= "<li onclick=\"javascript: settings.show();\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/settings.png\" border=\"0\" height=\"16\">Settings</li>";
+	   		$content .= "<li onclick=\"javascript: buddylist.show()\" onmouseup=\"closeDockMenu()\"><i class=\"icon icon-user\" style=\"height:16px;width:16px;\"></i>Buddylist</li>";
+	    	$content .= "<li onclick=\"javascript: chat.init()\" onmouseup=\"closeDockMenu()\">><i class=\"icon icon-user\" style=\"height:16px;width:16px;\"></i>Chat</li>";
+	    	$content .= "<li onclick=\"javascript: settings.show();\" onmouseup=\"closeDockMenu()\"><i class=\"icon icon-gear\" style=\"height:16px;width:16px;\"></i>Settings</li>";
 	    $content .= "</ul>";
 		
 		$output = $this->showDashBox($title, $content," ", "app", $grid);
@@ -104,7 +104,7 @@ class dashBoard{
 				foreach($groups AS $group){
 					$output .="<li onclick=\"groups.show('$group');\">";
 						$output .="<span class=\"marginRight\">";
-							$output .="<img src=\"./gfx/icons/group.png\" height=\"14\">";
+							$output .= '<i class="icon white-user" style="height:14px; width: 14px;"></i>';
 						$output .="</span>";
 						$output .="<span>";
 							$output .= $groupsClass->getGroupName($group);
@@ -116,7 +116,7 @@ class dashBoard{
 			$output .= "</ul>";
 		}
 		
-		$footer = "<a href=\"#addGroup\" onclick=\"popper('doit.php?action=addGroup')\" title=\"Create a new Group\"><i class=\"icon icon-plus\" style=\"color:#FFF\"></i></a>";
+		$footer = "<a href=\"#addGroup\" onclick=\"popper('doit.php?action=addGroup')\" title=\"Create a new Group\"><i class=\"icon white-plus\" style=\"color:#FFF\"></i></a>";
 		
 		$output = $this->showDashBox($title, $output, $footer, "group", $grid);
 		
@@ -142,7 +142,7 @@ class dashBoard{
                                 foreach($playlists AS $playlist){
                                         $output .= "<li>";
                                                 $output .= "<span class=\"marginRight\">";
-                                                        $output .= "<img src=\"./gfx/icons/playlist.png\" height=\"14\">";
+                                                        $output .= '<i class="icon white-play" style="height:14px; width: 14px;"></i>';
                                                 $output .= "</span>";
                                                 $output .= "<span>";
                                                         $output .= "<a href=\"#\" onclick=\"showPlaylist('$playlist');\">";
@@ -155,7 +155,7 @@ class dashBoard{
 
                 }
 			
-		$footer = "<a href=\"#addPlaylist\" onclick=\"playlists.showCreationForm();\" title=\"Create a new Playlist\"><i class=\"icon icon-plus\" style=\"color:#FFF\"></i></a>";
+		$footer = "<a href=\"#addPlaylist\" onclick=\"playlists.showCreationForm();\" title=\"Create a new Playlist\"><i class=\"icon white-plus\" style=\"color:#FFF\"></i></a>";
 			
 		
 		$output = $this->showDashBox($title, $output, $footer, "playlist", $grid);
@@ -238,7 +238,7 @@ class dashBoard{
 		$output .= '</ul>';
 		
 		
-		$footer = "<a href=\"#addTask\" onclick=\"tasks.addForm();\" title=\"Create a new Task\"><i class=\"icon icon-plus\" style=\"color:#FFF\"></i></a>";
+		$footer = "<a href=\"#addTask\" onclick=\"tasks.addForm();\" title=\"Create a new Task\"><i class=\"icon white-plus\" style=\"color:#FFF\"></i></a>";
 			
 		
 		

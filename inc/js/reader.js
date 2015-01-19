@@ -70,7 +70,7 @@ var reader = new function(){
                         output += "<div class=\"uffViewerNav\">";
                                 output += "<div style=\"margin: 10px;\">";
                                         output += "<ul>";
-                                    output += '<li style="font-size: 11pt; margin-bottom: 05px;"><i class="icon-user"></i>&nbsp;<strong>Active Users</strong></li>';
+                                    output += '<li style="font-size: 11pt; margin-bottom: 05px;"><i class="icon icon-user"></i>&nbsp;<strong>Active Users</strong></li>';
                                     //show active users
                 //	            $.each($activeUsers AS &$activeUser){
                 //	                if(!empty($activeUser)){

@@ -99,21 +99,20 @@ h3{
 }
 
 .fullScreen{
-  position : absolute;
-  top : 0,2%;
-  bottom : 100;
-  left : 0.5%;
-  right : 0;
-  width : 99;
-  height : docHeight-90;
-  z-index : 99;
+    position : absolute;
+    top : 0,2%;
+    bottom : 100;
+    left : 0.5%;
+    right : 0;
+    width : 99;
+    height : docHeight-90;
+    z-index : 99;
 }
 
 .windowMenu{
     position: absolute;
-    right: 5px;
-    top: 5px;
-    
+    right: 10px;
+    top: 10px;
 }
 
 .windowMenu .icon{
@@ -826,11 +825,6 @@ border-bottom: 1px solid #292929;
 .feedEntry .feedAttachment, .feedEntry .options, .feedEntry .commentLoadingArea, .feedEntry .feedContent{
     padding: 15px;
 }
-
-.feedEntry .options>a>.icon {
-    margin-top: 5px;
-}
-
 
 .feedEntry .itemSettingsButton{
     position: absolute;
@@ -1633,15 +1627,19 @@ color:#FFFFFF;
         background: #000;
     }
     
+        #dock>#toggleDashboardButton{
+            margin: 0 2px;
+            margin-bottom: -2px;
+        }
         
         #dock #startButton{
             border-left: 1px solid #FFF;
             border-right: 1px solid #FFF;
-            padding-right: 5px;
-            margin-top: 11px;
+            padding-right: 10px;
+            padding-left: 7px;
             height: 30px;
-            padding-top: 1px;
-            padding-bottom: 11px;
+            display: inline-block;
+            margin-top: 4px;
         }
         
         #dock td img {
@@ -1651,13 +1649,24 @@ color:#FFFFFF;
             margin-top: 12px;
         }
         
+        #dock .icon{
+            height: 30px;
+            width:30px;
+        }
+        
+        #dock #logout{
+            min-width: 10px;
+            margin-left: 10px;
+            padding: 0;
+            margin-top: 7px;
+        }
         
         
     #dock #searchField {
         bottom: 5px;
         font-size: 17px;
         position: absolute;
-        right: 5px;
+        left: 210px;
         vertical-align: bottom;
         width: 180px;
         height: 30px;
@@ -1665,7 +1674,7 @@ color:#FFFFFF;
         
         #dock #clockDiv{
         	position: absolute;
-			right: 205px;
+			right: 5px;
 			bottom: 10px;
 			width: 220px;
 			height: 20px;
@@ -2664,7 +2673,7 @@ margin: 0;
 		top: 5px;
 		left: 5px;
 		background-position: -312px 0;
-		background-image: url("../img/glyphicons-halflings-white.png");display: inline-block;
+		display: inline-block;
 		width: 14px;
 		height: 14px;
 		margin-top: 1px;

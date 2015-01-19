@@ -149,7 +149,7 @@ class playlists {
 
                             if(checkAuthorisation($playListFolderData['privacy'])){
                             if($delete){
-                                $deleteRow = "<td><a href=\"doit.php?action=deleteFromPlaylist&playlist=$playListId&type=file&itemId=".$playListFolderData['id']."\" target=\"submitter\"><img src=\"./gfx/icons/minus.png\" height=\"32\" border=\"0\"></a></td>";
+                                $deleteRow = "<td><a href=\"doit.php?action=deleteFromPlaylist&playlist=$playListId&type=file&itemId=".$playListFolderData['id']."\" target=\"submitter\"><i class=\"icon icon-minus\"></i></a></td>";
                             }
                             ?>
                                     <tr class="strippedRow playListfileNo<?=$playListFolderData['id'];?>">
@@ -168,7 +168,7 @@ class playlists {
 
                                 }
                             if($delete){
-                                $deleteRow = "<td><a href=\"doit.php?action=deleteFromPlaylist&playlist=$playListId&type=link&itemId=".$playListFolderData['id']."\" target=\"submitter\"><img src=\"./gfx/icons/minus.png\" height=\"32\" border=\"0\"></a></td>";
+                                $deleteRow = "<td><a href=\"doit.php?action=deleteFromPlaylist&playlist=$playListId&type=link&itemId=".$playListFolderData['id']."\" target=\"submitter\"><i class=\"icon icon-minus\"></i></a></td>";
                             }
 
                             ?>
@@ -183,7 +183,7 @@ class playlists {
                             $videos = explode(";", $playListData['youTube'], -1);
                             foreach($videos as &$vId){
                             if($delete){
-                                $deleteRow = "<td><a href=\"doit.php?action=deleteFromPlaylist&playlist=$playListId&type=youTube&itemId=$vId\" target=\"submitter\"><img src=\"./gfx/icons/minus.png\" height=\"32\" border=\"0\"></a></td>";
+                                $deleteRow = "<td><a href=\"doit.php?action=deleteFromPlaylist&playlist=$playListId&type=youTube&itemId=$vId\" target=\"submitter\"><i class=\"icon icon-minus\"></i></a></td>";
                             }
                             ?>
                                     <tr class="strippedRow playListyouTubeNo<?=$vId;?> tooltipper" onmouseover="mousePop('youTube', '<?=$vId;?>', '');" onmouseout="$('.mousePop').hide();">

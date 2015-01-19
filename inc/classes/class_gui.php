@@ -20,14 +20,16 @@ class gui {
         echo "        <div id=\"dock\">\n";
         echo "            <table>\n";
         echo "                <tr>\n";
-        echo "                    <td>\n<img src=\"img/arrow_up_bright.png\" alt=\"toggle dashboard\" onclick=\"dashBoard.toggle();\" style=\"margin-right:10px;\">";
+        echo "                    <td>"
+                                        . "<i class=\"icon white-chevron-up\" id=\"toggleDashboardButton\" onclick=\"dashBoard.toggle();\"></i>";
         echo "                          <a id=\"startButton\" title=\"toggle Dashboard\" href=\"#dashBoard\">"
-           . "                              <img src=\"img/eye_bright.png\"><span class=\"iconAlert\" id=\"appAlerts\"></span><img src=\"img/user_bright.png\"><span class=\"iconAlert\" id=\"openFriendRequests\"></span><img src=\"img/mail_bright.png\"><span class=\"iconAlert\" id=\"newMessages\" onclick=\"chat.applicationVar.show(); return false\"></span>"
+           . "                              <i class=\"icon white-eye\"></i><span class=\"iconAlert\" id=\"appAlerts\"></span>"
+                . "                         <i class=\"icon white-user\"></i><span class=\"iconAlert\" id=\"openFriendRequests\"></span>"
+                . "                         <i class=\"icon white-envelope\"></i><span class=\"iconAlert\" id=\"newMessages\" onclick=\"chat.applicationVar.show(); return false\"></span>"
            . "                          </a><td>\n";
-        echo "                    <!-- <td><div id=\"modulePlayer\" class=\"module\">&nbsp;&nbsp;Player</div>   </td> -->\n";
-        echo "                    <td><a href=\"doit.php?action=logout\" target=\"submitter\" style=\"tex-decoration: none; color: #FFF; min-width:10px; margin-left:10px;\" title=\"logout\">&nbsp;<i class=\"icon icon-off\"></i>&nbsp;</a></td>\n";
-        echo "                    <td align=\"right\" id=\"clockDiv\" style=\"color: #FFFFFF; float: right\"></td>\n";
+        echo "                    <td><div class=\"\" id=\"logout\" href=\"doit.php?action=logout\" target=\"submitter\" style=\"tex-decoration: none; color: #FFF; min-width:10px; margin-left:10px;\" title=\"logout\">&nbsp;<i class=\"icon white-logout\"></i>&nbsp;</div></td>\n";
         echo "                    <td align=\"right\"><input type=\"text\" name=\"searchField\" id=\"searchField\" placeholder=\"search\"></td>\n";
+        echo "                    <td align=\"right\" id=\"clockDiv\" style=\"color: #FFFFFF; float: right\"></td>\n";
         echo "                </tr>\n";
         echo "            </table>\n";
         echo "        </div>\n";

@@ -27,6 +27,6 @@ $userData = mysql_fetch_array($userSql);
 	?></div>
 	</div>
 	<footer>
-		<a href="#" onclick="dashBoard.toggle();" class="disableToggling"><i class="icon-arrow-down"></i></a>
+		<a href="#" onclick="dashBoard.toggle();" class="disableToggling"><i class="icon icon-chevron-down"></i></a>
 	</footer>
 </div></div>

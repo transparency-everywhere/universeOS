@@ -79,16 +79,16 @@ var calendar = new function(){
 									var userGroups = groups.get();
 									if(userGroups){
 										$.each(groups.get(), function( index, value ) {
-											html += '<li><input type="checkbox" data-value="'+value+'">&nbsp;<img src="./gfx/icons/group.png" height="14">'+groups.getTitle(value)+'</li>';
+											html += '<li><input type="checkbox" data-value="'+value+'">&nbsp;<i class="icon icon-user group" style="height:14px; width: 14px;"></i>'+groups.getTitle(value)+'</li>';
 										});
 									}
 								html += '</ul>';
 								html += '<ul id="taskList">';
-									html += '<li class="header"><input type="checkbox" id="showTasks" onclick="calendar.toggleTasks();">&nbsp;Show Tasks<a href="#" class="pull-right" onclick="tasks.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon-plus icon-white"></i></a></li>';
+									html += '<li class="header"><input type="checkbox" id="showTasks" onclick="calendar.toggleTasks();">&nbsp;Show Tasks<a href="#" class="pull-right" onclick="tasks.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon white-plus"></i></a></li>';
 									html += '<li style="display:none;"><input type="checkbox" id="hideDoneTasks" onclick="calendar.toggleDoneTasks();" checked>&nbsp;hide done</li>';
 								html += '</ul>';
 								html += '<ul id="events">';
-									html += '<li class="header">Events<a href="#" class="pull-right" onclick="events.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon-plus icon-white"></i></a></li>';
+									html += '<li class="header">Events<a href="#" class="pull-right" onclick="events.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon white-plus"></i></a></li>';
 									//events will apend to this list
 								html += '</ul>';
 								
@@ -202,7 +202,7 @@ var calendar = new function(){
 									  	  }
 										  var d = new Date(value.timestamp*1000);
 										  list += '<li data-taskId="'+value.id+'" style="'+style+'" class="'+taskClass+' task">&nbsp;<input type="checkbox" class="eventBox" data-eventid="'+value.id+'" '+checked+'>&nbsp;'+value.title+'<br>'+d.getHours()+':'+d.getMinutes()+'<span class="caret" onclick="$(\'#taskDetail_'+value.id+'\').toggle();"></span></li>';
-										  list += '<li class="taskDetail '+taskClass+'" id="taskDetail_'+value.id+'" style="'+style+'"><i class="icon-pencil icon-white" onclick="tasks.show('+value.id+', '+value.editable+');"></i>'+value.description+'</li>';
+										  list += '<li class="taskDetail '+taskClass+'" id="taskDetail_'+value.id+'" style="'+style+'"><i class="icon white-pencil" onclick="tasks.show('+value.id+', '+value.editable+');"></i>'+value.description+'</li>';
 										
 									  }
 								 });
@@ -276,7 +276,7 @@ var calendar = new function(){
 									  
 									  
 									  list += '<li data-eventId="'+value.id+'" onclick="$(\'#eventDetail_'+value.id+'\').toggle();">'+title+'</li>';
-									  list += '<li class="eventDetail" id="eventDetail_'+value.id+'" onclick="events.show('+value.id+', '+privacy.authorize(value.privacy, value.user)+');"><i class="icon-pencil"></i>'+startTime+' - '+stopTime+'<br>'+value.place+'</li>';
+									  list += '<li class="eventDetail" id="eventDetail_'+value.id+'" onclick="events.show('+value.id+', '+privacy.authorize(value.privacy, value.user)+');"><i class="icon white-pencil"></i>'+startTime+' - '+stopTime+'<br>'+value.place+'</li>';
 									
 								  }
 								 });

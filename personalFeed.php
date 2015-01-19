@@ -48,7 +48,7 @@ while($newMessagesData = mysql_fetch_array($newMessagesSql)){
     
     <script>
         if($("#message_<?=$newMessagesData['sender'];?>").length == 0){
-            $('#systemAlerts').append('<li id="message_<?=$newMessagesData['sender'];?>"><?=showUserPicture("$newMessagesData[sender]", '15', '', true);?><div class="messageMain"><a href="#" onclick="showProfile(\'<?=$newMessagesData2[username];?>\');"><?=$newMessagesData2[username];?></a> <?=$text;?></div><div class="messageButton"><a onclick="im.openDialogue(\'<?=$newMessagesData2[username];?>\'); $(\'#message_<?=$newMessagesData[sender];?>\').remove();" class="btn btn-info btn-mini" style="margin-right:25px;"><i class="icon-envelope icon-white"> </i> Show</a><a class="btn btn-mini" href="doit.php?action=updateMessageStatus&buddy=<?=$newMessagesData2[userid];?>" target="submitter" onclick="$(\'#message_<?=$newMessagesData[sender];?>\').remove();">Ignore</a></div></li>');
+            $('#systemAlerts').append('<li id="message_<?=$newMessagesData['sender'];?>"><?=showUserPicture("$newMessagesData[sender]", '15', '', true);?><div class="messageMain"><a href="#" onclick="showProfile(\'<?=$newMessagesData2[username];?>\');"><?=$newMessagesData2[username];?></a> <?=$text;?></div><div class="messageButton"><a onclick="im.openDialogue(\'<?=$newMessagesData2[username];?>\'); $(\'#message_<?=$newMessagesData[sender];?>\').remove();" class="btn btn-info btn-mini" style="margin-right:25px;"><i class="icon white-envelope"> </i> Show</a><a class="btn btn-mini" href="doit.php?action=updateMessageStatus&buddy=<?=$newMessagesData2[userid];?>" target="submitter" onclick="$(\'#message_<?=$newMessagesData[sender];?>\').remove();">Ignore</a></div></li>');
         }
     </script>
 <? 

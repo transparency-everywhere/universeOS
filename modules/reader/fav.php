@@ -34,11 +34,11 @@ if($_GET['action'] == "add"){
             <table width="100%" height="40" cellspacing="0" style="cursor: pointer;">
                 <tr style="border-top: 1px solid #c9c9c9;" id="favTabBar">
                 	<!-- this cols toggle the tabs the javascript is located at bottom -->
-                    <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive active" id="showfavGroup"><span class=""><img src="./gfx/icons/group.png">&nbsp;Groups</span></td>
-                    <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" id="showfavFav"><span class=""><img src="./gfx/icons/fav.png">&nbsp;Fav</span></td>
-                    <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" id="showfavPlayList"><span class=""><img src="./gfx/icons/playlist.png">&nbsp;Playlists</span></td>
+                        <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive active" id="showfavGroup"><span class=""><i class="icon icon-user usergroup"></i>&nbsp;Groups</span></td>
+                    <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" id="showfavFav"><span class=""><i class="icon icon-star"></i>&nbsp;Fav</span></td>
+                    <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" id="showfavPlayList"><span class=""><i class="icon icon-play playlist"></i>&nbsp;Playlists</span></td>
                     <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" id="showfavNews"><span class=""><img src="./gfx/icons/rss.png">&nbsp;News</span></td>
-                    <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" id="showfavFiles"><span class=""><img src="gfx/icons/filesystem/folder.png">&nbsp;Files</span></td>
+                    <td width="20%" align="center" style="border-right: 1px solid #CFCFCF;" class="grayBar interactive" id="showfavFiles"><span class=""><i class="icon icon-folder"></i>&nbsp;Files</span></td>
                 </tr>
             </table>
             <div class="favTab" id="favTab_Group">
