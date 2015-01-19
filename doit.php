@@ -1001,15 +1001,6 @@ else if($_GET['action'] == "showSingleFeed"){
         
         
         }
-else if($_GET['action'] == "reloadMainFeed"){
-            
-        $feedClass = new feed();
-            
-                $feedClass->show("friends", "$_SESSION[userid]");
-                echo "<div onclick=\"feedLoadMore('.feedMain' ,'friends', 'NULL', '1'); feedLoadMore('friends','1'); $(this).hide();\">...load more</div>";
-                
-            
-        }
 else if($_GET['action'] == "feedLoadMore"){
             $feedClass = new feed();
             $type = save($_GET['type']);
@@ -1668,7 +1659,7 @@ else if($_GET['action'] == "deleteItem"){
         }
 else if($_GET['action'] == "loadPrivacySettings"){
         	//is used bei js privacy.load to load privacy selection with privacy = $_POST['val'] into DOM
-			$editable =  ($_POST['editable'] === 'true'); //str to bool
+		$editable =  ($_POST['editable'] === 'true'); //str to bool
                         
                 $privacyClass = new privacy($_POST['val']);
           	$privacyClass->showPrivacySettings($editable);

@@ -16,18 +16,9 @@
 
 var buddylist = new function(){
     this.checksum;
-    this.getBuddies = function(){
-                                   var res;
-			  		$.ajax({
-				      url:"api.php?action=getBuddylist",
-				      async: false,  
-					  type: "POST",
-				      success:function(data) {
-				         res = $.parseJSON(data); 
-				      }
-				   });
-				   return res;
-			  	};
+    this.getBuddies = function(){ 
+	return api.query('api/buddies/get/', {});
+    };
     this.addBuddy = function(userid){
         var res;
 	$.ajax({

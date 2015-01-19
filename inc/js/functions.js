@@ -1882,7 +1882,7 @@ var privacy = new function(){
 			  			editable = false;
 			  		
 			  		
-			  		$.post("doit.php?action=loadPrivacySettings", {
+			  		$.post("api/item/privay/load/", {
 	                       val:val, editable : editable
 	                       }, function(result){
 		                   		$(selector).html(result);
@@ -1898,7 +1898,7 @@ var privacy = new function(){
 				    var result="";
 				    
 				    $.ajax({
-				      url:"doit.php?action=loadPrivacySettings",
+				      url:"api/item/privay/load/",
 				      async: false,  
 					  type: "POST",
 					  data: { val : val, editable : editable },

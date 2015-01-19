@@ -779,7 +779,7 @@ var events = new function(){
 	this.create = function(startStamp, stopStamp, title, place, privacyShow, privacyEdit){
 			  		
 				    $.ajax({
-				      url:"doit.php?action=loadPrivacySettings",
+				      url:"api/item/privay/load/",
 				      async: false,  
 					  type: "POST",
 					  data: { 

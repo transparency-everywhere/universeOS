@@ -152,6 +152,7 @@ switch($action){
         }
     break;
 	case 'getBuddylist':
+            //api/buddies/get/
 		if(proofLoginMobile($_POST['userid'], $_POST['hash'])){
                         $buddyListClass = new buddylist();
 			echo json_encode($buddyListClass->buddyListArray($_POST['userid']));
