@@ -1,4 +1,19 @@
 
+function getUserCypher(id){
+		var result="";
+		    $.ajax({
+		      url:"api.php?action=getUserCypher",
+		      async: false, 
+			  type: "POST",
+			  data: { userid : id },
+		      success:function(data) {
+		         result = data; 
+		      }
+		   });
+		   
+		   return result;
+}
+
         //proof registration
         function checkReg(){
                 var valuee;

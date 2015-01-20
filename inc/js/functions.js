@@ -443,8 +443,6 @@ var universe = new function(){
     };
 };
 
-			  
-
 var User = new function(){
     this.userid;
     this.setUserId = function(id){
@@ -575,7 +573,6 @@ var User = new function(){
     };
 };
           
-
 var privacy = new function(){
 	
 	this.load = function(selector, val, editable){
@@ -773,320 +770,6 @@ var privacy = new function(){
 	
 };
 
-var groups = new function(){
-	
-        this.show = function(groupId){
-            
-                  reader.applicationVar.show();
-                    reader.tabs.addTab("" + groupId + "", '',gui.loadPage("./group.php?id=" + groupId + ""));
-              
-                  return false;
-        };
-        this.create = function(title, type, description, invitedUsers){
-            var callback = function(data){
-                       if(data != '1'){
-                           gui.alert('The group could not be created', 'Create Group');
-                       };
-            };
-            api.query('api/groups/create/', { title : title, type: type, description: description, invitedUsers: JSON.stringify(invitedUsers) }, callback);
-        };
-	this.get = function(){
-			  		
-				    var result = api.query('api.php?action=getGroups', { val : 'val' });
-				    
-				    if(result != null){
-				   		return $.parseJSON(result);
-				   	}
-	};
-        this.getData = function(groupId){
-            
-            return api.query('api/groups/getData/', { group_id : groupId });
-            
-        };
-        this.deleteUserFromGroup = function(groupId, userId){
-            
-            
-            callback = function(){
-              gui.alert('The user has been removed'); 
-              if($('#updateGroupFormContainer')){
-                  groups.showUpdateGroupForm(groupId);
-              }
-            };
-            api.query('api/groups/removeUser/', { group_id : groupId, user_id: userId },callback);
-            
-        };
-	this.getTitle = function(groupId){
-			  		
-				    var result = api.query('api.php?action=getGroupTitle', {groupId : groupId});
-				    
-				   	if(result){
-				   		return result;
-				   	}
-			  		
-			  	};
-        this.update = function(groupId, title, description, type, membersInvite){
-            
-            callback = function(){
-              gui.alert('The group has been updated'); 
-              if($('#updateGroupFormContainer')){
-                  groups.showUpdateGroupForm(groupId);
-              };
-            };
-            api.query('api/groups/update/', { group_id : groupId, title: title, description: description, type: type, members_invite: membersInvite },callback);
-        };
-                     
-        this.makeUserAdmin = function(groupId, userId){
-            callback = function(){
-              gui.alert('The admin has been added');
-              if($('#updateGroupFormContainer')){
-                  groups.showUpdateGroupForm(groupId);
-              }
-            };
-            api.query('api/groups/makeUserAdmin/', { group_id : groupId, user_id: userId },callback);
-        };
-        this.removeFromAdmins = function(groupId, userId){
-            callback = function(){
-              gui.alert('The admin has been removed');
-              if($('#updateGroupFormContainer')){
-                  groups.showUpdateGroupForm(groupId);
-              }
-              
-            };
-            api.query('api/groups/removeFromAdmins/', { group_id : groupId, user_id: userId },callback);
-            
-        };
-        this.getUsers = function(groupId){
-            
-            return api.query('api/groups/getUsers/', { group_id : groupId });
-        
-        };
-        
-        this.verifyGroupRemoval = function(groupId){
-            
-            var confirmParameters = {};
-            confirmParameters['title'] = 'Delete Group';
-            confirmParameters['text'] = 'Are you sure to delete this grouü?';
-            confirmParameters['submitButtonTitle'] = 'Delete';
-            confirmParameters['submitFunction'] = function(){
-                var callback = function(){
-                    $('.blueModal').hide();
-                    gui.alert('The group has been removed');
-                };
-                api.query('api/groups/delete/', { group_id : groupId }, callback);
-            };
-            confirmParameters['cancelButtonTitle'] = 'Cancel';
-            confirmParameters['cancelFunction'] = function(){
-                //alert('cancel');
-            };
-
-            gui.confirm(confirmParameters);
-        };
-        this.generateMemberOptionsButton = function(group_id, user_id, admins){
-            var output = '';
-            output += "<div class='btn-group'>";
-                output += "<button type='button' class='btn btn-default btn-sm dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>";
-                    output += "Action <span class='caret'></span>";
-                output += '</button>';
-             
-                output += "<ul class='dropdown-menu' role='menu'>";
-                    if($.inArray(''+user_id, admins) === -1){
-                      output += "<li><a href='#' onclick='groups.makeUserAdmin("+group_id+","+user_id+");'>Make Admin</a></li>";
-                    }else{
-                      output += "<li><a href='#' onclick='groups.removeFromAdmins("+group_id+","+user_id+");'>Remove from Admins</a></li>";
-                    }
-                    
-                    
-                  output += "<li class='divider'></li>";
-                    output += "<li><a href='#' onclick='groups.deleteUserFromGroup("+group_id+","+user_id+");'>Remove from group</a></li>";
-                output += '</ul>';
-            output += '</div>';
-            
-            
-            return output;
-        };
-        this.showUpdateGroupForm = function(group_id){
-            var formModal = new gui.modal();
-            var groupData = groups.getData(group_id);
-            var admins = groupData['admin'];
-            
-            var admins = admins.split(';');
-
-            var fieldArray = [];
-            var options = [];
-            options['headline'] = '';
-            options['buttonTitle'] = 'Save';
-            options['noButtons'] = true;
-
-            var field0 = [];
-            field0['caption'] = 'Title';
-            field0['inputName'] = 'title';
-            field0['type'] = 'text';
-            field0['value'] = groupData['title'];
-            fieldArray[0] = field0;
-
-            var captions = ['Public', 'Private'];
-            var type_ids = ['1', '0'];
-
-            var field1 = [];
-            field1['caption'] = 'Type';
-            field1['inputName'] = 'type';
-            field1['values'] = type_ids;
-            field1['captions'] = captions;
-            field1['type'] = 'dropdown';
-            field1['preselected'] = groupData['public'];
-            fieldArray[1] = field1;
-            
-            var checked = '';
-            if(groupData['membersInvite'] === '1'){
-                checked = 'checked';
-            }
-            
-            var field2 = [];
-            field2['caption'] = '';
-            field2['value'] = "<input type='checkBox' name='membersInvite' id='membersInvite' value='1' "+checked+"> Allow members to invite users";
-            field2['type'] = 'html';
-            fieldArray[2] = field2;
-
-            var field3 = [];
-            field3['caption'] = 'Description';
-            field3['inputName'] = 'description';
-            field3['type'] = 'text';
-            field3['value'] = groupData['description'];
-            fieldArray[3] = field3;
-            
-            var buddies = groups.getUsers(group_id);
-            var html = '<ul>';
-            $.each(buddies,function(index, value){
-                html += "<li>"+useridToUsername(value)+" "+groups.generateMemberOptionsButton(group_id, value, admins)+"</li>";
-            });
-            html += '<ul>';
-            
-            var field4 = [];
-            field4['caption'] = 'Users';
-            field4['type'] = 'html';
-            field4['value'] = html;
-            fieldArray[4] = field4;
-            
-            var field5 = [];
-            field5['caption'] = 'Delete Group';
-            field5['inputName'] = 'deleteGroup';
-            field5['value'] = 'Delete Group';
-            field5['type'] = 'button';
-            field5['actionFunction'] = 'groups.verifyGroupRemoval(\''+group_id+'\')';
-            fieldArray[5] = field5;
-            
-            
-
-
-            var modalOptions = {};
-            modalOptions['buttonTitle'] = 'Update Group';
-
-            modalOptions['action'] = function(){
-                var callback = function(){
-                    jsAlert('', 'The group has been updated');
-                    $('.blueModal').remove();
-                };
-                
-                
-                //needs to be done
-                
-                
-                
-                var invitedUsers;
-                groups.update(group_id, $('.blueModal #title').val(), $('.blueModal #description').val(), $('.blueModal #type').val(),  $('.blueModal #membersInvite').is(':checked'));
-            };
-            formModal.init('Update Group', '<div id="updateGroupFormContainter"></div>', modalOptions);
-            gui.createForm('#updateGroupFormContainter',fieldArray, options);
-            $('.dropdown-toggle').dropdown();
-        };
-        
-        
-        this.showCreateGroupForm = function(){
-            var formModal = new gui.modal();
-
-            var fieldArray = [];
-            var options = [];
-            options['headline'] = '';
-            options['buttonTitle'] = 'Save';
-            options['noButtons'] = true;
-
-            var field0 = [];
-            field0['caption'] = 'Title';
-            field0['inputName'] = 'title';
-            field0['type'] = 'text';
-            fieldArray[0] = field0;
-
-            var captions = ['Public', 'Private'];
-            var type_ids = ['1', '0'];
-
-            var field1 = [];
-            field1['caption'] = 'Type';
-            field1['inputName'] = 'type';
-            field1['values'] = type_ids;
-            field1['captions'] = captions;
-            field1['type'] = 'dropdown';
-            fieldArray[1] = field1;
-
-            var field2 = [];
-            field2['caption'] = 'Description';
-            field2['inputName'] = 'description';
-            field2['type'] = 'text';
-            fieldArray[2] = field2;
-
-            
-            var buddies = buddylist.getBuddies();
-            var html = '';
-            if(buddies.length === 0){
-                html += 'You have no user in your buddylist';
-            }
-            html += '<ul>';
-            $.each(buddies,function(index, value){
-                html += "<li><input type='checkbox' class='invitedBuddy' value='"+value+"'> "+useridToUsername(value)+"</li>";
-            });
-            html += '<ul>';
-            var field3 = [];
-            field3['caption'] = 'Invite Users';
-            field3['type'] = 'html';
-            field3['value'] = html;
-            fieldArray[3] = field3;
-
-
-
-            var modalOptions = {};
-            modalOptions['buttonTitle'] = 'Create Group';
-
-            modalOptions['action'] = function(){
-                var callback = function(){
-                    jsAlert('', 'The group has been created');
-                    $('.blueModal').remove();
-                };
-                var invitedUsers = [];
-                $('.blueModal .invitedBuddy').each(function(){
-                   invitedUsers.push($(this).val()); 
-                });
-                groups.create($('.blueModal #title').val(), $('.blueModal #type').val(), $('.blueModal #description').val(), invitedUsers);
-            };
-            formModal.init('Update CreateGroup', '<div id="createGroupFormContainer"></div>', modalOptions);
-            gui.createForm('#createGroupFormContainer',fieldArray, options);
-        };
-        
-        //join public group or accept invitation
-        this.join = function(group_id){
-            var callback = function(){
-                $('#profileWrap.group_'+group_id+' #joinButton .btn').hide();
-                $('#favTab_Group').load('doit.php?action=showUserGroups');
-                updateDashbox('group');
-            };
-            api.query('api/groups/join/', { group_id : group_id}, callback);
-        };
-        
-        //decline invitation
-        this.declineRequest = function(group_id){
-            alert('needs to be written');
-        };
-	
-};
-
 var modal =  new function() {
 			    this.html;
 			    this.create = function (title, content, action) {
@@ -1171,66 +854,6 @@ function proofLogin(){
                   return false;
               }
 }
-
-function getUserPicture(request){
-            debug.log('getUserPicture initizialized with request'+request);
-			            var post;
-			            var userid;
-			            if(is_numeric(request)){
-                                        debug.log('     numeric request');
-			                userid = request;
-			                //check if username is stored
-			                if(typeof userPictures[userid] !== 'undefined'){
-			                    //return stored username
-                                            
-                                            debug.log('     username for userid '+userid+'is stored:'+userPictures[userid]);
-			                    return userPictures[userid];
-			                }else{
-                                            
-			                    post = request;
-			                }
-			            }else{
-                                        
-                                        debug.log('     string request - request should be a username');
-			                post = request;
-			            }
-			            
-			            //load data from sercer
-			            var result = '';
-                                    
-                                    debug.log('     ajax request initialized');
-                                    result = api.query('api.php?action=getUserPicture', {request : post});
-			            
-			            if(is_numeric(request)){
-                                        
-                                        debug.log('     numeric request');
-			                if(result.length > 0){
-			                    
-			                }
-			                userPictures[userid]=result;
-			            }else{
-			                var response = new Array();
-			                
-			                var userPictureObject = JSON.parse(result);
-			                $.each(userPictureObject, function(index, value) {
-			                        //add value to userPictures var
-			                        userPictures[index]=htmlentities(value);
-			                        response[index]=htmlentities(value);
-			                    });
-			                
-			                
-			            }
-			            if(is_numeric(request)){
-                                        
-                                        debug.log('     return numeric response');
-			                return userPictures[userid];
-			            }else{
-			                return response;
-			            }
-                                    
-                                    
-				
-			}
 			
 function searchUserByString(string, limit){
     var result = api.query('api.php?action=searchUserByString', { string : string, limit : limit });
@@ -1258,21 +881,6 @@ function jsAlert(type, message){
               }
 //encryption functions
 
-//not in use because of async
-function generateAsymKeyPair(){
-      var keySize = 1024;
-      var crypt;
-      var ret = [];
-      crypt = new JSEncrypt({default_key_size: keySize});
-
-        crypt.getKey(function () {
-      		ret['privateKey'] = crypt.getPrivateKey();
-      		ret['publicKey'] = crypt.getPublicKey();
-        });
-      
-      
-	}
-
 function getSalt(type, itemId, key){
 			var encryptedSalt = '';
 			$.ajax({
@@ -1291,17 +899,17 @@ function getSalt(type, itemId, key){
 function createSalt(type, itemId, receiverType, receiverId, salt){
 			var ret;
 			$.ajax({
-			  url:"api.php?action=createSalt",
-			  async: false,  
-			  type: "POST",
-			  data: { type: type, itemId: itemId, receiverType: receiverType, receiverId: receiverId, salt: salt },
-			  success:function(data) {
-			     ret = data; 
-			  }
+                            url:"api.php?action=createSalt",
+                            async: false,  
+                            type: "POST",
+                            data: { type: type, itemId: itemId, receiverType: receiverType, receiverId: receiverId, salt: salt },
+                            success:function(data){
+                              ret = data; 
+                            }
 			});
 			
 			return ret;
-	}
+}
 
 var hash = new function(){
 		this.MD5 = function(string){
@@ -1737,20 +1345,6 @@ function usernameToUserid(username){
 		
 	}
 
-function getUserCypher(id){
-		var result="";
-		    $.ajax({
-		      url:"api.php?action=getUserCypher",
-		      async: false, 
-			  type: "POST",
-			  data: { userid : id },
-		      success:function(data) {
-		         result = data; 
-		      }
-		   });
-		   
-		   return result;
-	}
 
 function getUserSalt(id){
 		//returns user salt (aes encrypted with pw hash)
@@ -1780,25 +1374,6 @@ function feedLoadMore(destination ,type, user, limit){
 		},'html');
 	}
        
-//can be deleted
-function del_reloadFeed(type){
-        if(type === "friends"){
-            $.post('api.php?action=checkForFeeds&type=friends', function(data) {
-                console.log('reloadFeed - check for new feeds');
-                if(data === "1"){
-                    console.log('reloadFeed - no new feeds');
-                }else{
-                    console.log('reloadFeed - loading new feeds..');
-                    
-                    
-                    $(".feedMain").slideDown("200", function () {
-                        $(this).load("doit.php?action=reloadMainFeed");
-                        console.log('reloadFeed - new feed loaded');
-                    });
-                }
-            });
-        }
-    }
 
 //filesystem
 
@@ -2054,9 +1629,6 @@ function nextPlaylistItem(playList, row){
              	  $("#playListPlayer").load("playListplayer.php?playList=" + playList +"&row=" + row +"");
               }
 
-
-
-
 function isYoutubeURL(url){
     return /((http|https):\/\/)?(www\.)?(youtube\.com)(\/)?([a-zA-Z0-9\-\.]+)\/?/.test(url);
 }
@@ -2102,8 +1674,7 @@ function popper(url) {
 function deleteFromPersonals(id){
                   $("#loader").load("doit.php?action=deleteFromPersonals&id=" + id + "");
               }
-              
-
+          
 function showProfile(userId){
     var username = useridToUsername(userId);
     reader.tabs.addTab(username, '',gui.loadPage("./profile.php?user=" + userId));
@@ -2118,6 +1689,7 @@ function showPlaylist(id){
 function startPlayer(type, typeid){
               $("#dockplayer").load("player/dockplayer.php?reload=1&" + type +"=" + typeid + "");
               }
+
 function closeDockMenu(){
                 $("#dockMenu").hide("fast");
               }
@@ -2144,500 +1716,62 @@ function clock() {
                 setTimeout('clock()',36000);
               }
 
-//PLUGINS
-//PLUGINS
-//PLUGINS
-
-/*
-                 * AutoSuggest
-                 * Copyright 2009-2010 Drew Wilson
-                 * www.drewwilson.com
-                 * code.drewwilson.com/entry/autosuggest-jquery-plugin
-                 *
-                 * Version 1.4   -   Updated: Mar. 23, 2010
-                 *
-                 * This Plug-In will auto-complete or auto-suggest completed search queries
-                 * for you as you type. You can add multiple selections and remove them on
-                 * the fly. It supports keybord navigation (UP + DOWN + RETURN), as well
-                 * as multiple AutoSuggest fields on the same page.
-                 *
-                 * Inspied by the Autocomplete plugin by: J�rn Zaefferer
-                 * and the Facelist plugin by: Ian Tearle (iantearle.com)
-                 *
-                 * This AutoSuggest jQuery plug-in is dual licensed under the MIT and GPL licenses:
-                 *   http://www.opensource.org/licenses/mit-license.php
-                 *   http://www.gnu.org/licenses/gpl.html
-                 */
-
-(function($){
-        $.fn.autoSuggest = function(data, options) {
-                                var defaults = { 
-                                        asHtmlID: false,
-                                        startText: "Enter Name Here",
-                                        emptyText: "No Results Found",
-                                        preFill: {},
-                                        limitText: "No More Selections Are Allowed",
-                                        selectedItemProp: "value", //name of object property
-                                        selectedValuesProp: "value", //name of object property
-                                        searchObjProps: "value", //comma separated list of object property names
-                                        queryParam: "q",
-                                        retrieveLimit: false, //number for 'limit' param on ajax request
-                                        extraParams: "",
-                                        matchCase: false,
-                                        minChars: 1,
-                                        keyDelay: 400,
-                                        resultsHighlight: true,
-                                        neverSubmit: false,
-                                        selectionLimit: false,
-                                        showResultList: true,
-                                        start: function(){},
-                                        selectionClick: function(elem){},
-                                        selectionAdded: function(elem){},
-                                        selectionRemoved: function(elem){ elem.remove(); },
-                                        formatList: false, //callback function
-                                        beforeRetrieve: function(string){ return string; },
-                                        retrieveComplete: function(data){ return data; },
-                                        resultClick: function(data){},
-                                        resultsComplete: function(){}
-                                };  
-                                var opts = $.extend(defaults, options);	 	
-
-                                var d_type = "object";
-                                var d_count = 0;
-                                if(typeof data == "string") {
-                                        d_type = "string";
-                                        var req_string = data;
-                                } else {
-                                        var org_data = data;
-                                        for (k in data) if (data.hasOwnProperty(k)) d_count++;
-                                }
-                                if((d_type == "object" && d_count > 0) || d_type == "string"){
-                                        return this.each(function(x){
-                                                if(!opts.asHtmlID){
-                                                        x = x+""+Math.floor(Math.random()*100); //this ensures there will be unique IDs on the page if autoSuggest() is called multiple times
-                                                        var x_id = "as-input-"+x;
-                                                } else {
-                                                        x = opts.asHtmlID;
-                                                        var x_id = x;
-                                                }
-                                                opts.start.call(this);
-                                                var input = $(this);
-                                                input.attr("autocomplete","off").addClass("as-input").attr("id",x_id).val(opts.startText);
-                                                var input_focus = false;
-
-                                                // Setup basic elements and render them to the DOM
-                                                input.wrap('<ul class="as-selections" id="as-selections-'+x+'"></ul>').wrap('<li class="as-original" id="as-original-'+x+'"></li>');
-                                                var selections_holder = $("#as-selections-"+x);
-                                                var org_li = $("#as-original-"+x);				
-                                                var results_holder = $('<div class="as-results" id="as-results-'+x+'"></div>').hide();
-                                                var results_ul =  $('<ul class="as-list"></ul>');
-                                                var values_input = $('<input type="hidden" class="as-values" name="as_values_'+x+'" id="as-values-'+x+'" />');
-                                                var prefill_value = "";
-                                                if(typeof opts.preFill == "string"){
-                                                        var vals = opts.preFill.split(",");					
-                                                        for(var i=0; i < vals.length; i++){
-                                                                var v_data = {};
-                                                                v_data[opts.selectedValuesProp] = vals[i];
-                                                                if(vals[i] != ""){
-                                                                        add_selected_item(v_data, "000"+i);	
-                                                                }		
-                                                        }
-                                                        prefill_value = opts.preFill;
-                                                } else {
-                                                        prefill_value = "";
-                                                        var prefill_count = 0;
-                                                        for (k in opts.preFill) if (opts.preFill.hasOwnProperty(k)) prefill_count++;
-                                                        if(prefill_count > 0){
-                                                                for(var i=0; i < prefill_count; i++){
-                                                                        var new_v = opts.preFill[i][opts.selectedValuesProp];
-                                                                        if(new_v == undefined){ new_v = ""; }
-                                                                        prefill_value = prefill_value+new_v+",";
-                                                                        if(new_v != ""){
-                                                                                add_selected_item(opts.preFill[i], "000"+i);	
-                                                                        }		
-                                                                }
-                                                        }
-                                                }
-                                                if(prefill_value != ""){
-                                                        input.val("");
-                                                        var lastChar = prefill_value.substring(prefill_value.length-1);
-                                                        if(lastChar != ","){ prefill_value = prefill_value+","; }
-                                                        values_input.val(","+prefill_value);
-                                                        $("li.as-selection-item", selections_holder).addClass("blur").removeClass("selected");
-                                                }
-                                                input.after(values_input);
-                                                selections_holder.click(function(){
-                                                        input_focus = true;
-                                                        input.focus();
-                                                }).mousedown(function(){ input_focus = false; }).after(results_holder);	
-
-                                                var timeout = null;
-                                                var prev = "";
-                                                var totalSelections = 0;
-                                                var tab_press = false;
-
-                                                // Handle input field events
-                                                input.focus(function(){			
-                                                        if($(this).val() == opts.startText && values_input.val() == ""){
-                                                                $(this).val("");
-                                                        } else if(input_focus){
-                                                                $("li.as-selection-item", selections_holder).removeClass("blur");
-                                                                if($(this).val() != ""){
-                                                                        results_ul.css("width",selections_holder.outerWidth());
-                                                                        results_holder.show();
-                                                                }
-                                                        }
-                                                        input_focus = true;
-                                                        return true;
-                                                }).blur(function(){
-                                                        if($(this).val() == "" && values_input.val() == "" && prefill_value == ""){
-                                                                $(this).val(opts.startText);
-                                                        } else if(input_focus){
-                                                                $("li.as-selection-item", selections_holder).addClass("blur").removeClass("selected");
-                                                                results_holder.hide();
-                                                        }				
-                                                }).keydown(function(e) {
-                                                        // track last key pressed
-                                                        lastKeyPressCode = e.keyCode;
-                                                        first_focus = false;
-                                                        switch(e.keyCode) {
-                                                                case 38: // up
-                                                                        e.preventDefault();
-                                                                        moveSelection("up");
-                                                                        break;
-                                                                case 40: // down
-                                                                        e.preventDefault();
-                                                                        moveSelection("down");
-                                                                        break;
-                                                                case 8:  // delete
-                                                                        if(input.val() == ""){							
-                                                                                var last = values_input.val().split(",");
-                                                                                last = last[last.length - 2];
-                                                                                selections_holder.children().not(org_li.prev()).removeClass("selected");
-                                                                                if(org_li.prev().hasClass("selected")){
-                                                                                        values_input.val(values_input.val().replace(","+last+",",","));
-                                                                                        opts.selectionRemoved.call(this, org_li.prev());
-                                                                                } else {
-                                                                                        opts.selectionClick.call(this, org_li.prev());
-                                                                                        org_li.prev().addClass("selected");		
-                                                                                }
-                                                                        }
-                                                                        if(input.val().length == 1){
-                                                                                results_holder.hide();
-                                                                                 prev = "";
-                                                                        }
-                                                                        if($(":visible",results_holder).length > 0){
-                                                                                if (timeout){ clearTimeout(timeout); }
-                                                                                timeout = setTimeout(function(){ keyChange(); }, opts.keyDelay);
-                                                                        }
-                                                                        break;
-                                                                case 9: case 188:  // tab or comma
-                                                                        tab_press = true;
-                                                                        var i_input = input.val().replace(/(,)/g, "");
-                                                                        if(i_input != "" && values_input.val().search(","+i_input+",") < 0 && i_input.length >= opts.minChars){	
-                                                                                e.preventDefault();
-                                                                                var n_data = {};
-                                                                                n_data[opts.selectedItemProp] = i_input;
-                                                                                n_data[opts.selectedValuesProp] = i_input;																				
-                                                                                var lis = $("li", selections_holder).length;
-                                                                                add_selected_item(n_data, "00"+(lis+1));
-                                                                                input.val("");
-                                                                        }
-                                                                case 13: // return
-                                                                        tab_press = false;
-                                                                        var active = $("li.active:first", results_holder);
-                                                                        if(active.length > 0){
-                                                                                active.click();
-                                                                                results_holder.hide();
-                                                                        }
-                                                                        if(opts.neverSubmit || active.length > 0){
-                                                                                e.preventDefault();
-                                                                        }
-                                                                        break;
-                                                                default:
-                                                                        if(opts.showResultList){
-                                                                                if(opts.selectionLimit && $("li.as-selection-item", selections_holder).length >= opts.selectionLimit){
-                                                                                        results_ul.html('<li class="as-message">'+opts.limitText+'</li>');
-                                                                                        results_holder.show();
-                                                                                } else {
-                                                                                        if (timeout){ clearTimeout(timeout); }
-                                                                                        timeout = setTimeout(function(){ keyChange(); }, opts.keyDelay);
-                                                                                }
-                                                                        }
-                                                                        break;
-                                                        }
-                                                });
-
-                                                function keyChange() {
-                                                        // ignore if the following keys are pressed: [del] [shift] [capslock]
-                                                        if( lastKeyPressCode == 46 || (lastKeyPressCode > 8 && lastKeyPressCode < 32) ){ return results_holder.hide(); }
-                                                        var string = input.val().replace(/[\\]+|[\/]+/g,"");
-                                                        if (string == prev) return;
-                                                        prev = string;
-                                                        if (string.length >= opts.minChars) {
-                                                                selections_holder.addClass("loading");
-                                                                if(d_type == "string"){
-                                                                        var limit = "";
-                                                                        if(opts.retrieveLimit){
-                                                                                limit = "&limit="+encodeURIComponent(opts.retrieveLimit);
-                                                                        }
-                                                                        if(opts.beforeRetrieve){
-                                                                                string = opts.beforeRetrieve.call(this, string);
-                                                                        }
-                                                                        $.getJSON(req_string+"?"+opts.queryParam+"="+encodeURIComponent(string)+limit+opts.extraParams, function(data){ 
-                                                                                d_count = 0;
-                                                                                var new_data = opts.retrieveComplete.call(this, data);
-                                                                                for (k in new_data) if (new_data.hasOwnProperty(k)) d_count++;
-                                                                                processData(new_data, string); 
-                                                                        });
-                                                                } else {
-                                                                        if(opts.beforeRetrieve){
-                                                                                string = opts.beforeRetrieve.call(this, string);
-                                                                        }
-                                                                        processData(org_data, string);
-                                                                }
-                                                        } else {
-                                                                selections_holder.removeClass("loading");
-                                                                results_holder.hide();
-                                                        }
-                                                }
-                                                var num_count = 0;
-                                                function processData(data, query){
-                                                        if (!opts.matchCase){ query = query.toLowerCase(); }
-                                                        var matchCount = 0;
-                                                        results_holder.html(results_ul.html("")).hide();
-                                                        for(var i=0;i<d_count;i++){				
-                                                                var num = i;
-                                                                num_count++;
-                                                                var forward = false;
-                                                                if(opts.searchObjProps == "value") {
-                                                                        var str = data[num].value;
-                                                                } else {	
-                                                                        var str = "";
-                                                                        var names = opts.searchObjProps.split(",");
-                                                                        for(var y=0;y<names.length;y++){
-                                                                                var name = $.trim(names[y]);
-                                                                                str = str+data[num][name]+" ";
-                                                                        }
-                                                                }
-                                                                if(str){
-                                                                        if (!opts.matchCase){ str = str.toLowerCase(); }				
-                                                                        if(str.search(query) != -1 && values_input.val().search(","+data[num][opts.selectedValuesProp]+",") == -1){
-                                                                                forward = true;
-                                                                        }	
-                                                                }
-                                                                if(forward){
-                                                                        var formatted = $('<li class="as-result-item" id="as-result-item-'+num+'"></li>').click(function(){
-                                                                                        var raw_data = $(this).data("data");
-                                                                                        var number = raw_data.num;
-                                                                                        if($("#as-selection-"+number, selections_holder).length <= 0 && !tab_press){
-                                                                                                var data = raw_data.attributes;
-                                                                                                input.val("").focus();
-                                                                                                prev = "";
-                                                                                                add_selected_item(data, number);
-                                                                                                opts.resultClick.call(this, raw_data);
-                                                                                                results_holder.hide();
-                                                                                        }
-                                                                                        tab_press = false;
-                                                                                }).mousedown(function(){ input_focus = false; }).mouseover(function(){
-                                                                                        $("li", results_ul).removeClass("active");
-                                                                                        $(this).addClass("active");
-                                                                                }).data("data",{attributes: data[num], num: num_count});
-                                                                        var this_data = $.extend({},data[num]);
-                                                                        if (!opts.matchCase){ 
-                                                                                var regx = new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + query + ")(?![^<>]*>)(?![^&;]+;)", "gi");
-                                                                        } else {
-                                                                                var regx = new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + query + ")(?![^<>]*>)(?![^&;]+;)", "g");
-                                                                        }
-
-                                                                        if(opts.resultsHighlight){
-                                                                                this_data[opts.selectedItemProp] = this_data[opts.selectedItemProp].replace(regx,"<em>$1</em>");
-                                                                        }
-                                                                        if(!opts.formatList){
-                                                                                formatted = formatted.html(this_data[opts.selectedItemProp]);
-                                                                        } else {
-                                                                                formatted = opts.formatList.call(this, this_data, formatted);	
-                                                                        }
-                                                                        results_ul.append(formatted);
-                                                                        delete this_data;
-                                                                        matchCount++;
-                                                                        if(opts.retrieveLimit && opts.retrieveLimit == matchCount ){ break; }
-                                                                }
-                                                        }
-                                                        selections_holder.removeClass("loading");
-                                                        if(matchCount <= 0){
-                                                                results_ul.html('<li class="as-message">'+opts.emptyText+'</li>');
-                                                        }
-                                                        results_ul.css("width", selections_holder.outerWidth());
-                                                        results_holder.show();
-                                                        opts.resultsComplete.call(this);
-                                                }
-
-                                                function add_selected_item(data, num){
-                                                        values_input.val(values_input.val()+data[opts.selectedValuesProp]+",");
-                                                        var item = $('<li class="as-selection-item" id="as-selection-'+num+'"></li>').click(function(){
-                                                                        opts.selectionClick.call(this, $(this));
-                                                                        selections_holder.children().removeClass("selected");
-                                                                        $(this).addClass("selected");
-                                                                }).mousedown(function(){ input_focus = false; });
-                                                        var close = $('<a class="as-close">&times;</a>').click(function(){
-                                                                        values_input.val(values_input.val().replace(","+data[opts.selectedValuesProp]+",",","));
-                                                                        opts.selectionRemoved.call(this, item);
-                                                                        input_focus = true;
-                                                                        input.focus();
-                                                                        return false;
-                                                                });
-                                                        org_li.before(item.html(data[opts.selectedItemProp]).prepend(close));
-                                                        opts.selectionAdded.call(this, org_li.prev());	
-                                                }
-
-                                                function moveSelection(direction){
-                                                        if($(":visible",results_holder).length > 0){
-                                                                var lis = $("li", results_holder);
-                                                                if(direction == "down"){
-                                                                        var start = lis.eq(0);
-                                                                } else {
-                                                                        var start = lis.filter(":last");
-                                                                }					
-                                                                var active = $("li.active:first", results_holder);
-                                                                if(active.length > 0){
-                                                                        if(direction == "down"){
-                                                                        start = active.next();
-                                                                        } else {
-                                                                                start = active.prev();
-                                                                        }	
-                                                                }
-                                                                lis.removeClass("active");
-                                                                start.addClass("active");
-                                                        }
-                                                }
-
-                                        });
-                                }
-                        };
-})(jQuery);
-
-var delay = (function(){
-				  var timer = 0;
-				  return function(callback, ms){
-				    clearTimeout (timer);
-				    timer = setTimeout(callback, ms);
-				  };
-				})();
+function getUserPicture(request){
+            debug.log('getUserPicture initizialized with request'+request);
+			            var post;
+			            var userid;
+			            if(is_numeric(request)){
+                                        debug.log('     numeric request');
+			                userid = request;
+			                //check if username is stored
+			                if(typeof userPictures[userid] !== 'undefined'){
+			                    //return stored username
+                                            
+                                            debug.log('     username for userid '+userid+'is stored:'+userPictures[userid]);
+			                    return userPictures[userid];
+			                }else{
+                                            
+			                    post = request;
+			                }
+			            }else{
+                                        
+                                        debug.log('     string request - request should be a username');
+			                post = request;
+			            }
+			            
+			            //load data from sercer
+			            var result = '';
+                                    
+                                    debug.log('     ajax request initialized');
+                                    result = api.query('api.php?action=getUserPicture', {request : post});
+			            
+			            if(is_numeric(request)){
+                                        
+                                        debug.log('     numeric request');
+			                if(result.length > 0){
+			                    
+			                }
+			                userPictures[userid]=result;
+			            }else{
+			                var response = new Array();
+			                
+			                var userPictureObject = JSON.parse(result);
+			                $.each(userPictureObject, function(index, value) {
+			                        //add value to userPictures var
+			                        userPictures[index]=htmlentities(value);
+			                        response[index]=htmlentities(value);
+			                    });
+			                
+			                
+			            }
+			            if(is_numeric(request)){
+                                        
+                                        debug.log('     return numeric response');
+			                return userPictures[userid];
+			            }else{
+			                return response;
+			            }
+                                    
+                                    
 				
-(function ( $ ) {
- //tags
-    $.fn.userSearch = function( options ) {
- 
-        // This is the easiest way to have default options.
-        var settings = $.extend({
-            // These are the defaults.
-            source: null,
-            seperator: ",",
-            fieldName: "users",
-            val: ''
-        }, options );
- 
- 		var output, buddies, username, userPicture;
- 		output = '<div class="userSearch">';
- 		output += '<ul class="inputTagBar" style="display:none;">';
- 		output += '</ul>';
- 		output += '<input type="text" placeholder="search users..." class="userTagSearch">';
- 		output += '<ul class="inputTagSuggestions">';
- 		output += '</ul>';
- 		output += '<input type="hidden" value="'+settings.val+'" name="'+settings.fieldName+'">';
- 		output += '<div>';
-		
-		//add output to the chosen element
- 		this.html(output);
- 		//search suggestions
- 		$('.userTagSearch').keyup(function(key){
- 			var shownUsers = [];
- 			$('.inputTagBar li').each(function(){
- 				shownUsers[shownUsers.length+1] = $(this).data('user');
- 			});
- 			if(shownUsers.length === 0)
- 				$('.inputTagBar').hide();
- 			else
- 				$('.inputTagBar').show();
- 			
- 			//hide if no input
- 			if($('.userTagSearch').val().length === 0)
- 				$('.inputTagSuggestions').hide();
- 				
- 			output = '';
- 			
- 			//backspace =-> delete last tag
- 			if(key.keyCode === 8){
- 				$('.inputTagSuggestions').hide();
- 			}else{
- 				$('.inputTagSuggestions').show();
-				$('.inputTagSuggestions').html('');
-				
-				
-				//load suggestions from API
- 				var suggestions = searchUserByString($(this).val(), '0,30');
-				$.each(suggestions, function( index, value ) {
-					  			if(value !== undefined && !in_array(index, shownUsers)){
-					  			
-					  			username = String(value);
-					  			username = username.slice(0,-1);
-					  			userPicture = User.showPicture(index);
-					  			
-					  			
-					  			output += '<li onclick="addUserToInputTagBar('+index+')">';
-					  			output += userPicture;
-					  			output += ' ';
-					  			output += username;
-					  			output += '</li>';
-					  			}
-					  			
-				});
-				if(output.length === 0){
-					output = 'no results...';
-				}
-				$('.inputTagSuggestions').html(output);
-				
- 				
- 			}
- 		});
- 
-        // Greenify the collection based on the settings variable.
-        return this;
- 
-    };
- 
-}( jQuery ));
-
-function removeUserFromInputTagBar(userid){
-	//remove value from input
-	var oldValue = $('.userSearch input[type=hidden]').val();
-	$('.userSearch input[type=hidden]').val(oldValue.replace(userid+',',''));
-	if($('.userSearch input[type=hidden]').val().length === 0){
-		$('.inputTagBar').hide();
-	}
-	//remove tag
-	$('.inputTagBar .userTag_'+userid).remove();
-}
-
-function addUserToInputTagBar(userid){
-	//dumb way to find out which users are already loaded
-	var shownUsers = [];
- 	$('.inputTagBar li').each(function(){
- 		shownUsers[shownUsers.length+1] = $(this).data('user');
- 	});
-	if(!in_array(userid, shownUsers)){
-		//add value to input
-		$('.userSearch input[type=hidden]').val($('.userSearch input[type=hidden]').val()+userid+',');
-		$('.inputTagBar').show();
-		username = useridToUsername(userid);
-		//append tag to tagBar
-		$('.inputTagBar').append('<li class="userTag_'+userid+'" data-user="'+userid+'">'+username+'<a onclick="removeUserFromInputTagBar(\''+userid+'\');">x</a></li>');
-	}
-			 
-}
-
-
-if (!Date.now) {
-    Date.now = function() { return new Date().getTime(); }
-}
+			}
