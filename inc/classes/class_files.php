@@ -151,26 +151,45 @@ class files {
                         $fileValues['download'] = $download;
                         $fileValues['status'] = true;
         
-        if($dbClass->insert('files', $fileValues)){
+                        
+        $fileId = $this->insertRecordDB($fileValues);
+        if($fileId){
         	
-        jsAlert("The file has been uploaded :)");
+            jsAlert("The file has been uploaded :)");
         }else{
         	jsAlert("Opps, something went wrong.");
         }
-        ?>
-            <script>
+        
+        
+        echo '<script>';?>
                 filesystem.tabs.updateTabContent('<?=substr($FileElementData['title'], 0, 10);?>' ,gui.loadPage('modules/filesystem/showElement.php?element=<?=$element;?>&reload=1'));
-            </script>
         <?php
+        echo '</script>';
         $time = time();
         
-        //add feed
-        $fileId = mysql_insert_id();
+        //add feed entry
         $feed = "has uploaded a file";
         
         $feedClass = new feed();
         $feedClass->create($user, $feed, "", "showThumb", $privacy, "file", $fileId);
         
+    }
+    
+    
+    
+    function createFile($element, $fileValue=NULL, $privacy=NULL){
+        $elementClass = new element($element);
+        $path = $elementClass->getPath();
+        
+        $myfile = fopen(universeBasePath.'/'.$path, "w");
+        fwrite($myfile, $fileValue);
+        fclose($myfile);
+
+        echo $path;
+    }
+    
+    function insertRecordDB($values){
+        return $dbClass->insert('files', $fileValues);
     }
     
     function getPath($fileId){
@@ -256,10 +275,10 @@ class files {
             return 'application/octet-stream';
         }
     }
-	 function tidyTempFiles(){
+    function tidyTempFiles(){
 	 	mysql_query("DELETE FROM `files` WHERE temp='true' AND timestamp<'".(time()-86400)."'");
 	 }
-function getFileIcon($fileType, $full=false){
+    function getFileIcon($fileType, $full=false){
         //turns filetype into src of icon
         //used in showFileList(); showItemThum();
         switch($fileType){
@@ -368,7 +387,7 @@ class file{
 			
             return $path;
     }
-	 function validateTempFile($privacy){
+    function validateTempFile($privacy){
                 $fileId = $this->id;
 	 	$path = $this->getPath();
 		$oldpath = $path.'.temp';
@@ -408,20 +427,20 @@ class file{
             return $filePath;
     }
 
-function getFileData(){
-    $fileId = $this->id;
-    
-    $dbClass = new db();
-    $fileData = $dbClass->select('files', array('id', save($fileId)));
-    $fileData['realpath'] = $this->getPath();
-    if(authorize($fileData['privacy'], 'show', $fileData['owner']))
-    return $fileData;
-}
+    function getFileData(){
+        $fileId = $this->id;
 
-function getTitle(){
-		$fileData = $this->getFileData();
-		return $fileData['title'];
-	}
+        $dbClass = new db();
+        $fileData = $dbClass->select('files', array('id', save($fileId)));
+        $fileData['realpath'] = $this->getPath();
+        if(authorize($fileData['privacy'], 'show', $fileData['owner']))
+        return $fileData;
+    }
+
+    function getTitle(){
+                    $fileData = $this->getFileData();
+                    return $fileData['title'];
+            }
 
 
     function getFileType(){

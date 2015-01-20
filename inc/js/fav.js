@@ -16,25 +16,33 @@
 
 var fav = new function(){
     this.add = function(type,typeid){
-	$.ajax({
-            url:"api/fav/add/",
-            async: false,  
-            type: "POST",
-            data: {type : type, typeid:typeid},
-            success:function(data) {
-               if(data == '1'){
-                    gui.alert('The favorite has been added.', 'Add Favorite');
-               }else{
-                    gui.alert(data, 'Add Favorite');
-               }
+//	$.ajax({
+//            url:"api/fav/add/",
+//            async: false,  
+//            type: "POST",
+//            data: {type : type, typeid:typeid},
+//            success:function(data) {
+//               if(data == '1'){
+//                    gui.alert('The favorite has been added.', 'Add Favorite');
+//               }else{
+//                    gui.alert(data, 'Add Favorite');
+//               }
+//            }
+//	});
+        api.query('api/fav/add/', {type : type, typeid:typeid},function(data){
+            if(data == '1'){
+                gui.alert('The favorite has been added.', 'Add Favorite');
+                updateDashbox('fav');
+            }else{
+                 gui.alert(data, 'Add Favorite');
             }
-	});
+        });
     };
     
-this.remove = function(type, typeId){
-    if($.post("api/fav/remove/", { type: type, typeId: typeId } )){
-	gui.alert('Your favorite has been removed.', 'Remove Favorite');
-	updateDashbox('fav');
+    this.remove = function(type, typeId){
+        api.query('api/fav/remove/', { type: type, typeId: typeId }, function(){
+            gui.alert('Your favorite has been removed.', 'Remove Favorite');
+            updateDashbox('fav');
+        });
     }
-}
 };

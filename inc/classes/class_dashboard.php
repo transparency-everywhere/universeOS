@@ -104,10 +104,10 @@ class dashBoard{
 				foreach($groups AS $group){
 					$output .="<li onclick=\"groups.show('$group');\">";
 						$output .="<span class=\"marginRight\">";
-							$output .= '<i class="icon white-user" style="height:14px; width: 14px;"></i>';
+							$output .= '<i class="icon white-user" style="height:20px; width: 20px;"></i>';
 						$output .="</span>";
 						$output .="<span>";
-							$output .= $groupsClass->getGroupName($group);
+							$output .= shorten($groupsClass->getGroupName($group),19);
 						$output .="</span>";
 					$output .="</li>";
 					$i++;
@@ -116,7 +116,7 @@ class dashBoard{
 			$output .= "</ul>";
 		}
 		
-		$footer = "<a href=\"#addGroup\" onclick=\"popper('doit.php?action=addGroup')\" title=\"Create a new Group\"><i class=\"icon white-plus\" style=\"color:#FFF\"></i></a>";
+		$footer = "<a href=\"#addGroup\" onclick=\"popper('doit.php?action=addGroup')\" title=\"Create a new Group\"><i class=\"icon white-plus\" style=\"color:#FFF; margin-bottom: -10px;\"></i></a>";
 		
 		$output = $this->showDashBox($title, $output, $footer, "group", $grid);
 		

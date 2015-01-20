@@ -2631,7 +2631,7 @@ margin: 0;
             margin: 0 4px;
             position: relative;
             float: left;
-            height: 180px;
+            height: 200px;
 	}
 	
 	.dashBox .content{
@@ -2663,6 +2663,10 @@ margin: 0;
 	.dashBox footer a{
 		float:right;
 	}
+        
+        .dashBox footer .white-plus{
+            margin-bottom: -10px;
+        }
 	
 	.dashBox > div, .dashBox > ul {
 		/*padding: 3px;*/

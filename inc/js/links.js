@@ -17,18 +17,7 @@
         
 var links = new function(){
     this.getData = function(linkId){
-        
-        var result="";
-	$.ajax({
-            url:"api/links/select/",
-            async: false,  
-            type: "POST",
-            data: {link_id : linkId},
-            success:function(data) {
-               result = JSON.parse(data);
-            }
-	});
-	return result;
+	return api.query('api/links/select', {link_id : linkId});
     };
     this.update = function(linkId, element, title,  type, privacy, link, callback){
         

@@ -22,6 +22,12 @@ class element {
     }
     //put your code here
     
+    function getPath(){
+        $elementData = $this->getData();
+        $folder = new folder($elementData['folder']);
+        return $folder->getPath();
+    }
+    
     function create($folder, $title, $type, $user, $privacy){
         
         

@@ -17,33 +17,11 @@
 var folders = new function(){
               	
     this.getData = function(folder_id){
-        
-        var result="";
-	$.ajax({
-            url:"api/folders/select/",
-            async: false,  
-            type: "POST",
-            data: {folder_id : folder_id},
-            success:function(data) {
-               result = JSON.parse(data);
-            }
-	});
-	return result;
+	return api.query('api/folders/select/', {folder_id : folder_id});
     };
               	
     this.getPath = function(folder_id){
-        
-        var result="";
-	$.ajax({
-            url:"api/folders/getPath/",
-            async: false,  
-            type: "POST",
-            data: {folder_id : folder_id},
-            success:function(data) {
-               result = JSON.parse(data);
-            }
-	});
-	return result;
+	return api.query('api/folders/getPath/',{folder_id : folder_id});
     };
     this.update = function(folderId, parent_folder, title, privacy, callback){
         
@@ -106,18 +84,7 @@ var folders = new function(){
     };
     
     this.folderIdToFolderTitle = function(folderId){
-				    var result="";
-				    
-				    $.ajax({
-				      url:"api.php?action=folderIdToFolderTitle",
-				      async: false,  
-					  type: "POST",
-					  data: { folderId : folderId },
-				      success:function(data) {
-				         result = data; 
-				      }
-				   });
-				   return result;
+				   return folders.getData(folderId)['name'];
     };
     this.createFolder = function(parent_folder, name, privacy, callback){
         var result="";
@@ -176,20 +143,8 @@ var folders = new function(){
     
     
     this.delete = function(folderId, callback){
-        var result="";
-	$.ajax({
-            url:"api/folders/delete/",
-            async: false,  
-            type: "POST",
-            data: {folder_id : folderId},
-            success:function(data) {
-               result = data;
-               if(typeof callback === 'function'){
-                   callback(); //execute callback if var callback is function
-               }
-            }
-	});
-	return result;
+	return api.query('api/folders/delete/',{folder_id : folderId},callback);
+        
     };
     this.verifyRemoval = function(folderId){
         var confirmParameters = {};

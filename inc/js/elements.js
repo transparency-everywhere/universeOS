@@ -17,16 +17,7 @@
 var elements = new function(){
     
     this.getData = function(element_id){
-        var result="";
-	$.ajax({
-            url:"api/elements/select/",
-            async: false,  
-            type: "POST",
-            data: {element_id : element_id},
-            success:function(data) {
-               result = JSON.parse(data);
-            }
-	});
+        return api.query('api/elements/select/',{element_id : element_id});
 	return result;
     };
     
@@ -207,18 +198,7 @@ var elements = new function(){
     };
     
     this.elementIdToElementTitle = function(elementId){
-				    var result="";
-				    
-				    $.ajax({
-				      url:"api.php?action=elementIdToElementTitle",
-				      async: false,  
-					  type: "POST",
-					  data: { elementId : elementId },
-				      success:function(data) {
-				         result = data; 
-				      }
-				   });
-				   return result;
-              	};
+            return elements.getData(elementId)['title'];
+    };
               	
 };

@@ -572,6 +572,14 @@ var gui = new function(){
 	};
     };
     
+    this.shorten = function(text, maxLength){
+        var ret = text;
+        if (ret.length > maxLength) {
+            ret = ret.substr(0,maxLength-3) + "...";
+        }
+        return ret;
+    };
+    
     this.generateId = function(){
         var text = "";
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -1236,15 +1244,7 @@ var application = function(id){
             if(type === 'html'){
                 content = value;
             }else if(type === 'url'){
-                
-                $.ajax({
-                      url: value,
-                      type: "GET",
-                      async: false,
-                      success: function(data) {
-                                        content = data;
-                      }
-                });
+                content = api.query(value,{});
             }
             
 		var windowStyle = '';
@@ -1372,21 +1372,8 @@ var application = function(id){
 };
 			  
 var tasks = new function(){
-	
-	this.getData = function(taskId){
-		var res;
-		$.ajax({
-	      url:"api.php?action=getTaskData",
-	      async: false,  
-		  type: "POST",
-		  data: { 
-		  	taskId : taskId
-		  	 },
-	      success:function(data) {
-	         res = $.parseJSON(data); 
-	      }
-	   });
-	   return res;
+    	this.getData = function(taskId){
+	   return api.query('api.php?action=getTaskData', {taskId: taskId});
 	};
 	
 	this.addForm = function(startstamp){
@@ -1459,7 +1446,6 @@ var tasks = new function(){
               $('#createTask').submit(function(e){
                       e.preventDefault();
                       if($('#taskTitle').val().length > 0 && $('#date').val().length > 0 && $('#time').val().length > 0){
-
                               $.post("api.php?action=createTask",$(this).serialize(),function(data){
                                             if(data.length === 0){
                                               calendar.loadTasks();
@@ -1481,24 +1467,9 @@ var tasks = new function(){
 	};
 	
 	this.get = function(startStamp, stopStamp, privacy){
-		var result;
-	    $.ajax({
-	      url:"api.php?action=getTasks",
-	      async: false,  
-		  type: "POST",
-		  data: { 
-		  	 startStamp: startStamp,
-		  	 stopStamp: stopStamp,
-		  	 privacy: privacy
-		  	 },
-	      success:function(data) {
-	      	if(data){
-	        	result = $.parseJSON(data); 
-	      	}
-	      }
-	   });
 	   
-	   return result;
+	   return api.query('api.php?action=getTasks',{startStamp: startStamp, stopStamp: stopStamp, privacy: privacy});
+           
 	};
 	
 	this.show = function(taskId, editable){
@@ -1653,36 +1624,16 @@ var tasks = new function(){
 	   });
 	};
 	this.markAsDone = function(id){
-		$.ajax({
-	      url:"api.php?action=markTaskAsDone",
-	      async: false,  
-		  type: "POST",
-		  data: { 
-		  	eventid : id,
-		  	 },
-	      success:function(data) {
-	         result = data; 
-	      }
-	   });
-	   $('.task_'+id).addClass('doneTask');
-	   if(!calendar.showDoneTasks){
-	   	$('.task_'+id).hide();
-	   }
+                api.query('api.php?action=markTaskAsDone', {eventid : id});
+                $('.task_'+id).addClass('doneTask');
+                if(!calendar.showDoneTasks){
+                    $('.task_'+id).hide();
+                }
 	};
 	this.markAsPending = function(id){
-		$.ajax({
-	      url:"api.php?action=markTaskAsPending",
-	      async: false,  
-		  type: "POST",
-		  data: { 
-		  	eventid : id,
-		  	 },
-	      success:function(data) {
-	         result = data; 
-	      }
-	   });
-	  $('.task_'+id).removeClass('doneTask');
-	  $('.task_'+id).show();
+            api.query('api.php?action=markTaskAsPending', {eventid : id});
+            $('.task_'+id).removeClass('doneTask');
+            $('.task_'+id).show();
 	};
 	this.update = function(){
 		updateDashbox('task');
@@ -1738,19 +1689,7 @@ var User = new function(){
     };
     this.getLastActivity = function(request){
 		            //load data from server
-		            var result="";
-		            
-                            $.ajax({
-		                url:sourceURL+"/api.php?action=getLastActivity",
-		                async: false,  
-		                    type: "POST",
-		                    data: { 
-		                                    request : request 
-		                                },
-		                success:function(data) {
-		                           result = data; 
-		                        }
-		            });
+                            api.query('api.php?action=getLastActivity',{ request : request });
 		            
 		            if(is_numeric(request)){
 		                if(result.length > 0){
@@ -1881,7 +1820,7 @@ var privacy = new function(){
 			  			editable = false;
 			  		
 			  		
-			  		$.post("api/item/privay/load/", {
+			  		$.post("api/item/privacy/load/", {
 	                       val:val, editable : editable
 	                       }, function(result){
 		                   		$(selector).html(result);
@@ -1893,37 +1832,27 @@ var privacy = new function(){
 
 			  		if(typeof editable == 'undefined')
 			  			editable = false;
-			  			
-				    var result="";
-				    
-				    $.ajax({
-				      url:"api/item/privay/load/",
-				      async: false,  
-					  type: "POST",
-					  data: { val : val, editable : editable },
-				      success:function(data) {
-				         result = data; 
-				      }
-				   	});
-				   return result;
+                                    
+                                        return api.query('api/item/privacy/load', { val : val, editable : editable });
 			  	};
          
         this.updatePrivacy = function(type, item_id, privacy, callback){
             
-        var result="";
-	$.ajax({
-            url:"api/item/privacy/",
-            async: false,  
-            type: "POST",
-            data: $.param({type : type, itemId: item_id})+'&'+privacy,
-            success:function(data) {
-               result = data;
-               if(typeof callback === 'function'){
-                   callback(); //execute callback if var callback is function
-               }
-            }
-	});
-	return result;
+            var result="";
+            $.ajax({
+                url:"api/item/privacy/",
+                async: false,  
+                type: "POST",
+                data: $.param({type : type, itemId: item_id})+'&'+privacy,
+                success:function(data) {
+                   result = data;
+                   if(typeof callback === 'function'){
+                       callback(); //execute callback if var callback is function
+                   }
+                }
+            });
+            return result;
+            
         };
         this.showUpdatePrivacyForm = function(type, item_id){
             var title;
@@ -1991,25 +1920,12 @@ var privacy = new function(){
 			  		if(author == localStorage.currentUser_userid)
 			  			return true;
 			  			
-			  		var result;
-				    $.ajax({
-				      url:"api.php?action=authorize",
-				      async: false,  
-					  type: "POST",
-					  data: { 
-					  	 privacy: privacy,
-					  	 author: author
-					  	 },
-				      success:function(data) {
-				      	if(data){
-				        	result = data;
-				      	}
-				      }
-				   });
-				   if(parseInt(result) === 1)
-				   		return true;
-				   else
-				   		return false;
+			  		var result = api.query('api.php?action=authorize', {privacy: privacy, author: author});
+				    
+                                        if(parseInt(result) === 1)
+                                                     return true;
+                                        else
+                                                     return false;
 			  	};
                                 
         this.init = function(){
@@ -2113,18 +2029,9 @@ var groups = new function(){
         };
 	this.get = function(){
 			  		
-				    var result="";
+				    var result = api.query('api.php?action=getGroups', { val : 'val' });
 				    
-				    $.ajax({
-				      url:"api.php?action=getGroups",
-				      async: false,  
-					  type: "POST",
-					  data: { val : 'val' },
-				      success:function(data) {
-				         result = data; 
-				      }
-				   	});
-				   	if(result != null){
+				    if(result != null){
 				   		return $.parseJSON(result);
 				   	}
 	};
@@ -2147,17 +2054,8 @@ var groups = new function(){
         };
 	this.getTitle = function(groupId){
 			  		
-				    var result="";
+				    var result = api.query('api.php?action=getGroupTitle', {groupId : groupId});
 				    
-				    $.ajax({
-				      url:"api.php?action=getGroupTitle",
-				      async: false,  
-					  type: "POST",
-					  data: { groupId : groupId },
-				      success:function(data) {
-				         result = data; 
-				      }
-				   	});
 				   	if(result){
 				   		return result;
 				   	}
@@ -2541,16 +2439,8 @@ var Feed = function(type, $selector){
 };
 
 function proofLogin(){
-    var result;
-    $.ajax({
-          url: 'api.php?action=proofLogin',
-          type: "GET",
-          async: false,
-          success: function(data) {
-              result = data;
-          }
-    });
-              if(result == '1'){
+    var result = api.query('api.php?action=proofLogin', {});
+    if(result == '1'){
                   return true;
               }else{
                   return false;
@@ -2584,16 +2474,7 @@ function getUserPicture(request){
 			            var result = '';
                                     
                                     debug.log('     ajax request initialized');
-			            $.ajax({
-			                url:sourceURL+"/api.php?action=getUserPicture",
-			                async: false,  
-					type: "POST",
-					data: { request : post },
-			                success:function(data) { result = data;
-                                        
-                                        debug.log('     userpicture request successfull');
-                                        }
-			            });
+                                    api.query('api.php?action=getUserPicture', {request : post});
 			            
 			            if(is_numeric(request)){
                                         
@@ -2627,27 +2508,11 @@ function getUserPicture(request){
 			}
 			
 function searchUserByString(string, limit){
-    var result = [];
-    $.ajax({
-	              url:sourceURL+"/api.php?action=searchUserByString",
-	              async: false,  
-	              type: "POST",
-	              data: { string : string, limit : limit },
-	              success:function(data) {
-		              if(data === '"null"')
-		                  return false;
-		              else{
-			              var res = JSON.parse(data);
-			              if(res.length !== 0 && res != null){
-			                
-			                result = res;
-			                
-			              }else{
-			              	result = false;
-			              }
-		              }
-	              }
-	            });
+    var result = api.query('api.php?action=searchUserByString', { string : string, limit : limit });
+    
+    if(result.length === 0 && result == null){
+        result = false;           
+    }
     return result;
 }
 
@@ -3572,7 +3437,7 @@ function playPlaylist(playlist, row, fileId){
 function playFileDock(fileId){
               	$("#dockplayer").load("./player/dockplayer.php?file=" + fileId +"&reload=1");
               }
-  
+
 function nextPlaylistItem(playList, row){
              	  $("#playListPlayer").load("playListplayer.php?playList=" + playList +"&row=" + row +"");
               }

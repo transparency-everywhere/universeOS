@@ -103,9 +103,8 @@ class fav {
         
         
         $db = new db();
-        $checkData = $db->insert('fav', array('type', $type, '&&', 'item', $typeid), array('type'));
-        
-        if(isset($checkData['type'])){
+        $checkData = $db->select('fav', array('type', $type, '&&', 'item', $typeid));
+        if(is_array($checkData)){
             echo "allready your favourite";
             return false;
         } else {

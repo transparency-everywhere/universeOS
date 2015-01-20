@@ -779,7 +779,7 @@ var events = new function(){
 	this.create = function(startStamp, stopStamp, title, place, privacyShow, privacyEdit){
 			  		
 				    $.ajax({
-				      url:"api/item/privay/load/",
+				      url:"api/item/privacy/load/",
 				      async: false,  
 					  type: "POST",
 					  data: { 

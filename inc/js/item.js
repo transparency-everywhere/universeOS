@@ -16,29 +16,14 @@
 var item = new function(){
     this.plusOne = function(type, itemId){
         
-        
-        $.ajax({
-              url: 'api/item/score/scorePlus/',
-              type: "POST",
-              data: {type: type, item:itemId},
-              async: false,
-              success: function(data){
-                  
+        api.query('api/item/score/scorePlus/',{type: type, item:itemId},function(data){
                 $('span.scoreButton.'+type+'_'+itemId+' .counter').html(data);
-              }
         });
         
     };
     this.minusOne = function(type, itemId){
-        $.ajax({
-              url: 'api/item/score/scoreMinus/',
-              type: "POST",
-              data: {type: type, item:itemId},
-              async: false,
-              success: function(data) {
-                  
-                $('span.scoreButton.'+type+'_'+itemId+' .counter').html(data);
-              }
+        api.query('api/item/score/scoreMinus/',{type: type, item:itemId},function(data){
+            $('span.scoreButton.'+type+'_'+itemId+' .counter').html(data);
         });
     };
     this.showItemThumb = function(type, itemId){
