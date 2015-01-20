@@ -23,7 +23,7 @@ class personalEvents{
                         if($personalEventData['event'] == "comment"){
                             if($personalEventData['info'] == "feed"){
                                 $description = "Has commented your post.";
-                                $link = "reader.tabs.addTab(\'Comment\', \'\',gui.loadPage(\'modules/reader/showComment.php?type=$personalEventData[info]&itemid=$personalEventData[eventId]\')); return false";
+                                $link = "reader.tabs.addTab(\'Comment\', \'\',gui.loadPage(\'modules/reader/showComment.php?type=$personalEventData[info]&itemid=$personalEventData[eventId]\'));";
                             }else if($personalEventData['info'] == "profile"){
                                 $description = "Has commented in your profile.";
                                 $link = "showProfile(\'".getUser()."\');";

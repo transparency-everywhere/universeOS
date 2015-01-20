@@ -14,6 +14,45 @@
 //        @author nicZem for Tranpanrency - everywhere.com
         
 
+
+var Feed = function(type, $selector){
+    this.initType = type;
+    this.lastFeedReceived;
+    this.frame_id; //generate rand id
+    this.updateLastFeedReceived = function(feedId){
+        if(parseInt(feedId)>parseInt(this.last_feed_received)){
+            this.last_feed_received = feedId;
+            
+        }
+    };
+    this.init = function(initType, initTypeId, limit){
+        this.frame_id = gui.generateId();
+        
+        this.last_feed_received = 0;
+        var output = '';
+        
+        var pointer = this;
+        var loadedFeeds = this.loadFeeds(initType, initTypeId, limit);
+        
+        $.each(loadedFeeds,function(index, value){
+            output += pointer.generateSingleFeed(value);
+        });
+        
+        
+        
+        return '<div class="feedFrame" id="'+this.frame_id+'" data-type="'+this.initType+'" data-last="'+this.last_feed_received+'">'+output+'</div>';
+        
+    };
+    this.generateSingleFeed = function(feedData){
+        this.updateLastFeedReceived(parseInt(feedData['id']));
+        return feed.generateSingleFeed(feedData);
+    };
+    this.loadFeeds = function(type, typeId, limit){
+        return api.query('api/feed/load/', { type : type, typeId: typeId, limit:limit});
+    };
+    $($selector).html(this.init(type));
+};
+
 var feed = new function(){
     this.reload = function(type){
         
