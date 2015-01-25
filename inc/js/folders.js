@@ -23,6 +23,21 @@ var folders = new function(){
     this.getPath = function(folder_id){
 	return api.query('api/folders/getPath/',{folder_id : folder_id});
     };
+              	
+    this.getItems = function(folder_id){
+        
+        var result="";
+	$.ajax({
+            url:"api/folders/getItems/",
+            async: false,  
+            type: "POST",
+            data: {folder_id : folder_id},
+            success:function(data) {
+               result = JSON.parse(data);
+            }
+	});
+	return result;
+    };
     this.update = function(folderId, parent_folder, title, privacy, callback){
         
         var result="";

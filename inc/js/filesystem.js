@@ -16,15 +16,15 @@
 
 var filesystem =  new function() {
     this.init = function(){
-        
         var html = '<div id="fileBrowserFrame"></div>';
-        
-        
-        
         this.applicationVar = new application('filesystem');
         this.applicationVar.create('Filesystem', 'html', html,{width: 6, height:  5, top: 0, left: 3});
-			  			
-        html = '          <div class="leftNav">';		  			
+        this.tabs = new tabs('#fileBrowserFrame');
+        this.tabs.init();
+	this.tabs.addTab('universe', '', this.generateFullFileBrowser(0));
+    };
+    this.generateFullFileBrowser = function(folderId){
+        var html = '          <div class="leftNav">';		  			
         html += '              <ul>';		  			
         html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,gui.loadPage(\'modules/filesystem/fileBrowser.php?special=pupularity&reload=1\'));return false"><img src="gfx/icons/filesystem/side_suggestions.png"> Suggestions</a></li>';		  			
         html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,gui.loadPage(\'modules/filesystem/fileBrowser.php?reload=1\'));return false"><img src="gfx/icons/filesystem/side_allFiles.png"> All Files</a></li>';		  			
@@ -37,23 +37,19 @@ var filesystem =  new function() {
         html += '                  <!-- <li><i class="icon-warning-sign"></i> deleted</li> -->';		  			
         html += '              </ul>';		  			
         html += '          </div>';		  			
-        html += '';		  			
-        html += '';
-        
-	this.tabs = new tabs('#fileBrowserFrame');
-        this.tabs.init();
-	this.tabs.addTab('universe', '',gui.loadPage('modules/filesystem/fileBrowser.php'));
-			  	
+        html += this.generateFileBrowser(folderId);
+        return html;
     };
     this.generateFileBrowser = function(folderId){
+        var showFileBrowser = true;
         if(empty(folderId) || folderId === 0){
             folderId = '1';
         }else if(folderId === '2'){
             if(proofLogin()){
                 var homefolder = User.getAllData(User.userid)['homefolder'];
-                var showFileBrowser = true;
+                showFileBrowser = true;
             }else{
-                var showFileBrowser = false;
+                showFileBrowser = false;
             }
         }
         var folderData = folders.getData(folderId);
@@ -74,7 +70,7 @@ var filesystem =  new function() {
         if(!empty(folderId)){
             html += '        	<ul class="fileBrowserSettings fileBrowserSettings' + folderId + '">';		  			
             if(proofLogin()){
-                html += '        			<li><a href="#" onclick="fav.add(\'folder\', ' + folderId + '">Fav</a></li>';
+                html += '                       <li><a href="#" onclick="fav.add(\'folder\', ' + folderId + ')">Fav</a></li>';
             }		  			
             if(privacy.authorize(folderData['privacy'], folderData['creator'])){
                 html += '        		<li><a href="#" onclick="javascript: popper(\'doit.php?action=addElement&folder=' + folderId + '&reload=1\');return false">Add Element</a></li>';
@@ -82,35 +78,106 @@ var filesystem =  new function() {
                 html += '        		<li><a href="#" onclick="javascript: popper(\'doit.php?action=addInternLink&parentFolder=' + folderId + '&reload=1\');return false">Add Shortcut</a></li>';
             }		  			
             html += '        	</ul>';
+        }
+        if(showFileBrowser){
+            html += this.showFileBrowser(folderId);
         }		  			
-//bis hierher gekommen, mittwoch ab hier weitermachen mit den zeilen ausm comment weiter unten
-        html += '';		  			
-        html += '';		  			
-        html += '';		  			
-        html += '';		  			
-        html += '';		  			
-        html += '';      
-        
+//        if(favorite){
+//            html += '<table width="100%">';		  			
+//            html += fav.show(getUser());		  			
+//            html += '</table>';
+//        }		  			
+        html += '        </div>';	  			
+        html += '    </div>';		  			
+        html += '    </div>';
+        return html;
     };
-    
-    			
-//				if($showFileBrowser){
-//                                    $fileSystem = new fileSystem();
-//                                    $fileSystem->showFileBrowser($folder, $folderQuery, $elementQuery);
-//				}
-//
-//				if($fav){
-//                                        $favClass = new fav();
-//					echo'<table width="100%">';
-//					echo $favClass->show(getUser());
-//					echo'</table>';
-//				}
-//				
-//				
-//                ?>
-//        </div>
-//    </div>
-//    </div>
+
+    this.showFileBrowser = function(folder){
+        var subpath = './';
+        var rightClick = true;
+        var html = '<table cellspacing="0" class="filetable">';
+       
+        if(empty(folder)){
+            folder = 1;
+        }else{
+            //userFolder
+            var parentFolderData = [];
+            if(folder === "2"){
+                    //get userfolder
+                    var userfolder = User.getAllData(User.userid)['homefolder'];
+
+                    folder = userfolder;
+                    parentFolderData['folder'] = 1;
+            };
+
+            if(folder === userfolder){
+                    parentFolderData['folder'] = 1;
+            };
+        };
+
+            //generate parent folder row
+            if(!empty(folder) && (folder !== "1")){
+                if(parentFolderData['folder'] !== "1"){
+                    parentFolderData = folders.getData(folder);
+                }
+                    
+            html += '                        <tr height="30" class="greyHover">';		  			
+            html += '                            <td width="30">&nbsp;<img src="' + subpath + 'img/folder_dark.png" height="22"></td>';		  			
+            html += '                            <td><a href="' + subpath + 'out/?folder=' + parentFolderData['folder'] + '" onclick="openFolder(' + parentFolderData['folder'] + '); return false;">...</a></td>';		  			
+            html += '                            <td width="50px"></td>';		  			
+            html += '                            <td width="50px"></td>';		  			
+            html += '                        </tr>';
+            }
+
+            var itemsInFolder = folders.getItems(folder);
+            $.each(itemsInFolder,function(key, value){
+                //generate row with folders and elements
+                if(value['type'] === "folder"){
+                    var name = value['data']['name'];
+                    //special folder handlers
+                    if(folder === "3"){
+                        name = groups.getTitle(value['data']['name']) + '\'s Groupfiles'; // value['data']['name']) because groupid = foldername
+                    }
+                    html += '                <tr oncontextmenu="showMenu(\'folder' + value['data']['id'] + '\'); return false;" height="30" class="greyHover">';
+                    html += '                <td width="30">';
+                    if(rightClick){
+                        html += ''; //hier muss die rightClick function noch eingebunden werden!!
+                    }
+                    html += '&nbsp;<img src="' + subpath + 'img/folder_dark.png"></td>';
+                    html += '                    <td><a href="#" onclick="openFolder(\'' + value['data']['id'] + '\'); return false;">' + name + '</a></td>';
+                    html += '                    <td width="80px">';
+                    html += item.showScoreButton('folder', value['data']['id']);
+                    html += '                    </td>';
+                    html += '                    <td width="30px">';
+                    if(rightClick){
+                        html += item.showItemSettings('folder', value['data']['id']);
+                    }
+                    html += '                    </td>';
+                    html += '                </tr>';
+
+                };
+                
+                if(value['type'] === "element"){
+                    var title = value['data']['title'];
+                    html += "                        <tr oncontextmenu=\"showMenu('element" + value['data']['id'] + "'); return false;\" height=\"30\">";
+                    html += "                           <td width=\"30\">&nbsp;<img src=\"" + subpath + "gfx/icons/filesystem/element.png\" height=\"22\"></td>";
+                    html += "                           <td><a href=\"#\" onclick=\"elements.open('" + value['data']['id'] + "'); return false;\">" + title + "</a></td>";
+                    html += "                           <td width=\"80px\">" + item.showScoreButton('folder', value['data']['id']) + "</td>";
+                    html += "                           <td width=\"30px\">";
+                    if(rightClick){
+                        html += item.showItemSettings('element', value['data']['id']);
+                    }
+                    html += "                           </td>";
+                    html += "                        </tr>";
+                    if(rightClick){
+                        html += ''; //hier muss die rightClick function noch eingebunden werden!!
+                    }
+                }
+            });
+            html += '</table>';
+            return html;
+    };
     
     this.openShareModal = function(type, typeId){
               		
@@ -157,7 +224,7 @@ var filesystem =  new function() {
               		modal.create(title, content);
               	};
     this.openFolder = function(folderId){
-        this.tabs.updateTabContent(1, gui.loadPage('modules/filesystem/fileBrowser.php?reload=1&folder='+folderId));
+        this.tabs.updateTabContent(1, this.generateFullFileBrowser(folderId));
     };
     
     this.createUFF = function(element, title, filename, privacy, callback){

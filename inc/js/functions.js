@@ -281,6 +281,8 @@ var universe = new function(){
         
         gui.loadScript('inc/js/im.js');
         
+        gui.loadScript('inc/js/groups.js');
+        
         applications.init();
         
         
