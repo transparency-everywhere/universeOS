@@ -82,7 +82,7 @@ var filesystem =  new function() {
         if(showFileBrowser){
             html += this.showFileBrowser(folderId);
         }		  			
-//        if(favorite){
+//        if(fav){
 //            html += '<table width="100%">';		  			
 //            html += fav.show(getUser());		  			
 //            html += '</table>';

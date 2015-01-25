@@ -15,20 +15,25 @@
         
 
 var fav = new function(){
+    this.select = function(user){
+        
+        var result="";
+	$.ajax({
+            url:"api/fav/select/",
+            async: false,  
+            type: "POST",
+            data: {user : user},
+            success:function(data) {
+               result = JSON.parse(data);
+            }
+	});
+	return result;
+    };
+    this.show = function(user){
+        
+    }
     this.add = function(type,typeid){
-//	$.ajax({
-//            url:"api/fav/add/",
-//            async: false,  
-//            type: "POST",
-//            data: {type : type, typeid:typeid},
-//            success:function(data) {
-//               if(data == '1'){
-//                    gui.alert('The favorite has been added.', 'Add Favorite');
-//               }else{
-//                    gui.alert(data, 'Add Favorite');
-//               }
-//            }
-//	});
+
         api.query('api/fav/add/', {type : type, typeid:typeid},function(data){
             if(data == '1'){
                 gui.alert('The favorite has been added.', 'Add Favorite');

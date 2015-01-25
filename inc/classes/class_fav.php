@@ -12,6 +12,12 @@
  * @author niczem
  */
 class fav {
+    function select($user){
+        $db = new db();
+        $favs = $db->select('fav', array('user', $user));
+        return $favs;
+        //Hier weitermachen!! $favs in types aufteilen und dann in html einbringen
+    }
     function show($user=NULL){
         if($user == NULL){
                 $user = getUser();
