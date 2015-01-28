@@ -13,10 +13,47 @@
  */
 class fav {
     function select($user){
-        $db = new db();
-        $favs = $db->select('fav', array('user', $user));
-        return $favs;
-        //Hier weitermachen!! $favs in types aufteilen und dann in html einbringen
+        $dbClass = new db();
+        $favs = $dbClass->select('fav', array('user', $user));
+        foreach($favs AS $favData) {
+            //derive the table and the image from fav-type
+            if($favData['type'] == "folder"){
+                $favFolders = $dbClass->shiftResult($dbClass->select('folders', array('id', $favData['item'])), 'id');
+                foreach ($favFolders as $folderData) {
+                    $folderData['iconsrc'] = "img/folder_dark.png";
+                    if(authorize($folderData['privacy'], "show", $folderData['creator']))
+                        $result[] = array('type' => 'folder', 'data' => $folderData);
+                }
+            }else if($favData['type'] == "element"){
+                $favElements = $dbClass->shiftResult($dbClass->select('elements', array('id', $favData['item'])), 'id');
+                foreach ($favElements as $elementData) {
+                    $elementData['iconsrc'] = "gfx/icons/filesystem/element.png";
+                    if(authorize($elementData['privacy'], "show", $elementData['creator']))
+                        $result[] = array('type' => 'element', 'data' => $elementData);
+                }
+            }else if($favData['type'] == "file"){
+                $favFiles = $dbClass->shiftResult($dbClass->select('files', array('id', $favData['item'])), 'id');
+                foreach ($favFiles as $fileData) {
+                    $fileClass = new file($favData['item']);
+                    $fileType = $fileClass->getFileType();
+                    $fileClass2 = new files();
+                    $fileData['iconsrc'] = "fileIcons/".$fileClass2->getFileIcon($fileType);
+                    if(authorize($fileData['privacy'], "show", $fileData['creator']))
+                        $result[] = array('type' => 'file', 'data' => $fileData);
+                }
+            }else if($favData['type'] == "link"){
+                $favLinks = $dbClass->shiftResult($dbClass->select('links', array('id', $favData['item'])), 'id');
+                foreach ($favLinks as $linkData) {
+                    $classLinks = new link();
+                    $fileType = $classLinks->getType($favData['item']);
+                    $filesClass = new files();
+                    $linkData['iconsrc'] = "gfx/icons/filesystem/element.png";
+                    if(authorize($linkData['privacy'], "show", $linkData['creator']))
+                        $result[] = array('type' => 'link', 'data' => $linkData);
+                }
+            }
+        }
+        return $result;
     }
     function show($user=NULL){
         if($user == NULL){
@@ -46,14 +83,12 @@ class fav {
                                     $fileType = $fileClass->getFileType();
                                     $filesClass = new files();
                                     $img = "fileIcons/".$filesClass->getFileIcon($fileType);
-
                                 }else if($type == "link"){
                                     $typeTable = "links";
                                     $classLinks = new link();
                                     $fileType = $classLinks->getType($item);
                                     $filesClass = new files();
                                     $img = "fileIcons/".$filesClass->getFileIcon($fileType);
-
                                 }
                                 $dbClass = new db();
                                 $favFolderData = $dbClass->select($typeTable, array('id', $item));

@@ -16,7 +16,6 @@
 
 var fav = new function(){
     this.select = function(user){
-        
         var result="";
 	$.ajax({
             url:"api/fav/select/",
