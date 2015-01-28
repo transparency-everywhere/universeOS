@@ -46,6 +46,13 @@ class db{
             return $return;
         }
         public function shiftResult($result, $testColumn){
+            //check if result is array (if result is empty the sql string will be returned)
+            if(!is_array($result)){
+                return [];
+            }
+            
+            
+            //check if collumn which need to be tested exists
             if(isset($result[$testColumn])){
                 $return[0] = $result;
                 return $return;
