@@ -372,21 +372,6 @@ switch($action){
         
     break;
 	
-    //is used for universeOS registration form
-    case 'processSiteRegistration':
-    
-	    if(validateCapatcha($_POST['captcha'])){
-                $classUser = new user();
-	        $classUser->create($_POST['username'], $_POST['password'], $_POST['authSalt'], $_POST['keySalt'], $_POST['privateKey'], $_POST['publicKey']);
-			
-			
-		echo "1";
-            }else{
-	    	echo "The Captcha was wrong";
-            }
-        
-    break;
-	
     //is used for universeIM registration form
     case 'processSiteRegistrationMobile':
             $classUser = new user();

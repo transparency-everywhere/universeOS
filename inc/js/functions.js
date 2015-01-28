@@ -283,6 +283,10 @@ var universe = new function(){
         
         gui.loadScript('inc/js/groups.js');
         
+        
+        //gui.loadScript('inc/js/calendar.js');
+        
+        
         applications.init();
         
         
@@ -295,11 +299,25 @@ var universe = new function(){
         //init bootstrap alert
         $(".alert").alert();
         
+        //init reload
+        if(proofLogin()){
+            setInterval(function()
+            {
+                universe.reload();
+            }, 3000);
+        }
+
+
+        //loads clock into the dock, yeah.
+        clock();
+                
+        
     };
     this.reload = function(){
         //fetch request data like open filebrowsers & feeds
         var requests = [];
         
+        //push uff documents to request
         $.each(reader.uffChecksums,function(index, value){
                     if(typeof(value) != 'undefined'){
                         requests.push({
@@ -313,6 +331,8 @@ var universe = new function(){
                     }
                 });
         
+        if(proofLogin())
+        //push buddylist checksum
         requests.push({
                     action:'buddylist',
                     subaction:'reload',
@@ -321,6 +341,8 @@ var universe = new function(){
                     }
                 });
                 
+                
+        //sync chat request
         requests.push({
             action : 'IM',
             subaction:'sync',
@@ -329,11 +351,12 @@ var universe = new function(){
             }
         });
         
+        
+        //sync feed request
         var feedsArray = [];
         $('.feedFrame').each(function(){
             feedsArray.push({'type':$(this).data('type'), 'last_feed_received':$(this).data('last')});
         });
-        
         requests.push({
             action : 'feed',
             subaction: 'sync',
@@ -358,7 +381,8 @@ var universe = new function(){
             case'buddylist':
                 if(responseElement.subaction === 'reload'){
                     buddylist.reload();
-                }else if(responseElement.subaction === 'openRequest'){
+                }
+                else if(responseElement.subaction === 'openRequest'){
                     var notificationId = this.notificationArray.length+1;
                     this.notificationArray[notificationId]
                             = new notification({
@@ -468,7 +492,7 @@ var User = new function(){
     };
     this.showPicture = function(userid, lastActivity, size){
 	 
-        debug.log('showPicture initialized...');           
+        debug.log('showPicture initialized...');       
         var userpicture = getUserPicture(userid);
         if(typeof lastActivity === 'undefined'){
             debug.log('     get user activity for user '+userid);
@@ -1008,6 +1032,36 @@ var cypher = new function(){
 
 var sec =  new function() {
 		
+    //check pw
+    this.scorePassword = function(pass) {
+        var score = 0;
+        if (!pass)
+            return score;
+
+        // award every unique letter until 5 repetitions
+        var letters = new Object();
+        for (var i=0; i<pass.length; i++) {
+            letters[pass[i]] = (letters[pass[i]] || 0) + 1;
+            score += 5.0 / letters[pass[i]];
+        }
+
+        // bonus points for mixing it up
+        var variations = {
+            digits: /\d/.test(pass),
+            lower: /[a-z]/.test(pass),
+            upper: /[A-Z]/.test(pass),
+            nonWords: /\W/.test(pass),
+        }
+
+        variationCount = 0;
+        for (var check in variations) {
+            variationCount += (variations[check] == true) ? 1 : 0;
+        }
+        score += (variationCount - 1) * 10;
+
+        return parseInt(score);
+    }
+                
     //standard password cypher used in processRegistration(), login() and updatePassword();
     this.passwordCypher = function (password, type, itemId, salt) {
 

@@ -60,6 +60,7 @@ h3{
     background: #FFF;
     min-width: 250px;
     min-height: 260px;
+    border-radius: 3px;
     box-shadow: 1px 3px 8px 0.00px rgba(0, 0, 0, 0.3);
 }
 .fenster > header {
@@ -76,9 +77,13 @@ h3{
 }
 .fenster .inhalt {
 	background-color: #FFF;
-        height: 100%;
+        top: 40px;
         overflow: auto;
-        position: relative;
+        position: absolute;
+        left: 0;
+        right: 0;
+        border-radius: 3px;
+        bottom: 0;
 }
 .inhalt p {
 	margin-bottom:0px;
@@ -1898,7 +1903,7 @@ color:#FFFFFF;
 
 
 
-.button{
+/*.button{
 	cursor: pointer;
 	text-decoration:none;
 	border: 1px solid rgb(153, 153, 153);
@@ -1926,7 +1931,7 @@ color:#FFFFFF;
 .button a:link{
 	color: #000000 !important;
 	font-color: #000000 !important;
-}
+}*/
 
 .downloadButton{
     padding-top: 1px;

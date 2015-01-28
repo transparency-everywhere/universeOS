@@ -22,7 +22,10 @@ var settings = new function(){
 	
     };
     this.show = function(){
-        settings.applicationVar.show();
+        if(this.applicationVar)
+            settings.applicationVar.show();
+        else
+            this.init();
     };
     
 			    this.submitPassword = function () {

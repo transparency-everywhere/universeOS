@@ -53,23 +53,6 @@
         
         <!-- <script type="inc/js/jquery.jplayer.min.js"></script> -->
         <script src="inc/js/bootstrap.min.js"></script>
-                <script type="text/javascript">
-
-
-                //reload
-                setInterval(function()
-                {
-                    $("#reload").load("reload.php");
-                    //reloadFeed("friends");
-                }, 3000);
-
-
-                //loads clock into the dock, yeah.
-                clock();
-                
-
-
-        </script>
         <script src="inc/plugins/ckeditor/ckeditor.js"></script>
         <script type="text/javascript" src="inc/plugins/ckeditor/jquery.js"></script>
         <?
@@ -77,13 +60,13 @@
         //define bg-image
         if(!empty($userdata['backgroundImg'])){ 
             ?>
-        <style type="text/css">
-            body{
-                background-image: url(<?=$userdata['backgroundImg'];?>);
-                background-attachment: no-repeat;
-            }
-        </style>
-        <? }
+            <style type="text/css">
+                body{
+                    background-image: url(<?=$userdata['backgroundImg'];?>);
+                    background-attachment: no-repeat;
+                }
+            </style>
+            <? }
         
         //look for startmessages
         if(!empty($userdata['startLink'])){

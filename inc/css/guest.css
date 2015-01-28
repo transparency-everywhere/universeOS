@@ -1,8 +1,4 @@
 
-    #bodywrap{
-        top: 31px;
-    }
-    
     #offlineHeader{
         position: absolute;
         top: 0px;
@@ -20,24 +16,6 @@
     .dockSeachResult{
         bottom: 41px;
     }
-    
-    #topThing{
-    	position: absolute; top: 0px; right: 0px; left: 0px; padding-top:10px; padding-bottom:10px; background: #000; color: #383D3C; padding-top: 5px; padding-bottom: 3px; padding-left:10px;
-    }
-    
-    #topThing span:first-of-type{
-    	color: #54545B;
-    	float:left;
-    	
-    }
-    
-    #topThing span{
-    	margin-right: 15px; 
-    	margin-left:15px;
-    	float:right;
-    }
-    
-
 
 /*registration at guest.php*/
     #registration{
@@ -224,4 +202,133 @@ and (min-width : 321px) {
 @media only screen 
 and (max-width : 320px) {
 /* Styles */
+}
+
+
+
+
+
+
+/*new guestpage stuff*/
+.guestBox{
+    background-color:  #006d67;
+    box-shadow: 1px 3px 8px 0px rgba(0, 0, 0, 0.3);
+    width: 199px;
+    height: 270px;
+    float:left;
+    margin-left: 10px;
+    color:#FFF;
+    margin-bottom: 10px;
+}
+
+.guestBox.registerBox{
+    width: 825px;
+    background-color:  #b2a400;
+}
+
+.guestBox.registerBox img{
+    display:none;float: left;
+}
+
+.guestBox.registerBox p{
+    float: right;
+    margin-right: 25px;
+    max-width: 368px;
+}
+
+.guestBox h2{
+    margin-top: 15px;
+    margin-left: 20px;
+}
+
+.guestBox input[type=text], .guestBox input[type=password]{
+    width: 320px;
+    height: 40px;
+    margin-top: 10px;
+    border:none;
+}
+
+.guestBox input{
+    clear:both;
+    display: block;
+    margin-left: 20px;
+}
+
+.guestBox input[type=submit]{
+    display: inline-block;
+    float: right;
+}
+
+.guestBox .image{
+    height: 130px;
+    padding: 10px;
+    text-align: center;
+}
+
+.guestBox p{
+    margin-top:0;
+    margin: 10px;
+    font-size:20px;
+}
+
+#dock #searchField{
+    height: 35px;
+    left: 215px;
+    bottom: 2.5px;
+    border: none;
+}
+
+.arrow-right {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-top: 15px solid transparent;
+    border-bottom: 16px solid transparent;
+    border-right: 15px solid #790125;
+    margin-left: -15px;
+    float: left;
+    padding: 0;
+}
+
+.regError{
+    display: none;
+    position: absolute;
+    background-color: #790125;
+    margin-top: -35px;
+    height: 30px;
+    line-height: 30px;
+    color: #FFF!important;
+    padding-right: 5px;
+    text-align: left;
+    width: 300px;
+    margin-left: 325px;
+}
+
+.regError>a:hover{
+    text-decoration: none;
+}
+
+.regError>*{
+    color:#FFF!important;
+}
+
+.button{
+    color: #FFF;
+    background-color: #006d67;
+    width: 100px;
+    margin-top: 2.5px;
+    margin-left: 5px;
+    height: 35px;
+    padding: 7px 0;
+    text-align: center;
+}
+/* Smartphones (portrait) ----------- */
+@media all and (max-width : 1600px) {
+    /* Styles */
+
+    #clearBox{
+        clear:left;
+    }
 }

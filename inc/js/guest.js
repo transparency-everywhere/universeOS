@@ -14,94 +14,6 @@ function getUserCypher(id){
 		   return result;
 }
 
-        //proof registration
-        function checkReg(){
-                var valuee;
-                var check;
-                var usernameLengthCheck;
-                var checkBox;
-                var passwordCheck;
-                $(".checkReg").each(function() {
-                    valuee = $(this).val();
-                        if(valuee === ""){
-                            check = "FALSE";
-                        }else{
-                            if(check === ""){
-                            check = "TRUE";
-                            }
-                        }
-                });
-                
-                if($('#regUsername').val().length < 3){
-                	usernameLengthCheck = 'FALSE';
-                }
-                
-                $(".checkRegBox").each(function() {
-                    checkBox = $(this).is(':checked');
-                        if(checkBox){
-                            checkBox = "TRUE";
-                        }else{
-                            checkBox = "FALSE";
-                        }
-                });
-                if($("#registration #password").val() != $("#registration #passwordRepeat").val()){
-                    passwordCheck = "FALSE";
-                }
-
-                    if(check == "FALSE" || passwordCheck === "FALSE" || checkBox === "FALSE" || usernameLengthCheck === "FALSE"){
-                        if(check == "FALSE"){
-                        alert("Please fill out all the fields");
-                        }
-                        if(usernameLengthCheck == "FALSE"){
-                        alert("Your Username needs at least three chars.");
-                        }
-                        if(checkBox == "FALSE"){
-                        alert("Your have to accept our terms.");
-                        }
-                        if(passwordCheck == "FALSE"){
-                        alert("Your passwords dont match.");
-                        }
-                    }else{
-                        processRegistration()
-                        //$("#regForm").submit();
-                    }
-        }
-function checkUsername(id){
-	
-	$('.captchaContainer').slideDown('slow');
-	
-    var username = $("#"+id).val();
-    if(/^[a-zA-Z0-9- ]*$/.test(username) == false) {
-        $('#checkUsernameStatus').html('<a style="color: red">&nbsp;contains illegal characters</a>');
-    }else if(username.length > 2){
-        
-                //check server for new messages
-                $.post("api.php?action=checkUsername", {
-                       username:username
-                       }, function(result){
-                            var res = result;
-                            if(res == "1"){
-                                //load checked message
-                                $('#checkUsernameStatus').html('<a style="color: green">&nbsp;succes!</a>');
-                            }else{
-                                $('#checkUsernameStatus').html('<a style="color: red">&nbsp;already in use</a>');
-                            }
-                       }, "html");
-                
-               
-        
-        
-    }else{
-        //html to short
-        $('#checkUsernameStatus').html('<o style="color: red">&nbsp;to short</o>');
-    }
-							       $("#"+id).keyup(function() {
-									    delay(function(){
-									      checkUsername(id);
-									    }, 500 );
-									});
-}
-
 function randomString(length, chars) {
 	//nimphios at http://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript
 	
@@ -116,71 +28,178 @@ function randomString(length, chars) {
 }
 
 
-function processRegistration(){
-	//get user input
-    var username = $("#regUsername").val();
-    var password = $("#registration #password").val();
-    var captcha = $("#captcha").val();
-    
-    
-    //hide registration form, show loading wheel
-    $('#regForm').slideUp();
-	jsAlert('', 'The universe is creating your keypair now, this may take some minutes..');
-	$('#regLoad').show();
-    
-    
-	//cypher password into two hashes and two salts
-	//passwordHash is used to cypher the password for db
-	//keyHash is used to encrypt the pricate Key
-	
-	
-    				//generate Keypair
-			      	var crypt;
-					var publicKey;
-			      	var privateKey;
-			      	
-			      	crypt = new JSEncrypt({default_key_size: 4096});
-			      	crypt.getKey(function () {
-			      		
-			      		//generate salts and keys from password
-    					var keys = cypher.createKeysForUser(password);
-    					
-			      		privateKey = sec.symEncrypt(keys['keyHash'], crypt.getPrivateKey()); //encrypt privatestring, using the password hash
-			      		publicKey = crypt.getPublicKey();
-    					
-                		//submit registration
-                		$.post("api.php?action=processSiteRegistration", {
-                       		username:username,
-                       		password:keys['authHash'],
-                       		authSalt:keys['authSaltEncrypted'],
-                       		keySalt:keys['keySaltEncrypted'],
-                       		publicKey:publicKey,
-                       		privateKey:privateKey,
-                       		captcha:captcha
-                       		
-                       	}, function(result){
-                            var res = result;
-                            	if(res == 1){
-                                	//load checked message
-                                	jsAlert('','You just joined the universeOS');
-                                	$('#regLoad').slideUp('');
-                                
-                                	$('#loginUsername').val(username);
-                                	$('#loginPassword').val($("#registration #password").val());
-					            	$("#startbox").show("slow");
-					            	$("#startbox").css('z-index', 9999);
-					            	$("#startbox").css('position', 'absolute');
-                            	}else{
-                                	alert(res);
-                                	$('#regLoad').slideUp('');
-                                	$('#regForm').show();
-                            	}
-                       	}, "html");
+var registration = new function(){
+    this.checkReg = function(username, password, passwordRepeat){
+        
+                var valuee,check,usernameLengthCheck,checkBox,passwordCheck;
+                
+                $(".checkReg").each(function() {
+                    valuee = $(this).val();
+                    if(valuee === ""){
+                        check = "FALSE";
+                    }else{
+                        if(check === ""){
+                        check = "TRUE";
+                        }
+                    }
+                });
+                
+                if(username.length < 3){
+                	usernameLengthCheck = 'FALSE';
+                }
+                
+                $(".checkRegBox").each(function() {
+                    checkBox = $(this).is(':checked');
+                        if(checkBox){
+                            checkBox = "TRUE";
+                        }else{
+                            checkBox = "FALSE";
+                        }
+                });
+                if(password != passwordRepeat){
+                    passwordCheck = "FALSE";
+                }
 
-			      });
+                    if(check == "FALSE" || passwordCheck === "FALSE" || checkBox === "FALSE" || usernameLengthCheck === "FALSE"){
+                        if(check == "FALSE"){
+                            alert("Please fill out all the fields");
+                        }
+                        if(usernameLengthCheck == "FALSE"){
+                            alert("Your Username needs at least three chars.");
+                        }
+                        if(checkBox == "FALSE"){
+                            alert("Your have to accept our terms.");
+                        }
+                        if(passwordCheck == "FALSE"){
+                            alert("Your passwords dont match.");
+                        }
+                    }else{
+                        registration.processRegistration(username, password);
+                        console.log('all checks false');
+                    }
+        
+    }
+    this.checkPassword = function(id){
+            $('#checkPasswordStatus').show();
+            var password = $("#"+id).val();
+                var score = sec.scorePassword(password);
+                var html = '';
+                var bg;
+                if (score > 80){
+                    bg = '#719005';
+                    html = '<a style="color: green">Nice! Your password is pretty secure.</a><div class="arrow-right"></div>';
+                }
+                else if (score > 60){
+                    bg = '#c47800';
+                    html = '<a style="color: green">Meh. That´s all you got? You can do better!</a><div class="arrow-right"></div>';
+                }
+                else if (score < 60){
+                    bg = '#790125';
+                    html = '<a style="color: green">Uh-Oh! My mom could crack that password!</a><div class="arrow-right"></div>';
+                }
+                $('#checkPasswordStatus').html(html);
+                $('#checkPasswordStatus').css('background', bg);
+                $('#checkPasswordStatus .arrow-right').css('borderRight', 'border-right: 15px solid '+bg);
+    };
+    this.checkUsername = function(id){
+	$('.captchaContainer').slideDown('slow');
+	var $checkUsernameStatus = $('#checkUsernameStatus');
+        var username = $("#"+id).val();
+        
+        if(/^[a-zA-Z0-9- ]*$/.test(username) == false) {
+            $checkUsernameStatus.html('<a style="color: red">&nbsp;contains illegal characters</a><div class="arrow-right"></div>');
+        }else if(username.length > 2){
+        
+                //check server for new messages
+                $.post("api.php?action=checkUsername", {
+                       username:username
+                       }, function(result){
+                            var res = result;
+                            if(res == "1"){
+                                //load checked message
+                                $checkUsernameStatus.hide();
+                            }else{
+                                $checkUsernameStatus.show();
+                                $checkUsernameStatus.html('<a style="color: red">&nbsp;already in use</a><div class="arrow-right"></div>');
+                            }
+                       }, "html");
+        }else{
+            //html to short
+            $checkUsernameStatus.html('<a style="color: red">&nbsp;to short</a><div class="arrow-right"></div>');
+        }
+        
+        $("#"+id).keyup(function(){
+            delay(function(){
+              registration.checkUsername(id);
+            }, 500 );
+	});
+    };
+    this.processRegistration = function(username, password){
+        
+
+        //hide registration form, show loading wheel
+            $('.registerBox div').hide();
+            jsAlert('', 'The universe is creating your keypair now, this may take some minutes..');
+            $('.registerBox img').show();
+
+
+            //cypher password into two hashes and two salts
+            //passwordHash is used to cypher the password for db
+            //keyHash is used to encrypt the pricate Key
+
+
+                            //generate Keypair
+                            var crypt,publicKey,privateKey;
+
+                            crypt = new JSEncrypt({default_key_size: 4096});
+                            crypt.getKey(function () {
+
+                                    //generate salts and keys from password
+                                    var keys = cypher.createKeysForUser(password);
+
+                                    privateKey = sec.symEncrypt(keys['keyHash'], crypt.getPrivateKey()); //encrypt privatestring, using the password hash
+                                    publicKey = crypt.getPublicKey();
+
+                                    //submit registration
+                                    $.post("api/user/create/", {
+                                            username:username,
+                                            password:keys['authHash'],
+                                            authSalt:keys['authSaltEncrypted'],
+                                            keySalt:keys['keySaltEncrypted'],
+                                            publicKey:publicKey,
+                                            privateKey:privateKey,
+                                        }, function(result){
+                                        var res = result;
+                                            if(res == 1){
+                                                    //load checked message
+                                                    jsAlert('','You just joined the universeOS');
+                                                    $('.registerBox').slideUp('');
+
+                                                    $('#loginUsername').val(username);
+                                                    $('#loginPassword').val($("#registration #password").val());
+                                                                    $("#startbox").show("slow");
+                                                                    $("#startbox").css('z-index', 9999);
+                                                                    $("#startbox").css('position', 'absolute');
+                                            }else{
+                                                    alert(res);
+                                                    $('#regLoad').slideUp('');
+                                                    $('#regForm').show();
+                                            }
+                                        }, "html");
+                                    });
+    };
+    this.init = function(){
+        $(document).ready(function(){
+            $('#registrationForm').submit(function(e){
+               e.preventDefault();
+               alert('uppaduppa');
+               registration.checkReg($('#registrationForm #regUsername').val(), $('#registrationForm #password').val(), $('#registrationForm #passwordRepeat').val());
+            });
+        });
+    };
 }
 
-
+registration.init();
 
 function login(){
 	var username = $('#loginUsername').val();
@@ -195,9 +214,9 @@ function login(){
 		update.sha512TOsha512_2(userid, password);
 	}else if(userCypher == 'sha512_2'){
 		var shaPass = hash.SHA512(password);
-    	console.log('dude');
+                
 		var passwordHash = cypher.getKey('auth', userid, shaPass);
-		console.log('dude');
+                
 		
 	                $.post("api.php?action=authentificate", {
 	                       username:username,
@@ -240,7 +259,6 @@ var update = new function(){
 	    		var passwordHashOld = cypherOld[0];
 	    	
 				var saltDecrypted = cypherOld[3];
-				console.log('s:'+saltDecrypted);
 				if(saltDecrypted.length == 0||passwordHashOld.length==0||saltDecrypted=='undefined'){
 					jsAlert('', 'The Password you entered was wrong');
 					return false;
@@ -309,52 +327,52 @@ function updatePasswordAndCreateSignatures(userid, password){
 	password = md.toString(CryptoJS.enc.Hex);
 	var oldPassword = password;
 	
-    var salt = CryptoJS.SHA512(randomString(64, '#aA'));  //generate salt and hash it.
-    console.log('salt not encrypted:'+salt);
-    var shaPass = CryptoJS.SHA512(salt+password);
-    var passwordHash = shaPass.toString(CryptoJS.enc.Hex); //parse cypher object to string
-    
-    
-    var shaKey = CryptoJS.SHA512(password+salt);
-    var keyHash = shaKey.toString(CryptoJS.enc.Hex);
-    
-    
-    var salt = sec.symEncrypt(password, salt.toString(CryptoJS.enc.Hex));				  //encrypt salt, using md5-pw hash
-    console.log('salt encrypted:'+salt);
-    console.log('keyHash:'+keyHash);
-    
-    			//generate Keypair
-			      var crypt;
-			      var publicKey;
-			      crypt = new JSEncrypt({default_key_size: 1024});
-				  jsAlert('', 'The universe creates now your asymetric keypair, this may take some seconds..');
-			      crypt.getKey(function () {
-			      	var temp = crypt.getPrivateKey();
-			      	
-			      	console.log('P:::'+temp+':::P');
-			      	
-			      	var privateKey = sec.symEncrypt(keyHash, temp); //encrypt privatestring, usering the password hash
-			      	
-			      	console.log('encrypted privateKey:'+privateKey);
-			      	publicKey = crypt.getPublicKey();
-			      	console.log(publicKey);
-	                $.post("api.php?action=updatePasswordAndCreateSignatures", {
-	                       userid:userid,
-	                       password:passwordHash,
-	                       salt:salt,
-	                       publicKey:publicKey,
-	                       privateKey:privateKey,
-	                       oldPassword: oldPassword
-	                       }, function(result){
-	                            var res = result;
-	                            if(res == '1'){
-	                                //load checked message
-	                                jsAlert('','The update worked, you can sign in now with your default userdata.');
-	                                
-	                            }else{
-	                                jsAlert('', 'Oops something went wrong :(');
-	                            }
-	                       }, "html");
-	
-				      });
+        var salt = CryptoJS.SHA512(randomString(64, '#aA'));  //generate salt and hash it.
+        console.log('salt not encrypted:'+salt);
+        var shaPass = CryptoJS.SHA512(salt+password);
+        var passwordHash = shaPass.toString(CryptoJS.enc.Hex); //parse cypher object to string
+
+
+        var shaKey = CryptoJS.SHA512(password+salt);
+        var keyHash = shaKey.toString(CryptoJS.enc.Hex);
+
+
+        var salt = sec.symEncrypt(password, salt.toString(CryptoJS.enc.Hex));				  //encrypt salt, using md5-pw hash
+        console.log('salt encrypted:'+salt);
+        console.log('keyHash:'+keyHash);
+
+                            //generate Keypair
+                                  var crypt;
+                                  var publicKey;
+                                  crypt = new JSEncrypt({default_key_size: 1024});
+                                      jsAlert('', 'The universe creates now your asymetric keypair, this may take some seconds..');
+                                  crypt.getKey(function () {
+                                    var temp = crypt.getPrivateKey();
+
+                                    console.log('P:::'+temp+':::P');
+
+                                    var privateKey = sec.symEncrypt(keyHash, temp); //encrypt privatestring, usering the password hash
+
+                                    console.log('encrypted privateKey:'+privateKey);
+                                    publicKey = crypt.getPublicKey();
+                                    console.log(publicKey);
+                            $.post("api.php?action=updatePasswordAndCreateSignatures", {
+                                   userid:userid,
+                                   password:passwordHash,
+                                   salt:salt,
+                                   publicKey:publicKey,
+                                   privateKey:privateKey,
+                                   oldPassword: oldPassword
+                                   }, function(result){
+                                        var res = result;
+                                        if(res == '1'){
+                                            //load checked message
+                                            jsAlert('','The update worked, you can sign in now with your default userdata.');
+
+                                        }else{
+                                            jsAlert('', 'Oops something went wrong :(');
+                                        }
+                                   }, "html");
+
+                                          });
 }

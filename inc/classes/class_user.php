@@ -21,7 +21,6 @@ class user {
         $username = mysql_real_escape_string($username);
         $db = new db();
         $data = $db->select('user', array('username', $username), array('userid', 'password', 'hash', 'cypher'));
-
         $userid = $data['userid'];
 
         $timestamp = time();
@@ -116,7 +115,7 @@ class user {
   
     public function create($username, $password, $authSalt, $keySalt, $privateKey, $publicKey){
 
-        $username = save($_POST['username']);
+        $username = $username;
         $db = new db();
         $data = $db->select('user', array('username', $username), array('username'));
 

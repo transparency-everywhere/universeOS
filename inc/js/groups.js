@@ -36,7 +36,7 @@ var groups = new function(){
 				    var result = api.query('api.php?action=getGroups', { val : 'val' });
 				    
 				    if(result != null){
-				   		return $.parseJSON(result);
+				   		return result;
 				   	}
 	};
         this.getData = function(groupId){

@@ -6,178 +6,107 @@ if(!isset($_SESSION))
 include_once("inc/functions.php");
 include_once("inc/config.php");
 ?>
-		<script type="text/javascript" src="inc/js/guest.js"></script>
+	<script type="text/javascript" src="inc/js/guest.js"></script>
         <link rel="stylesheet" type="text/css" href="inc/css/guest.css" media="all" />
-        <div id="topThing">
-            <span>2013 <a href="http://transparency-everywhere.com" target="blank" style="color: #54545B;">Transparency Everywhere</a></span>
-            
-            <span id="socialBar">
-            	<a href="http://wiki.universeOS.org" target="_blank" title="Get your information out of the universe Wiki."><img src="gfx/startPage/wikipedia.png"></a>
-            	<a href="http://twitter.com/universeOS" target="_blank" title="Have a look at our Twitter account."><img src="gfx/startPage/twitter.png"></a>
-            	<a href="http://facebook.com/universeOS" target="_blank" title="Like us on Facebook."><img src="gfx/startPage/facebook.png"></a>
-            	<a href="#" onclick="altert('Will follow soon');" target="_blank" title="Have a look at our Source"><img src="gfx/startPage/bitbucket.png"></a>
-            </span>
-            <span style="">
-            	<a href="#" style="color: #54545B;" onclick="showContent('1', 'Site Notice');">Site Notice</a>
-            </span>
-        </div>
-        <div id="reload"></div>
         <div id="bodywrap">
-        	  <?
-    include("register.php");
-    ?>
-    <style>
-    	#guestInfoBox{
-    		background: #383838;
-			border: 1px solid #222222;
-			padding: 5px;
-			position: absolute;
-			top:3px;
-			left:3px;
-			width:250px;
-    	}
-    	
-		#guestInfoBox h1, #guestInfoBox h2, #guestInfoBox h3, #guestInfoBox h4{
-			margin: 0;
-			margin-top: 5px;
-			line-height: 30px;
-		}
-		
-    	#guestInfoBox a {
-			color: #FFFFFF;
-			position: absolute;
-			right: 8px;
-			top: 0px;
-		}
-    	
-    	#guestInfoBox ul{
-    		margin: 10px 0px 10px 10px;
-    	}
-    	
-    	#guestInfoBox ul li{
-    		line-height: 19px;
-    		line-height: 15px;
-			margin: 10px 0 15px 22px;
-    	}
-    	
-    	#guestInfoBox ul li img{
-    		height: 12px;
-    		margin-left: -19px;
-    		position: absolute;
-    		margin-top: 2px;
-    		
-    	}
-    	#betaBox{
-    		background: #383838;
-			border: 1px solid #222222;
-			padding: 5px;
-			position: absolute;
-			top:3px;
-			left:272px;
-			width:250px;
-    	}
-    	
-		#betaBox h1, #betaBox h2, #betaBox h3, #betaBox h4{
-			margin: 0;
-			margin-top: 5px;
-			line-height: 30px;
-		}
-		
-    	#betaBox a {
-			color: #FFFFFF;
-			position: absolute;
-			right: 8px;
-			top: 0px;
-		}
-    </style>
-        <div id="guestInfoBox">
-        	<a href="#" onclick="$('#guestInfoBox').hide();">x</a>
-        	<h2>universeOS</h2>
-        	<h3>"The world shares a Desktop"</h3>
-        	<p>Be part of the first social webOS which shares the following amazing features:</p>
-        	<ul>
-        		<li><img src="./gfx/bulletPoint.png">organize, open and share your files</li>
-        		<li><img src="./gfx/bulletPoint.png">use public files and make your files accesible to the public</li>
-        		<li><img src="./gfx/bulletPoint.png">present yourself through your profile and form groups with your buddies</li>
-        		<li><img src="./gfx/bulletPoint.png">encrypt your data and communication to be sure that it doesn't fall into the wrong hands</li>
-        	</ul>
-        	<p>But finally the fact that we don't make profit with your data is most important<br>to us.</p>
-        	
+        
+        <div id="guestArea">
+            <div class="guestBox registerBox">
+                <h2>Sign Up</h2>
+                <div class="pull-left">
+                    <form id="registrationForm">
+                    <input type="text" id="regUsername" placeholder="Your Username" onblur="registration.checkUsername('regUsername');" class="checkReg">
+                    <span id="checkUsernameStatus" class="regError"><div class="arrow-right"></div></span>
+                    <input type="password" id="password" placeholder="Your Password" class="checkReg" onkeyup="registration.checkPassword('password');">
+                    <span id="checkPasswordStatus" class="regError"><div class="arrow-right"></div></span>
+                    <input type="password" style="margin-bottom:15px;" id="passwordRepeat" placeholder="Repeat Password" class="checkReg">
+                    <span style="display: inline-block;padding-top: 10px"><input type="checkbox" style="display: inline-block;" class="checkRegBox"> I accept the <a href="#">terms</a></span>
+                    <input type="hidden" value="" id="checkReg">
+                    <input type="submit" class="button" value="Sign me up!">
+                    </form>
+                </div>
+                <img src="gfx/loading-bubbles.svg" width="150" height="150">
+                <p>
+                    Lorem Ipsum Supidubu bbaskd jaskaj sdfakshkgjsfdbsnk
+                </p>
+            </div>
+            <div class="guestBox" id="clearBox">
+                <div class="image"><img src="gfx/guest/guest_01.png" style="width: 153px"/></div>
+                <p>save, organize and share your files</p>
+            </div>
+            <div class="guestBox">
+                <div class="image"><img src="gfx/guest/guest_02.png" style="width: 125px"/></div>
+                <p>use public files and make your files accesible</p>
+            </div>
+            <div class="guestBox">
+                <div class="image"><img src="gfx/guest/guest_03.png" style="width: 159px; width: 159px; margin-top: 12px;"/></div>
+                <p>present yourself and stay in touch with your buddies</p>
+            </div>
+            <div class="guestBox">
+                <div class="image"><img src="gfx/guest/guest_04.png" style="width: 169px"/></div>
+                <p>encrypt your data and communication</p>
+            </div>
         </div>
-        <div id="betaBox">
-        	<a href="#" onclick="$('#betaBox').hide();">x</a>
-        	<h2>Beta Test Run</h2>
-        	<p>Currently we are still in the beta phase of our project. Therefore we cannot guarantee 100% of security but we are well on the way to it. So you shouldn’t handle highly sensitive data in the filesystem and chat and excuse if there are little issues in the workflow. We appreciate criticism and error reports because it helps us to improve the universeOS. So have fun with the universeOS.</p>
-        </div>
+        
         <div id="alerter" class="container"></div><div id="loader"></div><iframe name="submitter" style="display:none;" id="submitter"></iframe>
         <div id="suggest">
         </div>
         
     </div>
         
-    <div id="dockplayer" style="display: none">
-	    <?
-	    //include("modules/player/dockplayer.php");
-	    ?>
-    </div>
-        
-        
+    <!--login menu-->
     <div class="box-shadow border-top-right-radius" id="startbox" style="display: none;">
         <div id="startMainWindow">
             <div id="startMainHeader" class="border-top-right-radius">
                 <span style="font-size:19pt;font-weight: 1; font-weight: 100; margin-left:5px;">Please Log In</span>
             </div>
-        <hgroup>
-            <form method="post" target="submitter" id="loginForm" onsubmit="login(); return false;">
-            <table width="100%" valign="center">
-                <tr height="10">
-                    <td></td>
-                </tr>
-                <tr valign="top">
-                    <td><input type="text" name="username" placeholder="username" id="loginUsername" class="margin bigInput" style="width: 170px;"></td>
-                    <td><input type="password" name="password" placeholder="password" id="loginPassword" class="margin bigInput" style="width: 170px;"></td>
-                </tr>
-                <tr>
-                    <td style="color: #FFFFFF" align="center"></td>
-                </tr>
-                <tr>
-                    <td><input type="submit" value="Log In" name="submit" class="btn btn-primary margin"></td>
-                </tr>
-            </table>
-            </form>
-        </hgroup>
+            <hgroup>
+                <form method="post" target="submitter" id="loginForm" onsubmit="login(); return false;">
+                <table width="100%" valign="center">
+                    <tr height="10">
+                        <td></td>
+                    </tr>
+                    <tr valign="top">
+                        <td><input type="text" placeholder="username" id="loginUsername" class="margin bigInput" style="width: 170px;"></td>
+                        <td><input type="password" placeholder="password" id="loginPassword" class="margin bigInput" style="width: 170px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="color: #FFFFFF" align="center"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="submit" value="Log In" name="submit" class="btn btn-primary margin"></td>
+                    </tr>
+                </table>
+                </form>
+            </hgroup>
         </div>
     </div>
+    <!--/login menu-->
         
-<div id="dockMenu" class="fancy" style="display: none">
-	<header>universeOS&nbsp;</header>
-    <ul class="appList">
+    <div id="dockMenu" class="fancy" style="display: none">
+        <header>universeOS&nbsp;</header>
+        <ul class="appList">
 
-        <li class="" onclick="filesystem.show()" onmouseup="closeDockMenu()"><i class="icon icon-folder" style="height:16px;width:16px;"></i>&nbsp;&nbsp;Filesystem</li>
+            <li class="" onclick="filesystem.show()" onmouseup="closeDockMenu()"><i class="icon icon-folder" style="height:16px;width:16px;"></i>&nbsp;&nbsp;Filesystem</li>
 
 
-        <li class="" onclick="reader.show()" onmouseup="closeDockMenu()"><img src="./gfx/viewer.png" border="0" height="16">&nbsp;&nbsp;Reader</li>
-    </ul>
-    <div>
+            <li class="" onclick="reader.show()" onmouseup="closeDockMenu()"><img src="./gfx/viewer.png" border="0" height="16">&nbsp;&nbsp;Reader</li>
+        </ul>
+        <div>
+        </div>
     </div>
-</div>
     <div id="dock">
         <table>
             <tr valign="top">
-                <td><div id="personalButton" class="module" style="margin-top: 4px;">&nbsp;&nbsp;Log In</div></td>
-                <td><div id="moduleMenu" class="module" style="font-color: #FFF;">&nbsp;&nbsp;Start</div></td>
+                <td><div id="personalButton" class="button">Log In</div></td>
+                <td><div id="moduleMenu" class="button">Start</div></td>
                 <!-- <td><div id="modulePlayer" class="module">&nbsp;&nbsp;Player</div></td> -->
+                <td align="right"><input type="text" name="searchField" id="searchField" placeholder="search"></td>
                 <td align="right" id="clockDiv" style="color: #FFFFFF; float: right"></td>
-                <td align="right"><input type="text" name="searchField" id="searchField" class="border-radius" placeholder="search"></td>
             </tr>
         </table>
     </div>
     <script>
-        //open player
-        $("#modulePlayer").click(function () {
-            $("#dockplayer").slideToggle("slow");
-        });
-        
         //open menu
         $("#moduleMenu").click(function () {
             $("#startbox").hide("slow");

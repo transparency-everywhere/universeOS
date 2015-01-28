@@ -27,7 +27,6 @@ if(!$login) {
        
 } ?>
 	<script>User.userid = <?php echo getUser();?></script>
-        <div id="reload"></div>
         <div id="alerter" class="container"></div>
             <?
              include("modules/desktop/dashboard.php");

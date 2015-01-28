@@ -1,4 +1,24 @@
+Update
+    Delete Users where cypher is md5 or sha512
+
+    check if our server serves svg files as image/svg, not as text/plain (regbox - loading bubbles)
+
+
 Recent:
+
+        Open Designtaks:
+            Guestpage
+                Login & Start
+
+        reload
+
+        update all icons
+
+        guestpage
+
+        update Font to ubuntu
+        
+
 
 	Update from running version:
 		DB
@@ -28,10 +48,6 @@ Recent:
 		youtube titles
 		youTubeIdToTitle()
 		getUserFavs
-		
-	security
-	
-	Bugs
 		
 		
 Files and the use of them
