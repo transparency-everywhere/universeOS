@@ -30,11 +30,10 @@ if(isset($_GET['special'])){
         $folderQuery = NULL;
         $elementQuery = "WHERE type LIKE '%document%'";
     }
-	else if($_GET['special'] == "fav"){
-		$showFileBrowser = false;
-		$fav = true;
-	}
-    
+    else if($_GET['special'] == "fav"){
+            $showFileBrowser = false;
+            $fav = true;
+    }
 }else{
 if(isset($_GET['folder'])){
 	$folder = $_GET['folder']; 

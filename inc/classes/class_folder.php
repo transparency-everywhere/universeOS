@@ -167,6 +167,7 @@ class folder {
         //select subfolders in folder
         $folders = $db->shiftResult($db->select('folders', array('folder', $folderId)), 'id');
         foreach ($folders as $folderData) {
+            $folderData['iconsrc'] = "img/folder_dark.png";
             if(authorize($folderData['privacy'], "show", $folderData['creator']))
                 $result[] = array('type' => 'folder', 'data' => $folderData);
         }
@@ -174,6 +175,7 @@ class folder {
         //select elements in folder
         $elements = $db->shiftResult($db->select('elements', array('folder', $folderId)), 'id');
         foreach ($elements as $elementData) {
+            $elementData['iconsrc'] = "gfx/icons/filesystem/element.png";
             if(authorize($elementData['privacy'], "show", $elementData['creator']))
                 $result[] = array('type' => 'element', 'data' => $elementData);
         }
@@ -184,6 +186,7 @@ class folder {
             if($shortcutData['type'] === 'folder') {
                 $folders = $db->shiftResult($db->select('folders',array('id', $shortcutData['typeId'])), 'id');
                 foreach ($folders as $folderData) {
+                    $folderData['iconsrc'] = "img/folder_dark.png";
                     $folderData['shortcut'] = true;
                     if(authorize($folderData['privacy'], "show", $folderData['creator'])){
                         $result[] = array('type' => 'folder', 'data' => $folderData);
@@ -193,6 +196,7 @@ class folder {
             if($shortcutData['type'] === 'element') {
                 $elements = $db->shiftResult($db->select('elements', array('folder', $shortcutData['typeId'])), 'id');
                 foreach ($elements as $elementData) {
+                    $elementData['iconsrc'] = "gfx/icons/filesystem/element.png";
                     $elementData['shortcut'] = true;
                     if(authorize($elementData['privacy'], "show", $elementData['creator'])){
                         $result[] = array('type' => 'element', 'data' => $elementData);
