@@ -13,10 +13,51 @@
  */
 class fav {
     function select($user){
-        $db = new db();
-        $favs = $db->select('fav', array('user', $user));
-        return $favs;
-        //Hier weitermachen!! $favs in types aufteilen und dann in html einbringen
+        $dbClass = new db();
+        $favs = $dbClass->select('fav', array('user', $user));
+        foreach($favs AS $favData) {
+            //get favs from table favs and select them from the appropriate table. 
+            if($favData['type'] == "folder"){
+                $favFolders = $dbClass->shiftResult($dbClass->select('folders', array('id', $favData['item'])), 'id');
+                foreach ($favFolders as $folderData) {
+                    $folderData['iconsrc'] = "img/folder_dark.png";
+                    $folderData['favId'] = $favData['id'];
+                    if(authorize($folderData['privacy'], "show", $folderData['creator']))
+                        $result[] = array('type' => 'folder', 'data' => $folderData);
+                }
+            }else if($favData['type'] == "element"){
+                $favElements = $dbClass->shiftResult($dbClass->select('elements', array('id', $favData['item'])), 'id');
+                foreach ($favElements as $elementData) {
+                    $elementData['iconsrc'] = "gfx/icons/filesystem/element.png";
+                    $elementData['favId'] = $favData['id'];
+                    if(authorize($elementData['privacy'], "show", $elementData['creator']))
+                        $result[] = array('type' => 'element', 'data' => $elementData);
+                }
+            }else if($favData['type'] == "file"){
+                $favFiles = $dbClass->shiftResult($dbClass->select('files', array('id', $favData['item'])), 'id');
+                foreach ($favFiles as $fileData) {
+                    $fileClass = new file($favData['item']);
+                    $fileType = $fileClass->getFileType();
+                    $fileClass2 = new files();
+                    $fileData['iconsrc'] = "fileIcons/".$fileClass2->getFileIcon($fileType);
+                    $fileData['favId'] = $favData['id'];
+                    if(authorize($fileData['privacy'], "show", $fileData['creator']))
+                        $result[] = array('type' => 'file', 'data' => $fileData);
+                }
+            }else if($favData['type'] == "link"){
+                $favLinks = $dbClass->shiftResult($dbClass->select('links', array('id', $favData['item'])), 'id');
+                foreach ($favLinks as $linkData) {
+                    $classLinks = new link();
+                    $fileType = $classLinks->getType($favData['item']);
+                    $filesClass = new files();
+                    $linkData['iconsrc'] = "gfx/icons/filesystem/element.png";
+                    $linkData['favId'] = $favData['id'];
+                    if(authorize($linkData['privacy'], "show", $linkData['creator']))
+                        $result[] = array('type' => 'link', 'data' => $linkData);
+                }
+            }
+        }
+        return $result;
     }
     function show($user=NULL){
         if($user == NULL){
@@ -28,58 +69,56 @@ class fav {
         $output = '';
         
         foreach($userFavs AS $filefdata){
-                                $item = $filefdata['item'];
-                                $type = $filefdata['type'];
+            $item = $filefdata['item'];
+            $type = $filefdata['type'];
 
-                                //derive the table and the image from fav-type
-                                if($type == "folder"){
-                                    $typeTable = "folders";
-                                    $img = "filesystem/folder.png";
-                                    $link = "openFolder($item); return false;";
-                                }else if($type == "element"){
-                                    $typeTable = "elements";
-                                    $img = "filesystem/element.png";
-                                    $link = "openElement($item); return false;";
-                                }else if($type == "file"){
-                                    $typeTable = "files";
-                                    $fileClass = new file($item);
-                                    $fileType = $fileClass->getFileType();
-                                    $filesClass = new files();
-                                    $img = "fileIcons/".$filesClass->getFileIcon($fileType);
+            //derive the table and the image from fav-type
+            if($type == "folder"){
+                $typeTable = "folders";
+                $img = "filesystem/folder.png";
+                $link = "openFolder($item); return false;";
+            }else if($type == "element"){
+                $typeTable = "elements";
+                $img = "filesystem/element.png";
+                $link = "openElement($item); return false;";
+            }else if($type == "file"){
+                $typeTable = "files";
+                $fileClass = new file($item);
+                $fileType = $fileClass->getFileType();
+                $filesClass = new files();
+                $img = "fileIcons/".$filesClass->getFileIcon($fileType);
+            }else if($type == "link"){
+                $typeTable = "links";
+                $classLinks = new link();
+                $fileType = $classLinks->getType($item);
+                $filesClass = new files();
+                $img = "fileIcons/".$filesClass->getFileIcon($fileType);
+            }
+            $dbClass = new db();
+            $favFolderData = $dbClass->select($typeTable, array('id', $item));
+                if(isset($favFolderData['name'])){
+                    $favFolderData['title'] = $favFolderData['name'];
+                }else{
+                    $favFolderData['name'] = ''; //fix so the notice 'undefined index' won't be shown anymore
+                }
 
-                                }else if($type == "link"){
-                                    $typeTable = "links";
-                                    $classLinks = new link();
-                                    $fileType = $classLinks->getType($item);
-                                    $filesClass = new files();
-                                    $img = "fileIcons/".$filesClass->getFileIcon($fileType);
+            if($i%2 == 0){
+                $color="FFFFFF";
+            }else {
+                $color="e5f2ff";
+            }
+            $i++;
 
-                                }
-                                $dbClass = new db();
-                                $favFolderData = $dbClass->select($typeTable, array('id', $item));
-                                    if(isset($favFolderData['name'])){
-                                        $favFolderData['title'] = $favFolderData['name'];
-                                    }else{
-                                        $favFolderData['name'] = ''; //fix so the notice 'undefined index' won't be shown anymore
-                                    }
-                                    
-                                if($i%2 == 0){
-                                    $color="FFFFFF";
-                                }else {
-                                    $color="e5f2ff";
-                                }
-                                $i++;
+                                        $output .= "<tr class=\"strippedRow\" onmouseup=\"showMenu('folder".$filefdata['id']."')\">";
+                                                $output .= "<td onmouseup=\"showMenu(".$favFolderData['id'].")\" width=\"35\">&nbsp;<img src=\"./gfx/icons/$img\" height=\"20\"></td>";
+                                                $output .= "<td onmouseup=\"showMenu(".$favFolderData['id'].")\"><a href=\"#\" onclick=\"$link\">".$favFolderData['name'].""."".$favFolderData['title']."/</a></td>";
+                    if($user == getUser()){
 
-                                                            $output .= "<tr class=\"strippedRow\" onmouseup=\"showMenu('folder".$filefdata['id']."')\">";
-                                                                    $output .= "<td onmouseup=\"showMenu(".$favFolderData['id'].")\" width=\"35\">&nbsp;<img src=\"./gfx/icons/$img\" height=\"20\"></td>";
-                                                                    $output .= "<td onmouseup=\"showMenu(".$favFolderData['id'].")\"><a href=\"#\" onclick=\"$link\">".$favFolderData['name'].""."".$favFolderData['title']."/</a></td>";
-                                        if($user == getUser()){
+                    $output .= "<td align=\"right\"><a class=\"btn btn-mini\" onclick=\"fav.remove('$type', '$item')\"><i class=\"icon icon-minus\"></i></a></td>";
 
-                                        $output .= "<td align=\"right\"><a class=\"btn btn-mini\" onclick=\"fav.remove('$type', '$item')\"><i class=\"icon icon-minus\"></i></a></td>";
+                    }
 
-                                        }
-
-                                    $output .= "</tr>";
+                $output .= "</tr>";
         }
         if($i == 0){
             $output .="<tr style=\"display:table-row; background: none; padding-top: 0px;\">";

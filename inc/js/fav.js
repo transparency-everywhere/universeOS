@@ -16,7 +16,6 @@
 
 var fav = new function(){
     this.select = function(user){
-        
         var result="";
 	$.ajax({
             url:"api/fav/select/",
@@ -30,8 +29,45 @@ var fav = new function(){
 	return result;
     };
     this.show = function(user){
-        
-    }
+        var html = '<table width="100%">';		  			
+        var favs = this.select(user);
+        var i = 0;
+        $.each(favs, function(key, value){
+            if(!empty(value['data']['name'])){
+                value['data']['title'] = value['data']['name'];
+            }
+            if(value['type'] === 'folder'){
+                var link = "openFolder(" + value['data']['id'] + "); return false;";
+                
+            }
+            if(value['type'] === 'element'){
+                var link = "openElement(" + value['data']['id'] + "); return false;";
+                
+            }
+            html += "<tr class=\"strippedRow\" onmouseup=\"showMenu('folder" + value['data']['favId'] + "')\">";
+            html += "<td onmouseup=\"showMenu(" + value['data']['id'] + ")\" width=\"35\">&nbsp;<img src=\"./" + value['data']['iconsrc'] + "\" height=\"20\"></td>";
+            html += "<td onmouseup=\"showMenu(" + value['data']['id'] + ")\"><a href=\"#\" onclick=\"" + link + "\">" + value['data']['title'] + "</a></td>";
+            if(user === User.userid){
+                html += "<td align=\"right\"><a class=\"btn btn-mini\" onclick=\"fav.remove('" + value['type'] + "', '" + value['data']['id'] + "')\"><i class=\"icon icon-minus\"></i></a></td>";
+            }
+            html += "</tr>";  
+            i++;
+        });
+        if(i === 0){
+            html += "<tr style=\"display:table-row; background: none; padding-top: 0px;\">";
+            html += "<td colspan=\"2\" style=\"padding: 5px; padding-top: 0px;\">";
+            html += "You don't have any favorites so far. Add folders, elements, files, playlists or other items to your favorites and they will appear here.";
+            html += "</td>";
+            html += "</tr>";
+        }
+        html += '</table>';
+    
+        return html;
+                                
+                                    
+
+
+        }
     this.add = function(type,typeid){
 
         api.query('api/fav/add/', {type : type, typeid:typeid},function(data){

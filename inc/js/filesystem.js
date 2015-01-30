@@ -82,11 +82,9 @@ var filesystem =  new function() {
         if(showFileBrowser){
             html += this.showFileBrowser(folderId);
         }		  			
-//        if(fav){
-//            html += '<table width="100%">';		  			
-//            html += fav.show(getUser());		  			
-//            html += '</table>';
-//        }		  			
+        if(fav){		  			
+            html += fav.show(User.userid);
+        }		  			
         html += '        </div>';	  			
         html += '    </div>';		  			
         html += '    </div>';
@@ -144,7 +142,7 @@ var filesystem =  new function() {
                     if(rightClick){
                         html += ''; //hier muss die rightClick function noch eingebunden werden!!
                     }
-                    html += '&nbsp;<img src="' + subpath + 'img/folder_dark.png"></td>';
+                    html += '&nbsp;<img src="' + subpath + value['data']['iconsrc'] + '"></td>';
                     html += '                    <td><a href="#" onclick="openFolder(\'' + value['data']['id'] + '\'); return false;">' + name + '</a></td>';
                     html += '                    <td width="80px">';
                     html += item.showScoreButton('folder', value['data']['id']);
@@ -161,7 +159,7 @@ var filesystem =  new function() {
                 if(value['type'] === "element"){
                     var title = value['data']['title'];
                     html += "                        <tr oncontextmenu=\"showMenu('element" + value['data']['id'] + "'); return false;\" height=\"30\">";
-                    html += "                           <td width=\"30\">&nbsp;<img src=\"" + subpath + "gfx/icons/filesystem/element.png\" height=\"22\"></td>";
+                    html += "                           <td width=\"30\">&nbsp;<img src=\"" + subpath + value['data']['iconsrc'] + "\" height=\"22\"></td>";
                     html += "                           <td><a href=\"#\" onclick=\"openElement('" + value['data']['id'] + "'); return false;\">" + title + "</a></td>"; //openElement wird zu elements.open
                     html += "                           <td width=\"80px\">" + item.showScoreButton('folder', value['data']['id']) + "</td>";
                     html += "                           <td width=\"30px\">";
