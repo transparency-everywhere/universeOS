@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	width="1696px" height="62px">
+<style type="text/css"><![CDATA[
+.style0 {
+  font-size: 38px;
+  font-family: "Ubuntu-Light";
+  fill: rgb(255,255,255);
+}
+]]></style>
+<text transform="matrix(2,0,0,2,-2,60)" class="style0">
+<tspan x="0 30.5935 49.1828 57.5805 73.5025 93.8475 125.11 144.148 152.203 163.82 184.682 192.737 204.551 225.17 244.207 252.263 272.517 292.881 301.248 318.503 336.994 349.131 363.711 382.609 407.84 426.574 434.63 446.296 454.351 466.165 486.784 505.821 513.877" y="0.00">
+Welcome to the universeOS - the fi</tspan>
+<tspan x="533.029 545.166 559.925 572.503 580.558 595.116 615.689 631.911 640.058 657.693 666.661 674.717 701.822 720.312 741.774 767.006" y="0.00">
+rst social webOS</tspan>
+</text>
+</svg>

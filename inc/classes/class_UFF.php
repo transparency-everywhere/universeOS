@@ -194,9 +194,7 @@ class uff {
                
                 $filePath = universeBasePath.'/'.$fileClass->getFullFilePath();
 
-                $file = fopen($filePath, 'r');
-                $return = fread($file, filesize($filePath));
-                fclose($file);
+                $return = $fileClass->read();
                 $checksum = md5_file($filePath);
                 $uff = new uff($fileId);
                 $uff->addChecksumToUffCookie($checksum);

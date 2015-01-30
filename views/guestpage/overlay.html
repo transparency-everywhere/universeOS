@@ -1,0 +1,48 @@
+<style>
+
+
+
+.content-blurred {
+    position: absolute;
+top: 0;
+right: 0;
+bottom: 0;
+left: 0;
+	position:absolute;
+	top:0;
+	left:0;
+	right:0;
+        background: #f8f8f8;
+	-webkit-filter:blur(10px);
+	filter:url(#blur-effect);
+	opacity:.35;
+   z-index: 999;
+}
+
+</style>
+<script>
+var content = document.querySelector('.overlay');
+var duplicate = content.cloneNode(true);
+var contentBlurred = document.createElement('div');
+contentBlurred.className = 'content-blurred';
+contentBlurred.appendChild(duplicate);
+
+var header = document.querySelector('.overlay');
+header.appendChild(contentBlurred);
+
+var contentWrapper = document.querySelector('.content-wrapper'),
+translation;
+
+contentWrapper.addEventListener('scroll',function(){
+  translation = 'translate3d(0,' + (-this.scrollTop + 'px') + ',0)';
+  duplicate.style['-webkit-transform'] = translation;
+  duplicate.style['-moz-transform'] = translation;
+  duplicate.style['transform'] = translation;
+  
+  console.log(duplicate);
+});
+
+// offset to demo blurring
+contentWrapper.scrollTop = 140;
+</script>
+<div class="overlay content-blurred">adsasd</div>

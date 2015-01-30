@@ -18,7 +18,18 @@
 
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
-
-$playlist = new playlist($_POST['playlist_id']);
-echo $playlist->getPlaylistTitle();
+                    
+                    
+error_reporting(E_ALL);
+                $fileId = $_POST['file_id'];
+                $dbClass = new db();
+                $fileData = $dbClass->select('files', array('id', $fileId));
+                if(authorize($fileData['privacy'], "edit", $fileData['owner'])){
+                    $fileClass = new file($fileId);
+                    if($fileClass->delete()){
+                        echo 1;
+                    }else{
+                        echo 0;
+                    }
+		}
 ?>

@@ -163,6 +163,15 @@ li.notHidden{
    display: block;
 }
 
+.itemPreview h3{
+    margin-top: 15px;
+}
+
+.itemPreview img{
+    max-height: 63px;
+    margin-right: 10px;
+}
+
 .itemThumb{
     max-width: 250px;
     overflow: hidden;

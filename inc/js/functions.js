@@ -368,6 +368,8 @@ var universe = new function(){
         };
         
         var response = api.query('api/reload/', requestData);
+        
+        //@async
         var temp = this;
         $.each(response, function(key, value){
             temp.handleReloadTypes(value);
@@ -1831,3 +1833,9 @@ function getUserPicture(request){
                                     
 				
 			}
+
+function loadMiniFileBrowser($target, folder, element, level, showGrid, select){
+        api.query('api/item/loadMiniFileBrowser/', {folder: folder, element: element, level: level, showGrid: showGrid, select: select},function(result){
+            $target.html(result)
+        });
+}

@@ -239,7 +239,7 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 	            <?php
 	            if($showFolderButton){
 	            ?>
-	                <span class="trigger"><a href="#" onclick="<?=$trigger['folders'];?>" class="btn btn-mini"><i class="icon-ok"></i></a>&nbsp;</span>
+	                <span class="trigger"><a href="#" onclick="<?=$trigger['folders'];?>" class="btn btn-mini"><i class="icon white-check"></i></a>&nbsp;</span>
 				<?php } ?>
 	            </li>
 	            <!-- frame in which the folder data is loaded, if loadFolderDataIntoMiniBrowser() is called -->
@@ -272,7 +272,7 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 		        		<?php
 	           			 if($showElementButton){
 	            		?>
-	                    <span class="trigger"><a href="#" onclick="<?=$trigger['elements'];?>" class="btn btn-mini"><i class="icon-ok"></i></a>&nbsp;</span>
+	                    <span class="trigger"><a href="#" onclick="<?=$trigger['elements'];?>" class="btn btn-mini"><i class="icon white-check"></i></a>&nbsp;</span>
 	                    <?php } ?>
 		            </li>
 		            <!-- frame in which the element data is loaded, if loadElementDataIntoMiniBrowser() is called -->
@@ -314,7 +314,7 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 			        		<?php
 		           			 if($showFileButton){
 		            		?>
-	                        <span class="trigger"><a href="#" onclick="<?=$trigger['files'];?>" class="btn btn-mini"><i class="icon-ok"></i></a>&nbsp;</span>
+	                        <span class="trigger"><a href="#" onclick="<?=$trigger['files'];?>" class="btn btn-mini"><i class="icon white-check"></i></a>&nbsp;</span>
 	                        <?php } ?>
 	                    </li>
 	                    
@@ -344,7 +344,7 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 			        	<?php
 		           			 if($showFileButton){
 		            	?>
-	                    <span class="trigger"><a href="#" onclick="<?=$trigger['files'];?>" class="btn btn-mini"><i class="icon-ok icon-white"></i></a></span>
+	                    <span class="trigger"><a href="#" onclick="<?=$trigger['files'];?>" class="btn btn-mini"><i class="icon white-check"></i></a></span>
 	                    <?php } ?>
 	                </li>
 	                <?php

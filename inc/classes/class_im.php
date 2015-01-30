@@ -22,7 +22,7 @@ class im {
         $where = "`id`>$lastMessageReceived AND (`receiver`='$user' OR `sender`='$user')";
         
         $result = $db->shiftResult($db->select('messages', $where,  array('id', 'receiver', 'sender')), 'id');
-        
+
         return $result;
     }
  

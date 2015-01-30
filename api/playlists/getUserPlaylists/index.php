@@ -19,6 +19,6 @@
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
 
-$playlist = new playlist($_POST['playlist_id']);
-echo $playlist->getPlaylistTitle();
+$playlist = new playlist();
+echo json_encode($playlist->getUserPlaylistArray($_POST['type'], $_POST['user']));
 ?>

@@ -18,7 +18,8 @@
 
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
+                    
 
-$playlist = new playlist($_POST['playlist_id']);
-echo $playlist->getPlaylistTitle();
+$fileClass = new file($_POST['file_id']);
+echo $fileClass->read();
 ?>

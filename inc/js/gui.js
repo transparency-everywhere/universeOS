@@ -310,6 +310,7 @@ var gui = new function(){
         document.getElementsByTagName('head')[0].appendChild(se);
         
     };
+    
     this.getRasterWidth = function(numberOfFields){
         var gutterWidth = $(document).width()/49;
         return ((numberOfFields*3)+(numberOfFields-1))*gutterWidth;
