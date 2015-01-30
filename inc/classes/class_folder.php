@@ -163,45 +163,71 @@ class folder {
     function getItems() {
         $folderId = $this->id;
         $db = new db();
+        if(is_numeric($folderId)){
+            //select subfolders in folder
+            $folders = $db->shiftResult($db->select('folders', array('folder', $folderId)), 'id');
+            foreach ($folders as $folderData) {
+                $folderData['iconsrc'] = "img/folder_dark.png";
+                if(authorize($folderData['privacy'], "show", $folderData['creator']))
+                    $result[] = array('type' => 'folder', 'data' => $folderData);
+            }
 
-        //select subfolders in folder
-        $folders = $db->shiftResult($db->select('folders', array('folder', $folderId)), 'id');
-        foreach ($folders as $folderData) {
-            $folderData['iconsrc'] = "img/folder_dark.png";
-            if(authorize($folderData['privacy'], "show", $folderData['creator']))
-                $result[] = array('type' => 'folder', 'data' => $folderData);
-        }
+            //select elements in folder
+            $elements = $db->shiftResult($db->select('elements', array('folder', $folderId)), 'id');
+            foreach ($elements as $elementData) {
+                $elementData['iconsrc'] = "gfx/icons/filesystem/element.png";
+                if(authorize($elementData['privacy'], "show", $elementData['creator']))
+                    $result[] = array('type' => 'element', 'data' => $elementData);
+            }
 
-        //select elements in folder
-        $elements = $db->shiftResult($db->select('elements', array('folder', $folderId)), 'id');
-        foreach ($elements as $elementData) {
-            $elementData['iconsrc'] = "gfx/icons/filesystem/element.png";
-            if(authorize($elementData['privacy'], "show", $elementData['creator']))
-                $result[] = array('type' => 'element', 'data' => $elementData);
-        }
-
-        //select shortcuts in folder
-        $shortcuts = $db->shiftResult($db->select('internLinks', array('parentId', $folderId, 'AND', 'parentType', 'folder')), 'id');
-        foreach ($shortcuts as $shortcutData) {
-            if($shortcutData['type'] === 'folder') {
-                $folders = $db->shiftResult($db->select('folders',array('id', $shortcutData['typeId'])), 'id');
-                foreach ($folders as $folderData) {
-                    $folderData['iconsrc'] = "img/folder_dark.png";
-                    $folderData['shortcut'] = true;
-                    if(authorize($folderData['privacy'], "show", $folderData['creator'])){
-                        $result[] = array('type' => 'folder', 'data' => $folderData);
+            //select shortcuts in folder
+            $shortcuts = $db->shiftResult($db->select('internLinks', array('parentId', $folderId, 'AND', 'parentType', 'folder')), 'id');
+            foreach ($shortcuts as $shortcutData) {
+                if($shortcutData['type'] === 'folder') {
+                    $folders = $db->shiftResult($db->select('folders',array('id', $shortcutData['typeId'])), 'id');
+                    foreach ($folders as $folderData) {
+                        $folderData['iconsrc'] = "img/folder_dark.png";
+                        $folderData['shortcut'] = true;
+                        if(authorize($folderData['privacy'], "show", $folderData['creator'])){
+                            $result[] = array('type' => 'folder', 'data' => $folderData);
+                        }
+                    }
+                }
+                if($shortcutData['type'] === 'element') {
+                    $elements = $db->shiftResult($db->select('elements', array('folder', $shortcutData['typeId'])), 'id');
+                    foreach ($elements as $elementData) {
+                        $elementData['iconsrc'] = "gfx/icons/filesystem/element.png";
+                        $elementData['shortcut'] = true;
+                        if(authorize($elementData['privacy'], "show", $elementData['creator'])){
+                            $result[] = array('type' => 'element', 'data' => $elementData);
+                        }
                     }
                 }
             }
-            if($shortcutData['type'] === 'element') {
-                $elements = $db->shiftResult($db->select('elements', array('folder', $shortcutData['typeId'])), 'id');
-                foreach ($elements as $elementData) {
-                    $elementData['iconsrc'] = "gfx/icons/filesystem/element.png";
-                    $elementData['shortcut'] = true;
-                    if(authorize($elementData['privacy'], "show", $elementData['creator'])){
-                        $result[] = array('type' => 'element', 'data' => $elementData);
-                    }
+        }else{
+            //special querys, like show all music, show popular files etc. from the left sidebar
+            $specialType = $folderId;
+            if($specialType === "pupularity"){
+                $folders = $db->shiftResult($db->query("SELECT * FROM `folders` ORDER BY votes DESC LIMIT 0,10"), 'id');
+                $elements = $db->shiftResult($db->query("SELECT * FROM `elements` ORDER BY votes DESC LIMIT 0,10"), 'id');
+            }else if($specialType === "audio"){
+                $elements = $db->shiftResult($db->query("SELECT * FROM `elements` WHERE type LIKE '%audio%'"), 'id');
+            }else if($specialType === "video"){
+                $elements = $db->shiftResult($db->query("SELECT * FROM `elements` WHERE type LIKE '%video%'"), 'id');
+            }else if($specialType === "document"){
+                $elements = $db->shiftResult($db->query("SELECT * FROM `elements` WHERE type LIKE '%document%'"), 'id');
+            }
+            if(isset($folders)){
+                foreach ($folders as $folderData) {
+                    $folderData['iconsrc'] = "img/folder_dark.png";
+                    if(authorize($folderData['privacy'], "show", $folderData['creator']))
+                        $result[] = array('type' => 'folder', 'data' => $folderData);
                 }
+            }
+            foreach ($elements as $elementData) {
+                $elementData['iconsrc'] = "gfx/icons/filesystem/element.png";
+                if(authorize($elementData['privacy'], "show", $elementData['creator']))
+                    $result[] = array('type' => 'element', 'data' => $elementData);
             }
         }
         return $result;

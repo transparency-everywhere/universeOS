@@ -26,13 +26,13 @@ var filesystem =  new function() {
     this.generateFullFileBrowser = function(folderId){
         var html = '          <div class="leftNav">';		  			
         html += '              <ul>';		  			
-        html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,gui.loadPage(\'modules/filesystem/fileBrowser.php?special=pupularity&reload=1\'));return false"><img src="gfx/icons/filesystem/side_suggestions.png"> Suggestions</a></li>';		  			
-        html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,gui.loadPage(\'modules/filesystem/fileBrowser.php?reload=1\'));return false"><img src="gfx/icons/filesystem/side_allFiles.png"> All Files</a></li>';		  			
-        html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,gui.loadPage(\'modules/filesystem/fileBrowser.php?special=document&reload=1\'));return false"><img src="gfx/icons/filesystem/side_documents.png"> Documents</a></li>';		  			
-        html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,gui.loadPage(\'modules/filesystem/fileBrowser.php?special=audio&reload=1\'));return false"><img src="gfx/icons/filesystem/side_audio.png"> Audio Files</a></li>';		  			
-        html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,gui.loadPage(\'modules/filesystem/fileBrowser.php?special=video&reload=1\'));return false"><img src="gfx/icons/filesystem/side_video.png"> Video Files</a></li>';		  			
+        html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'pupularity\'));return false"><img src="gfx/icons/filesystem/side_suggestions.png"> Suggestions</a></li>';		  			
+        html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'1\'));return false"><img src="gfx/icons/filesystem/side_allFiles.png"> All Files</a></li>';		  			
+        html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'document\'));return false"><img src="gfx/icons/filesystem/side_documents.png"> Documents</a></li>';		  			
+        html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'audio\'));return false"><img src="gfx/icons/filesystem/side_audio.png"> Audio Files</a></li>';		  			
+        html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'video\'));return false"><img src="gfx/icons/filesystem/side_video.png"> Video Files</a></li>';		  			
         if(proofLogin()){
-            html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,gui.loadPage(\'modules/filesystem/fileBrowser.php?special=fav&reload=1\'));return false"><img src="gfx/icons/filesystem/side_fav.png"> Fav</a></li>';		  			
+            html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'fav\'));return false"><img src="gfx/icons/filesystem/side_fav.png"> Fav</a></li>';		  			
         }
         html += '                  <!-- <li><i class="icon-warning-sign"></i> deleted</li> -->';		  			
         html += '              </ul>';		  			
@@ -42,32 +42,38 @@ var filesystem =  new function() {
     };
     this.generateFileBrowser = function(folderId){
         var showFileBrowser = true;
-        if(empty(folderId) || folderId === 0){
-            folderId = '1';
-        }else if(folderId === '2'){
-            if(proofLogin()){
-                var homefolder = User.getAllData(User.userid)['homefolder'];
-                showFileBrowser = true;
-            }else{
-                showFileBrowser = false;
+        var fav = false;
+        if(is_numeric(folderId)){
+            if(empty(folderId) || folderId === 0){
+                folderId = '1';
+            }else if(folderId === '2'){
+                if(proofLogin()){
+                    folderId = User.getAllData(User.userid)['homefolder'];
+                    showFileBrowser = true;
+                }else{
+                    showFileBrowser = false;
+                }
             }
-        }
-        var folderData = folders.getData(folderId);
-        if(folderData['folder'] === 2){
-            folderData['folder'] = "1";
-        }
-        
-        		  			
-        html = '<div class="frameRight fileBrowser_' + folderId + '">';		  			
+            var folderData = folders.getData(folderId);
+            if(folderData['folder'] === 2){
+                folderData['folder'] = "1";
+            }
+        }else if(folderId === "fav"){
+            showFileBrowser = false;
+            fav = true;
+        }      
+        var html = '<div class="frameRight fileBrowser_' + folderId + '">';		  			
         html += '    <div class="path">';		  			
-        html += '         universe/' + folders.getPath(folderId);
+        if(is_numeric(folderId)){
+            html += '         universe/' + folders.getPath(folderId);
+        }
         if(proofLogin() && !empty(folderId)){
             html += '         <a href=\"#\" id=\"settingsButton\" onclick=\"$(\'.fileBrowserSettings' + folderId + '\').slideToggle(\'slow\'); return false\" title=\"more...\" class=\"btn btn-mini\"><i class=\"glyphicon glyphicon-cog\"></i></a>';
         }		  			
         html += '    </div>';		  			
         html += '    <div class="underFrame" style="overflow: none;">';		  			
         html += '        <div class="fileBrowser">';		  			
-        if(!empty(folderId)){
+        if(!empty(folderId) && is_numeric(folderId)){
             html += '        	<ul class="fileBrowserSettings fileBrowserSettings' + folderId + '">';		  			
             if(proofLogin()){
                 html += '                       <li><a href="#" onclick="fav.add(\'folder\', ' + folderId + ')">Fav</a></li>';
@@ -115,14 +121,14 @@ var filesystem =  new function() {
         };
 
             //generate parent folder row
-            if(!empty(folder) && (folder !== "1")){
+            if(!empty(folder) && (folder !== "1") && is_numeric(folder)){
                 if(parentFolderData['folder'] !== "1"){
                     parentFolderData = folders.getData(folder);
                 }
                     
             html += '                        <tr height="30" class="greyHover">';		  			
             html += '                            <td width="30">&nbsp;<img src="' + subpath + 'img/folder_dark.png" height="22"></td>';		  			
-            html += '                            <td><a href="' + subpath + 'out/?folder=' + parentFolderData['folder'] + '" onclick="openFolder(' + parentFolderData['folder'] + '); return false;">...</a></td>';		  			
+            html += '                            <td><a href="#" onclick="openFolder(' + parentFolderData['folder'] + '); return false;">...</a></td>';		  			
             html += '                            <td width="50px"></td>';		  			
             html += '                            <td width="50px"></td>';		  			
             html += '                        </tr>';
