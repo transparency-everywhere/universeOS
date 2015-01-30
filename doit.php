@@ -2393,12 +2393,7 @@ else if($_GET['action'] == "createNewUFF"){
             </script>
                 
             <? }}
-else if($_GET['action'] == "loadUff"){
-                //is used to load content of a UFF
-                $uff = new uff(save($_GET['id']));
-                echo $uff->show();
-                
-            }
+
 else if($_GET['action'] == "writeUff"){
     
     error_reporting(E_ALL);

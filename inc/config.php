@@ -21,12 +21,28 @@ if(!isset($_SESSION)){
 }
 
 //mysql connect	or die
-	mysql_connect("$server","$user","$password");
-	mysql_select_db("$db");
-	
-	if(!mysql_connect("$server","$user","$password") OR !mysql_select_db("$db")) {
-            die("Something went wrong with the Database... WTF?!");
-	}
+mysql_connect("$server","$user","$password");
+mysql_select_db("$db");
 
+if(!mysql_connect("$server","$user","$password") OR !mysql_select_db("$db")) {
+    die("Something went wrong with the Database... WTF?!");
+}
+
+
+define('analytic_script',  "<!-- Piwik only on page for unregistered users -->"
+    . "<script type=\"text/javascript\"> \n"
+    . "  var _paq = _paq || [];\n"
+    . "  _paq.push(['trackPageView']);\n"
+    . "  _paq.push(['enableLinkTracking']);\n"
+    . "  (function() {\n"
+    . "    var u=((\"https:\" == document.location.protocol) ? \"https\" : \"http\") + \"://analytics.transparency-everywhere.com//\";\n"
+    . "    _paq.push(['setTrackerUrl', u+'piwik.php']);\n"
+    . "    _paq.push(['setSiteId', 1]);\n"
+    . "    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';\n"
+    . "    g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);\n"
+    . "  })();\n"
+    . "</script>\n"
+    . "<noscript><p><img src=\"http://analytics.transparency-everywhere.com/piwik.php?idsite=1\" style=\"border:0\" alt=\"\" /></p></noscript>\n"
+    . "<!-- End Piwik Code -->");
 
 ?>

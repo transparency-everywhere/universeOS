@@ -33,14 +33,23 @@ var notification = function(options){
       });
     };
     this.push = function(){
-        var note = this.generateNotification();
-        $('#notifications>ul').append(note);
         
-        this.initClicks();
+        
+        //generate checksum to avoid double notices
+        var optionChecksum = hash.MD5(JSON.stringify(this.options));
+        if($('.'+optionChecksum).length === 0){
+            var note = this.generateNotification();
+            $('#notifications>ul').append(note);
+
+            this.initClicks();
+        }
     };
     this.generateNotification = function(){
         var options = this.options;
         
+        
+        //generate checksum to avoid double notices
+        var optionChecksum = hash.MD5(JSON.stringify(this.options));
         
         //generate data attributes
         var data = '';
@@ -56,7 +65,7 @@ var notification = function(options){
         
         
         
-        var html = '<li id="'+options.id+'" '+data+'>\n\
+        var html = '<li id="'+options.id+'" class="'+optionChecksum+'" '+data+'>\n\
             <div class="messageMain">\n\
                 '+options.message+'\n\
             </div>\n\
@@ -69,5 +78,12 @@ var notification = function(options){
         </li>';
         
         return html;
+    };
+};
+
+var notifications = new function(){
+    this.ignoredNotifications = [];
+    this.ignore = function(uniqueIdentifier){
+        ignoredNotifications.push(uniqueIdentifier);
     };
 };

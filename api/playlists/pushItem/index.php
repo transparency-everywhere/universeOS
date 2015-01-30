@@ -1,5 +1,4 @@
 <?php
-
 //This file is published by transparency-everywhere with the best deeds.
 //Check transparency-everywhere.com for further information.
 //Licensed under the CC License, Version 4.0 (the "License");
@@ -18,7 +17,6 @@
 
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
-
-$playlist = new playlist($_POST['playlist_id']);
-echo $playlist->getPlaylistTitle();
-?>
+error_reporting(E_ALL);
+$playlistClass = new playlist($_POST['playlist']);
+echo $playlistClass->pushItem(array('item_type'=>$_POST['item_type'],'item_id'=>$_POST['item_id']));

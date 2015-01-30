@@ -5,16 +5,22 @@ Update
 
 
 Recent:
-
+        Playlists
+            createFile
+            createPlaylist
+            
+    
         Open Designtaks:
             Guestpage
                 Login & Start
 
         reload
+            Ignore notifications
+                notifications.ignore in notifications.js
 
         update all icons
 
-        guestpage
+        
 
         update Font to ubuntu
         

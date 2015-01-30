@@ -405,5 +405,11 @@ var filesystem =  new function() {
     this.show = function(){
         this.applicationVar.show();
     };
+    
+    this.readFile = function(file_id){
+        
+        
+        return api.query('api/files/read/', { file_id : file_id});
+    };
 };
 

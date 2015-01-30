@@ -42,13 +42,13 @@ var playlists = new function(){
 	});
 	return result;
     };
-    this.create = function(title, privacy, callback){
+    this.create = function(element, title, privacy, callback){
                 var result="";
                 $.ajax({
                     url:"api/playlists/create/",
                     async: false,  
                     type: "POST",
-                    data: $.param({title: title})+'&'+privacy,
+                    data: $.param({element: element, title: title})+'&'+privacy,
                     success:function(data) {
                        result = data;
                        if(typeof callback === 'function'){
@@ -58,6 +58,14 @@ var playlists = new function(){
                 });
                 return result;  		
             };
+            
+    //returns all playlists which the users has access to
+    //@param type - show or edit
+    this.getUserPlaylists = function(type){
+        var user_id = User.userid;
+        return api.query('api/playlists/getUserPlaylists/', { type : type, user_id: user_id});
+    };
+            
     this.showCreationForm = function(){
         var formModal = new gui.modal();
         
@@ -67,6 +75,7 @@ var playlists = new function(){
         options['buttonTitle'] = 'Save';
         options['noButtons'] = true;
         
+        
         var field0 = [];
         field0['caption'] = 'Title';
         field0['inputName'] = 'title';
@@ -74,11 +83,18 @@ var playlists = new function(){
         fieldArray[0] = field0;
         
         var field1 = [];
-        field1['caption'] = 'Privacy';
-        field1['inputName'] = 'privacy';
+        field1['caption'] = 'Element';
+        field1['inputName'] = 'element';
         field1['type'] = 'html';
-        field1['value'] = "<div id=\'privacyField\'></div>";
+        field1['value'] = "<div id=\'createPlaylistFileBrowserFrame\'></div>";
         fieldArray[1] = field1;
+        
+        var field2 = [];
+        field2['caption'] = 'Privacy';
+        field2['inputName'] = 'privacy';
+        field2['type'] = 'html';
+        field2['value'] = "<div id=\'privacyField\'></div>";
+        fieldArray[2] = field2;
         
         
         var modalOptions = {};
@@ -88,16 +104,65 @@ var playlists = new function(){
             var callback = function(){
                 jsAlert('', 'The playlist has been added');
                 $('.blueModal').remove();
-                //filesystem.tabs.updateTabContent(1 , gui.loadPage('modules/filesystem/fileBrowser.php?folder='+parent_folder));
+                
+                
+                updateDashbox('playlist');
+                $('#favTab_playList').load('doit.php?action=showUserPlaylists');
             };
-            playlists.create($('#createPlaylistFormContainer #title').val(), $('#createPlaylistFormContainer #privacyField :input').serialize(),callback);
+            
+            playlists.create($('#createPlaylistFileBrowserFrame .choosenTypeId').val(), $('#createPlaylistFormContainer #title').val(), $('#createPlaylistFormContainer #privacyField :input').serialize(),callback);
         };
-        privacy.load('#privacyField', '', true);
+        
         formModal.init('Create Playlist', '<div id="createPlaylistFormContainer"></div>', modalOptions);
         gui.createForm('#createPlaylistFormContainer',fieldArray, options);
+        
+        //load minifilebrowser
+        loadMiniFileBrowser($('#createPlaylistFileBrowserFrame'),"1", '', '', true, "element");
+        
+        //load privacy
+        privacy.load('#privacyField', '', true);
+        
 			  		
     };
     
+    
+    this.showPlaylistInfo = function(playlist_id){
+        
+        
+        var formModal = new gui.modal();
+        var playlistData = playlists.getData(playlist_id);
+        var playlistFileContent = filesystem.readFile(playlistData['file_id']);
+        
+        var itemList;
+        if(playlistFileContent.items.length === 0){
+            itemList = 'This playlist is empty';
+        }else{
+            itemList = '<ul class="dynamicList">';
+            $.each(playlistFileContent.items, function(key, value){
+                
+                var info = item.getInfo(value.item_type, value.item_id);
+                
+                itemList += '<li>';
+                    itemList += '<div class="previewImage"><img src="'+info.image+'"/></div>';
+                    itemList += '<div class="caption">'+info.title+'</div>';
+                itemList += '</li>';
+            });
+            itemList += '</ul>';
+        }
+      
+        var html = '<div id="showPlaylistInfoContainer">'+itemList+'</div>';
+        
+        var modalOptions = {};
+        modalOptions['buttonTitle'] = 'Play Playlist';
+        
+        modalOptions['action'] = function(){};
+        formModal.init('Playlist '+playlistData['title'], html, modalOptions);
+        
+        
+    };
+    
+    
+//    old
     this.update = function(playlist_id, title, privacy, callback){
         
         var result="";
@@ -115,7 +180,7 @@ var playlists = new function(){
 	});
 	return result;
     };
-    
+//    old
     this.showUpdatePlaylistForm = function(playlist_id){
         var formModal = new gui.modal();
         var playlistData = playlists.getData(playlist_id);
@@ -156,4 +221,61 @@ var playlists = new function(){
         formModal.init('Update Playlist', '<div id="createElementFormContainer"></div>', modalOptions);
         gui.createForm('#createElementFormContainer',fieldArray, options);
     };
+    
+    
+    
+    this.pushItemToPlaylistForm = function(item_type, item_id){
+        
+        var formModal = new gui.modal();
+        
+        var fieldArray = [];
+        var options = [];
+        options['headline'] = '';
+        options['buttonTitle'] = 'Add';
+        options['noButtons'] = true;
+        
+        
+        var field0 = [];
+        field0['caption'] = 'Item';
+        field0['inputName'] = '';
+        field0['value'] = item.generateItemPreview(item_type, item_id);
+        field0['type'] = 'html';
+        fieldArray[0] = field0;
+        
+        
+        var user_playlists = playlists.getUserPlaylists('edit');
+        var field1 = [];
+        field1['caption'] = 'Playlist';
+        field1['inputName'] = 'playlist';
+        field1['values'] = user_playlists.ids;
+        field1['captions'] = user_playlists.titles;
+        field1['type'] = 'dropdown';
+        fieldArray[1] = field1;
+        
+        
+        
+        var modalOptions = {};
+        modalOptions['buttonTitle'] = 'Add to Playlist';
+        
+        modalOptions['action'] = function(){
+            playlists.pushItem($('#pushItemToPlaylistFormContainer #playlist').val(), item_type, item_id, function(){
+                gui.alert('The item has been added to the playlist');
+            });
+        };
+        
+        formModal.init('Add item to Playlist', '<div id="pushItemToPlaylistFormContainer"></div>', modalOptions);
+        gui.createForm('#pushItemToPlaylistFormContainer',fieldArray, options);
+        
+        //load privacy
+        privacy.load('#privacyField', '', true);
+        
+    };
+    
+    
+    this.pushItem = function(playlist, item_type, item_id, callback){
+        
+        return api.query('api/playlists/pushItem/', { playlist : playlist, item_type: item_type, item_id: item_id}, callback);
+        
+    };
+        
 };

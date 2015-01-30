@@ -34,6 +34,45 @@ var item = new function(){
         return api.query('api/item/getScore/', { type : type, itemId: itemId});
     };
     
+    
+    this.generateItemPreview = function(item_type, item_id){
+        var itemInfo = item.getInfo(item_type, item_id);
+        
+        var html = '<table class=\'itemPreview\'>';
+                html += '<tr>';
+                    html += '<td>';
+                        html += '<img src=\''+itemInfo.image+'\'/>';
+                    html += '</td>';
+                    html += '<td>';
+                        html += '<table>';
+                            html += '<tr><td><h3>'+itemInfo.title+'</h3></td></tr>';
+                            html += '<tr><td>'+itemInfo.subtitle+'</td></tr>';
+                        html += '</table>';
+                    html += '</td>';
+                html += '</tr>';
+            html += '</table>';
+            
+            return html;
+    };
+    
+    this.getInfo = function(item_type, item_id){
+        var image;
+        var title;
+        var subtitle;
+        
+        switch(item_type){
+            case 'youtube':
+                var id = youtubeURLToVideoId(item_id);
+                image = 'http://img.youtube.com/vi/'+id+'/1.jpg';
+                title = getYoutubeTitle(id);
+                subtitle = item_id;
+                
+                break;
+        }
+        
+        return {'image':image, 'title':title, 'subtitle': subtitle};
+    };
+    
     this.showScoreButton = function(type, itemId){
         
         var score = this.getScore(type, itemId);

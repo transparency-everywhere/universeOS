@@ -83,8 +83,8 @@ var registration = new function(){
             $('#checkPasswordStatus').show();
             var password = $("#"+id).val();
                 var score = sec.scorePassword(password);
-                var html = '';
-                var bg;
+                var bg,html,help;
+                help = 'How to find a Stronger password:<br>Songs<br>Is there a song that has been in your head for years? Use the first letter of each word.<br>Your Favorite Things<br>My favorite is You fill in the blanks. How about:<br>Mfc=Vwb	My favorite car equals Volkswagen Bus.<br>Mff=Lmb	My favorite fish equals Largemouth bass';
                 if (score > 80){
                     bg = '#719005';
                     html = '<a style="color: green">Nice! Your password is pretty secure.</a><div class="arrow-right"></div>';
@@ -97,9 +97,10 @@ var registration = new function(){
                     bg = '#790125';
                     html = '<a style="color: green">Uh-Oh! My mom could crack that password!</a><div class="arrow-right"></div>';
                 }
+                $('.registerBox p').html(help);
                 $('#checkPasswordStatus').html(html);
                 $('#checkPasswordStatus').css('background', bg);
-                $('#checkPasswordStatus .arrow-right').css('borderRight', 'border-right: 15px solid '+bg);
+                $('#checkPasswordStatus .arrow-right').css('borderRight', '15px solid '+bg);
     };
     this.checkUsername = function(id){
 	$('.captchaContainer').slideDown('slow');
@@ -148,20 +149,22 @@ var registration = new function(){
             //keyHash is used to encrypt the pricate Key
 
 
-                            //generate Keypair
-                            var crypt,publicKey,privateKey;
+            //generate Keypair
+            var crypt,publicKey,privateKey;
 
-                            crypt = new JSEncrypt({default_key_size: 4096});
-                            crypt.getKey(function () {
+            crypt = new JSEncrypt({default_key_size: 4096});
+            
+            crypt.getKey(function () {
 
-                                    //generate salts and keys from password
-                                    var keys = cypher.createKeysForUser(password);
+                    //generate salts and keys from password
+                    var keys = cypher.createKeysForUser(password);
 
-                                    privateKey = sec.symEncrypt(keys['keyHash'], crypt.getPrivateKey()); //encrypt privatestring, using the password hash
-                                    publicKey = crypt.getPublicKey();
+                    privateKey = sec.symEncrypt(keys['keyHash'], crypt.getPrivateKey()); //encrypt privatestring, using the password hash
+                    publicKey = crypt.getPublicKey();
 
-                                    //submit registration
-                                    $.post("api/user/create/", {
+                    //submit registration
+                    //@async
+                    $.post("api/user/create/", {
                                             username:username,
                                             password:keys['authHash'],
                                             authSalt:keys['authSaltEncrypted'],
@@ -186,13 +189,22 @@ var registration = new function(){
                                                     $('#regForm').show();
                                             }
                                         }, "html");
-                                    });
+            });
     };
     this.init = function(){
         $(document).ready(function(){
+            
+            $('#regUsername').on('blur',function(){
+                registration.checkUsername('regUsername');
+            });
+            $('#registrationForm #password').on('blur',function(){
+                registration.checkPassword('password');
+            });
+            
+            
+            
             $('#registrationForm').submit(function(e){
                e.preventDefault();
-               alert('uppaduppa');
                registration.checkReg($('#registrationForm #regUsername').val(), $('#registrationForm #password').val(), $('#registrationForm #passwordRepeat').val());
             });
         });
@@ -207,18 +219,12 @@ function login(){
 	var userid = usernameToUserid(username);
 	var userCypher = getUserCypher(userid);
 	
-	
-	if(userCypher === 'md5'){
-		updatePasswordAndCreateSignatures(userid, password);
-	}else if(userCypher == 'sha512'){
-		update.sha512TOsha512_2(userid, password);
-	}else if(userCypher == 'sha512_2'){
-		var shaPass = hash.SHA512(password);
+	var shaPass = hash.SHA512(password);
                 
-		var passwordHash = cypher.getKey('auth', userid, shaPass);
-                
-		
-	                $.post("api.php?action=authentificate", {
+	var passwordHash = cypher.getKey('auth', userid, shaPass);
+        
+        //@async
+	$.post("api.php?action=authentificate", {
 	                       username:username,
 	                       password:passwordHash,
 	                       }, function(result){
@@ -240,139 +246,23 @@ function login(){
 	                            }
 	                            return false;
 	                       }, "html");
-		
-		
-		
-	}else{
-		jsAlert('', 'There is no user with this username.');
-	}
-	
-	
+                               
 }
 
-var update = new function(){
-	this.sha512TOsha512_2 = function(userid, password){
-			//is used to erase use of md5
-		
-			//UPDATE PASSWORD
-	    		var cypherOld = sec.passwordCypher(password, 'auth', userid);
-	    		var passwordHashOld = cypherOld[0];
-	    	
-				var saltDecrypted = cypherOld[3];
-				if(saltDecrypted.length == 0||passwordHashOld.length==0||saltDecrypted=='undefined'){
-					jsAlert('', 'The Password you entered was wrong');
-					return false;
-				}
-				//generate new password
-				var passwordSHA512 = hash.SHA512(password); //stretch password
-				var password_new = hash.SHA512(passwordSHA512+saltDecrypted);
-				//encrypt salt with sha512(password)
-				var saltEncrypted_new = sec.symEncrypt(passwordSHA512, saltDecrypted);
-		
-		
-		
-			//UPDATE PRIVATE KEY
-			
-				//get old private key
-				var privateKey = sec.getPrivateKey('user', userid, saltDecrypted, cypherOld[1]);
-				
-				//save new private key
-				
-				//generate salt for random key
-    			var keySalt = hash.SHA512(randomString(64, '#aA'));  //generate salt and hash it.
-    			
-			    var privateKeyHash = hash.SHA512(passwordSHA512+keySalt);
-			    
-			    
-			    //save salt
-			    var encryptedKeySalt = sec.symEncrypt(passwordSHA512, keySalt);
-			    //createSalt('privateKey', userid, '', '', encryptedKeySalt);
-			    
-			    var privateKeyNew = sec.symEncrypt(privateKeyHash, privateKey);
-			
-				//save new password, new private key and send oldpw & userid
-				$.post("api.php?action=update_sha512TOsha512_2", {
-	                       userid:userid,
-	                       oldPassword:passwordHashOld,
-	                       newPassword:password_new,
-	                       newPrivateKey:privateKeyNew,
-	                       saltAuthNew: saltEncrypted_new,
-	                       saltKeyNew: encryptedKeySalt
-	                       }, function(result){
-	                            var res = result;
-	                            if(res){
-	                            	
-	                            	jsAlert(res);
-	                            }else{
-	                                jsAlert('', 'Your account has been updated. You can login with your default userdata.');
-	                            }
-	                            return false;
-	                       }, "html");
-			
-		
-		
-		
-		
-	};
-};
-
-function updatePasswordAndCreateSignatures(userid, password){
-	
-	jsAlert('', 'You started using the universeOS with version 0.1, that means your password was not stored with the biggest security and your signatures are not up to date. We use the password you just entered to catch up.');
-	
-	//cypher password into two hashes
-	//passwordHash is used to cypher the password for db
-	//keyHash is used to encrypt the pricate Key
-	var md = CryptoJS.MD5(password);
-	password = md.toString(CryptoJS.enc.Hex);
-	var oldPassword = password;
-	
-        var salt = CryptoJS.SHA512(randomString(64, '#aA'));  //generate salt and hash it.
-        console.log('salt not encrypted:'+salt);
-        var shaPass = CryptoJS.SHA512(salt+password);
-        var passwordHash = shaPass.toString(CryptoJS.enc.Hex); //parse cypher object to string
-
-
-        var shaKey = CryptoJS.SHA512(password+salt);
-        var keyHash = shaKey.toString(CryptoJS.enc.Hex);
-
-
-        var salt = sec.symEncrypt(password, salt.toString(CryptoJS.enc.Hex));				  //encrypt salt, using md5-pw hash
-        console.log('salt encrypted:'+salt);
-        console.log('keyHash:'+keyHash);
-
-                            //generate Keypair
-                                  var crypt;
-                                  var publicKey;
-                                  crypt = new JSEncrypt({default_key_size: 1024});
-                                      jsAlert('', 'The universe creates now your asymetric keypair, this may take some seconds..');
-                                  crypt.getKey(function () {
-                                    var temp = crypt.getPrivateKey();
-
-                                    console.log('P:::'+temp+':::P');
-
-                                    var privateKey = sec.symEncrypt(keyHash, temp); //encrypt privatestring, usering the password hash
-
-                                    console.log('encrypted privateKey:'+privateKey);
-                                    publicKey = crypt.getPublicKey();
-                                    console.log(publicKey);
-                            $.post("api.php?action=updatePasswordAndCreateSignatures", {
-                                   userid:userid,
-                                   password:passwordHash,
-                                   salt:salt,
-                                   publicKey:publicKey,
-                                   privateKey:privateKey,
-                                   oldPassword: oldPassword
-                                   }, function(result){
-                                        var res = result;
-                                        if(res == '1'){
-                                            //load checked message
-                                            jsAlert('','The update worked, you can sign in now with your default userdata.');
-
-                                        }else{
-                                            jsAlert('', 'Oops something went wrong :(');
-                                        }
-                                   }, "html");
-
-                                          });
-}
+$(document).ready(function(){
+   registration.init();
+   
+        //open menu
+        $("#moduleMenu").click(function () {
+            $("#startbox").hide("slow");
+            $("#dockMenu").slideToggle("slow");
+        }); 
+        
+        //open login box
+        $("#personalButton").click(function () {
+            $("#dockMenu").hide("slow");
+            $("#startbox").slideToggle("slow");
+            $("#startbox").css('z-index', 9999);
+            $("#startbox").css('position', 'absolute');
+        });
+});

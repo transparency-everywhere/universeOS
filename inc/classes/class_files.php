@@ -136,20 +136,20 @@ class files {
         }
         
         //add db entry and add temp value
-                        $fileValues['folder'] = $element;
-                        $fileValues['title'] = $imgName;
-                        $fileValues['size'] = $size;
-                        $fileValues['timestamp'] = $time;
-                        $fileValues['filename'] = $imgName;
-                        $fileValues['language'] = $lang;
-                        $fileValues['type'] = $type;
-                        $fileValues['owner'] = $user;
-                        $fileValues['votes'] = '';
-                        $fileValues['score'] = '';
-                        $fileValues['privacy'] = $privacy;
-                        $fileValues['var1'] = '';
-                        $fileValues['download'] = $download;
-                        $fileValues['status'] = true;
+        $fileValues['folder'] = $element;
+        $fileValues['title'] = $imgName;
+        $fileValues['size'] = $size;
+        $fileValues['timestamp'] = $time;
+        $fileValues['filename'] = $imgName;
+        $fileValues['language'] = $lang;
+        $fileValues['type'] = $type;
+        $fileValues['owner'] = $user;
+        $fileValues['votes'] = '';
+        $fileValues['score'] = '';
+        $fileValues['privacy'] = $privacy;
+        $fileValues['var1'] = '';
+        $fileValues['download'] = $download;
+        $fileValues['status'] = true;
         
                         
         $fileId = $this->insertRecordDB($fileValues);
@@ -177,19 +177,44 @@ class files {
     
     
     
-    function createFile($element, $fileValue=NULL, $privacy=NULL){
+    function createFile($element, $title, $filename, $fileValue=NULL, $privacy=NULL){
+        
+        $type = $this->getMime($filename);
+        $filename = sanitize_file_name($filename);
+        $user = getUser();
+        
         $elementClass = new element($element);
         $path = $elementClass->getPath();
         
-        $myfile = fopen(universeBasePath.'/'.$path, "w");
+        $myfile = fopen(universeBasePath.'/'.$path.'/'.$filename, "w");
         fwrite($myfile, $fileValue);
         fclose($myfile);
 
-        echo $path;
+        
+        
+        //add db entry and add temp value
+        $fileValues['folder'] = $element;
+        $fileValues['title'] = $title;
+        $fileValues['size'] = 0;
+        $fileValues['timestamp'] = time();
+        $fileValues['filename'] = $filename;
+        $fileValues['type'] = $type;
+        $fileValues['owner'] = $user;
+        $fileValues['privacy'] = $privacy;
+        
+                        
+        return $this->insertRecordDB($fileValues);
+    }
+    
+    function updateFileContent($file_id, $content){
+        $myfile = fopen(universeBasePath.'/'.$this->getPath($file_id), "w");
+        fwrite($myfile, $content);
+        fclose($myfile);
     }
     
     function insertRecordDB($values){
-        return $dbClass->insert('files', $fileValues);
+        $dbClass = new db();
+        return $dbClass->insert('files', $values);
     }
     
     function getPath($fileId){
@@ -417,6 +442,7 @@ class file{
             $folderClass = new folder($documentElementData['folder']);
             $folderArray = $folderClass->loadFolderArray("path");
             $folderArray = array_reverse($folderArray['names'], true);
+            if(is_array($folderArray))
             foreach($folderArray as &$folder){
                 $path .= "$folder/";
             }
@@ -441,6 +467,24 @@ class file{
                     $fileData = $this->getFileData();
                     return $fileData['title'];
             }
+            
+    function read(){
+        
+               
+                $filePath = universeBasePath.'/'.$this->getFullFilePath();
+
+                $file = fopen($filePath, 'r');
+                $return = fread($file, filesize($filePath));
+                fclose($file);
+                
+                return $return;
+        
+    }
+    
+    function overwrite($string){
+        $files = new files($this->id);
+        $files->updateFileContent($this->id, $string);
+    }
 
 
     function getFileType(){
@@ -513,10 +557,27 @@ class file{
 
 	
     
-    
-    
-	 
-         
-    
-
+/**
+ * from Chyrp
+ * Function: sanitize
+ * Returns a sanitized string, typically for URLs.
+ *
+ * Parameters:
+ *     $string - The string to sanitize.
+ *     $force_lowercase - Force the string to lowercase?
+ *     $anal - If set to *true*, will remove all non-alphanumeric characters.
+ */
+function sanitize_file_name($string, $force_lowercase = true, $anal = false) {
+    $strip = array("~", "`", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "=", "+", "[", "{", "]",
+                   "}", "\\", "|", ";", ":", "\"", "'", "&#8216;", "&#8217;", "&#8220;", "&#8221;", "&#8211;", "&#8212;",
+                   "â€”", "â€“", ",", "<", ">", "/", "?");
+    $clean = trim(str_replace($strip, "", strip_tags($string)));
+    $clean = preg_replace('/\s+/', "-", $clean);
+    $clean = ($anal) ? preg_replace("/[^a-zA-Z0-9]/", "", $clean) : $clean ;
+    return ($force_lowercase) ?
+        (function_exists('mb_strtolower')) ?
+            mb_strtolower($clean, 'UTF-8') :
+            strtolower($clean) :
+        $clean;
+}
 

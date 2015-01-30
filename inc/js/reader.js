@@ -103,14 +103,15 @@ var reader = new function(){
         switch(fileData['type']){
             case'UFF':
                 
-                //load uff file and init wysiqyg
-                $.get('doit.php?action=loadUff&id='+file_id, function(uffContent) {
+                
+                
+                api.query('api/files/read/', { file_id : file_id}, function(uffContent){
+                    
                     initUffReader(file_id, uffContent, "false");
                     
                     
                     //store hash
                     reader.uffChecksums[file_id] = hash.MD5(uffContent);
-                    
                 });
                 
                 break;

@@ -210,6 +210,19 @@ and (max-width : 320px) {
 
 
 /*new guestpage stuff*/
+#guestArea #header{
+    width:360px; margin-bottom:25px;
+    display:block;
+    margin: 25px 10px;
+}
+
+#guestArea #subheader{
+    width:848px;
+    display:block;
+    margin-bottom: 25px;
+    margin-left: 10px;
+}
+
 .guestBox{
     background-color:  #006d67;
     box-shadow: 1px 3px 8px 0px rgba(0, 0, 0, 0.3);
@@ -233,7 +246,9 @@ and (max-width : 320px) {
 .guestBox.registerBox p{
     float: right;
     margin-right: 25px;
-    max-width: 368px;
+    max-width: 405px;
+    margin-top: 5px;
+    line-height: 24px;
 }
 
 .guestBox h2{
@@ -285,7 +300,7 @@ and (max-width : 320px) {
     width: 0;
     height: 0;
     border-top: 15px solid transparent;
-    border-bottom: 16px solid transparent;
+    border-bottom: 15px solid transparent;
     border-right: 15px solid #790125;
     margin-left: -15px;
     float: left;
