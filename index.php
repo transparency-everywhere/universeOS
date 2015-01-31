@@ -44,7 +44,7 @@ if(!$login) {
     echo '</html>';
        
 }else{
-    echo '<script>$(document).ready(function(){User.userid = '.getUser().'});</script>';
+    echo '<script>User.userid = '.getUser().';</script>';
     echo '<div id="alerter" class="container"></div>';
     
     include("modules/desktop/dashboard.php");

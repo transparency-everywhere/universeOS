@@ -3291,168 +3291,6 @@ and (max-device-width : 480px) {
 
 }
 
-#circularG{
-position:relative;
-width:100px;
-height:100px}
-
-.circularG{
-position:absolute;
-background-color:#424242;
-width:23px;
-height:23px;
--moz-border-radius:15px;
--moz-animation-name:bounce_circularG;
--moz-animation-duration:1.6s;
--moz-animation-iteration-count:infinite;
--moz-animation-direction:linear;
--webkit-border-radius:15px;
--webkit-animation-name:bounce_circularG;
--webkit-animation-duration:1.6s;
--webkit-animation-iteration-count:infinite;
--webkit-animation-direction:linear;
--ms-border-radius:15px;
--ms-animation-name:bounce_circularG;
--ms-animation-duration:1.6s;
--ms-animation-iteration-count:infinite;
--ms-animation-direction:linear;
--o-border-radius:15px;
--o-animation-name:bounce_circularG;
--o-animation-duration:1.6s;
--o-animation-iteration-count:infinite;
--o-animation-direction:linear;
-border-radius:15px;
-animation-name:bounce_circularG;
-animation-duration:1.6s;
-animation-iteration-count:infinite;
-animation-direction:linear;
-}
-
-#circularG_1{
-left:0;
-top:39px;
--moz-animation-delay:0.6s;
--webkit-animation-delay:0.6s;
--ms-animation-delay:0.6s;
--o-animation-delay:0.6s;
-animation-delay:0.6s;
-}
-
-#circularG_2{
-left:11px;
-top:11px;
--moz-animation-delay:0.8s;
--webkit-animation-delay:0.8s;
--ms-animation-delay:0.8s;
--o-animation-delay:0.8s;
-animation-delay:0.8s;
-}
-
-#circularG_3{
-top:0;
-left:39px;
--moz-animation-delay:1s;
--webkit-animation-delay:1s;
--ms-animation-delay:1s;
--o-animation-delay:1s;
-animation-delay:1s;
-}
-
-#circularG_4{
-right:11px;
-top:11px;
--moz-animation-delay:1.2s;
--webkit-animation-delay:1.2s;
--ms-animation-delay:1.2s;
--o-animation-delay:1.2s;
-animation-delay:1.2s;
-}
-
-#circularG_5{
-right:0;
-top:39px;
--moz-animation-delay:1.4s;
--webkit-animation-delay:1.4s;
--ms-animation-delay:1.4s;
--o-animation-delay:1.4s;
-animation-delay:1.4s;
-}
-
-#circularG_6{
-right:11px;
-bottom:11px;
--moz-animation-delay:1.6s;
--webkit-animation-delay:1.6s;
--ms-animation-delay:1.6s;
--o-animation-delay:1.6s;
-animation-delay:1.6s;
-}
-
-#circularG_7{
-left:39px;
-bottom:0;
--moz-animation-delay:1.8s;
--webkit-animation-delay:1.8s;
--ms-animation-delay:1.8s;
--o-animation-delay:1.8s;
-animation-delay:1.8s;
-}
-
-#circularG_8{
-left:11px;
-bottom:11px;
--moz-animation-delay:2s;
--webkit-animation-delay:2s;
--ms-animation-delay:2s;
--o-animation-delay:2s;
-animation-delay:2s;
-}
-
-@-moz-keyframes bounce_circularG{
-0%{
--moz-transform:scale(1)}
-
-100%{
--moz-transform:scale(.3)}
-
-}
-
-@-webkit-keyframes bounce_circularG{
-0%{
--webkit-transform:scale(1)}
-
-100%{
--webkit-transform:scale(.3)}
-
-}
-
-@-ms-keyframes bounce_circularG{
-0%{
--ms-transform:scale(1)}
-
-100%{
--ms-transform:scale(.3)}
-
-}
-
-@-o-keyframes bounce_circularG{
-0%{
--o-transform:scale(1)}
-
-100%{
--o-transform:scale(.3)}
-
-}
-
-@keyframes bounce_circularG{
-0%{
-transform:scale(1)}
-
-100%{
-transform:scale(.3)}
-
-}
-
 
 
 /* Smartphones (landscape) ----------- */
@@ -3468,3 +3306,25 @@ and (max-width : 320px) {
 }
 
 
+.dynamicList{
+    list-style: none;
+}
+
+.dynamicList li{
+    vertical-align: bottom;
+    margin-bottom: 10px;
+}
+
+.dynamicList li>div{
+    display: inline-block;
+}
+
+.dynamcList li .actionArea{
+    float:right;
+}
+
+.dynamicList .previewImage img{
+    max-width:75px;
+    max-height:50px;
+    margin-right: 10px;
+}

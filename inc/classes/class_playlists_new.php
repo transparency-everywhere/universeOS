@@ -128,4 +128,44 @@ class playlist{
         
     }
     
+    //removes item from playlist
+    //@param order_id order_id of the item that shall be deleted
+    public function removeItem($order_id){
+        
+        $playlistData = $this->select();
+        $fileClass = new file($playlistData['file_id']);
+        $playlistObject = json_decode($fileClass->read());
+        
+        $items = $playlistObject->items;
+        
+        //get array element with order_id = $order_id
+        foreach($items AS $key=>$item){
+            if($item->order_id == $order_id){
+                
+                //key of the element that needs to be deleted
+                $key_to_delete = $key;
+            }
+        }
+        
+        echo $key_to_delete;
+        
+        //delete element from array
+        unset($items[$key_to_delete]);
+        
+        //resort array
+        rsort($items);
+        
+        //resort order_ids and push item to final result
+        foreach($items AS $key=>$item){
+            $item->order_id = $key;
+            $result[] = $item;
+        }
+        
+        
+        $playlistObject->items = $result;
+        
+        
+        $fileClass->overwrite(json_encode($playlistObject));
+    }
+    
 }

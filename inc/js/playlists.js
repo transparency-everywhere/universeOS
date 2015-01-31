@@ -142,9 +142,10 @@ var playlists = new function(){
                 
                 var info = item.getInfo(value.item_type, value.item_id);
                 
-                itemList += '<li>';
+                itemList += '<li class="playlistItem_'+playlist_id+'_'+value.order_id+'">';
                     itemList += '<div class="previewImage"><img src="'+info.image+'"/></div>';
                     itemList += '<div class="caption">'+info.title+'</div>';
+                    itemList += '<div class="actionArea"><a href="#" onclick="playlists.removeItemFromPlaylist(\''+playlist_id+'\',\''+value.order_id+'\');"><i class="icon white-minus"></i></a></div>';
                 itemList += '</li>';
             });
             itemList += '</ul>';
@@ -268,6 +269,15 @@ var playlists = new function(){
         
         //load privacy
         privacy.load('#privacyField', '', true);
+        
+    };
+    
+    this.removeItemFromPlaylist = function(playlist_id, order_id){
+        
+        return api.query('api/playlists/removeItem/', { playlist : playlist_id, order_id: order_id}, function(){
+            gui.alert('The item has been removed from the playlist');
+            $('.playlistItem_'+playlist_id+'_'+order_id).remove();
+        });
         
     };
     
