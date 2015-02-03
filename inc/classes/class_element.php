@@ -65,6 +65,21 @@ class element {
         return $data;
     }
     
+    function getFileNumbers(){
+        $elementId = $this->id;
+        
+        $dbClass = new db();
+        $fileNumbers = mysql_num_rows($dbClass->query("SELECT id, title, owner, privacy FROM files WHERE folder='".$elementId."'"));
+        return $fileNumbers;
+    }
+    
+    function getAuthorData($userid){        
+        $dbClass = new db();
+        $data = $dbClass->query("SELECT userid, username FROM user WHERE userid='$userid'");
+		
+        return $data;
+    }
+    
     function delete($elementId=NULL){
         if($elementId == NULL)
             $elementId = $this->id;
