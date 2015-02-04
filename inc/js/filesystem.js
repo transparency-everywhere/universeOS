@@ -24,6 +24,11 @@ var filesystem =  new function() {
 	this.tabs.addTab('universe', '', this.generateFullFileBrowser(0));
     };
     this.generateFullFileBrowser = function(folderId){
+        var html = this.generateLeftNav();		  			
+        html += this.generateFileBrowser(folderId);
+        return html;
+    };
+    this.generateLeftNav = function(){
         var html = '          <div class="leftNav">';		  			
         html += '              <ul>';		  			
         html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'pupularity\'));return false"><img src="gfx/icons/filesystem/side_suggestions.png"> Suggestions</a></li>';		  			
@@ -36,8 +41,7 @@ var filesystem =  new function() {
         }
         html += '                  <!-- <li><i class="icon-warning-sign"></i> deleted</li> -->';		  			
         html += '              </ul>';		  			
-        html += '          </div>';		  			
-        html += this.generateFileBrowser(folderId);
+        html += '          </div>';		  	
         return html;
     };
     this.generateFileBrowser = function(folderId){
