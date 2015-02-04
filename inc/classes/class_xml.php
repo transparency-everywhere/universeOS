@@ -11,7 +11,7 @@
  *
  * @author niczem
  */
-class class_xml {
+class xml {
 /**
   * Opens an URL with curl and outputs xml
   *

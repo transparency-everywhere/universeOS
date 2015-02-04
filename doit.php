@@ -48,49 +48,6 @@ else if($_GET['action'] == "deleteBuddy"){
 		jsAlert("The Buddy was removed from your Buddylist.");
 		echo "<script>parent.$('.buddy_$buddy').hide()</script>";
      }
-else if($_GET['action'] == "showPlaylist"){
-        $playListId = save($_GET['id']);
-        $classDb = new db();
-        $playListData = $classDb->select('playlist', array('id', $playListId));
-        if($playListData['user'] == getUser()){
-            $delete = TRUE;
-        }
-            ?>
-            <div class="jqPopUp border-radius transparency" id="showPlaylist">
-                    
-                    <header>
-                    		<a class="jqClose">X</a>
-                            <img src="./gfx/icons/playlist.png">&nbsp;<?=$playListData['title'];?>
-                    </header>
-                    <div class="jqContent">
-                        <center>
-                            <div style="overflow: auto; width: 450px; height: 200px;">
-                           		<?
-                                        $playlistClass = new playlists();
-                           		$playlistClass->showPlaylist($playListId);
-                           		?>
-                            </div>
-                        </center>
-                    </div>
-                            <footer>
-                                <a href="javascript: nextPlaylistItem('<?=$playListData['id'];?>', '0')" class="btn btn-success"><i class="icon-play icon-white"></i>&nbsp;Play</a>&nbsp;
-                                <? 
-                                if(proofLogin()){ ?>
-                                <a href="#" onclick="popper('doit.php?action=copyPlaylist&playlist=<?=$playListData['id'];?>')" class="btn btn-info" style="color: #FFFFFF"><i class="icon-share icon-white"></i>&nbsp;Copy</a>&nbsp;
-                                <?
-                                	if(authorize($playListData['privacy'], "edit", $playListData['user'])){?>
-                                <a href="#" onclick="popper('doit.php?action=editItem&type=playlist&itemId=<?=$playListData['id'];?>')" class=" btn btn-warning" style="color: #FFFFFF"><i class="icon-edit icon-white"></i>&nbsp;Edit</a>
-                                <? 	}
-								} ?>
-                            </footer>
-            	<script>	
-				$('.jqClose').click(function(){
-					$('.jqPopUp').hide();
-				});
-            	</script>
-            </div>
-    <?
-     }
 else if($_GET['action'] == "addFileToPlaylist"){
          
          $playlist = save($_POST['playlistId']);
@@ -174,7 +131,7 @@ else if($_GET['action'] == "addFileToPlaylist"){
             </form>
             <script>
                 $("#playlistSubmit").click(function () {
-                $('#addPlaylist').slideUp();
+                    $('#addPlaylist').slideUp();
                 });
             </script>
      <?}
@@ -272,7 +229,7 @@ else if($_GET['action'] == "showUserPlaylists"){ ?>
                             ?>
                             <tr border="0" class="strippedRow" width="100%" height="30">
                                 <td width="27">&nbsp;<img src="./gfx/icons/playlist.png"></td>
-                                <td width="150"><a href="javascript: popper('doit.php?action=showPlaylist&id=<?=$playListData['id'];?>')"><?=$playListData['title']?></a></td>
+                                <td width="150"><a href="showPlaylist('<?=$playListData['id'];?>')"><?=$playListData['title']?></a></td>
                                 <td><?=$playListData['played'];?></td>
                             </tr>
                             <?PHP

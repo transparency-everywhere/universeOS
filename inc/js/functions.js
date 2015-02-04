@@ -1163,6 +1163,8 @@ var tabs = function(parentIdentifier){
                         this.tabHistory.push(numberOfTabs+1);
                         $(parentIdentifier+' .tabFrame').append('<div class="tab tab_'+(numberOfTabs+1)+'">'+content+'</div>');
                         this.initClicks();
+                        
+                        return numberOfTabs+1;
 		};
                 this.getTabByTitle = function(tabTitle){
                     parentIdentifier = this.parentIdentifier;
@@ -1739,10 +1741,11 @@ function showProfile(userId){
     reader.applicationVar.show();
     return false;
 };
-  
+
+//outdated
 function showPlaylist(id){
-              	popper('doit.php?action=showPlaylist&id='+id);
-              }
+    playlists.showInfo(id);
+}
   
 function startPlayer(type, typeid){
               $("#dockplayer").load("player/dockplayer.php?reload=1&" + type +"=" + typeid + "");
@@ -1838,4 +1841,18 @@ function loadMiniFileBrowser($target, folder, element, level, showGrid, select){
         api.query('api/item/loadMiniFileBrowser/', {folder: folder, element: element, level: level, showGrid: showGrid, select: select},function(result){
             $target.html(result)
         });
+}
+
+function is_url(str) {
+   var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+  '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+  '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+  '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+  '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+  '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+  if(!pattern.test(str)) {
+    return false;
+  } else {
+    return true;
+  }
 }

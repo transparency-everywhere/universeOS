@@ -129,7 +129,7 @@ if(empty($friendButton)){
      
                         <table class="border-top-radius border-box" cellspacing="0" width="100%">
                             <?
-                            $playListSql = mysql_query("SELECT * FROM playlist WHERE user='$user'");
+                            $playListSql = mysql_query("SELECT * FROM `playlists` WHERE user='$user'");
                             while($playListData = mysql_fetch_array($playListSql)){
 	        				if(authorize($playListData['privacy'], 'show', $playListData['user'])){
                             if($i%2 == 0){
@@ -141,7 +141,7 @@ if(empty($friendButton)){
                                 ?>
                             <tr border="0" bgcolor="#<?=$color;?>" width="100%" height="35">
                                 <td width="35">&nbsp;<img src="./gfx/icons/playlist.png"></td>
-                                <td><a href="javascript: popper('doit.php?action=showPlaylist&id=<?=$playListData['id'];?>')"><?=$playListData[title]?></a></td>
+                                <td><a href="showPlaylist('<?=$playListData['id'];?>')"><?=$playListData['title']?></a></td>
                             </tr>
                             <? }} ?>
                         </table>

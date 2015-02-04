@@ -20,10 +20,13 @@ class playlist{
     public $id;
 
     function __construct($id=NULL){
+        $this->setId($id);
+    }
+    
+    function setId($id=NULL){
         if($id != NULL){
             $this->id = $id;
         }
-
     }
  
     function getUserPlaylistArray($type='show', $userId=NULL){
@@ -71,7 +74,6 @@ class playlist{
         $db = new db();
         return $db->select('playlists', array('id', $this->id));
     }
-        
     function getPlaylistTitle($playlistId=NULL){
                if(empty($playlistId))
                    $playlistId = $this->id;

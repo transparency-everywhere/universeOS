@@ -50,7 +50,7 @@ class youtube {
             $text);
         
         if(!empty($text)){
-            $this->id = text;
+            $this->id = $text;
         }
         
         return $text;
@@ -71,10 +71,10 @@ class youtube {
             </div>
             <script type="text/javascript">
 
-        var params = { allowScriptAccess: "always" };
-        var atts = { id: "myytplayer" };
-        swfobject.embedSWF("http://www.youtube.com/v/ASPDeS3_54U?enablejsapi=1&playerapiid=ytplayer&version=3",
-                           "ytapiplayer", "425", "356", "8", null, null, params, atts);
+                var params = { allowScriptAccess: "always" };
+                var atts = { id: "myytplayer" };
+                swfobject.embedSWF("http://www.youtube.com/v/ASPDeS3_54U?enablejsapi=1&playerapiid=ytplayer&version=3",
+                                   "ytapiplayer", "425", "356", "8", null, null, params, atts);
 
             </script>
 

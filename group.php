@@ -121,7 +121,7 @@ if (!empty($memberData['itemId'])) {
 	            ?>
 	        <tr border="0" bgcolor="#<?=$color;?>" width="100%" height="35">
 	            <td width="35">&nbsp;<img src="./gfx/icons/playlist.png"></td>
-	            <td><a href="javascript: popper('doit.php?action=showPlaylist&id=<?=$playListData['id'];?>')"><?=$playListData['title']?></a></td>
+	            <td><a href="showPlaylist('<?=$playListData['id'];?>')"><?=$playListData['title']?></a></td>
 	        </tr>
 	        <? }} ?>
 	    </table>

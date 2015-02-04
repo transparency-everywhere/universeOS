@@ -96,6 +96,16 @@ var applications = new function(){
             app['position'] = {width: 2, height:  5, top: 0, left: 9};
             app['icon'] = standardIcon;
             apps[6] = app;
+            
+            //buddylist
+            var app = [];
+            app['title'] = 'player';
+            app['className'] = 'player'; // name of the the javascript class object
+            app['source'] = 'player.js';
+            app['active'] = true;
+            app['position'] = {width: 2, height:  5, top: 0, left: 9};
+            app['icon'] = standardIcon;
+            apps[7] = app;
         }
         
         return apps;

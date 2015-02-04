@@ -133,6 +133,14 @@ var item = new function(){
                         
 				return html;
     };
-    
+    this.generateInfo = function(image, title, action){
+        var output = '<div class="itemPreview">';
+                    output += '<div class="previewImage"><img src=\''+image+'\'/></div>';
+                    output += '<div class="caption">'+title+'</div>';
+                    output += '<div class="actionArea">'+action+'</div>';
+        output += '</div>';
+        
+        return output;
+    };
 };
         

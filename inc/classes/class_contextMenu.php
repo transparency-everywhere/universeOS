@@ -460,6 +460,12 @@ class contextMenu{
                                 }
                                 $options[] = $delete;
                             break;
+                        case "custom": 
+                            
+                            $options[] = $info1;
+                                
+                            
+                            break;
 			
 		}
 		

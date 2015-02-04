@@ -126,7 +126,7 @@ var playlists = new function(){
     };
     
     
-    this.showPlaylistInfo = function(playlist_id){
+    this.showInfo = function(playlist_id){
         
         
         var formModal = new gui.modal();
@@ -141,11 +141,8 @@ var playlists = new function(){
             $.each(playlistFileContent.items, function(key, value){
                 
                 var info = item.getInfo(value.item_type, value.item_id);
-                
                 itemList += '<li class="playlistItem_'+playlist_id+'_'+value.order_id+'">';
-                    itemList += '<div class="previewImage"><img src="'+info.image+'"/></div>';
-                    itemList += '<div class="caption">'+info.title+'</div>';
-                    itemList += '<div class="actionArea"><a href="#" onclick="playlists.removeItemFromPlaylist(\''+playlist_id+'\',\''+value.order_id+'\');"><i class="icon white-minus"></i></a></div>';
+                    itemList += item.generateInfo(info.image, info.title, '<a href="#" onclick="playlists.removeItemFromPlaylist(\''+playlist_id+'\',\''+value.order_id+'\');"><i class="icon white-minus"></i></a>');
                 itemList += '</li>';
             });
             itemList += '</ul>';
@@ -156,7 +153,9 @@ var playlists = new function(){
         var modalOptions = {};
         modalOptions['buttonTitle'] = 'Play Playlist';
         
-        modalOptions['action'] = function(){};
+        modalOptions['action'] = function(){
+            playlists.playPlaylist(playlist_id)
+        };
         formModal.init('Playlist '+playlistData['title'], html, modalOptions);
         
         
@@ -223,6 +222,95 @@ var playlists = new function(){
         gui.createForm('#createElementFormContainer',fieldArray, options);
     };
     
+    this.pushItemForm = function(item_type, item_id){
+        
+        var formModal = new gui.modal();
+        
+        var fieldArray = [];
+        var options = [];
+        options['headline'] = '';
+        options['buttonTitle'] = 'Save';
+        options['noButtons'] = true;
+        
+        
+        var info = item.getInfo(item_type, item_id);
+        var field1 = [];
+        field1['caption'] = 'Item';
+        field1['inputName'] = 'item';
+        field1['type'] = 'html';
+        field1['value'] = item.generateInfo(info.image, info.title, '');
+        fieldArray[0] = field1;
+        
+        var userPlaylists = playlists.getUserPlaylists('edit');
+        
+        var field2 = [];
+        field2['caption'] = 'Playlist';
+        field2['inputName'] = 'playlist';
+        field2['type'] = 'dropdown';
+        field2['values'] = userPlaylists['ids'];
+        field2['captions'] =  userPlaylists['titles'];
+        fieldArray[1] = field2;
+        
+        
+        var modalOptions = {};
+        modalOptions['buttonTitle'] = 'Add Item to Playlist';
+        
+        modalOptions['action'] = function(){
+            var callback = function(){
+                jsAlert('', 'The playlist has been updated');
+                $('.blueModal').remove();
+            };
+            playlists.pushItem($('#pushPlaylistFormContainer #playlist').val(), item_type, item_id, callback);
+        };
+        formModal.init('Add Item To Playlist', '<div id="pushPlaylistFormContainer"></div>', modalOptions);
+        gui.createForm('#pushPlaylistFormContainer',fieldArray, options);
+    };
+    
+    
+    this.playItem = function(options){
+        var type = options['item_type'];
+        var item_id = options['item_id'];
+        var order_id = options['order_id'];
+        var playlist_id = options['playlist_id'];
+        
+        var onStop = function(){playlists.playPlaylistRow(playlist_id, order_id+1);};
+        
+        switch(type){
+            case 'youtube':
+                player.loadYoutubeVideo(playlists.getPlaylistTabObject(playlist_id), item_id,onStop);
+                break;
+        }
+    };
+    
+    this.getPlaylistTabObject = function(playlist_id){
+        return $('#player .tab_2');
+    };
+    
+    this.playPlaylistRow = function(playlist_id, order_id){
+        
+       
+        var playlistData = playlists.getData(playlist_id);
+        var playlistFileContent = filesystem.readFile(playlistData['file_id']);
+        
+        if(playlistFileContent.items.length === 0){
+            //playlist is empty
+        }else{
+            $.each(playlistFileContent.items, function(key, value){
+               if(value['order_id'] == order_id){
+                   //push playlist id to value array for playItem function
+                   value['playlist_id'] = playlist_id;
+                   
+                   playlists.playItem(value);
+               }
+            });
+        }
+    };
+    
+    this.playPlaylist = function(playlist_id){
+        player.show();
+        var tab_id = player.tabs.addTab('Playlist', 'html', 'content', function(){/*onclose*/})
+        this.playPlaylistRow(playlist_id, 0);
+    };
     
     
     this.pushItemToPlaylistForm = function(item_type, item_id){

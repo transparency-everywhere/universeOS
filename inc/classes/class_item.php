@@ -346,236 +346,236 @@ class item {
     }
     
 	
-function protect(){
-           $type = $this->type;
-           $typeid = $this->typeid;
-		if(hasRight('protectFileSystemItems')){
-			$type = save($type);
-			$typeId = save($typeId);
-			
-			switch($type){
-				case 'folder':
-					
-					$folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
-					$folderData = mysql_fetch_array($folderSQL);
-					
-					$privacy = $folderData['privacy'];
-					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
-					$privacy .= ";PROTECTED";
-					}
-					$table = 'folders';
-					break;
-				case 'element':
-					
-					$elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
-					$elementData = mysql_fetch_array($elementSQL);
-					$privacy = $elementData['privacy'];
-					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
-					$privacy .= ";PROTECTED";
-					}
-					$table = 'elements';
-					
-					
-					break;
-				case 'file':
-					$fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
-					$fileData = mysql_fetch_array($fileSQL);
-					$privacy = $fileData['privacy'];
-					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
-					$privacy .= ";PROTECTED";
-					}
-					$table = 'files';
-					break;
-				case 'link':
-					$linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
-					$linkData = mysql_fetch_array($linkSQL);
-					
-					
-					$privacy = $linkData['privacy'];
-					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
-					$privacy .= ";PROTECTED";
-					}
-					
-					$table = 'link';
-					break;
-			}
-                        
-			if(isset($table)){
-                            $values['privacy'] = $privacy;
-                            
-                            $db = new db();
-                            $db->update($table, $values, array('id', $typeId));
-                        }
-		}else{
-			jsAlert("You dont have the rights to protect an Item.");
-		}
-	}
-function removeProtection(){
-		
-		if(hasRight('editProtectedFilesystemItem')){
-			
-                    $type = $this->type;
-                    $typeid = $this->typeid;
-			
-			switch($type){
-				case 'folder':
-					
-					$folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
-					$folderData = mysql_fetch_array($folderSQL);
-					
-					$privacy = $folderData['privacy'];
-					$privacy = str_replace(";PROTECTED", "", $privacy);
-					
-					$table = 'folders';
-					
-					break;
-				case 'element':
-					
-					$elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
-					$elementData = mysql_fetch_array($elementSQL);
-					
-					$privacy = $elementData['privacy'];
-					$privacy = str_replace(";PROTECTED", "", $privacy);
-					
-					$table = 'elements';
-					
-					break;
-				case 'file':
-					$fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
-					$fileData = mysql_fetch_array($fileSQL);
-					$privacy = $fileData['privacy'];
-					$privacy = str_replace(";PROTECTED", "", $privacy);
-					
-					$table = 'files';
-					break;
-				case 'link':
-					$linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
-					$linkData = mysql_fetch_array($linkSQL);
-					
-					
-					$privacy = $linkData['privacy'];
-					$privacy = str_replace(";PROTECTED", "", $privacy);
-					
-                                        $table = 'links';
-                                        
-                                        
-					break;
-			}
-			if(isset($table)){
-                            $values['privacy'] = $privacy;
-                            
-                            $db = new db();
-                            $db->update($table, $values, array('id', $typeId));
-                        }
-		}else{
-			jsAlert("You do not have the rights to edit protected files.");
-		}
-	}
+    function protect(){
+               $type = $this->type;
+               $typeid = $this->typeid;
+                    if(hasRight('protectFileSystemItems')){
+                            $type = save($type);
+                            $typeId = save($typeId);
 
-function makeUndeletable(){
-		
-		if(hasRight('undeletableFilesystemItems')){
-			
+                            switch($type){
+                                    case 'folder':
+
+                                            $folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
+                                            $folderData = mysql_fetch_array($folderSQL);
+
+                                            $privacy = $folderData['privacy'];
+                                            if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
+                                            $privacy .= ";PROTECTED";
+                                            }
+                                            $table = 'folders';
+                                            break;
+                                    case 'element':
+
+                                            $elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
+                                            $elementData = mysql_fetch_array($elementSQL);
+                                            $privacy = $elementData['privacy'];
+                                            if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
+                                            $privacy .= ";PROTECTED";
+                                            }
+                                            $table = 'elements';
+
+
+                                            break;
+                                    case 'file':
+                                            $fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
+                                            $fileData = mysql_fetch_array($fileSQL);
+                                            $privacy = $fileData['privacy'];
+                                            if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
+                                            $privacy .= ";PROTECTED";
+                                            }
+                                            $table = 'files';
+                                            break;
+                                    case 'link':
+                                            $linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
+                                            $linkData = mysql_fetch_array($linkSQL);
+
+
+                                            $privacy = $linkData['privacy'];
+                                            if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
+                                            $privacy .= ";PROTECTED";
+                                            }
+
+                                            $table = 'link';
+                                            break;
+                            }
+
+                            if(isset($table)){
+                                $values['privacy'] = $privacy;
+
+                                $db = new db();
+                                $db->update($table, $values, array('id', $typeId));
+                            }
+                    }else{
+                            jsAlert("You dont have the rights to protect an Item.");
+                    }
+            }
+    function removeProtection(){
+
+                    if(hasRight('editProtectedFilesystemItem')){
+
                         $type = $this->type;
                         $typeid = $this->typeid;
-			switch($type){
-				case 'folder':
-					
-					$folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
-					$folderData = mysql_fetch_array($folderSQL);
-					
-					$privacy = $folderData['privacy'];
-					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
-						$privacy .= ";UNDELETABLE";
-					}
-					
-					$table = 'folders';
-					break;
-				case 'element':
-					
-					$elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
-					$elementData = mysql_fetch_array($elementSQL);
-					$privacy = $elementData['privacy'];
-					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
-						$privacy .= ";UNDELETABLE";
-					}
-					
-					$table = 'elements';
-					break;
-				case 'file':
-					$fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
-					$fileData = mysql_fetch_array($fileSQL);
-					$privacy = $fileData['privacy'];
-					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
-						$privacy .= ";UNDELETABLE";
-					}
-					
-					
-					$table = 'files';
-					break;
-				case 'link':
-					$linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
-					$linkData = mysql_fetch_array($linkSQL);
-					
-					
-					$privacy = $linkData['privacy'];
-					if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
-						$privacy .= ";UNDELETABLE";
-					}
-					
-					
-					$table = 'links';
-					break;
-			}
-			if(isset($table)){
-                            $values['privacy'] = $privacy;
-                            
-                            $db = new db();
-                            $db->update($table, $values, array('id', $typeId));
-                        }
-		}else{
-			jsAlert("You do not have the right to make Items undeletable.");
-		}
-	}
-function makeDeletable(){
-		if(hasRight("editUndeletableFilesystemItems")){
-		
-                $type = $this->type;
-                $typeid = $this->typeid;
-		switch($type){
-			case 'folder':
-				$table = 'folders';
-				break;
-			case 'element':
-				$table = 'elements';
-				break;
-			case 'file':
-				$table = 'files';
+
+                            switch($type){
+                                    case 'folder':
+
+                                            $folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
+                                            $folderData = mysql_fetch_array($folderSQL);
+
+                                            $privacy = $folderData['privacy'];
+                                            $privacy = str_replace(";PROTECTED", "", $privacy);
+
+                                            $table = 'folders';
+
+                                            break;
+                                    case 'element':
+
+                                            $elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
+                                            $elementData = mysql_fetch_array($elementSQL);
+
+                                            $privacy = $elementData['privacy'];
+                                            $privacy = str_replace(";PROTECTED", "", $privacy);
+
+                                            $table = 'elements';
+
+                                            break;
+                                    case 'file':
+                                            $fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
+                                            $fileData = mysql_fetch_array($fileSQL);
+                                            $privacy = $fileData['privacy'];
+                                            $privacy = str_replace(";PROTECTED", "", $privacy);
+
+                                            $table = 'files';
+                                            break;
+                                    case 'link':
+                                            $linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
+                                            $linkData = mysql_fetch_array($linkSQL);
+
+
+                                            $privacy = $linkData['privacy'];
+                                            $privacy = str_replace(";PROTECTED", "", $privacy);
+
+                                            $table = 'links';
+
+
+                                            break;
+                            }
+                            if(isset($table)){
+                                $values['privacy'] = $privacy;
+
+                                $db = new db();
+                                $db->update($table, $values, array('id', $typeId));
+                            }
+                    }else{
+                            jsAlert("You do not have the rights to edit protected files.");
+                    }
+            }
+
+    function makeUndeletable(){
+
+                    if(hasRight('undeletableFilesystemItems')){
+
+                            $type = $this->type;
+                            $typeid = $this->typeid;
+                            switch($type){
+                                    case 'folder':
+
+                                            $folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
+                                            $folderData = mysql_fetch_array($folderSQL);
+
+                                            $privacy = $folderData['privacy'];
+                                            if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
+                                                    $privacy .= ";UNDELETABLE";
+                                            }
+
+                                            $table = 'folders';
+                                            break;
+                                    case 'element':
+
+                                            $elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
+                                            $elementData = mysql_fetch_array($elementSQL);
+                                            $privacy = $elementData['privacy'];
+                                            if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
+                                                    $privacy .= ";UNDELETABLE";
+                                            }
+
+                                            $table = 'elements';
+                                            break;
+                                    case 'file':
+                                            $fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
+                                            $fileData = mysql_fetch_array($fileSQL);
+                                            $privacy = $fileData['privacy'];
+                                            if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
+                                                    $privacy .= ";UNDELETABLE";
+                                            }
+
+
+                                            $table = 'files';
+                                            break;
+                                    case 'link':
+                                            $linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
+                                            $linkData = mysql_fetch_array($linkSQL);
+
+
+                                            $privacy = $linkData['privacy'];
+                                            if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
+                                                    $privacy .= ";UNDELETABLE";
+                                            }
+
+
+                                            $table = 'links';
+                                            break;
+                            }
+                            if(isset($table)){
+                                $values['privacy'] = $privacy;
+
+                                $db = new db();
+                                $db->update($table, $values, array('id', $typeId));
+                            }
+                    }else{
+                            jsAlert("You do not have the right to make Items undeletable.");
+                    }
+            }
+    function makeDeletable(){
+                    if(hasRight("editUndeletableFilesystemItems")){
+
+                    $type = $this->type;
+                    $typeid = $this->typeid;
+                    switch($type){
+                            case 'folder':
+                                    $table = 'folders';
+                                    break;
+                            case 'element':
+                                    $table = 'elements';
+                                    break;
+                            case 'file':
+                                    $table = 'files';
+                                    break;
+                            case 'link':
+                                    $table = 'links';
                                 break;
-			case 'link':
-				$table = 'links';
-                            break;
-		}
-                
-                
-                
-                
-		if(isset($table)){
-                    
-                    $db = new db();
-                    $itemData = $db->select($table, array('id', $typeId), array('privacy'));
-				
-                    $privacy = $itemData['privacy'];
-                    $privacy = str_replace(";UNDELETABLE", "", $privacy);
-                    
-                    $values['privacy'] = $privacy;
-                    
-                    $db->update($table, $values, array('id', $typeId));
-                }
-		}else{
-			jsAlert("You dont have the right to edit undeletable Items.");
-		}
-	}
+                    }
+
+
+
+
+                    if(isset($table)){
+
+                        $db = new db();
+                        $itemData = $db->select($table, array('id', $typeId), array('privacy'));
+
+                        $privacy = $itemData['privacy'];
+                        $privacy = str_replace(";UNDELETABLE", "", $privacy);
+
+                        $values['privacy'] = $privacy;
+
+                        $db->update($table, $values, array('id', $typeId));
+                    }
+                    }else{
+                            jsAlert("You dont have the right to edit undeletable Items.");
+                    }
+            }
 }
 
 

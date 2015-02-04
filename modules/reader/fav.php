@@ -118,14 +118,13 @@ if($_GET['action'] == "add"){
                                 }
                             
                             
-                            $playListSql = mysql_query("SELECT id, user, title, played FROM playlist WHERE user='$_SESSION[userid]' $query");
+                            $playListSql = mysql_query("SELECT id, user, title, played FROM `playlist` WHERE user='$_SESSION[userid]' $query");
                             while($playListData = mysql_fetch_array($playListSql)){
                             $i++;
                             ?>
                             <tr border="0" class="strippedRow" width="100%" height="30">
                                 <td width="27">&nbsp;<img src="./gfx/icons/playlist.png"></td>
                                 <td width="150"><a href="javascript: showPlaylist('<?=$playListData[id]?>');"><?=$playListData[title]?></a></td>
-                                <td align="right"><?=$playListData[played];?>&nbsp;&nbsp;</td>
                             </tr>
                             <?PHP
                             } 

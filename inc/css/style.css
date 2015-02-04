@@ -254,23 +254,27 @@ li.notHidden{
     bottom: 0px;
     width: 30%;
     z-index: 9999;
-    border-top: 2px solid #3d3d3d;
-    border-left: 2px solid #3d3d3d;
-    -webkit-border-top-left-radius: 5px;
-    -moz-border-radius-topleft: 5px;
-    -o-border-radius-topleft: 5px;
-    border-top-left-radius: 5px;
+    background: #607d8b;
+    color: #FFF;
+}
+
+.dockSeachResult, .dockSeachResult a, .dockSeachResult a:link, .dockSeachResult a:visited{
+    color:  #fefefe;
+    font-size: 20px; /* Näherungswert aufgrund einer Schriftersetzung */
+    font-weight: 300;
+    text-align: left;
 }
 
 .dockSeachResult > h2{
-	margin-top: 5px;
-	margin-bottom: 15px;
-	margin-right: 15px;
-	font-size: 15pt; float:right;
+    margin-top: 15px;
+    margin-bottom: 40px;
+    margin-left: 15px;
+    float: left;
+    font-size: 20px;
 }
 
 .dockSeachResult > .listContainer:first-of-type{
-	clear: right;
+	clear: left;
 }
 .dockSeachResult > .listContainer{
 	margin: 50px 15px;
@@ -283,12 +287,39 @@ li.notHidden{
 	overflow: auto;
 }
 
-.resultList li {
-font-size: 19px;
+.resultList li{
+    height:40px;
+    line-height: 40px;
+    border-bottom: 1px solid #607d8b;
 }
 
-.resultList li img{
-	margin-bottom: -3px; margin-left:5px; margin-right:5px;
+.resultList li a, .resultList li a:link,.resultList li a:visited, .resultList li a:active{
+    font-size: 19px;
+    color:  #313131;
+    font-size: 14px;
+}
+
+.resultList li .icon, .resultList li .userPicture{
+    margin-bottom: -10px;
+}
+.resultList li .userPicture{
+    margin-top: 5px;
+}
+
+.resultList .searchContext{
+    display:none;
+    background-color:  #eceff1;
+}
+
+.searchContext ul li{
+    width: 50%;
+    float: left;
+    padding-left: 5px;
+}
+
+.searchContext .icon{
+    margin-bottom: -3px!important;
+    margin-right: 5px;
 }
 
 .windowHeader {
@@ -1815,7 +1846,7 @@ color:#FFFFFF;
                     top: 0;
                     left: 0;
                     right: 0;
-                    margin-top: -1.5em;
+                    margin-top: -1em;
                 }
 
                 .list:empty,

@@ -126,8 +126,8 @@ class dashBoard{
 	function showPlaylistBox($grid=true){
 		$output = '';
                 //playlists
-                $playlistClass = new playlists();
-                $playlists = $playlistClass->getPlaylists();
+                $playlistClass = new playlist();
+                $playlists = $playlistClass->getUserPlaylistArray();
 
                 $title = "Your Playlists";
                 if(count($playlists) == 0){
@@ -139,17 +139,19 @@ class dashBoard{
                 }else{
 
                         $output .= "<ul>";
-                                foreach($playlists AS $playlist){
+                        $i = 0;
+                                foreach($playlists['ids'] AS $key=>$list_id){
                                         $output .= "<li>";
                                                 $output .= "<span class=\"marginRight\">";
                                                         $output .= '<i class="icon white-play" style="height:14px; width: 14px;"></i>';
                                                 $output .= "</span>";
                                                 $output .= "<span>";
-                                                        $output .= "<a href=\"#\" onclick=\"showPlaylist('$playlist');\">";
-                                                        $output .=  $playlistClass->getPlaylistTitle($playlist);
+                                                        $output .= "<a href=\"#\" onclick=\"playlists.showInfo('".$list_id."');\">";
+                                                        $output .=  $playlists['titles'][$key];
                                                         $output .= "</a>";
                                                 $output .= "</span>";
                                         $output .= "</li>";
+                                        $i++;
                                 }
                         $output .= "</ul>";
 
@@ -162,7 +164,6 @@ class dashBoard{
 		$footer = "";
 		
 		return $output;
-		
 	}
 	function showMessageBox($grid=true){
 			//unseenMessages
