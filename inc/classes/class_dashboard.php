@@ -116,7 +116,7 @@ class dashBoard{
 			$output .= "</ul>";
 		}
 		
-		$footer = "<a href=\"#addGroup\" onclick=\"popper('doit.php?action=addGroup')\" title=\"Create a new Group\"><i class=\"icon white-plus\" style=\"color:#FFF; margin-bottom: -10px;\"></i></a>";
+		$footer = "<a href=\"#addGroup\" onclick=\"groups.showCreateGroupForm();\" title=\"Create a new Group\"><i class=\"icon white-plus\" style=\"color:#FFF; margin-bottom: -10px;\"></i></a>";
 		
 		$output = $this->showDashBox($title, $output, $footer, "group", $grid);
 		

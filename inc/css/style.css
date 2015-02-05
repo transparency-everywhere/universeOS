@@ -392,12 +392,14 @@ li.notHidden{
     width: 100%;
 }
 
-.gui_form_table{
+.gui_form_table input[type=text]{
     width: 100%;
     height: 40px;
     padding: 7px;
     font-size: 16px;
     color: #313131;
+    margin-bottom: 15px;
+    border: none;
 }
 
 .formTable{
@@ -450,10 +452,10 @@ li.notHidden{
     .blueModal > header .modalClose{
         cursor: pointer;
         position: absolute;
-        top: 10px;
-        right: 10px;
+        top: 16px;
+        right: 13px;
         color: #FFF;
-	z-index: 1;
+        z-index: 1;
     }
 
 .blueModal > .content{
@@ -463,7 +465,7 @@ li.notHidden{
 
 .blueModal > footer{
 	height: 30px;
-	margin: 5px 5px 0px 5px;
+        margin-bottom: 22px;
 }
 
 .blueModal h3{
@@ -2869,7 +2871,7 @@ margin: 0;
 				}
 				
  				.privacySettings>ul>li{
-                                    margin-top: 5px;
+                                    margin-bottom: 12px;
                                     padding: 5px;
                                     padding-left: 35px;
                                     clear: both;
@@ -2877,6 +2879,7 @@ margin: 0;
                                     line-height: 36px;
                                     color: #313131;
                                     background-color: #ffffff;
+                                    margin-bottom: 5px;
  				}
                                 
                                 .privacySettings>ul>li .white-check{
@@ -3380,4 +3383,127 @@ and (max-width : 320px) {
     max-width:75px;
     max-height:50px;
     margin-right: 10px;
+}
+
+.button{
+    color: #FFF;
+    background-color:  #00bcd4;
+    width: 100px;
+    margin-top: 2.5px;
+    margin-left: 5px;
+    height: 35px;
+    padding: 7px 0;
+    text-align: center;
+    font-size:16px;
+}
+
+.antiButton{
+    color: #FFF;
+    background-color: #37474f;
+    width: 100px;
+    margin-top: 2.5px;
+    height: 35px;
+    padding: 7px 0;
+    text-align: center;
+    font-size:16px;
+}
+
+.antiButton:hover,.button:hover{
+    color:#FFF;
+}
+
+
+
+
+
+
+
+.custom-dropdown--large {
+    font-size: 1.5em;
+}
+
+.custom-dropdown--small {
+    font-size: .7em;
+}
+
+.custom-dropdown__select{
+    font-size: inherit; /* inherit size from .custom-dropdown */
+    padding: .5em; /* add some space*/
+    margin: 0; /* remove default margins */
+}
+
+.custom-dropdown__select--white {
+color: #FFF;
+background-color: #00bcd4;
+}
+
+@supports (pointer-events: none) and
+      ((-webkit-appearance: none) or
+      (-moz-appearance: none) or
+      (appearance: none)) {
+
+    .custom-dropdown {
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+        width: 100%;
+        margin-bottom: 12px;
+    }
+
+    .custom-dropdown__select {
+        padding-right: 2.5em; /* accommodate with the pseudo elements for the dropdown arrow */
+        border: 0;
+        border-radius: 0;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        width: 100%;
+    }
+
+    .custom-dropdown::before,
+    .custom-dropdown::after {
+        content: "";
+        position: absolute;
+        pointer-events: none;
+    }
+
+    .custom-dropdown::after { /*  Custom dropdown arrow */
+        content: "\25BC";
+        height: 1em;
+        font-size: .625em;
+        line-height: 1;
+        right: 12px;
+        top: 50%; margin-top: -.5em;
+    }
+
+    .custom-dropdown::before { /*  Custom dropdown arrow cover */
+        width: 2em;
+        right: 0;
+        top: 0;
+        bottom: 0;
+    }
+
+    .custom-dropdown__select[disabled] {
+        color: rgba(0,0,0,.3);
+    }
+
+    .custom-dropdown.custom-dropdown--disabled::after {
+        color: rgba(0,0,0,.1);
+    }
+
+    /* White dropdown style */
+    .custom-dropdown--white::before {
+        background-color: #00bcd4;
+    }
+
+    .custom-dropdown--white::after {
+        color: #FFF;
+    }
+
+    /* FF only temp fix */
+    @-moz-document url-prefix() {
+        .custom-dropdown__select             { padding-right: .9em }
+        .custom-dropdown--large .custom-dropdown__select { padding-right: 1.3em }
+        .custom-dropdown--small .custom-dropdown__select { padding-right: .5em }
+    }
 }

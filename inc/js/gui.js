@@ -18,7 +18,7 @@
 var gui = new function(){
     this.initWysiwyg = false; //is used in generateField and createForm to check if wysiwyg needs to be initialized
     this.initializeUploadify = false;
-    this.generateList = function(values, captions, preselected){
+    this.generateList = function(values, captions, preselected, caption){
         var html = '';
         $.each(values, function( index, value ) {
             var selected;
@@ -28,6 +28,7 @@ var gui = new function(){
                 else
                     {selected = '';}
             }
+            html += '<option>'+caption+'</option>';
             html += '<option value="' + value + '" '+selected+'>' + captions[index] + '</option>';
         });
         return html;
@@ -70,7 +71,6 @@ var gui = new function(){
                             mainHTML += '<td>' + fieldData.caption + '</td><td>&nbsp;</td>';
                             break;
                         case'dropdown':
-                            mainHTML += '<td>' + fieldData.caption + '</td><td>&nbsp;</td>';
                             break;
                         case'password':
                             mainHTML += '<td>' + fieldData.caption + '</td><td>&nbsp;</td>';
@@ -124,9 +124,15 @@ var gui = new function(){
                             mainHTML += '<td><input type="text" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '"/></td><td>'+fieldData['appendix']+'</td>';
                             break;
                         case 'dropdown':
-                            mainHTML += '<td><select name="' + fieldData.inputName + '" id="' + fieldData.inputName + '">';
-                            mainHTML += gui.createDropdown(fieldData.values, fieldData.captions, fieldData.preselected);
-                            mainHTML += '</select></td><td>'+fieldData['appendix']+'</td>';
+                            
+                            mainHTML += '<td colspan="3">';
+                                mainHTML += '<span class="custom-dropdown custom-dropdown--white">';
+                                    mainHTML += '<select class="custom-dropdown__select custom-dropdown__select--white" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '">';
+                                        
+                                    mainHTML += gui.createDropdown(fieldData.values, fieldData.captions, fieldData.preselected, fieldData.caption);
+                                    mainHTML += ' </select>';
+                                mainHTML += '</span>';
+                            mainHTML += '</td>';
                             break;
                         case 'space':
                             mainHTML += '<td></td>';
@@ -227,8 +233,9 @@ var gui = new function(){
         }
         return html;
     };
-    this.createDropdown = function(values, captions, preselected){
+    this.createDropdown = function(values, captions, preselected, caption){
         var html = '';
+        html = '<option>'+caption+'</option>';
         $.each(values, function( index, value ) {
             var selected;
             if(typeof preselected !== 'undefined'){
@@ -336,16 +343,16 @@ var gui = new function(){
 			    	this.html += '<div class="blueModal container">';
 	            		this.html += '<header>';
 	            			this.html += title;
-	            			this.html += '<a class="modalClose" onclick="$(\'.blueModal\').remove();">X</a>';
+	            			this.html += '<a class="modalClose" onclick="$(\'.blueModal\').remove();"><span class="icon white-close"></span></a>';
 	            		this.html += '</header>';
 	            		this.html += '<div class="content">';
 	            		this.html += content;
 	            		this.html += '</div>';
 	            		this.html += '<footer>';
 	            		
-	                 		this.html += '<a href="#" onclick="$(\'.blueModal\').remove(); return false;" class="btn pull-left">Close</a>';
+	                 		this.html += '<a href="#" onclick="$(\'.blueModal\').remove(); return false;" class="antiButton pull-left">Close</a>';
 	                 		if(typeof options['action'] !== 'undefined'){
-	                			this.html += '<a href="#" id="action" class="btn btn-primary pull-right">&nbsp;&nbsp;'+options['buttonTitle']+'&nbsp;&nbsp;</a>';
+	                			this.html += '<a href="#" id="action" class="button pull-right">&nbsp;&nbsp;'+options['buttonTitle']+'&nbsp;&nbsp;</a>';
 	                 		}
 	            		
 	            		this.html += '</footer>';

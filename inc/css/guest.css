@@ -325,17 +325,6 @@ and (max-width : 320px) {
 .regError>*{
     color:#FFF!important;
 }
-
-.button{
-    color: #FFF;
-    background-color:  #00bcd4;
-    width: 100px;
-    margin-top: 2.5px;
-    margin-left: 5px;
-    height: 35px;
-    padding: 7px 0;
-    text-align: center;
-}
 /* Smartphones (portrait) ----------- */
 @media all and (max-width : 1600px) {
     /* Styles */
