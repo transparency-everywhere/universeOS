@@ -72,7 +72,7 @@ var elements = new function(){
         html += '                <td></td>';
         html += '                <td></td>';
         html += '            </tr>';
-//            html += elements.showFileList(elementData['id']); //muss ich noch machen :(
+        html += elements.showFileList(elementData['id']); // generate list with files, links and shortcuts
         html += '        </table>';
         html += '    <center style="margin-top: 20px; margin-bottom: 20px;">';
         if(proofLogin()){
@@ -86,6 +86,7 @@ var elements = new function(){
 //            html += comments.show(elementData['id']); //nic macht function in js fertig
         html += '    </div>';
         html += '</div>';
+        console.log(html);
         filesystem.tabs.addTab(elementData['title'], '', html);
     };
     
@@ -95,10 +96,10 @@ var elements = new function(){
         }
         var fileList = this.getFileList(element_id);
         var i = 0;
-        var html;
-        var link;
-        var rightLink;
-        var image;
+        var html = "";
+        var link = "";
+        var rightLink = "";
+        var image = "";
         $.each(fileList, function(key, value){
             var data = value['data'];
             if(value['type'] === 'file'){
@@ -130,7 +131,7 @@ var elements = new function(){
                 html += '<td width="30px">&nbsp;' + image + '</td>';
                 html += '<td><a href="./out/?file=' + data['id'] + '" onclick="' + link + ' return false">' + data['title'] + '</a></td>';
                 html += '<td width="80" align="right">';
-                html += item.getScore('file', data['id']);
+                html += item.showScoreButton('file', data['id']);
                 html += '</td>';
                 html += '<td width="50">';
                 if(data['download']){
@@ -161,7 +162,7 @@ var elements = new function(){
                 html += '<td width="30px">&nbsp;' + image + '</td>';
                 html += '<td><a href="./out/?file=' + data['id'] + '" onclick="' + link + ' return false">' + data['title'] + '</a></td>';
                 html += '<td width="80" align="right">';
-                html += item.getScore('link', data['id']);
+                html += item.showScoreButton('link', data['id']);
                 html += '</td>';
                 html += '<td width="50">';
                 if(data['download']){

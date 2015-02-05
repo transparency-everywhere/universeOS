@@ -419,6 +419,7 @@ var filesystem =  new function() {
     icons['folder'] = 'sc-google-plus';
     icons['element'] = 'sc-google-plus';
     icons['download'] = 'download';
+    icons['link'] = 'sc-google-plus';
     icons['audio/mpeg'] = 'sc-google-plus';
     icons['audio/wav'] = 'sc-google-plus';
     icons['audio'] = 'sc-google-plus';
