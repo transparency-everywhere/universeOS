@@ -72,7 +72,7 @@ var elements = new function(){
         html += '                <td></td>';
         html += '                <td></td>';
         html += '            </tr>';
-//            html += elements.showFileList(elementData['id']); //muss ich noch machen :(
+        html += elements.showFileList(elementData['id']); // generate list with files, links and shortcuts
         html += '        </table>';
         html += '    <center style="margin-top: 20px; margin-bottom: 20px;">';
         if(proofLogin()){
@@ -89,282 +89,102 @@ var elements = new function(){
         filesystem.tabs.addTab(elementData['title'], '', html);
     };
     
-    this.showFileList = function(element_id){
-        var fileList = this.getFileList;
-        var files = fileList['files'];
-        var links = fileList['links'];
-        var shortcuts = fileList['shortcuts'];
-        var html;
-        var link;
-        var rightLink;
-        var image;
+    this.showFileList = function(element_id, grid){
+        if(typeof grid === 'undefined'){
+            grid = false; //if grid=true itemsettings and rightclickmenu will be disabled
+        }
+        var fileList = this.getFileList(element_id);
         var i = 0;
-        $.each(files, function(key, value){
-            i++;
-            if(value['type'] == "audio/mpeg"){
-                link = "openFile('" + value['type'] + "', '" + value['id'] + "', '" + value['title'] + "')";
-                rightLink = "startPlayer('file', '" + value['id'] + "')";
-                image = "../music.png";
+        var html = "";
+        var link = "";
+        var rightLink = "";
+        var image = "";
+        $.each(fileList, function(key, value){
+            var data = value['data'];
+            if(value['type'] === 'file'){
+                i++;
+                if(data['type'] === "audio/mpeg"){
+                    link = "openFile('" + data['type'] + "', '" + data['id'] + "', '" + data['title'] + "')";
+                    rightLink = "startPlayer('file', '" + data['id'] + "')";
+                }
+                else if(data['type'] === "video/mp4"){
+                    link = "openFile('video', '" + data['id'] + "', '" + data['title'] + "');";
+                    rightLink = "reader.tabs.addTab('See " + data['title'] + "', '',gui.loadPage('./modules/reader/player.php?id='" + data['id'] + "')); return false";
+                }
+                else if(data['type'] === "UFF"){
+                    link = "openFile('" + data['type'] + "', '" + data['id'] + "', '" + data['title'] + "')";
+                }
+                else if(data['type'] === "text/plain" || data['type'] === "application/pdf" || data['type'] === "text/x-c++"){
+                    link = "openFile('document', '" + data['id'] + "', '" + data['title'] + "');";
+                }
+                else if(data['type'] === "image/jpeg" || data['type'] === "image/png" || data['type'] === "image/gif"){
+                    //if a image is opened the tab is not named like the file
+                    //it is named like the parent element, because images are
+                    //shown in a gallery with all the images listed in the parent
+                    //element
+                    var elementData = this.getData(data['folder']);
+                    link = "openFile('image', '" + data['id'] + "', '" + elementData['title'] + "');";
+                }
+                image = filesystem.generateIcon(data['type']);
+                html += '<tr class="strippedRow file_' + data['id'] + '" oncontextmenu="showMenu(\'file' + data['id'] + '\'); return false;" height="40px">';
+                html += '<td width="30px">&nbsp;' + image + '</td>';
+                html += '<td><a href="./out/?file=' + data['id'] + '" onclick="' + link + ' return false">' + data['title'] + '</a></td>';
+                html += '<td width="80" align="right">';
+                html += item.showScoreButton('file', data['id']);
+                html += '</td>';
+                html += '<td width="50">';
+                if(data['download']){
+                    html += '<a href="./out/download/?fileId=' + data['id'] + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download') + '</a>';
+                }
+                if(!grid){
+                    html += item.showItemSettings(data['type'], data['id']);
+                }
+                html += '</td>';
+                html += '</tr>';
+                if(!grid){
+                    html += ''; //hier muss die rightClick function noch eingebunden werden.
+                }
             }
-            else if(value['type'] == "video/mp4"){
-                link = "openFile('video', '" + value['id'] + "', '" + value['title'] + "');";
-                rightLink = "reader.tabs.addTab('See " + value['title'] + "', '',gui.loadPage('./modules/reader/player.php?id='" + value['id'] + "')); return false";
+            if(value['type'] === 'link'){
+                i++;
+                if(data['type'] === "youTube"){
+                    link = "openFile('" + data['type'] + "', '" + data['id'] + "', '" + data['title'] + "')";
+                }
+                else if(data['type'] === "audio/mp3"){
+                    rightLink = "startPlayer('file', '" + data['id'] + "')";
+                }
+                else if(data['type'] === "RSS"){
+                    link = "openFile('" + data['type'] + "', '" + data['id'] + "', '" + data['title'] + "')";
+                }
+                image = filesystem.generateIcon(data['type']);
+                html += '<tr class="strippedRow file_' + data['id'] + '" oncontextmenu="showMenu(\'file' + data['id'] + '\'); return false;" height="40px">';
+                html += '<td width="30px">&nbsp;' + image + '</td>';
+                html += '<td><a href="./out/?file=' + data['id'] + '" onclick="' + link + ' return false">' + data['title'] + '</a></td>';
+                html += '<td width="80" align="right">';
+                html += item.showScoreButton('link', data['id']);
+                html += '</td>';
+                html += '<td width="50">';
+                if(data['download']){
+                    html += '<a href="./out/download/?fileId=' + data['id'] + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download') + '</a>';
+                }
+                if(!grid){
+                    html += item.showItemSettings('link', data['id']);
+                }
+                html += '</td>';
+                html += '</tr>';
+                if(!grid){
+                    html += ''; //hier muss die rightClick function noch eingebunden werden.
+                }
             }
-            else if(value['type'] == "UFF"){
-                link = "openFile('" + value['type'] + "', '" + value['id'] + "', '" + value['title'] + "')";
-            }
-            else if(value['type'] == "text/plain" || value['type'] == "application/pdf" || value['type'] == "text/x-c++"){
-                link = "openFile('document', '" + value['id'] + "', '" + value['title'] + "');";
-            }
-            else if(value['type'] == "image/jpeg" || value['type'] == "image/png" || value['type'] == "image/gif"){
-                //if a image is opened the tab is not named like the file
-                //it is named like the parent element, because images are
-                //shown in a gallery with all the images listed in the parent
-                //element
-                var elementData = this.getData(value['folder']);
-                link = "openFile('image', '" + value['id'] + "', '" + elementData['title'] + "');";
-            }
-            
-            
-//$filesClass = new files();
-//$image = $filesClass->getFileIcon($fileListData['type']);
-//    ?>
-//    <tr class="strippedRow file_<?=$fileListData['id'];?>" oncontextmenu="showMenu('file<?=$fileListData['id'];?>'); return false;" height="40px">
-//        <td width="30px">&nbsp;<img src="<?=$subpath;?>gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData['type'];?>" height="22"></td>
-//        <td><a href="<?=$subpath;?>out/?file=<?=$fileListData['id'];?>" onclick="<?=$link;?> return false"><?=substr($fileListData[title],0,30);?></a></td>
-//        <td width="80" align="right">
-//
-//                <?php
-//                $item = new item('file', $fileListData['id']);
-//                echo $item->showScore();
-//                ?>
-//        </td>
-//        <td width="50"><? if($fileListData['download']){ ?>
-//                    <a href="./out/download/?fileId=<?=$fileListData['id'];?>" target="submitter" class="btn btn-mini" title="download file"><i class="icon-download"></i></a>
-//                <? } 
-//                if(!$git){
-//                    $contextMenu = new contextMenu('file', $fileListData['id']);
-//                    echo $contextMenu->showItemSettings();
-//                }?></td>
-//    </tr>
-//    <?php
-//    if(!$git){
-//        $contextMenu = new contextMenu("file", $fileListData['id'], $title10, $openFileType);
-//        $contextMenu->showRightClick();
-//    }
-//
-//}}            
-
-
-
-        });        
-        
-        
-//while($fileListData = mysql_fetch_array($fileListSQL)) {
-//$i++;
-//if(authorize($fileListData['privacy'], "show", $fileListData['owner'])){
-//$title10 = substr("$fileListData[title]", 0, 10);
-//$link = "openFile('".$fileListData['type']."', '".$fileListData['id']."', '$title10');";
-//if($fileListData['type'] == "audio/mpeg"){
-//    $rightLink = "startPlayer('file', '".$fileListData['id']."')";
-//    $image = "../music.png";
-//}
-//else if($fileListData['type'] == "video/mp4"){
-//    //define link for openFileFunction
-//    $openFileType = "video";
-//
-//    //define openFile function
-//    $link = "openFile('$openFileType', '".$fileListData['id']."', '$title10');";
-//
-//    $rightLink = "reader.tabs.addTab('See $title10', '',gui.loadPage('./modules/reader/player.php?id='".$fileListData['id']."')); return false";
-//}
-//else if($fileListData['type'] == "UFF"){
-////standard from know on (19.02.2013)
-//
-//    //define link for openFileFunction
-//    $openFileType = "UFF";
-//
-//    //define openFile function
-//    $link = "openFile('$openFileType', '".$fileListData['id']."', '$title10');";
-//}
-//else if($fileListData['type'] == "text/plain" OR $fileListData['type'] == "application/pdf" OR $fileListData['type'] == "text/x-c++"){
-////standard from know on (19.02.2013)
-//
-//    //define link for openFileFunction
-//    $openFileType = "document";
-//
-//    //define openFile function
-//    $link = "openFile('$openFileType', '".$fileListData['id']."', '$title10');";
-//}
-//else if($fileListData['type'] == "image/jpeg" OR $fileListData['type'] == "image/png" OR $fileListData['type'] == "image/gif"){
-////if a image is opened the tab is not named after the file
-////it is named after the parent element, because images are
-////shown in a gallery with all the images listed in the parent
-////element
-//    $elementData = $db->select('elements', array('id', $fileListData['folder']), array('title'));
-//    $elementTitle10 = substr($elementData['title'], 0,10);
-//
-//
-//
-//    //define link for openFileFunction
-//    $openFileType = "image";
-//
-//    //define openFile function
-//    $link = "openFile('$openFileType', '".$fileListData['id']."', '$elementTitle10');";
-//}
-//$filesClass = new files();
-//$image = $filesClass->getFileIcon($fileListData['type']);
-//    ?>
-//    <tr class="strippedRow file_<?=$fileListData['id'];?>" oncontextmenu="showMenu('file<?=$fileListData['id'];?>'); return false;" height="40px">
-//        <td width="30px">&nbsp;<img src="<?=$subpath;?>gfx/icons/fileIcons/<?=$image;?>" alt="<?=$fileListData['type'];?>" height="22"></td>
-//        <td><a href="<?=$subpath;?>out/?file=<?=$fileListData['id'];?>" onclick="<?=$link;?> return false"><?=substr($fileListData[title],0,30);?></a></td>
-//        <td width="80" align="right">
-//
-//                <?php
-//                $item = new item('file', $fileListData['id']);
-//                echo $item->showScore();
-//                ?>
-//        </td>
-//        <td width="50"><? if($fileListData['download']){ ?>
-//                    <a href="./out/download/?fileId=<?=$fileListData['id'];?>" target="submitter" class="btn btn-mini" title="download file"><i class="icon-download"></i></a>
-//                <? } 
-//                if(!$git){
-//                    $contextMenu = new contextMenu('file', $fileListData['id']);
-//                    echo $contextMenu->showItemSettings();
-//                }?></td>
-//    </tr>
-//    <?php
-//    if(!$git){
-//        $contextMenu = new contextMenu("file", $fileListData['id'], $title10, $openFileType);
-//        $contextMenu->showRightClick();
-//    }
-//
-//}}
-//
-//--------------------------------------------------------------------------------------------------------------------
-//
-//$linkListSQL = mysql_query("SELECT * FROM links WHERE $query");
-//while($linkListData = mysql_fetch_array($linkListSQL)) {
-//$title10 = substr($linkListData['title'], 0, 10);
-//
-//$link = "$link&id=".$linkListData['id'];
-//if($linkListData['type'] == "youTube"){
-//    $link = "openFile('youTube', '".$linkListData['id']."', '$title10', '');";
-//}
-//
-//if($linkListData['type'] == "audio/mp3"){
-//    $rightLink = "startPlayer('file', '".$fileListData['id']."')";
-//}
-//
-//if($linkListData['type'] == "RSS"){
-//    $link = "openFile('RSS', '".$linkListData['id']."', '$title10');";
-//}
-//$fileClass = new files();
-//$image = $fileClass->getFileIcon($linkListData['type']);
-//
-//
-//    $i++;
-//?>
-//<tr class="strippedRow link_<?=$linkListData['id'];?>" oncontextmenu="showMenu('link<?=$linkListData['id'];?>'); return false;" height="40px">
-//    <td width="65px">&nbsp;<img src="<?=$subpath;?>gfx/icons/fileIcons/<?=$image;?>" alt="<?=$linkListData['type'];?>" height="22px"></td>
-//    <td><a href="#" onclick="<?=$link;?>"><?=substr($linkListData['title'],0,30);?></a></td>
-//    <td width="70" align="right">
-//                <?php
-//                $item = new item('file', $fileListData['id']);
-//                echo $item->showScore();
-//                ?>
-//        </td>
-//
-//        <td width="50">
-//        <?php
-//        if(!$git){
-//                $contextMenu = new contextMenu('link', $linkListData['id'], $title10, $linkListData['type']);
-//                echo $contextMenu->showItemSettings();
-//        }
-//        ?></td>
-//</tr>
-//<?php
-//    if(!$git){
-//        $contextMenu = new contextMenu("link", $linkListData['id'], $title10, $linkListData['type']);
-//        echo $contextMenu->showRightClick();
-//    }
-//}
-//
-//
-//
-//$shortCutSql = mysql_query("SELECT * FROM internLinks $shortCutQuery");
-//while($shortCutData = mysql_fetch_array($shortCutSql)){
-//    $i++;
-//    if($shortCutData['type'] == "file"){
-//
-//        $shortCutItemData = $db->select('files', array('id', $shortCutData['typeId']), array('title', 'privacy', 'type'));
-//        $title10 = substr($shortCutItemData['title'], 0,10);
-//        $title = $shortCutItemData['title'];
-//        if($shortCutItemData['type'] == "UFF"){
-//        //standard from know on (19.02.2013)
-//
-//            //define link for openFileFunction
-//            $openFileType = "UFF";
-//
-//            //define openFile function
-//            $link = "openFile('$openFileType', '".$shortCutItemData['typeId']."', '$title10');";
-//        }
-//        else if($shortCutItemData['type'] == "text/plain" OR $shortCutItemData['type'] == "application/pdf"){
-//        //standard from know on (19.02.2013)
-//
-//            //define link for openFileFunction
-//            $openFileType = "document";
-//
-//            //define openFile function
-//            $link = "openFile('$openFileType', '".$shortCutItemData['typeId']."', '$title10');";
-//        }
-//
-//
-//
-//
-//
-//
-//    }else if($shortCutData['type'] == "link"){
-//
-//        $shortCutItemData = $db->select('links', array('id', $shortCutData['typeId']), array('title', 'link', 'privacy', 'type'));
-//        $title10 = substr($shortCutItemData['title'], 0,10);
-//        $title = $shortCutItemData['title'];
-//        if($shortCutItemData['type'] == "youTube"){
-//            $youtubeClass = new youtube($shortCutItemData['link']);
-//            $vId = $youtubeClass->getId();
-//            $link = "openFile('youTube', '$vId', '$title10');";
-//        }
-//
-//        if($shortCutItemData['type'] == "RSS"){
-//            $link = "openFile('RSS', '".$shortCutData['typeId']."', '$title10');";
-//        }
-//    }
-//
-//    $filesClass = new files();
-//    $image = $filesClass->getFileIcon($shortCutItemData['type']);
-//
-//    echo'<tr>';
-//        echo'<td>';
-//            echo"&nbsp;<img src=\"$subpath"."gfx/icons/fileIcons/$image\" height=\"22\"><i class=\"shortcutMark\"> </i>";
-//        echo"</td>";
-//        echo'<td colspan="3">';
-//            echo'<a href=\"./out/?'.$shortCutData['type'].'='.$shortCutData['typeId']." onclick=\"$link return false\">$title</a>";
-//        echo"</td>";
-//    echo'</tr>';
-//}
-//                        if($i == 0){
-//
-//            echo'<tr class="strippedRow" style="height: 20px;">';
-//                echo'<td colspan="3">';
-//                    echo'This Element is empty.';
-//                echo'</td>';
-//            echo'</tr>';
-//                        }
-//
-
-        
-        
-        
+        });
+        if(i === 0){
+            html += '<tr class="strippedRow" style="height: 20px;">';
+            html += '<td colspan="3">';
+            html += 'This Element is empty.';
+            html += '</td>';
+            html += '</tr>';
+        }
+        return html;
     };
     
     this.getFileList = function(element_id){

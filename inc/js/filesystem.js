@@ -47,7 +47,7 @@ var filesystem =  new function() {
     this.generateFileBrowser = function(folderId){
         var showFileBrowser = true;
         var fav = false;
-        if(is_numeric(folderId)){
+        if(is_numeric(folderId) || empty(folderId)){
             if(empty(folderId) || folderId === 0){
                 folderId = '1';
             }else if(folderId === '2'){
@@ -126,16 +126,14 @@ var filesystem =  new function() {
 
             //generate parent folder row
             if(!empty(folder) && (folder !== "1") && is_numeric(folder)){
-                if(parentFolderData['folder'] !== "1"){
-                    parentFolderData = folders.getData(folder);
-                }
-                    
-            html += '                        <tr height="30" class="greyHover">';		  			
-            html += '                            <td width="30">&nbsp;<img src="' + subpath + 'img/folder_dark.png" height="22"></td>';		  			
-            html += '                            <td><a href="#" onclick="openFolder(' + parentFolderData['folder'] + '); return false;">...</a></td>';		  			
-            html += '                            <td width="50px"></td>';		  			
-            html += '                            <td width="50px"></td>';		  			
-            html += '                        </tr>';
+                if(parentFolderData['folder'] !== "1")
+                    parentFolderData = folders.getData(folder);                    
+                html += '                        <tr height="30" class="greyHover">';		  			
+                html += '                            <td width="30">&nbsp;' + filesystem.generateIcon('folder') + '</td>';		  			
+                html += '                            <td><a href="#" onclick="openFolder(' + parentFolderData['folder'] + '); return false;">...</a></td>';		  			
+                html += '                            <td width="50px"></td>';		  			
+                html += '                            <td width="50px"></td>';		  			
+                html += '                        </tr>';
             }
 
             var itemsInFolder = folders.getItems(folder);
@@ -152,7 +150,7 @@ var filesystem =  new function() {
                     if(rightClick){
                         html += ''; //hier muss die rightClick function noch eingebunden werden!!
                     }
-                    html += '&nbsp;<img src="' + subpath + value['data']['iconsrc'] + '"></td>';
+                    html += '                    &nbsp;' + filesystem.generateIcon('folder') + '</td>';
                     html += '                    <td><a href="#" onclick="openFolder(\'' + value['data']['id'] + '\'); return false;">' + name + '</a></td>';
                     html += '                    <td width="80px">';
                     html += item.showScoreButton('folder', value['data']['id']);
@@ -169,7 +167,7 @@ var filesystem =  new function() {
                 if(value['type'] === "element"){
                     var title = value['data']['title'];
                     html += "                        <tr oncontextmenu=\"showMenu('element" + value['data']['id'] + "'); return false;\" height=\"30\">";
-                    html += "                           <td width=\"30\">&nbsp;<img src=\"" + subpath + value['data']['iconsrc'] + "\" height=\"22\"></td>";
+                    html += "                           <td width=\"30\">&nbsp;" + filesystem.generateIcon('element') + "</td>";
                     html += "                           <td><a href=\"#\" onclick=\"elements.open('" + value['data']['id'] + "'); return false;\">" + title + "</a></td>"; //openElement wird zu elements.open
                     html += "                           <td width=\"80px\">" + item.showScoreButton('folder', value['data']['id']) + "</td>";
                     html += "                           <td width=\"30px\">";
@@ -411,9 +409,41 @@ var filesystem =  new function() {
     };
     
     this.readFile = function(file_id){
-        
-        
         return api.query('api/files/read/', { file_id : file_id});
     };
+    
+    this.generateIcon = function(fileType){
+    var icons = {};
+    icons['folder'] = 'sc-google-plus';
+    icons['element'] = 'sc-google-plus';
+    icons['download'] = 'download';
+    icons['link'] = 'sc-google-plus';
+    icons['audio/mpeg'] = 'sc-google-plus';
+    icons['audio/wav'] = 'sc-google-plus';
+    icons['audio'] = 'sc-google-plus';
+    icons['video/mp4'] = 'sc-google-plus';
+    icons['video'] = 'sc-google-plus';
+    icons['UFF'] = 'sc-google-plus';
+    icons['text/plain'] = 'sc-google-plus';
+    icons['text/x-c++'] = 'sc-google-plus';
+    icons['application/pdf'] = 'sc-google-plus';
+    icons['application/vnd.ms-office'] = 'sc-google-plus';
+    icons['application/zip'] = 'sc-google-plus';
+    icons['image/jpeg'] = 'sc-google-plus';
+    icons['image/png'] = 'sc-google-plus';
+    icons['image/tiff'] = 'sc-google-plus';
+    icons['image/gif'] = 'sc-google-plus';
+    icons['image'] = 'sc-google-plus';
+    icons['youTube'] = 'sc-google-plus';
+    icons['wiki'] = 'sc-google-plus';
+    icons['RSS'] = 'sc-google-plus';
+
+    if(typeof fileType === 'undefined'){
+        icons[fileType] = 'archive'; //shall be replaced with unknown file icon
+    }
+
+    return '<span class="icon dark-' + icons[fileType] + '"></span>';
+
+}
 };
 
