@@ -168,9 +168,6 @@ class element {
             $fileClass = new files();
             
             $files = $db->shiftResult($db->select('files', array('folder', mysql_real_escape_string($elementId))), 'id');
-            foreach ($files as $value) {
-                $value['iconsrc'] = 'test';
-            }
             $links = $db->shiftResult($db->select('links', array('folder', mysql_real_escape_string($elementId))), 'id');
             $shortcuts = $db->shiftResult($db->select('shortcuts',  array('parentType', 'element', 'AND', 'parentId', $elementId)), 'id');
             
@@ -179,8 +176,7 @@ class element {
                 'links' => $links,
                 'shortcuts' => $shortcuts
             );
-            
-	}
+        }
         
 	
     function showFileList($element=NULL, $fileQuery=NULL, $git=NULL, $subpath=NULL){
