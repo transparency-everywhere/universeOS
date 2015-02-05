@@ -86,7 +86,6 @@ var elements = new function(){
 //            html += comments.show(elementData['id']); //nic macht function in js fertig
         html += '    </div>';
         html += '</div>';
-        console.log(html);
         filesystem.tabs.addTab(elementData['title'], '', html);
     };
     

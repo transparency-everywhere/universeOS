@@ -47,7 +47,7 @@ var filesystem =  new function() {
     this.generateFileBrowser = function(folderId){
         var showFileBrowser = true;
         var fav = false;
-        if(is_numeric(folderId)){
+        if(is_numeric(folderId) || empty(folderId)){
             if(empty(folderId) || folderId === 0){
                 folderId = '1';
             }else if(folderId === '2'){
@@ -126,16 +126,14 @@ var filesystem =  new function() {
 
             //generate parent folder row
             if(!empty(folder) && (folder !== "1") && is_numeric(folder)){
-                if(parentFolderData['folder'] !== "1"){
-                    parentFolderData = folders.getData(folder);
-                }
-                    
-            html += '                        <tr height="30" class="greyHover">';		  			
-            html += '                            <td width="30">&nbsp;<img src="' + subpath + 'img/folder_dark.png" height="22"></td>';		  			
-            html += '                            <td><a href="#" onclick="openFolder(' + parentFolderData['folder'] + '); return false;">...</a></td>';		  			
-            html += '                            <td width="50px"></td>';		  			
-            html += '                            <td width="50px"></td>';		  			
-            html += '                        </tr>';
+                if(parentFolderData['folder'] !== "1")
+                    parentFolderData = folders.getData(folder);                    
+                html += '                        <tr height="30" class="greyHover">';		  			
+                html += '                            <td width="30">&nbsp;' + filesystem.generateIcon('folder') + '</td>';		  			
+                html += '                            <td><a href="#" onclick="openFolder(' + parentFolderData['folder'] + '); return false;">...</a></td>';		  			
+                html += '                            <td width="50px"></td>';		  			
+                html += '                            <td width="50px"></td>';		  			
+                html += '                        </tr>';
             }
 
             var itemsInFolder = folders.getItems(folder);
@@ -152,7 +150,7 @@ var filesystem =  new function() {
                     if(rightClick){
                         html += ''; //hier muss die rightClick function noch eingebunden werden!!
                     }
-                    html += '&nbsp;<img src="' + subpath + value['data']['iconsrc'] + '"></td>';
+                    html += '                    &nbsp;' + filesystem.generateIcon('folder') + '</td>';
                     html += '                    <td><a href="#" onclick="openFolder(\'' + value['data']['id'] + '\'); return false;">' + name + '</a></td>';
                     html += '                    <td width="80px">';
                     html += item.showScoreButton('folder', value['data']['id']);
@@ -169,7 +167,7 @@ var filesystem =  new function() {
                 if(value['type'] === "element"){
                     var title = value['data']['title'];
                     html += "                        <tr oncontextmenu=\"showMenu('element" + value['data']['id'] + "'); return false;\" height=\"30\">";
-                    html += "                           <td width=\"30\">&nbsp;<img src=\"" + subpath + value['data']['iconsrc'] + "\" height=\"22\"></td>";
+                    html += "                           <td width=\"30\">&nbsp;" + filesystem.generateIcon('element') + "</td>";
                     html += "                           <td><a href=\"#\" onclick=\"elements.open('" + value['data']['id'] + "'); return false;\">" + title + "</a></td>"; //openElement wird zu elements.open
                     html += "                           <td width=\"80px\">" + item.showScoreButton('folder', value['data']['id']) + "</td>";
                     html += "                           <td width=\"30px\">";
