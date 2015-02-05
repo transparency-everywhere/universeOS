@@ -220,7 +220,7 @@ and (max-width : 320px) {
 }
 
 .guestBox{
-    background-color:  #006d67;
+    background-color:  #37474f;
     box-shadow: 1px 3px 8px 0px rgba(0, 0, 0, 0.3);
     width: 199px;
     height: 270px;
@@ -232,7 +232,7 @@ and (max-width : 320px) {
 
 .guestBox.registerBox{
     width: 825px;
-    background-color:  #b2a400;
+    background-color:  #607d8b;
 }
 
 .guestBox.registerBox img{
@@ -268,6 +268,7 @@ and (max-width : 320px) {
 .guestBox input[type=submit]{
     display: inline-block;
     float: right;
+    border: none;
 }
 
 .guestBox .image{
@@ -327,7 +328,7 @@ and (max-width : 320px) {
 
 .button{
     color: #FFF;
-    background-color: #006d67;
+    background-color:  #00bcd4;
     width: 100px;
     margin-top: 2.5px;
     margin-left: 5px;

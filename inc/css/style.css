@@ -417,15 +417,13 @@ li.notHidden{
     position: absolute;
     z-index: 99999;
     overflow: auto;
-    top: 50%;
+    top: 100px;
     left: 50%;
-    background-color: #4f85bb;
-    color: #FFFFFF;
-    
-    margin-top: -175px;;
-    margin-left: -275px;
-    width: 500px;
-    height: 350px;
+    background-color:  #607d8b;
+    box-shadow: 1px 3px 8px 0px rgba(0, 0, 0, 0.3);
+    color:  #fefefe;
+    margin-left: -200px;
+    width: 400px;
 }
 
 .blueModal > header{
@@ -445,7 +443,7 @@ li.notHidden{
     }
 
 .blueModal > .content{
-	height: 270px;
+	max-height: 550px;
 	margin: 0px 5px;
 	overflow: auto;
 	
@@ -2831,11 +2829,8 @@ margin: 0;
                     width: 75px;
                     height: 35px;
                 }
-                
-                .privacySettings{
-                	background: #3E3E3E;
-                	border: 1px solid #c9c9c9;
-                	color: #E2E2E2;
+                .privacySettings {
+                    color: #313131;
                 }
                 
 				.privacySettings h1, .privacySettings h2, .privacySettings h3{
@@ -2850,35 +2845,34 @@ margin: 0;
 				
 				.privacySettings > header{
 					position: relative;
-					font-size: 27px;
+					font-size: 20px;
 					line-height: 30px;
 					padding: 5px;
-					padding-bottom: 0px;
-	    			border-bottom:1px solid #3a3a3a;
-					background: -moz-linear-gradient(top, rgba(38,38,38,1) 0%, rgba(40,40,40,1) 49%, rgba(40,40,40,1) 100%); /* FF3.6+ */
-					background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(38,38,38,1)), color-stop(49%,rgba(40,40,40,1)), color-stop(100%,rgba(40,40,40,1))); /* Chrome,Safari4+ */
-					background: -webkit-linear-gradient(top, rgba(38,38,38,1) 0%,rgba(40,40,40,1) 49%,rgba(40,40,40,1) 100%); /* Chrome10+,Safari5.1+ */
-					background: -o-linear-gradient(top, rgba(38,38,38,1) 0%,rgba(40,40,40,1) 49%,rgba(40,40,40,1) 100%); /* Opera 11.10+ */
-					background: -ms-linear-gradient(top, rgba(38,38,38,1) 0%,rgba(40,40,40,1) 49%,rgba(40,40,40,1) 100%); /* IE10+ */
-					background: linear-gradient(to bottom, rgba(38,38,38,1) 0%,rgba(40,40,40,1) 49%,rgba(40,40,40,1) 100%); /* W3C */
-					filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#262626', endColorstr='#282828',GradientType=0 ); /* IE6-9 */
-				}
+                                        color:#FFF;
+                                }
 				
 				.privacySettings ul{
 				}
 				
- 				.privacySettings li{
+ 				.privacySettings>ul>li{
  					margin-top: 5px;
  					padding: 5px;
  					padding-left: 20px;
- 					border-top: 1px solid #313131;
  					clear:both;
- 					
+                                        width: 360px;
+ 					color: #313131;
+                                        background-color:  #ffffff;
  				}
- 				.privacySettings li:first-of-type{
- 					margin-top: 0px;
- 					border-top: none;
- 				}
+                                
+                                
+ 				.privacySettings>ul>li.active{
+                                    backgroundColor: red;
+                                }
+                                
+                                .privacySettings h2 input[type=checkbox]{
+                                    display:none;
+                                }
+                                
  				
  				.privacySettings input[type=checkbox]{
  					margin: -1.5px 1px 0 -13px;
@@ -2886,15 +2880,16 @@ margin: 0;
  				
  				.privacySettings .sub{
  					margin-left: 25px;
+                                        width: 330px;
  					border-top: none;
  					display:none;
  				}
  				
  				.privacySettings .sub > div{
- 					float:left;
- 					margin-left: 20px;
- 					height: 25px;
-					font-size: 18px;
+ 					width: 150px;
+                                        height: 25px;
+                                        font-size: 18px;
+                                        display: inline-block;
  				}
  				
  				.privacySettings .sub > div:first-of-type{
@@ -2909,12 +2904,12 @@ margin: 0;
  				.privacySettings .groupList li > div:first-of-type{
  					margin-left: 0;
  					width: 120px; 
- 				    overflow-x: hidden;
+                                        overflow-x: hidden;
  				}
  				
  				.privacySettings .groupList li > div{
- 					float:left;
  					margin-left: 20px;
+                                        display: inline-block;
  				}
  				.privacySettings .groupList li > div:last-of-type{
  					

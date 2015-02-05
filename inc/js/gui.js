@@ -333,7 +333,7 @@ var gui = new function(){
         this.html;
         this.init = function (title, content, options) {
 			    	this.html = '';
-			    	this.html += '<div class="blueModal border-radius container">';
+			    	this.html += '<div class="blueModal container">';
 	            		this.html += '<header>';
 	            			this.html += title;
 	            			this.html += '<a class="modalClose" onclick="$(\'.blueModal\').remove();">X</a>';

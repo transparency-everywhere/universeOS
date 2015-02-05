@@ -717,28 +717,35 @@ var privacy = new function(){
 			  	};
                                 
         this.init = function(){
-               $('.privacyPublicTrigger').click(function(){
-
-                                        if($(this).is(':checked')){
-
-                                            $('.uncheckPublic').prop('checked', false);
-
-                                        }
+                                    $('.privacyPublicTrigger').click(function(){
+                                        $('input[type=checkbox].privacyPublicTrigger').prop('checked',true);
+                                        
+                                        //maybe $(this).next('input[type=checkbox].uncheckPublic')
+                                        $('input[type=checkbox].uncheckPublic').prop('checked', false);
 
                                     });
 
+
+                                    $('.privacyHiddenTrigger').click(function(){
+                                        $('input[type=checkbox].privacyHiddenTrigger').prop('checked',true);
+                                        if(1){
+                                            $('.uncheckHidden').prop('checked', false);
+                                        }
+                                    });
+                                    
+                                    $('.privacyShowFriendDetails').click(function(){
+                                    	$('.privacyShowBuddy').show();
+                                    });
+
                                     $('.privacyCustomTrigger').click(function(){
+                                        
+                                        
                                         if($(this).is(':checked')){
                                             $('.uncheckCustom').prop('checked', false);
                                         }
                                     });
 
 
-                                    $('.privacyHiddenTrigger').click(function(){
-                                        if($(this).is(':checked')){
-                                            $('.uncheckHidden').prop('checked', false);
-                                        }
-                                    });
                                     
                                     $('.privacyOnlyMeTrigger').click(function(){
                                         if($(this).is(':checked')){
@@ -765,6 +772,7 @@ var privacy = new function(){
                                     	$('.privacyShowGroups').show();
                                     	var groupTriggerId = '.privacyGroupTrigger_'+$(this).data('groupid');
                                         if($(this).is(':checked')){
+                                                $('.privacyBuddyTrigger').prop('checked', false);
                                         	if($(this).data('privacytype') == "edit")
                                             	$(groupTriggerId+'_see').prop('checked', true);
                                         }else{
@@ -780,6 +788,17 @@ var privacy = new function(){
                                             $('.privacyOnlyMeTrigger').prop('checked', false);
                                         }
                                     });
+                                    
+                                    
+                                    
+                                    $('.uncheckGroups').click(function(){
+                                        
+                                        if($(this).is(':checked')){
+                                            $('input[type=checkbox].privacyGroupTrigger').prop('checked',false);
+                                        }
+                                        
+                                    });
+                                    
                                     $('.privacyHiddenTrigger').click(function(){
                                         if($(this).is(':checked')){
                                             $('.uncheckHidden').prop('checked', false);
