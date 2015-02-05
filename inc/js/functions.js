@@ -1843,20 +1843,20 @@ function loadMiniFileBrowser($target, folder, element, level, showGrid, select){
         });
 }
 
-<<<<<<< Updated upstream
 function is_url(str) {
-   var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-  '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-  '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-  '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-  '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-  '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-  if(!pattern.test(str)) {
-    return false;
-  } else {
-    return true;
-  }
-=======
+    var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+    if(!pattern.test(str)) {
+      return false;
+    } else {
+      return true;
+    }
+}
+
 function htmlspecialchars(string, quote_style, charset, double_encode) {
   //       discuss at: http://phpjs.org/functions/htmlspecialchars/
   //      original by: Mirek Slugen
@@ -1922,5 +1922,4 @@ function htmlspecialchars(string, quote_style, charset, double_encode) {
   }
 
   return string;
->>>>>>> Stashed changes
 }
