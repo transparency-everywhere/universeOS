@@ -437,7 +437,7 @@ var filesystem =  new function() {
     fileIcons['wiki'] = 'sc-google-plus';
     fileIcons['RSS'] = 'sc-google-plus';
 
-    if(typeof fileIcons[fileType] === 'undefined'){
+    if(typeof fileType === 'undefined'){
         fileIcons[fileType] = 'archive'; //shall be replaced with unknown file icon
     }
 
