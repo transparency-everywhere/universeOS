@@ -74,7 +74,7 @@ var folders = new function(){
         fieldArray[0] = field0;
         
         var field1 = [];
-        field1['caption'] = 'Privacy';
+        field1['caption'] = '';
         field1['inputName'] = 'privacy';
         field1['type'] = 'html';
         field1['value'] = "<div id=\'privacyField\'></div>";
@@ -133,7 +133,7 @@ var folders = new function(){
         fieldArray[0] = field0;
         
         var field1 = [];
-        field1['caption'] = 'Privacy';
+        field1['caption'] = '';
         field1['inputName'] = 'privacy';
         field1['type'] = 'html';
         field1['value'] = "<div id=\'privacyField\'></div>";

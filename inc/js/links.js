@@ -95,7 +95,7 @@ var links = new function(){
         fieldArray[2] = field2;
         
         var field3 = [];
-        field3['caption'] = 'Privacy';
+        field3['caption'] = '';
         field3['inputName'] = 'privacy';
         field3['type'] = 'html';
         field3['value'] = "<div id=\'privacyField\'></div>";
@@ -167,7 +167,7 @@ var links = new function(){
         fieldArray[2] = field2;
         
         var field3 = [];
-        field3['caption'] = 'Privacy';
+        field3['caption'] = '';
         field3['inputName'] = 'privacy';
         field3['type'] = 'html';
         field3['value'] = "<div id=\'privacyField\'></div>";

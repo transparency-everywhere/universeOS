@@ -247,7 +247,7 @@ var elements = new function(){
         fieldArray[1] = field1;
         
         var field2 = [];
-        field2['caption'] = 'Privacy';
+        field2['caption'] = '';
         field2['inputName'] = 'privacy';
         field2['type'] = 'html';
         field2['value'] = "<div id=\'privacyField\'></div>";
@@ -318,7 +318,7 @@ var elements = new function(){
         fieldArray[1] = field1;
         
         var field2 = [];
-        field2['caption'] = 'Privacy';
+        field2['caption'] = '';
         field2['inputName'] = 'privacy';
         field2['type'] = 'html';
         field2['value'] = "<div id=\'privacyField\'></div>";

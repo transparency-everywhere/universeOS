@@ -90,7 +90,7 @@ var playlists = new function(){
         fieldArray[1] = field1;
         
         var field2 = [];
-        field2['caption'] = 'Privacy';
+        field2['caption'] = '';
         field2['inputName'] = 'privacy';
         field2['type'] = 'html';
         field2['value'] = "<div id=\'privacyField\'></div>";
@@ -199,7 +199,7 @@ var playlists = new function(){
         fieldArray[0] = field0;
         
         var field1 = [];
-        field1['caption'] = 'Privacy';
+        field1['caption'] = '';
         field1['inputName'] = 'privacy';
         field1['type'] = 'html';
         field1['value'] = "<div id=\'privacyField\'></div>";

@@ -62,7 +62,7 @@ var gui = new function(){
                     //caption
                     switch(fieldData['type']){
                         case'text':
-                            mainHTML += '<td>' + fieldData.caption + '</td><td>&nbsp;</td>';
+                           
                             break;   
                         case'wysiwyg':
                             break;
@@ -100,7 +100,7 @@ var gui = new function(){
                                     disabled = '';
                                 }
                             }
-                            mainHTML += '<td colspan="3"><input type="text" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '" value="' + fieldData['value'] + '" style="width:100%;" '+disabled+'/></td><td>'+fieldData['appendix']+'</td>';
+                            mainHTML += '<td colspan="3"><input type="text" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '" value="' + fieldData['value'] + '" placeholder="'+fieldData.caption+'" style="width:100%;" '+disabled+'/></td><td>'+fieldData['appendix']+'</td>';
                             break;
                         case 'textarea':
                             if(!fieldData['value']){
@@ -109,7 +109,7 @@ var gui = new function(){
                             mainHTML += '<td colspan="3"><textarea name="' + fieldData.inputName + '" id="' + fieldData.inputName + '">'+fieldData['value']+'</textarea></td><td>'+fieldData['appendix']+'</td>';
                             break;
                         case 'password':
-                            mainHTML += '<td><input type="password" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '"/></td>';
+                            mainHTML += '<td><input type="password" name="' + fieldData.inputName + '" placeholder="'+fieldData.caption+'" id="' + fieldData.inputName + '"/></td>';
                             break;
                         case 'checkbox':
                             var checked;
@@ -333,7 +333,7 @@ var gui = new function(){
         this.html;
         this.init = function (title, content, options) {
 			    	this.html = '';
-			    	this.html += '<div class="blueModal border-radius container">';
+			    	this.html += '<div class="blueModal container">';
 	            		this.html += '<header>';
 	            			this.html += title;
 	            			this.html += '<a class="modalClose" onclick="$(\'.blueModal\').remove();">X</a>';
