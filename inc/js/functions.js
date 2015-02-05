@@ -679,7 +679,7 @@ var privacy = new function(){
         options['noButtons'] = true;
         
         var field0 = [];
-        field0['caption'] = 'Privacy';
+        field0['caption'] = '';
         field0['inputName'] = 'privacy';
         field0['type'] = 'html';
         field0['value'] = "<div id=\'privacyField\'></div>";
@@ -718,6 +718,9 @@ var privacy = new function(){
                                 
         this.init = function(){
                                     $('.privacyPublicTrigger').click(function(){
+                                        $('li.privacyHiddenTrigger').removeClass('active');
+                                        $('li.privacyPublicTrigger').addClass('active');
+                                        
                                         $('input[type=checkbox].privacyPublicTrigger').prop('checked',true);
                                         
                                         //maybe $(this).next('input[type=checkbox].uncheckPublic')
@@ -727,6 +730,9 @@ var privacy = new function(){
 
 
                                     $('.privacyHiddenTrigger').click(function(){
+                                        
+                                        $('li.privacyHiddenTrigger').addClass('active');
+                                        $('li.privacyPublicTrigger').removeClass('active');
                                         $('input[type=checkbox].privacyHiddenTrigger').prop('checked',true);
                                         if(1){
                                             $('.uncheckHidden').prop('checked', false);
@@ -739,6 +745,8 @@ var privacy = new function(){
 
                                     $('.privacyCustomTrigger').click(function(){
                                         
+                                        $('li.privacyHiddenTrigger').removeClass('active');
+                                        $('li.privacyPublicTrigger').removeClass('active');
                                         
                                         if($(this).is(':checked')){
                                             $('.uncheckCustom').prop('checked', false);
@@ -755,6 +763,8 @@ var privacy = new function(){
                                     
                                     $('.privacyBuddyTrigger').click(function(){
                                     	
+                                        $('li.privacyHiddenTrigger').removeClass('active');
+                                        $('li.privacyPublicTrigger').removeClass('active');
                                     	var buddyTriggerId = '.privacyBuddyTrigger';
                                         if($(this).is(':checked')){
                                         	if($(this).data('privacytype') == "edit")
@@ -769,6 +779,8 @@ var privacy = new function(){
                                     });
                                     
                                     $('.privacyGroupTrigger').click(function(){
+                                        $('li.privacyHiddenTrigger').removeClass('active');
+                                        $('li.privacyPublicTrigger').removeClass('active');
                                     	$('.privacyShowGroups').show();
                                     	var groupTriggerId = '.privacyGroupTrigger_'+$(this).data('groupid');
                                         if($(this).is(':checked')){
