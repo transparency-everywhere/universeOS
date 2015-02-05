@@ -411,37 +411,39 @@ var filesystem =  new function() {
     };
     
     this.readFile = function(file_id){
-        
-        
         return api.query('api/files/read/', { file_id : file_id});
     };
+    
     this.generateIcon = function(fileType){
-    var fileIcons = {};
-    fileIcons['audio/mpeg'] = 'sc-google-plus';
-    fileIcons['audio/wav'] = 'sc-google-plus';
-    fileIcons['audio'] = 'sc-google-plus';
-    fileIcons['video/mp4'] = 'sc-google-plus';
-    fileIcons['video'] = 'sc-google-plus';
-    fileIcons['UFF'] = 'sc-google-plus';
-    fileIcons['text/plain'] = 'sc-google-plus';
-    fileIcons['text/x-c++'] = 'sc-google-plus';
-    fileIcons['application/pdf'] = 'sc-google-plus';
-    fileIcons['application/vnd.ms-office'] = 'sc-google-plus';
-    fileIcons['application/zip'] = 'sc-google-plus';
-    fileIcons['image/jpeg'] = 'sc-google-plus';
-    fileIcons['image/png'] = 'sc-google-plus';
-    fileIcons['image/tiff'] = 'sc-google-plus';
-    fileIcons['image/gif'] = 'sc-google-plus';
-    fileIcons['image'] = 'sc-google-plus';
-    fileIcons['youTube'] = 'sc-google-plus';
-    fileIcons['wiki'] = 'sc-google-plus';
-    fileIcons['RSS'] = 'sc-google-plus';
+    var icons = {};
+    icons['folder'] = 'sc-google-plus';
+    icons['element'] = 'sc-google-plus';
+    icons['download'] = 'download';
+    icons['audio/mpeg'] = 'sc-google-plus';
+    icons['audio/wav'] = 'sc-google-plus';
+    icons['audio'] = 'sc-google-plus';
+    icons['video/mp4'] = 'sc-google-plus';
+    icons['video'] = 'sc-google-plus';
+    icons['UFF'] = 'sc-google-plus';
+    icons['text/plain'] = 'sc-google-plus';
+    icons['text/x-c++'] = 'sc-google-plus';
+    icons['application/pdf'] = 'sc-google-plus';
+    icons['application/vnd.ms-office'] = 'sc-google-plus';
+    icons['application/zip'] = 'sc-google-plus';
+    icons['image/jpeg'] = 'sc-google-plus';
+    icons['image/png'] = 'sc-google-plus';
+    icons['image/tiff'] = 'sc-google-plus';
+    icons['image/gif'] = 'sc-google-plus';
+    icons['image'] = 'sc-google-plus';
+    icons['youTube'] = 'sc-google-plus';
+    icons['wiki'] = 'sc-google-plus';
+    icons['RSS'] = 'sc-google-plus';
 
     if(typeof fileType === 'undefined'){
-        fileIcons[fileType] = 'archive'; //shall be replaced with unknown file icon
+        icons[fileType] = 'archive'; //shall be replaced with unknown file icon
     }
 
-    return '<span class="icon dark-' + fileIcons[fileType] + '"></span>';
+    return '<span class="icon dark-' + icons[fileType] + '"></span>';
 
 }
 };

@@ -168,14 +168,33 @@ class element {
             $fileClass = new files();
             
             $files = $db->shiftResult($db->select('files', array('folder', mysql_real_escape_string($elementId))), 'id');
+            foreach ($files as $fileData) {
+                if(authorize($fileData['privacy'], "show", $fileData['creator']))
+                    $result[] = array('type' => 'file', 'data' => $fileData);
+            }
             $links = $db->shiftResult($db->select('links', array('folder', mysql_real_escape_string($elementId))), 'id');
-            $shortcuts = $db->shiftResult($db->select('shortcuts',  array('parentType', 'element', 'AND', 'parentId', $elementId)), 'id');
-            
-            return array(
-                'files' => $files,
-                'links' => $links,
-                'shortcuts' => $shortcuts
-            );
+            foreach ($links as $linkData) {
+                if(authorize($linkData['privacy'], "show", $linkData['creator']))
+                    $result[] = array('type' => 'link', 'data' => $linkData);
+            }
+            $shortcutList = $db->shiftResult($db->select('shortcuts',  array('parentType', 'element', 'AND', 'parentId', $elementId)), 'id');
+            foreach ($shortcutList as $shortCutData) {
+                if($shortCutData['type'] == "file"){
+                    $files = $db->shiftResult($db->select('files', array('folder', mysql_real_escape_string($shortCutData['typeId']))), 'id');
+                    foreach ($files as $fileData) {
+                        if(authorize($fileData['privacy'], "show", $fileData['creator']))
+                            $result[] = array('type' => 'file', 'data' => $fileData);
+                    }
+                }
+                if($shortCutData['type'] == "link"){
+                    $files = $db->shiftResult($db->select('links', array('folder', mysql_real_escape_string($shortCutData['typeId']))), 'id');
+                    foreach ($links as $linkData) {
+                        if(authorize($linkData['privacy'], "show", $linkData['creator']))
+                            $result[] = array('type' => 'link', 'data' => $linkData);
+                    }
+                }
+            }
+            return $result;
         }
         
 	
