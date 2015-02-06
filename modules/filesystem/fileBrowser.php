@@ -83,7 +83,7 @@ $pathdata = $folderClass->getFolderData();
         		<?
         		}
         		if(authorize($pathdata['privacy'], "edit", $pathdata['creator'])){ ?>
-        		<li><a href="#" onclick="javascript: popper('doit.php?action=addElement&folder=<?=$folder;?>&reload=1');return false">Add Element</a></li>
+        		<li><a href="#" onclick="javascript: popper('doit.php?action=addElement&folder=<?=$folder;?>&reload=1');return false">Add Elementcxcdfsafgds</a></li>
                         <li><a href="#" onclick="javascript: folders.showCreateFolderForm('<?=$folder;?>');return false">Add Folder</a></li>
         		<li><a href="#" onclick="javascript: popper('doit.php?action=addInternLink&parentFolder=<?=$folder;?>&reload=1');return false">Add Shortcut</a></li>
 				<? } ?>

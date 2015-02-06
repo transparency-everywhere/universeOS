@@ -220,7 +220,7 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 		if($showGrid){
         echo'<ul class="miniFileBrowser">';
 		echo'<li class="choosenItem"></li>';
-		echo'<li class="change" onclick="$(\'.miniFileBrowser .strippedRow\').slideDown();">change</li>';
+		echo'<li class="change" onclick="$(\'.miniFileBrowser .strippedRow\').not(\'.fix\').slideDown();">change</li>';
 		}
 		
         //if folder is empty => load file list
@@ -235,12 +235,13 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 	        	
 		        if(authorize($filefdata['privacy'], "show", $filefdata['creator'])){
 				$action['folders'] = "$('.folder".$filefdata['id']."LoadingFrame').loadOuter('doit.php?action=loadMiniBrowser&folder=".$filefdata['id']."&level=$level&select=$select');return false;";
-		        $trigger['folders'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/filesystem/folder.png\' alt=\'folder\' height=\'32px\'>&nbsp;$filefdata[name]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'folder\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'".$filefdata['id']."\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+		        $trigger['folders'] = "$('.miniFileBrowser .choosenItem').html('<span class=\'icon white-archive\'></span>&nbsp;$filefdata[name]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'folder\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'".$filefdata['id']."\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow:visible').slideUp();";
 				
 					
 		        ?>
 	            <li class="strippedRow" <?=$style;?>>
-	                <span>&nbsp;<img src="./gfx/icons/filesystem/folder.png" height="14"></span>
+	                
+		        <span class="icon dark-folder"></span>
 	                <span><a href="#" onclick="<?=$action['folders'];?>"><?=$filefdata['name'];?>/</a></span>
 	            <?php
 	            if($showFolderButton){
@@ -251,7 +252,7 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 	            <!-- frame in which the folder data is loaded, if loadFolderDataIntoMiniBrowser() is called -->
 	            <li class="folder<?=$filefdata['id'];?>LoadingFrame" style="display: none;"></li>
 	            <!-- keep strippedrow working-->
-	            <li class="strippedRow" style="display: none;"></li>
+	            <li class="strippedRow fix" style="display: none;"></li>
 	            <?php
 	            }
 			}
@@ -269,11 +270,11 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 		        	
 				
 				$action['elements'] = "$('.element".$fileddata['id']."LoadingFrame').loadOuter('doit.php?action=loadMiniBrowser&element=".$fileddata['id']."&level=$level&select=$select');return false;";
-		        $trigger['elements'] = "$('.miniFileBrowser .choosenItem').html('<img src=\'./gfx/icons/filesystem/element.png\' alt=\'folder\' height=\'32px\'>&nbsp;$title<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'element\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'".$fileddata['id']."\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow').slideUp();";
+                                $trigger['elements'] = "$('.miniFileBrowser .choosenItem').html('<span class=\'icon white-archive\'></span>&nbsp;$title<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'element\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'".$fileddata['id']."\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow:visible').slideUp();";
 						
 		        ?>
 		            <li class="strippedRow" <?=$style;?>>
-		                <span class="icon dark-folder"></span>
+		                <span class="icon dark-archive"></span>
 		                <span><a href="#" onclick="<?=$action['elements'];?>"><?=$title15;?></a></span>
 		        		<?php
 	           			 if($showElementButton){
@@ -284,7 +285,7 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 		            <!-- frame in which the element data is loaded, if loadElementDataIntoMiniBrowser() is called -->
 		            <li class="element<?=$fileddata['id'];?>LoadingFrame" style="display: none;"></li>
 		            <!-- keep strippedrow working-->
-		            <li class="strippedRow" style="display: none;"></li>
+		            <li class="strippedRow fix" style="display: none;"></li>
 		            <?php
 	            }
 			}

@@ -135,10 +135,12 @@ class search{
     function parseSearchResults(){
     
         
-        $icon = 'icon-sc-facebook';
+        $icon = 'dark-sc-facebook';
         $iconStyle = 'height: 30px;width: 30px;';
         $output = '';
-        $users = $this->getSearchResults('users');
+        if(proofLogin()){
+            $users = $this->getSearchResults('users');
+        }
         if(count($users) > 0){
 
             $output .= "<div class=\"listContainer\">";
@@ -157,7 +159,7 @@ class search{
 
 
         $folders = $this->getSearchResults('folders');
-        $icon = 'icon-folder';
+        $icon = 'dark-folder';
         if(count($folders) > 0){
             $output .= "<div class=\"listContainer\">";
             $output .= '<ul class="list resultList">';
@@ -171,7 +173,7 @@ class search{
 
 
         $elements = $this->getSearchResults('elements');
-        $icon = 'icon-archive';
+        $icon = 'dark-archive';
         if(count($elements) > 0){
             $output .= "<div class=\"listContainer\">";
             $output .= '<ul class="list resultList">';
@@ -187,7 +189,7 @@ class search{
 
 
         $files = $this->getSearchResults('files');
-        $icon = 'icon-file';
+        $icon = 'dark-file';
         if(count($files) > 0){
             $output .= "<div class=\"listContainer\">";
             $output .= '<ul class="list resultList">';
@@ -201,7 +203,7 @@ class search{
         }
 
         $groups = $this->getSearchResults('groups');
-        $icon = 'icon-group';
+        $icon = 'dark-group';
         if(count($groups) > 0){
             $output .= "<div class=\"listContainer\">";
             $output .= '<ul class="list resultList">';
@@ -214,7 +216,7 @@ class search{
         }
 
             $wikis = $this->getSearchResults('wiki');
-            $icon = 'icon-play';
+            $icon = 'dark-wikipedia';
             if(count($wikis) > 0){
                 $output .= "<div class=\"listContainer\">";
                 $output .= '<ul class="list resultList">';
@@ -229,7 +231,7 @@ class search{
 
 
         $youtubes = $this->getSearchResults('youtube');
-        $youtube_icon = 'youtube';
+        $icon = 'dark-youtube';
         if(count($youtubes) > 0){
             $output .= "<div class=\"listContainer\">";
             $output .= '<ul class="list resultList">';
@@ -249,6 +251,7 @@ class search{
             $output .= '</div>';
         }
 
+        $icon = 'dark-spotify';
         $spotifies = $this->getSearchResults('spotifies');
         if(count($spotifies) > 0){
             $output .= "<div class=\"listContainer\">";

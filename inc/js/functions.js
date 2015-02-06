@@ -862,6 +862,14 @@ var modal =  new function() {
 			    };
 			};
        
+function logout(){
+    gui.alert('Goodbye :)', '');
+    api.query('api/user/logout/index.php', {},function(data){
+         
+        window.location.href=window.location.href;
+    });
+}
+       
 function universeTime(timestamp){
     var time = Math.floor(Date.now() / 1000);
     

@@ -321,36 +321,6 @@ else if($_GET['action'] == "requestGroup"){
 		 $group = save($_GET['group']);
          mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`, `validated`) VALUES ('".$group."', 'user', '".getUser()."', '$time', '".getUser()."', '0');");
      }
-else if($_GET['action'] == "joinGroup"){
-     	
-		
-		$group = save($_GET['group']);
-                $groupsClass = new groups();
-		$groupData = $groupsClass->getGroupData($group);
-		if($groupData["public"] == "1"){
-			//if group is public add group attachment
-         	$time = time();
-         	mysql_query("INSERT INTO `groupAttachments` (`group`, `item`, `itemId`, `timestamp`, `author`, `validated`) VALUES ('".$group."', 'user', '".getUser()."', '$time', '".getUser()."', '1');");
-     		$publicScript = "parent.$('#profileWrap.group_".$group." #joinButton .btn').hide();";
-		}else{
-			
-			//update entry which has been added in request group
-         	mysql_query("UPDATE groupAttachments SET validated='1' WHERE id='".$_GET['id']."'");
-		}
-         jsAlert("Joined :)"); 
-         ?>
-                <script>
-                parent.$('#favTab_Group').load('doit.php?action=showUserGroups');
-                parent.parent.updateDashbox('group');
-                <?=$publicScript;?>
-                </script>
-         <?
-     }
-else if($_GET['action'] == "declineGroup"){
-         
-         mysql_query("DELETE FROM groupAttachments WHERE id='".$_GET['id']."'");
-         jsAlert("Declined..");
-     }
 else if($_GET['action'] == "loadPersonalFileFrame"){
     
          //is used to load filelists into the reader home view
@@ -389,142 +359,7 @@ else if($_GET['action'] == "loadPersonalFileFrame"){
 else if($_GET['action'] == "loadMiniBrowser"){
                 $fileSystem = new fileSystem();
 		$fileSystem->showMiniFileBrowser("".$_GET['folder']."", "".$_GET['element']."", "".$_GET['level']."", false, $_GET['select']);
-     	
-     }
-else if($_GET['action'] == "addElement"){
-         
-         if(proofLogin()){
-            $classDb = new db();
-            $selectdata = $classDb->select('folders', array('id', $_GET['folder']));
-            if($_POST['submit']) {
-    
-                 
-    
-                    //set privacy
-                    $customShow = $_POST['privacyCustomSee'];
-                    $customEdit = $_POST['privacyCustomEdit'];
-                    
-                    $privacy = exploitPrivacy("".$_POST['privacyPublic']."", "".$_POST['privacyHidden']."", $customEdit, $customShow);
-                    $user = $_SESSION['userid'];
-
-                $elementClass = new element();
-                //add feed
-                $elementId = $elementClass->create($_POST['folder'], $_POST['elementName'], $_POST['type'], $_POST['creator'], $privacy);
-                $feed = "has created an element";
-
-                $feedClass = new feed();
-                $feedClass->create(getUser(), $feed, "", "showThumb", $privacy, "element", $elementId);
-
-                if($_POST['type'] == "image"){
-                    $dbClass = new db();
-                    $fileFolderData = $dbclass->select('folders', array('id', $_POST['folder']));
-                    //here could be a fail but Its workin right o0
-                    $folderpath = $folderData['path'];
-                    mkdir("./upload$folderpath/thumbs");
-                }
-                ?>
-                <script>
-
-                            parent.filesystem.tabs.updateTabContent(1 ,parent.gui.loadPage('modules/filesystem/fileBrowser.php?folder=<?=$_POST['folder'];?>&reload=1'));
-
-                </script>
-                <?
-                echo jsAlert("you just added an element :)");
-        } else {
-        ?>
-       <form action="./doit.php?action=addElement" method="post" target="submitter">  
-        <div class="jqPopUp border-radius transparency" id="addElement" style="">
-            <a class="jqClose" id="closeElement">X</a>
-            <header>
-                Add an Element
-            </header>
-            <div class="jqContent">
-            <table>
-                <tr>
-                    <td align="right">Name:&nbsp;</td>
-                    <td><input type="text" name="elementName" style="width:300px;"><input type="hidden" name="folder" value="<?=$_GET['folder'];?>"></td>
-                </tr>
-                <tr>
-                    <td align="right">Type:&nbsp;</td>
-                    <td>
-                        <select name="type">
-                            <option value="document">document</option>
-                            <option value="link">link</option>
-                            <option value="audio">audio</option>
-                            <option value="video">video</option>
-                            <option value="image">image</option>
-                            <option value="app">execute</option>
-                            <option value="other">other<option>
-                        </select>
-                    </td>
-                </tr>
-                
-                <tr>
-                    <td align="right">Author:&nbsp;</td>
-                    <td><input type="text" name="creator"></td>
-                </tr>
-                
-                <tr>
-                    <td align="right">Title:&nbsp;</td>
-                    <td><input type="text" name="name"></td>
-                </tr>
-                <tr>
-                    <td align="right">Year:&nbsp;</td>
-                    <td><input type="text" name="year"></td>
-                </tr>
-                <tr>
-                    <td align="right">Original Title:&nbsp;</td>
-                    <td><input type="text" name="originalTitle"></td>
-                </tr>
-                <tr>
-                    <td align="right">Language:&nbsp;</td>
-                    <td>
-                    	<?php
-                        $guiClass = new gui();
-                    	echo $guiClass->showLanguageDropdown();
-						?>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right">Folder:&nbsp;</td>
-                    <td><?=$selectdata['name'];?></td>
-                </tr>
-                    <tr>
-                        <td colspan="2">
-                            <?php
-                                $privacyClass = new privacy($selectdata['privacy']);
-                                                if($privacyClass->isProtected()){
-                                                	if(hasRight("protectFileSystemItems")){
-                                                		
-														$selectdata['privacy'] = str_replace(";PROTECTED", "", $selectdata['privacy']);
-                                                	}
-                                                }
-                                $privacyClass->showPrivacySettings();
-                            ?>
-                            
-                        </td>
-                    </tr>
-            </table>
-            </div>
-	        <footer>
-	        	<span class="pull-left"><a class="btn" onclick="$('.jqPopUp').slideUp();">back</a></span>
-	        	<span class="pull-right"><input type="submit" name="submit" value="add" class="btn btn-success" id="elementSubmit"><input type="hidden" name="step1"></span>
-	        </footer>
-        </div>
-        </form>
-        <script>
-            $("#elementSubmit").click(function () {
-            $('#addElement').slideUp();
-            });
-            $("#closeElement").click(function () {
-            $('#addElement').slideUp();
-            });
-        </script>
-
-
-<?
-        }}    
-     }
+}
 else if($_GET['action'] == "addInternLink"){
      	if(proofLogin()){
      		
@@ -2124,29 +1959,6 @@ else if($_GET['action'] == "reportBug"){
                     });
                 </script>
             <?}
-else if($_GET['action'] == "deleteFile"){
-//cann propably be deleted
-                if(proofLogin()){
-                    
-                    $fileId = save($_GET['fileId']);
-                    $fileClass = new file($fileId);
-                    if($fileClass->delete()){
-                        $dbClass = new db();
-                        $fileData = $dbClass->select('files', array('id', $fileId));
-                            $fileElementSql = mysql_query("SELECT id, title FROM elements WHERE id='$fileData[folder]'");
-                            $fileElementData = mysql_fetch_array($fileElementSql);
-                            jsAlert("File has been deleted :( ");
-                                ?>
-                                    <script>
-                                       
-                                       parent.filesystem.tabs.updateTabContent('<?=substr($fileElementData['title'], 0, 10);?>' ,parent.gui.loadPage('modules/filesystem/showElement.php?element=<?=$fileElementData[id];?>&reload=1'));
-                                
-                                    </script>
-                                <?
-                        
-                    }
-                }
-            }
 else if($_GET['action'] == "deleteLink"){
                 
                 $linkId = save($_GET['linkId']);
@@ -2243,114 +2055,6 @@ else if($_GET['action'] == "mousePop"){
                     });
                 </script>
             <?}
-else if($_GET['action'] == "createNewUFF"){
-                
-                $element = save($_GET['element']);
-                if(isset($_POST['submit'])){
-                    $element = save($_POST['element']);
-                    $title = save($_POST['title']);
-                    $filename = save($_POST['filename']);
-                    //set privacy
-                    $customShow = $_POST['privacyCustomSee'];
-                    $customEdit = $_POST['privacyCustomEdit'];
-                    
-                    $privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
-                            $user = getUser();
-
-
-                    //upload file
-                    $elementSQL = mysql_query("SELECT folder, title FROM elements WHERE id='$element'");
-                    $elementData = mysql_fetch_array($elementSQL);
-					
-					    
-            			$title10 = addslashes(substr($elementData['title'], 0, 10));
-                        $folderClass = new folder($elementData['folder']);
-                        $path = universeBasePath.'/'.$folderClass->getPath();
-                        $filename = "$filename.UFF";
-                        $folder = $element;
-                        $timestamp = time();
-                        
-                        
-                        $ourFileName = "$path$filename";
-                        
-                        $ourFileHandle = fopen($ourFileName, 'w') or jsAlert("can\'t open file");
-                        fclose($ourFileHandle);
-                        if(mysql_query("INSERT INTO `files` (`id`, `folder`, `title`, `size`, `timestamp`, `filename`, `language`, `type`, `owner`, `votes`, `score`, `privacy`) VALUES (NULL, '$folder', '$title', '', '$timestamp', '$filename', '', 'UFF', '$user', '0', '0', '$privacy');")){
-                          
-                            //add feed
-                            $fileId = mysql_insert_id();
-                            $feed = "has created a new UFF-file";
-                            
-                            $feedClass = new feed();
-                            $feedClass->create($user, $feed, "", "showThumb", $privacy, "file", $fileId);
-                            
-                           
-                            jsAlert("your file has been created");
-                            ?>
-                            <script>
-			        
-                                       parent.filesystem.tabs.updateTabContent('<?=$title10;?>' ,parent.gui.loadPage('modules/filesystem/showElement.php?element=<?=$element;?>&reload=1'));
-                                
-                            </script>
-			                <?
-                        }
-                }else{
-                $elementData = mysql_fetch_array(mysql_query("SELECT privacy FROM elements WHERE id='$element'"));
-                ?>
-            <div class="jqPopUp border-radius transparency" id="newUFF" style="width: 600px; height: 400px;">
-                <a href="#" class="jqClose" id="closeNewUff">X</a>
-                <header>
-                    Add UFF File
-                </header>
-                <div class="jqContent">
-                    <form action="doit.php?action=createNewUFF" method="post" target="submitter">
-                        <table>
-                            <tr>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td valign="top" align="right">Title:</td>
-                                <td>&nbsp;</td>
-                                <td><input type="text" name="title" style="width: 300px;"></td>
-                            </tr>
-                            <tr>
-                                <td valign="top" align="right">Filename:</td>
-                                <td></td>
-                                <td><input type="text" name="filename" style="width: 300px;"></td>
-                            </tr>
-                            <tr>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td colspan="3">
-                                    <?
-                                    $privacyClass = new privacy($elementData['privacy']);
-                                    $privacyClass->showPrivacySettings();
-                                    ?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><input type="hidden" name="element" value="<?=$element;?>"></td>
-                                <td></td>
-                                <td>
-                                    <input type="submit" value="add" name="submit" id="submitNewUFF" class="btn btn-success">
-                                </td>
-                            </tr>
-                        </table>
-                    </form>
-                </div>
-            </div>
-            <script>
-                $("#submitNewUFF").click(function () {
-                $('#newUFF').slideUp();
-                });
-                $("#closeNewUff").click(function () {
-                $('#newUFF').slideUp();
-                });
-            </script>
-                
-            <? }}
-
 else if($_GET['action'] == "writeUff"){
     
     error_reporting(E_ALL);
@@ -2367,8 +2071,8 @@ else if($_GET['action'] == "removeUFFcookie"){
 else if($_GET['action'] == "logout"){
             	if(!empty($_SESSION['userid'])){
             		
-            	unset($_SESSION['userid']);
-            	unset($_SESSION['personalFeed']);
+                            unset($_SESSION['userid']);
+                            unset($_SESSION['personalFeed']);
 				session_unset();
     			jsAlert( "good bye");
 				?>

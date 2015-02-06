@@ -43,7 +43,8 @@ if(!$login) {
     echo '</body>';
     echo '</html>';
        
-}else{
+}
+else{
     echo '<script>User.userid = '.getUser().';</script>';
     echo '<div id="alerter" class="container"></div>';
     

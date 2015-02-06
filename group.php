@@ -35,10 +35,10 @@ if (!empty($memberData['itemId'])) {
                         }
                         if(empty($member)){ 
                         if($groupData["public"] == "1"){?>
-                        <a href="doit.php?action=joinGroup&group=<?=$group;?>&val=1" target="submitter" class="btn btn-info" style="margin-top: 10px;">Join</a>
+                        <a href="#" onclick="groups.join('<?=$group;?>');" target="submitter" class="btn btn-info" style="margin-top: 10px;">Join</a>
                         <?
                         }else{?>
-                        <a href="doit.php?action=joinGroup&group=<?=$group;?>&val=1" target="submitter" class="btn btn-info" style="margin-top: 10px;">Send Request</a>
+                        <a href="#" onclick="groups.join('<?=$group;?>');" target="submitter" class="btn btn-info" style="margin-top: 10px;">Send Request</a>
                         <?}
                         }else{
                             if($groupData['membersInvite'] == "1" || $admin == "1"){

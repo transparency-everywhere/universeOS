@@ -68,18 +68,18 @@ var gui = new function(){
                         case'wysiwyg':
                             break;
                         case'checkbox':
-                            mainHTML += '<td>' + fieldData.caption + '</td><td>&nbsp;</td>';
+                            mainHTML += '<td class="caption">' + fieldData.caption + '</td><td>&nbsp;</td>';
                             break;
                         case'dropdown':
                             break;
                         case'password':
-                            mainHTML += '<td>' + fieldData.caption + '</td><td>&nbsp;</td>';
+                            mainHTML += '<td class="caption">' + fieldData.caption + '</td><td>&nbsp;</td>';
                             break;
                         case'button':
-                            mainHTML += '<td>' + fieldData.caption + '</td><td>&nbsp;</td>';
+                            mainHTML += '<td class="caption">' + fieldData.caption + '</td><td>&nbsp;</td>';
                             break;
                         default:
-                            mainHTML += '<td colspan="4">' + fieldData.caption + '</td></tr><tr class='+tr_class+'>';
+                            mainHTML += '<td colspan="4" class="caption">' + fieldData.caption + '</td></tr><tr class='+tr_class+'>';
                             break;
                          
                     }

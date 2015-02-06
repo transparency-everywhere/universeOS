@@ -1,28 +1,17 @@
     <!--login menu-->
-    <div class="box-shadow border-top-right-radius" id="startbox" style="display: none;">
-        <div id="startMainWindow">
-            <div id="startMainHeader" class="border-top-right-radius">
-                <span style="font-size:19pt;font-weight: 1; font-weight: 100; margin-left:5px;">Please Log In</span>
-            </div>
-            <hgroup>
+    <div class="box-shadow" id="startbox" style="display: none;">
                 <form method="post" target="submitter" id="loginForm" onsubmit="login(); return false;">
-                <table width="100%" valign="center">
-                    <tr height="10">
-                        <td></td>
-                    </tr>
-                    <tr valign="top">
-                        <td><input type="text" placeholder="username" id="loginUsername" class="margin bigInput" style="width: 170px;"></td>
-                        <td><input type="password" placeholder="password" id="loginPassword" class="margin bigInput" style="width: 170px;"></td>
-                    </tr>
-                    <tr>
-                        <td style="color: #FFFFFF" align="center"></td>
-                    </tr>
-                    <tr>
-                        <td><input type="submit" value="Log In" name="submit" class="btn btn-primary margin"></td>
-                    </tr>
-                </table>
+                    <table width="100%" valign="center">
+                        <tr valign="top">
+                            <td><input type="text" placeholder="username" id="loginUsername"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="password" placeholder="password" id="loginPassword"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="submit" value="Log In" name="submit" class="button pull-right"></td>
+                        </tr>
+                    </table>
                 </form>
-            </hgroup>
-        </div>
     </div>
     <!--/login menu-->
