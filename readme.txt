@@ -1,25 +1,22 @@
 Update
     Delete Users where cypher is md5 or sha512
 
+    Delete Table 'playlist'
+
     check if our server serves svg files as image/svg, not as text/plain (regbox - loading bubbles)
 
 
-Recent:
+Recent:                                                         Release Message
+
+        Files
+            encrypt files                                           x
+        
+        Security
+            3rd Party Applications like Youtube                     x                
+        
         Playlists
             createFile
             createPlaylist
-            
-    
-        Open Designtaks:
-            Guestpage
-                Login & Start
-
-        reload
-            Ignore notifications
-                notifications.ignore in notifications.js
-
-        update all icons
-
         
 
         update Font to ubuntu
@@ -54,7 +51,34 @@ Recent:
 		youtube titles
 		youTubeIdToTitle()
 		getUserFavs
+
+
+
+JS nice to have
+    Scrollbars
+
+    Projects
+        foldable
+
+    Responsive
+        Apps - hexaflip
+        http://oxism.com/hexaflip/
+
+    Elements and Folders display #hashtag
+        https://github.com/robbz/twitterwalljs
+
 		
+Components
+
+    GUI
+        Draggable Applications
+        Dock
+        Dashboard
+
+    Filesystem
+        Open Files and Links
+            
+        
 		
 Files and the use of them
 

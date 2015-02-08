@@ -2314,7 +2314,111 @@ del.bar{
 
 /* profile*/
 /* profile*/
-/* profile*/
+
+
+.profile{
+    
+}
+
+.profile header{
+    height: 140px;
+}
+
+.profile header .userPicture{
+    border-radius: 0!important;
+    width:140px!important;
+    height:140px!important;
+    
+}
+
+.profile header .main{
+    padding: 20px;
+    padding-left: 160px;
+}
+
+.profile header .main span{
+    display:block;
+}
+
+.profile header .main .place{
+    margin-top:15px;
+}
+
+.profile header .main .userName{
+    font-size:24px;
+}
+
+.profileNavLeft{
+    width: 140px!important;
+    background-color:  #37474f;
+    margin: 0;
+    position:absolute;
+    top:140px;
+}
+
+.profileMain{
+    left: 140px;
+    right: 0;
+}
+
+.profileNavLeft li{
+    color: #FFF;
+    padding-left: 5px;
+    padding-right: 5px;
+    height: 40px;
+    line-height: 40px;
+    cursor: pointer;
+}
+.profileNavLeft li .icon{
+    width: 21px;
+    height: 21px;
+    margin-right: 5px;
+    margin-bottom: -6px;
+}
+
+.profileNavLeft li.openChat{
+    background-color:  #607d8b;
+    background-color: #607d8b;
+    height: auto;
+    display: block;
+    padding-top: 15px;
+    text-align: center;
+}
+
+.profileNavLeft li.openChat img{
+    width: 80px;
+    height: 74px;
+    display: block;
+    margin-left:30px;
+}
+
+.profileNavLeft, .profileMain{
+    position:absolute;
+}
+
+.profileMainNav{
+    border-bottom: 1px solid #dcdcdc;
+    height: 40px;
+}
+
+.profileMainNav li{
+   float: left;
+    background-color: #eceff1;
+    width: 22%;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 10px;
+    margin-right:1px;
+    cursor:pointer;
+}
+
+.profileMainNav li.active{
+    color: #FFF;
+    background-color:  #00bcd4;
+}
+
+
+/* profile old*/
 
 
 

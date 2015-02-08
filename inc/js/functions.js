@@ -599,6 +599,55 @@ var User = new function(){
             return output;
         
     };
+    this.showProfile = function(user_id){
+        
+        var output   = '<div class="profile">';
+                output += '<header>';
+                    output += User.showPicture(user_id);
+                        output += '<div class="main">';
+                            output += '<span class="userName">';
+                                output += useridToUsername(user_id);
+                            output += '</span>';
+                            output += '<span class="realName">Nic Zemke';
+                                //output += useridToUsername(user_id);
+                            output += '</span>';
+                            output += '<span class="place">From Hamburg';
+                                //output += useridToUsername(user_id);
+                            output += '</span>';
+                        output += '</div>';
+
+                output  += '</header>';
+                output  += '<div class="">';
+                    output += '<ul class="profileNavLeft">';
+                        output += '<li><i class="icon icon-heart"></i>Favorites</li>';
+                        output += '<li><i class="icon icon-heart"></i>Files</li>';
+                        output += '<li><i class="icon icon-heart"></i>Playlists</li>';
+                        output += '<li class="openChat"><img src="gfx/chat_icon.svg"/>Open Chat</li>';
+                    output += '</ul>';
+                    output += '<div class="profileMain">';
+                        output += '<ul class="profileMainNav">';
+                            output += '<li class="active">Activity</li>';
+                            output += '<li data-type="friends">Friends</li>';
+                            output += '<li data-type="info">Info</li>';
+                            output += '<li data-type="groups">Groups</li>';
+                        output += '</ul>';
+                        output += '<div class="content">';
+                        output += '</div>';
+                    output += '</div>';
+                output  += '</div>';
+            output  += '</div>';
+        
+        reader.tabs.addTab('Profle', 'html', output);
+        
+        $('.profileMainNav li').click(function(){
+            var type = $(this).attr('data-type');
+            alert(type);
+            
+            $(this).next('');
+        });
+        
+        
+    };
 };
           
 var privacy = new function(){
@@ -1775,9 +1824,7 @@ function deleteFromPersonals(id){
               }
           
 function showProfile(userId){
-    var username = useridToUsername(userId);
-    reader.tabs.addTab(username, '',gui.loadPage("./profile.php?user=" + userId));
-    reader.applicationVar.show();
+    User.showProfile(userId);
     return false;
 };
 
