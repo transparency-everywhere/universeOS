@@ -137,50 +137,52 @@ var filesystem =  new function() {
             }
 
             var itemsInFolder = folders.getItems(folder);
-            $.each(itemsInFolder,function(key, value){
-                //generate row with folders and elements
-                if(value['type'] === "folder"){
-                    var name = value['data']['name'];
-                    //special folder handlers
-                    if(folder === "3"){
-                        name = groups.getTitle(value['data']['name']) + '\'s Groupfiles'; // value['data']['name']) because groupid = foldername
-                    }
-                    html += '                <tr oncontextmenu="showMenu(\'folder' + value['data']['id'] + '\'); return false;" height="30" class="greyHover">';
-                    html += '                <td width="30">';
-                    if(rightClick){
-                        html += ''; //hier muss die rightClick function noch eingebunden werden!!
-                    }
-                    html += '                    &nbsp;' + filesystem.generateIcon('folder') + '</td>';
-                    html += '                    <td><a href="#" onclick="openFolder(\'' + value['data']['id'] + '\'); return false;">' + name + '</a></td>';
-                    html += '                    <td width="80px">';
-                    html += item.showScoreButton('folder', value['data']['id']);
-                    html += '                    </td>';
-                    html += '                    <td width="30px">';
-                    if(rightClick){
-                        html += item.showItemSettings('folder', value['data']['id']);
-                    }
-                    html += '                    </td>';
-                    html += '                </tr>';
+            if(itemsInFolder !== null){
+                $.each(itemsInFolder,function(key, value){
+                    //generate row with folders and elements
+                    if(value['type'] === "folder"){
+                        var name = value['data']['name'];
+                        //special folder handlers
+                        if(folder === "3"){
+                            name = groups.getTitle(value['data']['name']) + '\'s Groupfiles'; // value['data']['name']) because groupid = foldername
+                        }
+                        html += '                <tr oncontextmenu="showMenu(\'folder' + value['data']['id'] + '\'); return false;" height="30" class="greyHover">';
+                        html += '                <td width="30">';
+                        if(rightClick){
+                            html += ''; //hier muss die rightClick function noch eingebunden werden!!
+                        }
+                        html += '                    &nbsp;' + filesystem.generateIcon('folder') + '</td>';
+                        html += '                    <td><a href="#" onclick="openFolder(\'' + value['data']['id'] + '\'); return false;">' + name + '</a></td>';
+                        html += '                    <td width="80px">';
+                        html += item.showScoreButton('folder', value['data']['id']);
+                        html += '                    </td>';
+                        html += '                    <td width="30px">';
+                        if(rightClick){
+                            html += item.showItemSettings('folder', value['data']['id']);
+                        }
+                        html += '                    </td>';
+                        html += '                </tr>';
 
-                };
-                
-                if(value['type'] === "element"){
-                    var title = value['data']['title'];
-                    html += "                        <tr oncontextmenu=\"showMenu('element" + value['data']['id'] + "'); return false;\" height=\"30\">";
-                    html += "                           <td width=\"30\">&nbsp;" + filesystem.generateIcon('element') + "</td>";
-                    html += "                           <td><a href=\"#\" onclick=\"elements.open('" + value['data']['id'] + "'); return false;\">" + title + "</a></td>"; //openElement wird zu elements.open
-                    html += "                           <td width=\"80px\">" + item.showScoreButton('folder', value['data']['id']) + "</td>";
-                    html += "                           <td width=\"30px\">";
-                    if(rightClick){
-                        html += item.showItemSettings('element', value['data']['id']);
+                    };
+
+                    if(value['type'] === "element"){
+                        var title = value['data']['title'];
+                        html += "                        <tr oncontextmenu=\"showMenu('element" + value['data']['id'] + "'); return false;\" height=\"30\">";
+                        html += "                           <td width=\"30\">&nbsp;" + filesystem.generateIcon('element') + "</td>";
+                        html += "                           <td><a href=\"#\" onclick=\"elements.open('" + value['data']['id'] + "'); return false;\">" + title + "</a></td>"; //openElement wird zu elements.open
+                        html += "                           <td width=\"80px\">" + item.showScoreButton('folder', value['data']['id']) + "</td>";
+                        html += "                           <td width=\"30px\">";
+                        if(rightClick){
+                            html += item.showItemSettings('element', value['data']['id']);
+                        }
+                        html += "                           </td>";
+                        html += "                        </tr>";
+                        if(rightClick){
+                            html += ''; //hier muss die rightClick function noch eingebunden werden!!
+                        }
                     }
-                    html += "                           </td>";
-                    html += "                        </tr>";
-                    if(rightClick){
-                        html += ''; //hier muss die rightClick function noch eingebunden werden!!
-                    }
-                }
-            });
+                });
+            }
             html += '</table>';
             return html;
     };

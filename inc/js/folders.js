@@ -88,9 +88,8 @@ var folders = new function(){
             var callback = function(){
                 jsAlert('', 'The folder has been updated');
                 $('.blueModal').remove();
-                filesystem.tabs.updateTabContent(1 , gui.loadPage('modules/filesystem/fileBrowser.php?folder='+folderData['folder']));
+                filesystem.tabs.updateTabContent(1 , filesystem.generateFullFileBrowser(folderData['folder']));
             };
-            console.log($('#createElementFormContainer #privacyField :input').serialize());
             folders.update(folder, folderData['folder'], $('#createElementFormContainer #title').val(), $('#createElementFormContainer #privacyField :input').serialize(),callback);
         };
         privacy.load('#privacyField', folderData['privacy'], true);
@@ -99,7 +98,7 @@ var folders = new function(){
     };
     
     this.folderIdToFolderTitle = function(folderId){
-				   return folders.getData(folderId)['name'];
+        return folders.getData(folderId)['name'];
     };
     this.createFolder = function(parent_folder, name, privacy, callback){
         var result="";
@@ -147,7 +146,7 @@ var folders = new function(){
             var callback = function(){
                 jsAlert('', 'The folder has been added');
                 $('.blueModal').remove();
-                filesystem.tabs.updateTabContent(1 , gui.loadPage('modules/filesystem/fileBrowser.php?folder='+parent_folder));
+                filesystem.tabs.updateTabContent(1 , filesystem.generateFullFileBrowser(parent_folder));
             };
             folders.createFolder(parent_folder, $('#createElementFormContainer #title').val(), $('#createElementFormContainer #privacyField :input').serialize(),callback);
         };
@@ -169,7 +168,7 @@ var folders = new function(){
         confirmParameters['submitButtonTitle'] = 'Delete';
         confirmParameters['submitFunction'] = function(){
             folders.delete(folderId);
-            filesystem.tabs.updateTabContent(1 , gui.loadPage('modules/filesystem/fileBrowser.php?folder='+folderData['folder']));
+            filesystem.tabs.updateTabContent(1 , filesystem.generateFullFileBrowser(folderData['folder']));
            
             gui.alert('The folder has been deleted');
         };
