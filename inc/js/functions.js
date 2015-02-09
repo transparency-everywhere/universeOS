@@ -619,19 +619,43 @@ var User = new function(){
                 output  += '</header>';
                 output  += '<div class="">';
                     output += '<ul class="profileNavLeft">';
-                        output += '<li><i class="icon icon-heart"></i>Favorites</li>';
-                        output += '<li><i class="icon icon-heart"></i>Files</li>';
-                        output += '<li><i class="icon icon-heart"></i>Playlists</li>';
+                        output += '<li data-type="favorites"><i class="icon icon-heart"></i>Favorites</li>';
+                        output += '<li data-type="files"><i class="icon icon-heart"></i>Files</li>';
+                        output += '<li data-type="playlists"><i class="icon icon-heart"></i>Playlists</li>';
                         output += '<li class="openChat"><img src="gfx/chat_icon.svg"/>Open Chat</li>';
                     output += '</ul>';
                     output += '<div class="profileMain">';
                         output += '<ul class="profileMainNav">';
-                            output += '<li class="active">Activity</li>';
+                            output += '<li class="active" data-type="activity">Activity</li>';
                             output += '<li data-type="friends">Friends</li>';
                             output += '<li data-type="info">Info</li>';
                             output += '<li data-type="groups">Groups</li>';
                         output += '</ul>';
                         output += '<div class="content">';
+                        
+                            output += '<div class="profile_tab favorites_tab" style="display:block">Favorites</div>';
+                            output += '<div class="profile_tab files_tab">Files</div>';
+                            output += '<div class="profile_tab playlists_tab">Playlists</div>';
+                            output += '<div class="profile_tab activity_tab">activity</div>';
+                            
+                            
+                            output += '<div class="profile_tab friends_tab">';
+                                output += '<ul>';
+                                var profile_buddylist = buddylist.getBuddies(user_id);
+                                $.each(profile_buddylist, function(index, value){
+                                    output += '<li><div>'+User.showPicture(value);
+                                    output += '<span class="username">'+useridToUsername(value)+'</span>';
+                                    output += '<span class="realname">'+useridToUsername(value)+'</span>';
+                                    output += item.showItemSettings('user', value);
+                                    output += '</div></li>';
+                                });
+                                output += '</ul>';
+                            output += '</div>';
+                            
+                            
+                            output += '<div class="profile_tab info_tab">info</div>';
+                            output += '<div class="profile_tab groups_tab">groups</div>';
+                        
                         output += '</div>';
                     output += '</div>';
                 output  += '</div>';
@@ -639,11 +663,14 @@ var User = new function(){
         
         reader.tabs.addTab('Profle', 'html', output);
         
-        $('.profileMainNav li').click(function(){
+        //load feed
+        var profileFeed = new Feed('user', '.activity_tab', user_id);
+        
+        $('.profileMainNav li, profileNavLeft').click(function(){
             var type = $(this).attr('data-type');
-            alert(type);
             
-            $(this).next('');
+            $(this).parent().parent().parent().find('.content .profile_tab').hide();
+            $(this).parent().parent().parent().find('.content .'+type+'_tab').show();
         });
         
         

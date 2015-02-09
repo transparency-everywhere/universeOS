@@ -21,6 +21,6 @@ include('../../../inc/functions.php');
 
     	
         $buddyListClass = new buddylist();
-	echo json_encode($buddyListClass->buddyListArray());
+	echo json_encode($buddyListClass->buddyListArray($_POST['user_id']));
 
 ?>

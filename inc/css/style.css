@@ -2359,6 +2359,8 @@ del.bar{
 .profileMain{
     left: 140px;
     right: 0;
+    bottom: 0;
+    top: 140px;
 }
 
 .profileNavLeft li{
@@ -2416,6 +2418,40 @@ del.bar{
     color: #FFF;
     background-color:  #00bcd4;
 }
+
+.profileMain .profile_tab{
+    display:none;
+}
+
+.profileMain .friends_tab li{
+    float: left;
+    width: 50%;
+}
+
+.profileMain .friends_tab li .userPicture{
+    border-radius:0!important;
+    width: 100px!important;
+    height: 100px!important;
+}
+
+.profileMain .friends_tab li>div{
+    background-color: #eceff1;
+    margin:10px;
+    height: 100px;
+}
+
+.profileMain .friends_tab li>div .username{
+    display:block;
+}
+.profileMain .friends_tab li>div .realname{
+    display:block;
+}
+.profileMain .friends_tab li>div .itemSettingsButton{
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+}
+
 
 
 /* profile old*/
