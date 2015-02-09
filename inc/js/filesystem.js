@@ -46,7 +46,7 @@ var filesystem =  new function() {
     };
     this.generateFileBrowser = function(folderId){
         var showFileBrowser = true;
-        var fav = false;
+        var favorite = false;
         if(is_numeric(folderId) || empty(folderId)){
             if(empty(folderId) || folderId === 0){
                 folderId = '1';
@@ -64,7 +64,7 @@ var filesystem =  new function() {
             }
         }else if(folderId === "fav"){
             showFileBrowser = false;
-            fav = true;
+            favorite = true;
         }      
         var html = '<div class="frameRight fileBrowser_' + folderId + '">';		  			
         html += '    <div class="path">';		  			
@@ -92,7 +92,7 @@ var filesystem =  new function() {
         if(showFileBrowser){
             html += this.showFileBrowser(folderId);
         }		  			
-        if(fav){		  			
+        if(favorite){
             html += fav.show(User.userid);
         }		  			
         html += '        </div>';	  			
@@ -414,29 +414,30 @@ var filesystem =  new function() {
     
     this.generateIcon = function(fileType){
     var icons = {};
-    icons['folder'] = 'sc-google-plus';
-    icons['element'] = 'sc-google-plus';
+    icons['folder'] = 'folder';
+    icons['element'] = 'filesystem';
     icons['download'] = 'download';
-    icons['link'] = 'sc-google-plus';
-    icons['audio/mpeg'] = 'sc-google-plus';
-    icons['audio/wav'] = 'sc-google-plus';
-    icons['audio'] = 'sc-google-plus';
-    icons['video/mp4'] = 'sc-google-plus';
-    icons['video'] = 'sc-google-plus';
-    icons['UFF'] = 'sc-google-plus';
-    icons['text/plain'] = 'sc-google-plus';
-    icons['text/x-c++'] = 'sc-google-plus';
-    icons['application/pdf'] = 'sc-google-plus';
-    icons['application/vnd.ms-office'] = 'sc-google-plus';
-    icons['application/zip'] = 'sc-google-plus';
-    icons['image/jpeg'] = 'sc-google-plus';
-    icons['image/png'] = 'sc-google-plus';
-    icons['image/tiff'] = 'sc-google-plus';
-    icons['image/gif'] = 'sc-google-plus';
-    icons['image'] = 'sc-google-plus';
-    icons['youTube'] = 'sc-google-plus';
-    icons['wiki'] = 'sc-google-plus';
-    icons['RSS'] = 'sc-google-plus';
+    icons['link'] = 'external-link';
+    icons['file'] = 'file';
+    icons['audio/mpeg'] = 'file';
+    icons['audio/wav'] = 'file';
+    icons['audio'] = 'file';
+    icons['video/mp4'] = 'file';
+    icons['video'] = 'file';
+    icons['UFF'] = 'file';
+    icons['text/plain'] = 'file';
+    icons['text/x-c++'] = 'file';
+    icons['application/pdf'] = 'file';
+    icons['application/vnd.ms-office'] = 'file';
+    icons['application/zip'] = 'file';
+    icons['image/jpeg'] = 'image';
+    icons['image/png'] = 'image';
+    icons['image/tiff'] = 'image';
+    icons['image/gif'] = 'image';
+    icons['image'] = 'image';
+    icons['youTube'] = 'youtube';
+    icons['wiki'] = 'wikipedia';
+    icons['RSS'] = 'rss';
 
     if(typeof fileType === 'undefined'){
         icons[fileType] = 'archive'; //shall be replaced with unknown file icon
