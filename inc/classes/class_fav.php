@@ -167,7 +167,7 @@ class fav {
 
     function remove($type, $item){
         $db = new db();
-        if($db->delete('table', array('type', $type, '&&', 'item', $item))){
+        if($db->delete('fav', array('type', $type, '&&', 'item', $item))){
             return true;
         }	
     }
