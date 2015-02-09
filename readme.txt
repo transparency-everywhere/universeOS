@@ -3,6 +3,8 @@ Update
 
     Delete Table 'playlist'
 
+    Add Table 'user_privacy_rights' and create entry for each user
+
     check if our server serves svg files as image/svg, not as text/plain (regbox - loading bubbles)
 
 

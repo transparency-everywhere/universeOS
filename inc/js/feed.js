@@ -15,7 +15,7 @@
         
 
 
-var Feed = function(type, $selector){
+var Feed = function(type, $selector, initTypeId){
     this.initType = type;
     this.lastFeedReceived;
     this.frame_id; //generate rand id
@@ -50,7 +50,7 @@ var Feed = function(type, $selector){
     this.loadFeeds = function(type, typeId, limit){
         return api.query('api/feed/load/', { type : type, typeId: typeId, limit:limit});
     };
-    $($selector).html(this.init(type));
+    $($selector).html(this.init(type, initTypeId));
 };
 
 var feed = new function(){

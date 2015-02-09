@@ -16,8 +16,11 @@
 
 var buddylist = new function(){
     this.checksum;
-    this.getBuddies = function(){ 
-	return api.query('api/buddies/get/', {});
+    this.getBuddies = function(user_id){ 
+        if(typeof user_id === 'undefined'){
+            var user_id = '';
+        }
+	return api.query('api/buddies/get/', {user_id:user_id});
     };
     this.addBuddy = function(userid){
         var res;

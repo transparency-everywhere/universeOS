@@ -208,17 +208,16 @@ and (max-width : 320px) {
 .guestBox{
     background-color:  #37474f;
     box-shadow: 1px 3px 8px 0px rgba(0, 0, 0, 0.3);
-    width: 199px;
+    width: 365px;
     height: 270px;
     float:left;
-    margin-left: 10px;
     color:#FFF;
     margin-bottom: 10px;
 }
 
 .guestBox.registerBox{
-    width: 825px;
     background-color:  #607d8b;
+    margin-left: 20px;
 }
 
 .guestBox.registerBox img{
@@ -236,6 +235,11 @@ and (max-width : 320px) {
 .guestBox h2{
     margin-top: 15px;
     margin-left: 20px;
+}
+
+.guestBox a:link, .guestBox a:visited{
+    color: #FFF;
+    text-decoration: underline;
 }
 
 .guestBox input[type=text], .guestBox input[type=password]{
@@ -267,6 +271,29 @@ and (max-width : 320px) {
     margin-top:0;
     margin: 10px;
     font-size:20px;
+}
+
+.guestBox ul{
+    margin: 15px;
+    margin-top: 9px;
+}
+
+.guestBox ul li{
+    clear: left;
+}
+
+.guestBox ul li img{
+    width: 57px;
+    height: 57px;
+    float: left;
+    margin-bottom: 8px;
+    
+}
+.guestBox ul li span{
+    float: left;
+    width: 265px;
+    margin-left: 10px;
+    margin-top: 8px;
 }
 
 #dock #searchField{
@@ -310,12 +337,4 @@ and (max-width : 320px) {
 
 .regError>*{
     color:#FFF!important;
-}
-/* Smartphones (portrait) ----------- */
-@media all and (max-width : 1600px) {
-    /* Styles */
-
-    #clearBox{
-        clear:left;
-    }
 }

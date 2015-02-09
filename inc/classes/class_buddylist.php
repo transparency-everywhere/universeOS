@@ -13,7 +13,7 @@
  */
 class buddylist {
     
-    function addBuddy($buddyid, $user=false){
+        function addBuddy($buddyid, $user=false){
    		if(!$user){
    			$user = getUser();
    		}
@@ -23,7 +23,7 @@ class buddylist {
 		$timestamp = time();
                 
                 
-        $check = mysql_query("SELECT * FROM buddylist WHERE (owner='".$user."' && buddy='$buddy') OR (buddy='".$user."' && owner='$buddy')");
+                $check = mysql_query("SELECT * FROM buddylist WHERE (owner='".$user."' && buddy='$buddy') OR (buddy='".$user."' && owner='$buddy')");
 		$checkData = mysql_fetch_array($check);
 		
         if(!isset($checkData['owner'])){
@@ -129,72 +129,75 @@ class buddylist {
                     return $return; 
         }
 
-   function getChecksum($user=NULL, $request=0){
-       $checksum = '';
-       foreach($this->buddyListArray() AS $data){
-            $checksum .= $data;
-           
-       }
-       return md5($checksum);
-   }
-        
-   function buddyListArray($user=NULL, $request=0){
-   //returns all buddies of $user
-        if(empty($user)){
-            $user= getUser();
-        }
-        $db = new db();
-        $buddyListQuery = $db->shiftResult($db->select('buddylist', array('owner', $user, '&&', 'request', $request)), 'owner');
-        $buddies = array();
-        foreach($buddyListQuery AS $buddylistData) {
-            $buddies[] = $buddylistData['buddy'];
-        }
-        
-        return $buddies;
-       
-   }
-   
-   function friendsYouMayKnow(){
-       //returns an array with people that match the buddylist of >2 friends
-       
-       //load all buddies of user into an array
-       //request is used for sql-injection to also
-       //get buddies who didn't answered the
-       //request
-       $buddies = $this->buddyListArray('', "1' OR request='0");
-       
-	   $notSuggest = $this->getNotSuggestList(); //get array of users that will not be suggested
-       
-       //return every single buddy
-       foreach($buddies AS &$buddy){
-           
-           //get every buddy of this buddy
-           $buddiesOfBuddy = $this->buddyListArray($buddy);
-           
-           
-           //return every single buddy of this buddy
-           foreach($buddiesOfBuddy AS &$buddyOfBuddy){
-               //the most counted userid will be the userid
-               //of the user who send the request so it has
-               //to be removed from the whole array
-               //
-               //all buddies which are allready in the users
-               //buddylist also need to be removed
-               if($buddyOfBuddy != getUser() && !in_array($buddyOfBuddy, $buddies) && $buddyOfBuddy != 0 && !in_array($buddyOfBuddy, $notSuggest)){
-                    $finalArray[] = $buddyOfBuddy;
-               }
-           }
-           
-           
-       }
-       
-       //gives out the value inside the array which occures most
-       $c = array_count_values($finalArray); 
-       $return = array_search(max($c), $c);
+        function getChecksum($user=NULL, $request=0){
+            $checksum = '';
+            foreach($this->buddyListArray() AS $data){
+                 $checksum .= $data;
 
-       return $return;
-       
-   }
+            }
+            return md5($checksum);
+        }
+
+        function buddyListArray($user=NULL, $request=0){
+        //returns all buddies of $user
+             if(empty($user)){
+                 $user= getUser();
+             }else{
+                 //check privacy rights!
+                 
+             }
+             $db = new db();
+             $buddyListQuery = $db->shiftResult($db->select('buddylist', array('owner', $user, '&&', 'request', $request)), 'owner');
+             $buddies = array();
+             foreach($buddyListQuery AS $buddylistData) {
+                 $buddies[] = $buddylistData['buddy'];
+             }
+
+             return $buddies;
+
+        }
+
+        function friendsYouMayKnow(){
+            //returns an array with people that match the buddylist of >2 friends
+
+            //load all buddies of user into an array
+            //request is used for sql-injection to also
+            //get buddies who didn't answered the
+            //request
+            $buddies = $this->buddyListArray('', "1' OR request='0");
+
+                $notSuggest = $this->getNotSuggestList(); //get array of users that will not be suggested
+
+            //return every single buddy
+            foreach($buddies AS &$buddy){
+
+                //get every buddy of this buddy
+                $buddiesOfBuddy = $this->buddyListArray($buddy);
+
+
+                //return every single buddy of this buddy
+                foreach($buddiesOfBuddy AS &$buddyOfBuddy){
+                    //the most counted userid will be the userid
+                    //of the user who send the request so it has
+                    //to be removed from the whole array
+                    //
+                    //all buddies which are allready in the users
+                    //buddylist also need to be removed
+                    if($buddyOfBuddy != getUser() && !in_array($buddyOfBuddy, $buddies) && $buddyOfBuddy != 0 && !in_array($buddyOfBuddy, $notSuggest)){
+                         $finalArray[] = $buddyOfBuddy;
+                    }
+                }
+
+
+            }
+
+            //gives out the value inside the array which occures most
+            $c = array_count_values($finalArray); 
+            $return = array_search(max($c), $c);
+
+            return $return;
+
+        }
 
 	function getNotSuggestList(){
             $db = new db();
