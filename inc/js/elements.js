@@ -103,32 +103,10 @@ var elements = new function(){
             var data = value['data'];
             if(value['type'] === 'file'){
                 i++;
-                if(data['type'] === "audio/mpeg"){
-                    link = "openFile('" + data['type'] + "', '" + data['id'] + "', '" + data['title'] + "')";
-                    rightLink = "startPlayer('file', '" + data['id'] + "')";
-                }
-                else if(data['type'] === "video/mp4"){
-                    link = "openFile('video', '" + data['id'] + "', '" + data['title'] + "');";
-                    rightLink = "reader.tabs.addTab('See " + data['title'] + "', '',gui.loadPage('./modules/reader/player.php?id='" + data['id'] + "')); return false";
-                }
-                else if(data['type'] === "UFF"){
-                    link = "openFile('" + data['type'] + "', '" + data['id'] + "', '" + data['title'] + "')";
-                }
-                else if(data['type'] === "text/plain" || data['type'] === "application/pdf" || data['type'] === "text/x-c++"){
-                    link = "openFile('document', '" + data['id'] + "', '" + data['title'] + "');";
-                }
-                else if(data['type'] === "image/jpeg" || data['type'] === "image/png" || data['type'] === "image/gif"){
-                    //if a image is opened the tab is not named like the file
-                    //it is named like the parent element, because images are
-                    //shown in a gallery with all the images listed in the parent
-                    //element
-                    var elementData = this.getData(data['folder']);
-                    link = "openFile('image', '" + data['id'] + "', '" + elementData['title'] + "');";
-                }
                 image = filesystem.generateIcon(data['type']);
                 html += '<tr class="strippedRow file_' + data['id'] + '" oncontextmenu="showMenu(\'file' + data['id'] + '\'); return false;" height="40px">';
                 html += '<td width="30px">&nbsp;' + image + '</td>';
-                html += '<td><a href="./out/?file=' + data['id'] + '" onclick="' + link + ' return false">' + data['title'] + '</a></td>';
+                html += '<td><a href="./out/?file=' + data['id'] + '" onclick="reader.openFile(\'' + data['id'] + '\'); return false">' + data['title'] + '</a></td>';
                 html += '<td width="80" align="right">';
                 html += item.showScoreButton('file', data['id']);
                 html += '</td>';
@@ -147,19 +125,10 @@ var elements = new function(){
             }
             if(value['type'] === 'link'){
                 i++;
-                if(data['type'] === "youTube"){
-                    link = "openFile('" + data['type'] + "', '" + data['id'] + "', '" + data['title'] + "')";
-                }
-                else if(data['type'] === "audio/mp3"){
-                    rightLink = "startPlayer('file', '" + data['id'] + "')";
-                }
-                else if(data['type'] === "RSS"){
-                    link = "openFile('" + data['type'] + "', '" + data['id'] + "', '" + data['title'] + "')";
-                }
                 image = filesystem.generateIcon(data['type']);
                 html += '<tr class="strippedRow file_' + data['id'] + '" oncontextmenu="showMenu(\'file' + data['id'] + '\'); return false;" height="40px">';
                 html += '<td width="30px">&nbsp;' + image + '</td>';
-                html += '<td><a href="./out/?file=' + data['id'] + '" onclick="' + link + ' return false">' + data['title'] + '</a></td>';
+                html += '<td><a href="./out/?file=' + data['id'] + '" onclick="reader.openFile(\'' + data['id'] + '\'); return false">' + data['title'] + '</a></td>';
                 html += '<td width="80" align="right">';
                 html += item.showScoreButton('link', data['id']);
                 html += '</td>';
