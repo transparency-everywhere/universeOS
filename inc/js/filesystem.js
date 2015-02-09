@@ -31,13 +31,13 @@ var filesystem =  new function() {
     this.generateLeftNav = function(){
         var html = '          <div class="leftNav">';		  			
         html += '              <ul>';		  			
-        html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'pupularity\'));return false"><img src="gfx/icons/filesystem/side_suggestions.png"> Suggestions</a></li>';		  			
-        html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'1\'));return false"><img src="gfx/icons/filesystem/side_allFiles.png"> All Files</a></li>';		  			
-        html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'document\'));return false"><img src="gfx/icons/filesystem/side_documents.png"> Documents</a></li>';		  			
-        html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'audio\'));return false"><img src="gfx/icons/filesystem/side_audio.png"> Audio Files</a></li>';		  			
-        html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'video\'));return false"><img src="gfx/icons/filesystem/side_video.png"> Video Files</a></li>';		  			
+        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'pupularity\'));return false"><a href="#"><img src="gfx/icons/filesystem/side_suggestions.png"> Suggestions</a></li>';		  			
+        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'1\'));return false"><a href="#"><img src="gfx/icons/filesystem/side_allFiles.png"> All Files</a></li>';		  			
+        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'document\'));return false"><a href="#"><img src="gfx/icons/filesystem/side_documents.png"> Documents</a></li>';		  			
+        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'audio\'));return false"><a href="#"><img src="gfx/icons/filesystem/side_audio.png"> Audio Files</a></li>';		  			
+        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'video\'));return false"><a href="#"><img src="gfx/icons/filesystem/side_video.png"> Video Files</a></li>';		  			
         if(proofLogin()){
-            html += '                  <li><a href="#" onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'fav\'));return false"><img src="gfx/icons/filesystem/side_fav.png"> Fav</a></li>';		  			
+            html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'fav\'));return false"><a href="#"><img src="gfx/icons/filesystem/side_fav.png"> Fav</a></li>';		  			
         }
         html += '                  <!-- <li><i class="icon-warning-sign"></i> deleted</li> -->';		  			
         html += '              </ul>';		  			
