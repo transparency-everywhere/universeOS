@@ -194,6 +194,9 @@ class element {
                     }
                 }
             }
+            if(empty($result)){
+                $result = [];
+            }
             return $result;
         }
         

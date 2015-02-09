@@ -11,11 +11,10 @@
 //        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //        See the License for the specific language governing permissions and
 //        limitations under the License.
-//        @author nicZem for Tranpanrency - everywhere.com
+//        @author nicZem for Transparency-everywhere.com
         
 
 var elements = new function(){
-    
     this.open = function(element){
         filesystem.show();
         var elementData = this.getData(element);
@@ -101,80 +100,25 @@ var elements = new function(){
         var image = "";
         $.each(fileList, function(key, value){
             var data = value['data'];
-            if(value['type'] === 'file'){
-                i++;
-                if(data['type'] === "audio/mpeg"){
-                    link = "openFile('" + data['type'] + "', '" + data['id'] + "', '" + data['title'] + "')";
-                    rightLink = "startPlayer('file', '" + data['id'] + "')";
-                }
-                else if(data['type'] === "video/mp4"){
-                    link = "openFile('video', '" + data['id'] + "', '" + data['title'] + "');";
-                    rightLink = "reader.tabs.addTab('See " + data['title'] + "', '',gui.loadPage('./modules/reader/player.php?id='" + data['id'] + "')); return false";
-                }
-                else if(data['type'] === "UFF"){
-                    link = "openFile('" + data['type'] + "', '" + data['id'] + "', '" + data['title'] + "')";
-                }
-                else if(data['type'] === "text/plain" || data['type'] === "application/pdf" || data['type'] === "text/x-c++"){
-                    link = "openFile('document', '" + data['id'] + "', '" + data['title'] + "');";
-                }
-                else if(data['type'] === "image/jpeg" || data['type'] === "image/png" || data['type'] === "image/gif"){
-                    //if a image is opened the tab is not named like the file
-                    //it is named like the parent element, because images are
-                    //shown in a gallery with all the images listed in the parent
-                    //element
-                    var elementData = this.getData(data['folder']);
-                    link = "openFile('image', '" + data['id'] + "', '" + elementData['title'] + "');";
-                }
-                image = filesystem.generateIcon(data['type']);
-                html += '<tr class="strippedRow file_' + data['id'] + '" oncontextmenu="showMenu(\'file' + data['id'] + '\'); return false;" height="40px">';
-                html += '<td width="30px">&nbsp;' + image + '</td>';
-                html += '<td><a href="./out/?file=' + data['id'] + '" onclick="' + link + ' return false">' + data['title'] + '</a></td>';
-                html += '<td width="80" align="right">';
-                html += item.showScoreButton('file', data['id']);
-                html += '</td>';
-                html += '<td width="50">';
-                if(data['download']){
-                    html += '<a href="./out/download/?fileId=' + data['id'] + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download') + '</a>';
-                }
-                if(!grid){
-                    html += item.showItemSettings(data['type'], data['id']);
-                }
-                html += '</td>';
-                html += '</tr>';
-                if(!grid){
-                    html += ''; //hier muss die rightClick function noch eingebunden werden.
-                }
+            i++;
+            image = filesystem.generateIcon(data['type']);
+            html += '<tr class="strippedRow file_' + data['id'] + '" oncontextmenu="showMenu(\'file' + data['id'] + '\'); return false;" height="40px">';
+            html += '<td width="30px">&nbsp;' + image + '</td>';
+            html += '<td><a href="./out/?file=' + data['id'] + '" onclick="reader.openFile(\'' + data['id'] + '\'); return false">' + data['title'] + '</a></td>';
+            html += '<td width="80" align="right">';
+            html += item.showScoreButton(value['type'], data['id']);
+            html += '</td>';
+            html += '<td width="50">';
+            if(data['download']){
+                html += '<a href="./out/download/?fileId=' + data['id'] + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download') + '</a>';
             }
-            if(value['type'] === 'link'){
-                i++;
-                if(data['type'] === "youTube"){
-                    link = "openFile('" + data['type'] + "', '" + data['id'] + "', '" + data['title'] + "')";
-                }
-                else if(data['type'] === "audio/mp3"){
-                    rightLink = "startPlayer('file', '" + data['id'] + "')";
-                }
-                else if(data['type'] === "RSS"){
-                    link = "openFile('" + data['type'] + "', '" + data['id'] + "', '" + data['title'] + "')";
-                }
-                image = filesystem.generateIcon(data['type']);
-                html += '<tr class="strippedRow file_' + data['id'] + '" oncontextmenu="showMenu(\'file' + data['id'] + '\'); return false;" height="40px">';
-                html += '<td width="30px">&nbsp;' + image + '</td>';
-                html += '<td><a href="./out/?file=' + data['id'] + '" onclick="' + link + ' return false">' + data['title'] + '</a></td>';
-                html += '<td width="80" align="right">';
-                html += item.showScoreButton('link', data['id']);
-                html += '</td>';
-                html += '<td width="50">';
-                if(data['download']){
-                    html += '<a href="./out/download/?fileId=' + data['id'] + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download') + '</a>';
-                }
-                if(!grid){
-                    html += item.showItemSettings('link', data['id']);
-                }
-                html += '</td>';
-                html += '</tr>';
-                if(!grid){
-                    html += ''; //hier muss die rightClick function noch eingebunden werden.
-                }
+            if(!grid){
+                html += item.showItemSettings(value['type'], data['id']);
+            }
+            html += '</td>';
+            html += '</tr>';
+            if(!grid){
+                html += ''; //hier muss die rightClick function noch eingebunden werden.
             }
         });
         if(i === 0){
@@ -262,7 +206,7 @@ var elements = new function(){
             var callback = function(){
                 jsAlert('', 'The element has been added');
                 $('.blueModal').remove();
-                filesystem.tabs.updateTabContent(1 , gui.loadPage('modules/filesystem/fileBrowser.php?folder='+parent_folder));
+                filesystem.tabs.updateTabContent(1 , filesystem.generateFullFileBrowser(parent_folder));
             };
             elements.create(parent_folder, $('#createElementFormContainer #title').val(), $('#createElementFormContainer #type').val(),  $('#createElementFormContainer #privacyField :input').serialize(),callback);
         };
@@ -333,7 +277,7 @@ var elements = new function(){
             var callback = function(){
                 jsAlert('', 'The element has been updated');
                 $('.blueModal').remove();
-                filesystem.tabs.updateTabContent(1 , gui.loadPage('modules/filesystem/fileBrowser.php?folder='+elementData.folder));
+                filesystem.tabs.updateTabContent(1 , filesystem.generateFullFileBrowser(elementData.folder));
             };
             elements.update(element, elementData['folder'], $('#createElementFormContainer #title').val(), $('#createElementFormContainer #type').val(),  $('#createElementFormContainer #privacyField :input').serialize(),callback);
         };
@@ -367,7 +311,7 @@ var elements = new function(){
         confirmParameters['submitFunction'] = function(){
             elements.delete(elementId);
             gui.alert('The element has been deleted');
-            filesystem.tabs.updateTabContent(1 , gui.loadPage('modules/filesystem/fileBrowser.php?folder='+elementData.folder));
+            filesystem.tabs.updateTabContent(1 , filesystem.generateFullFileBrowser(elementData.folder));
             
         };
         confirmParameters['cancelButtonTitle'] = 'Cancel';
