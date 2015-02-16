@@ -67,36 +67,36 @@ var filesystem =  new function() {
             favorite = true;
         }      
         var html = '<div class="frameRight fileBrowser_' + folderId + '">';		  			
-        html += '    <div class="path">';		  			
-        if(is_numeric(folderId)){
-            html += '         universe/' + folders.getPath(folderId);
-        }
-        if(proofLogin() && !empty(folderId)){
-            html += '         <a href=\"#\" id=\"settingsButton\" onclick=\"$(\'.fileBrowserSettings' + folderId + '\').slideToggle(\'slow\'); return false\" title=\"more...\" class=\"btn btn-mini\"><i class=\"glyphicon glyphicon-cog\"></i></a>';
-        }		  			
-        html += '    </div>';		  			
-        html += '    <div class="underFrame" style="overflow: none;">';		  			
-        html += '        <div class="fileBrowser">';		  			
-        if(!empty(folderId) && is_numeric(folderId)){
-            html += '        	<ul class="fileBrowserSettings fileBrowserSettings' + folderId + '">';		  			
-            if(proofLogin()){
-                html += '                       <li><a href="#" onclick="fav.add(\'folder\', ' + folderId + ')">Fav</a></li>';
+            html += '    <div class="path">';		  			
+            if(is_numeric(folderId)){
+                html += '         universe/' + folders.getPath(folderId);
+            }
+            if(proofLogin() && !empty(folderId)){
+                html += '         <a href=\"#\" id=\"settingsButton\" onclick=\"$(\'.fileBrowserSettings' + folderId + '\').slideToggle(\'slow\'); return false\" title=\"more...\" class=\"btn btn-mini\"><i class=\"glyphicon glyphicon-cog\"></i></a>';
             }		  			
-            if(privacy.authorize(folderData['privacy'], folderData['creator'])){
-                html += '        		<li><a href="#" onclick="javascript: elements.showCreateElementForm(\'' + folderId + '\');return false">Add Element</a></li>';
-                html += '                       <li><a href="#" onclick="javascript: folders.showCreateFolderForm(' + folderId + ');return false">Add Folder</a></li>';
-                html += '        		<li><a href="#" onclick="javascript: popper(\'doit.php?action=addInternLink&parentFolder=' + folderId + '&reload=1\');return false">Add Shortcut</a></li>';
+            html += '    </div>';		  			
+            html += '    <div class="underFrame" style="overflow: none;">';		  			
+            html += '        <div class="fileBrowser">';		  			
+            if(!empty(folderId) && is_numeric(folderId)){
+                html += '        	<ul class="fileBrowserSettings fileBrowserSettings' + folderId + '">';		  			
+                if(proofLogin()){
+                    html += '                       <li><a href="#" onclick="fav.add(\'folder\', ' + folderId + ')">Fav</a></li>';
+                }		  			
+                if(privacy.authorize(folderData['privacy'], folderData['creator'])){
+                    html += '        		<li><a href="#" onclick="javascript: elements.showCreateElementForm(\'' + folderId + '\');return false">Add Element</a></li>';
+                    html += '                       <li><a href="#" onclick="javascript: folders.showCreateFolderForm(' + folderId + ');return false">Add Folder</a></li>';
+                    html += '        		<li><a href="#" onclick="javascript: popper(\'doit.php?action=addInternLink&parentFolder=' + folderId + '&reload=1\');return false">Add Shortcut</a></li>';
+                }		  			
+                html += '        	</ul>';
+            }
+            if(showFileBrowser){
+                html += this.showFileBrowser(folderId);
             }		  			
-            html += '        	</ul>';
-        }
-        if(showFileBrowser){
-            html += this.showFileBrowser(folderId);
-        }		  			
-        if(favorite){
-            html += fav.show(User.userid);
-        }		  			
-        html += '        </div>';	  			
-        html += '    </div>';		  			
+            if(favorite){
+                html += fav.show(User.userid);
+            }		  			
+            html += '        </div>';	  			
+            html += '    </div>';		  			
         html += '    </div>';
         return html;
     };

@@ -61,7 +61,8 @@ var playlists = new function(){
             
     //returns all playlists which the users has access to
     //@param type - show or edit
-    this.getUserPlaylists = function(type){
+    this.getUserPlaylists = function(type, user_id){
+        if(typeof user_id === 'undefined')
         var user_id = User.userid;
         return api.query('api/playlists/getUserPlaylists/', { type : type, user_id: user_id});
     };
@@ -134,14 +135,14 @@ var playlists = new function(){
         var playlistFileContent = filesystem.readFile(playlistData['file_id']);
         
         var itemList;
-        if(playlistFileContent.items.length === 0){
+        if(typeof playlistFileContent.items === 'undefined' || playlistFileContent.items.length === 0){
             itemList = 'This playlist is empty';
         }else{
             itemList = '<ul class="dynamicList">';
             $.each(playlistFileContent.items, function(key, value){
                 
                 var info = item.getInfo(value.item_type, value.item_id);
-                itemList += '<li class="playlistItem_'+playlist_id+'_'+value.order_id+'">';
+                itemList += '<li class="playlistItem_'+playlist_id+'_'+value.order_id+'" >';
                     itemList += item.generateInfo(info.image, info.title, '<a href="#" onclick="playlists.removeItemFromPlaylist(\''+playlist_id+'\',\''+value.order_id+'\');"><i class="icon white-minus"></i></a>');
                 itemList += '</li>';
             });

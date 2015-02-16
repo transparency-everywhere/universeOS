@@ -60,6 +60,54 @@ class user {
         $userData = $db->select('user', array('username', $username), array('userid', 'username'));
         return $userData['userid'];
     }
+    public function updateProfileInfo($realname, $city, $hometown, $birthdate, $school, $university, $work, $selector=NULL){
+    
+        if($selector == NULL){
+            $userid = $this->userid;
+        }else{
+            if(is_numeric($selector))
+                $userid = $selector;
+            else
+                $userid = $this->usernameToUserid($selector);
+        }
+        
+  	if(empty($userid)){
+  		$userid = getUser();
+  	}
+        $values['realname'] = $realname;
+        $values['place'] = $city;
+        $values['home'] = $hometown;
+        $values['birthdate'] = $birthdate;
+        $values['school1'] = $school;
+        $values['university1'] = $university;
+        $values['employer'] = $work;
+        $db = new db();
+        $db->update('user', $values, array('userid', $userid));
+    }
+    public function getProfileInfo($selector=NULL){
+        if($selector == NULL){
+            $userid = $this->userid;
+        }else{
+            if(is_numeric($selector))
+                $userid = $selector;
+            else
+                $userid = $this->usernameToUserid($selector);
+        }
+        
+        
+  	if(empty($userid)){
+  		$userid = getUser();
+  	}else{
+                 //check privacy rights!
+                 $privacy = new userPrivacy($userid);
+                 if(!$privacy->proofRight('info')){
+                     return array();
+                 }
+        }
+        
+	$db = new db();
+	return $db->select('user', array('userid', $userid), array('realname', 'birthdate', 'school1', 'university1', 'employer', 'place', 'home', 'homefolder'));
+    }
     public function getData($selector=NULL){
         if($selector == NULL){
             $userid = $this->userid;
@@ -131,6 +179,19 @@ class user {
             
             $db = new db();
             $userid = $db->insert('user', $values);
+            
+            
+            //create record in user_privacy_rights  
+            $privacyValues['userid'] = $userid;
+            $privacyValues['profile_realname'] = 'p';
+            $privacyValues['profile_fav'] = 'p';
+            $privacyValues['profile_files'] = 'p';
+            $privacyValues['profile_playlists'] = 'p';
+            $privacyValues['profile_activity'] = 'p';
+            $privacyValues['buddylist'] = 'p';
+            $privacyValues['info'] = 'p';
+            $privacyValues['groups'] = 'p';
+            $db->insert('user_privacy_rights', $privacyValues);
 
                     //store salts
                     $saltClass = new salt();

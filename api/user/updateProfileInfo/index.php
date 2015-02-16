@@ -18,6 +18,6 @@
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
 
+
 $user = new user($_POST['userid']);
-if($_POST['userid'] == getUser())
-echo json_encode($user->getData());
+echo json_encode($user->updateProfileInfo($_POST['realname'], $_POST['city'], $_POST['hometown'], $_POST['birthdate'], $_POST['school'], $_POST['university'], $_POST['work']));

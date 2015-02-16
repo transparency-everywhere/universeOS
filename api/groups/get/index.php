@@ -18,6 +18,5 @@
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
 
-$user = new user($_POST['userid']);
-if($_POST['userid'] == getUser())
-echo json_encode($user->getData());
+$groups = new groups();
+echo json_encode($groups->get($_POST['userid']));
