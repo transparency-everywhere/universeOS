@@ -10,6 +10,7 @@
  * Description of newPHPClass
  *
  * @author niczem
+ * @author transpevstefan
  */
 class fav {
     function select($user){

@@ -319,7 +319,7 @@ var calendar = new function(){
 								day += date+'.'+month;
 								day += '<div class="dropdown">';
 									day += '<a class="dropdown-toggle" data-toggle="dropdown" href="#">';
-										day += '<i class=\"icon icon-gear\"></i>';
+										day += filesystem.generateIcon('settings');
 										day += '<span class="caret"></span>';
 									day += '</a>';
 									day += '<ul class="dropdown-menu">';

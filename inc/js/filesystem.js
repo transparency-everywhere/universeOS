@@ -67,6 +67,7 @@ var filesystem =  new function() {
             favorite = true;
         }      
         var html = '<div class="frameRight fileBrowser_' + folderId + '">';		  			
+<<<<<<< HEAD
             html += '    <div class="path">';		  			
             if(is_numeric(folderId)){
                 html += '         universe/' + folders.getPath(folderId);
@@ -91,6 +92,22 @@ var filesystem =  new function() {
             }
             if(showFileBrowser){
                 html += this.showFileBrowser(folderId);
+=======
+        html += '    <div class="path">';		  			
+        if(is_numeric(folderId)){
+            html += '         universe/' + folders.getPath(folderId);
+        }
+        if(proofLogin() && !empty(folderId)){
+            html += '         <a href=\"#\" id=\"settingsButton\" onclick=\"$(\'.fileBrowserSettings' + folderId + '\').slideToggle(\'slow\'); return false\" title=\"more...\" class=\"btn btn-mini\">' + this.generateIcon('settings') + '</a>';
+        }		  			
+        html += '    </div>';		  			
+        html += '    <div class="underFrame" style="overflow: none;">';		  			
+        html += '        <div class="fileBrowser">';		  			
+        if(!empty(folderId) && is_numeric(folderId)){
+            html += '        	<ul class="fileBrowserSettings fileBrowserSettings' + folderId + '">';		  			
+            if(proofLogin()){
+                html += '                       <li><a href="#" onclick="fav.add(\'folder\', ' + folderId + ')">Fav</a></li>';
+>>>>>>> 0363852dc8217684aa908b3e03817ec767175fb6
             }		  			
             if(favorite){
                 html += fav.show(User.userid);
@@ -157,7 +174,7 @@ var filesystem =  new function() {
                         html += item.showScoreButton('folder', value['data']['id']);
                         html += '                    </td>';
                         html += '                    <td width="30px">';
-                        if(rightClick){
+                        if(proofLogin()){
                             html += item.showItemSettings('folder', value['data']['id']);
                         }
                         html += '                    </td>';
@@ -416,6 +433,7 @@ var filesystem =  new function() {
     
     this.generateIcon = function(fileType){
     var icons = {};
+    icons['settings'] = 'gear';
     icons['folder'] = 'folder';
     icons['element'] = 'filesystem';
     icons['download'] = 'download';

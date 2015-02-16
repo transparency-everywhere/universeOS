@@ -1,90 +1,94 @@
+.filetable tr td:first-of-type .icon{
+    width: 30px;
+    height: 30px;
+}
 
-    #offlineHeader{
-        position: absolute;
-        top: 0px;
-        right: 0px;
-        left: 0px;
-        padding-top:10px;
-        padding-bottom:10px;
-        background: #000000;
-        color: #383D3C;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        padding-left:10px;
-    }
+#offlineHeader{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    padding-top:10px;
+    padding-bottom:10px;
+    background: #000000;
+    color: #383D3C;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left:10px;
+}
 
 /*registration at guest.php*/
-    #registration{
-    	position: absolute;
-    	top: 50px;
-    	right: 50px;
-    	position: absolute;
-		top: 10px;
-		right: 10px;
-		color: #FFFFFF;
-		text-align:right;
-    }
-    
-    #registration span{
-		position: absolute;
-		width: 200px;
-		margin-left: -205px;
-		font-size: 17pt;
-		margin-top: 7px;
-		text-align: right;
-    }
-    
-    #registration a:link{
-    	color: #FFFFFF;
-    }
-    
-    #registration li{
-    	height: 37px;
-		width: 220px;
-    }
-    
-    #registration li span:empty{
-    	display:none;
-    }
-    
-    #registration .captchaContainer{
-    	display:none;
-    }
-    
-    #registration #regUsername{
-    	-webkit-border-bottom-right-radius: 0px;
-		-webkit-border-bottom-left-radius: 0px;
-		-moz-border-radius-bottomright: 0px;
-		-moz-border-radius-bottomleft: 0px;
-		border-bottom-right-radius: 0px;
-		border-bottom-left-radius: 0px;
-    }
-    
-    #registration #password{
-		-webkit-border-radius: 0px;
-		-moz-border-radius: 0px;
-		border-radius: 0px;
-		border-top: 0;
-    }
-    
-    #registration #passwordRepeat{
-    	-webkit-border-top-left-radius: 0px;
-		-webkit-border-top-right-radius: 04px;
-		-moz-border-radius-topleft: 0px;
-		-moz-border-radius-topright: 0px;
-		border-top-left-radius: 0px;
-		border-top-right-radius: 0px;
-		border-top: none;
-		margin-top: -1px;
-    }
-    
-    #regLoad{
-    	display:none;margin-top: 20px;
-		margin-right: 20px;
-		color: #FFFFFF;
-		max-width:150px;
-		text-align:left;
-    }
+#registration{
+    position: absolute;
+    top: 50px;
+    right: 50px;
+    position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #FFFFFF;
+            text-align:right;
+}
+
+#registration span{
+            position: absolute;
+            width: 200px;
+            margin-left: -205px;
+            font-size: 17pt;
+            margin-top: 7px;
+            text-align: right;
+}
+
+#registration a:link{
+    color: #FFFFFF;
+}
+
+#registration li{
+    height: 37px;
+            width: 220px;
+}
+
+#registration li span:empty{
+    display:none;
+}
+
+#registration .captchaContainer{
+    display:none;
+}
+
+#registration #regUsername{
+    -webkit-border-bottom-right-radius: 0px;
+            -webkit-border-bottom-left-radius: 0px;
+            -moz-border-radius-bottomright: 0px;
+            -moz-border-radius-bottomleft: 0px;
+            border-bottom-right-radius: 0px;
+            border-bottom-left-radius: 0px;
+}
+
+#registration #password{
+            -webkit-border-radius: 0px;
+            -moz-border-radius: 0px;
+            border-radius: 0px;
+            border-top: 0;
+}
+
+#registration #passwordRepeat{
+    -webkit-border-top-left-radius: 0px;
+            -webkit-border-top-right-radius: 04px;
+            -moz-border-radius-topleft: 0px;
+            -moz-border-radius-topright: 0px;
+            border-top-left-radius: 0px;
+            border-top-right-radius: 0px;
+            border-top: none;
+            margin-top: -1px;
+}
+
+#regLoad{
+    display:none;margin-top: 20px;
+            margin-right: 20px;
+            color: #FFFFFF;
+            max-width:150px;
+            text-align:left;
+}
 /*registration end*/
     
 #startbox {
@@ -132,46 +136,47 @@
 .margin{
     margin-left: 20px;
 }
-			#topThing #socialBar{
-				margin-left: 5px;
-				margin-right: 5px;
-			}
-		
-			#topThing #socialBar a{
-				height: 22px;
-				width: 22px;
-				padding: 1px;
-			}
-			#topThing #socialBar a:hover{
-				background: #3E3E3E;
-			}
-		
-			#topThing #socialBar img{
-				height: 20px;
-				width: 20px;
-				margin-bottom: -5px;
-			}
+
+#topThing #socialBar{
+        margin-left: 5px;
+        margin-right: 5px;
+}
+
+#topThing #socialBar a{
+        height: 22px;
+        width: 22px;
+        padding: 1px;
+}
+#topThing #socialBar a:hover{
+        background: #3E3E3E;
+}
+
+#topThing #socialBar img{
+        height: 20px;
+        width: 20px;
+        margin-bottom: -5px;
+}
 			
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen 
 and (min-device-width : 320px) 
 and (max-device-width : 480px) {
 /* Styles */
-			#topThing, #guestInfoBox, #betaBox{
-				display:none;
-			}
-			
-			#bodyWrap{
-				top:5px;
-			}
-			
-			#startMainHeader {
-				width: 320px;
-			}
-			
-			#loginForm input[type=text], #loginForm input[type=password]{
-				max-width: 120px;
-			}
+        #topThing, #guestInfoBox, #betaBox{
+                display:none;
+        }
+
+        #bodyWrap{
+                top:5px;
+        }
+
+        #startMainHeader {
+                width: 320px;
+        }
+
+        #loginForm input[type=text], #loginForm input[type=password]{
+                max-width: 120px;
+        }
 }
 
 /* Smartphones (landscape) ----------- */

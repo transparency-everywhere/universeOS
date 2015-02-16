@@ -48,9 +48,9 @@ var fav = new function(){
             if(value['type'] === 'file'){
                 var link = "reader.openFile(" + value['data']['id'] + "); return false;";
             }
-            html += "<tr class=\"strippedRow\" onmouseup=\"showMenu('folder" + value['data']['favId'] + "')\">";
-            html += "<td onmouseup=\"showMenu(" + value['data']['id'] + ")\" width=\"35\">&nbsp;" + filesystem.generateIcon(value['type']) + "</td>";
-            html += "<td onmouseup=\"showMenu(" + value['data']['id'] + ")\"><a href=\"#\" onclick=\"" + link + "\">" + value['data']['title'] + "</a></td>";
+            html += "<tr class=\"strippedRow\">";
+            html += "<td width=\"35\">&nbsp;" + filesystem.generateIcon(value['type']) + "</td>";
+            html += "<td><a href=\"#\" onclick=\"" + link + "\">" + value['data']['title'] + "</a></td>";
             if(user === User.userid){
                 html += "<td align=\"right\"><a class=\"btn btn-mini\" onclick=\"fav.remove('" + value['type'] + "', '" + value['data']['id'] + "')\"><i class=\"icon icon-minus\"></i></a></td>";
             }

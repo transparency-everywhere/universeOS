@@ -956,8 +956,8 @@ border-bottom: 1px solid #292929;
 }
 
 #filesystem .leftNav li img{
-	height: 16px;
-	margin-bottom: -2px;
+	height: 20px;
+	margin-bottom: 5px;
 }
 
 #filesystem .path {
@@ -1006,6 +1006,11 @@ border-bottom: 1px solid #292929;
 .filetable tr td:first-of-type img{
     margin-right: 5px;
     margin-left: 5px;
+}
+
+.filetable tr td:first-of-type .icon{
+    width: 30px;
+    height: 30px;
 }
 
 .autoFlow{
@@ -2084,6 +2089,7 @@ line-height: 14px;
    height: 17px;
    overflow: none;
    font-size: 12px;
+   margin-top: -15px;
    padding-top: 6px;
    padding-right: 3px;
    padding-bottom: 0px;
