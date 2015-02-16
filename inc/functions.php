@@ -76,6 +76,8 @@ include('classes/class_gui.php');
 
 include('classes/class_messages.php');
 
+include('classes/class_userPrivacy.php');
+
    
 //fav
 //fav

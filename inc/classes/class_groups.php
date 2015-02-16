@@ -12,11 +12,19 @@
  * @author niczem
  */
 
+
 class groups{
 	public function get($userid=NULL){
             $groups;
-            if(empty($userid))
+            if(empty($userid)){
                     $userid = getUser();
+            }else{
+                 //check privacy rights!
+                 $privacy = new userPrivacy($userid);
+                 if(!$privacy->proofRight('groups')){
+                     return array();
+                 }
+            }
             $db = new db();
             $userGroups = $db->select('groupAttachments', array('item', 'user', '&&', 'validated','1','&&','itemId',$userid), array('group'));
             foreach($userGroups AS $data){

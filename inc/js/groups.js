@@ -31,13 +31,17 @@ var groups = new function(){
             };
             api.query('api/groups/create/', { title : title, type: type, description: description, invitedUsers: JSON.stringify(invitedUsers) }, callback);
         };
-	this.get = function(){
-			  		
-				    var result = api.query('api.php?action=getGroups', { val : 'val' });
+	this.get = function(userid){
+            if(typeof userid === 'undefined'){
+                var requestData = {}
+            }else{
+                requestData = {userid:userid};
+            }
+				    var result = api.query('api/groups/get/', requestData);
 				    
-				    if(result != null){
-				   		return result;
-				   	}
+            if(result != null){
+		return result;
+            }
 	};
         this.getData = function(groupId){
             

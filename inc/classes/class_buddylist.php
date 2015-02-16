@@ -11,7 +11,8 @@
  *
  * @author niczem
  */
-class buddylist {
+
+class buddylist{
     
         function addBuddy($buddyid, $user=false){
    		if(!$user){
@@ -144,12 +145,15 @@ class buddylist {
                  $user= getUser();
              }else{
                  //check privacy rights!
-                 
+                 $privacy = new userPrivacy($user);
+                 if(!$privacy->proofRight('buddylist')){
+                     return array();
+                 }
              }
              $db = new db();
              $buddyListQuery = $db->shiftResult($db->select('buddylist', array('owner', $user, '&&', 'request', $request)), 'owner');
              $buddies = array();
-             foreach($buddyListQuery AS $buddylistData) {
+             foreach($buddyListQuery AS $buddylistData){
                  $buddies[] = $buddylistData['buddy'];
              }
 

@@ -121,7 +121,7 @@ var registration = new function(){
                                 $checkUsernameStatus.hide();
                             }else{
                                 $checkUsernameStatus.show();
-                                $checkUsernameStatus.html('<a style="color: red">&nbsp;already in use</a><div class="arrow-right"></div>');
+                                $checkUsernameStatus.html('<a style="color: red">&nbsp;this username is already in use</a><div class="arrow-right"></div>');
                             }
                        }, "html");
         }else{
@@ -192,6 +192,7 @@ var registration = new function(){
             });
     };
     this.init = function(){
+        console.log('init reg');
         $(document).ready(function(){
             
             $('#regUsername').on('blur',function(){
@@ -204,9 +205,12 @@ var registration = new function(){
             
             
             $('#registrationForm').submit(function(e){
-               e.preventDefault();
+                e.preventDefault();
+                e.stopImmediatePropagation(); //otherwise form will be submitted twice
                registration.checkReg($('#registrationForm #regUsername').val(), $('#registrationForm #password').val(), $('#registrationForm #passwordRepeat').val());
+               return false;
             });
+            
         });
     };
 }

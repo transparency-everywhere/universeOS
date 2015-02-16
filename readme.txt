@@ -1,7 +1,10 @@
 Update
     Delete Users where cypher is md5 or sha512
 
-    Delete Table 'playlist'
+    user
+        +profile_info
+
+    add table playlists/Delete Table 'playlist'
 
     Add Table 'user_privacy_rights' and create entry for each user
 

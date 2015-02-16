@@ -9,7 +9,7 @@ include("../../inc/classes/class_search.php");
 ?>
 
 <div class="dockSeachResult">
-    <h2>Your results for '<?php htmlentities($_POST['search']);?>'</h2>
+    <h2>Your results for '<?php echo htmlentities($_POST['search']);?>'</h2>
     <?php
     $search = new search($_POST['search']);
     

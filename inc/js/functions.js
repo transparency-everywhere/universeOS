@@ -546,10 +546,12 @@ var User = new function(){
 		            }
         
     };
+    this.getProfileInfo = function(userid){
+        return api.query('api/user/getProfileInfo/', { user_id:userid });
+    }
     this.getAllData = function(userid){
         //data will only be returned if getUser()==userid or userid is on buddylist of getUser()
-        
-            return api.query('api/user/getAllData/', { user_id:userid });
+        return api.query('api/user/getAllData/', { user_id:userid });
     }
     this.showSignature = function(userid, timestamp, reverse){
         
@@ -600,51 +602,83 @@ var User = new function(){
         
     };
     this.showProfile = function(user_id){
+        var profile_userdata = this.getProfileInfo(user_id);
+        var realname = '', city = '', birthdate = '';
+        if(typeof profile_userdata['realname'] !== 'undefined'){
+            realname = '<span class="realName">'+profile_userdata['realname']+'</span>';
+        }
+        if(typeof profile_userdata.home !== 'undefined'){
+            city += '<span class="city">from '+profile_userdata.home+'</span>';
+        }
+        if(typeof profile_userdata.place !== 'undefined'){
+            city += '<span class="home">from '+profile_userdata.home+'</span>';
+        }
         
         var output   = '<div class="profile">';
                 output += '<header>';
                     output += User.showPicture(user_id);
                         output += '<div class="main">';
+                        
                             output += '<span class="userName">';
                                 output += useridToUsername(user_id);
                             output += '</span>';
-                            output += '<span class="realName">Nic Zemke';
-                                //output += useridToUsername(user_id);
+                            output += '<span class="realName">';
+                                output += realname;
                             output += '</span>';
-                            output += '<span class="place">From Hamburg';
-                                //output += useridToUsername(user_id);
+                            output += '<span class="place">';
+                                output += city;
                             output += '</span>';
                         output += '</div>';
 
                 output  += '</header>';
-                output  += '<div class="">';
-                    output += '<ul class="profileNavLeft">';
-                        output += '<li data-type="favorites"><i class="icon icon-heart"></i>Favorites</li>';
-                        output += '<li data-type="files"><i class="icon icon-heart"></i>Files</li>';
-                        output += '<li data-type="playlists"><i class="icon icon-heart"></i>Playlists</li>';
-                        output += '<li class="openChat"><img src="gfx/chat_icon.svg"/>Open Chat</li>';
-                    output += '</ul>';
+                //output  += '<div class="">';
+                    output += '<div class="profileNavLeft">';
+                        output += '<ul>';
+                            output += '<li data-type="favorites"><img src="gfx/profile/sidebar_fav.svg"/>Favorites</li>';
+                            output += '<li data-type="files"><img src="gfx/profile/sidebar_files.svg"/>Files</li>';
+                            output += '<li data-type="playlists"><img src="gfx/profile/sidebar_playlist.svg"/>Playlists</li>';
+                            output += '<li class="openChat"><img src="gfx/chat_icon.svg"/>Open Chat</li>';
+                        output += '</ul>';
+                        output += '</div>';
                     output += '<div class="profileMain">';
                         output += '<ul class="profileMainNav">';
                             output += '<li class="active" data-type="activity">Activity</li>';
                             output += '<li data-type="friends">Friends</li>';
+                            
                             output += '<li data-type="info">Info</li>';
                             output += '<li data-type="groups">Groups</li>';
                         output += '</ul>';
                         output += '<div class="content">';
                         
-                            output += '<div class="profile_tab favorites_tab" style="display:block">Favorites</div>';
-                            output += '<div class="profile_tab files_tab">Files</div>';
-                            output += '<div class="profile_tab playlists_tab">Playlists</div>';
-                            output += '<div class="profile_tab activity_tab">activity</div>';
+                            output += '<div class="profile_tab favorites_tab" style="display:block">';
+                                output += fav.show(1);
+                            output += '</div>';
+                            output += '<div class="profile_tab files_tab">'+filesystem.showFileBrowser(profile_userdata['homefolder'])+'</div>';
+                            output += '<div class="profile_tab playlists_tab">';
+                                
+                                output += '<ul>';
+                                var profile_playlists = playlists.getUserPlaylists('show',user_id);
+                                $.each(profile_playlists['ids'], function(index, value){
+                                    output += '<li onclick="playlists.showInfo(\''+value+'\');"><div><span class="icon icon-group"></span>';
+                                    output += '<span  style="font-size:18px; padding-top: 5px;" onclick="">'+profile_playlists['titles'][index]+'</span>';
+                                    //output += item.showItemSettings('user', value);
+                                    output += '</div></li>';
+                                });
+                                output += '</ul>';
+                            output += '</div>';
                             
                             
+                            output += '<div class="profile_tab activity_tab" style="display:block"></div>';
+                            
+                            
+                            
+                            //buddies
                             output += '<div class="profile_tab friends_tab">';
                                 output += '<ul>';
                                 var profile_buddylist = buddylist.getBuddies(user_id);
                                 $.each(profile_buddylist, function(index, value){
                                     output += '<li><div>'+User.showPicture(value);
-                                    output += '<span class="username">'+useridToUsername(value)+'</span>';
+                                    output += '<span class="username" style="padding-top: 5px; font-size:18px;">'+useridToUsername(value)+'</span>';
                                     output += '<span class="realname">'+useridToUsername(value)+'</span>';
                                     output += item.showItemSettings('user', value);
                                     output += '</div></li>';
@@ -652,12 +686,47 @@ var User = new function(){
                                 output += '</ul>';
                             output += '</div>';
                             
+                            output += '<div class="profile_tab info_tab">';
                             
-                            output += '<div class="profile_tab info_tab">info</div>';
-                            output += '<div class="profile_tab groups_tab">groups</div>';
+                                $.each(profile_userdata, function(key, value){
+                                    switch(key){
+                                        case 'home':
+                                            key = 'from';
+                                            break;
+                                        case 'city':
+                                            key = 'lives in';
+                                            break;
+                                        case 'school1':
+                                            key = 'school';
+                                            break;
+                                        case 'university1':
+                                            key = 'university';
+                                            break;
+                                    }
+                                    if(!is_numeric(key)){
+                                        output += '<span class="'+key+'"><label>'+key+'</label>'+value+'</span>';
+                                    }
+                                });
+                            
+                            output += '</div>';
+                            
+                            
+                            output += '<div class="profile_tab groups_tab">';
+                            
+                                output += '<ul>';
+                                var profile_groups = groups.get(user_id);
+                                if(typeof profile_groups !== 'undefined'){
+                                    $.each(profile_groups, function(index, value){
+                                        output += '<li onclick="groups.show('+value+')"><div><span class="icon icon-group"></span>';
+                                        output += '<span class="username" style="font-size:18px; padding-top: 5px;">'+groups.getTitle(value)+'</span>';
+                                        output += '</div></li>';
+                                    });
+                                }
+                                output += '</ul>';
+                            output += '</div>';
                         
                         output += '</div>';
-                    output += '</div>';
+                    //output += '</div>';
                 output  += '</div>';
             output  += '</div>';
         
@@ -666,9 +735,10 @@ var User = new function(){
         //load feed
         var profileFeed = new Feed('user', '.activity_tab', user_id);
         
-        $('.profileMainNav li, profileNavLeft').click(function(){
+        $('.profileMainNav li, .profileNavLeft li').click(function(){
             var type = $(this).attr('data-type');
-            
+            $(this).parent().find('li').removeClass('active');
+            $(this).addClass('active');
             $(this).parent().parent().parent().find('.content .profile_tab').hide();
             $(this).parent().parent().parent().find('.content .'+type+'_tab').show();
         });
@@ -1885,7 +1955,7 @@ function clock() {
                     var hoursRoundedOne = "" + hours;
                     var hoursRoundedTwo = pad.substring(0, pad.length - hoursRoundedOne.length) + hoursRoundedOne;
 
-                var outStr = dayNames[day]+', '+monthNames[month]+'. '+now.getDate()+'.&nbsp;&nbsp;'+hoursRoundedTwo+':'+minutesRoundedTwo;
+                var outStr = dayNames[day]+', '+monthNames[month]+'. '+now.getDate()+'.<span style="margin-left:8px;">'+hoursRoundedTwo+':'+minutesRoundedTwo+'</span>';
                 $('#clockDiv').html(outStr);
                 setTimeout('clock()',36000);
               }
