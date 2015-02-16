@@ -89,7 +89,7 @@ var buddylist = new function(){
             output += "	                 <td align=\"right\" style=\"padding: 0 10px;\">";
             output += "						    <a href=\"#\" onclick=\"showProfile('"+value+"'); return false\" title=\"open Profile\"><span class=\"icon icon-user\"><\/span><\/a>";
             output += "						    <a href=\"#\" onclick=\"im.openDialogue('"+username+"'); return false\" title=\"write Message\"><span class=\"icon icon-envelope\"><\/span><\/a>";
-            output += "						    <a href=\"#\" onclick=\"im.openDialogue('"+username+"'); return false\" title=\"write Message\"><span class=\"icon icon-gear\"><\/spant><\/a>";
+            output += "						    <a href=\"#\" onclick=\"im.openDialogue('"+username+"'); return false\" title=\"write Message\">" + filesystem.generateIcon('settings') + "<\/a>";
             output += "			<\/td>";
             output += "                <\/tr>";
         });

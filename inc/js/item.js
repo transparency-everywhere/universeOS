@@ -79,9 +79,11 @@ var item = new function(){
         
         
         var output = '<span class="scoreButton '+type+'_'+itemId+'">';
-                output += '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+type+'\', \''+itemId+'\');"><i class="icon icon-dislike"></i></a>';
+                if(proofLogin())
+                    output += '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+type+'\', \''+itemId+'\');"><i class="icon icon-dislike"></i></a>';
                 output += '<a class="btn btn-xs btn-success counter" href="#">'+score+'</a>';
-                output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+type+'\', \''+itemId+'\');"><i class="icon icon-like"></i></a>';
+                if(proofLogin())
+                    output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+type+'\', \''+itemId+'\');"><i class="icon icon-like"></i></a>';
             output += '</span>';
         return output;
     };
@@ -122,7 +124,7 @@ var item = new function(){
 					
 				});
 					
-			        var html = "<a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"btn btn-xs itemSettingsButton\"><i class=\"icon icon-gear\"></i></a>\n\
+			        var html = "<a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"btn btn-xs itemSettingsButton\">" + filesystem.generateIcon('settings') + "</a>\n\
                                         <div class=\"itemSettingsWindow\">\n\
                                             <ul>";
                                     html += list;

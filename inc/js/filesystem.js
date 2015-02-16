@@ -72,7 +72,7 @@ var filesystem =  new function() {
             html += '         universe/' + folders.getPath(folderId);
         }
         if(proofLogin() && !empty(folderId)){
-            html += '         <a href=\"#\" id=\"settingsButton\" onclick=\"$(\'.fileBrowserSettings' + folderId + '\').slideToggle(\'slow\'); return false\" title=\"more...\" class=\"btn btn-mini\"><i class=\"glyphicon glyphicon-cog\"></i></a>';
+            html += '         <a href=\"#\" id=\"settingsButton\" onclick=\"$(\'.fileBrowserSettings' + folderId + '\').slideToggle(\'slow\'); return false\" title=\"more...\" class=\"btn btn-mini\">' + this.generateIcon('settings') + '</a>';
         }		  			
         html += '    </div>';		  			
         html += '    <div class="underFrame" style="overflow: none;">';		  			
@@ -157,7 +157,7 @@ var filesystem =  new function() {
                         html += item.showScoreButton('folder', value['data']['id']);
                         html += '                    </td>';
                         html += '                    <td width="30px">';
-                        if(rightClick){
+                        if(proofLogin()){
                             html += item.showItemSettings('folder', value['data']['id']);
                         }
                         html += '                    </td>';
@@ -416,6 +416,7 @@ var filesystem =  new function() {
     
     this.generateIcon = function(fileType){
     var icons = {};
+    icons['settings'] = 'gear';
     icons['folder'] = 'folder';
     icons['element'] = 'filesystem';
     icons['download'] = 'download';
