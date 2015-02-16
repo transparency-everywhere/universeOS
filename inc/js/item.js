@@ -80,10 +80,10 @@ var item = new function(){
         
         var output = '<span class="scoreButton '+type+'_'+itemId+'">';
                 if(proofLogin())
-                    output += '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+type+'\', \''+itemId+'\');"><i class="icon icon-dislike"></i></a>';
+                    output += '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('dislike') + '</a>';
                 output += '<a class="btn btn-xs btn-success counter" href="#">'+score+'</a>';
                 if(proofLogin())
-                    output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+type+'\', \''+itemId+'\');"><i class="icon icon-like"></i></a>';
+                    output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('like') + '</a>';
             output += '</span>';
         return output;
     };
