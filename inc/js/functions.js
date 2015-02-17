@@ -650,7 +650,7 @@ var User = new function(){
                         output += '</ul>';
                         output += '<div class="content">';
                         
-                            output += '<div class="profile_tab favorites_tab" style="display:block">';
+                            output += '<div class="profile_tab favorites_tab">';
                                 output += fav.show(1);
                             output += '</div>';
                             output += '<div class="profile_tab files_tab">'+filesystem.showFileBrowser(profile_userdata['homefolder'])+'</div>';
@@ -659,7 +659,7 @@ var User = new function(){
                                 output += '<ul>';
                                 var profile_playlists = playlists.getUserPlaylists('show',user_id);
                                 $.each(profile_playlists['ids'], function(index, value){
-                                    output += '<li onclick="playlists.showInfo(\''+value+'\');"><div><span class="icon icon-group"></span>';
+                                    output += '<li onclick="playlists.showInfo(\''+value+'\');"><div><span class="icon icon-playlist"></span>';
                                     output += '<span  style="font-size:18px; padding-top: 5px;" onclick="">'+profile_playlists['titles'][index]+'</span>';
                                     //output += item.showItemSettings('user', value);
                                     output += '</div></li>';
@@ -737,13 +737,25 @@ var User = new function(){
         
         $('.profileMainNav li, .profileNavLeft li').click(function(){
             var type = $(this).attr('data-type');
-            $(this).parent().find('li').removeClass('active');
+            $(this).parent().parent().parent().find('.profileMainNav li').removeClass('active');
             $(this).addClass('active');
             $(this).parent().parent().parent().find('.content .profile_tab').hide();
             $(this).parent().parent().parent().find('.content .'+type+'_tab').show();
         });
         
         
+    };
+    this.logout = function(){
+        gui.alert('Goodbye :)', '');
+        api.query('api/user/logout/index.php', {},function(data){
+             
+            window.location.href=window.location.href;
+        });
+    };
+    this.getRealName = function(userid){
+        var realname = this.getProfileInfo(userid)['realname'];
+        console.log(realname);
+        return realname;
     };
 };
           
@@ -1007,14 +1019,6 @@ var modal =  new function() {
                                 }
 			    };
 			};
-       
-function logout(){
-    gui.alert('Goodbye :)', '');
-    api.query('api/user/logout/index.php', {},function(data){
-         
-        window.location.href=window.location.href;
-    });
-}
        
 function universeTime(timestamp){
     var time = Math.floor(Date.now() / 1000);

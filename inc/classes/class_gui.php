@@ -22,7 +22,7 @@ class gui {
         echo "                <tr>\n";
         echo "                    <td>"
                                         . "<i class=\"icon white-chevron-up\" id=\"toggleDashboardButton\" onclick=\"dashBoard.toggle();\"></i>";
-        echo "                          <a id=\"startButton\" title=\"toggle Dashboard\" href=\"#dashBoard\">"
+        echo "                          <a id=\"startButton\" title=\"toggle Dashboard\" href=\"#\">"
            . "                              <i class=\"icon white-eye\"></i><span class=\"iconAlert\" id=\"appAlerts\"></span>"
                 . "                         <i class=\"icon white-user\"></i><span class=\"iconAlert\" id=\"openFriendRequests\"></span>"
                 . "                         <i class=\"icon white-envelope\"></i><span class=\"iconAlert\" id=\"newMessages\" onclick=\"chat.applicationVar.show(); return false\"></span>"

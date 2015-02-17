@@ -166,8 +166,8 @@ if($_GET['action'] == "add"){
 
                     <div class="leftNav">
                     <ul style="float: left; padding: 10px;">
-                        <li onclick="loader('personalFileFrame','doit.php?action=loadPersonalFileFrame&query=allFiles');"><img src="./gfx/icon7.png" width="16">&nbsp;All Files</li>
-                        <li onclick="loader('personalFileFrame','doit.php?action=loadPersonalFileFrame&query=myFiles');"><img src="./gfx/icons/filesystem/element.png" width="17" style="margin-bottom: -2px;">&nbsp;myFiles</li>
+                        <li onclick="loader('personalFileFrame','doit.php?action=loadPersonalFileFrame&query=allFiles');"><span class="icon icon-file"></span>&nbsp;All Files</li>
+                        <li onclick="loader('personalFileFrame','doit.php?action=loadPersonalFileFrame&query=myFiles');"><span class="icon icon-filesystem"></span>&nbsp;myFiles</li>
                         <li><i style="font-size: 8pt;">some Info about this list.</i></li>
                     </ul>
                     </div>

@@ -27,7 +27,4 @@ $dashboard = new dashBoard();
                 
 	?></div>
 	</div>
-	<footer>
-		<a href="#" onclick="dashBoard.toggle();" class="disableToggling"><i class="icon icon-chevron-down"></i></a>
-	</footer>
 </div></div>

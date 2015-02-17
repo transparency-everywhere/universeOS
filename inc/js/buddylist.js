@@ -85,11 +85,13 @@ var buddylist = new function(){
             var username = useridToUsername(value);
             output += "                <tr class=\"height60 greyHover\">";
             output += "	                 <td style=\"padding:0 10px; width: 43px;\">"+User.showPicture(value, undefined, 40)+"<\/td>";
-            output += "	                 <td><a href=\"#\" onclick=\"im.openDialogue('"+username+"');\">"+username+"<\/a><br><a href=\"#\" onclick=\"im.openDialogue('<?=$username;?>');\" class=\"realname\"><?=useridToRealname($buddy);?>&nbsp;<\/a><\/td>";
+            output += "                  <td>";
+            output += "                     <a href=\"#\" onclick=\"im.openDialogue('"+username+"');\">"+username+"<\/a>";
+            output += "                 <br><a href=\"#\" onclick=\"im.openDialogue('"+username+"');\" class=\"realname\">"+User.getRealName(value)+"<\/a><\/td>";
             output += "	                 <td align=\"right\" style=\"padding: 0 10px;\">";
-            output += "						    <a href=\"#\" onclick=\"showProfile('"+value+"'); return false\" title=\"open Profile\"><span class=\"icon icon-user\"><\/span><\/a>";
+            output += "						    <a href=\"#\" onclick=\"User.showProfile('"+value+"'); return false\" title=\"open Profile\"><span class=\"icon icon-user\"><\/span><\/a>";
             output += "						    <a href=\"#\" onclick=\"im.openDialogue('"+username+"'); return false\" title=\"write Message\"><span class=\"icon icon-envelope\"><\/span><\/a>";
-            output += "						    <a href=\"#\" onclick=\"im.openDialogue('"+username+"'); return false\" title=\"write Message\">" + filesystem.generateIcon('settings') + "<\/a>";
+            output += "						    <a href=\"#\" onclick=\"settings.showUpdateBuddylistForm(); return false\" title=\"write Message\">" + filesystem.generateIcon('settings') + "<\/a>";
             output += "			<\/td>";
             output += "                <\/tr>";
         });

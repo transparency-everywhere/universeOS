@@ -58,8 +58,6 @@ var dashBoard = new function(){
 			$('#dashGrid').animate({marginBottom: 0}, 1000, function() {
 				$('#dashBoard').removeClass('up');
 				$('#dashBoardBG').removeClass('up');
-				$('#dashBoard footer a i').removeClass('icon-chevron-down');
-				$('#dashBoard footer a i').addClass('icon-chevron-up');
 			});
 			this.view = 'up';
 	};
@@ -68,8 +66,6 @@ var dashBoard = new function(){
 			$('#dashGrid').animate({marginBottom: -300}, 750, function() {
 				$('#dashBoard').addClass('up');
 				$('#dashBoardBG').addClass('up');
-				$('#dashBoard footer a i').removeClass('icon-chevron-up');
-				$('#dashBoard footer a i').addClass('icon-chevron-down');
 			});
 			this.view = 'down';
 	};

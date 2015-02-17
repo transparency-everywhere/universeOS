@@ -31,15 +31,13 @@ var settings = new function(){
     this.updateProfileInfo = function(realname, city, hometown, birthdate, school, university, work){
         
         return api.query('api/user/updateProfileInfo/', { realname:realname,city:city,hometown:hometown, birthdate:birthdate, school:school, university:university, work:work});
-    }
+    };
     
     this.showUpdatePrivacyForm = function(){
         
         //profile info
         
-        
-        
-    }
+    };
     
     this.showUpdateBuddylistForm = function(){
         var settings_buddylist = buddylist.getBuddies();
