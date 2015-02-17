@@ -442,9 +442,11 @@ var filesystem =  new function() {
     icons['image/tiff'] = 'image';
     icons['image/gif'] = 'image';
     icons['image'] = 'image';
-    icons['youTube'] = 'youtube';
+    icons['youtube'] = 'youtube';
     icons['wiki'] = 'wikipedia';
     icons['RSS'] = 'rss';
+    icons['dislike'] = 'wikipedia';
+    icons['like'] = 'rss';
 
     if(typeof fileType === 'undefined'){
         icons[fileType] = 'archive'; //shall be replaced with unknown file icon

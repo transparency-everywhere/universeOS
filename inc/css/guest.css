@@ -3,6 +3,10 @@
     height: 30px;
 }
 
+.scoreButton .counter {
+    margin-left: 65px;
+}
+
 #offlineHeader{
     position: absolute;
     top: 0px;

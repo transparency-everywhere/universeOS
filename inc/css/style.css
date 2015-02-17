@@ -976,6 +976,11 @@ border-bottom: 1px solid #292929;
     float:right;margin-top: -5px;
 }
 
+#filesystem .path #settingsButton .icon{
+    margin-right: -3px;
+}
+
+
 #filesystem td{
     padding-top:2px;
 }
