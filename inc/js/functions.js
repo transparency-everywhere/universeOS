@@ -614,6 +614,12 @@ var User = new function(){
             city += '<span class="home">from '+profile_userdata.home+'</span>';
         }
         
+        var buttons = '';
+        if(!buddylist.isBuddy(user_id) || user_id != User.userid){
+            buttons = '<a class="button">Add Friend</a>';
+        }
+        
+        
         var output   = '<div class="profile">';
                 output += '<header>';
                     output += User.showPicture(user_id);
@@ -628,6 +634,10 @@ var User = new function(){
                             output += '<span class="place">';
                                 output += city;
                             output += '</span>';
+                        output += '</div>';
+                        
+                        output += '<div>';
+                        output += buttons;
                         output += '</div>';
 
                 output  += '</header>';
@@ -738,6 +748,7 @@ var User = new function(){
         $('.profileMainNav li, .profileNavLeft li').click(function(){
             var type = $(this).attr('data-type');
             $(this).parent().parent().parent().find('.profileMainNav li').removeClass('active');
+            $(this).parent().parent().parent().find('.profileNavLeft li').removeClass('active');
             $(this).addClass('active');
             $(this).parent().parent().parent().find('.content .profile_tab').hide();
             $(this).parent().parent().parent().find('.content .'+type+'_tab').show();
@@ -2110,3 +2121,26 @@ function htmlspecialchars(string, quote_style, charset, double_encode) {
 
   return string;
 }
+
+
+//taken from: http://stackoverflow.com/questions/1181575/javascript-determine-whether-an-array-contains-a-value - eyelidlessness
+var indexOf = function(needle) {
+    if(typeof Array.prototype.indexOf === 'function') {
+        indexOf = Array.prototype.indexOf;
+    } else {
+        indexOf = function(needle) {
+            var i = -1, index = -1;
+
+            for(i = 0; i < this.length; i++) {
+                if(this[i] === needle) {
+                    index = i;
+                    break;
+                }
+            }
+
+            return index;
+        };
+    }
+
+    return indexOf.call(this, needle);
+};

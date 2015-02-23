@@ -14,6 +14,7 @@
 //        @author nicZem for Tranpanrency - everywhere.com
 
 var playlists = new function(){
+    this.activePlaylist = {};
     
     this.getData = function(playlist_id){
         
@@ -42,6 +43,8 @@ var playlists = new function(){
 	});
 	return result;
     };
+    
+    
     this.create = function(element, title, privacy, callback){
                 var result="";
                 $.ajax({
@@ -58,14 +61,6 @@ var playlists = new function(){
                 });
                 return result;  		
             };
-            
-    //returns all playlists which the users has access to
-    //@param type - show or edit
-    this.getUserPlaylists = function(type, user_id){
-        if(typeof user_id === 'undefined')
-        var user_id = User.userid;
-        return api.query('api/playlists/getUserPlaylists/', { type : type, user_id: user_id});
-    };
             
     this.showCreationForm = function(){
         var formModal = new gui.modal();
@@ -125,6 +120,14 @@ var playlists = new function(){
         
 			  		
     };
+    //returns all playlists which the users has access to
+    //@param type - show or edit
+    this.getUserPlaylists = function(type, user_id){
+        if(typeof user_id === 'undefined')
+        var user_id = User.userid;
+        return api.query('api/playlists/getUserPlaylists/', { type : type, user_id: user_id});
+    };
+            
     
     
     this.showInfo = function(playlist_id){
@@ -140,10 +143,11 @@ var playlists = new function(){
         }else{
             itemList = '<ul class="dynamicList">';
             $.each(playlistFileContent.items, function(key, value){
-                
+                console.log(value);
                 var info = item.getInfo(value.item_type, value.item_id);
                 itemList += '<li class="playlistItem_'+playlist_id+'_'+value.order_id+'" >';
                     itemList += item.generateInfo(info.image, info.title, '<a href="#" onclick="playlists.removeItemFromPlaylist(\''+playlist_id+'\',\''+value.order_id+'\');"><i class="icon white-minus"></i></a>');
+                    itemList += '<span class="icon white-play" onclick="playlists.playPlaylistRow(\''+playlist_id+'\', \''+value.order_id+'\');"></span>';
                 itemList += '</li>';
             });
             itemList += '</ul>';
@@ -267,53 +271,6 @@ var playlists = new function(){
         gui.createForm('#pushPlaylistFormContainer',fieldArray, options);
     };
     
-    
-    this.playItem = function(options){
-        var type = options['item_type'];
-        var item_id = options['item_id'];
-        var order_id = options['order_id'];
-        var playlist_id = options['playlist_id'];
-        
-        var onStop = function(){playlists.playPlaylistRow(playlist_id, order_id+1);};
-        
-        switch(type){
-            case 'youtube':
-                player.loadYoutubeVideo(playlists.getPlaylistTabObject(playlist_id), item_id,onStop);
-                break;
-        }
-    };
-    
-    this.getPlaylistTabObject = function(playlist_id){
-        return $('#player .tab_2');
-    };
-    
-    this.playPlaylistRow = function(playlist_id, order_id){
-        
-       
-        var playlistData = playlists.getData(playlist_id);
-        var playlistFileContent = filesystem.readFile(playlistData['file_id']);
-        
-        if(playlistFileContent.items.length === 0){
-            //playlist is empty
-        }else{
-            $.each(playlistFileContent.items, function(key, value){
-               if(value['order_id'] == order_id){
-                   //push playlist id to value array for playItem function
-                   value['playlist_id'] = playlist_id;
-                   
-                   playlists.playItem(value);
-               }
-            });
-        }
-    };
-    
-    this.playPlaylist = function(playlist_id){
-        player.show();
-        var tab_id = player.tabs.addTab('Playlist', 'html', 'content', function(){/*onclose*/})
-        this.playPlaylistRow(playlist_id, 0);
-    };
-    
-    
     this.pushItemToPlaylistForm = function(item_type, item_id){
         
         var formModal = new gui.modal();
@@ -376,5 +333,82 @@ var playlists = new function(){
         return api.query('api/playlists/pushItem/', { playlist : playlist, item_type: item_type, item_id: item_id}, callback);
         
     };
+    
+    
+    this.playItem = function(options){
+        var type = options['item_type'];
+        var item_id = options['item_id'];
+        var order_id = options['order_id'];
+        var playlist_id = options['playlist_id'];
+        
+        var onStop = function(){playlists.playPlaylistRow(playlist_id, order_id+1);};
+        
+        if(this.activePlaylist.playlist_id !== playlist_id){
+            this.openPlaylistTab(playlist_id);
+        }
+        
+        switch(type){
+            case 'youtube':
+                player.loadYoutubeVideo(playlists.getPlaylistTabObject(playlist_id), item_id,onStop);
+                break;
+        }
+    };
+    
+    this.getPlaylistTabObject = function(playlist_id){
+        return $('#player .tab_2');
+    };
+    
+    this.updateActiveItemObject = function(playlist_id, tab, order_id){
+        
+        if(typeof playlist_id === undefined){
+            playlist_id = this.activePlaylist.playlist_id;
+        }
+        if(typeof tab === undefined){
+            tab = this.activePlaylist.tab;
+        }
+        if(typeof tab === undefined){
+            order_id = this.activePlaylist.order_id;
+        }
+        this.activePlaylist = {'playlist_id':playlist_id, 'tab':tab, 'order_id':order_id};
+        player.updateActiveItemObject(tab, '', true, {'playlist_id':playlist_id,'order_id':order_id});
+                   
+    };
+    
+    this.playPlaylistRow = function(playlist_id, order_id){
+        
+       
+        var playlistData = playlists.getData(playlist_id);
+        var playlistFileContent = filesystem.readFile(playlistData['file_id']);
+        var tempThis = this;
+        if(playlistFileContent.items.length === 0){
+            //playlist is empty
+        }else{
+            $.each(playlistFileContent.items, function(key, value){
+               if(value['order_id'] == order_id){
+                   //push playlist id to value array for playItem function
+                   value['playlist_id'] = playlist_id;
+                   
+                   playlists.playItem(value);
+                   
+                   //update activePlaylist
+                   tempThis.updateActiveItemObject(tempThis.activePlaylist.playlist_id, tempThis.activePlaylist.tab, order_id);
+                   
+               }
+            });
+        }
+    };
+    
+    this.openPlaylistTab = function(playlist_id){
+        
+        player.show();
+        var tab_id = player.tabs.addTab('Playlist', 'html', 'content', function(){/*onclose*/});
+        this.updateActiveItemObject(playlist_id, tab_id);
+    };
+    
+    this.playPlaylist = function(playlist_id){
+        this.openPlaylistTab(playlist_id);
+        this.playPlaylistRow(playlist_id, 0);
+    };
+    
         
 };

@@ -898,6 +898,7 @@ border-bottom: 1px solid #292929;
 .feedEntry .itemSettingsButton{
     position: absolute;
     right: 10px;
+    margin-top: 2px;
 }
 
 #feedInput{
@@ -1569,7 +1570,7 @@ color:#FFFFFF;
 
 #bodywrap {
 	position: absolute;
-	top: 11px;
+	top: 1px;
 	right: 1px;
 	bottom: 41px;
 	left: 1px;
@@ -1761,12 +1762,18 @@ color:#FFFFFF;
 			font-size: 20px;
         }
         
-        #dockplayer{
-            top: auto;
+        .dockPlayer{
             position: absolute;
-            right: 200px;
-            bottom: 40px;      
-            z-index: 99999;
+            right: 210px;
+            bottom: 0;
+            margin: 0;
+            color: #FFF;
+            line-height: 40px;
+            margin-bottom: -11px;
+        }
+        
+        .dockPlayer li{
+            float:left;
         }
         
         #dockMenu{
@@ -2392,6 +2399,10 @@ del.bar{
     top: 140px;
 }
 
+.profileNavLeft li.active{
+    background: none!important;
+}
+
 .profileNavLeft li{
     color: #FFF;
     padding-left: 5px;
@@ -2461,6 +2472,7 @@ del.bar{
 .profileMain .profile_tab li{
     float: left;
     width: 50%;
+    cursor: pointer;
 }
 
 .profileMain .profile_tab li .icon-group{
@@ -3009,16 +3021,16 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
                 #dashBoard tr{
                     display:list-item;
                     padding: 5px;
-					padding-top: 12px;
-					padding-bottom: 12px;
-					cursor: pointer;
-					float: left;
-					font-size: 14px;
-                                        width:130px!important;
-                                        height: 40px!important;
-                                        background: #1a1b1b;
-                                        margin-bottom: 15px;
-                                        margin-right: 15px;
+                    padding-top: 12px;
+                    padding-bottom: 12px;
+                    cursor: pointer;
+                    float: left;
+                    font-size: 14px;
+                    width:130px!important;
+                    padding-top: 12px; height: 40px!important;
+                    background: #1a1b1b;
+                    margin-bottom: 15px;
+                    margin-right: 15px;
                 }
                 
                 #dashBoard a:link, #dashBoard a:visited{
