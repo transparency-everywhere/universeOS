@@ -29,6 +29,14 @@ class gui {
            . "                          </a><td>\n";
         echo "                    <td><div class=\"\" id=\"logout\" onclick=\"logout();\" target=\"submitter\" style=\"tex-decoration: none; color: #FFF; min-width:10px; margin-left:10px;\" title=\"logout\">&nbsp;<i class=\"icon white-logout\"></i>&nbsp;</div></td>\n";
         echo "                    <td align=\"right\"><input type=\"text\" name=\"searchField\" id=\"searchField\" placeholder=\"search\"></td>\n";
+        
+        
+        echo '<td align="right"><ul class="dockPlayer">';
+        echo '<li><span class="prev icon white-arrow-left" onclick="player.prev();"></span></li>';
+        echo '<li><span class="play icon white-play"></span></li>';
+        echo '<li><span class="next icon white-arrow-right" onclick="player.next();"></span></li>';
+        echo '<li></li>';
+        echo '</ul></td>';
         echo "                    <td align=\"right\" id=\"clockDiv\" style=\"color: #FFFFFF; float: right\"></td>\n";
         echo "                </tr>\n";
         echo "            </table>\n";
