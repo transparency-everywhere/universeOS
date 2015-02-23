@@ -22,6 +22,9 @@ var buddylist = new function(){
         }
 	return api.query('api/buddies/get/', {user_id:user_id});
     };
+    this.isBuddy = function(buddy_id){
+        return $.inArray(buddy_id, buddylist.getBuddies())
+    };
     this.addBuddy = function(userid){
         var res;
 	$.ajax({
@@ -73,6 +76,8 @@ var buddylist = new function(){
 	});
 	return res;
     };
+    
+    
     
     this.generateBuddylist = function(){
         var output="";
