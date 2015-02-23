@@ -110,7 +110,7 @@ var elements = new function(){
             html += '</td>';
             html += '<td width="50">';
             if(data['download']){
-                html += '<a href="./out/download/?fileId=' + data['id'] + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download') + '</a>';
+                html += '<a href="./out/download/?fileId=' + data['id'] + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download', 'grey') + '</a>';
             }
             if(!grid){
                 html += item.showItemSettings(value['type'], data['id']);

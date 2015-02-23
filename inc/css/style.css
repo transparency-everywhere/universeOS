@@ -956,8 +956,8 @@ border-bottom: 1px solid #292929;
 }
 
 #filesystem .leftNav li img{
-	height: 20px;
-	margin-bottom: 5px;
+    height: 20px;
+    margin-bottom: 5px;
 }
 
 #filesystem .path {
@@ -977,7 +977,7 @@ border-bottom: 1px solid #292929;
 }
 
 #filesystem .path #settingsButton .icon{
-    margin-right: -3px;
+    margin-right: -4px;
 }
 
 
@@ -1466,8 +1466,8 @@ color:#FFFFFF;
 
 .icon{
     display: inline-block;
-    width: 15px;
-    height: 15px;
+    width: 18px;
+    height: 18px;
     background-size: 100%;
 }
 
@@ -2077,16 +2077,16 @@ font-weight:bold;
 }
 
 .scoreButton .icon{
-    width: 15px;
-    height: 15px;
+    width: 18px;
+    height: 18px;
     margin-top: 5px;
 }
 
 .scoreButton .counter{
-width: 22px;
-border: 1px solid #dcdcdc;
+width: 26px;
+border: 2px solid #a0a0a0;
 border-radius: 0;
-line-height: 14px;
+line-height: 18px;
 }
 
 

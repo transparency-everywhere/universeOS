@@ -80,10 +80,10 @@ var item = new function(){
         
         var output = '<span class="scoreButton '+type+'_'+itemId+'">';
                 if(proofLogin())
-                    output += '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('dislike') + '</a>';
+                    output += '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('dislike', 'gray') + '</a>';
                 output += '<a class="btn btn-xs btn-success counter" href="#">'+score+'</a>';
                 if(proofLogin())
-                    output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('like') + '</a>';
+                    output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('like', 'gray') + '</a>';
             output += '</span>';
         return output;
     };
@@ -124,7 +124,7 @@ var item = new function(){
 					
 				});
 					
-			        var html = "<a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"btn btn-xs itemSettingsButton\">" + filesystem.generateIcon('settings') + "</a>\n\
+			        var html = "<a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"btn btn-xs itemSettingsButton\">" + filesystem.generateIcon('settings', 'grey') + "</a>\n\
                                         <div class=\"itemSettingsWindow\">\n\
                                             <ul>";
                                     html += list;

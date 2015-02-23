@@ -73,7 +73,7 @@ var filesystem =  new function() {
                         html += '         universe/' + folders.getPath(folderId);
                     }
                     if(proofLogin() && !empty(folderId)){
-                        html += '         <a href=\"#\" id=\"settingsButton\" onclick=\"$(\'.fileBrowserSettings' + folderId + '\').slideToggle(\'slow\'); return false\" title=\"more...\" class=\"btn btn-mini\">' + this.generateIcon('settings') + '</a>';
+                        html += '         <a href=\"#\" id=\"settingsButton\" onclick=\"$(\'.fileBrowserSettings' + folderId + '\').slideToggle(\'slow\'); return false\" title=\"more...\" class=\"btn btn-mini\">' + this.generateIcon('settings', 'grey') + '</a>';
                     }		  			
                     html += '    </div>';		  			
                     html += '    <div class="underFrame" style="overflow: none;">';		  			
@@ -388,7 +388,7 @@ var filesystem =  new function() {
             $('.blueModal').hide();
             gui.alert('The file has been removed');
             console.log(elementData.title.substr(0,10));
-            filesystem.tabs.updateTabContent(elementData.title.substr(0,10) ,gui.loadPage('modules/filesystem/showElement.php?element='+elementData['id']+'&reload=1'));
+            filesystem.tabs.updateTabContent(elementData.title.substr(0,10) ,this.generateFullFileBrowser(elementData['id']));
         };
         api.query('api/files/delete/', { file_id : fileId }, callback);
     };
@@ -418,13 +418,31 @@ var filesystem =  new function() {
         return api.query('api/files/read/', { file_id : file_id});
     };
     
-    this.generateIcon = function(fileType){
+    this.generateIcon = function(fileType, color){
     var icons = {};
+    
+    //general
     icons['settings'] = 'gear';
     icons['folder'] = 'folder';
     icons['element'] = 'filesystem';
     icons['download'] = 'download';
     icons['link'] = 'external-link';
+    icons['RSS'] = 'rss';
+    icons['dislike'] = 'dislike';
+    icons['like'] = 'like';
+    icons['minus'] = 'minus';
+    icons['plus'] = 'plus';
+    icons['up'] = 'arrow-up';
+    icons['down'] = 'arrow-down';
+    icons['left'] = 'arrow-left';
+    icons['right'] = 'arrow-right';
+    icons['chev_up'] = 'chevron-up';
+    icons['chev_down'] = 'chevron-down';
+    icons['chev_left'] = 'chevron-left';
+    icons['chev_right'] = 'chevron-right';
+    
+    //files
+    icons['undefined'] = 'archive';
     icons['file'] = 'file';
     icons['audio/mpeg'] = 'file';
     icons['audio/wav'] = 'file';
@@ -437,22 +455,29 @@ var filesystem =  new function() {
     icons['application/pdf'] = 'file';
     icons['application/vnd.ms-office'] = 'file';
     icons['application/zip'] = 'file';
+    
+    //images
     icons['image/jpeg'] = 'image';
     icons['image/png'] = 'image';
     icons['image/tiff'] = 'image';
     icons['image/gif'] = 'image';
     icons['image'] = 'image';
+    
+    //3rd parties
     icons['youtube'] = 'youtube';
     icons['wiki'] = 'wikipedia';
-    icons['RSS'] = 'rss';
-    icons['dislike'] = 'wikipedia';
-    icons['like'] = 'rss';
 
     if(typeof fileType === 'undefined'){
         icons[fileType] = 'archive'; //shall be replaced with unknown file icon
     }
+    if(color === 'grey' || color === 'gray'){
+        color = 'icon'; //because uk spelling is 'grey' and in the usa 'gray'
+    }
+    if(typeof color === 'undefined' || color !== 'white' && color !== 'icon'){
+        color = 'dark';
+    }
 
-    return '<span class="icon dark-' + icons[fileType] + '"></span>';
+    return '<span class="icon ' + color + '-' + icons[fileType] + '"></span>';
 
 }
 };
