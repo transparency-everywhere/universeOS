@@ -120,7 +120,7 @@ class search{
     
     function buildLI($icon, $action, $title, $contextMenu=false){
         
-        $title = substr($title, 0, 35);
+        $title = substr($title, 0, 33);
         
         $output = '<li>';
             $output .=  $icon;

@@ -13,6 +13,20 @@ Update
 
 Recent:                                                         Release Message
 
+        modal
+            shortcuts
+            tasks
+            calendar ?
+
+      Style
+            Hover
+                .button, .anti-button
+                fenster: close, minimize, maximize
+
+            Background
+                
+                
+
         Files
             encrypt files                                           x
         

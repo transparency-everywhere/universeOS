@@ -104,7 +104,7 @@ class dashBoard{
 				foreach($groups AS $group){
 					$output .="<li onclick=\"groups.show('$group');\">";
 						$output .="<span class=\"marginRight\">";
-							$output .= '<i class="icon white-user" style="height:20px; width: 20px;"></i>';
+							$output .= '<i class="icon white-user" style="height:20px; width: 20px;margin-bottom: -5px;"></i>';
 						$output .="</span>";
 						$output .="<span>";
 							$output .= shorten($groupsClass->getGroupName($group),19);
@@ -143,7 +143,7 @@ class dashBoard{
                                 foreach($playlists['ids'] AS $key=>$list_id){
                                         $output .= "<li>";
                                                 $output .= "<span class=\"marginRight\">";
-                                                        $output .= '<i class="icon white-play" style="height:14px; width: 14px;"></i>';
+                                                        $output .= '<i class="icon white-play" style="height:20px; width: 20px;margin-bottom: -5px;"></i>';
                                                 $output .= "</span>";
                                                 $output .= "<span>";
                                                         $output .= "<a href=\"#\" onclick=\"playlists.showInfo('".$list_id."');\">";
