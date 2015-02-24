@@ -61,7 +61,7 @@ var applications = new function(){
             app['source'] = 'chat.js';
             app['className'] = 'chat'; // name of the the javascript class object
             app['active'] = true;
-            app['position'] = {width: 2, height:  2, top: 0, left: 5};
+            app['position'] = {width: 2, height:  2, top: 0, left: 5, hidden:true};
             app['icon'] = standardIcon;
             apps[3] = app;
 

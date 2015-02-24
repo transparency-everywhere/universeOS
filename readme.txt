@@ -10,6 +10,7 @@ Update
 
     check if our server serves svg files as image/svg, not as text/plain (regbox - loading bubbles)
 
+    fade in applications
 
 Recent:                                                         Release Message
 

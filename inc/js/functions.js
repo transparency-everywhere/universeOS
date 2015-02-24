@@ -137,30 +137,30 @@ var init = new function(){
 			});	
 	};
 	
-	this.toolTipper = function(){
-  
-  
-
-          $(document).mousemove(function(event){
-              window.mouseX = event.pageX;
-              window.mouseY = event.pageY;
-              $('.mousePop').hide();
-          });
-          
-          
-          
-          //initialize mousePop(tooltip)
-          $('.tooltipper').mouseenter(function(){
-              
-              var type = $(this).attr("data-popType");
-              var id = $(this).attr("data-typeId");
-              var text = $(this).attr("data-text");
-              mousePop(type, id, text);
-          }).mouseleave(function(){
-              $('.mousePop').hide();
-          });
-		
-	};
+//	this.toolTipper = function(){
+//  
+//  
+//
+//          $(document).mousemove(function(event){
+//              window.mouseX = event.pageX;
+//              window.mouseY = event.pageY;
+//              $('.mousePop').hide();
+//          });
+//          
+//          
+//          
+//          //initialize mousePop(tooltip)
+//          $('.tooltipper').mouseenter(function(){
+//              
+//              var type = $(this).attr("data-popType");
+//              var id = $(this).attr("data-typeId");
+//              var text = $(this).attr("data-text");
+//              mousePop(type, id, text);
+//          }).mouseleave(function(){
+//              $('.mousePop').hide();
+//          });
+//		
+//	};
 	this.search = function(){
 		//init search
 			$("#searchField").keyup(function()
@@ -206,20 +206,21 @@ var init = new function(){
 		
 		this.dashBox();
 		
-		this.toolTipper();
+		//this.toolTipper();
 		this.search();
 		
 		dashBoard.init();
 		//fade in applications
-                $("#filesystem:hidden").fadeIn(3000);
-                $("#buddylist:hidden").fadeIn(3000);
-
-                $("#feed:hidden").fadeIn(3000);
-                $("#chat:hidden").fadeIn(3000);
                 
                 $('*').on('scroll',function(){
                  $('.itemSettingsWindow, .rightClick').hide();
                 });
+                
+                $('body').on('click',function(){
+                 $('.itemSettingsWindow, .rightClick').hide();
+                });
+                
+                item.initSettingsToggle();
           
 	};
 	

@@ -2204,33 +2204,21 @@ margin-bottom: -5px;
 
 
 .rightclick, .itemSettingsWindow, .fileBrowserSettings{
-    background: #FFFFFF;
-    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=85)";
-    filter: alpha(opacity=85);
-    -moz-opacity:0.85;
-    -khtml-opacity: 0.85;
-    opacity: 0.85;
     
-    border: 1px 1px 0 1px solid #c9c9c9;
+    background-color: #37474f;
 }
 
 .itemSettingsWindow{
     position: fixed;
     min-width: 100px;
-    color: #FFFFFF;
     z-index: 9999;
     display: none;
-    font-size: 12pt;
-    text-align: left;
 }
 
 .rightclick{
     position: absolute;
     color:rgb(158, 158, 158);
     z-index: 9999;
-    min-width: 100px;
-	font-size: 12px;
-	text-align: left;
 }
 
 .fileBrowserSettings{
@@ -2241,28 +2229,28 @@ margin-bottom: -5px;
     margin-bottom: 0;
 }
 
-.itemSettingsWindow > ul > li, .rightclick > ul > li, .fileBrowserSettings > li{
-        height: 22px;
-        line-height: 20px;
-        border-bottom: 1px solid rgb(215, 215, 215);
-        padding: 2px;
+.fileBrowserSettings > li.inactive a{
+    color:  #607d8b;
 }
 
-.itemSettingsWindow > ul > li:hover, .rightclick > ul > li:hover, .fileBrowserSettings > li:hover{
-    background: #333333;
+.itemSettingsWindow a, fileBrowserSettings a{
+    width: 170px;
+    height: 40px;
+    display: block;
+    padding-left: 13px;
+    line-height: 40px;
+    color:#FFF;
+    font-size: 16px;
+    width: 170px;
 }
 
-.itemSettingsWindow a:link, .rightclick a:link, .fileBrowserSettings a:link{ 
-    text-decoration:none;
-    color:rgb(158, 158, 158);
-}
-.itemSettingsWindow a:visited, .itemSettingsWindow a:visited , .fileBrowserSettings a:visited {
-    text-decoration:none;
-    color:rgb(158, 158, 158);
+.itemSettingsWindow a:hover, fileBrowserSettings a:hover{
+    background-color: #263238;
 }
 
-.rightclick > ul > li:last-of-type{
-	border: 0;
+
+.itemSettingsWindow a:active, .fileBrowserSettings a:active{
+        background-color:  #00bcd4;
 }
 
 .rssTitle{
