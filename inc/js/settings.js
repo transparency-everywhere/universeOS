@@ -17,6 +17,13 @@
 var settings = new function(){
     this.init = function(){
         
+        var     output =    '<ul>';
+                output +=       '<li><a href="">General</a></li>';
+                output +=       '<li><a href="">Privacy</a></li>';
+                output +=       '<li><a href="">Buddylist</a></li>';
+                output +=       '<!-- <li><a href="">Security</a></li> -->';
+                output +=       '<!-- <li><a href="">Services</a></li> -->';
+                output +=   '</ul>'
         this.applicationVar = new application('settings');
 	this.applicationVar.create('Settings', 'url', 'modules/settings/index.php',{width: 2, height:  5, top: 0, left: 0});
 	

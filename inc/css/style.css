@@ -2213,6 +2213,7 @@ margin-bottom: -5px;
     min-width: 100px;
     z-index: 9999;
     display: none;
+    box-shadow: 1px 3px 8px 0px rgba(0, 0, 0, 0.3);
 }
 
 .rightclick{

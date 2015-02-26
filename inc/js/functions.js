@@ -356,7 +356,12 @@ var universe = new function(){
         //sync feed request
         var feedsArray = [];
         $('.feedFrame').each(function(){
-            feedsArray.push({'type':$(this).data('type'), 'last_feed_received':$(this).data('last')});
+            
+            //@bug
+            if($(this).data('type') != 'group'){
+                               feedsArray.push({'type':$(this).data('type'), 'last_feed_received':$(this).data('last')});
+                               console.log($(this).data('type'));
+            }
         });
         requests.push({
             action : 'feed',
@@ -554,6 +559,13 @@ var User = new function(){
         //data will only be returned if getUser()==userid or userid is on buddylist of getUser()
         return api.query('api/user/getAllData/', { user_id:userid });
     }
+    
+    this.getGroups = function(){
+        return api.query('api/user/getGroups/', { });
+    };
+    this.inGroup = function(group_id){
+        return jQuery.inArray(group_id, User.getGroups() );
+    };
     this.showSignature = function(userid, timestamp, reverse){
         
         debug.log('showSignature for user '+userid+' initialized...');
