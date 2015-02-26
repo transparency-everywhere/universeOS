@@ -39,6 +39,7 @@ var reader = new function(){
         
         
         switch(fileData['type']){
+            //cases: ...
             case 'UFF':
                 var output = '';
                 if(privacy.authorize(fileData['privacy'], "edit", fileData['owner'])){
