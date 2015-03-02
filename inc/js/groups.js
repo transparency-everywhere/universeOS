@@ -16,6 +16,12 @@
 
 var groups = new function(){
 	
+        //removes current user from group
+        this.leave = function(groupId){
+                api.query('api/groups/leave/', { group_id : groupId });
+                gui.alert('', 'You left the group');
+        };
+        
         this.show = function(groupId){
             
                   reader.applicationVar.show();
@@ -80,7 +86,7 @@ var groups = new function(){
 
                     output  += '</header>';
                     //output  += '<div class="">';
-                        output += '<div class="profileNavLeft">';
+                        output += '<div class="profileNavLeft leftNav dark">';
                             output += '<ul>';
                                 output += '<li data-type="activity"><img src="gfx/profile/sidebar_fav.svg"/>Favorites</li>';
                                 output += '<li data-type="files"><img src="gfx/profile/sidebar_files.svg"/>Files</li>';

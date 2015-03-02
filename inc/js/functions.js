@@ -655,7 +655,7 @@ var User = new function(){
 
                 output  += '</header>';
                 //output  += '<div class="">';
-                    output += '<div class="profileNavLeft">';
+                    output += '<div class="profileNavLeft leftNav dark">';
                         output += '<ul>';
                             output += '<li data-type="favorites"><img src="gfx/profile/sidebar_fav.svg"/>Favorites</li>';
                             output += '<li data-type="files"><img src="gfx/profile/sidebar_files.svg"/>Files</li>';
@@ -780,6 +780,10 @@ var User = new function(){
         var realname = this.getProfileInfo(userid)['realname'];
         console.log(realname);
         return realname;
+    };
+    
+    this.getPrivacy = function(){
+        return api.query('api/user/getPrivacy/', {});
     };
 };
           

@@ -23,7 +23,11 @@
 class userPrivacy{
     public $userid;
     function __construct($userid){
-        $this->$userid = $userid;
+        $this->userid = $userid;
+    }
+    function updateRights($values){
+        $db = new db();
+        $db->update('user_privacy_rights', $values, array('userid', $this->userid));
     }
     function getRight($rightName){
         $db = new db();
@@ -58,5 +62,9 @@ class userPrivacy{
                 break;
         }
         return false;
+    }
+    function getRights(){
+        $db = new db();
+        return $db->select('user_privacy_rights', array('userid', $this->userid));
     }
 }

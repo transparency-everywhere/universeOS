@@ -765,6 +765,80 @@ border-bottom: 1px solid #292929;
 	left: 20px;
 }
 
+#settings #updateProfileFormContainer, #settings #privacySettings{
+    margin: 20px 20px 20px 15px;
+}
+
+#settings #updateProfileFormContainer .userPicture{
+    border-radius: 0!important;
+    width: 140px!important;
+    height: 140px!important;
+    border: none!important;
+}
+
+#settings #updateProfileFormContainer tr td:first-of-type{
+    vertical-align:top;
+    padding-top: 12px;
+}
+
+#settings #updateProfileFormContainer #changePicture{
+    margin-top: 105px;
+    float:right;
+    margin-bottom: 15px;
+}
+
+#settings input[type=text]{
+    border: 1px solid #c9c9c9;
+}
+
+#settingsBuddylist ul li{
+    width: 100%;
+}
+
+#settingsBuddylist ul li .button{
+    margin-right: -110px;
+    margin-top: -45px;
+    float: right;
+}
+
+#settingsBuddylist ul {
+    width: auto;
+    margin-right: 130px;
+}
+
+#privacySettings ul{
+    margin-bottom: 75px;
+}
+
+#privacySettings li{
+    width:33.3%;
+    float:left;
+}
+
+#privacySettings li div{
+background-color: #607d8b;
+padding: 5px 12px;
+margin-right: 20px;
+color: #FFF;
+}
+
+#privacySettings li.active div{
+    background-color:  #00bcd4;
+}
+
+#privacySettings li div .icon{
+    display:none;
+}
+
+#privacySettings li.active div .icon{
+    display: inline-block;
+    margin-bottom: -4px;
+}
+
+#privacySettings .button{
+    margin-right: 20px;
+}
+
 #mailList {
     width: 450px;
     margin-left: 150px;
@@ -2388,11 +2462,12 @@ del.bar{
     top: 140px;
 }
 
-.profileNavLeft li.active{
+.leftNav.dark li.active{
     background: none!important;
 }
 
-.profileNavLeft li{
+.leftNav.dark li{
+    padding: 0;
     color: #FFF;
     padding-left: 5px;
     padding-right: 5px;
@@ -2401,15 +2476,16 @@ del.bar{
     cursor: pointer;
     background: #37474f;
     overflow: hidden;
+    font-size: 16px;
 }
-.profileNavLeft li .icon{
+.leftNav.dark li .icon{
     width: 21px;
     height: 21px;
     margin-right: 5px;
     margin-bottom: -6px;
 }
 
-.profileNavLeft li.openChat{
+.leftNav.dark li.openChat{
     background-color:  #607d8b;
     height: auto;
     display: block;
@@ -2417,7 +2493,7 @@ del.bar{
     text-align: center;
 }
 
-.profileNavLeft li.openChat img{
+.leftNav.dark li.openChat img{
     width: 80px;
     height: 74px;
     display: block;
@@ -2458,20 +2534,20 @@ del.bar{
     display:none;
 }
 
-.profileMain .profile_tab li{
+.profileMain .profile_tab li, .grayList li{
     float: left;
     width: 50%;
     cursor: pointer;
 }
 
-.profileMain .profile_tab li .icon-group{
+.profileMain .profile_tab li .icon-group, .grayList li .icon-group{
     height: 75px!important;
     width: 75px!important;
     display: inline-block;
     float: left;
 }
 
-.profileMain .profile_tab li .userPicture{
+.profileMain .profile_tab li .userPicture, .grayList li .userPicture{
     border-radius: 0!important;
     width: 75px!important;
     height: 75px!important;
@@ -2479,17 +2555,17 @@ del.bar{
     margin-right: 5px;
 }
 
-.profileMain .profile_tab li>div{
+.profileMain .profile_tab li>div, .grayList li>div{
     background-color: #eceff1;
     margin:10px;
     height: 75px;
     position: relative;
 }
 
-.profileMain .profile_tab li>div span{
+.profileMain .profile_tab li>div span, .grayList li>div span{
     display:block;
 }
-.profileMain .profile_tab li>div .itemSettingsButton{
+.profileMain .profile_tab li>div .itemSettingsButton, .grayList li>div .itemSettingsButton{
     margin-right: -6px;
     position: absolute;
     bottom: 8px;

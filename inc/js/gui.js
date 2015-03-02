@@ -79,7 +79,7 @@ var gui = new function(){
                             mainHTML += '<td class="caption">' + fieldData.caption + '</td><td>&nbsp;</td>';
                             break;
                         default:
-                            mainHTML += '<td colspan="4" class="caption">' + fieldData.caption + '</td></tr><tr class='+tr_class+'>';
+                            //mainHTML += '';
                             break;
                          
                     }
@@ -87,11 +87,41 @@ var gui = new function(){
         mainHTML += '</tr>';
         mainHTML += '<tr>';
                     //body
+                    
+                    
+                    if(typeof fieldData['caption_position'] === 'undefined'){
+                        fieldData['caption_position'] = 'left';
+                    }
+                    
+                    var colspan = '3';
+                    var textBeforeInput;
+                    switch(fieldData['caption_position']){
+                        
+                        case 'top':
+                            colspan = '3';
+                            textBeforeInput = fieldData.caption;
+                            break;
+                        case 'left':
+                            colspan = '2';
+                            textBeforeInput = '';
+                            mainHTML += '<td>'+fieldData.caption+'</td>';
+                            break;
+                        case 'placeholder':
+                            colspan = '3';
+                            textBeforeInput = '';
+                            //mainHTML += '<td>'+fieldData.caption+'</td>';
+                            break;
+                    }
+                    
                     switch(fieldData['type']){
+                        
+                        
+                        
                         case 'text':
                             if(!fieldData['value']){
                                 fieldData['value'] = '';
                             }
+                            
                             var disabled = '';
                             if(typeof fieldData['disabled'] != 'undefined'){
                                 if(fieldData['disabled']){
@@ -100,17 +130,28 @@ var gui = new function(){
                                     disabled = '';
                                 }
                             }
-                            mainHTML += '<td colspan="3"><input type="text" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '" value="' + fieldData['value'] + '" placeholder="'+fieldData.caption+'" style="width:100%;" '+disabled+'/></td><td>'+fieldData['appendix']+'</td>';
+                            
+                            
+                            
+                            mainHTML += '<td colspan="'+colspan+'">'+textBeforeInput+'<input type="text" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '" value="' + fieldData['value'] + '" placeholder="'+fieldData.caption+'" style="width:100%;" '+disabled+'/></td><td>'+fieldData['appendix']+'</td>';
                             break;
+                            
+                            
                         case 'textarea':
                             if(!fieldData['value']){
                                 fieldData['value'] = '';
                             }
                             mainHTML += '<td colspan="3"><textarea name="' + fieldData.inputName + '" id="' + fieldData.inputName + '">'+fieldData['value']+'</textarea></td><td>'+fieldData['appendix']+'</td>';
                             break;
+                            
+                            
+                            
                         case 'password':
                             mainHTML += '<td><input type="password" name="' + fieldData.inputName + '" placeholder="'+fieldData.caption+'" id="' + fieldData.inputName + '"/></td>';
                             break;
+                            
+                            
+                            
                         case 'checkbox':
                             var checked;
                             if(fieldData.checked === true){
@@ -120,9 +161,15 @@ var gui = new function(){
                             }
                             mainHTML += '<td><input type="checkbox" value="' + fieldData.value + '" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '" '+ checked +'/></td>';
                             break;
+                            
+                            
+                            
                         case 'radio':
                             mainHTML += '<td><input type="text" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '"/></td><td>'+fieldData['appendix']+'</td>';
                             break;
+                            
+                            
+                            
                         case 'dropdown':
                             
                             mainHTML += '<td colspan="3">';
@@ -134,16 +181,28 @@ var gui = new function(){
                                 mainHTML += '</span>';
                             mainHTML += '</td>';
                             break;
+                            
+                            
+                            
                         case 'space':
                             mainHTML += '<td></td>';
                             break;
+                            
+                            
+                            
                         case 'wysiwyg':
                             gui.initWysiwyg = true;
                             mainHTML += '<td colspan="3"><div class="wysiwyg" id="' + fieldData.inputName + '" contenteditable="true">'+fieldData.value+'</div></td><td>'+fieldData['appendix']+'</td>';
                             break;
+                            
+                            
+                            
                         case 'button':
                             mainHTML += '<td colspan="1"><a href="#" onclick="'+fieldData.actionFunction+'" class="btn btn-default">'+fieldData.value+'</a></td><td>'+fieldData['appendix']+'</td>';
                             break;
+                            
+                            
+                            
                         case 'file':
                             gui.initializeUploadify = true;
                             
@@ -155,8 +214,11 @@ var gui = new function(){
                             }
                             mainHTML += '<td colspan="1">'+fileGallery+'<ul id="' + fieldData.inputName + '_fileList"></ul><input type="hidden" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '" value="'+fieldValue+'"><div id="' + fieldData.inputName + '_fileField"></div></td><td>'+fieldData['appendix']+'</td>';
                             break;
+                            
+                            
+                            
                         case 'html':
-                            mainHTML += '<td colspan="3">'+fieldData.value+'</td><td>'+fieldData['appendix']+'</td>';
+                            mainHTML += '<td colspan="'+colspan+'">'+textBeforeInput+fieldData.value+'</td><td>'+fieldData['appendix']+'</td>';
                             break;
                     }
         mainHTML += '</tr>'; 

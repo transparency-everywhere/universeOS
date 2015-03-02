@@ -110,10 +110,13 @@ class groups{
         }
 
         function userLeaveGroup($group, $user=NULL){
-            
+                    if(empty($user))
+                        $user = getUser();
+                    
+                    
                     $db = new db();
                    
-                        if( $db->delete('groupAttachments', array('group', $group, '&&', 'item', $user))){
+                    if( $db->delete('groupAttachments', array('group', $group, '&&', 'item', 'user', '&&', 'itemId', $user))){
                                 return true;
                         }
                 }
