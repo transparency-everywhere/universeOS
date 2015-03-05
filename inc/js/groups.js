@@ -16,6 +16,12 @@
 
 var groups = new function(){
 	
+        //removes current user from group
+        this.leave = function(groupId){
+                api.query('api/groups/leave/', { group_id : groupId });
+                gui.alert('', 'You left the group');
+        };
+        
         this.show = function(groupId){
             
                   reader.applicationVar.show();
@@ -23,12 +29,115 @@ var groups = new function(){
               
                   return false;
         };
-        this.create = function(title, type, description, invitedUsers){
-            var callback = function(data){
-                       if(data != '1'){
-                           gui.alert('The group could not be created', 'Create Group');
-                       };
-            };
+       
+        
+        this.getMembers = function(group_id){
+            
+        };
+        this.getPlaylists = function(group_id){
+            
+        };
+        this.showProfile = function(group_id){
+            var groupdata = this.getData(group_id);
+            var buttonText, buttonClass, buttonAction;
+            if(User.inGroup(group_id)){
+                buttonText = 'Leave Group';
+                buttonClass = 'button';
+            }else{
+                
+                if(groupdata.public == '0'){
+                    
+                    //show message "this group is private?"
+                    
+                }else{
+                    
+                    buttonText = 'Join Group';
+                    buttonClass = 'button';
+                    
+                }
+                
+            }
+            
+            var adminButton;
+            if(groupdata.isAdmin){
+                adminButton = '<a href="#" class="button">Admin</a>';
+            }
+            
+            
+
+            var buttons = '<a href="#" class="button">'+buttonText+'</a>'+adminButton;
+
+            var output   = '<div class="profile">';
+                    output += '<header>';
+                        //output += User.showPicture(user_id);
+                            output += '<div class="main">';
+
+                                output += '<span class="userName">';
+                                    output += groupdata.title;
+                                output += '</span>';
+                                output += '<span class="description">';
+                                    output += groupdata.description;
+                                output += '</span>';
+                            output += '</div>';
+
+                            output += '<div>';
+                            output += buttons;
+                            output += '</div>';
+
+                    output  += '</header>';
+                    //output  += '<div class="">';
+                        output += '<div class="profileNavLeft leftNav dark">';
+                            output += '<ul>';
+                                output += '<li data-type="activity"><img src="gfx/profile/sidebar_fav.svg"/>Favorites</li>';
+                                output += '<li data-type="files"><img src="gfx/profile/sidebar_files.svg"/>Files</li>';
+                                output += '<li data-type="playlists"><img src="gfx/profile/sidebar_playlist.svg"/>Playlists</li>';
+                                output += '<li class="openChat"><img src="gfx/chat_icon.svg"/>Open Chat</li>';
+                            output += '</ul>';
+                            output += '</div>';
+                        output += '<div class="profileMain">';
+                            output += '<ul class="profileMainNav">';
+                                output += '<li class="active" data-type="activity">Activity</li>';
+
+                                output += '<li data-type="info">Info</li>';
+                                output += '<li data-type="members">Members</li>';
+                            output += '</ul>';
+                            output += '<div class="content">';
+
+                                output += '<div class="profile_tab favorites_tab">';
+                                    output += fav.show(1);
+                                output += '</div>';
+                                output += '<div class="profile_tab files_tab">'+filesystem.showFileBrowser(groupdata['homeFolder'])+'</div>';
+                                output += '<div class="profile_tab playlists_tab">';
+
+                                output += '</div>';
+
+
+                                output += '<div class="profile_tab activity_tab" style="display:block"></div>';
+
+
+
+                            output += '</div>';
+                        //output += '</div>';
+                    output  += '</div>';
+                output  += '</div>';
+
+            reader.tabs.addTab('Profle', 'html', output);
+
+            //load feed
+            var profileFeed = new Feed('group', '.activity_tab', group_id);
+
+            $('.profileMainNav li, .profileNavLeft li').click(function(){
+                var type = $(this).attr('data-type');
+                $(this).parent().parent().parent().find('.profileMainNav li').removeClass('active');
+                $(this).parent().parent().parent().find('.profileNavLeft li').removeClass('active');
+                $(this).addClass('active');
+                $(this).parent().parent().parent().find('.content .profile_tab').hide();
+                $(this).parent().parent().parent().find('.content .'+type+'_tab').show();
+            });
+
+        };
+        
+        this.create = function(title, type, description, invitedUsers, callback){
             api.query('api/groups/create/', { title : title, type: type, description: description, invitedUsers: JSON.stringify(invitedUsers) }, callback);
         };
 	this.get = function(userid){
@@ -79,7 +188,6 @@ var groups = new function(){
             };
             api.query('api/groups/update/', { group_id : groupId, title: title, description: description, type: type, members_invite: membersInvite },callback);
         };
-                     
         this.makeUserAdmin = function(groupId, userId){
             callback = function(){
               gui.alert('The admin has been added');
@@ -301,15 +409,24 @@ var groups = new function(){
             modalOptions['buttonTitle'] = 'Create Group';
 
             modalOptions['action'] = function(){
-                var callback = function(){
-                    jsAlert('', 'The group has been created');
-                    $('.blueModal').remove();
+                
+                var callback = function(data){
+                    if(data != '1'){
+                        gui.alert('The group could not be created', 'Create Group');
+                    }else{
+                        
+                        jsAlert('', 'The group has been created');
+                        $('.blueModal').remove();
+                    }
                 };
                 var invitedUsers = [];
                 $('.blueModal .invitedBuddy').each(function(){
                    invitedUsers.push($(this).val()); 
                 });
-                groups.create($('.blueModal #title').val(), $('.blueModal #type').val(), $('.blueModal #description').val(), invitedUsers);
+                
+                
+                
+                groups.create($('.blueModal #title').val(), $('.blueModal #type').val(), $('.blueModal #description').val(), invitedUsers, callback);
             };
             formModal.init('Update CreateGroup', '<div id="createGroupFormContainer"></div>', modalOptions);
             gui.createForm('#createGroupFormContainer',fieldArray, options);

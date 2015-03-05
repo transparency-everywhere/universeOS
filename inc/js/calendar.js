@@ -25,7 +25,7 @@ var calendar = new function(){
 	this.showDoneTasks = false; // defines if tasks with status "done" are shown
 	this.applicationVar;
 	this.show = function(){
-			  		if($('#calendarFenster').length === 0){
+			  		if($('#calendar').length === 0){
 			  			calendar.init();
 			  		}else{
 			  			this.applicationVar.show();

@@ -18,8 +18,10 @@
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
 
+error_reporting(E_ALL);
 
-$invitedUsers = json_decode($_POST['invitedUsers']);
+var_dump($_POST['values']);
 
-$groupsClass = new groups();
-echo $groupsClass->createGroup($_POST['title'], $_POST['type'], $_POST['description'], $invitedUsers);
+$user = new userPrivacy(getUser());
+$user->updateRights($_POST['values']);
+

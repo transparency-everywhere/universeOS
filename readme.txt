@@ -10,6 +10,18 @@ Update
 
     check if our server serves svg files as image/svg, not as text/plain (regbox - loading bubbles)
 
+    fade in applications
+
+todo
+    suche load more..
+
+    formclass caption position: top/left/placeholder
+
+    rightclick .rightclick, data-type data-typeId
+
+    comments auflösen, alle comments werden feeds :/
+
+    add type xml and json to openlink
 
 Recent:                                                         Release Message
 
@@ -31,7 +43,8 @@ Recent:                                                         Release Message
             encrypt files                                           x
         
         Security
-            3rd Party Applications like Youtube                     x                
+            3rd Party Applications like Youtube                     x   
+            groups.getData
         
         Playlists
             createFile
@@ -74,6 +87,9 @@ Recent:                                                         Release Message
 
 
 JS nice to have
+
+    desktop: Search onmouseover
+
     Scrollbars
 
     Projects

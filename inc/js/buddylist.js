@@ -68,7 +68,7 @@ var buddylist = new function(){
             type: "POST",
             success:function(data) {
 	      if(data == '1'){
-                  jsAlert('The buddy was removed');
+                  gui.alert('The buddy was removed', 'Buddylist');
               }else{
                   gui.alert('There was an error.', 'Error');
               }

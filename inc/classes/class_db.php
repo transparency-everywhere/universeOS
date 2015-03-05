@@ -95,7 +95,7 @@ class db{
 
                     //only add row to query if value is not empty
                     if(!empty($value)||($value == 0)){
-                            $query[] = " $row='".save($value)."'";
+                            $query[] = " `$row`='".save($value)."'";
                     }
             }
             $query = implode(',', $query);

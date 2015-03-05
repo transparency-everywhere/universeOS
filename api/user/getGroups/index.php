@@ -18,8 +18,6 @@
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
 
-
-$invitedUsers = json_decode($_POST['invitedUsers']);
-
+//groups
 $groupsClass = new groups();
-echo $groupsClass->createGroup($_POST['title'], $_POST['type'], $_POST['description'], $invitedUsers);
+echo json_encode($groups = $groupsClass->getGroups());

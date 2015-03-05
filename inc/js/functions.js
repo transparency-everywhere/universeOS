@@ -137,30 +137,30 @@ var init = new function(){
 			});	
 	};
 	
-	this.toolTipper = function(){
-  
-  
-
-          $(document).mousemove(function(event){
-              window.mouseX = event.pageX;
-              window.mouseY = event.pageY;
-              $('.mousePop').hide();
-          });
-          
-          
-          
-          //initialize mousePop(tooltip)
-          $('.tooltipper').mouseenter(function(){
-              
-              var type = $(this).attr("data-popType");
-              var id = $(this).attr("data-typeId");
-              var text = $(this).attr("data-text");
-              mousePop(type, id, text);
-          }).mouseleave(function(){
-              $('.mousePop').hide();
-          });
-		
-	};
+//	this.toolTipper = function(){
+//  
+//  
+//
+//          $(document).mousemove(function(event){
+//              window.mouseX = event.pageX;
+//              window.mouseY = event.pageY;
+//              $('.mousePop').hide();
+//          });
+//          
+//          
+//          
+//          //initialize mousePop(tooltip)
+//          $('.tooltipper').mouseenter(function(){
+//              
+//              var type = $(this).attr("data-popType");
+//              var id = $(this).attr("data-typeId");
+//              var text = $(this).attr("data-text");
+//              mousePop(type, id, text);
+//          }).mouseleave(function(){
+//              $('.mousePop').hide();
+//          });
+//		
+//	};
 	this.search = function(){
 		//init search
 			$("#searchField").keyup(function()
@@ -206,20 +206,21 @@ var init = new function(){
 		
 		this.dashBox();
 		
-		this.toolTipper();
+		//this.toolTipper();
 		this.search();
 		
 		dashBoard.init();
 		//fade in applications
-                $("#filesystem:hidden").fadeIn(3000);
-                $("#buddylist:hidden").fadeIn(3000);
-
-                $("#feed:hidden").fadeIn(3000);
-                $("#chat:hidden").fadeIn(3000);
                 
                 $('*').on('scroll',function(){
                  $('.itemSettingsWindow, .rightClick').hide();
                 });
+                
+                $('body').on('click',function(){
+                 $('.itemSettingsWindow, .rightClick').hide();
+                });
+                
+                item.initSettingsToggle();
           
 	};
 	
@@ -355,7 +356,12 @@ var universe = new function(){
         //sync feed request
         var feedsArray = [];
         $('.feedFrame').each(function(){
-            feedsArray.push({'type':$(this).data('type'), 'last_feed_received':$(this).data('last')});
+            
+            //@bug
+            if($(this).data('type') != 'group'){
+                               feedsArray.push({'type':$(this).data('type'), 'last_feed_received':$(this).data('last')});
+                               console.log($(this).data('type'));
+            }
         });
         requests.push({
             action : 'feed',
@@ -553,6 +559,13 @@ var User = new function(){
         //data will only be returned if getUser()==userid or userid is on buddylist of getUser()
         return api.query('api/user/getAllData/', { user_id:userid });
     }
+    
+    this.getGroups = function(){
+        return api.query('api/user/getGroups/', { });
+    };
+    this.inGroup = function(group_id){
+        return jQuery.inArray(group_id, User.getGroups() );
+    };
     this.showSignature = function(userid, timestamp, reverse){
         
         debug.log('showSignature for user '+userid+' initialized...');
@@ -642,7 +655,7 @@ var User = new function(){
 
                 output  += '</header>';
                 //output  += '<div class="">';
-                    output += '<div class="profileNavLeft">';
+                    output += '<div class="profileNavLeft leftNav dark">';
                         output += '<ul>';
                             output += '<li data-type="favorites"><img src="gfx/profile/sidebar_fav.svg"/>Favorites</li>';
                             output += '<li data-type="files"><img src="gfx/profile/sidebar_files.svg"/>Files</li>';
@@ -767,6 +780,10 @@ var User = new function(){
         var realname = this.getProfileInfo(userid)['realname'];
         console.log(realname);
         return realname;
+    };
+    
+    this.getPrivacy = function(){
+        return api.query('api/user/getPrivacy/', {});
     };
 };
           

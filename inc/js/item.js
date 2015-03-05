@@ -120,12 +120,14 @@ var item = new function(){
 					
 				}
                                 
-				list += "<li><a "+href+" "+onclick+" "+target+">"+option['title']+'a</a></li>';  
+				list += "<li><a "+href+" "+onclick+" "+target+">"+option['title']+'</a></li>';  
 					
 				});
 					
+
+
 			        var html = "<a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"btn btn-xs itemSettingsButton\">" + filesystem.generateIcon('settings', 'grey') + "</a>\n\
-                                        <div class=\"itemSettingsWindow\">\n\
+                                <div class=\"itemSettingsWindow\">\n\
                                             <ul>";
                                     html += list;
                                     
@@ -134,6 +136,39 @@ var item = new function(){
                                         </div>";
                         
 				return html;
+    };
+    this.initSettingsToggle = function(){
+       
+        $(document).on("click", ".itemSettingsButton", function(e){
+                var $settingsWindow = $(this).next('.itemSettingsWindow');
+                
+                //hide all itemSettingsWindows
+                $('.itemSettingsWindow').hide();
+                
+                $settingsWindow.show();
+                
+                
+                
+                //proof if settingswindow is in viewport
+                var inViewPort = {'right':e.clientX+170<$(window).width(), 'bottom':e.clientY+$settingsWindow.height()<$(window).height()};
+                
+                var top, left;
+                top = e.clientY;
+                left = e.clientX;
+                
+                
+                if(!inViewPort.right||!inViewPort.bottom){
+                    if(!inViewPort.right){
+                        left = e.clientX-170;
+                    }
+//                    if(!inViewPort.bottom){
+//                        top = e.clientY-$settingsWindow.height();
+//                    }
+                }
+                
+                
+                $settingsWindow.css({'top':top, 'left':left});
+        });
     };
     this.generateInfo = function(image, title, action){
         var output = '<div class="itemPreview">';

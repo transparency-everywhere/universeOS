@@ -35,14 +35,14 @@ class contextMenu{
 		$title = $this->title;
 		$info1 = $this->info1;
 				//init vars
-	            $open[] = '';
-	            $fav[] = '';
-	            $privacy[] = '';
-	            $playlist[] = '';
-				$edit[] = '';
-				$delete[] = '';
-				$protect[] = '';
-				$undeletable[] = '';
+	        $open[] = '';
+	        $fav[] = '';
+	        $privacy[] = '';
+	        $playlist[] = '';
+                $edit[] = '';
+                $delete[] = '';
+                $protect[] = '';
+                $undeletable[] = '';
 				
                 $db = new db();
 		switch($this->type){
@@ -114,7 +114,7 @@ class contextMenu{
                                 
                                 $checkFolderData = $db->select('folders', array('id', $itemId),array('privacy', 'creator'));
 				
-				$open['title'] = 'open';
+				$open['title'] = 'Open';
 				$open['href'] = '#';
 				$open['onclick'] = "openFolder('$itemId')";
 				
@@ -539,7 +539,7 @@ class contextMenu{
 				}
                                 if(!isset($target))
                                     $target = '';
-				$list .= "<li><a $href $onclick $target>".$option['title'].'a</a></li>';  
+				$list .= "<li><a $href $onclick $target>".$option['title'].'</a></li>';  
 					
 				}
 			}
