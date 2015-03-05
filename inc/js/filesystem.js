@@ -467,17 +467,18 @@ var filesystem =  new function() {
     icons['youtube'] = 'youtube';
     icons['wiki'] = 'wikipedia';
 
-    if(typeof fileType === 'undefined'){
-        icons[fileType] = 'archive'; //shall be replaced with unknown file icon
+    if(typeof fileType === 'undefined' || fileType === 'undefined' || icons[fileType] === 'undefined'){
+        icons[fileType] = 'archive'; //should be replaced with unknown file icon
     }
     if(color === 'grey' || color === 'gray'){
-        color = 'icon'; //because uk spelling is 'grey' and in the usa 'gray'
+        color = 'icon'; //because uk spelling is 'grey' and in the usa it's spelled 'gray'
     }
-    if(typeof color === 'undefined' || color !== 'white' && color !== 'icon'){
+    if(typeof color === 'undefined' || color === 'undefined' || color !== 'white' && color !== 'icon'){
         color = 'dark';
     }
 
     return '<span class="icon ' + color + '-' + icons[fileType] + '"></span>';
+    
 
 }
 };
