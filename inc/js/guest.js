@@ -213,7 +213,7 @@ var registration = new function(){
             
         });
     };
-}
+};
 
 registration.init();
 

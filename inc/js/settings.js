@@ -24,6 +24,7 @@ var settings = new function(){
                     output +=       '<li onclick="settings.showUpdatePrivacyForm();">Privacy</li>';
                     output +=       '<li onclick="settings.showUpdateBuddylistForm();">Buddylist</li>';
                     output +=       '<li onclick="settings.showGroupsForm();">Groups</li>';
+                    output +=       '<li onclick="settings.showSecurityOverview();">Security</li>';
                     output +=       '<!-- <li><a href="">Security</a></li> -->';
                     output +=       '<!-- <li><a href="">Services</a></li> -->';
                     output +=   '</ul>';
@@ -35,7 +36,7 @@ var settings = new function(){
                 
                 
         this.applicationVar = new application('settings');
-	this.applicationVar.create('Settings', 'html', output,{width: 2, height:  5, top: 0, left: 0});
+	this.applicationVar.create('Settings', 'html', output,{width: 6, height:  5, top: 0, left: 3});
 	this.showUpdateProfileForm()
     };
     this.show = function(){
@@ -59,7 +60,7 @@ var settings = new function(){
         var captions = this.getPrivacyCaptions();
         var types = this.getPrivacyTypes();
         
-        var output = '<div id="privacySettings">';
+        var output = '<div id="privacySettings"><h2 style="margin-top:0">Privacy</h2>';
             
             
             $.each(types, function(index, value){
@@ -141,20 +142,99 @@ var settings = new function(){
         });
     };
     
+    
+    
     this.showUpdateBuddylistForm = function(){
         var settings_buddylist = buddylist.getBuddies();
         var output = '<div id="settingsBuddylist"><h2 style="margin-top:0">Buddylist</h2>';
-        output += '<ul class="grayList">';
-        $.each(settings_buddylist, function(index, value){
-           output += '<li><div>'; 
-           output += User.showPicture(value);
-           output += useridToUsername(value);
-           
-           output += '</div><button class="button" onclick="buddylist.removeBuddy(\''+value+'\');">Unfriend</button></li>'; 
-        });
-        output += '</ul></div>';
+        if(settings_buddylist.length === 0){
+            
+            output += '<h3>You don\'t have anyone on your Buddylist so far.</h3>';
+            output += '<h3>Use the search to look for people you know</h3>';
+            
+        }else{
+            output += '<ul class="grayList">';
+
+            $.each(settings_buddylist, function(index, value){
+               output += '<li><div>'; 
+               output += User.showPicture(value);
+               output += useridToUsername(value);
+
+               output += '</div><button class="button" onclick="buddylist.removeBuddy(\''+value+'\');">Unfriend</button></li>'; 
+            });
+            output += '</ul>';
+        }
+        output += '</div>';
         
         $('#settingsFrame').html(output);
+        
+    };
+    this.showSecurityOverview = function(){
+        
+        var output = '<div id="settingsSecurity"><h2 style="margin-top:0">Change Password</h2>';
+        output += '<a href="#" class="button" id="changePasswordButton">Change Password</a>';
+        output += '</div>';
+        
+        $('#settingsFrame').html(output);
+        
+        $('#changePasswordButton').click(function(){
+           settings.showUpdatePasswordForm(); 
+        });
+        
+    };
+    this.showUpdatePasswordForm = function(){
+        
+        
+         var user_info = User.getProfileInfo(User.userid);
+        
+        var fieldArray = [];
+        var options = [];
+        options['headline'] = 'Update Profile';
+        options['buttonTitle'] = 'Save';
+        options['noButtons'] = true;
+        //Realname, City, Hometown, Birthdate, School, University, Work
+        
+        
+        var field0 = [];
+        field0['caption'] = 'Picture';
+        field0['type'] = 'html';
+        field0['value'] = "<div id='userpicture_area'></div><a href='#' class='button' id='changePicture'>Change Picture</a>";
+        field0['caption_position'] = 'left';
+        fieldArray[0] = field0;
+        
+        var field1 = [];
+        field1['caption'] = 'Old Password';
+        field1['inputName'] = 'old_password';
+        field1['type'] = 'password';
+        field1['caption_position'] = 'left';
+        fieldArray[1] = field1;
+        
+        var field2 = [];
+        field2['caption'] = 'New Password';
+        field2['inputName'] = 'new_password';
+        field2['type'] = 'password';
+        field2['caption_position'] = 'left';
+        fieldArray[2] = field2;
+        
+        var field3 = [];
+        field3['caption'] = 'Repeat New Password';
+        field3['inputName'] = 'password';
+        field3['type'] = 'text';
+        field3['caption_position'] = 'left';
+        fieldArray[3] = field3;
+        
+        $('#settingsFrame').html('<div id="updatePasswordContainer"></div>');
+        
+       // formModal.init('Update Profile', '<div id="updateProfileFormContainer"></div>', modalOptions);
+        gui.createForm('#updatePasswordContainer',fieldArray, options);
+        
+        $('#updateProfileFormContainer .dynForm').submit(function(e){
+            e.preventDefault();
+            settings.updateProfileInfo($('#updateProfileFormContainer #realname').val(), $('#updateProfileFormContainer #city').val(), $('#updateProfileFormContainer #hometown').val(), birthdate, $('#updateProfileFormContainer #school').val(), $('#updateProfileFormContainer #university').val(), $('#updateProfileFormContainer #work').val());
+            
+        });
+        
+        
         
     };
     this.showUpdateProfileForm = function(){
@@ -222,7 +302,7 @@ var settings = new function(){
         field6['type'] = 'text';
         field6['value'] = user_info['university1'];
         field6['caption_position'] = 'left';
-        fieldArray[6] = field5;
+        fieldArray[6] = field6;
         
         var field7 = [];
         field7['caption'] = 'Work';
@@ -248,41 +328,79 @@ var settings = new function(){
             e.preventDefault();
             var birthdate = '09.07.1991';
             settings.updateProfileInfo($('#updateProfileFormContainer #realname').val(), $('#updateProfileFormContainer #city').val(), $('#updateProfileFormContainer #hometown').val(), birthdate, $('#updateProfileFormContainer #school').val(), $('#updateProfileFormContainer #university').val(), $('#updateProfileFormContainer #work').val());
-            
+            gui.alert('Your changes have been saved.','Settings');
         });
         
         //load userpicture
         $('#userpicture_area').html(User.showPicture(User.userid));
+        
+        $('#changePicture').click(function(){
+            settings.showUpdatePictureForm();
+        });
     };
     this.showUpdatePictureForm = function(){
-        var output = '';
-        output += '<h2>Update your userpicture</h2>';
-        output += '<h3>Current userpicture</h3>';
+        var output = '<div>';
+        output += '<style>';
+        
+        output += '#settingsFrame h3{display:block!important;clear:left!important;} #settingsFrame .userPicture{border-radius:0!important; width:120px!important;height:120px!important;} #settingsFrame #buttons{margin-top:50px;} #settingsFrame .userPicture{float: none;}';
+        output += '</style>';
+        output += '<form target="submitter" onsubmit="alert(\'sdrft\');" action="api/user/uploadUserPicture/" id="userForm" enctype="multipart/form-data" method="post">';
+        
+        output += '<h2>Current userpicture</h2>';
         output += User.showPicture(User.userid);
-        output += '<h3>Upload new userpicture</h3>';
-        output += '';
-        output += '<a href="#" class="antiButton pull-left">Cancel</a>';
-        output += '<a href="#" class="button pull-right">Change Picture</a>';
+        output += '<h2 style="padding-top:50px">Upload new userpicture</h2>';
+        output += '<input name="userpicture" type="file">';
+        output += '</form>';
+        output += '<div id="buttons">';
+        output += '<a href="#" class="antiButton pull-left" id="cancelButton">Cancel</a>';
+        output += '<a href="#" class="button pull-right" id="changeButton">Change Picture</a>';
+        output += '</div></div>';
         $('#settingsFrame').html(output);
+      
+        $('#settingsFrame #cancelButton').click(function(){
+            settings.showUpdateProfileForm();
+        });
+      
+        $('#settingsFrame #changeButton').click(function(){
+            $('#settings #userForm').submit();
+        });
     };
     this.showGroupsForm = function(){
-        var output = '<div id="settingsBuddylist">';
+        var output = '<div id="settingsGroups"><h2 style="margin-top:0">Groups</h2>';
         
-        
-            output += '<ul class="grayList">';
             var profile_groups = groups.get(User.userid);
+        if(typeof profile_groups === 'undefined'){
+            
+            output += '<h3>You are not in any Group so far.</h3>';
+            output += '<h3>Search for Groups or create a new one:</h3>';
+            output += '<a href="#" class="button" onclick="groups.showCreateGroupForm();">Create Group</a>';
+            
+        }else{
+            output += '<ul class="grayList">';
             if(typeof profile_groups !== 'undefined'){
+                
                 $.each(profile_groups, function(index, value){
-                    output += '<li onclick="groups.show('+value+')"><div><span class="icon icon-group"></span>';
+                    
+                    var groupdata = groups.getData(value);
+                    var adminButton = '';
+                    if(groupdata.isAdmin){
+                        adminButton = '<a href="#" class="button" onclick="settings.showGroupAdminForm('+value+'); return false">Admin</a>';
+                    }
+
+                    output += '<li><div onclick="groups.show('+value+')"><span class="icon icon-group"></span>';
                     output += '<span class="username" style="font-size:18px; padding-top: 5px;">'+groups.getTitle(value)+'</span>';
-                    output += '</div><button class="button" onclick="groups.leave(\''+value+'\');">Leave</button></li>';
+                    output += '</div><button class="button" onclick="groups.leave(\''+value+'\'); return false">Leave</button>'+adminButton+'</li>';
                 });
             }
-            output += '</ul></div>';
+            output += '</ul>';
+        }
+            output += '</div>';
         $('#settingsFrame').html(output);
     };
     this.showGroupAdminForm = function(group_id){
-        var user_info = User.getProfileInfo(User.userid);
+        var groupData = groups.getData(group_id);
+        
+        console.log(groupData);
         
         var fieldArray = [];
         var options = [];
@@ -317,37 +435,64 @@ var settings = new function(){
         field2['caption_position'] = 'left';
         fieldArray[2] = field2;
         
-        //public
-        var field3 = [];
-        field3['caption'] = 'Public';
-        field3['inputName'] = 'public';
-        field3['type'] = 'text';
-        field3['value'] = groupData['public'];
-        field3['caption_position'] = 'left';
+        //@old
+        //overwrite old value, can be removed in future
+        if(groupData['public'] === 'public'){
+            groupData['public'] = '1';
+        }else if(groupData['public'] === 'private'){
+            groupData['public'] = '0';
+        }
+        
+        var captions = ['Public', 'Private'];
+        var type_ids = ['1', '0'];
+
+        var field3= [];
+        field3['caption'] = 'Type';
+        field3['inputName'] = 'type';
+        field3['values'] = type_ids;
+        field3['captions'] = captions;
+        field3['type'] = 'dropdown';
+        field3['preselected'] = groupData['public'];
         fieldArray[3] = field3;
         
         var field4 = [];
         field4['caption'] = 'Admin';
         field4['inputName'] = 'admin';
-        field4['type'] = 'text';
-        field4['value'] = groupData['admin'];
+        field4['type'] = 'html';
+        field4['value'] = useridToUsername(groupData['admin']);
         field4['caption_position'] = 'left';
         fieldArray[4] = field4;
         
         var field5 = [];
         field5['caption'] = 'Are members allowed to invite other users?';
         field5['inputName'] = 'membersInvite';
-        field5['type'] = 'text';
-        field5['value'] = groupData['membersInvite'];
+        field5['type'] = 'checkbox';
+        if(groupData['membersInvite'] == '1'){
+            field5['checked'] = true;
+        }
         field5['caption_position'] = 'top';
         fieldArray[5] = field5;
         
-        var field8 = [];
-        field8['caption'] = '';
-        field8['inputName'] = 'buttons';
-        field8['type'] = 'html';
-        field8['value'] = '<div id=\'buttons\'><input type=\'submit\' value=\'save\' class=\'button pull-right\'></div>';
-        fieldArray[8] = field8;
+        
+            //generate member list
+            
+        
+        
+        //members list
+        var field6 = [];
+        field6['caption'] = 'Members:';
+        field6['inputName'] = 'membersInvite';
+        field6['type'] = 'text';
+        field6['value'] = groupData['membersInvite'];
+        field6['caption_position'] = 'top';
+        fieldArray[6] = field6;
+        
+        var field7 = [];
+        field7['caption'] = '';
+        field7['inputName'] = 'buttons';
+        field7['type'] = 'html';
+        field7['value'] = '<div id=\'buttons\'><input type=\'submit\' value=\'save\' class=\'button pull-right\'></div>';
+        fieldArray[7] = field7;
         
         $('#settingsFrame').html('<div id="updateProfileFormContainer"></div>');
         
@@ -365,7 +510,9 @@ var settings = new function(){
         $('#userpicture_area').html(User.showPicture(User.userid));
         //members
     };
-    
+    this.showUpdateGroupPictureForm = function(group_id){
+        alert('needs to be implemented');
+    };
     
     this.submitPassword = function () {
             if($('#newPassword').val() === $('#newPasswordRepeat').val() && $('#newPassword').val().length > 0){ 

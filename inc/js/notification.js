@@ -70,9 +70,9 @@ var notification = function(options){
                 '+options.message+'\n\
             </div>\n\
             <div class="messageButton">\n\
-                <a href="#" onclick="'+options.acceptButton.action+'" class="btn btn-success btn-xs" style="margin-right:25px;">'+options.acceptButton.value+'</a>';
+                <a href="#" onclick="'+options.acceptButton.action+'" class="button" style="margin-right:25px;">'+options.acceptButton.value+'</a>';
             if(options.cancelButton){
-                html += '<a href="#" onclick="'+options.cancelButton.action+'" class="btn btn-default btn-xs" style="margin-right:25px;">'+options.cancelButton.value+'</a>';
+                html += '<a href="#" onclick="'+options.cancelButton.action+'" class="antiButton" style="margin-right:25px;">'+options.cancelButton.value+'</a>';
             }
             html += '</div>\n\
         </li>';

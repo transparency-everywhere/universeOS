@@ -1,4 +1,4 @@
-//        This file is published by transparency - everywhere with the best deeds.
+ //        This file is published by transparency - everywhere with the best deeds.
 //        Check transparency - everywhere.com for further information.
 //        Licensed under the CC License, Version 4.0 (the "License");
 //        you may not use this file except in compliance with the License.
@@ -31,7 +31,9 @@ var groups = new function(){
         };
        
         
-        this.getMembers = function(group_id){
+        this.getUsers = function(group_id){
+            
+            return api.query('api/groups/getUsers/', {'group_id':group_id});
             
         };
         this.getPlaylists = function(group_id){
@@ -60,7 +62,7 @@ var groups = new function(){
             
             var adminButton;
             if(groupdata.isAdmin){
-                adminButton = '<a href="#" class="button">Admin</a>';
+                adminButton = '<a href="#" class="button" onclick="settings.showGroupAdminForm('+group_id+');">Admin</a>';
             }
             
             
@@ -428,7 +430,7 @@ var groups = new function(){
                 
                 groups.create($('.blueModal #title').val(), $('.blueModal #type').val(), $('.blueModal #description').val(), invitedUsers, callback);
             };
-            formModal.init('Update CreateGroup', '<div id="createGroupFormContainer"></div>', modalOptions);
+            formModal.init('Create Group', '<div id="createGroupFormContainer"></div>', modalOptions);
             gui.createForm('#createGroupFormContainer',fieldArray, options);
         };
         

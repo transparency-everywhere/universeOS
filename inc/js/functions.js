@@ -382,6 +382,9 @@ var universe = new function(){
         });
         
     };
+    this.generateMessage = function(userid, message){
+        
+    };
     this.handleReloadTypes = function(responseElement){
         switch(responseElement.action){
             
@@ -394,7 +397,7 @@ var universe = new function(){
                     var notificationId = this.notificationArray.length+1;
                     this.notificationArray[notificationId]
                             = new notification({
-                                                    message: User.showPicture(responseElement.data.userid)+useridToUsername(responseElement.data.userid)+' want\'s to be your friend',
+                                                    message: User.showPicture(responseElement.data.userid)+useridToUsername(responseElement.data.userid)+'&nbsp; want\'s to be your friend',
                                                     acceptButton:{
                                                         action: 'buddylist.acceptBuddyRequest('+responseElement.data.userid+')',
                                                         value: 'accept'
@@ -500,7 +503,7 @@ var User = new function(){
     };
     this.showPicture = function(userid, lastActivity, size){
 	 
-        debug.log('showPicture initialized...');       
+        debug.log('showPicture initialized...');
         var userpicture = getUserPicture(userid);
         if(typeof lastActivity === 'undefined'){
             debug.log('     get user activity for user '+userid);
@@ -1329,11 +1332,41 @@ var sec =  new function() {
         return message;
     };
 
-
     this.randomString = function(){
 			    	return hash.SHA512(randomString(64, '#aA'));  //generate salt and hash it.
 			    	
 			    };
+                            
+    this.updatePassword = function(oldPassword, newPassword, userid){
+    	
+		//cypher old password
+		var shaPass_old = hash.SHA512('abcabc');
+		var passwordHash_old = cypher.getKey('auth', userid, shaPass_old);
+                
+
+		var privateKey = cypher.getPrivateKey('user', userid);
+		var keysNew = cypher.createKeysForUser(newPassword);
+                console.log(keysNew);
+                privateKey = sec.symEncrypt(keysNew['keyHash'], privateKey); //encrypt privatestring, using the password hash
+	    
+                $.post("api.php?action=updatePassword", {
+                    oldPassword:passwordHash_old,
+                    password:keysNew['authHash'],
+                    authSalt:keysNew['authSaltEncrypted'],
+                    keySalt:keysNew['keySaltEncrypted'],
+                    privateKey:privateKey
+	    	}, function(result){
+		    	if(result == 1){
+		    		
+	    			parent.localStorage.currentUser_passwordHashMD5 = passwordHashMD5New;
+		    		jsAlert('', 'Your password has been changed');
+		    	}else{
+		    		jsAlert('', result);
+		    	}
+	    	}, "html");
+	    
+	    
+    }
 };
 var tabs = function(parentIdentifier){
     this.parentIdentifier = parentIdentifier;

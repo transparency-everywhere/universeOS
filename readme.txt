@@ -1,8 +1,15 @@
+Pleas mark stuff thats depraciated with @old
+
 Update
     Delete Users where cypher is md5 or sha512
 
     user
         +profile_info
+        move old userpictures from/userPictures
+    groups
+        public: public->1
+                not publ->0
+
 
     add table playlists/Delete Table 'playlist'
 
@@ -12,16 +19,33 @@ Update
 
     fade in applications
 
-todo
-    suche load more..
 
-    formclass caption position: top/left/placeholder
+
+todo
+
+    fix raster
+
+    standard birthdate in settings is 09.07.1991 -> add timepick calendar
+
+    add protection to userPicture element, groupicture element etc
+
+    fade in applications
+
+    suche load more..
 
     rightclick .rightclick, data-type data-typeId
 
     comments auflösen, alle comments werden feeds :/
 
     add type xml and json to openlink
+
+    registration
+        hints for stronger passwords
+
+    group admin
+        change group picture
+
+        members
 
 Recent:                                                         Release Message
 

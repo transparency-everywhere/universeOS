@@ -409,8 +409,8 @@ li.notHidden{
 }
 
 .gui_form_table .caption{
-    font-size: 20px;
-    padding-bottom: 10px;
+    /* font-size: 20px; */
+    /* padding-bottom: 10px; */
 }
 
 .formTable{
@@ -720,6 +720,7 @@ border-bottom: 1px solid #292929;
     margin-right: 0px;
     overflow: auto;
     background-color: rgb(255, 255, 255);
+    padding-bottom: 30px;
 }
 
 .step{
@@ -765,8 +766,8 @@ border-bottom: 1px solid #292929;
 	left: 20px;
 }
 
-#settings #updateProfileFormContainer, #settings #privacySettings{
-    margin: 20px 20px 20px 15px;
+#settings #settingsFrame>div{
+    margin: 20px 20px 0 15px;
 }
 
 #settings #updateProfileFormContainer .userPicture{
@@ -795,10 +796,16 @@ border-bottom: 1px solid #292929;
     width: 100%;
 }
 
+
 #settingsBuddylist ul li .button{
     margin-right: -110px;
     margin-top: -45px;
     float: right;
+}
+
+
+#settingsBuddylist ul li a.button{
+    margin-top: -84px;
 }
 
 #settingsBuddylist ul {
@@ -813,6 +820,7 @@ border-bottom: 1px solid #292929;
 #privacySettings li{
     width:33.3%;
     float:left;
+    cursor: pointer;
 }
 
 #privacySettings li div{
@@ -1950,6 +1958,13 @@ color:#FFFFFF;
                     margin-bottom: 5px;
                 }
                 
+                #dock .button:first-of-type{
+                    margin-left: 3px;
+                }
+                #dock .button{
+                    margin-right:3px;
+                }
+                
                 /*.listContainer and .list cause a box with
                 an header element and an ul that disapears
                 if empty(used in dockmenu ajax stuff)*/
@@ -2478,6 +2493,13 @@ del.bar{
     overflow: hidden;
     font-size: 16px;
 }
+.leftNav.dark li:hover{
+    background-color:  #00bcd4;
+}
+.leftNav.dark li:active, .leftNav.dark li:focus{
+    background-color:  #263238;
+}
+
 .leftNav.dark li .icon{
     width: 21px;
     height: 21px;
@@ -2855,12 +2877,29 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
     bottom: 0;
 }
 
+#notifications ul{
+    margin:0;
+}
+
 #notifications>ul>li {
     /* position: absolute; */
-    background: #FFF;
-    width: 220px;
-    margin: 5px;
+    background-color:  #263238;
+    box-shadow: 1px 3px 8px 0px rgba(0, 0, 0, 0.3);
+    width: 310px;
+    max-height: 120px;
+    color:#FFF;
     padding: 10px;
+    font-size: 20px;
+    margin-top: 1px;
+    margin-left: 1px;
+}
+#notifications>ul>li .userPicture{
+    margin-right:5px;
+}
+
+#notifications>ul>li .messageButton{
+  margin-top: 20px;
+margin-bottom: 3px;
 }
 
 	#systemAlerts{
@@ -3673,9 +3712,8 @@ and (max-width : 320px) {
     background-color:  #00bcd4;
     width: 100px;
     margin-top: 2.5px;
-    margin-left: 5px;
     height: 35px;
-    padding: 7px 0;
+    padding: 7px 7px;
     text-align: center;
     font-size:16px;
 border: none;
@@ -3687,7 +3725,7 @@ border: none;
     width: 100px;
     margin-top: 2.5px;
     height: 35px;
-    padding: 7px 0;
+    padding: 7px;
     text-align: center;
     font-size:16px;
 }

@@ -127,7 +127,7 @@ switch($action){
             echo"false";
         }
     break;
-    case 'messengerLogin':
+        case 'messengerLogin':
 		if(empty($_POST['username']))
 			$username = save($_GET['username']);
 		else 

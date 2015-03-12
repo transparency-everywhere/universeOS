@@ -68,7 +68,7 @@ var gui = new function(){
                         case'wysiwyg':
                             break;
                         case'checkbox':
-                            mainHTML += '<td class="caption">' + fieldData.caption + '</td><td>&nbsp;</td>';
+                            mainHTML += '<td colspan="3">' + fieldData.caption + '</td>';
                             break;
                         case'dropdown':
                             break;
@@ -725,6 +725,7 @@ var gui = new function(){
     	$('body').html($(this).html().replaceAll("/(b(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig","<a href='#' onclick='$1'>$1</a>"));
         
     }
+    
 };
               
         
