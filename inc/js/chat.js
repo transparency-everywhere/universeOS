@@ -18,7 +18,7 @@ var chat = new function(){
     this.tabs;
     this.init = function(){
         this.applicationVar = new application('chat');
-        this.applicationVar.create('Chat', 'html', '<div id="chatFrame"></div>',{width: 2, height:  2, top: 0, left: 5});
+        this.applicationVar.create('Chat', 'html', '<div id="chatFrame"></div>',{width: 2, height:  2, top: 0, left: 5, hidden:true});
         
         
 	this.tabs = new tabs('#chatFrame');
