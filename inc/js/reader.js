@@ -13,7 +13,8 @@
 //        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //        See the License for the specific language governing permissions and
 //        limitations under the License.
-//        @author nicZem for Tranpanrency - everywhere.com
+//        @author nicZem for transparency-everywhere.com
+//        @author pabst for transparency-everywhere.com
         
 
 var reader = new function(){
@@ -23,8 +24,11 @@ var reader = new function(){
     this.uffChecksums = []; //var to store checksums for reload
     
     this.init = function(){
+        var grid = {width: 5, height:  4, top: 6, left: 3, hidden: true};
+        if(proofLogin())
+            grid = {width: 8, height:  8, top: 1, left: 2, hidden: true};
         this.applicationVar = new application('reader');
-        this.applicationVar.create('Reader', 'url', 'modules/reader/index.php',{width: 5, height:  4, top: 0, left: 4, hidden: true});
+        this.applicationVar.create('Reader', 'url', 'modules/reader/index.php', grid);
         
         
 	this.tabs = new tabs('#readerFrame');
@@ -49,20 +53,110 @@ var reader = new function(){
         
         var output = '';
         
+        console.log(fileData['type']);
+        
         switch(fileData['type']){
             //cases: text, uff, image, pdf?, audio?, video?
-            case 'image', 'image/jpeg', 'image/png', 'image/tiff', 'image/gif':
+            case 'image':
+            case 'image/jpeg':
+            case 'image/png':
+            case 'image/tiff':
+            case 'image/gif':
+                var title = fileData['title'];
+                var imgPath = "./upload/" + folders.getPath(elements.getData(fileData['folder'])['folder']) + fileData['filename'];
+                output += '<div class="openFile">';
+                    output += header;
+                    output += "<div class=\"fileWindow\" id=\"fileWindowId\">";
+                        output += "<div class=\"imageReader\">";
+                            output += "<div class=\"mainImage\">";
+                                output += "<img src=\"" + imgPath + "\" />";
+                            output += "</div>";
+                            output += "<div class=\"previewImages\">";
+                                output += "Thumbs muss ich noch regeln!"; //Thumbs muss ich noch regeln!
+                                output += "";
+                                output += "";
+                                output += "";
+                            output += "</div>";
+                        output += "</div>";
+                    output += '</div>';
+                output += '</div>';
+            break;
+            
+            
+            case 'text/plain':
+            case 'text/x-c++':
                 var title = fileData['title'];
                 output += '<div class="openFile">';
                     output += header;
                     output += "<div class=\"fileWindow\" id=\"fileWindowId\">";
-                        //this iframe is used to handle all the onload, onsubmit, onkeyup events, its necessary because of the fact that the dhtml-goddies tab script parses the damn js
-                        //dirty solution!!!
-                        output += "<div class=\"imageReader\">";
+                        output += "<div class=\"textReader\">";
                         output += "";
                         output += "";
                         output += "";
-                        output += "aaaaaaaaaasd";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "</div>";
+                    output += '</div>';
+                output += '</div>';
+            break;
+            
+            
+            case 'audio':
+            case 'audio/wav':
+            case 'audio/mpeg':
+                var title = fileData['title'];
+                output += '<div class="openFile">';
+                    output += header;
+                    output += "<div class=\"fileWindow\" id=\"fileWindowId\">";
+                        output += "<div class=\"audioReader\">";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "</div>";
+                    output += '</div>';
+                output += '</div>';
+            break;
+            
+            
+            case 'video':
+            case 'video/mp4':
+                var title = fileData['title'];
+                output += '<div class="openFile">';
+                    output += header;
+                    output += "<div class=\"fileWindow\" id=\"fileWindowId\">";
+                        output += "<div class=\"videoReader\">";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "</div>";
+                    output += '</div>';
+                output += '</div>';
+            break;
+            
+            
+            case 'application/pdf':
+                var title = fileData['title'];
+                output += '<div class="openFile">';
+                    output += header;
+                    output += "<div class=\"fileWindow\" id=\"fileWindowId\">";
+                        output += "<div class=\"pdfReader\">";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
                         output += "";
                         output += "";
                         output += "";
@@ -103,6 +197,18 @@ var reader = new function(){
                     output += '</div>';
                 output += '</div>';
             break;
+            
+            default:
+                var title = fileData['title'];
+                output += '<div class="openFile">';
+                    output += header;
+                    output += "<div class=\"fileWindow\" id=\"fileWindowId\">";
+                        output += "<div class=\"swwReader\">";
+                        output += "<span>Sorry, but this file isn't compatible with the universeOS. :(</span>";
+                        output += "</div>";
+                    output += '</div>';
+                output += '</div>';
+            break;
         }
         
         reader.tabs.addTab(title, 'html', output, function(){
@@ -136,6 +242,7 @@ var reader = new function(){
         
     };
     this.openLink = function(){
+        //wikipedia, youtube
         
     };
     

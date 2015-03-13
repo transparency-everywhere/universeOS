@@ -12,13 +12,17 @@
 //        See the License for the specific language governing permissions and
 //        limitations under the License.
 //        @author nicZem for transparency-everywhere.com
+//        @author pabst for transparency-everywhere.com
 
 
 var filesystem =  new function() {
     this.init = function(){
         var html = '<div id="fileBrowserFrame"></div>';
+        var grid = {width: 6, height:  4, top: 7, left: 0};
+        if(proofLogin())
+            grid = {width: 6, height:  5, top: 0, left: 3};
         this.applicationVar = new application('filesystem');
-        this.applicationVar.create('Filesystem', 'html', html,{width: 6, height:  5, top: 0, left: 3});
+        this.applicationVar.create('Filesystem', 'html', html, grid);
         this.tabs = new tabs('#fileBrowserFrame');
         this.tabs.init();
 	this.tabs.addTab('universe', '', this.generateFullFileBrowser(0));
