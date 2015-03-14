@@ -13,7 +13,8 @@
 //        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //        See the License for the specific language governing permissions and
 //        limitations under the License.
-//        @author nicZem for Tranpanrency - everywhere.com
+//        @author nicZem for transparency-everywhere.com
+//        @author pabst for transparency-everywhere.com
         
 
 var reader = new function(){
@@ -23,8 +24,11 @@ var reader = new function(){
     this.uffChecksums = []; //var to store checksums for reload
     
     this.init = function(){
+        var grid = {width: 5, height:  4, top: 6, left: 3, hidden: true};
+        if(proofLogin())
+            grid = {width: 8, height:  8, top: 1, left: 2, hidden: true};
         this.applicationVar = new application('reader');
-        this.applicationVar.create('Reader', 'url', 'modules/reader/index.php',{width: 5, height:  4, top: 0, left: 4, hidden: true});
+        this.applicationVar.create('Reader', 'url', 'modules/reader/index.php', grid);
         
         
 	this.tabs = new tabs('#readerFrame');
@@ -37,11 +41,132 @@ var reader = new function(){
     this.openFile = function(file_id){
         var fileData = filesystem.getFileData(file_id);
         
+        var header = "<header class=\"white-gradient\">";
+        header += filesystem.generateIcon(fileData['type'], 'grey');
+        header += "<span class=\"title\">" + fileData['title'] + "</span>";
+        header += item.showScoreButton('file', file_id);
+        header += filesystem.generateIcon('download', 'grey');
+        header += item.showItemSettings('file', file_id);
+        header += filesystem.generateIcon('plus', 'grey');
+        header += filesystem.generateIcon('minus', 'grey');
+        header += "</header>";
+        
+        var output = '';
+        
+        console.log(fileData['type']);
         
         switch(fileData['type']){
-            //cases: ...
+            //cases: text, uff, image, pdf?, audio?, video?
+            case 'image':
+            case 'image/jpeg':
+            case 'image/png':
+            case 'image/tiff':
+            case 'image/gif':
+                var title = fileData['title'];
+                var imgPath = "./upload/" + folders.getPath(elements.getData(fileData['folder'])['folder']) + fileData['filename'];
+                output += '<div class="openFile">';
+                    output += header;
+                    output += "<div class=\"fileWindow\" id=\"fileWindowId\">";
+                        output += "<div class=\"imageReader\">";
+                            output += "<div class=\"mainImage\">";
+                                output += "<img src=\"" + imgPath + "\" />";
+                            output += "</div>";
+                            output += "<div class=\"previewImages\">";
+                                output += "Thumbs muss ich noch regeln!"; //Thumbs muss ich noch regeln!
+                                output += "";
+                                output += "";
+                                output += "";
+                            output += "</div>";
+                        output += "</div>";
+                    output += '</div>';
+                output += '</div>';
+            break;
+            
+            
+            case 'text/plain':
+            case 'text/x-c++':
+                var title = fileData['title'];
+                output += '<div class="openFile">';
+                    output += header;
+                    output += "<div class=\"fileWindow\" id=\"fileWindowId\">";
+                        output += "<div class=\"textReader\">";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "</div>";
+                    output += '</div>';
+                output += '</div>';
+            break;
+            
+            
+            case 'audio':
+            case 'audio/wav':
+            case 'audio/mpeg':
+                var title = fileData['title'];
+                output += '<div class="openFile">';
+                    output += header;
+                    output += "<div class=\"fileWindow\" id=\"fileWindowId\">";
+                        output += "<div class=\"audioReader\">";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "</div>";
+                    output += '</div>';
+                output += '</div>';
+            break;
+            
+            
+            case 'video':
+            case 'video/mp4':
+                var title = fileData['title'];
+                output += '<div class="openFile">';
+                    output += header;
+                    output += "<div class=\"fileWindow\" id=\"fileWindowId\">";
+                        output += "<div class=\"videoReader\">";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "</div>";
+                    output += '</div>';
+                output += '</div>';
+            break;
+            
+            
+            case 'application/pdf':
+                var title = fileData['title'];
+                output += '<div class="openFile">';
+                    output += header;
+                    output += "<div class=\"fileWindow\" id=\"fileWindowId\">";
+                        output += "<div class=\"pdfReader\">";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "";
+                        output += "</div>";
+                    output += '</div>';
+                output += '</div>';
+            break;
+            
             case 'UFF':
-                var output = '';
                 if(privacy.authorize(fileData['privacy'], "edit", fileData['owner'])){
                     var readOnly = "false";
                 }else{
@@ -50,19 +175,8 @@ var reader = new function(){
 
                 var title = fileData['title'];
 
-
-
-                var icon = "<img src=\"$subpath"+"gfx/icons/fileIcons/$icon\" height=\"20\">";
-
                 output += '<div class="openFile">';
-                    output += "<header class=\"gray-gradient\">";
-                    output += icon;
-                    output += "<span class=\"title\">$title $type</span>";
-                    output += "<span class=\"controls\">$controls</span>";
-                    output += "<span class=\"bar\">$bar</span>";
-                    output += "<span class=\"score\">$score</span>";
-                    output += "<span class=\"download\">$download</span>";
-                    output += "</header>";
+                    output += header;
                     output += "<div class=\"fileWindow\" id=\"fileWindowId\">";
 
 
@@ -71,17 +185,7 @@ var reader = new function(){
                         output += "<div class=\"uffViewerNav\">";
                                 output += "<div style=\"margin: 10px;\">";
                                         output += "<ul>";
-                                    output += '<li style="font-size: 11pt; margin-bottom: 05px;"><i class="icon icon-user"></i>&nbsp;<strong>Active Users</strong></li>';
-                                    //show active users
-                //	            $.each($activeUsers AS &$activeUser){
-                //	                if(!empty($activeUser)){
-                //	                output += "<li onclick=\"openProfile($activeUser);\" style=\"cursor: pointer;\">";
-                //	                //$output .= showUserPicture($activeUser, "11");
-                //	                output +=  "&nbsp;";
-                //	                output +=  useridToUsername($activeUser);
-                //	                output += "</li>";
-                //	                }
-                //	            }
+                                            output += '<li style="font-size: 11pt; margin-bottom: 05px;"><i class="icon icon-user"></i>&nbsp;<strong>Active Users</strong></li>';
                                         output += "</ul>";
                                 output += "</div>";
                         output += "</div>";
@@ -89,6 +193,18 @@ var reader = new function(){
                         output += "<div class=\"uffViewerMain\">";
                                 output += "<textarea class=\"uffViewer_"+file_id+" WYSIWYGeditor\" id=\"editor1\">";
                                 output += "</textarea>";
+                        output += "</div>";
+                    output += '</div>';
+                output += '</div>';
+            break;
+            
+            default:
+                var title = fileData['title'];
+                output += '<div class="openFile">';
+                    output += header;
+                    output += "<div class=\"fileWindow\" id=\"fileWindowId\">";
+                        output += "<div class=\"swwReader\">";
+                        output += "<span>Sorry, but this file isn't compatible with the universeOS. :(</span>";
                         output += "</div>";
                     output += '</div>';
                 output += '</div>';
@@ -126,6 +242,7 @@ var reader = new function(){
         
     };
     this.openLink = function(){
+        //wikipedia, youtube
         
     };
     
