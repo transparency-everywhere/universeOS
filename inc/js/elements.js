@@ -11,7 +11,8 @@
 //        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //        See the License for the specific language governing permissions and
 //        limitations under the License.
-//        @author nicZem for Transparency-everywhere.com
+//        @author nicZem for transparency-everywhere.com
+//        @author pabst for transparency-everywhere.com
         
 
 var elements = new function(){
@@ -20,71 +21,21 @@ var elements = new function(){
         var elementData = this.getData(element);
         var elementAuthorData = this.getAuthorData(elementData['author']);
         var link = "./modules/reader/showfile.php?type=" + elementData['type'];
+        var header = "<header class=\"white-header\">";
+        header += filesystem.generateIcon(elementData['type'], 'grey');
+        header += "<span class=\"title\">" + elementData['title'] + "</span>";
+        header += item.showScoreButton('element', element);
+        header += '<a href=\"#\" id=\"settingsButton\" onclick=\"$(\'.elementSettings' + element + '\').slideToggle(\'slow\'); return false\" title=\"more...\">' + filesystem.generateIcon('settings', 'grey') + '</a>'; 
+        header += '<ul class="elementSettings elementSettings' + element + '">';		 
+        header += '<li><a href="#" onclick="filesystem.showCreateUFFForm(\'' + element + '\'); " target="submitter">' + filesystem.generateIcon('file', 'white') + '&nbsp;Create an UFF</a></li>';
+        header += '<li><a href="#" onclick="links.showCreateLinkForm(\'' + element + '\');">' + filesystem.generateIcon('file', 'white') + '&nbsp;Add a link</a></li>';		  			
+        header += '<li><a href="#" onclick="filesystem.openUploadTab(\'' + element + '\');">' + filesystem.generateIcon('link', 'white') + '&nbsp;Upload a file or an image</a></li>';
+        header += '</ul>';
+        header += "</header>";
         var html = filesystem.generateLeftNav();
-        html += '    <div id="showElement" class="frameRight">';
-        html += '        <h2 style="margin-left: 5%; margin-bottom:0px; margin-top:5%;">';
-        html += '            ' + htmlspecialchars(elementData['title']) + '&nbsp;<i class="icon-info-sign" onclick="$(\'.elementInfo(' + elementData['id'] + '\').slideDown();"></i>';
-        html += '        </h2>';
-        html += '        <div class="elementInfo' + elementData['id'] + ' hidden">';
-        html += '    <table width="100%" class="fileBox" cellspacing="0">';
-        html += '        <tr bgcolor="#FFFFFF" height="35px">';
-        html += '            <td width="110px">Element-Type:</td>';
-        html += '            <td>' + elementData['type'] + '</td>';
-        html += '        </tr>';
-        html += '        <tr bgcolor="#e5f2ff" height="35px">';
-        html += '            <td width="110px">Author:</td>';
-        html += '            <td>' + elementData['creator'] + '</td>';
-        html += '        </tr>';
-        html += '        <tr bgcolor="#FFFFFF" height="35px">';
-        html += '            <td>Title:</td>';
-        html += '            <td>' + elementData['name'] + '</td>';
-        html += '        </tr>';
-        html += '        <tr bgcolor="#e5f2ff" height="35px">';
-        html += '            <td>Year:</td>';
-        html += '            <td>' + elementData['year'] + '</td>';
-        html += '        </tr>';
-        html += '        <tr bgcolor="#FFFFFF" height="35px">';
-        html += '            <td>Original Title:</td>';
-        html += '            <td>' + elementData['originalTitle'] + '</td>';
-        html += '        </tr>';
-        html += '        <tr bgcolor="#e5f2ff" height="35px">';
-        html += '            <td>Language:</td>';
-        html += '            <td>' + elementData['language'] + '</td>';
-        html += '        </tr>';
-        html += '        <tr bgcolor="#FFFFFF" height="35px">';
-        html += '            <td>License:</td>';
-        html += '            <td>' + elementData['license'] + '</td>';
-        html += '        </tr>';
-        html += '    </table>';
-        html += '    <div style="display:none; float:left; width:40%; margin-top: 3%; background: #c9c9c9; height: 250px;">';
-        html += '    </div>';
-        html += '    </div>';
-        html += '    <div style=" clear: left;margin-left: 5%;">';
-        html += '        <a target="_blank" href="http://www.amazon.de/gp/search?ie=UTF8&camp=1638&creative=6742&index=aps&keywords=' + htmlentities(elementData['title']) + '%20' + elementData['creator'] + '&linkCode=ur2&tag=universeos-21">find on amazon</a><img src="http://www.assoc-amazon.de/e/ir?t=universeos-21&l=ur2&o=3" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />';
-        html += '    </div>';
-        html += '    <h3 style="margin-left:5%; margin-bottom:-10px;"><i class="icon-file"></i>&nbsp;Files</h3>';
-        html += '        <table cellspacing="0" class="filetable" style="width: 90%; margin-left: 5%; border: 1px solid #c9c9c9; border-right: 1px solid #c9c9c9;">';
-        html += '            <tr class="grayBar" height="35">';
-        html += '                <td></td>';
-        html += '                <td>Title</td>';
-        html += '                <td></td>';
-        html += '                <td></td>';
-        html += '                <td></td>';
-        html += '            </tr>';
-        html += elements.showFileList(elementData['id']); // generate list with files, links and shortcuts
-        html += '        </table>';
-        html += '    <center style="margin-top: 20px; margin-bottom: 20px;">';
-        if(proofLogin()){
-            html += '    	<a class="btn btn-info" href="#" onclick="filesystem.showCreateUFFForm(\'' + element + '\'); " target="submitter"><i class="icon-file icon-white"></i> Create Document</a>';
-            html += '        <a href="#" onclick="filesystem.openUploadTab(\'' + element + '\');" class="btn btn-info"><i class="icon-file icon-white"></i>&nbsp;Upload File</a>';
-            html += '        &nbsp;<a href="javascript: links.showCreateLinkForm(\'' + element + '\');" class="btn btn-info"><i class="icon white-link"></i>&nbsp;Add Link</a>';
-        }
-        html += '    </center>';
-        html += '    <hr>';
-        html += '    <div>';
-//            html += comments.show(elementData['id']); //nic macht function in js fertig
-        html += '    </div>';
-        html += '</div>';
+        html += '<div id="showElement" class="frameRight">';
+        html += header;
+        html += this.showFileList(element);
         filesystem.tabs.addTab(elementData['title'], '', html);
     };
     
@@ -98,35 +49,39 @@ var elements = new function(){
         var link = "";
         var rightLink = "";
         var image = "";
+        var date = "";
+        html += '<ul>';
         $.each(fileList, function(key, value){
             var data = value['data'];
             i++;
+            date = new Date(data['timestamp']*1000);
             image = filesystem.generateIcon(data['type']);
-            html += '<tr class="strippedRow file_' + data['id'] + '" oncontextmenu="showMenu(\'file' + data['id'] + '\'); return false;" height="40px">';
-            html += '<td width="30px">&nbsp;' + image + '</td>';
-            html += '<td><a href="./out/?file=' + data['id'] + '" onclick="reader.openFile(\'' + data['id'] + '\'); return false">' + data['title'] + '</a></td>';
-            html += '<td width="80" align="right">';
-            html += item.showScoreButton(value['type'], data['id']);
-            html += '</td>';
-            html += '<td width="50">';
-            if(data['download']){
-                html += '<a href="./out/download/?fileId=' + data['id'] + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download', 'grey') + '</a>';
-            }
-            if(!grid){
-                html += item.showItemSettings(value['type'], data['id']);
-            }
-            html += '</td>';
-            html += '</tr>';
+            html += '<li data-type="' + data['type'] + '" data-id="' + data['id'] + '" data-title="' + data['title'] + '">';
+                html += '<span class="icons">&nbsp;' + image + '</span>';
+                html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="reader.openFile(\'' + data['id'] + '\'); return false">' + data['title'] + '</a></span>';
+                html += '<span class="date">' + date + '</span>';
+                html += '<span class="size">' + Math.round(data['size']/1024) + ' kB</span>';
+                html += '<span class="buttons">'
+                    html += item.showScoreButton(value['type'], data['id']);
+                    if(data['download']){
+                        html += '<a href="./out/download/?fileId=' + data['id'] + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download', 'grey') + '</a>';
+                    }
+                    if(!grid){
+                        html += item.showItemSettings(value['type'], data['id']);
+                    }
+                html += '</span>';
+            html += '</li>';
             if(!grid){
                 html += ''; //hier muss die rightClick function noch eingebunden werden.
             }
         });
+        html += '</ul>';
         if(i === 0){
-            html += '<tr class="strippedRow" style="height: 20px;">';
-            html += '<td colspan="3">';
+            html += '<ul><li>';
+            html += '<span>';
             html += 'This Element is empty.';
-            html += '</td>';
-            html += '</tr>';
+            html += '</span>';
+            html += '</li></ul>';
         }
         return html;
     };
