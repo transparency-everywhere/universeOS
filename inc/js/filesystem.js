@@ -178,7 +178,7 @@ var filesystem =  new function() {
                         html += "                        <tr oncontextmenu=\"showMenu('element" + value['data']['id'] + "'); return false;\" height=\"30\">";
                         html += "                           <td width=\"30\">&nbsp;" + filesystem.generateIcon('element') + "</td>";
                         html += "                           <td><a href=\"#\" onclick=\"elements.open('" + value['data']['id'] + "'); return false;\">" + title + "</a></td>"; //openElement wird zu elements.open
-                        html += "                           <td width=\"80px\">" + item.showScoreButton('folder', value['data']['id']) + "</td>";
+                        html += "                           <td width=\"80px\">" + item.showScoreButton('element', value['data']['id']) + "</td>";
                         html += "                           <td width=\"30px\">";
                         if(rightClick){
                             html += item.showItemSettings('element', value['data']['id']);
