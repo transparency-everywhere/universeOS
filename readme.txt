@@ -22,6 +22,14 @@ Update
 
 
 todo
+    all onclick to bind(?)
+
+    profile
+        button feedback
+
+    group profile button feedback
+        button feedback
+
 
     fix raster
 

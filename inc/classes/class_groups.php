@@ -26,7 +26,8 @@ class groups{
                  }
             }
             $db = new db();
-            $userGroups = $db->select('groupAttachments', array('item', 'user', '&&', 'validated','1','&&','itemId',$userid), array('group'));
+            $userGroups = $db->shiftResult($db->select('groupAttachments', array('item', 'user', '&&', 'validated','1','&&','itemId',$userid), array('group')), 'group');
+            
             foreach($userGroups AS $data){
                     $groups[] = $data['group'];
             }
@@ -130,7 +131,11 @@ class groups{
                 
         function getGroupData($groupId){
                     $db = new db();
-                    return $db->select('groups', array('id', $groupId));;
+                    $data = $db->select('groups', array('id', $groupId));
+                    if($data['admin'] == getUser()){
+                        $data['isAdmin'] = true;
+                    }
+                    return $data;
                 }
 
         function getGroupName($groupId){

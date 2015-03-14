@@ -36,21 +36,21 @@ var calendar = new function(){
 			  		
 			  		var html = '<div id="calendar">';
 			  				html += '<header>';
-			  					html += '<div class="btn-group pull-right" id="calendarViewDetail">';
-			  						html += '<a href="#" class="btn" id="prev">&lt;&lt;</a>';
-			  						html += '<a href="#" class="btn" id="text"></a>';
-			  						html += '<a href="#" class="btn" id="next">>></a>';
+			  					html += '<div class="pull-right" id="calendarViewDetail">';
+			  						html += '<a href="#" class="button" id="prev">&lt;&lt;</a>';
+			  						html += '<a href="#" class="button" id="text"></a>';
+			  						html += '<a href="#" class="button" id="next">>></a>';
 			  					html += '</div>';
-			  					html += '<div class="btn-group pull-left" id="calendarView">';
-			  						html += '<a href="#" class="btn" id="day">Day</a>';
-			  						html += '<a href="#" class="btn" id="week">Week</a>';
-			  						html += '<a href="#" class="btn" id="month">Month</a>';
+			  					html += '<div class="pull-left" id="calendarView">';
+			  						html += '<a href="#" class="button grayButton" id="day">Day</a>';
+			  						html += '<a href="#" class="button grayButton" id="week">Week</a>';
+			  						html += '<a href="#" class="button grayButton" id="month">Month</a>';
 			  					html += '</div>';
-			  					html += '<div class="btn-group pull-left" id="calendarListType" style="margin-left:30px;">';
-			  						html += '<a href="#" class="btn active" id="boxes"><i class="icon-th"></i></a>';
-			  						html += '<a href="#" class="btn" id="list"><i class="icon-th-list"></i></a>';
-			  					html += '</div>';
-			  					html += '<div class="btn pull-right" id="headerToday" style="margin-right:30px;">Today</div>';
+//			  					html += '<div class=" pull-left" id="calendarListType" style="margin-left:30px;">';
+//			  						html += '<a href="#" class="button active" id="boxes"><i class="icon-th"></i></a>';
+//			  						html += '<a href="#" class="button" id="list"><i class="icon-th-list"></i></a>';
+//			  					html += '</div>';
+			  					html += '<a class="button pull-right" id="headerToday" style="margin-right:5px;">Today</a>';
 			  				html += '</header>';
 				  			html += '<div id="main">';
 								html += '<header>';
@@ -84,7 +84,7 @@ var calendar = new function(){
 									}
 								html += '</ul>';
 								html += '<ul id="taskList">';
-									html += '<li class="header"><input type="checkbox" id="showTasks" onclick="calendar.toggleTasks();">&nbsp;Show Tasks<a href="#" class="pull-right" onclick="tasks.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon white-plus"></i></a></li>';
+									html += '<li class="header" onclick="calendar.toggleTasks();">Tasks<a href="#" class="pull-right" onclick="tasks.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon white-plus"></i></a></li>';
 									html += '<li style="display:none;"><input type="checkbox" id="hideDoneTasks" onclick="calendar.toggleDoneTasks();" checked>&nbsp;hide done</li>';
 								html += '</ul>';
 								html += '<ul id="events">';
@@ -95,7 +95,7 @@ var calendar = new function(){
 							html += '</div>';
 						html += '</div>';
 						
-                                                this.applicationVar = new application('calendar');
+                                                this.applicationVar = new application('calendarApplication');
 			  			this.applicationVar.create('Calendar', 'html', html,{width: 2, height:  2, top: 0, left: 9});
 			  			
 			  			
@@ -124,20 +124,13 @@ var calendar = new function(){
 			  		//show days as boxes
 			  		if(type == 'boxes'){
 			  			
-			  			$('#main').mouseenter(function(){
-			  				$(this).children('header').slideDown();
-			  			});
-			  			
-			  			$('#main').mouseleave(function(){
-			  				$(this).children('header').slideUp();
-			  			});
-			  			
-			  			
 			  			$('.calendarFrame').removeClass('list');
 			  			$('#calendarListType #list').removeClass('active');
 			  			
 			  			$('.calendarFrame').addClass('boxes');
 			  			$('#calendarListType #boxes').addClass('active');
+                                                
+			  			$('#main>header').show();
 			  			this.listType = 'boxes';
 			  			
 			  		//show days in list
@@ -316,7 +309,7 @@ var calendar = new function(){
 						
 					var day  = '<div class="day '+dayClass+'" data-timestamp="'+dayDateObject.getTime()/1000+'">';
 							day += '<header>';
-								day += date+'.'+month;
+								day += date;
 								day += '<div class="dropdown">';
 									day += '<a class="dropdown-toggle" data-toggle="dropdown" href="#">';
 										day += filesystem.generateIcon('settings');
@@ -514,18 +507,21 @@ var calendar = new function(){
 			  		if(type == 'month'){
 			  			
 			  			
-				  		$('#calendarView .btn').removeClass('active');
+				  		$('#calendarView .button').removeClass('active');
 				  		$('#month').addClass('active');
+                                                
+			  			calendar.toggleListType('boxes');
 			  			
 			  			
-			  			$('#calendarViewDetail .btn').unbind('click');
+			  			$('#calendarViewDetail .button').unbind('click');
 			  			
-						$('#calendarViewDetail #prev').click(function(){
+						$('#calendarViewDetail #prev').bind('click',function(){
 							calendar.shownTimeObject.setMonth(calendar.shownTimeObject.getMonth()-1);
+                                                        console.log(calendar.shownTimeObject);
 			  				calendar.loadMonth(calendar.shownTimeObject);
 						});
 						
-						$('#calendarViewDetail #next').click(function(){
+						$('#calendarViewDetail #next').bind('click',function(){
 							calendar.shownTimeObject.setMonth(calendar.shownTimeObject.getMonth()+1);
 			  				calendar.loadMonth(calendar.shownTimeObject);
 							
@@ -536,12 +532,12 @@ var calendar = new function(){
 						
 			  		}else if(type == 'week'){
 			  			
-				  		$('#calendarView .btn').removeClass('active');
+				  		$('#calendarView .button').removeClass('active');
 				  		$('#week').addClass('active');
 				  		
 						
 						
-			  			$('#calendarViewDetail .btn').unbind('click');
+			  			$('#calendarViewDetail .button').unbind('click');
 			  			
 						$('#calendarViewDetail #prev').click(function(){
 							calendar.shownTimeObject.setSeconds(-(7*86400));
@@ -561,14 +557,14 @@ var calendar = new function(){
 						
 			  		}else if(type == 'day'){
 			  			
-				  		$('#calendarView .btn').removeClass('active');
+				  		$('#calendarView .button').removeClass('active');
 				  		$('#day').addClass('active');
 				  		
 						$('#calendarViewDetail #text').html(calendar.shownTimeObject.getDate()+'.'+calendar.shownTimeObject.getMonth()+1);
 						
 						
 						
-			  			$('#calendarViewDetail .btn').unbind('click');
+			  			$('#calendarViewDetail .button').unbind('click');
 			  			
 						$('#calendarViewDetail #prev').click(function(){
 							calendar.shownTimeObject.setSeconds(-86400);
@@ -598,9 +594,7 @@ var calendar = new function(){
 						}
 					});
 					
-					
-			  		$('#calendarView .btn').unbind('click');
-			  		
+			  		$('#calendarView .button').unbind('click');
 			  		
 			  		$('#calendarView #month').click(function(){
 			  				calendar.loadMonth(calendar.shownTimeObject);
@@ -688,7 +682,7 @@ var calendar = new function(){
 								  	
 									  var startDate = new Date(value.startStamp*1000);
 									  var endDate = new Date(value.stopStamp*1000);
-									  list += '<li data-eventId="'+value.id+'" onclick="events.show('+value.id+', '+privacy.authorize(value.privacy, value.user)+');" id="sideEvent_'+value.id+'">'+calendar.beautifyDate(startDate.getDate())+'.'+calendar.beautifyDate(startDate.getMonth()+1)+'&nbsp;'+value.title+'</li>';
+									  list += '<li data-eventId="'+value.id+'" onclick="events.show('+value.id+', '+privacy.authorize(value.privacy, value.user)+');" id="sideEvent_'+value.id+'">'+value.title+'</li>';
 									
 								  }
 								 });
@@ -842,7 +836,7 @@ var events = new function(){
 					  		    	content += 'Privacy:';
 					  		    	content += '</td>';
 					  		    	content += '<td>';
-					  		    	content += privacy.show('f//f', true);
+                                                                    content += '<div id=\'privacyField\'></div>';
 					  		    	content += '</td>';
 					  		    content += '</tr>';
 					  		    content += '<tr>';
@@ -890,6 +884,9 @@ var events = new function(){
               			
               			return false;
               		});
+                        
+                        privacy.load('#privacyField', 'f//f', true);
+                        
 			  	};
 	
 	this.join = function(originalEventId, addToVisitors){

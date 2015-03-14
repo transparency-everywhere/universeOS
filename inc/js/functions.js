@@ -652,7 +652,7 @@ var User = new function(){
                             output += '</span>';
                         output += '</div>';
                         
-                        output += '<div>';
+                        output += '<div class="buttons">';
                         output += buttons;
                         output += '</div>';
 

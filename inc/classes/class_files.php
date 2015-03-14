@@ -114,24 +114,23 @@ class files {
         $folderpath = universeBasePath.'/'.$folderClass->getPath();
 
 
-        $thumbPath = universeBasePath.'/'.$folderpath."thumbs/";
+        $thumbPath = $folderpath."thumbs";
         $imgName = basename($file['name']);
-        $elementName = "$FileElementData[title]_";
-        $imgName = "$elementName$imgName";
+        $elementName = $FileElementData['title'].'_';
+        $imgName = $elementName.$imgName;
 
 
 
         move_uploaded_file($file['tmp_name'], $folderpath.$file['name']);
         rename($folderpath.$filename, $folderpath.$imgName);
         if($type == "image/jpg" || $type == "image/jpeg" || $type == "image/png"){
-                    $thumbPath= "$thumbPath";
-                    $path = "../../$folderpath";
+                    $thumbPath= $thumbPath;
                     $imageClass = new image();
-                    if(is_dir("$thumbPath")){
-                       $imageClass -> mkthumb("$imgName",300,300,$path,"$thumbPath");
+                    if(is_dir($thumbPath)){
+                       $imageClass -> mkthumb($imgName,600,600,$folderpath,$thumbPath);
                     } else{
-                        mkdir("$thumbPath");
-                        $imageClass -> mkthumb("$imgName",300,300,$path,"$thumbPath");
+                        mkdir($thumbPath);
+                        $imageClass -> mkthumb($imgName,600,600,$folderpath,$thumbPath);
                     }
         }
         
@@ -172,6 +171,7 @@ class files {
         
         $feedClass = new feed();
         $feedClass->create($user, $feed, "", "showThumb", $privacy, "file", $fileId);
+        return $fileId;
         
     }
     

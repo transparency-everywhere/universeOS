@@ -83,7 +83,8 @@ h3{
 }
 .fenster .inhalt {
 	background-color: #FFF;
-        top: 40px;
+        
+	top: 40px;
         overflow: auto;
         position: absolute;
         left: 0;
@@ -695,15 +696,16 @@ li.notHidden{
 }
 
 .leftNav > ul > li.header{
-background: #303030; /* Old browsers */
-background: -moz-linear-gradient(top, #303030 0%, #2b2b2b 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#303030), color-stop(100%,#2b2b2b)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top, #303030 0%,#2b2b2b 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, #303030 0%,#2b2b2b 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top, #303030 0%,#2b2b2b 100%); /* IE10+ */
-background: linear-gradient(to bottom, #303030 0%,#2b2b2b 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#303030', endColorstr='#2b2b2b',GradientType=0 ); /* IE6-9 */
-border-bottom: 1px solid #292929;
+    background: #37474f;
+ /* Old browsers */
+ /* FF3.6+ */
+ /* Chrome,Safari4+ */
+ /* Chrome10+,Safari5.1+ */
+ /* Opera 11.10+ */
+ /* IE10+ */
+ /* W3C */
+ /* IE6-9 */
+
 }
 
 .leftNav > ul > li img{
@@ -2440,7 +2442,15 @@ del.bar{
 
 .profile header .main{
     padding: 20px;
-    padding-left: 160px;
+    margin-right: 100px;
+    float: left;
+}
+
+
+.profile header .buttons{
+	margin-top: 20px;
+	float:right;
+	margin-right: 15px;
 }
 
 .profile header .main span{
@@ -2479,6 +2489,7 @@ del.bar{
 
 .leftNav.dark li.active{
     background: none!important;
+    color: #00bcd4;
 }
 
 .leftNav.dark li{
@@ -3329,35 +3340,56 @@ margin-bottom: 3px;
 			}
 
 			#calendar{
-				position: relative;
+				position: absolute;
 				background-color:#FFFFFF;
 				width: 100%;
 				height: 100%;
-			}
+			
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+}
 			
 			#calendar>header{
-				height: 30px;
+				height: 45px;
 				padding: 5px;
 				position:absolute;
-				top:0;
+				top: 0;
 				right:0;
-				left:0;background: #eeeeee; /* Old browsers */
-				background: -moz-linear-gradient(top, #eeeeee 0%, #cccccc 100%); /* FF3.6+ */
-				background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#cccccc)); /* Chrome,Safari4+ */
-				background: -webkit-linear-gradient(top, #eeeeee 0%,#cccccc 100%); /* Chrome10+,Safari5.1+ */
-				background: -o-linear-gradient(top, #eeeeee 0%,#cccccc 100%); /* Opera 11.10+ */
-				background: -ms-linear-gradient(top, #eeeeee 0%,#cccccc 100%); /* IE10+ */
-				background: linear-gradient(to bottom, #eeeeee 0%,#cccccc 100%); /* W3C */
-				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6-9 */
+				left:0; /* Old browsers */ /* FF3.6+ */ /* Chrome,Safari4+ */ /* Chrome10+,Safari5.1+ */ /* Opera 11.10+ */ /* IE10+ */ /* W3C */ /* IE6-9 */
 			}
+                        
+                        #calendar>header #calendarView .button{
+                            color:  #313131;
+                            margin-right: 2px;
+                            background-color:  #cfd8dc;
+                            width: 70px;
+                        }
+                        
+                        #calendar>header #calendarView .button.active{
+                            background-color:  #607d8b;
+                            color: #FFF;
+                        }
 			
+                        #calendarViewDetail .button{
+                            color:  #313131;
+                            background-color:  #cfd8dc;
+                        }
+			
+			#calendarViewDetail #prev, #calendarViewDetail #next{
+                              width: 40px;
+                              margin-left: 2px;
+                        
+                              margin-right: 2px;
+}
 			#calendarViewDetail #text{
-				width: 65px;
+				width: 80px;
 			}
 			
 			#calendar #main>header{
 				height: 25px;
-				background: rgba(75, 73, 73,0.2);
+				background: #cfd8dc;
 				color:#FFFFFF;
 				position: absolute;
 				top: 0;
@@ -3371,29 +3403,28 @@ margin-bottom: 3px;
 				float:left;
 				padding-left: 5px;
 				padding-top: 3px;
+				border-left: 1px solid #FFF;
 				box-sizing: border-box;
 			}
 			
 			#calendar #main{
 				position: absolute;
-				top: 40px;
-				left: 150px;
+				top: 49px;
+				left: 171px;
 				bottom: 0px;
 				right: 0px;
 			}
 			
 			#calendar #side{
 				position: relative;
-				top: 40px;
-				left: 0px;
 				bottom: 0px;
-				background: #3E3E3E;
 				position: absolute;
-				top: 40px;
+				top: 49px;
 				left: 0px;
-				bottom: 0;
-				background: #3E3E3E;
-			}
+				background: #607d8b;
+			
+				color: #FFF;
+}
 			
 			#calendar #side #months{
 				list-style: none;
@@ -3442,7 +3473,7 @@ margin-bottom: 3px;
 			}
 			
 			.calendarFrame.boxes .day header{
-				text-align: right;
+				text-align: left;
 			}
 			
 			.calendarFrame.list .day header{
@@ -3450,7 +3481,7 @@ margin-bottom: 3px;
 			}
 			
 			.calendarFrame.boxes .day header .dropdown{
-				float:left;
+				float: right;
 			}
 			
 			.calendarFrame.list .day header .dropdown{
@@ -3467,9 +3498,8 @@ margin-bottom: 3px;
 			}
 			
 			.calendarFrame .day header{
-				padding: 2px;
-				font-size: 14pt;
-				background-color: rgba(200,200,200,0.4);
+				padding: 10px;
+				font-size: 20px;
 			}
 			
 			.calendarFrame .day:hover .dropdown{
@@ -3501,12 +3531,10 @@ margin-bottom: 3px;
 			}
 			
 			.calendarFrame .day.today header{
-				padding: 2px;
-				background-color: #D1D1D1;
+    color: #00bcd4;
 			}
 			
 			.calendarFrame .day.weekend header{
-				background-color: rgba(200,200,200,0.2);
 			}
 
 			.calendarFrame .day:first-child {
@@ -3519,6 +3547,9 @@ margin-bottom: 3px;
 				color: #FFFFFF;*/
 			}
 			
+			.calendarFrame.monthView .day.today{
+                            border: 1px solid #00bcd4;
+                        }
 			.calendarFrame.monthView .day{
 				height: 100px;
 			}
@@ -3555,11 +3586,9 @@ margin-bottom: 3px;
 			}
 			
 			.calendarFrame .day .eventList li{
-				border-radius: 5px;
-				margin: 2px;
 				padding: 2px;
 				color: #FFFFFF;
-				font-size: 17px;
+				font-size: 12px;
 				background: #8AD361;
 				position:relative;
 			}
@@ -3716,7 +3745,8 @@ and (max-width : 320px) {
     padding: 7px 7px;
     text-align: center;
     font-size:16px;
-border: none;
+    border: none;
+    display: inline-block;
 }
 
 .antiButton{

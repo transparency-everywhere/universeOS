@@ -20,13 +20,11 @@ var settings = new function(){
         var     output = '<div>';
                     output += "<div class='leftNav dark' style='top: 0; background: #37474f;'>";
                     output +=    '<ul>';
-                    output +=       '<li onclick="settings.showUpdateProfileForm();">General</li>';
-                    output +=       '<li onclick="settings.showUpdatePrivacyForm();">Privacy</li>';
-                    output +=       '<li onclick="settings.showUpdateBuddylistForm();">Buddylist</li>';
-                    output +=       '<li onclick="settings.showGroupsForm();">Groups</li>';
-                    output +=       '<li onclick="settings.showSecurityOverview();">Security</li>';
-                    output +=       '<!-- <li><a href="">Security</a></li> -->';
-                    output +=       '<!-- <li><a href="">Services</a></li> -->';
+                    output +=       '<li data-function="settings.showUpdateProfileForm();"><span class="icon blue-gear"></span>General</li>';
+                    output +=       '<li data-function="settings.showUpdatePrivacyForm();"><span class="icon blue-eye"></span>Privacy</li>';
+                    output +=       '<li data-function="settings.showUpdateBuddylistForm();"><span class="icon blue-user"></span>Buddylist</li>';
+                    output +=       '<li data-function="settings.showGroupsForm();"><span class="icon blue-group"></span>Groups</li>';
+                    output +=       '<li data-function="settings.showSecurityOverview();"><span class="icon blue-lock"></span>Security</li>';
                     output +=   '</ul>';
                     output += '</div>';
                     output += "<div class='frameRight' style='top:0px;' id='settingsFrame'>";
@@ -37,7 +35,14 @@ var settings = new function(){
                 
         this.applicationVar = new application('settings');
 	this.applicationVar.create('Settings', 'html', output,{width: 6, height:  5, top: 0, left: 3});
-	this.showUpdateProfileForm()
+	this.showUpdateProfileForm();
+        
+        $('.leftNav li').click(function(){
+            var functionName = $(this).attr('data-function');
+            $(this).parent().children('li').removeClass('active');
+            $(this).addClass('active');
+            eval(functionName);
+        });
     };
     this.show = function(){
         if(this.applicationVar)
@@ -389,7 +394,7 @@ var settings = new function(){
 
                     output += '<li><div onclick="groups.show('+value+')"><span class="icon icon-group"></span>';
                     output += '<span class="username" style="font-size:18px; padding-top: 5px;">'+groups.getTitle(value)+'</span>';
-                    output += '</div><button class="button" onclick="groups.leave(\''+value+'\'); return false">Leave</button>'+adminButton+'</li>';
+                    output += '</div><a href="#" class="button" onclick="groups.leave(\''+value+'\'); return false">Leave</a>'+adminButton+'</li>';
                 });
             }
             output += '</ul>';

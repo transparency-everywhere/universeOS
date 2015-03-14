@@ -133,6 +133,22 @@ class user {
           $db = new db();
           $db->update('user', $values, array('userid', $userid));
     }
+    public function updateUserPicture($fileArray){
+        $userData = $this->getData();
+        $fileClass = new files();
+        $fileId = $fileClass->addFile($fileArray, $userData['profilepictureelement'], $userData['homefolder'], 'p', $this->userid);
+
+        $file = new file($fileId);
+        $fileData = $file->getFileData();
+        
+        $db = new db();
+        $db->update('user', array('userPicture'=>$fileData['filename']), array('userid',getUser()));
+
+        echo '<script>';
+        echo 'parent.settings.showUpdateProfileForm();';
+        echo '</script>';
+        
+    }
     
     public function getFav($userid=NULL){
         $return;
@@ -188,6 +204,7 @@ class user {
             $privacyValues['profile_files'] = 'p';
             $privacyValues['profile_playlists'] = 'p';
             $privacyValues['profile_activity'] = 'p';
+            $privacyValues['receive_messages'] = 'p';
             $privacyValues['buddylist'] = 'p';
             $privacyValues['info'] = 'p';
             $privacyValues['groups'] = 'p';
@@ -490,19 +507,6 @@ function showUserPicture($userid, $size, $subpath = NULL, $small = NULL /*define
       
         
         $style = '';
-        //there are three different thumb sizes which are created when
-        //the userpicture is uploaded, depending on the requested size
-        //a different thumb needs to be choosen to minimize traffic
-        if($size < "25"){
-            $folderpath = "25";
-
-        } else if($size < "40"){
-            $folderpath = "40";
-
-        } else if($size < "300"){
-            $folderpath = "300";
-
-        }
 		$size.="px";
     
     if(empty($picData['userPicture'])){
@@ -516,12 +520,12 @@ function showUserPicture($userid, $size, $subpath = NULL, $small = NULL /*define
 		
         if($subpath !== "total"){
             
-            $src = "$path./upload/userFiles/$userid/userPictures/thumb/$folderpath/".$picData['userPicture']."";
+            $src = "$path./upload/userFiles/$userid/thumbs/".$picData['userPicture']."";
 			if(empty($class)){
             	$style = "background-image: url('$src');";
 			}
         }else{
-            $src = "./upload/userFiles/$userid/userPictures/thumb/$folderpath/".$picData['userPicture']."";
+            $src = "./upload/userFiles/$userid/userPictures/thumbs/".$picData['userPicture']."";
 			if(empty($class)){
             	$style = "background-image: url('$src');";
 			}

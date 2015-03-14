@@ -41,10 +41,11 @@ var groups = new function(){
         };
         this.showProfile = function(group_id){
             var groupdata = this.getData(group_id);
-            var buttonText, buttonClass, buttonAction;
-            if(User.inGroup(group_id)){
+            var buttonText = '', buttonClass = '', buttonAction = '', adminButton = '', onClick = '';
+            if(User.inGroup(group_id) !== -1){
                 buttonText = 'Leave Group';
                 buttonClass = 'button';
+                onClick = 'groups.leave('+group_id+')';
             }else{
                 
                 if(groupdata.public == '0'){
@@ -55,23 +56,23 @@ var groups = new function(){
                     
                     buttonText = 'Join Group';
                     buttonClass = 'button';
+                    onClick = 'groups.join('+group_id+')';
                     
                 }
                 
             }
             
-            var adminButton;
             if(groupdata.isAdmin){
                 adminButton = '<a href="#" class="button" onclick="settings.showGroupAdminForm('+group_id+');">Admin</a>';
             }
             
             
 
-            var buttons = '<a href="#" class="button">'+buttonText+'</a>'+adminButton;
+            var buttons = '<a href="#" onclick="'+onClick+'" class="button">'+buttonText+'</a>'+adminButton;
 
             var output   = '<div class="profile">';
                     output += '<header>';
-                        //output += User.showPicture(user_id);
+                            output += groups.showPicture(group_id);
                             output += '<div class="main">';
 
                                 output += '<span class="userName">';
@@ -82,7 +83,7 @@ var groups = new function(){
                                 output += '</span>';
                             output += '</div>';
 
-                            output += '<div>';
+                            output += '<div class="buttons">';
                             output += buttons;
                             output += '</div>';
 
@@ -215,6 +216,13 @@ var groups = new function(){
             return api.query('api/groups/getUsers/', { group_id : groupId });
         
         };
+        this.showPicture = function(group_id){
+            
+            return "<div class=\"userPicture userPicture_2\" style=\"background: url('data:image\/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAjCAYAAAAe2bNZAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAABipJREFUeNrMWEuIHFUUve\/Vq6qe7ulvejLG+IkMBhfibCISmaBoRMgyG0lExA9kJUYXom4Cuo4oghj8bASFRBFEN0EDulGiWYgbPxCN0UkmM5Ppme7qrs+r9zy3ujsxk2SsDiakhuqurnqv7rnn3nfufSOstXS9HJKuo0M9eujnkSYYMFkrehRpwmnJc+UmT8mtjiBXG\/tdLzG\/usKSNYZSjBWjgLkSDziwHF7liPGS58z4rtwuASbR1o0ScxyAtbgSZkadwMzAKDXGvRdLvvM0fk+BkYyBgi93j\/uFvYud6KUgTD4nMTIYm58OvNxzZHFd2T3kK7FjbrlHnSglAzDZYyFofdm7s1l2P44TvS1K7ffOCIAUxzYXlgGYDfXiuzo1O46f6ZAD48gXkvI84pOLXbDm+tWi+858O7zHGBGJnICUq5ycYDhH5IORNrtOt3rkcJJgavovZ7JQKUHLQczPpz0l7kNID+cGY1OdO0quK55oBSGAGZJCkk4vDjEbFhjd6cVU8JyHlLSH8yqZipLcYDgl7ko0A7Fk0vSyoPkjBdA4MVNhbHLnsbKUW4FLcZKWU5Mt7P+cxdFLEtE0Jr\/CK30ZDy9xwMHUjjCYjBCKRig3yuRcTTi6eG9EgnLTDhiJGEFs1AiFEupuT8DCHSOU1nkS+cufSnOupsFxDOfDI4z\/HT6MoMBiEGEwlCNkn+J8eYS8+XoNMYdYyiylhjqkemEveyxAp+\/65xKCgV0ihD\/g5hF8P5ADy5\/Il29Wo2N9Yo3g90ewLXE9tKPmF+YyFXWVS41KlZLB6vK8AvmeB71IB2LWn4S\/F\/BxNEO\/pkTSfsxaGSoh+5imhrTuZddxnFCnG0AYJa77NpTMCovIEPbCDvXQqGTqqhMKQweAfADz+iHM+BTHrE2fx8\/X12DlCEa+NQyDMRrlQVIUhaj4IQkWRegP32OfpLQXtxBSOuQ4NgPDkh\/FmgooQDoxAJlkYSwUXEID9QaG18HSPrmq8IC9WSmc3WBSx3FMCoU00TFZjENpoIQdBwhjOT9NvraTwyJlP77nGyqwhheIrDbRQckyaNIszBwCZg\/XB+MknuOxcRzBnkYKyHMtxv\/YAwsUR8PRumWiWnxVZrHXZJFXGhLBoJqVsRlHUiNOEhqmQF4pywUm87rfz25tlItvbmhWjiZa72x3wyyNmBH2OYpi1CO95ebJ2rf1SvE53NrMOHTGms2hM2sciWaPzURpzN8+US8\/ibBs60ax3+r0aCXooRl3ETvTlzVLWZM1u7BMYaI310pjr21cX9mnHOenpXb3Czj0VdCLj+F9xlEyHxj2AH5w4m26sVl9rDRWeBxJOrXUDmi5E1IPS9KFVRexYCCZx2KoZGi40FwttNq0sNSm0phb9T13plwszJTGx6hU8I5g\/mdLK8FHwHRmtY6J6Vc+zF7oKsWdHLNx6w3N2l6wscvodHKhFVALLHA+eBjDydgX6svTPkxUDWZZt+QAfK1cpGppjKSSJ1c64XunF1v7sdXpmEEzkIHJehSgnGzUnm1US\/t6UVyfX+oQ5wSvGFCNJd\/XDJY9MULC93OqX2p05oWl6niRJmrjqKHyx9kzS49gEfwiYUgNe49mvfx2pVTYc+LUPC21e+SjNy64Kktc1gNO4gv0dcRVKKB0HocWxlorQRbGjetr0xO18penF5fvBeiTquh7LMO7ce757cQsxWgrx3w3A6i1pqtxcKi5of977izVK6WbEKodSOwDKoCyAtV0u9NBX2u4iUZepnQ1\/x1g0340fDDfDbrUMYI5I7VzIqH3T5goQlyL2HFZ3kQLuiYHA+jAnBI2fuo2h9T9E6g9lloHjmskFFbVNfy\/RGQYCNEzt7vh3XVJ6q\/Q1rY0nNLUuDwapnYD+KrwXgxj\/NUN9hWH5eLfKFrQRkPLZUWzFU9MnerZGrYqFHRT+0HTp0+gD2Usngru+fheNxBF5mqSWxy6sIfk5eUOnhWpb2COjawqM7xljQfPeI5Gji7COd72riA7gnZCAbwNmKUEmvNHG7Fz+t2ngxkOp9DgRUxKY2DYrALDYJvUZzHBuTAwLFelBj87OyApxULq4mYKMLzXy17ERv4RYACDOhC2dc0EDgAAAABJRU5ErkJggg=='); border-color: red; width: 20px;height:  20px;background-size: 100%;border-radius:10px\"><\/div>";
+
+        };
+        
+        
         
         this.verifyGroupRemoval = function(groupId){
             
