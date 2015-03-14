@@ -3439,6 +3439,28 @@ margin-bottom: 3px;
 			#calendar #side ul li.header:hover .icon-plus{
 				display:block;
 			}
+                        
+                        #calendar .calendarPrivacyTrigger .icon{
+                            float:right;
+                            display:none
+                        }
+                        
+                        
+                        #calendar .calendarPrivacyTrigger .blue-check{
+                            display:block;
+                        }
+                        #calendar .calendarPrivacyTrigger.active .blue-check{
+                            display:none;
+                        }
+                        #calendar .calendarPrivacyTrigger.active .white-check{
+                            display: block;
+                        }
+                        
+                        #calendar #side .icon{
+                            margin-bottom: -5px;
+                        }
+                        
+                        
 			
 			.day ul{
 				margin:0px;

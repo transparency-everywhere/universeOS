@@ -25,6 +25,9 @@ var chat = new function(){
         this.tabs.init();
 	this.tabs.addTab('Home', '',gui.loadPage('modules/chat/chat.php'));
     };
+    this.show = function(){
+        this.applicationVar.show();
+    }
 };
 
 //IM CHAT  
