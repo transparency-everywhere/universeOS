@@ -24,6 +24,9 @@ var calendar = new function(){
 	this.loader;
 	this.showDoneTasks = false; // defines if tasks with status "done" are shown
 	this.applicationVar;
+        this.getColor = function(){
+            return ['ffa000', 'ff5722', 'b71c1c', '880e4f', '4a148c', '311b92', '0d459c', '0656b1', '006064', '164c2c', '2a5619', '645b0f', '4e342e']
+        };
 	this.show = function(){
 			  		if($('#calendar').length === 0){
 			  			calendar.init();
@@ -71,15 +74,16 @@ var calendar = new function(){
 								html += '<ul id="calendars">';
 									html += '<li class="header">Calendars</li>';
 									
-									html += '<li><input type="checkbox" data-value="h" checked>&nbsp;Me</li>';
-									html += '<li><input type="checkbox" data-value="p">&nbsp;Public</li>';
-									html += '<li><input type="checkbox" data-value="f" checked>&nbsp;Friends</li>';
+                                                                        //load general privacies (public only me etc)
+									html += '<li class="calendarPrivacyTrigger active" data-value="h">&nbsp;My Calendar <span class="icon white-check"></span><span class="icon blue-check"></span></li>';
+									html += '<li class="calendarPrivacyTrigger" data-value="p">&nbsp;Public <span class="icon white-check"></span><span class="icon blue-check"></span></li>';
+									html += '<li class="calendarPrivacyTrigger active" data-value="f">&nbsp;Friends <span class="icon white-check"></span><span class="icon blue-check"></span></li>';
 									
 									//load groups into calendar list
 									var userGroups = groups.get();
 									if(userGroups){
 										$.each(groups.get(), function( index, value ) {
-											html += '<li><input type="checkbox" data-value="'+value+'">&nbsp;<i class="icon icon-user group" style="height:14px; width: 14px;"></i>'+groups.getTitle(value)+'</li>';
+											html += '<li class="calendarPrivacyTrigger" data-value="'+value+'"><i class="icon white-group" style="height:14px; width: 14px;"></i>'+groups.getTitle(value)+' <span class="icon white-check"></span><span class="icon blue-check"></span></li>';
 										});
 									}
 								html += '</ul>';
@@ -103,7 +107,10 @@ var calendar = new function(){
 							$('#side #calendars li').not('.header').slideToggle();
 						});
 			  			
-			  			$('#calendars input[type=checkbox]').click(function(){
+                                                
+                                                
+			  			$('#calendars li').click(function(){
+                                                        $(this).toggleClass('active');
 			  				calendar.loadEvents();
 			  			});
 			  			
@@ -165,7 +172,7 @@ var calendar = new function(){
 	
 	this.getPrivacy = function(){
 			  		var privacy = [];
-			  		$('#calendars input[type=checkbox]:checked').each(function(){
+			  		$('#calendars .calendarPrivacyTrigger.active').each(function(){
 			  			 privacy.push($(this).data('value'));
 			  		});
 			  		
@@ -682,7 +689,7 @@ var calendar = new function(){
 								  	
 									  var startDate = new Date(value.startStamp*1000);
 									  var endDate = new Date(value.stopStamp*1000);
-									  list += '<li data-eventId="'+value.id+'" onclick="events.show('+value.id+', '+privacy.authorize(value.privacy, value.user)+');" id="sideEvent_'+value.id+'">'+value.title+'</li>';
+									  list += '<li data-eventId="'+value.id+'" onclick="events.show('+value.id+', '+privacy.authorize(value.privacy, value.user)+');" id="sideEvent_'+value.id+'"><span class="icon white-bell"></span>'+value.title+'</li>';
 									
 								  }
 								 });
