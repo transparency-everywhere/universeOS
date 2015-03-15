@@ -724,7 +724,21 @@ var gui = new function(){
     	
     	$('body').html($(this).html().replaceAll("/(b(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig","<a href='#' onclick='$1'>$1</a>"));
         
-    }
+    };
+    this.generateGrayList = function(items){
+      var html;
+      html = '<ul class="grayList">';
+        $.each(items, function(key, value){
+            html += '<li><div>'; 
+                   html += value.text;
+            html += '</div>';
+            html += value.buttons;
+            html += '</li>';
+        });
+            
+      html += '</ul>';
+      return html;
+    };
     
 };
               
