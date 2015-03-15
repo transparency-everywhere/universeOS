@@ -29,7 +29,7 @@ var elements = new function(){
         header += '<ul class="elementSettings elementSettings' + element + '">';		 
         header += '<li><a href="#" onclick="filesystem.showCreateUFFForm(\'' + element + '\'); " target="submitter">' + filesystem.generateIcon('file', 'white') + '&nbsp;Create an UFF</a></li>';
         header += '<li><a href="#" onclick="links.showCreateLinkForm(\'' + element + '\');">' + filesystem.generateIcon('file', 'white') + '&nbsp;Add a link</a></li>';		  			
-        header += '<li><a href="#" onclick="filesystem.openUploadTab(\'' + element + '\');">' + filesystem.generateIcon('link', 'white') + '&nbsp;Upload a file or an image</a></li>';
+        header += '<li><a href="#" onclick="filesystem.openUploadTab(\'' + element + '\');">' + filesystem.generateIcon('link', 'white') + '&nbsp;Upload file or image</a></li>';
         header += '</ul>';
         header += "</header>";
         var html = filesystem.generateLeftNav();
@@ -50,13 +50,19 @@ var elements = new function(){
         var rightLink = "";
         var image = "";
         var date = "";
+        html += '<span class="icons"></span>';
+        html += '<span class="title">Name</span>';
+        html += '<span class="date">Date</span>';
+        html += '<span class="size">Size</span>';
+        html += '<span class="buttons"></span>'
         html += '<ul>';
         $.each(fileList, function(key, value){
+            //generate fileList for an element with an unordered list <ul>
             var data = value['data'];
             i++;
-            date = new Date(data['timestamp']*1000);
+            date = new Date(data['timestamp']*1000).toString().substr(11, 5) + new Date(data['timestamp']*1000).toString().substr(4, 4) + new Date(data['timestamp']*1000).toString().substr(8, 2); //year + month + day
             image = filesystem.generateIcon(data['type']);
-            html += '<li data-type="' + data['type'] + '" data-id="' + data['id'] + '" data-title="' + data['title'] + '">';
+            html += '<li data-id="' + data['id'] + '" data-type="' + data['type'] + '" data-title="' + data['title'] + '" data-date="' + date + '" data-size="' + data['size'] + '">';
                 html += '<span class="icons">&nbsp;' + image + '</span>';
                 html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="reader.openFile(\'' + data['id'] + '\'); return false">' + data['title'] + '</a></span>';
                 html += '<span class="date">' + date + '</span>';
@@ -257,6 +263,7 @@ var elements = new function(){
 	});
 	return result;
     };
+    
     this.verifyRemoval = function(elementId){
         var confirmParameters = {};
         var elementData = elements.getData(elementId);
