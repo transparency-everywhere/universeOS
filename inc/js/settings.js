@@ -159,8 +159,10 @@ var settings = new function(){
             
         }else{
             output += '<ul class="grayList">';
-
+            var listItems = [];
+            
             $.each(settings_buddylist, function(index, value){
+               listItems.push({'text':User.showPicture(value)+useridToUsername(value), 'buttons':'</div><button class="button" onclick="buddylist.removeBuddy(\''+value+'\');">Unfriend</button></li>'});
                output += '<li><div>'; 
                output += User.showPicture(value);
                output += useridToUsername(value);
@@ -168,9 +170,9 @@ var settings = new function(){
                output += '</div><button class="button" onclick="buddylist.removeBuddy(\''+value+'\');">Unfriend</button></li>'; 
             });
             output += '</ul>';
+            output += gui.generateGrayList(listItems);
         }
         output += '</div>';
-        
         $('#settingsFrame').html(output);
         
     };
@@ -381,23 +383,20 @@ var settings = new function(){
             output += '<a href="#" class="button" onclick="groups.showCreateGroupForm();">Create Group</a>';
             
         }else{
-            output += '<ul class="grayList">';
+            var listItems = [];
+            
             if(typeof profile_groups !== 'undefined'){
                 
                 $.each(profile_groups, function(index, value){
-                    
                     var groupdata = groups.getData(value);
                     var adminButton = '';
                     if(groupdata.isAdmin){
                         adminButton = '<a href="#" class="button" onclick="settings.showGroupAdminForm('+value+'); return false">Admin</a>';
                     }
-
-                    output += '<li><div onclick="groups.show('+value+')"><span class="icon icon-group"></span>';
-                    output += '<span class="username" style="font-size:18px; padding-top: 5px;">'+groups.getTitle(value)+'</span>';
-                    output += '</div><a href="#" class="button" onclick="groups.leave(\''+value+'\'); return false">Leave</a>'+adminButton+'</li>';
+                    listItems.push({'text':'<div onclick="groups.show('+value+')"><span class="icon icon-group"></span><span class="username" style="font-size:18px; padding-top: 5px;">'+groups.getTitle(value)+'</span>', 'buttons':'<a href="#" class="button" onclick="groups.leave(\''+value+'\'); return false">Leave</a>'+adminButton});
                 });
             }
-            output += '</ul>';
+            output = gui.generateGrayList(listItems);
         }
             output += '</div>';
         $('#settingsFrame').html(output);
@@ -479,9 +478,9 @@ var settings = new function(){
         fieldArray[5] = field5;
         
         
-            //generate member list
-            
-        
+        //generate member list
+        var groupMembers = groups.getUsers(group_id);    
+        $.each();
         
         //members list
         var field6 = [];
