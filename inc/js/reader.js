@@ -53,6 +53,9 @@ var reader = new function(){
         
         var output = '';
         
+        var path = "./upload/" + folders.getPath(elements.getData(fileData['folder'])['folder']) + fileData['filename'];
+
+        
         console.log(fileData['type']);
         
         switch(fileData['type']){
@@ -63,19 +66,20 @@ var reader = new function(){
             case 'image/tiff':
             case 'image/gif':
                 var title = fileData['title'];
-                var imgPath = "./upload/" + folders.getPath(elements.getData(fileData['folder'])['folder']) + fileData['filename'];
                 output += '<div class="openFile">';
                     output += header;
                     output += "<div class=\"fileWindow\" id=\"fileWindowId\">";
                         output += "<div class=\"imageReader\">";
                             output += "<div class=\"mainImage\">";
-                                output += "<img src=\"" + imgPath + "\" />";
+                                output += "<img src=\"" + path + "\" />";
                             output += "</div>";
                             output += "<div class=\"previewImages\">";
-                                output += "Thumbs muss ich noch regeln!"; //Thumbs muss ich noch regeln!
-                                output += "";
-                                output += "";
-                                output += "";
+                                $.each(elements.getFileList(fileData['folder']), function(key, value){
+                                    var thumbPath = "./upload/" + folders.getPath(elements.getData(fileData['folder'])['folder']) + "thumbs/" + value['data']['filename'];
+                                    if(value['data']['type'] === "image" || value['data']['type'] === "image/jpeg" || value['data']['type'] === "image/png" || value['data']['type'] === "image/tiff" || value['data']['type'] === "image/gif"){
+                                        output += "<img src=\"" + thumbPath + "\" onclick=\"reader.openFile('" + value['data']['id'] + "'); return false\"/>";
+                                    }
+                                });
                             output += "</div>";
                         output += "</div>";
                     output += '</div>';
@@ -90,8 +94,7 @@ var reader = new function(){
                     output += header;
                     output += "<div class=\"fileWindow\" id=\"fileWindowId\">";
                         output += "<div class=\"textReader\">";
-                        output += "";
-                        output += "";
+                            output += nl2br(htmlentities(filesystem.readFile(fileData['id'])));
                         output += "";
                         output += "";
                         output += "";
@@ -245,5 +248,4 @@ var reader = new function(){
         //wikipedia, youtube
         
     };
-    
 };
