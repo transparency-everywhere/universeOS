@@ -27,7 +27,7 @@ class gui {
                 . "                         <i class=\"icon white-user\"></i><span class=\"iconAlert\" id=\"openFriendRequests\"></span>"
                 . "                         <i class=\"icon white-envelope\"></i><span class=\"iconAlert\" id=\"newMessages\" onclick=\"chat.applicationVar.show(); return false\"></span>"
            . "                          </a><td>\n";
-        echo "                    <td><div class=\"\" id=\"logout\" onclick=\"logout();\" target=\"submitter\" style=\"tex-decoration: none; color: #FFF; min-width:10px; margin-left:10px;\" title=\"logout\">&nbsp;<i class=\"icon white-logout\"></i>&nbsp;</div></td>\n";
+        echo "                    <td><div class=\"\" id=\"logout\" onclick=\"User.logout();\" target=\"submitter\" style=\"tex-decoration: none; color: #FFF; min-width:10px; margin-left:10px;\" title=\"logout\">&nbsp;<i class=\"icon white-logout\"></i>&nbsp;</div></td>\n";
         echo "                    <td align=\"right\"><input type=\"text\" name=\"searchField\" id=\"searchField\" placeholder=\"search\"></td>\n";
         
         
