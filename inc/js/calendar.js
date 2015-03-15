@@ -22,10 +22,14 @@ var calendar = new function(){
 	this.listType = 'boxes';
 	this.shownTimeObject;
 	this.loader;
+        this.usedColors = 0; //no of used colors from the color array, returned from getColor
+        this.colorDB = {}; //colors are saved with privacy value (e.g. calendar.colorDB['f'] could be 0 which would be the first value from the array, returned by calendar.getColor())
 	this.showDoneTasks = false; // defines if tasks with status "done" are shown
 	this.applicationVar;
         this.getColor = function(){
-            return ['ffa000', 'ff5722', 'b71c1c', '880e4f', '4a148c', '311b92', '0d459c', '0656b1', '006064', '164c2c', '2a5619', '645b0f', '4e342e']
+            calendar.usedColors++;
+            var colors = ['ffa000', 'ff5722', 'b71c1c', '880e4f', '4a148c', '311b92', '0d459c', '0656b1', '006064', '164c2c', '2a5619', '645b0f', '4e342e'];
+            return colors[calendar.usedColors];
         };
 	this.show = function(){
 			  		if($('#calendar').length === 0){
@@ -72,7 +76,7 @@ var calendar = new function(){
 							html += '<div id="side" class="leftNav">';
 							
 								html += '<ul id="calendars">';
-									html += '<li class="header">Calendars</li>';
+									html += '<li class="header">Calendars<span class="toggleTrigger icon white-chevron-down pull-right"></span></li>';
 									
                                                                         //load general privacies (public only me etc)
 									html += '<li class="calendarPrivacyTrigger active" data-value="h">&nbsp;My Calendar <span class="icon white-check"></span><span class="icon blue-check"></span></li>';
@@ -88,11 +92,11 @@ var calendar = new function(){
 									}
 								html += '</ul>';
 								html += '<ul id="taskList">';
-									html += '<li class="header" onclick="calendar.toggleTasks();">Tasks<a href="#" class="pull-right" onclick="tasks.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon white-plus"></i></a></li>';
+									html += '<li class="header" onclick="calendar.toggleTasks();">Tasks<span class="toggleTrigger icon white-chevron-down pull-right"></span><a href="#" class="pull-right" onclick="tasks.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon white-plus"></i></a></li>';
 									html += '<li style="display:none;"><input type="checkbox" id="hideDoneTasks" onclick="calendar.toggleDoneTasks();" checked>&nbsp;hide done</li>';
 								html += '</ul>';
 								html += '<ul id="events">';
-									html += '<li class="header">Events<a href="#" class="pull-right" onclick="events.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon white-plus"></i></a></li>';
+									html += '<li class="header">Events<span class="toggleTrigger icon white-chevron-down pull-right"></span><a href="#" class="pull-right" onclick="events.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon white-plus"></i></a></li>';
 									//events will apend to this list
 								html += '</ul>';
 								
@@ -103,6 +107,10 @@ var calendar = new function(){
 			  			this.applicationVar.create('Calendar', 'html', html,{width: 2, height:  2, top: 0, left: 9});
 			  			
 			  			
+                                                $('#side .toggleTrigger').click(function(){
+                                                    $(this).toggleClass('white-chevron-down white-chevron-up');
+                                                });
+                                                
 						$('#calendars .header').click(function(){
 							$('#side #calendars li').not('.header').slideToggle();
 						});
@@ -245,6 +253,34 @@ var calendar = new function(){
 			  		}
 			  	};
 	
+        this.getEventColor = function(privacy){
+            if(privacy.indexOf('//') === -1){
+                
+            }else{
+                privacy = privacy.substr('//')[0];
+                
+            }
+            if(typeof calendar.colorDB[privacy] === 'undefined'){
+                var color = calendar.getColor();
+                calendar.colorDB[privacy] = color;
+                return '#'+color;
+            }else{
+                return '#'+calendar.colorDB[privacy];
+            }
+        };
+        
+        //loads colors for active privacy values
+        this.loadColorsIntoSide = function(){
+            
+            $('.calendarPrivacyTrigger').each(function(){
+                if($(this).hasClass('active')){
+                    var privacyValue = $(this).attr('data-value');
+                    $(this).css('backgroundColor', '#'+calendar.getEventColor(privacyValue));
+                }
+            });
+            
+        };
+        
 	this.loadEvents = function(){
 			  		if($('#showTasks').is(':checked')){
 			  			calendar.loadTasks();
@@ -274,16 +310,17 @@ var calendar = new function(){
 									  	stopTime = '';
 									  }
 									  
+                                                                          var bgColor = calendar.getEventColor(value.privacy);
 									  
-									  list += '<li data-eventId="'+value.id+'" onclick="$(\'#eventDetail_'+value.id+'\').toggle();">'+title+'</li>';
-									  list += '<li class="eventDetail" id="eventDetail_'+value.id+'" onclick="events.show('+value.id+', '+privacy.authorize(value.privacy, value.user)+');"><i class="icon white-pencil"></i>'+startTime+' - '+stopTime+'<br>'+value.place+'</li>';
+									  list += '<li data-eventId="'+value.id+'" onclick="$(\'#eventDetail_'+value.id+'\').toggle();" style="background-color: '+bgColor+';">'+title+'</li>';
+									  list += '<li class="eventDetail" id="eventDetail_'+value.id+'" onclick="events.show('+value.id+', '+privacy.authorize(value.privacy, value.user)+');" style="background-color: '+bgColor+';"><i class="icon white-pencil"></i>'+startTime+' - '+stopTime+'<br>'+value.place+'</li>';
 									
 								  }
 								 });
 							}
 							
 						$(this).children('.eventList').append(list);
-			  			
+			  			calendar.loadColorsIntoSide();
 			  			
 			  			
 			  		});
