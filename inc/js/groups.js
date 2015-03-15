@@ -15,6 +15,30 @@
 
 
 var groups = new function(){
+    
+        this.updateGUI = function(groupId){
+            dashBoard.updateDashBox('group');
+            
+            //check if profile is opened
+            $('.groupProfile').each(function(){
+                if($(this).attr('data-groupid') == groupId){
+                    $(this).replaceWith(groups.generateProfile(groupId));
+                }
+            });
+            
+            //check if settings are opened
+                //overview
+                if($('#settingsGroups').length > 0){
+                    settings.showGroupsForm();
+                }
+                //admin
+                $('#groupAdminFormContainer').each(function(){
+                    if($(this).attr('data-groupid') == groupId){
+                        
+                        settings.showGroupAdminForm(groupId);
+                    }
+                });
+        };
 	
         //removes current user from group
         this.leave = function(groupId){
@@ -39,7 +63,7 @@ var groups = new function(){
         this.getPlaylists = function(group_id){
             
         };
-        this.showProfile = function(group_id){
+        this.generateProfile = function(group_id){
             var groupdata = this.getData(group_id);
             var buttonText = '', buttonClass = '', buttonAction = '', adminButton = '', onClick = '';
             if(User.inGroup(group_id) !== -1){
@@ -61,6 +85,7 @@ var groups = new function(){
                 }
                 
             }
+            alert(User.inGroup(group_id));
             
             if(groupdata.isAdmin){
                 adminButton = '<a href="#" class="button" onclick="settings.showGroupAdminForm('+group_id+');">Admin</a>';
@@ -70,7 +95,7 @@ var groups = new function(){
 
             var buttons = '<a href="#" onclick="'+onClick+'" class="button">'+buttonText+'</a>'+adminButton;
 
-            var output   = '<div class="profile">';
+            var output   = '<div class="profile groupProfile" data-groupid="'+group_id+'">';
                     output += '<header>';
                             output += groups.showPicture(group_id);
                             output += '<div class="main">';
@@ -123,8 +148,12 @@ var groups = new function(){
                         //output += '</div>';
                     output  += '</div>';
                 output  += '</div>';
+                return output;
+        };
+        this.showProfile = function(group_id){
+            var output = this.generateProfile(group_id);
 
-            reader.tabs.addTab('Profle', 'html', output);
+            reader.tabs.addTab('Profile', 'html', output);
 
             //load feed
             var profileFeed = new Feed('group', '.activity_tab', group_id);
