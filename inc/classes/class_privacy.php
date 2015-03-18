@@ -84,9 +84,11 @@ class privacy {
         if($value == "p"){
             //check checkbox on public
             $checked['privacyPublic'] = 'checked="checked"';
+            $active['public'] = 'active';
         }else if($value == "h"){
             //check checkbox on hidden
             $checked['privacyHidden'] = 'checked="checked"';
+            $active['pidden'] = 'active';
         }else{
 			$showCustom = "notHidden";
             //handle other cases
@@ -99,6 +101,7 @@ class privacy {
             if(in_array("f", $customShow)){
                 //check checkbox on show friends
                 $checked['privacyCustomShowF'] = 'checked="checked"';
+                $active['buddies'] = 'active';
             }
             
             
@@ -110,10 +113,12 @@ class privacy {
             if(in_array("f", $customEdit)){
                 //check checkbox on allow friends to edit
                 $checked['privacyCustomEditF'] = 'checked="checked"';
+                $active['buddies'] = 'active';
             }
             if(in_array("h", $customEdit)){
                 //only authour is allow to edit
                 $checked['privacyCustomEditH'] = 'checked="checked"';
+                $active['buddies'] = 'active';
             }
             
             
@@ -133,20 +138,20 @@ class privacy {
         	<div class="privacySettings">
         		<header>Privacy settings</header>
         		<ul>
-        			<li class="privacyPublicTrigger">
+        			<li class="privacyPublicTrigger <?=$active['public'];?>">
                                     <span class="icon white-check"></span><h2><input type="checkbox" name="privacyPublic" value="true" class="privacyPublicTrigger uncheckCustom uncheckHidden" <?=$checked[privacyPublic];?> <?=$disabled;?>>Public</h2>
         			</li>
-        			<li class="privacyHiddenTrigger">
+        			<li class="privacyHiddenTrigger <?=$active['hidden'];?>">
                                     <span class="icon white-check"></span><h2><input type="checkbox" class="privacyHiddenTrigger uncheckPublic uncheckCustom" name="privacyHidden" value="true" <?=$checked[privacyHidden];?> <?=$disabled;?>>Only me</h2>
         			</li>
-        			<li class="privacyCustomTrigger privacyShowFriendDetails">
+        			<li class="privacyCustomTrigger privacyShowFriendDetails <?=$active['buddies'];?>">
                                     <span class="icon white-check"></span><h2><input type="checkbox" class="privacyBuddyTrigger privacyCustomTrigger uncheckPublic uncheckHidden" <?=$checked['privacyCustomShowF'];?> <?=$checked['privacyCustomEditF'];?> <?=$disabled;?>>Friends</h2>
         			</li>
         			<li class="<?=$showCustom;?> sub privacyShowBuddy">
         				<div><input type="checkbox" name="privacyCustomSee[]" value="f" data-privacytype="see" class="privacyCustomTrigger uncheckPublic uncheckGroups uncheckHidden privacyBuddyTrigger privacyBuddyTrigger_see" <?=$checked['privacyCustomShowF'];?> <?=$disabled;?>>See</div>
         				<div><input type="checkbox" name="privacyCustomEdit[]" value="f" data-privacytype="edit" class="uncheckPublic privacyCustomTrigger uncheckGroups uncheckHidden privacyBuddyTrigger privacyBuddyTrigger_edit" <?=$checked['privacyCustomEditF'];?> <?=$disabled;?>>Edit</div>
         			</li>
-        			<li class="privacyGroupTrigger">
+        			<li class="privacyGroupTrigger <?=$active['groups'];?>">
         				<h2><input type="checkbox" class="uncheckPublic privacyGroupTrigger privacyCustomTrigger uncheckHidden" <?=$disabled;?>>Groups</h2>
         			</li>
         			<li class="<?=$showCustom;?> sub privacyShowGroups <?=$showBuddy;?>">

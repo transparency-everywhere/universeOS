@@ -43,7 +43,10 @@ var gui = new function(){
         }
     };
     this.generateField = function(fieldData, tr_class){
-        
+        var requiredClass = '';
+        if(fieldData['requred'] === true){
+            requiredClass = 'requiredInput';
+        }
         
         if((typeof fieldData['value'] === 'undefined')||(fieldData['value'] == 'html')){
             fieldData['value'] = '';
@@ -133,7 +136,7 @@ var gui = new function(){
                             
                             
                             
-                            mainHTML += '<td colspan="'+colspan+'">'+textBeforeInput+'<input type="text" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '" value="' + fieldData['value'] + '" placeholder="'+fieldData.caption+'" style="width:100%;" '+disabled+'/></td><td>'+fieldData['appendix']+'</td>';
+                            mainHTML += '<td colspan="'+colspan+'">'+textBeforeInput+'<input type="text" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '" value="' + fieldData['value'] + '" placeholder="'+fieldData.caption+'" style="width:100%;" class="'+requiredClass+'" '+disabled+'/></td><td>'+fieldData['appendix']+'</td>';
                             break;
                             
                             
@@ -141,13 +144,13 @@ var gui = new function(){
                             if(!fieldData['value']){
                                 fieldData['value'] = '';
                             }
-                            mainHTML += '<td colspan="3"><textarea name="' + fieldData.inputName + '" id="' + fieldData.inputName + '">'+fieldData['value']+'</textarea></td><td>'+fieldData['appendix']+'</td>';
+                            mainHTML += '<td colspan="3"><textarea name="' + fieldData.inputName + '" id="' + fieldData.inputName + '" class="'+requiredClass+'">'+fieldData['value']+'</textarea></td><td>'+fieldData['appendix']+'</td>';
                             break;
                             
                             
                             
                         case 'password':
-                            mainHTML += '<td><input type="password" name="' + fieldData.inputName + '" placeholder="'+fieldData.caption+'" id="' + fieldData.inputName + '"/></td>';
+                            mainHTML += '<td><input type="password" name="' + fieldData.inputName + '" placeholder="'+fieldData.caption+'" id="' + fieldData.inputName + '" class="'+requiredClass+'"/></td>';
                             break;
                             
                             
@@ -159,13 +162,13 @@ var gui = new function(){
                             }else{
                                 checked = '';
                             }
-                            mainHTML += '<td><input type="checkbox" value="' + fieldData.value + '" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '" '+ checked +'/></td>';
+                            mainHTML += '<td><input type="checkbox" value="' + fieldData.value + '" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '" class="'+requiredClass+'" '+ checked +'/></td>';
                             break;
                             
                             
                             
                         case 'radio':
-                            mainHTML += '<td><input type="text" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '"/></td><td>'+fieldData['appendix']+'</td>';
+                            mainHTML += '<td><input type="text" name="' + fieldData.inputName + '" class="'+requiredClass+'" id="' + fieldData.inputName + '"/></td><td>'+fieldData['appendix']+'</td>';
                             break;
                             
                             
@@ -174,7 +177,7 @@ var gui = new function(){
                             
                             mainHTML += '<td colspan="3">';
                                 mainHTML += '<span class="custom-dropdown custom-dropdown--white">';
-                                    mainHTML += '<select class="custom-dropdown__select custom-dropdown__select--white" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '">';
+                                    mainHTML += '<select class="custom-dropdown__select custom-dropdown__select--white '+requiredClass+'" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '">';
                                         
                                     mainHTML += gui.createDropdown(fieldData.values, fieldData.captions, fieldData.preselected, fieldData.caption);
                                     mainHTML += ' </select>';
@@ -192,7 +195,7 @@ var gui = new function(){
                             
                         case 'wysiwyg':
                             gui.initWysiwyg = true;
-                            mainHTML += '<td colspan="3"><div class="wysiwyg" id="' + fieldData.inputName + '" contenteditable="true">'+fieldData.value+'</div></td><td>'+fieldData['appendix']+'</td>';
+                            mainHTML += '<td colspan="3"><div class="wysiwyg '+requiredClass+'" id="' + fieldData.inputName + '" contenteditable="true">'+fieldData.value+'</div></td><td>'+fieldData['appendix']+'</td>';
                             break;
                             
                             
@@ -280,6 +283,7 @@ var gui = new function(){
         if (typeof options['action'] == 'function'){
             $('#dynForm').submit(function(e){
                 e.preventDefault();
+                
                 options['action']();
             });
         }
@@ -381,19 +385,19 @@ var gui = new function(){
     };
     
     this.getRasterWidth = function(numberOfFields){
-        var gutterWidth = $(document).width()/49;
+        var gutterWidth = $('#bodywrap').width()/49;
         return ((numberOfFields*3)+(numberOfFields-1))*gutterWidth;
     };
     this.getRasterHeight = function(numberOfFields){
-        var gutterHeight = $(document).height()/49;
+        var gutterHeight = $('#bodywrap').height()/49;
         return ((numberOfFields*3)+(numberOfFields-1))*gutterHeight;
     };
     this.getRasterMarginLeft = function(numberOfFields){
-        var gutterWidth = $(document).width()/49;
+        var gutterWidth = $('#bodywrap').width()/49;
         return ((numberOfFields*3)+(numberOfFields+1))*gutterWidth;
     };
     this.getRasterMarginTop = function(numberOfFields){
-        var gutterHeight = $(document).height()/49;
+        var gutterHeight = $('#bodywrap').height()/49;
         return ((numberOfFields*3)+(numberOfFields+1))*gutterHeight;
         
     };

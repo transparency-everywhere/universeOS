@@ -276,8 +276,7 @@ li.notHidden{
     margin-top: 15px;
     margin-bottom: 40px;
     margin-left: 15px;
-    float: left;
-    font-size: 20px;
+    float: left; font-size: 20px;
 }
 
 .dockSeachResult > .listContainer:first-of-type{
@@ -294,10 +293,21 @@ li.notHidden{
 	overflow: auto;
 }
 
+.resultList li:hover{
+    background: #00bcd4;
+}
+
+
+
 .resultList li{
     height:40px;
     line-height: 40px;
     border-bottom: 1px solid #607d8b;
+}
+
+
+.resultList li .icon-gear{
+    cursor: pointer;
 }
 
 .resultList li a, .resultList li a:link,.resultList li a:visited, .resultList li a:active{
@@ -307,7 +317,9 @@ li.notHidden{
 }
 
 .resultList li .icon, .resultList li .userPicture{
-    margin-bottom: -10px;
+    margin-bottom: -8px;
+    height: 30px;
+    width: 30px;
 }
 .resultList li .userPicture{
     margin-top: 5px;
@@ -328,6 +340,30 @@ li.notHidden{
     margin-bottom: -3px!important;
     margin-right: 5px;
 }
+
+.resultList li:hover a, .resultList li:hover a:link,.resultList li:hover a:visited{
+    color:#FFF;
+}
+
+
+.resultList li .icon.white{
+    display:none;
+}
+
+.resultList li:hover .icon.white{
+    display:inline-block;
+}
+.resultList li:hover .icon.dark{
+    display:none;
+}
+.dockSeachResult .loadAll{
+    text-align:right;
+}
+
+.dockSeachResult .loadAll a{
+    color: #18ffff!important;
+}
+
 
 .windowHeader {
     position:absolute;
@@ -1328,6 +1364,7 @@ color: #FFF;
 		left: 0px;
 		right: 0px;
 		width: 100%;
+		overflow: auto;
 		height: 100%;
 	}
 	

@@ -22,6 +22,26 @@ Update
 
 
 todo
+    update handlers
+        groups
+            dashboard
+            settings
+                groups
+                groupadmin
+            profile
+        
+        playlists
+
+        buddylist
+            add user
+            remove user
+
+        calendar
+            updateDay
+            updateTasks
+            updateEvents
+
+
     all onclick to bind(?)
 
     profile
@@ -33,7 +53,7 @@ todo
 
     fix raster
 
-    standard birthdate in settings is 09.07.1991 -> add timepick calendar
+    forms add required option for inputs
 
     add protection to userPicture element, groupicture element etc
 
@@ -54,6 +74,8 @@ todo
         change group picture
 
         members
+
+        showprivacy active class groups
 
 Recent:                                                         Release Message
 

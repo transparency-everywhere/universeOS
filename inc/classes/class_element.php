@@ -292,10 +292,6 @@ class element {
                                     }?></td>
                         </tr>
                         <?php
-                        if(!$git){
-                            $contextMenu = new contextMenu("file", $fileListData['id'], $title10, $openFileType);
-                            $contextMenu->showRightClick();
-                        }
 
                 }}
                 $linkListSQL = mysql_query("SELECT * FROM links WHERE $query");
@@ -339,10 +335,6 @@ class element {
                             ?></td>
                     </tr>
                     <?php
-                        if(!$git){
-                            $contextMenu = new contextMenu("link", $linkListData['id'], $title10, $linkListData['type']);
-                            echo $contextMenu->showRightClick();
-                        }
                     }
 
 

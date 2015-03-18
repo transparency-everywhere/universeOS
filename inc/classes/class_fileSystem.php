@@ -86,7 +86,7 @@ class fileSystem {
                     <td width="30"><?php
                     if($rightClick){
                         $contextMenu = new contextMenu("folder", $filefdata['id'], $filefdata['name'], $filefdata['creator']);
-                        echo $contextMenu->showRightClick();
+                        
                     }?>&nbsp;<img src="<?=$subpath;?>img/folder_dark.png"></td>
                     <td><a href="<?=$subpath;?>out/?folder=<?=$filefdata['id'];?>" onclick="openFolder('<?=$filefdata['id'];?>'); return false;"><?=$name;?></a></td>
                     <td width="80px">
@@ -127,9 +127,6 @@ class fileSystem {
                                                             }
                                 echo "</td>";
                         echo "</tr>";
-                        if($rightClick){
-                            echo $contextMenu->showRightClick();
-                        }
 
                     }
                 

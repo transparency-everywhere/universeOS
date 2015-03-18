@@ -37,7 +37,7 @@ var applications = new function(){
         app['source'] = 'filesystem.js';
         app['className'] = 'filesystem'; // name of the the javascript class object
         app['active'] = true;
-        app['position'] = {width: 6, height:  5, top: 0, left: 3};
+        app['position'] = {width: 8, height:  5, top: 0, left: 2};
         app['icon'] = standardIcon;
         apps[1] = app;
         
@@ -180,12 +180,7 @@ var application = function(id){
                     }
 		}
                 
-		if(typeof style['hidden'] != 'undefined'){
-                    if(style['hidden'] === true){
-                        
-                        windowStyle +='display:none;';
-                    }
-		}
+                windowStyle +='display:none;';
                 
 		
 		
@@ -203,6 +198,10 @@ var application = function(id){
 
 		
 		$('#bodywrap').append(output);
+                
+		if(typeof style['hidden'] == 'undefined' || style['hidden'] !== true){
+                        $('#'+id+'.fenster').fadeIn(4000);
+		}
                   
 		
               init.draggableApplications();

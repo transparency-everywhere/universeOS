@@ -35,11 +35,11 @@ class search{
    }
    
    
-    function getSearchResults($type){
+    function getSearchResults($type, $limit=49){
         $q = $this->query;
         $qEncoded = urlencode($q);    
         
-        $k = 5;
+        $k = $limit+1; //limit+1 because the parseSearchResults function needs to check if the "load all" button is shown
         $results = array();
         
         switch($type){
@@ -86,7 +86,7 @@ class search{
                 break;
                 
             case 'wiki':
-                $xml = xml::curler("http://en.wikipedia.org/w/api.php?action=opensearch&limit=2&namespace=0&format=xml&search=$qEncoded");
+                $xml = xml::curler("http://en.wikipedia.org/w/api.php?action=opensearch&limit=$k&namespace=0&format=xml&search=$qEncoded");
                 foreach ($xml->Section->Item as $item) {
                     $results[]  = $item;
                 }
@@ -95,7 +95,7 @@ class search{
             case 'youtube':
 
                 //youtube
-                $xml2 = xml::curler("http://gdata.youtube.com/feeds/api/videos?max-results=5&restriction=DE&q=$qEncoded");
+                $xml2 = xml::curler("http://gdata.youtube.com/feeds/api/videos?max-results=$k&restriction=DE&q=$qEncoded");
                 foreach ($xml2->entry as $item2) {
                     $youtubeClass = new youtube($item2->id);
                     $vId = $youtubeClass->getId();
@@ -120,7 +120,7 @@ class search{
     
     function buildLI($icon, $action, $title, $contextMenu=false){
         
-        $title = substr($title, 0, 33);
+        $title = htmlentities(substr($title, 0, 33));
         
         $output = '<li>';
             $output .=  $icon;
@@ -130,6 +130,156 @@ class search{
             }
         $output .= '</li>';
         
+        return $output;
+    }
+    //loads results if you klick on load more. used in api/search/extendResults
+    function extendResults($type, $limit, $offset){
+        $items = $this->getSearchResults($type, $limit);
+        $i = 0;
+        foreach($items AS $item){
+            if($i > $offset){
+                $resultItems[] = $item;
+                
+            }
+            $i++;
+        }
+        return $this->parseLists($type, $resultItems, $limit);
+    }
+    function parseLists($type, $items, $limit=5){
+        $numberOfItems = count($items);
+        switch($type){
+            case 'users':
+                $i = 0;
+                $output .= '<ul class="list resultList">';
+                foreach($items AS $suggestData){
+                    if($i<$limit){
+                        $output .= $this->buildLI(showUserPicture($suggestData['userid'], "30", NULL, TRUE), "showProfile('".$suggestData['userid']."');", $suggestData['username'], true);
+
+                        $output .= $this->generateSearchResultContext('user', $suggestData['userid']);
+                    }else{
+                        $loadAll = '<div class="loadAll" data-type="users">results '.$i.' of '.$numberOfItems.' <a href="#">show all</a></div>';
+                    }
+                }
+                $output .= '</ul>';
+                break;
+            case 'folders':
+                
+                $icon = 'folder';
+                $i = 0;
+                $output .= '<ul class="list resultList">';
+                foreach($items AS $suggestData){
+                    if($i<$limit){
+                            $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', 'openFolder(\''.$suggestData['id'].'\');', $suggestData['name']);
+                    }else{
+                        $loadAll = '<div class="loadAll" data-type="folder">results '.$i.' of '.$numberOfItems.' <a href="#">show all</a></div>';
+                    }
+                    $i++;
+                }
+                $output .= '</ul>';
+                break;
+                
+                
+            case 'elements':
+                
+                $icon = 'archive';
+                $i=0;
+                $output .= '<ul class="list resultList">';
+                foreach($items AS $suggestData){
+                    if($i<$limit){
+                            $output .= $this->buildLI('<<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', 'openElement(\''.$suggestData['id'].'\');', $suggestData['title']);
+
+                    }else{
+                        $loadAll = '<div class="loadAll" data-type="elements">results '.$i.' of '.$numberOfItems.' <a href="#">show all</a></div>';
+                    }
+                    $i++;
+                }
+                $output .= '</ul>';
+                break;
+            case 'files':
+                $icon = 'file';
+                $i = 0;
+                $output .= '<ul class="list resultList">';
+                foreach($items AS $suggestData){
+                    if($i<$limit){
+                    $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "openFile('$suggestData[type]', '$suggestData[id]', '$suggestData[title]');", $suggestData['title']);
+                    }else{
+                        $loadAll = '<div class="loadAll" data-type="files">results '.$i.' of '.$numberOfItems.' <a href="#">show all</a></div>';
+                    }
+                    $i++;
+                }
+                $output .= '</ul>';
+                break;
+            case 'groups':
+                $icon = 'group';
+                $i = 0;
+                $output .= '<ul class="list resultList">';
+                foreach($items AS $suggestData){
+                    if($i<$limit){
+                        $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "reader.applicationVar.show(); reader.tabs.addTab('".$suggestData['title']."', '',gui.loadPage('./group.php?id=".$suggestData['id']."'));return false",$suggestData['title']);
+                    }else{
+                        $loadAll = '<div class="loadAll" data-type="groups">results '.$i.' of '.$numberOfItems.' <a href="#">show all</a></div>';
+                    }
+                    $i++;
+                }
+                $output .= '</ul>';
+                break;
+            case 'wiki':
+                $icon = 'wikipedia';
+                $i = 0;
+                $output .= '<ul class="list resultList">';
+                foreach($items AS $item){
+
+                    if($i<$limit){
+                    $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "openFile('wikipedia', '".urlencode($item->Text)."', '".urlencode(substr("$item->Text", 0, 10))."');", $item->Text);
+                    }else{
+                        $loadAll = '<div class="loadAll" data-type="wiki">results '.$i.' of '.$numberOfItems.' <a href="#">show all</a></div>';
+                    }
+                    $i++;
+                }
+                $output .= '</ul>';
+                break;
+            case 'youtube':
+                $icon = 'youtube';
+                $i = 0;
+                $output .= '<ul class="list resultList">';
+                foreach($items AS $item2){
+
+                    if($i<$limit){
+
+                        $youtubeClass = new youtube($item2->id);
+                        $vId = $youtubeClass->getId();
+                        $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "openFile('youTube', '', '".urlencode(substr("$item2->title", 0, 10))."', '$vId');", substr("$item2->title", 0, 40), true);
+
+
+                        $data = xml2array($item2->link);
+                        $output .= $this->generateSearchResultContext('youtube', $data['@attributes']['href']);
+
+                    }else{
+                        $loadAll = '<div class="loadAll" data-type="youtube">results '.$i.' of '.$numberOfItems.' <a href="#">show all</a></div>';
+                    }
+                    $i++;
+                }
+                $output .= '</ul>';
+                break;
+            case 'spotify':
+                $icon = 'spotify';
+                $i = 0;
+                $output .= '<ul class="list resultList">';
+                foreach($items AS $item2){
+
+                                $output .= "<li>";
+
+                                //icon
+                                $output .=  '<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>';
+                                //title
+                                $output .= "<a href=\"$item3[href]\">".substr("$item3->name", 0, 40)."</a>";
+
+                                $output .= "</li>";
+                }
+                $output .= '</ul>';
+                break;
+        }
+        $output .= $loadAll;
         return $output;
     }
     function parseSearchResults(){
@@ -144,15 +294,8 @@ class search{
         if(count($users) > 0){
 
             $output .= "<div class=\"listContainer\">";
-            $output .= '<ul class="list resultList">';
-            foreach($users AS $suggestData){
-                
-                $output .= $this->buildLI(showUserPicture($suggestData['userid'], "30", NULL, TRUE), "showProfile('".$suggestData['userid']."');", $suggestData['username'], true);
-                
-                $output .= $this->generateSearchResultContext('user', $suggestData['userid']);
-
-            }
-            $output .= '</ul>';
+            
+            $output .= $this->parseLists('users', $users);
             $output .= '<header>Users</header>';
             $output .= '</div>';
         }
@@ -162,11 +305,9 @@ class search{
         $icon = 'dark-folder';
         if(count($folders) > 0){
             $output .= "<div class=\"listContainer\">";
-            $output .= '<ul class="list resultList">';
-            foreach($folders AS $suggestData){
-                        $output .= $this->buildLI('<span class="icon '.$icon.'" style="'.$iconStyle.'"></span>', 'openFolder(\''.$suggestData['id'].'\');', $suggestData['name']);
-            }
-            $output .= '</ul>';
+            $output .= $this->parseLists('folders', $folders);
+            
+            
             $output .= '<header>Folders</header>';
             $output .= '</div>';
         }
@@ -175,14 +316,7 @@ class search{
         $elements = $this->getSearchResults('elements');
         $icon = 'dark-archive';
         if(count($elements) > 0){
-            $output .= "<div class=\"listContainer\">";
-            $output .= '<ul class="list resultList">';
-            foreach($elements AS $suggestData){
-                        $output .= $this->buildLI('<span class="icon '.$icon.'" style="'.$iconStyle.'"></span>', 'openElement(\''.$suggestData['id'].'\');', $suggestData['title']);
-
-                        
-            }
-            $output .= '</ul>';
+            $output .= $this->parseLists('elements', $folders);
             $output .= '<header>Elements</header>';
             $output .= '</div>';
         }
@@ -192,12 +326,8 @@ class search{
         $icon = 'dark-file';
         if(count($files) > 0){
             $output .= "<div class=\"listContainer\">";
-            $output .= '<ul class="list resultList">';
-            foreach($files AS $suggestData){
-                $output .= $this->buildLI('<span class="icon '.$icon.'" style="'.$iconStyle.'"></span>', "openFile('$suggestData[type]', '$suggestData[id]', '$suggestData[title]');", $suggestData['title']);
-                
-            }
-            $output .= '</ul>';
+            $output .= $this->parseLists('files', $files);
+            
             $output .= '<header>Files</header>';
             $output .= '</div>';
         }
@@ -206,11 +336,7 @@ class search{
         $icon = 'dark-group';
         if(count($groups) > 0){
             $output .= "<div class=\"listContainer\">";
-            $output .= '<ul class="list resultList">';
-            foreach($groups AS $suggestData){
-                $output .= $this->buildLI('<span class="icon '.$icon.'" style="'.$iconStyle.'"></span>', "reader.applicationVar.show(); reader.tabs.addTab('".$suggestData['title']."', '',gui.loadPage('./group.php?id=".$suggestData['id']."'));return false",$suggestData['title']);
-            }
-            $output .= '</ul>';
+            $output .= $this->parseLists('groups', $groups);
             $output .= '<header>Groups</header>';
             $output .= '</div>';
         }
@@ -219,11 +345,7 @@ class search{
             $icon = 'dark-wikipedia';
             if(count($wikis) > 0){
                 $output .= "<div class=\"listContainer\">";
-                $output .= '<ul class="list resultList">';
-                foreach($wikis AS $item){
-                    $output .= $this->buildLI('<span class="icon '.$icon.'" style="'.$iconStyle.'"></span>', "openFile('wikipedia', '".urlencode($item->Text)."', '".urlencode(substr("$item->Text", 0, 10))."');", $item->Text);
-            }
-            $output .= '</ul>';
+                $output .= $this->parseLists('wiki', $wikis);
             $output .= '<header>Wiki</header>';
             $output .= '</div>';
 
@@ -234,19 +356,7 @@ class search{
         $icon = 'dark-youtube';
         if(count($youtubes) > 0){
             $output .= "<div class=\"listContainer\">";
-            $output .= '<ul class="list resultList">';
-            foreach($youtubes AS $item2){
-                $youtubeClass = new youtube($item2->id);
-                $vId = $youtubeClass->getId();
-                $output .= $this->buildLI('<span class="icon '.$icon.'" style="'.$iconStyle.'"></span>', "openFile('youTube', '', '".urlencode(substr("$item2->title", 0, 10))."', '$vId');", substr("$item2->title", 0, 40), true);
-
-                
-                $data = xml2array($item2->link);
-                
-                $output .= $this->generateSearchResultContext('youtube', $data['@attributes']['href']);
-            }
-
-            $output .= '</ul>';
+            $output .= $this->parseLists('youtube', $youtubes);
             $output .= '<header>Youtube</header>';
             $output .= '</div>';
         }
@@ -255,18 +365,7 @@ class search{
         $spotifies = $this->getSearchResults('spotifies');
         if(count($spotifies) > 0){
             $output .= "<div class=\"listContainer\">";
-            $output .= '<ul class="list resultList">';
-            foreach($spotifies AS $item3){
-                                $output .= "<li>";
-
-                                //icon
-                                $output .=  '<span class="icon '.$icon.'" style="'.$iconStyle.'"></span>';
-                                //title
-                                $output .= "<a href=\"$item3[href]\">".substr("$item3->name", 0, 40)."</a>";
-
-                                $output .= "</li>";
-            }
-            $output .= '</ul>';
+            $output .= $this->parseLists('spotifies', $spotifies);
             $output .= '<header>Spotify</header>';
             $output .= '</div>';
         }
@@ -300,6 +399,7 @@ class search{
                         $output .= '<span class="icon '.$option['icon'].'"></span>';
                         $output .= '<a href="#" onclick="'.$option['action'].'">';
                         $output .= $option['title'];
+                        $output .= '</a>';
                     $output .= '</li>';
                 }
             $output .= '</ul>';

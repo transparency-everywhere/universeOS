@@ -43,6 +43,7 @@ var api = new function(){
                     }
                 }else{
                     result = callback(data);
+                    
                 }
             },
             async:async

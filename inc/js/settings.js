@@ -331,9 +331,13 @@ var settings = new function(){
        // formModal.init('Update Profile', '<div id="updateProfileFormContainer"></div>', modalOptions);
         gui.createForm('#updateProfileFormContainer',fieldArray, options);
         
+        
+        //init datepicker in modal
+        $('#updateProfileFormContainer #birthdate').datepicker();
+        
         $('#updateProfileFormContainer .dynForm').submit(function(e){
             e.preventDefault();
-            var birthdate = '09.07.1991';
+            var birthdate = $('#updateProfileFormContainer #birthdate').val();
             settings.updateProfileInfo($('#updateProfileFormContainer #realname').val(), $('#updateProfileFormContainer #city').val(), $('#updateProfileFormContainer #hometown').val(), birthdate, $('#updateProfileFormContainer #school').val(), $('#updateProfileFormContainer #university').val(), $('#updateProfileFormContainer #work').val());
             gui.alert('Your changes have been saved.','Settings');
         });
@@ -396,7 +400,7 @@ var settings = new function(){
                     listItems.push({'text':'<div onclick="groups.show('+value+')"><span class="icon icon-group"></span><span class="username" style="font-size:18px; padding-top: 5px;">'+groups.getTitle(value)+'</span>', 'buttons':'<a href="#" class="button" onclick="groups.leave(\''+value+'\'); return false">Leave</a>'+adminButton});
                 });
             }
-            output = gui.generateGrayList(listItems);
+            output += gui.generateGrayList(listItems);
         }
             output += '</div>';
         $('#settingsFrame').html(output);
@@ -480,7 +484,7 @@ var settings = new function(){
         
         //generate member list
         var groupMembers = groups.getUsers(group_id);    
-        $.each();
+        //$.each();
         
         //members list
         var field6 = [];
@@ -498,14 +502,14 @@ var settings = new function(){
         field7['value'] = '<div id=\'buttons\'><input type=\'submit\' value=\'save\' class=\'button pull-right\'></div>';
         fieldArray[7] = field7;
         
-        $('#settingsFrame').html('<div id="updateProfileFormContainer"></div>');
+        $('#settingsFrame').html('<div id="groupAdminFormContainer" data-groupid="'+group_id+'"></div>');
         
        // formModal.init('Update Profile', '<div id="updateProfileFormContainer"></div>', modalOptions);
-        gui.createForm('#updateProfileFormContainer',fieldArray, options);
+        gui.createForm('#groupAdminFormContainer',fieldArray, options);
         
         $('#updateProfileFormContainer .dynForm').submit(function(e){
             e.preventDefault();
-            var birthdate = '09.07.1991';
+            var birthdate = $('#updateProfileFormContainer #birthdate').val();
             settings.updateProfileInfo($('#updateProfileFormContainer #realname').val(), $('#updateProfileFormContainer #city').val(), $('#updateProfileFormContainer #hometown').val(), birthdate, $('#updateProfileFormContainer #school').val(), $('#updateProfileFormContainer #university').val(), $('#updateProfileFormContainer #work').val());
             
         });

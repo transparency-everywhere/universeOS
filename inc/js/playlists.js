@@ -14,6 +14,10 @@
 //        @author nicZem for Tranpanrency - everywhere.com
 
 var playlists = new function(){
+    this.updateGUI = function(playlist_id){
+        dashBoard.updateDashBox('playlist');
+    };
+    
     this.activePlaylist = {};
     
     this.getData = function(playlist_id){

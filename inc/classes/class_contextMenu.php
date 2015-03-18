@@ -472,7 +472,7 @@ class contextMenu{
 			  
 			  return $options;
 	}
-	public function showRightClick(){
+	public function d_showRightClick(){
 		
       	 $type = $this->type;
       	 $itemId = $this->itemId;

@@ -482,6 +482,16 @@ var universe = new function(){
 
 var User = new function(){
     this.userid;
+    
+    this.updateGUI = function(userid){
+            $('.userProfile').each(function(){
+                if($(this).attr('data-userid') == userid){
+                    $(this).replaceWith(User.generateProfile(userid));
+                }
+            });
+    };
+    
+    
     this.setUserId = function(id){
         
         this.userid = id;
@@ -567,7 +577,7 @@ var User = new function(){
         return api.query('api/user/getGroups/', { });
     };
     this.inGroup = function(group_id){
-        return jQuery.inArray(group_id, User.getGroups() );
+        return jQuery.inArray(group_id+'', User.getGroups());
     };
     this.showSignature = function(userid, timestamp, reverse){
         
@@ -617,7 +627,7 @@ var User = new function(){
             return output;
         
     };
-    this.showProfile = function(user_id){
+    this.generateProfile = function(user_id){
         var profile_userdata = this.getProfileInfo(user_id);
         var realname = '', city = '', birthdate = '';
         if(typeof profile_userdata['realname'] !== 'undefined'){
@@ -636,7 +646,7 @@ var User = new function(){
         }
         
         
-        var output   = '<div class="profile">';
+        var output   = '<div class="profile userProfile" data-userid="'+user_id+'">';
                 output += '<header>';
                     output += User.showPicture(user_id);
                         output += '<div class="main">';
@@ -755,6 +765,10 @@ var User = new function(){
                     //output += '</div>';
                 output  += '</div>';
             output  += '</div>';
+            return output;
+    };
+    this.showProfile = function(user_id){
+        var output = this.generateProfile(user_id);
         
         reader.tabs.addTab('Profle', 'html', output);
         
@@ -1169,6 +1183,30 @@ var hash = new function(){
 			return hash.toString(CryptoJS.enc.Hex);
 		};
 	};
+        
+var search = new function(){
+    this.init = function(query){
+        
+                $('.resultList a:link, .resultList .icon-gear').unbind('click');
+		$('.resultList a:link').bind('click', function(){
+			$('.dockSeachResult').hide('slow');
+		});
+                
+                $('.resultList .icon-gear').bind('click', function(){
+                        $(this).parent().next('li').slideToggle();
+                });
+                
+                $('.dockSeachResult .loadAll a').click(function(){
+                    var type = $(this).parent().attr('data-type');
+                    $(this).parent().parent().children('ul').replaceWith(search.extendResults(query,type, 40, 0));
+                    $(this).parent().remove();
+                    search.init(query);
+                });
+    };
+    this.extendResults = function(query, type, limit, offset){
+        return api.query('api/search/extendResults/', {query:query, type:type, limit:limit, offset:offset});
+    };
+};
 
 //different to the one in the guest.js (the one in the guest.js needs to be deleted and the functions on offline page(login, updatepass need to be checked...))
 var cypher = new function(){

@@ -97,6 +97,9 @@ var dashBoard = new function(){
 		}
 		return output;
         };
+        this.updateDashBox = function(type){
+            updateDashbox(type);
+        };
         
 };
 

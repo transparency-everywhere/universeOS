@@ -161,7 +161,7 @@ if($_GET[type] == "document"){
                         <td oncontextmenu="showMenu('image<?=$documentData['id'];?>'); return false;"><div id="viewerClick<?=$documentData[id];?>"><a href="#" onclick="filesystem.tabs.updateTabContent('Open <?=substr("$documentElementData[title]",0,10);?>' ,gui.loadPage('./modules/reader/showfile.php?type=image&id=<?=$documentData[id];?>')); ddAjaxContentToTab('Open <?=substr("$documentElementData[title]",0,10);?>','./modules/reader/showfile.php?type=image&id=<?=$documentData[id];?>');return false"><img src="<?=$path;?><?=$documentData[title];?>" height="100px"></a></div></td>   
                    <?php
                     $contextMenu = new contextMenu("image", $documentData['id'], $documentElementData['title']);
-                    $contextMenu->showRightClick();
+
                }?>
                     <script>
                         $("#viewerClick<?=$documentData[id];?>").click(function (){
