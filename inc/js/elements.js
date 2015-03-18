@@ -50,6 +50,7 @@ var elements = new function(){
         var rightLink = "";
         var image = "";
         var date = "";
+        var type = "";
         html += '<span class="icons"></span>';
         html += '<span class="title">Name</span>';
         html += '<span class="date">Date</span>';
@@ -60,11 +61,17 @@ var elements = new function(){
             //generate fileList for an element with an unordered list <ul>
             var data = value['data'];
             i++;
+            if(value['type'] === 'link'){
+                type = "openLink"; // if type is link, use reader.openLink()
+            }
+            if(value['type'] === 'file'){
+                type = "openFile"; // if type is file, use reader.openFile()
+            }
             date = new Date(data['timestamp']*1000).toString().substr(11, 5) + new Date(data['timestamp']*1000).toString().substr(4, 4) + new Date(data['timestamp']*1000).toString().substr(8, 2); //year + month + day
             image = filesystem.generateIcon(data['type']);
             html += '<li data-id="' + data['id'] + '" data-type="' + data['type'] + '" data-title="' + data['title'] + '" data-date="' + date + '" data-size="' + data['size'] + '">';
                 html += '<span class="icons">&nbsp;' + image + '</span>';
-                html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="reader.openFile(\'' + data['id'] + '\'); return false">' + data['title'] + '</a></span>';
+                html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="reader.' + type + '(\'' + data['id'] + '\'); return false">' + data['title'] + '</a></span>';
                 html += '<span class="date">' + date + '</span>';
                 html += '<span class="size">' + Math.round(data['size']/1024) + ' kB</span>';
                 html += '<span class="buttons">'
