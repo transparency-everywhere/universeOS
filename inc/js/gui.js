@@ -44,7 +44,7 @@ var gui = new function(){
     };
     this.generateField = function(fieldData, tr_class){
         var requiredClass = '';
-        if(fieldData['requred'] === true){
+        if(fieldData['required'] === true){
             requiredClass = 'requiredInput';
         }
         
@@ -218,7 +218,12 @@ var gui = new function(){
                             mainHTML += '<td colspan="1">'+fileGallery+'<ul id="' + fieldData.inputName + '_fileList"></ul><input type="hidden" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '" value="'+fieldValue+'"><div id="' + fieldData.inputName + '_fileField"></div></td><td>'+fieldData['appendix']+'</td>';
                             break;
                             
-                            
+                        case 'privacy':
+                            if(typeof fieldData.value === 'undefined'){
+                                fieldData.value = 'p';
+                            }
+                            mainHTML += '<td colspan="1"><div id="privacyField">'+privacy.show(fieldData.value,'true')+'</div></td>';
+                            break;
                             
                         case 'html':
                             mainHTML += '<td colspan="'+colspan+'">'+textBeforeInput+fieldData.value+'</td><td>'+fieldData['appendix']+'</td>';
@@ -228,7 +233,6 @@ var gui = new function(){
         return mainHTML;
     };
     this.createForm = function($selector, fields, options){
-
         var mainHTML = '';
         var advancedHTML = '';
         
@@ -283,8 +287,10 @@ var gui = new function(){
         if (typeof options['action'] == 'function'){
             $('#dynForm').submit(function(e){
                 e.preventDefault();
-                
-                options['action']();
+                if(gui.checkRequired())
+                    options['action']();
+                else
+                    gui.requiredAlert();
             });
         }
         if(this.initWysiwyg){
@@ -402,6 +408,21 @@ var gui = new function(){
         
     };
     
+    this.checkRequired = function(){
+        var state = true;
+                $('#dynForm .requiredInput').each(function(){
+                    var $element = $(this);
+                    if($element.is('input[type=text]')){
+                        if(empty($element.val())){
+                            state = false;
+                        }
+                    }
+                });
+        return state;
+    };
+    this.requiredAlert = function(){
+        alert('asd');
+    };
     this.modal = function(){
         this.html;
         this.init = function (title, content, options) {
@@ -429,7 +450,10 @@ var gui = new function(){
 
                                 if(typeof options['action'] !== 'undefined'){
                                         $('.blueModal #action').click(function(){
+                                            if(gui.checkRequired())
                                                 options['action']();
+                                            else
+                                                gui.requiredAlert();
                                         });
                                 }
 	};

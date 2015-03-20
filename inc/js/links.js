@@ -97,8 +97,7 @@ var links = new function(){
         var field3 = [];
         field3['caption'] = '';
         field3['inputName'] = 'privacy';
-        field3['type'] = 'html';
-        field3['value'] = "<div id=\'privacyField\'></div>";
+        field3['type'] = 'privacy';
         fieldArray[3] = field3;
         
         
@@ -114,7 +113,6 @@ var links = new function(){
             };
             links.create(element, $('#createLinkFormContainer #link_title').val(), $('#createLinkFormContainer #type').val(),  $('#createLinkFormContainer #privacyField :input').serialize(), $('#createLinkFormContainer #link').val(),callback);
         };
-        privacy.load('#privacyField', '', true);
         formModal.init('Add Link To Element', '<div id="createLinkFormContainer"></div>', modalOptions);
         gui.createForm('#createLinkFormContainer',fieldArray, options);
     };
@@ -169,8 +167,8 @@ var links = new function(){
         var field3 = [];
         field3['caption'] = '';
         field3['inputName'] = 'privacy';
-        field3['type'] = 'html';
-        field3['value'] = "<div id=\'privacyField\'></div>";
+        field3['type'] = 'privacy';
+        field3['value'] = linkData['privacy'];
         fieldArray[3] = field3;
         
         

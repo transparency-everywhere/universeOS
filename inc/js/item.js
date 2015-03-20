@@ -91,6 +91,52 @@ var item = new function(){
     this.getOptions = function(type, itemId){
         return api.query('api/item/getOptions/', { type : type, itemId: itemId});
     };
+    this.showRightClickMenu = function(type, itemId){
+        var options = this.getOptions(type, itemId);
+	var list = '';
+        var href = '';
+        var onclick = '';
+        var target = '';
+			$.each(options,function(index,option){
+                            
+                            
+				if(option['title']){
+					
+						onclick = '';
+                                }
+				if(option['href']){
+					href = 'href="'+option['href']+'"';
+					
+				}
+				if(option['onclick']){
+					if(href == 'href="#"'){
+						onclick = 'onclick="'+option['onclick']+'"';
+					}
+				}
+				if(option['target']){
+					if(href != 'href="#"'){
+						target = 'target="'+option['target']+'"';
+                                        }
+					
+				}
+                                
+				list += "<li><a "+href+" "+onclick+" "+target+">"+option['title']+'</a></li>';  
+					
+				});
+					
+
+
+			        var html = "<a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"btn btn-xs itemSettingsButton\">" + filesystem.generateIcon('settings', 'grey') + "</a>\n\
+                                <div class=\"itemSettingsWindow\">\n\
+                                            <ul>";
+                                    html += list;
+                                    
+                                    
+                                    html += "</ul>\n\
+                                        </div>";
+                        
+				return html;
+    };
     this.showItemSettings = function(type, itemId){
         var options = this.getOptions(type, itemId);
 	var list = '';
@@ -178,6 +224,47 @@ var item = new function(){
         output += '</div>';
         
         return output;
+    };
+    
+    this.initRightClick = function(){
+        $('.rightClick').bind('contextmenu', function(e){
+            e.preventDefault();
+            var $element = $(this);
+            var settingsHTML = item.showItemSettings($element.attr('data-type'),$element.attr('data-itemId'));
+            
+            //var $settingsWindow = ?;
+                $('#loader .itemSettingsWindow').remove()
+                $('#loader').append(settingsHTML);
+                
+                //hide all itemSettingsWindows
+                $('.itemSettingsWindow').hide();
+                var $settingsWindow = $('#loader .itemSettingsWindow');
+                
+                $settingsWindow.show();
+                
+                
+                
+                //proof if settingswindow is in viewport
+                var inViewPort = {'right':e.clientX+170<$(window).width(), 'bottom':e.clientY+$settingsWindow.height()<$(window).height()};
+                
+                var top, left;
+                top = e.clientY;
+                left = e.clientX;
+                
+                
+                if(!inViewPort.right||!inViewPort.bottom){
+                    if(!inViewPort.right){
+                        left = e.clientX-170;
+                    }
+//                    if(!inViewPort.bottom){
+//                        top = e.clientY-$settingsWindow.height();
+//                    }
+                }
+                
+                
+                $settingsWindow.css({'top':top, 'left':left});
+            
+        });
     };
 };
         

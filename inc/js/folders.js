@@ -70,14 +70,15 @@ var folders = new function(){
         field0['caption'] = 'Title';
         field0['inputName'] = 'title';
         field0['type'] = 'text';
+        field0['required'] = true;
         field0['value'] = folderData['name'];
         fieldArray[0] = field0;
         
         var field1 = [];
         field1['caption'] = '';
         field1['inputName'] = 'privacy';
-        field1['type'] = 'html';
-        field1['value'] = "<div id=\'privacyField\'></div>";
+        field1['type'] = 'privacy';
+        field1['value'] = folderData['privacy'];
         fieldArray[1] = field1;
         
         
@@ -92,7 +93,6 @@ var folders = new function(){
             };
             folders.update(folder, folderData['folder'], $('#createElementFormContainer #title').val(), $('#createElementFormContainer #privacyField :input').serialize(),callback);
         };
-        privacy.load('#privacyField', folderData['privacy'], true);
         formModal.init('Update Folder', '<div id="createElementFormContainer"></div>', modalOptions);
         gui.createForm('#createElementFormContainer',fieldArray, options);
     };
@@ -129,13 +129,13 @@ var folders = new function(){
         field0['caption'] = 'Title';
         field0['inputName'] = 'title';
         field0['type'] = 'text';
+        field0['required'] = true;
         fieldArray[0] = field0;
         
         var field1 = [];
         field1['caption'] = '';
         field1['inputName'] = 'privacy';
-        field1['type'] = 'html';
-        field1['value'] = "<div id=\'privacyField\'></div>";
+        field1['type'] = 'privacy';
         fieldArray[1] = field1;
         
         
@@ -150,7 +150,6 @@ var folders = new function(){
             };
             folders.createFolder(parent_folder, $('#createElementFormContainer #title').val(), $('#createElementFormContainer #privacyField :input').serialize(),callback);
         };
-        privacy.load('#privacyField', '', true);
         formModal.init('Create Folder', '<div id="createElementFormContainer"></div>', modalOptions);
         gui.createForm('#createElementFormContainer',fieldArray, options);
     };

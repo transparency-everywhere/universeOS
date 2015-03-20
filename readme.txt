@@ -53,15 +53,11 @@ todo
 
     fix raster
 
-    forms add required option for inputs
-
     add protection to userPicture element, groupicture element etc
 
     fade in applications
 
-    suche load more..
-
-    rightclick .rightclick, data-type data-typeId
+    pabst rightclick .rightclick, data-type data-typeId
 
     comments auflösen, alle comments werden feeds :/
 

@@ -143,6 +143,7 @@ var elements = new function(){
         
         var field0 = [];
         field0['caption'] = 'Title';
+        field0['required'] = true;
         field0['inputName'] = 'title';
         field0['type'] = 'text';
         fieldArray[0] = field0;
@@ -161,8 +162,7 @@ var elements = new function(){
         var field2 = [];
         field2['caption'] = '';
         field2['inputName'] = 'privacy';
-        field2['type'] = 'html';
-        field2['value'] = "<div id=\'privacyField\'></div>";
+        field2['type'] = 'privacy';
         fieldArray[2] = field2;
         
         
@@ -212,6 +212,7 @@ var elements = new function(){
         
         var field0 = [];
         field0['caption'] = 'Title';
+        field0['required'] = true;
         field0['inputName'] = 'title';
         field0['type'] = 'text';
         field0['value'] = elementData['title'];
@@ -232,8 +233,8 @@ var elements = new function(){
         var field2 = [];
         field2['caption'] = '';
         field2['inputName'] = 'privacy';
-        field2['type'] = 'html';
-        field2['value'] = "<div id=\'privacyField\'></div>";
+        field2['type'] = 'privacy';
+        field2['value'] = elementData['privacy'];
         fieldArray[2] = field2;
         
         
@@ -249,7 +250,6 @@ var elements = new function(){
             };
             elements.update(element, elementData['folder'], $('#createElementFormContainer #title').val(), $('#createElementFormContainer #type').val(),  $('#createElementFormContainer #privacyField :input').serialize(),callback);
         };
-        privacy.load('#privacyField', elementData['privacy'], true);
         formModal.init('Update Element', '<div id="createElementFormContainer"></div>', modalOptions);
         gui.createForm('#createElementFormContainer',fieldArray, options);
     };

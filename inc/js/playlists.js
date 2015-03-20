@@ -78,6 +78,7 @@ var playlists = new function(){
         
         var field0 = [];
         field0['caption'] = 'Title';
+        field0['required'] = true;
         field0['inputName'] = 'title';
         field0['type'] = 'text';
         fieldArray[0] = field0;
@@ -92,8 +93,7 @@ var playlists = new function(){
         var field2 = [];
         field2['caption'] = '';
         field2['inputName'] = 'privacy';
-        field2['type'] = 'html';
-        field2['value'] = "<div id=\'privacyField\'></div>";
+        field2['type'] = 'privacy';
         fieldArray[2] = field2;
         
         
@@ -119,8 +119,6 @@ var playlists = new function(){
         //load minifilebrowser
         loadMiniFileBrowser($('#createPlaylistFileBrowserFrame'),"1", '', '', true, "element");
         
-        //load privacy
-        privacy.load('#privacyField', '', true);
         
 			  		
     };
@@ -202,6 +200,7 @@ var playlists = new function(){
         
         var field0 = [];
         field0['caption'] = 'Title';
+        field0['required'] = true;
         field0['inputName'] = 'title';
         field0['type'] = 'text';
         field0['value'] = playlistData['title'];

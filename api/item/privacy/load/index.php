@@ -17,10 +17,8 @@
 
 include('../../../../inc/config.php');
 include('../../../../inc/functions.php');
-    
-
         	//is used bei js privacy.load to load privacy selection with privacy = $_POST['val'] into DOM
-		$editable =  ($_POST['editable'] === 'true'); //str to bool
+		$editable =  ($_POST['editable'] == 'true'); //str to bool
                         
                 $privacyClass = new privacy($_POST['val']);
           	$privacyClass->showPrivacySettings($editable);
