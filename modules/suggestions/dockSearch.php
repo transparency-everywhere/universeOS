@@ -18,5 +18,5 @@ include("../../inc/classes/class_search.php");
     ?>
 </div>
 <script>
-    search.init('<?php echo htmlentities($_POST['search']);?>');
+    search.initResultHandlers('<?php echo htmlentities($_POST['search']);?>');
 </script>

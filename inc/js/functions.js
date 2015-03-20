@@ -642,7 +642,7 @@ var User = new function(){
         
         var buttons = '';
         if(!buddylist.isBuddy(user_id) || user_id != User.userid){
-            buttons = '<a class="button">Add Friend</a>';
+            buttons = '<a class="button" onclick="buddylist.addBuddy('+user_id+'); $(this).text(\'request sent\');">Add Friend</a>';
         }
         
         
@@ -767,10 +767,13 @@ var User = new function(){
             output  += '</div>';
             return output;
     };
+    this.initProfileHandlers = function(user_id){
+        
+    };
     this.showProfile = function(user_id){
         var output = this.generateProfile(user_id);
         
-        reader.tabs.addTab('Profle', 'html', output);
+        reader.tabs.addTab('Profile', 'html', output);
         
         //load feed
         var profileFeed = new Feed('user', '.activity_tab', user_id);
@@ -824,7 +827,7 @@ var privacy = new function(){
 			  		if(typeof editable == 'undefined')
 			  			editable = false;
                                     
-                                        return api.query('api/item/privacy/load', { val : val, editable : editable });
+                                        return api.query('api/item/privacy/load/', { val : val, editable : editable });
 			  	};
          
         this.updatePrivacy = function(type, item_id, privacy, callback){
@@ -1185,14 +1188,15 @@ var hash = new function(){
 	};
         
 var search = new function(){
-    this.init = function(query){
-        
-                $('.resultList a:link, .resultList .icon-gear').unbind('click');
+    this.initResultHandlers = function(query){
+                item.item.initRightClick();
+                $('.resultList a:link, .resultList .icon-gear, .resultList .white-gear').unbind('click');
 		$('.resultList a:link').bind('click', function(){
 			$('.dockSeachResult').hide('slow');
+                        $('#searchField').val('');
 		});
                 
-                $('.resultList .icon-gear').bind('click', function(){
+                $('.resultList .white-gear, .resultList .icon-gear').bind('click', function(){
                         $(this).parent().next('li').slideToggle();
                 });
                 

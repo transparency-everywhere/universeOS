@@ -118,15 +118,19 @@ class search{
 
     }
     
-    function buildLI($icon, $action, $title, $contextMenu=false){
-        
+    function buildLI($icon, $action, $title, $contextMenu=false, $rightclick=false, $dataType=NULL, $dataItemId=NULL){
+        if($rightclick){
+            $liAppendix = 'class"rightClick" data-type="'.$dataType.'" data-itemId="'.$dataItemId.'"';
+        }else{
+            $liAppendix = '';
+        }
         $title = htmlentities(substr($title, 0, 33));
         
-        $output = '<li>';
+        $output = '<li '.$liAppendix.'>';
             $output .=  $icon;
             $output .= "<a href=\"#\" onclick=\"$action\">$title</a>";
             if($contextMenu){
-                $output .= '<span class="icon icon-gear" style="width:30px;height:30px; float:right; margin-right:15px;margin-top: 4px;"></span>';   
+                $output .= '<span class="icon icon-gear dark"></span><span class="icon white-gear white"></span>';   
             }
         $output .= '</li>';
         
@@ -169,7 +173,7 @@ class search{
                 $output .= '<ul class="list resultList">';
                 foreach($items AS $suggestData){
                     if($i<$limit){
-                            $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', 'openFolder(\''.$suggestData['id'].'\');', $suggestData['name']);
+                            $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', 'openFolder(\''.$suggestData['id'].'\');', $suggestData['name'], true, true, 'folder', $suggestData['id']);
                     }else{
                         $loadAll = '<div class="loadAll" data-type="folder">results '.$i.' of '.$numberOfItems.' <a href="#">show all</a></div>';
                     }
@@ -379,16 +383,16 @@ class search{
             case 'user':
                 if(proofLogin()){
                     
-                    $options[] = array('icon'=>'icon-plus', 'title'=>'Add User', 'action'=>'showProfile(\''.$item_id.'\');');
+                    $options[] = array('icon'=>'blue-plus', 'title'=>'Add User', 'action'=>'showProfile(\''.$item_id.'\');');
                 
                 }
                 break;
             
             case 'youtube':
                 if(proofLogin()){
-                    $options[] = array('icon'=>'icon-plus', 'title'=>'Add to Playlist', 'action'=>'playlists.pushItemToPlaylistForm(\'youtube\', \''.$item_id.'\');');
+                    $options[] = array('icon'=>'blue-plus', 'title'=>'Add to Playlist', 'action'=>'playlists.pushItemToPlaylistForm(\'youtube\', \''.$item_id.'\');');
                 }
-                $options[] = array('icon'=>'icon-play', 'title'=>'Play', 'action'=>"openFile('youTube', '', '".urlencode(substr("$item2->title", 0, 10))."', '$vId');");
+                $options[] = array('icon'=>'blue-play', 'title'=>'Play', 'action'=>"openFile('youTube', '', '".urlencode(substr("$item2->title", 0, 10))."', '$vId');");
                 break;
         }
         
