@@ -260,7 +260,7 @@ li.notHidden{
     right: 0px;
     bottom: 0px;
     width: 30%;
-    z-index: 9999;
+    z-index: 9998;
     background: #607d8b;
     color: #FFF;
 }
@@ -293,7 +293,7 @@ li.notHidden{
 	overflow: auto;
 }
 
-.resultList li:hover{
+.resultList>li:hover{
     background: #00bcd4;
 }
 
@@ -304,12 +304,6 @@ li.notHidden{
     line-height: 40px;
     border-bottom: 1px solid #607d8b;
 }
-
-
-.resultList li .icon-gear{
-    cursor: pointer;
-}
-
 .resultList li a, .resultList li a:link,.resultList li a:visited, .resultList li a:active{
     font-size: 19px;
     color:  #313131;
@@ -327,7 +321,7 @@ li.notHidden{
 
 .resultList .searchContext{
     display:none;
-    background-color:  #eceff1;
+    background-color:  #eceff1!important;
 }
 
 .searchContext ul li{
@@ -337,14 +331,22 @@ li.notHidden{
 }
 
 .searchContext .icon{
-    margin-bottom: -3px!important;
+    margin-bottom: -10px!important;
     margin-right: 5px;
 }
 
-.resultList li:hover a, .resultList li:hover a:link,.resultList li:hover a:visited{
+.resultList>li:hover>a, .resultList>li:hover>a:link,.resultList>li:hover>a:visited{
     color:#FFF;
 }
 
+.resultList li .icon-gear, .resultList li .white-gear{
+    width:30px;
+    height:30px; 
+    float:right; 
+    margin-right:15px;
+    margin-top: 4px;
+    cursor: pointer;
+}
 
 .resultList li .icon.white{
     display:none;
@@ -1017,8 +1019,8 @@ color: #FFF;
 
 .feedEntry .itemSettingsButton{
     position: absolute;
-    right: 10px;
-    margin-top: 2px;
+    right: 35px;
+    margin-top: 4px;
 }
 
 #feedInput{
@@ -3271,7 +3273,7 @@ margin-bottom: 3px;
                                 
  				
  				.privacySettings input[type=checkbox]{
- 					margin: -1.5px 1px 0 -13px;
+ 					margin: -3.5px 1px 0 -13px;
  				}
  				
  				.privacySettings .sub{
@@ -3283,10 +3285,12 @@ margin-bottom: 3px;
  				
  				.privacySettings .sub > div{
                                         width:45%;
-                                        height: 25px;
+                                        height: 35px;
                                         font-size: 18px;
                                         display: inline-block;
- 				}
+ 				
+                                        vertical-align: middle;
+}
  				
  				.privacySettings .sub > div:first-of-type{
  					margin-left: 0;
@@ -3295,7 +3299,9 @@ margin-bottom: 3px;
  				.privacySettings .groupList li{
  					clear: both;
  					padding-left: 5px;
- 				}
+ 				
+ 					min-height: 30px;
+}
  				
  				.privacySettings .groupList li > div:first-of-type{
  					margin-left: 0;
@@ -3304,9 +3310,13 @@ margin-bottom: 3px;
  				
  				.privacySettings .groupList li > div{
  					margin-left: 20px;
-                                        display: inline-block;
- 				}
+                                        
+ 					float: left;
+ 				
+ 					display: block;
+}
  				.privacySettings .groupList li > div:last-of-type{
+    /* clear: left; */
  					
  				}
 /*usersuggestion input (list of buddies with input=text and taggs)*/
