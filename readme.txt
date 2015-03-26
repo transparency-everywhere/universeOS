@@ -17,8 +17,6 @@ Update
 
     check if our server serves svg files as image/svg, not as text/plain (regbox - loading bubbles)
 
-    fade in applications
-
 
 
 todo
@@ -43,9 +41,6 @@ todo
 
 
     all onclick to bind(?)
-
-    profile
-        button feedback
 
     group profile button feedback
         button feedback
