@@ -218,11 +218,18 @@ var gui = new function(){
                             mainHTML += '<td colspan="1">'+fileGallery+'<ul id="' + fieldData.inputName + '_fileList"></ul><input type="hidden" name="' + fieldData.inputName + '" id="' + fieldData.inputName + '" value="'+fieldValue+'"><div id="' + fieldData.inputName + '_fileField"></div></td><td>'+fieldData['appendix']+'</td>';
                             break;
                             
+                        //privacy settings
                         case 'privacy':
                             if(typeof fieldData.value === 'undefined'){
                                 fieldData.value = 'p';
                             }
                             mainHTML += '<td colspan="1"><div id="privacyField">'+privacy.show(fieldData.value,'true')+'</div></td>';
+                            break;
+                            
+                        //minifilebrowser
+                        case 'folder':
+                            break;
+                        case 'element':
                             break;
                             
                         case 'html':

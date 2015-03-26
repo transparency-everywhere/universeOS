@@ -261,7 +261,7 @@ var filesystem =  new function() {
     };
     this.showCreateUFFForm = function(element){
         var formModal = new gui.modal();
-        
+        var elementData = elements.getData(element);
         var fieldArray = [];
         var options = [];
         options['headline'] = '';
@@ -283,8 +283,8 @@ var filesystem =  new function() {
         var field2 = [];
         field2['caption'] = '';
         field2['inputName'] = 'privacy';
-        field2['type'] = 'html';
-        field2['value'] = "<div id=\'privacyField\'></div>";
+        field2['type'] = 'privacy';
+        field2['value'] = elementData['privacy'];
         fieldArray[2] = field2;
         
         
@@ -299,7 +299,6 @@ var filesystem =  new function() {
             };
             filesystem.createUFF(element, $('#createDocumentFormContainer #title').val(),$('#createDocumentFormContainer #filename').val(), $('#createDocumentFormContainer #privacyField :input').serialize(),callback);
         };
-        privacy.load('#privacyField', '', true);
         formModal.init('Create Document', '<div id="createDocumentFormContainer"></div>', modalOptions);
         gui.createForm('#createDocumentFormContainer',fieldArray, options);
     };
@@ -349,8 +348,7 @@ var filesystem =  new function() {
         var field2 = [];
         field2['caption'] = '';
         field2['inputName'] = 'privacy';
-        field2['type'] = 'html';
-        field2['value'] = "<div id=\'privacyField\'></div>";
+        field2['type'] = 'privacy';
         fieldArray[2] = field2;
         
         
@@ -366,7 +364,6 @@ var filesystem =  new function() {
             };
             filesystem.createElement(parent_folder, $('#createElementFormContainer #title').val(), $('#createElementFormContainer #type').val(),  $('#createElementFormContainer #privacyField :input').serialize(),callback);
         };
-        privacy.load('#privacyField', '', true);
         formModal.init('Create Element', '<div id="createElementFormContainer"></div>', modalOptions);
         gui.createForm('#createElementFormContainer',fieldArray, options);
     };
@@ -484,6 +481,13 @@ var filesystem =  new function() {
     return '<span class="icon ' + color + '-' + icons[fileType] + '"></span>';
     
 
-}
 };
 
+    this.getMiniFileBrowser = function(folder, element, level, showGrid, select){
+        return api.query('api/item/loadMiniFileBrowser/', {folder: folder, element: element, level: level, showGrid: showGrid, select: select});
+    };
+};
+//@param select folder/element
+function loadMiniFileBrowser($target, folder, element, level, showGrid, select){
+        $target.html(filesystem.getMiniFileBrowser(folder, element, level, showGrid, select));
+}

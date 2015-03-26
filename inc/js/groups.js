@@ -43,6 +43,7 @@ var groups = new function(){
         //removes current user from group
         this.leave = function(groupId){
                 api.query('api/groups/leave/', { group_id : groupId });
+                this.updateGUI(groupId);
                 gui.alert('', 'You left the group');
         };
         
@@ -69,7 +70,7 @@ var groups = new function(){
             if(User.inGroup(group_id) !== -1){
                 buttonText = 'Leave Group';
                 buttonClass = 'button';
-                onClick = 'groups.leave('+group_id+')';
+                onClick = "groups.leave('"+group_id+"'); $(this).text('group left');";
             }else{
                 
                 if(groupdata.public == '0'){
@@ -80,7 +81,7 @@ var groups = new function(){
                     
                     buttonText = 'Join Group';
                     buttonClass = 'button';
-                    onClick = 'groups.join('+group_id+')';
+                    onClick = "groups.join('"+group_id+"'); $(this).text('request sent');";
                     
                 }
                 

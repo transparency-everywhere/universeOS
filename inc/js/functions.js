@@ -887,8 +887,8 @@ var privacy = new function(){
         var field0 = [];
         field0['caption'] = '';
         field0['inputName'] = 'privacy';
-        field0['type'] = 'html';
-        field0['value'] = "<div id=\'privacyField\'></div>";
+        field0['type'] = 'privacy';
+        field0['value'] = itemData['privacy'];
         fieldArray[0] = field0;
         
         
@@ -903,7 +903,6 @@ var privacy = new function(){
             };
             privacy.updatePrivacy(type, item_id, $('#createLinkFormContainer #privacyField :input').serialize(), callback);
         };
-        privacy.load('#privacyField', itemData['privacy'], true);
         formModal.init(title, '<div id="createLinkFormContainer"></div>', modalOptions);
         gui.createForm('#createLinkFormContainer',fieldArray, options);
             
@@ -1189,7 +1188,7 @@ var hash = new function(){
         
 var search = new function(){
     this.initResultHandlers = function(query){
-                item.item.initRightClick();
+                item.initRightClick();
                 $('.resultList a:link, .resultList .icon-gear, .resultList .white-gear').unbind('click');
 		$('.resultList a:link').bind('click', function(){
 			$('.dockSeachResult').hide('slow');
@@ -2126,12 +2125,6 @@ function getUserPicture(request){
                                     
 				
 			}
-
-function loadMiniFileBrowser($target, folder, element, level, showGrid, select){
-        api.query('api/item/loadMiniFileBrowser/', {folder: folder, element: element, level: level, showGrid: showGrid, select: select},function(result){
-            $target.html(result)
-        });
-}
 
 function is_url(str) {
     var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol

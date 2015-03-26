@@ -2572,8 +2572,9 @@ del.bar{
 }
 
 .profileMainNav{
-    border-bottom: 1px solid #dcdcdc;
-    height: 40px;
+    border-top: 1px solid red;
+    border-bottom: 1px solid red;
+    height: 43px;
     margin:0;
 }
 

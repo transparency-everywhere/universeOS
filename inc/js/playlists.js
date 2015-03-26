@@ -209,8 +209,8 @@ var playlists = new function(){
         var field1 = [];
         field1['caption'] = '';
         field1['inputName'] = 'privacy';
-        field1['type'] = 'html';
-        field1['value'] = "<div id=\'privacyField\'></div>";
+        field1['type'] = 'privacy';
+        field1['value'] = playlistData['privacy'];
         fieldArray[1] = field1;
         
         

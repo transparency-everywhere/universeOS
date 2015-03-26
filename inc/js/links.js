@@ -184,7 +184,6 @@ var links = new function(){
             };
             links.update(linkId, element, $('#createLinkFormContainer #link_title').val(),  $('#createLinkFormContainer #type').val(), $('#createLinkFormContainer #privacyField :input').serialize(), $('#createLinkFormContainer #link').val(), callback);
         };
-        privacy.load('#privacyField', linkData['privacy'], true);
         formModal.init('Update Link', '<div id="createLinkFormContainer"></div>', modalOptions);
         gui.createForm('#createLinkFormContainer',fieldArray, options);
     };
