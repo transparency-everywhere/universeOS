@@ -22,5 +22,9 @@ include('../../../inc/config.php');
 include('../../../inc/functions.php');
                     
     $feedClass = new feed($fileId);
-    echo json_encode($feedClass->load($_POST['type'], $_POST['typeId'], $_POST['limit']));
+    $dbClass = new db();
+    
+    $result = $feedClass->load($_POST['type'], $_POST['typeId'], $_POST['limit']);
+    $result = $dbClass->shiftResult($result, 'id');
+    echo json_encode($result);
 ?>

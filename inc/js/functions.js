@@ -772,13 +772,13 @@ var User = new function(){
     };
     this.showProfile = function(user_id){
         var output = this.generateProfile(user_id);
-        
+        reader.show();
         reader.tabs.addTab('Profile', 'html', output);
         
         //load feed
         var profileFeed = new Feed('user', '.activity_tab', user_id);
-        
-        $('.profileMainNav li, .profileNavLeft li').click(function(){
+        $('.profileMainNav li, .profileNavLeft li').unbind('click');
+        $('.profileMainNav li, .profileNavLeft li').bind('click', function(){
             var type = $(this).attr('data-type');
             $(this).parent().parent().parent().find('.profileMainNav li').removeClass('active');
             $(this).parent().parent().parent().find('.profileNavLeft li').removeClass('active');
@@ -806,6 +806,45 @@ var User = new function(){
         return api.query('api/user/getPrivacy/', {});
     };
 };
+          
+
+function useridToUsername(id){
+		if(usernames[id] == undefined){
+			
+		    var result="";
+		    $.ajax({
+		      url:"api.php?action=useridToUsername",
+		      async: false,  
+			  type: "POST",
+			  data: { request : id },
+		      success:function(data) {
+		         result = data; 
+		      }
+		   });
+		   usernames[id] = result;
+		   return result;
+		}else{
+			return usernames[id];
+		}
+		
+}
+
+function usernameToUserid(username){
+			
+		    var result="";
+		    $.ajax({
+		      url:"api.php?action=usernameToUserid",
+		      async: false,  
+			  type: "POST",
+			  data: { username : username },
+		      success:function(data) {
+		         result = data; 
+		      }
+		   });
+		   usernames[result] = username;
+		   return result;
+		
+}
           
 var privacy = new function(){
 	
@@ -1203,7 +1242,7 @@ var search = new function(){
                     var type = $(this).parent().attr('data-type');
                     $(this).parent().parent().children('ul').replaceWith(search.extendResults(query,type, 40, 0));
                     $(this).parent().remove();
-                    search.init(query);
+                    search.initResultHandlers(query);
                 });
     };
     this.extendResults = function(query, type, limit, offset){
@@ -1658,43 +1697,6 @@ function loadIframe(iframeName, url) {
                     return true;
                 }
 //api connection stuff
-function useridToUsername(id){
-		if(usernames[id] == undefined){
-			
-		    var result="";
-		    $.ajax({
-		      url:"api.php?action=useridToUsername",
-		      async: false,  
-			  type: "POST",
-			  data: { request : id },
-		      success:function(data) {
-		         result = data; 
-		      }
-		   });
-		   usernames[id] = result;
-		   return result;
-		}else{
-			return usernames[id];
-		}
-		
-	}
-
-function usernameToUserid(username){
-			
-		    var result="";
-		    $.ajax({
-		      url:"api.php?action=usernameToUserid",
-		      async: false,  
-			  type: "POST",
-			  data: { username : username },
-		      success:function(data) {
-		         result = data; 
-		      }
-		   });
-		   usernames[result] = username;
-		   return result;
-		
-	}
 
 
 function getUserSalt(id){
@@ -1803,11 +1805,12 @@ function openFile(type, typeId, title, typeInfo, extraInfo1, extraInfo2){
         	var linkId = typeId;
         	if(linkId.length == 0){
                          
-                reader.tabs.addTab(title, '',gui.loadPage('./modules/reader/openFile.php?type=youTube&linkId='+linkId+'&typeInfo='+vId+'&extraInfo1='+playlist+'&extraInfo2='+row+'&external=1'));
+                        //use player.loadYoutubeVideo in future
+                        reader.tabs.addTab(title, '',gui.loadPage('./modules/reader/openFile.php?type=youTube&linkId='+linkId+'&typeInfo='+vId+'&extraInfo1='+playlist+'&extraInfo2='+row+'&external=1'));
  	
         	}else{
-        		
-                reader.tabs.addTab(title, '',gui.loadPage('./modules/reader/openFile.php?type=youTube&linkId='+linkId+'&extraInfo1='+playlist+'&extraInfo2='+row+'&external=1'));
+        		//use player.loadYoutubeVideo in future
+                        reader.tabs.addTab(title, '',gui.loadPage('./modules/reader/openFile.php?type=youTube&linkId='+linkId+'&extraInfo1='+playlist+'&extraInfo2='+row+'&external=1'));
  
         	}return false;
         }
@@ -2025,11 +2028,6 @@ function popper(url) {
 function deleteFromPersonals(id){
                   $("#loader").load("doit.php?action=deleteFromPersonals&id=" + id + "");
               }
-          
-function showProfile(userId){
-    User.showProfile(userId);
-    return false;
-};
 
 //outdated
 function showPlaylist(id){

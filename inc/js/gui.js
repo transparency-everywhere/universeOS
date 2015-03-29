@@ -228,8 +228,35 @@ var gui = new function(){
                             
                         //minifilebrowser
                         case 'folder':
+                            if(typeof fieldData.folder === 'undefined'){
+                                fieldData.folder = '';
+                            }
+                            if(typeof fieldData.element === 'undefined'){
+                                fieldData.element = '';
+                            }
+                            if(typeof fieldData.level === 'undefined'){
+                                fieldData.level = '';
+                            }
+                            if(typeof fieldData.showGrid === 'undefined'){
+                                fieldData.showGrid = true;
+                            }
+                            //getMiniFileBrowser(folder, element, level, showGrid, select)
+                            mainHTML += filesystem.getMiniFileBrowser(fieldData.folder, fieldData.element, fieldData.level, fieldData.showGrid, 'folder');
                             break;
                         case 'element':
+                            if(typeof fieldData.folder === 'undefined'){
+                                fieldData.folder = '';
+                            }
+                            if(typeof fieldData.element === 'undefined'){
+                                fieldData.element = '';
+                            }
+                            if(typeof fieldData.level === 'undefined'){
+                                fieldData.level = '';
+                            }
+                            if(typeof fieldData.showGrid === 'undefined'){
+                                fieldData.showGrid = true;
+                            }
+                            mainHTML += filesystem.getMiniFileBrowser(fieldData.folder, fieldData.element, fieldData.level, fieldData.showGrid,'element');
                             break;
                             
                         case 'html':

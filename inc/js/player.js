@@ -82,7 +82,7 @@ var player = new function(){
     this.updateActiveItemPlay = function(callback){
         var $dockPlay = $('.dockPlayer .play');
         $dockPlay.addClass('white-play');
-        $dockPlay.removeClass('white-wikipedia');
+        $dockPlay.removeClass('white-pause');
         $dockPlay.click(callback);
     };
     

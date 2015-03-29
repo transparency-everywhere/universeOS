@@ -61,7 +61,7 @@ var settings = new function(){
     
     
     this.showUpdatePrivacyForm = function(){
-        
+        settings.show();
         var captions = this.getPrivacyCaptions();
         var types = this.getPrivacyTypes();
         
@@ -150,6 +150,7 @@ var settings = new function(){
     
     
     this.showUpdateBuddylistForm = function(){
+        settings.show();
         var settings_buddylist = buddylist.getBuddies();
         var output = '<div id="settingsBuddylist"><h2 style="margin-top:0">Buddylist</h2>';
         if(settings_buddylist.length === 0){
@@ -177,7 +178,7 @@ var settings = new function(){
         
     };
     this.showSecurityOverview = function(){
-        
+        settings.show();
         var output = '<div id="settingsSecurity"><h2 style="margin-top:0">Change Password</h2>';
         output += '<a href="#" class="button" id="changePasswordButton">Change Password</a>';
         output += '</div>';
@@ -190,8 +191,7 @@ var settings = new function(){
         
     };
     this.showUpdatePasswordForm = function(){
-        
-        
+         settings.show();
          var user_info = User.getProfileInfo(User.userid);
         
         var fieldArray = [];
@@ -245,7 +245,7 @@ var settings = new function(){
         
     };
     this.showUpdateProfileForm = function(){
-        
+        settings.show();
         var user_info = User.getProfileInfo(User.userid);
         
         var fieldArray = [];
@@ -350,6 +350,7 @@ var settings = new function(){
         });
     };
     this.showUpdatePictureForm = function(){
+        settings.show();
         var output = '<div>';
         output += '<style>';
         
@@ -377,6 +378,7 @@ var settings = new function(){
         });
     };
     this.showGroupsForm = function(){
+        settings.show();
         var output = '<div id="settingsGroups"><h2 style="margin-top:0">Groups</h2>';
         
             var profile_groups = groups.get(User.userid);
@@ -406,9 +408,8 @@ var settings = new function(){
         $('#settingsFrame').html(output);
     };
     this.showGroupAdminForm = function(group_id){
+        settings.show();
         var groupData = groups.getData(group_id);
-        
-        console.log(groupData);
         
         var fieldArray = [];
         var options = [];
@@ -519,6 +520,7 @@ var settings = new function(){
         //members
     };
     this.showUpdateGroupPictureForm = function(group_id){
+        settings.show();
         alert('needs to be implemented');
     };
     

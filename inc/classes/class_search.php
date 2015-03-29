@@ -120,7 +120,7 @@ class search{
     
     function buildLI($icon, $action, $title, $contextMenu=false, $rightclick=false, $dataType=NULL, $dataItemId=NULL){
         if($rightclick){
-            $liAppendix = 'class"rightClick" data-type="'.$dataType.'" data-itemId="'.$dataItemId.'"';
+            $liAppendix = 'class="rightClick" data-type="'.$dataType.'" data-itemId="'.$dataItemId.'"';
         }else{
             $liAppendix = '';
         }
@@ -219,7 +219,7 @@ class search{
                 $output .= '<ul class="list resultList">';
                 foreach($items AS $suggestData){
                     if($i<$limit){
-                        $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "reader.applicationVar.show(); reader.tabs.addTab('".$suggestData['title']."', '',gui.loadPage('./group.php?id=".$suggestData['id']."'));return false",$suggestData['title']);
+                        $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "groups.showProfile(".$suggestData['id'].");return false",$suggestData['title']);
                     }else{
                         $loadAll = '<div class="loadAll" data-type="groups">results '.$i.' of '.$numberOfItems.' <a href="#">show all</a></div>';
                     }
@@ -320,6 +320,7 @@ class search{
         $elements = $this->getSearchResults('elements');
         $icon = 'dark-archive';
         if(count($elements) > 0){
+            $output .= "<div class=\"listContainer\">";
             $output .= $this->parseLists('elements', $folders);
             $output .= '<header>Elements</header>';
             $output .= '</div>';
