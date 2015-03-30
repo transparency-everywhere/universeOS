@@ -3,7 +3,7 @@ session_start();
 include("inc/config.php");
 include("inc/functions.php");
 if(proofLogin()){
-if(isset($_POST[comment])) {
+if(isset($_POST['comment'])) {
     echo'<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>';
     $commentClass = new comments();
     $commentClass->addComment($_POST['type'], $_POST['itemid'], $_POST['user'], $_POST['comment']);
@@ -24,14 +24,15 @@ if(isset($_POST[comment])) {
     jsAlert("Please login or sign up to write a comment.");
 }
 if($_GET[type] == "feed"){
-$commentid = $_GET[feedid];
+$commentid = $_GET['feedid'];
 $commentClass = new comments();
-$commentClass->showFeedComments($commentid);
+$commentClass->showComments('feed', $commentid);
     
 }
 else {
-$commentid = $_GET[id];
+$commentid = $_GET['id'];
+$type = $_GET['type'];
 $classComments = new comments();
-$classComments->showComments(comment, $commentid);
+$classComments->showComments('comment', $commentid);
 }
 ?>
