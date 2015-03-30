@@ -60,7 +60,15 @@ var groups = new function(){
         };
         
         this.generateUserList = function(group_id){
-            
+            var usersInGroup = this.getUsers(group_id);
+            $.each(usersInGroup, function(index, value){
+//                var adminButton = '';
+//                if(groupdata.isAdmin){
+//                    adminButton = '<a href="#" class="button" onclick="settings.showGroupAdminForm('+value+'); return false">Admin</a>';
+//                }
+                listItems.push({'text':'<div onclick="User.showProfile('+value+')"><span class="icon icon-group"></span><span class="username" style="font-size:18px; padding-top: 5px;">'+useridToUsername(value)+'</span>', 'buttons':'<a href="#" class="button" onclick="groups.leave(\''+value+'\'); return false">Leave</a>'});
+            });
+            return gui.generateGrayList(listItems);
         };
         
         this.getPlaylists = function(group_id){

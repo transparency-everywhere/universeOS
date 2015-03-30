@@ -17,8 +17,12 @@
 var comments = new function(){
   this.loadSubComments = function(commentId){
       
-    $("#comment" + commentId + "").load("showComment.php?id=" + commentId +"");
+    $("#comment" + commentId + "").load("showComment.php?type=comment&id=" + commentId +"");
     $("#comment" + commentId + "").toggle("slow");
+  };
+  this.loadComments = function(type, itemId){
+    $("#comment_" + type + "_"+itemId).load('showComment.php?type='+type+'&feedid=' + itemId +'');
+    $("#comment_" + feedId + "").toggle("slow");
   };
   this.loadFeedComments = function(feedId){
       

@@ -177,7 +177,7 @@ class privacy {
                                                             }
                                                             ?>
                                                                 <li>
-                                                                    <div><i class="icon icon-group" style="margin-bottom:-5px;"></i>&nbsp;<a href="#" onclick="reader.tabs.addTab('<?=$title10;?>', '',gui.loadPage('group.php?id=<?=$groupData['id'];?>'));return false"><?=$title15;?></a></div>
+                                                                    <div><i class="icon icon-group" style="margin-bottom:-5px;"></i>&nbsp;<a href="#" onclick="groups.showProfile('group.php?id=<?=$groupData['id'];?>');return false"><?=$title15;?></a></div>
                                                                 	<div>
                                                                 		<input type="checkbox" name="privacyCustomSee[]" value="<?=$groupData['id'];?>" data-groupid="<?=$groupData['id'];?>" data-privacytype="see" class="privacyGroupTrigger privacyCustomTrigger uncheckPublic privacySee uncheckHidden privacyGroupTrigger_<?=$groupData['id'];?>_see" <?=$checked['editGroup'];?> <?=$disabled;?>>
 																		show

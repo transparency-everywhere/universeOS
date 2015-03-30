@@ -399,7 +399,7 @@ var settings = new function(){
                     if(groupdata.isAdmin){
                         adminButton = '<a href="#" class="button" onclick="settings.showGroupAdminForm('+value+'); return false">Admin</a>';
                     }
-                    listItems.push({'text':'<div onclick="groups.show('+value+')"><span class="icon icon-group"></span><span class="username" style="font-size:18px; padding-top: 5px;">'+groups.getTitle(value)+'</span>', 'buttons':'<a href="#" class="button" onclick="groups.leave(\''+value+'\'); return false">Leave</a>'+adminButton});
+                    listItems.push({'text':'<div onclick="groups.showProfile('+value+')"><span class="icon icon-group"></span><span class="username" style="font-size:18px; padding-top: 5px;">'+groups.getTitle(value)+'</span>', 'buttons':'<a href="#" class="button" onclick="groups.leave(\''+value+'\'); return false">Leave</a>'+adminButton});
                 });
             }
             output += gui.generateGrayList(listItems);

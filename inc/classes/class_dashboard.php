@@ -102,7 +102,7 @@ class dashBoard{
 			
 			$output .= "<ul class=\"\">";
 				foreach($groups AS $group){
-					$output .="<li onclick=\"groups.show('$group');\">";
+					$output .="<li onclick=\"groups.showProfile('$group');\">";
 						$output .="<span class=\"marginRight\">";
 							$output .= '<i class="icon white-user" style="height:20px; width: 20px;margin-bottom: -5px;"></i>';
 						$output .="</span>";

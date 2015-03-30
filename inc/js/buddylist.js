@@ -101,6 +101,14 @@ var buddylist = new function(){
             output += "                <\/tr>";
         });
         
+        if(buddies.length === 0){
+            output += '<div style="padding:15px; text-align:center;">';
+                output += '<span class="icon blue-user" style="height: 90px;width: 90px;"></span>';
+                output += '<h2>You don\'t have any buddies so far</h2>';
+                output += '<h3>Search for people you know and add them to the buddylist.</h3>';
+            output += '</div>';
+        }
+        
         //used in universe.reload()
         this.checksum = hash.MD5(checksum);
 

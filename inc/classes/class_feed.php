@@ -90,7 +90,9 @@ class feed {
         return $db->shiftResult($db->query("SELECT * FROM feed $where"));
     }
     
-    function show($type, $user=NULL, $limit=NULL, $feedId=NULL){
+    
+    //@del
+    function d_show($type, $user=NULL, $limit=NULL, $feedId=NULL){
         
         if(empty($limit)){
             $limit = "0,30";
@@ -216,7 +218,7 @@ class feed {
     }}
     
     
-   function deleteFeeds($type, $itemid){
+    function deleteFeeds($type, $itemid){
        $db = new db();
       
        if($db->delete('feed', array('attachedItem', $type, '&&', 'attachedItemId', $itemid))){
@@ -255,7 +257,7 @@ class feed {
        
        }
     }
-   function add($owner, $feed, $type, $feedLink1, $feedLink2, $validity=NULL, $groups=NULL){
+    function d_add($owner, $feed, $type, $feedLink1, $feedLink2, $validity=NULL, $groups=NULL){
        $time = time();
        if(empty($validity)){
            $validity = ($time + $validity); 
@@ -281,4 +283,26 @@ class feed {
     
     
     
+}
+
+
+class itemFeed{
+    function load($itemType, $itemId, $limit=NULL, $lowestId=NULL){
+        
+        if(empty($limit)){
+            $limit = "0,30";
+        }else{
+            $limit = save($limit);
+        }
+        
+        $where = 'WHERE 1=1';
+        
+        $where .= "`attachedItem`='".save($itemType)."' AND `attachedItemId`='".save($itemId)."'";
+        
+        if(!empty($lowestId)){
+            $where .= ' AND `id`>\''.save($lowestId).'\'';
+        }
+                
+        $where .= " ORDER BY `id` DESC LIMIT $limit"; //defines Query
+    }
 }

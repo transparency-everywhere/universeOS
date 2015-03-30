@@ -98,10 +98,10 @@ var feed = new function(){
                 
                 output += item.showItemSettings('feed', feedData['id']);
                 
-                output += '<a href="javascript:comments.loadFeedComments(\''+feedData['id']+'\');" class="btn btn-xs" style="color: #dcdcdc"><i class="icon icon-comment"></i></a>';
+                output += '<a href="javascript:comments.loadComments(\''+feedData['id']+'\');" class="btn btn-xs" style="color: #dcdcdc"><i class="icon icon-comment"></i></a>';
              
             output += '</div>';
-            output += '<div class="commentLoadingArea" id="feed'+feedData['id']+'" style="display:none;"></div>';
+            output += '<div class="commentLoadingArea" id="comment_feed_'+feedData['id']+'" style="display:none;"></div>';
             output += '</div>';
             
         debug.log('...generateSingleFeed finished');

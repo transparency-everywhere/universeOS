@@ -56,26 +56,20 @@ function addComment($type, $itemid, $author, $message){
     
 function showComments($type, $itemid) {
     if(proofLogin()){?>
-    <div id="<?=$type;?>Comment_<?=$itemid;?>">    
-     <script>
-     $('#addComment').submit(function() {
-     return false;
-     });
-    </script>
+    <div id="<?=$type;?>Comment_<?=$itemid;?>">
     <div class="shadow commentRow">
       <center>
-      <form action="showComment.php" method="post" id="addComment" target="submitter">
-          <table>
-              <tr>
-                  <td><?=showUserPicture(getUser(), "25");?></td>
-                  <td><input type="text" name="comment" placeholder="write commenta.." class="commentField" style="width: 100%; height:17px;"></td>
-                  <td><input type="submit" value="send" class="btn btn-small" name="submitComment" style="margin-left:13px;"></td>
-              </tr>
-                <input type="hidden" name="itemid" value="<?=$itemid;?>">
-                <input type="hidden" name="user" value="<?=$_SESSION['userid'];?>">
-                <input type="hidden" name="type" value="<?=$type;?>">
-          </table>
-      </form>
+          <form action="showComment.php" method="post" id="addComment" target="submitter">
+              <table>
+                  <tr>
+                      <td style="padding: 0 10px;"><?=showUserPicture($_SESSION['userid'], "30");?></td>
+                      <td style="vertical-align:middle;"><input type="text" name="comment" placeholder="write commenta.." class="commentField" style="width: 100%!important;"></td>
+                      <td style="padding: 0 10px;"><input type="submit" value="send" class="button" name="submitComment" style="width:auto;"></td>
+                      <td width="10"></td>
+
+                  </tr><input type="hidden" name="itemid" value="<?=$feedid;?>"><input type="hidden" name="user" value="<?=$_SESSION['userid'];?>"><input type="hidden" name="type" value="feed">
+              </table>
+          </form>
       </center>
     </div>
 
@@ -140,6 +134,7 @@ function showComments($type, $itemid) {
 echo"</div>";
 }
 
+//@del
 function showFeedComments($feedid){ 
     ?>
     <div id="feedComment_<?=$feedid;?>">
@@ -152,10 +147,9 @@ function showFeedComments($feedid){
           <form action="showComment.php" method="post" id="addComment" target="submitter">
               <table>
                   <tr>
-                      <td width="10"></td>
-                      <td><?=showUserPicture($_SESSION['userid'], "25");?></td>
-                      <td style="vertical-align:middle;"><input type="text" name="comment" placeholder="write commenta.." class="commentField" style="width: 100%;"></td>
-                      <td><input type="submit" value="send" class="btn btn-small" name="submitComment" style=""></td>
+                      <td style="padding: 0 10px;"><?=showUserPicture($_SESSION['userid'], "30");?></td>
+                      <td style="vertical-align:middle;"><input type="text" name="comment" placeholder="write commenta.." class="commentField" style="width: 100%!important;"></td>
+                      <td style="padding: 0 10px;"><input type="submit" value="send" class="button" name="submitComment" style="width:auto;"></td>
                       <td width="10"></td>
 
                   </tr><input type="hidden" name="itemid" value="<?=$feedid;?>"><input type="hidden" name="user" value="<?=$_SESSION['userid'];?>"><input type="hidden" name="type" value="feed">

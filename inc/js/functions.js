@@ -753,7 +753,7 @@ var User = new function(){
                                 var profile_groups = groups.get(user_id);
                                 if(typeof profile_groups !== 'undefined'){
                                     $.each(profile_groups, function(index, value){
-                                        output += '<li onclick="groups.show('+value+')"><div><span class="icon icon-group"></span>';
+                                        output += '<li onclick="groups.showProfile('+value+')"><div><span class="icon icon-group"></span>';
                                         output += '<span class="username" style="font-size:18px; padding-top: 5px;">'+groups.getTitle(value)+'</span>';
                                         output += '</div></li>';
                                     });
