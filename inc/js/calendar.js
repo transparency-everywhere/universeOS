@@ -985,8 +985,8 @@ var events = new function(){
 			  		    content += '</form>';
 			  		    
 			  		var onSubmit = function(){
-			  									events.join($('#joinEvent #originalEventId').val(), $('#joinEvent #addToVisitors').is(':checked'));
-			  									};
+                                            events.join($('#joinEvent #originalEventId').val(), $('#joinEvent #addToVisitors').is(':checked'));
+			  		};
   					//create modal
               		modal.create('Join the event "'+eventData.title+'"', content, [onSubmit, 'Save']);
 			  	};

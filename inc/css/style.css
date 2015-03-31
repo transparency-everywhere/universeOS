@@ -2629,7 +2629,8 @@ del.bar{
 .profileMain .profile_tab li>div, .grayList li>div{
     background-color: #eceff1;
     margin:10px;
-    height: 75px;
+    min-height: 35px;
+    max-height: 75px;
     position: relative;
 }
 

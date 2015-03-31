@@ -789,7 +789,7 @@ var gui = new function(){
     };
     this.generateGrayList = function(items){
       var html;
-      html = '<ul class="grayList">';
+      html = "<ul class='grayList'>";
         $.each(items, function(key, value){
             html += '<li><div>'; 
                    html += value.text;

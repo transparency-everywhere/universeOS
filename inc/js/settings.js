@@ -482,17 +482,12 @@ var settings = new function(){
         field5['caption_position'] = 'top';
         fieldArray[5] = field5;
         
-        
-        //generate member list
-        var groupMembers = groups.getUsers(group_id);    
-        //$.each();
-        
         //members list
         var field6 = [];
         field6['caption'] = 'Members:';
         field6['inputName'] = 'membersInvite';
-        field6['type'] = 'text';
-        field6['value'] = groupData['membersInvite'];
+        field6['type'] = 'html';
+        field6['value'] = groups.generateMemberList(group_id);
         field6['caption_position'] = 'top';
         fieldArray[6] = field6;
         

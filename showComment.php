@@ -23,16 +23,8 @@ if(isset($_POST['comment'])) {
 }else{
     jsAlert("Please login or sign up to write a comment.");
 }
-if($_GET[type] == "feed"){
-$commentid = $_GET['feedid'];
-$commentClass = new comments();
-$commentClass->showComments('feed', $commentid);
-    
-}
-else {
 $commentid = $_GET['id'];
 $type = $_GET['type'];
 $classComments = new comments();
-$classComments->showComments('comment', $commentid);
-}
+$classComments->showComments($type, $commentid);
 ?>

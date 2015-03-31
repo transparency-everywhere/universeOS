@@ -21,8 +21,8 @@ var comments = new function(){
     $("#comment" + commentId + "").toggle("slow");
   };
   this.loadComments = function(type, itemId){
-    $("#comment_" + type + "_"+itemId).load('showComment.php?type='+type+'&feedid=' + itemId +'');
-    $("#comment_" + feedId + "").toggle("slow");
+    $("#comment_" + type + "_"+itemId).load('showComment.php?type='+type+'&id=' + itemId +'');
+    $("#comment_" + type + "_"+itemId).toggle("slow");
   };
   this.loadFeedComments = function(feedId){
       

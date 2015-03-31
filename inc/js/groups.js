@@ -59,14 +59,17 @@ var groups = new function(){
             
         };
         
-        this.generateUserList = function(group_id){
+        this.generateMemberList = function(group_id){
+            var groupData = this.getData(group_id);
             var usersInGroup = this.getUsers(group_id);
+            var listItems = [];
+            var buttons = '';
             $.each(usersInGroup, function(index, value){
-//                var adminButton = '';
-//                if(groupdata.isAdmin){
-//                    adminButton = '<a href="#" class="button" onclick="settings.showGroupAdminForm('+value+'); return false">Admin</a>';
-//                }
-                listItems.push({'text':'<div onclick="User.showProfile('+value+')"><span class="icon icon-group"></span><span class="username" style="font-size:18px; padding-top: 5px;">'+useridToUsername(value)+'</span>', 'buttons':'<a href="#" class="button" onclick="groups.leave(\''+value+'\'); return false">Leave</a>'});
+                if(groupData.isAdmin)
+                    buttons = "<a href='#' class='button' onclick='groups.removeUser(\""+group_id+"\",\""+value+"\"); return false' style='position: absolute;right: 10px;margin-top: -45px;'>Remove User</a>";
+                listItems.push({
+                    'text':"<div onclick='User.showProfile("+value+")'><span class='icon blue-user' style='display:inline-block;height: 25px;width: 25px;margin-bottom: -6px;margin-left: 3px;'></span><span class='username' style='font-size:18px; padding-top: 5px; display:inline-block;height: 25px;margin-top: 5px;'>"+useridToUsername(value)+"</span></div>",
+                    'buttons':buttons});
             });
             return gui.generateGrayList(listItems);
         };
@@ -150,6 +153,7 @@ var groups = new function(){
 
 
                                 output += '<div class="profile_tab activity_tab" style="display:block"></div>';
+                                output += '<div class="profile_tab members_tab">'+groups.generateMemberList(group_id)+'</div>';
 
 
 
@@ -248,6 +252,9 @@ var groups = new function(){
             };
             api.query('api/groups/removeFromAdmins/', { group_id : groupId, user_id: userId },callback);
             
+        };
+        this.removeUser = function(groupId, userId){
+            alert('not implemented yet!');
         };
         this.getUsers = function(groupId){
             
@@ -495,6 +502,8 @@ var groups = new function(){
             alert('needs to be written');
         };
 	
+        
+        
 };
 
         

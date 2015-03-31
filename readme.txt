@@ -20,7 +20,22 @@ Update
 
 
 todo
-    update handlers
+    calendar
+        api calls
+            events.join
+            events.get
+            events.getData
+
+    forms
+        events.addForm
+        events.updateForm (?)
+
+        shortcuts.create
+        shortcuts.update
+        shortcuts.verifyRemoval
+
+
+    (update handlers)
         groups
             dashboard
             settings
@@ -54,8 +69,6 @@ todo
 
     pabst rightclick .rightclick, data-type data-typeId
 
-    comments auflösen, alle comments werden feeds :/
-
     add type xml and json to openlink
 
     registration
@@ -64,9 +77,7 @@ todo
     group admin
         change group picture
 
-        members
-
-        showprivacy active class groups
+    showprivacy active class groups
 
 Recent:                                                         Release Message
 
