@@ -72,17 +72,15 @@ CREATE TABLE IF NOT EXISTS `elements` (
   `votes` int(11) NOT NULL DEFAULT '0',
   `score` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Daten für Tabelle `elements`
 --
 
 INSERT INTO `elements` (`id`, `title`, `folder`, `creator`, `name`, `year`, `originalTitle`, `language`, `type`, `author`, `license`, `timestamp`, `info1`, `info2`, `info3`, `privacy`, `hidden`, `votes`, `score`) VALUES
-(1, 'myFiles', 0, '', '', '', '', '', 'myFiles', 1, 'Creative Commons Attribution/Share Alike', 1427772136, '', '', '', 'h', 0, 0, 0),
-(2, 'profile pictures', 1, '', '', '', '', '', 'image', 1, 'Creative Commons Attribution/Share Alike', 1427772136, '', '', '', 'p', 0, 0, 0),
-(3, 'myFiles', 4, '', '', '', '', '', 'myFiles', 1, 'Creative Commons Attribution/Share Alike', 1427772434, '', '', '', 'h', 0, 0, 0),
-(4, 'profile pictures', 5, '', '', '', '', '', 'image', 1, 'Creative Commons Attribution/Share Alike', 1427772434, '', '', '', 'p', 0, 0, 0);
+(1, 'myFiles', 4, '', '', '', '', '', 'myFiles', 1, 'Creative Commons Attribution/Share Alike', 1427772434, '', '', '', 'h', 0, 0, 0),
+(2, 'profile pictures', 5, '', '', '', '', '', 'image', 1, 'Creative Commons Attribution/Share Alike', 1427772434, '', '', '', 'p', 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -138,15 +136,11 @@ CREATE TABLE IF NOT EXISTS `feed` (
   `votes` int(11) NOT NULL,
   `score` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
 -- Daten für Tabelle `feed`
 --
-
-INSERT INTO `feed` (`id`, `author`, `feed`, `timestamp`, `validity`, `type`, `attachedItem`, `attachedItemId`, `privacy`, `votes`, `score`) VALUES
-(1, 1, 'is logged in', 1427772504, 60, 'feed', '', 0, 'p', 0, 0),
-(2, 1, 'is logged in', 1427772516, 60, 'feed', '', 0, 'p', 0, 0);
 
 -- --------------------------------------------------------
 
