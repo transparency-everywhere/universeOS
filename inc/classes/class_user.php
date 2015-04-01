@@ -242,7 +242,7 @@ class user {
             $myFiles = $element->create($userFolder, "myFiles", "myFiles", $userid, "h");
 
             //create Element "user pictures" to collect profile pictures
-            $pictureElement = $element->create($pictureFolder, "profile pictures", "image", $userid, "p");
+            $pictureElement = $element->create($pictureFolder, "profile pictures", "userPicture", $userid, "p");
 
             $updateValues['homefolder'] = $userFolder;
             $updateValues['myFiles'] = $myFiles;

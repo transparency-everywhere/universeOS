@@ -179,7 +179,10 @@ class groups{
                         $folderCLass = new folder();
                         $groupFolder = $folderCLass->create("3", $groupId, $userid, "$groupId//$groupId");
                         $element = new element();
-                        $groupElement = $element->create($groupFolder, $title, "other", $userid,  "$groupId//$groupId");
+                        $groupElement = $element->create($groupFolder, $title, "groupElement", $userid,  "$groupId//$groupId");
+                        
+                        //picture element
+                        $groupPictureElement = $element->create($groupFolder, $title, "groupPicture", $userid,  "$groupId//$groupId");
                         
                         unset($values);
                         $values['homeFolder'] = $groupFolder;
