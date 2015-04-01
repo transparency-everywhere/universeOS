@@ -638,7 +638,7 @@ var calendar = new function(){
 						}
 					});
 					
-			  		$('#calendarView .button').unbind('click');
+			  		//$('#calendarView .button').unbind('click');
 			  		
 			  		$('#calendarView #month').click(function(){
 			  				calendar.loadMonth(calendar.shownTimeObject);
@@ -799,20 +799,9 @@ var calendar = new function(){
 var events = new function(){
 	
 	this.getData = function(eventId){
-			  		var res;
-			  		$.ajax({
-				      url:"api.php?action=getEventData",
-				      async: false,  
-					  type: "POST",
-					  data: { 
-					  	eventId : eventId
-					  	 },
-				      success:function(data) {
-				         res = $.parseJSON(data); 
-				      }
-				   });
-				   return res;
-			  	};
+            
+            return api.query('api/calendar/events/getEventData/',{eventId : eventId});
+	};
 	
 	this.create = function(startStamp, stopStamp, title, place, privacyShow, privacyEdit){
 			  		
@@ -934,25 +923,10 @@ var events = new function(){
 			  	};
 	
 	this.join = function(originalEventId, addToVisitors){
-			  		var result;
-				    $.ajax({
-				      url:"api.php?action=joinEvent",
-				      async: false,  
-					  type: "POST",
-					  data: { 
-					  	 originalEventId: originalEventId,
-					  	 addToVisitors: addToVisitors
-					  	 },
-				      success:function(data) {
-				      	if(data){
-				        	result = $.parseJSON(data); 
-				      	}
-				      }
-				   });
-				   
-				   return result;
+            
+            return api.query('api/calendar/events/join/',{originalEventId: originalEventId,addToVisitors: addToVisitors});
 			  		
-			  	};
+	};
 	
 	this.joinForm = function(originalEventId){
 			  		
@@ -1112,23 +1086,6 @@ var events = new function(){
 			  	};
 	
 	this.get = function(startStamp, stopStamp, privacy){
-			  		var result;
-				    $.ajax({
-				      url:"api.php?action=getEvents",
-				      async: false,  
-					  type: "POST",
-					  data: { 
-					  	 startStamp: startStamp,
-					  	 stopStamp: stopStamp,
-					  	 privacy: privacy
-					  	 },
-				      success:function(data) {
-				      	if(data){
-				        	result = $.parseJSON(data); 
-				      	}
-				      }
-				   });
-				   
-				   return result;
-			  	};
+            return api.query('api/calendar/events/getEvents/',{ startStamp: startStamp,stopStamp: stopStamp,privacy: privacy});
+	};
 };
