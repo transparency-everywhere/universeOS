@@ -38,8 +38,15 @@ include('../../inc/functions.php');
             $i++;
             }
             }
-            if($i < "1"){
-                echo"You dont have any conversations so far";
+            if($i < "1"){?>
+                        
+            <center>
+                <span class="icon blue-comment" style="height: 90px;width: 90px; margin-top:5px;margin-right: -17px;"></span>
+                <h2 style="margin-top:0;">Chat</h2>
+                <h3>Click on a user in your buddylist to open a dialogue</h3>
+            </center>
+                        
+            <?php
             }
             ?>
                 </ul>

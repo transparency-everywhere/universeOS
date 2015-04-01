@@ -293,7 +293,7 @@ var filesystem =  new function() {
         
         modalOptions['action'] = function(){
             var callback = function(){
-                jsAlert('', 'The document has been added');
+                gui.alert('The document has been added');
                 $('.blueModal').remove();
                 //filesystem.tabs.updateTabContent(1 , gui.loadPage('modules/filesystem/fileBrowser.php?folder='+parent_folder));
             };
@@ -358,7 +358,7 @@ var filesystem =  new function() {
         
         modalOptions['action'] = function(){
             var callback = function(){
-                jsAlert('', 'The element has been added');
+                gui.alert('The element has been added');
                 $('.blueModal').remove();
                 filesystem.tabs.updateTabContent(1 , gui.loadPage('modules/filesystem/fileBrowser.php?folder='+parent_folder));
             };

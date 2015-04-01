@@ -391,7 +391,7 @@ var groups = new function(){
 
             modalOptions['action'] = function(){
                 var callback = function(){
-                    jsAlert('', 'The group has been updated');
+                    gui.alert('', 'The group has been updated');
                     $('.blueModal').remove();
                 };
                 
@@ -470,8 +470,9 @@ var groups = new function(){
                         gui.alert('The group could not be created', 'Create Group');
                     }else{
                         
-                        jsAlert('', 'The group has been created');
+                        gui.alert( 'The group has been created');
                         $('.blueModal').remove();
+                        groups.updateGUI();
                     }
                 };
                 var invitedUsers = [];

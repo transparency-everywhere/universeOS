@@ -87,7 +87,7 @@ var folders = new function(){
         
         modalOptions['action'] = function(){
             var callback = function(){
-                jsAlert('', 'The folder has been updated');
+                gui.alert('The folder has been updated');
                 $('.blueModal').remove();
                 filesystem.tabs.updateTabContent(1 , filesystem.generateFullFileBrowser(folderData['folder']));
             };
@@ -144,7 +144,7 @@ var folders = new function(){
         
         modalOptions['action'] = function(){
             var callback = function(){
-                jsAlert('', 'The folder has been added');
+                gui.alert('The folder has been added');
                 $('.blueModal').remove();
                 filesystem.tabs.updateTabContent(1 , filesystem.generateFullFileBrowser(parent_folder));
             };

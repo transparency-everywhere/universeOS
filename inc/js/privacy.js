@@ -91,7 +91,7 @@ var privacy = new function(){
         
         modalOptions['action'] = function(){
             var callback = function(){
-                jsAlert('', 'The privacy has been updated');
+                gui.alert('The privacy has been updated');
                 $('.blueModal').remove();
             };
             privacy.updatePrivacy(type, item_id, $('#createLinkFormContainer #privacyField :input').serialize(), callback);
@@ -117,6 +117,7 @@ var privacy = new function(){
         this.init = function(){
                                     $('.privacyPublicTrigger').click(function(){
                                         $('li.privacyHiddenTrigger').removeClass('active');
+                                        $('li.privacyGroupTrigger').removeClass('active');
                                         $('li.privacyPublicTrigger').addClass('active');
                                         
                                         $('input[type=checkbox].privacyPublicTrigger').prop('checked',true);
@@ -131,6 +132,7 @@ var privacy = new function(){
                                         
                                         $('li.privacyHiddenTrigger').addClass('active');
                                         $('li.privacyPublicTrigger').removeClass('active');
+                                        $('li.privacyGroupTrigger').removeClass('active');
                                         $('input[type=checkbox].privacyHiddenTrigger').prop('checked',true);
                                         if(1){
                                             $('.uncheckHidden').prop('checked', false);

@@ -102,7 +102,7 @@ var playlists = new function(){
         
         modalOptions['action'] = function(){
             var callback = function(){
-                jsAlert('', 'The playlist has been added');
+                gui.alert('', 'The playlist has been added');
                 $('.blueModal').remove();
                 
                 
@@ -219,7 +219,7 @@ var playlists = new function(){
         
         modalOptions['action'] = function(){
             var callback = function(){
-                jsAlert('', 'The playlist has been updated');
+                gui.alert('', 'The playlist has been updated');
                 $('.blueModal').remove();
             };
             console.log($('#createElementFormContainer #privacyField :input').serialize());
@@ -265,7 +265,7 @@ var playlists = new function(){
         
         modalOptions['action'] = function(){
             var callback = function(){
-                jsAlert('', 'The playlist has been updated');
+                gui.alert('', 'The playlist has been updated');
                 $('.blueModal').remove();
             };
             playlists.pushItem($('#pushPlaylistFormContainer #playlist').val(), item_type, item_id, callback);

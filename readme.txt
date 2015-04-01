@@ -20,12 +20,6 @@ Update
 
 
 todo
-    calendar
-        api calls
-            events.join
-            events.get
-            events.getData
-
     forms
         events.addForm
         events.updateForm (?)
@@ -33,27 +27,6 @@ todo
         shortcuts.create
         shortcuts.update
         shortcuts.verifyRemoval
-
-
-    (update handlers)
-        groups
-            dashboard
-            settings
-                groups
-                groupadmin
-            profile
-        
-        playlists
-
-        buddylist
-            add user
-            remove user
-
-        calendar
-            updateDay
-            updateTasks
-            updateEvents
-
 
     all onclick to bind(?)
 
@@ -76,8 +49,6 @@ todo
 
     group admin
         change group picture
-
-    showprivacy active class groups
 
 Recent:                                                         Release Message
 

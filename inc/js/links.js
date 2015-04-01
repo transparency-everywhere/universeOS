@@ -107,7 +107,7 @@ var links = new function(){
         
         modalOptions['action'] = function(){
             var callback = function(){
-                jsAlert('', 'The links has been added');
+                gui.alert('The links has been added');
                 $('.blueModal').remove();
                 filesystem.tabs.updateTabContent(2 , gui.loadPage('modules/filesystem/showElement.php?element='+element+'&reload=1'));
             };
@@ -178,7 +178,7 @@ var links = new function(){
         var element = linkData['folder'];
         modalOptions['action'] = function(){
             var callback = function(){
-                jsAlert('', 'The link has been updated');
+                gui.alert('The link has been updated');
                 $('.blueModal').remove();
                 filesystem.tabs.updateTabContent(2 , gui.loadPage('modules/filesystem/showElement.php?element='+element+'&reload=1'));
             };

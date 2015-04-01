@@ -172,7 +172,7 @@ var elements = new function(){
         
         modalOptions['action'] = function(){
             var callback = function(){
-                jsAlert('', 'The element has been added');
+                gui.alert('The element has been added');
                 $('.blueModal').remove();
                 filesystem.tabs.updateTabContent(1 , filesystem.generateFullFileBrowser(parent_folder));
             };
@@ -244,7 +244,7 @@ var elements = new function(){
         
         modalOptions['action'] = function(){
             var callback = function(){
-                jsAlert('', 'The element has been updated');
+                gui.alert('The element has been updated');
                 $('.blueModal').remove();
                 filesystem.tabs.updateTabContent(1 , filesystem.generateFullFileBrowser(elementData.folder));
             };

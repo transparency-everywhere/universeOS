@@ -61,7 +61,11 @@ function shorten($text, $chars_limit)
     return $text;
     }
 }
- 
+function array_delete($array, $element) {
+    return array_diff($array, [$element]);
+}
+
+
 include('classes/class_api.php');
 
 include('classes/class_image.php');
