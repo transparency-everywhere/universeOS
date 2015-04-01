@@ -57,35 +57,106 @@ var elements = new function(){
         html += '<span class="size">Size</span>';
         html += '<span class="buttons"></span>'
         html += '<ul>';
+        html += '<span class="heading">Files</span>';
         $.each(fileList, function(key, value){
-            //generate fileList for an element with an unordered list <ul>
-            var data = value['data'];
-            i++;
-            if(value['type'] === 'link'){
-                type = "openLink"; // if type is link, use reader.openLink()
+            if(value['type'] === 'file' && value['data']['type'] !== 'image' && value['data']['type'] !== 'image/jpeg' && value['data']['type'] !== 'image/png' && value['data']['type'] !== 'image/gif' && value['data']['type'] !== 'image/tiff') {
+                //generate fileList for an element with an unordered list <ul>
+                var data = value['data'];
+                i++;
+                if(value['type'] === 'link'){
+                    type = "openLink"; // if type is link, use reader.openLink()
+                }
+                if(value['type'] === 'file'){
+                    type = "openFile"; // if type is file, use reader.openFile()
+                }
+                date = new Date(data['timestamp']*1000).toString().substr(11, 5) + new Date(data['timestamp']*1000).toString().substr(4, 4) + new Date(data['timestamp']*1000).toString().substr(8, 2); //year + month + day
+                image = filesystem.generateIcon(data['type']);
+                html += '<li data-id="' + data['id'] + '" data-type="' + data['type'] + '" data-title="' + data['title'] + '" data-date="' + date + '" data-size="' + data['size'] + '">';
+                    html += '<span class="icons">&nbsp;' + image + '</span>';
+                    html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="reader.' + type + '(\'' + data['id'] + '\'); return false">' + data['title'] + '</a></span>';
+                    html += '<span class="date">' + date + '</span>';
+                    html += '<span class="size">' + Math.round(data['size']/1024) + ' kB</span>';
+                    html += '<span class="buttons">'
+                        html += item.showScoreButton(value['type'], data['id']);
+                        if(data['download']){
+                            html += '<a href="./out/download/?fileId=' + data['id'] + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download', 'grey') + '</a>';
+                        }
+                        if(!grid){
+                            html += item.showItemSettings(value['type'], data['id']);
+                        }
+                    html += '</span>';
+                html += '</li>';
+                if(!grid){
+                    html += ''; //hier muss die rightClick function noch eingebunden werden.
+                }
             }
-            if(value['type'] === 'file'){
-                type = "openFile"; // if type is file, use reader.openFile()
+        });
+        html += '<span class="heading">Images</span>';
+        $.each(fileList, function(key, value){
+            if(value['type'] === 'file' && (value['data']['type'] === 'image' || value['data']['type'] === 'image/jpeg' || value['data']['type'] === 'image/png' || value['data']['type'] === 'image/gif' || value['data']['type'] === 'image/tiff')) {
+                //generate fileList for an element with an unordered list <ul>
+                var data = value['data'];
+                i++;
+                if(value['type'] === 'link'){
+                    type = "openLink"; // if type is link, use reader.openLink()
+                }
+                if(value['type'] === 'file'){
+                    type = "openFile"; // if type is file, use reader.openFile()
+                }
+                date = new Date(data['timestamp']*1000).toString().substr(11, 5) + new Date(data['timestamp']*1000).toString().substr(4, 4) + new Date(data['timestamp']*1000).toString().substr(8, 2); //year + month + day
+                image = filesystem.generateIcon(data['type']);
+                html += '<li data-id="' + data['id'] + '" data-type="' + data['type'] + '" data-title="' + data['title'] + '" data-date="' + date + '" data-size="' + data['size'] + '">';
+                    html += '<span class="icons">&nbsp;' + image + '</span>';
+                    html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="reader.' + type + '(\'' + data['id'] + '\'); return false">' + data['title'] + '</a></span>';
+                    html += '<span class="date">' + date + '</span>';
+                    html += '<span class="size">' + Math.round(data['size']/1024) + ' kB</span>';
+                    html += '<span class="buttons">'
+                        html += item.showScoreButton(value['type'], data['id']);
+                        if(data['download']){
+                            html += '<a href="./out/download/?fileId=' + data['id'] + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download', 'grey') + '</a>';
+                        }
+                        if(!grid){
+                            html += item.showItemSettings(value['type'], data['id']);
+                        }
+                    html += '</span>';
+                html += '</li>';
+                if(!grid){
+                    html += ''; //hier muss die rightClick function noch eingebunden werden.
+                }
             }
-            date = new Date(data['timestamp']*1000).toString().substr(11, 5) + new Date(data['timestamp']*1000).toString().substr(4, 4) + new Date(data['timestamp']*1000).toString().substr(8, 2); //year + month + day
-            image = filesystem.generateIcon(data['type']);
-            html += '<li data-id="' + data['id'] + '" data-type="' + data['type'] + '" data-title="' + data['title'] + '" data-date="' + date + '" data-size="' + data['size'] + '">';
-                html += '<span class="icons">&nbsp;' + image + '</span>';
-                html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="reader.' + type + '(\'' + data['id'] + '\'); return false">' + data['title'] + '</a></span>';
-                html += '<span class="date">' + date + '</span>';
-                html += '<span class="size">' + Math.round(data['size']/1024) + ' kB</span>';
-                html += '<span class="buttons">'
-                    html += item.showScoreButton(value['type'], data['id']);
-                    if(data['download']){
-                        html += '<a href="./out/download/?fileId=' + data['id'] + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download', 'grey') + '</a>';
-                    }
-                    if(!grid){
-                        html += item.showItemSettings(value['type'], data['id']);
-                    }
-                html += '</span>';
-            html += '</li>';
-            if(!grid){
-                html += ''; //hier muss die rightClick function noch eingebunden werden.
+        });
+        html += '<span class="heading">Links</span>';
+        $.each(fileList, function(key, value){
+            if(value['type'] === 'link') {
+                //generate fileList for an element with an unordered list <ul>
+                var data = value['data'];
+                i++;
+                if(value['type'] === 'link'){
+                    type = "openLink"; // if type is link, use reader.openLink()
+                }
+                if(value['type'] === 'file'){
+                    type = "openFile"; // if type is file, use reader.openFile()
+                }
+                date = new Date(data['timestamp']*1000).toString().substr(11, 5) + new Date(data['timestamp']*1000).toString().substr(4, 4) + new Date(data['timestamp']*1000).toString().substr(8, 2); //year + month + day
+                image = filesystem.generateIcon(data['type']);
+                html += '<li data-id="' + data['id'] + '" data-type="' + data['type'] + '" data-title="' + data['title'] + '" data-date="' + date + '" data-size="' + data['size'] + '">';
+                    html += '<span class="icons">&nbsp;' + image + '</span>';
+                    html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="reader.' + type + '(\'' + data['id'] + '\'); return false">' + data['title'] + '</a></span>';
+                    html += '<span class="date">' + date + '</span>';
+                    html += '<span class="size">' + Math.round(data['size']/1024) + ' kB</span>';
+                    html += '<span class="buttons">'
+                        html += item.showScoreButton(value['type'], data['id']);
+                        if(data['download']){
+                            html += '<a href="./out/download/?fileId=' + data['id'] + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download', 'grey') + '</a>';
+                        }
+                        if(!grid){
+                            html += item.showItemSettings(value['type'], data['id']);
+                        }
+                    html += '</span>';
+                html += '</li>';
+                if(!grid){
+                    html += ''; //hier muss die rightClick function noch eingebunden werden.
+                }
             }
         });
         html += '</ul>';
