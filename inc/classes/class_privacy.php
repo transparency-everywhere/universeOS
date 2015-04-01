@@ -90,7 +90,6 @@ class privacy {
             $checked['privacyHidden'] = 'checked="checked"';
             $active['hidden'] = 'active';
         }else{
-			$showCustom = "notHidden";
             //handle other cases
             //   f;4;3;2//f;2;
             $custom = explode("//", $value);
@@ -102,6 +101,7 @@ class privacy {
                 //check checkbox on show friends
                 $checked['privacyCustomShowF'] = 'checked="checked"';
                 $active['buddies'] = 'active';
+		$showCustom = "notHidden";
             }
             
             
@@ -114,11 +114,20 @@ class privacy {
                 //check checkbox on allow friends to edit
                 $checked['privacyCustomEditF'] = 'checked="checked"';
                 $active['buddies'] = 'active';
+		$showCustom = "notHidden";
             }
             if(in_array("h", $customEdit)){
                 //only authour is allow to edit
                 $checked['privacyCustomEditH'] = 'checked="checked"';
                 $active['buddies'] = 'active';
+            }
+            //check if any groups in $customEdit
+            foreach($customEdit AS $singleValue){
+                if(is_numeric($singleValue)){
+                    $showGroups = 'notHidden';
+                    $active['groups'] = 'active';
+                    $groupsInPrivacy[] = (int)$singleValue;
+                }
             }
             
             
@@ -152,15 +161,18 @@ class privacy {
         				<div><input type="checkbox" name="privacyCustomEdit[]" value="f" data-privacytype="edit" class="uncheckPublic privacyCustomTrigger uncheckGroups uncheckHidden privacyBuddyTrigger privacyBuddyTrigger_edit" <?=$checked['privacyCustomEditF'];?> <?=$disabled;?>>Edit</div>
         			</li>
         			<li class="privacyGroupTrigger <?=$active['groups'];?>">
-        				<h2><input type="checkbox" class="uncheckPublic privacyGroupTrigger privacyCustomTrigger uncheckHidden" <?=$disabled;?>>Groups</h2>
+                                    <span class="icon white-check"></span><h2><input type="checkbox" class="uncheckPublic privacyGroupTrigger privacyCustomTrigger uncheckHidden" <?=$disabled;?>>Groups</h2>
         			</li>
-        			<li class="<?=$showCustom;?> sub privacyShowGroups <?=$showBuddy;?>">
+        			<li class="<?=$showGroups;?> sub privacyShowGroups <?=$showBuddy;?>">
         				<ul class="groupList">
-        					                           <?
-                                                        $attSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='".getUser()."' AND validated='1'");
-                                                        while($attData = mysql_fetch_array($attSql)){
-                                                            $i++;
-                                                            $groupSql = mysql_query("SELECT id, title FROM groups WHERE id='$attData[group]'");
+        					        <?php
+                                                        $groupClass = new groups();
+                                                        $userGroups = $groupClass->get();
+                                                        
+                                                        foreach($userGroups AS $groupId){
+                                                            $groupsInPrivacy = array_delete($groupsInPrivacy, (int)$groupId);
+                                                             $i++;
+                                                            $groupSql = mysql_query("SELECT id, title FROM groups WHERE id='$groupId'");
                                                             $groupData = mysql_fetch_array($groupSql);
                                                             $title = $groupData['title'];
                                                             $title10 = substr("$title", 0, 10);
@@ -187,7 +199,8 @@ class privacy {
 																		edit
                                                                 	</div>
                                                                 </li>
-                                                        <?}
+                                                        <?
+                                                        }
                                                         if($i < 1){
                                                             echo'<li style="padding-left:10px;">Your are in no group</li>';
                                                         }?>
