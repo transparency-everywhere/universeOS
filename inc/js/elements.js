@@ -178,7 +178,6 @@ var elements = new function(){
             };
             elements.create(parent_folder, $('#createElementFormContainer #title').val(), $('#createElementFormContainer #type').val(),  $('#createElementFormContainer #privacyField :input').serialize(),callback);
         };
-        privacy.load('#privacyField', '', true);
         formModal.init('Create Element', '<div id="createElementFormContainer"></div>', modalOptions);
         gui.createForm('#createElementFormContainer',fieldArray, options);
     };

@@ -20,6 +20,8 @@ Update
 
 
 todo
+    group admin
+
     forms
         events.addForm
         events.updateForm (?)
@@ -32,7 +34,6 @@ todo
 
     group profile button feedback
         button feedback
-
 
     fix raster
 

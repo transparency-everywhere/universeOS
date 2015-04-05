@@ -485,7 +485,7 @@ var settings = new function(){
         //members list
         var field6 = [];
         field6['caption'] = 'Members:';
-        field6['inputName'] = 'membersInvite';
+        field6['inputName'] = 'list';
         field6['type'] = 'html';
         field6['value'] = groups.generateMemberList(group_id);
         field6['caption_position'] = 'top';
@@ -498,21 +498,33 @@ var settings = new function(){
         field7['value'] = '<div id=\'buttons\'><input type=\'submit\' value=\'save\' class=\'button pull-right\'></div>';
         fieldArray[7] = field7;
         
+        options['action'] = function(){
+                var callback = function(){
+                    gui.alert('The group has been updated');
+                    $('.blueModal').remove();
+                };
+                
+                
+                //needs to be done
+                
+                
+                
+                var invitedUsers;
+                groups.update(group_id, $('#groupAdminFormContainer #title').val(), $('#groupAdminFormContainer #description').val(), $('#groupAdminFormContainer #type').val(),  $('#groupAdminFormContainer #membersInvite').is(':checked'));
+        };
+        
         $('#settingsFrame').html('<div id="groupAdminFormContainer" data-groupid="'+group_id+'"></div>');
         
        // formModal.init('Update Profile', '<div id="updateProfileFormContainer"></div>', modalOptions);
         gui.createForm('#groupAdminFormContainer',fieldArray, options);
         
-        $('#updateProfileFormContainer .dynForm').submit(function(e){
-            e.preventDefault();
-            var birthdate = $('#updateProfileFormContainer #birthdate').val();
-            settings.updateProfileInfo($('#updateProfileFormContainer #realname').val(), $('#updateProfileFormContainer #city').val(), $('#updateProfileFormContainer #hometown').val(), birthdate, $('#updateProfileFormContainer #school').val(), $('#updateProfileFormContainer #university').val(), $('#updateProfileFormContainer #work').val());
-            
-        });
         
         //load userpicture
         $('#userpicture_area').html(User.showPicture(User.userid));
         //members
+    };
+    this.showChangeGrouPictureForm =  function(group_id){
+        
     };
     this.showUpdateGroupPictureForm = function(group_id){
         settings.show();

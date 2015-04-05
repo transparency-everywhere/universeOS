@@ -226,10 +226,7 @@ var groups = new function(){
         this.update = function(groupId, title, description, type, membersInvite){
             
             callback = function(){
-              gui.alert('The group has been updated'); 
-              if($('#updateGroupFormContainer')){
-                  groups.showUpdateGroupForm(groupId);
-              };
+              gui.alert('The group has been updated');
             };
             api.query('api/groups/update/', { group_id : groupId, title: title, description: description, type: type, members_invite: membersInvite },callback);
         };

@@ -1994,13 +1994,23 @@ function nl2br(str, is_xhtml) {
     .replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
 };
 
+var handler = new function(){
+  this.open = function(type, itemId){
+      
+  }  
+};
 
-var services = [
-    'youtube'=> {
-                    regex : '',
-                    open : function(){
-
-                    }
-                },
-    
-];
+//var handlers = [
+//    'youtube'=> {
+//                    application : 'reader',
+//                    regex : '',
+//                    open : function(){
+//
+//                    };
+//                    prev : function(){
+//                    };
+//                    next : function(){
+//                    };
+//                },
+//    
+//];

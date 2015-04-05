@@ -546,7 +546,7 @@ switch($action){
 //events
 	case 'createEvent':
 		
-		
+		//@del
 		if($_POST['allDay'] == "true"){
 		
 			$startTime = strtotime($_POST['startDate']."-00:00")-3599;
