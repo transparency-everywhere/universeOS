@@ -131,6 +131,9 @@ var playlists = new function(){
     };
             
     
+    this.getGroupPlaylists = function(type, group_id){
+        return api.query('api/playlists/getGroupPlaylists/', { type : type, group_id:group_id});
+    };
     
     this.showInfo = function(playlist_id){
         

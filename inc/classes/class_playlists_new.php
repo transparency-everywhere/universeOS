@@ -28,7 +28,25 @@ class playlist{
             $this->id = $id;
         }
     }
- 
+    function getGroupPlaylistArray($type='show', $group_id=NULL){
+        $query = "(INSTR(`privacy`, '{$group_id}') > 0)";
+        
+        
+        $db = new db();
+        $result = $db->shiftResult($db->query('SELECT `id`, `title`, `privacy`, `user` FROM `playlists` WHERE '.$query), 'id');
+
+        foreach($result AS $playListsData){
+            if(authorize($playListsData['privacy'], $type, $playListsData['user'])){
+	            $ids[] = $playListsData['id'];
+	            $titles[] = $playListsData['title'];
+            }
+        }
+			
+	$return['ids'] = $ids;
+	$return['titles'] = $titles;
+	
+	return $return;
+    }
     function getUserPlaylistArray($type='show', $userId=NULL){
 		if($userId == null){
 			$userId = getUser();
