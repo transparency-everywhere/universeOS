@@ -152,7 +152,6 @@ class groups{
 
         function createGroup($title, $privacy, $description, $users){
 
-
                     $userid = getUser();
 
                     //check if nessecary informations are given
@@ -187,6 +186,7 @@ class groups{
                         unset($values);
                         $values['homeFolder'] = $groupFolder;
                         $values['homeElement'] = $groupElement;
+                        $values['group_picture_element'] = $groupPictureElement;
                         $db->update('groups', $values);
                         
                                 //add user which added group to group and validate
