@@ -17,8 +17,19 @@
 
 include('../../../../inc/config.php');
 include('../../../../inc/functions.php');
-    
 
+//set privacy
+$customShow = $_POST['privacyCustomSee'];
+$customEdit = $_POST['privacyCustomEdit'];
 
-$events = new events();
-$events->joinEvent($_POST['originalEventId'], getUser(), $_POST['addToVisitors']);
+$privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
+	
+	
+//set privacy
+$customShow = $_POST['privacyCustomSee'];
+$customEdit = $_POST['privacyCustomEdit'];
+$privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
+
+$tasks = new tasks();
+$tasks->create(getUser(), $_POST['timestamp'], $_POST['status'], $_POST['title'], $_POST['description'], $privacy);
+		
