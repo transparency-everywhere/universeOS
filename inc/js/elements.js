@@ -23,13 +23,21 @@ var elements = new function(){
         var link = "./modules/reader/showfile.php?type=" + elementData['type'];
         var header = "<header class=\"white-header\">";
             header += filesystem.generateIcon(elementData['type'], 'grey');
-            header += "<span class=\"title\">" + elementData['title'] + "</span>";
-            header += item.showScoreButton('element', element);
-            header += '<a href=\"#\" id=\"settingsButton\" onclick=\"$(\'.elementSettings' + element + '\').slideToggle(\'slow\'); return false\" title=\"more...\">' + filesystem.generateIcon('settings', 'grey') + '</a>'; 
+            header += "<span class=\"elementtitle\">" + elementData['title'] + "</span>";
+            header += '<span class="headerbuttons">'; 
+                header += filesystem.generateIcon('list', 'grey');
+                header += filesystem.generateIcon('list', 'blue');
+                header += filesystem.generateIcon('small_symbols', 'grey');
+                header += filesystem.generateIcon('small_symbols', 'blue');
+                header += filesystem.generateIcon('large_symbols', 'grey');
+                header += filesystem.generateIcon('large_symbols', 'blue');
+                header += item.showScoreButton('element', element);
+                header += '<a href=\"#\" id=\"settingsButton\" onclick=\"$(\'.elementSettings' + element + '\').slideToggle(\'slow\'); return false\" title=\"more...\">' + filesystem.generateIcon('settings', 'grey') + '</a>';  
+            header += '</span>';
             header += '<ul class="elementSettings elementSettings' + element + '">';		 
-                header += '<li><a href="#" onclick="filesystem.showCreateUFFForm(\'' + element + '\'); " target="submitter">' + filesystem.generateIcon('file', 'white') + '&nbsp;Create an UFF</a></li>';
-                header += '<li><a href="#" onclick="links.showCreateLinkForm(\'' + element + '\');">' + filesystem.generateIcon('file', 'white') + '&nbsp;Add a link</a></li>';		  			
-                header += '<li><a href="#" onclick="filesystem.openUploadTab(\'' + element + '\');">' + filesystem.generateIcon('link', 'white') + '&nbsp;Upload files</a></li>';
+                header += '<li><a href="#" onclick="filesystem.showCreateUFFForm(\'' + element + '\'); " target="submitter">' + filesystem.generateIcon('file', 'blue') + '&nbsp;Create an UFF</a></li>';
+                header += '<li><a href="#" onclick="links.showCreateLinkForm(\'' + element + '\');">' + filesystem.generateIcon('file', 'blue') + '&nbsp;Add a link</a></li>';		  			
+                header += '<li><a href="#" onclick="filesystem.openUploadTab(\'' + element + '\');">' + filesystem.generateIcon('link', 'blue') + '&nbsp;Upload files</a></li>';
             header += '</ul>';
         header += "</header>";
         var html = filesystem.generateLeftNav();
@@ -143,7 +151,7 @@ var elements = new function(){
                     html += '<span class="icons">&nbsp;' + image + '</span>';
                     html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="reader.' + type + '(\'' + data['id'] + '\'); return false">' + data['title'] + '</a></span>';
                     html += '<span class="date">' + date + '</span>';
-                    html += '<span class="size">' + Math.round(data['size']/1024) + ' kB</span>';
+                    html += '<span class="size"></span>';
                     html += '<span class="buttons">'
                         html += item.showScoreButton(value['type'], data['id']);
                         if(data['download']){
