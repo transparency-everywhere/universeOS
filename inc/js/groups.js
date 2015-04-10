@@ -74,9 +74,6 @@ var groups = new function(){
             return gui.generateGrayList(listItems);
         };
         
-        this.getPlaylists = function(group_id){
-            
-        };
         this.generateProfile = function(group_id){
             var groupdata = this.getData(group_id);
             var buttons='',buttonText = '', buttonClass = '', buttonAction = '', adminButton = '', onClick = '';
@@ -142,13 +139,13 @@ var groups = new function(){
                                 output += '<li data-type="members">Members</li>';
                             output += '</ul>';
                             output += '<div class="content">';
-
-                                output += '<div class="profile_tab favorites_tab">';
-                                    output += fav.show(1);
-                                output += '</div>';
+                                
                                 output += '<div class="profile_tab files_tab">'+filesystem.showFileBrowser(groupdata['homeFolder'])+'</div>';
                                 output += '<div class="profile_tab playlists_tab">';
-
+                                    var groupPlaylists = playlists.getGroupPlaylists(group_id);
+                                    $.each(groupPlaylists['index'], function(index, id){
+                                        
+                                    });
                                 output += '</div>';
 
 

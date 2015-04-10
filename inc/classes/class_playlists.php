@@ -34,7 +34,8 @@ class playlist{
         
         $db = new db();
         $result = $db->shiftResult($db->query('SELECT `id`, `title`, `privacy`, `user` FROM `playlists` WHERE '.$query), 'id');
-
+        $ids = array();
+        $titles[] = array();
         foreach($result AS $playListsData){
             if(authorize($playListsData['privacy'], $type, $playListsData['user'])){
 	            $ids[] = $playListsData['id'];

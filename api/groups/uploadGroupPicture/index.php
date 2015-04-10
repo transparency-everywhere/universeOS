@@ -1,5 +1,4 @@
 <?php
-
 //This file is published by transparency-everywhere with the best deeds.
 //Check transparency-everywhere.com for further information.
 //Licensed under the CC License, Version 4.0 (the "License");
@@ -18,7 +17,8 @@
 
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
+error_reporting(E_ALL);
+error_log(print_r($_FILES));
 
-$playlist = new playlist();
-echo json_encode($playlist->getGroupPlaylistArray($_POST['type'], $_POST['group_id']));
-?>
+$user = new user(getUser());
+$user->updateUserPicture($_FILES['userpicture']);

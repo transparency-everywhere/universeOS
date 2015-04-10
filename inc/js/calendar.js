@@ -95,6 +95,7 @@ var calendar = new function(){
 									html += '<li class="header" onclick="calendar.toggleTasks();">Tasks<span class="toggleTrigger icon white-chevron-down pull-right"></span><a href="#" class="pull-right" onclick="tasks.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon white-plus"></i></a></li>';
 									html += '<li style="display:none;"><input type="checkbox" id="hideDoneTasks" onclick="calendar.toggleDoneTasks();" checked>&nbsp;hide done</li>';
 								html += '</ul>';
+                                                                
 								html += '<ul id="events">';
 									html += '<li class="header">Events<span class="toggleTrigger icon white-chevron-down pull-right"></span><a href="#" class="pull-right" onclick="events.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon white-plus"></i></a></li>';
 									//events will apend to this list
@@ -666,18 +667,18 @@ var calendar = new function(){
 			  	};
 	
 	this.loadMonthsIntoSide = function(date){
-			  		var d = new Date(date);
-			  		d.setMonth(0);
-			  		d.setDate(1);
-			  		d.setHours(0);
-			  		d.setMinutes(0);
-			  		d.setSeconds(0);
-			  		d.setMilliseconds(0);
-			  		
-					var monthHTML = '<li class="header">Events</header>';
-					
-					
-					for(var monthCounter=0; monthCounter < 12; monthCounter++){
+		var d = new Date(date);
+		d.setMonth(0);
+		d.setDate(1);
+		d.setHours(0);
+		d.setMinutes(0);
+		d.setSeconds(0);
+		d.setMilliseconds(0);
+		
+		var monthHTML = '<li class="header">Events</header>';
+		
+		
+		for(var monthCounter=0; monthCounter < 12; monthCounter++){
 						var monthClass = '';
 						if(monthCounter === month){
 							monthClass = 'current';
@@ -686,16 +687,15 @@ var calendar = new function(){
 						
 						d.setMonth( d.getMonth( ) + 1 );
 					}
-					
-					//apend month and trigger to load month into sidebar
-					$('#side #events').html(monthHTML);
-					
-					$('#months .header').click(function(){
+		
+		//apend month and trigger to load month into sidebar
+		$('#side #events').html(monthHTML);
+		
+		$('#months .header').click(function(){
 						$('#side #events li').not('.header').slideToggle();
 					});
 			  		
-			  		
-			  	};
+	};
 	
 	this.loadEventsIntoSide = function(date){
 			  		var d = new Date(date);

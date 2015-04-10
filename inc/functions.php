@@ -117,7 +117,6 @@ include('classes/class_db.php');
 include('classes/class_privacy.php');
  
 include('classes/class_playlists.php');
-include('classes/class_playlists_new.php');
     
 include('classes/class_files.php');
 

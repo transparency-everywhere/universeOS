@@ -523,7 +523,7 @@ var settings = new function(){
         $('#userpicture_area').html(User.showPicture(User.userid));
         //members
     };
-    this.showChangeGrouPictureForm =  function(group_id){
+    this.showChangeGroupPictureForm =  function(group_id){
         
     };
     this.showUpdateGroupPictureForm = function(group_id){
