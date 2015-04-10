@@ -377,6 +377,35 @@ var settings = new function(){
             $('#settings #userForm').submit();
         });
     };
+    this.showUpdateGroupPictureForm = function(group_id){
+        settings.show();
+        var output = '<div>';
+        output += '<style>';
+        
+        output += '#settingsFrame h3{display:block!important;clear:left!important;} #settingsFrame .userPicture{border-radius:0!important; width:120px!important;height:120px!important;} #settingsFrame #buttons{margin-top:50px;} #settingsFrame .userPicture{float: none;}';
+        output += '</style>';
+        output += '<form target="submitter" action="api/groups/uploadGroupPicture/" id="userForm" enctype="multipart/form-data" method="post">';
+        
+        output += '<h2>Current group picture</h2>';
+        output += groups.showPicture(group_id);
+        output += '<h2 style="padding-top:50px">Upload new userpicture</h2>';
+        output += '<input name="groupPicture" type="file">';
+        output += '<input name="group" type="hidden" value="'+group_id+'">';
+        output += '</form>';
+        output += '<div id="buttons">';
+        output += '<a href="#" class="antiButton pull-left" id="cancelButton">Cancel</a>';
+        output += '<a href="#" class="button pull-right" id="changeButton">Change Picture</a>';
+        output += '</div></div>';
+        $('#settingsFrame').html(output);
+      
+        $('#settingsFrame #cancelButton').click(function(){
+            settings.showGroupAdminForm(group_id);
+        });
+      
+        $('#settingsFrame #changeButton').click(function(){
+            $('#settings #userForm').submit();
+        });
+    };
     this.showGroupsForm = function(){
         settings.show();
         var output = '<div id="settingsGroups"><h2 style="margin-top:0">Groups</h2>';
@@ -520,17 +549,12 @@ var settings = new function(){
         
         
         //load userpicture
-        $('#userpicture_area').html(User.showPicture(User.userid));
-        //members
-    };
-    this.showChangeGroupPictureForm =  function(group_id){
+        $('#userpicture_area').html(groups.showPicture(group_id));
         
+        $('#changePicture').click(function(){
+            settings.showUpdateGroupPictureForm(group_id);
+        });
     };
-    this.showUpdateGroupPictureForm = function(group_id){
-        settings.show();
-        alert('needs to be implemented');
-    };
-    
     this.submitPassword = function () {
             if($('#newPassword').val() === $('#newPasswordRepeat').val() && $('#newPassword').val().length > 0){ 
                     updatePassword($('#oldPassword').val(), $('#newPassword').val(), localStorage.currentUser_userid);

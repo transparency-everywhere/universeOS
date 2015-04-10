@@ -14,11 +14,8 @@
 //limitations under the License.
 //
 //@author nicZem for Tranpanrency-everywhere.com
-
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
-error_reporting(E_ALL);
-error_log(print_r($_FILES));
 
-$user = new user(getUser());
-$user->updateUserPicture($_FILES['userpicture']);
+$user = new groups();
+$user->updateGroupPicture($_POST['group'], $_FILES['groupPicture']);
