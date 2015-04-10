@@ -182,11 +182,20 @@ li.notHidden{
 .itemThumb{
     max-width: 250px;
     overflow: hidden;
-    color:#006d67;
+    color: #006d67;
+    font-size:12px;
 }
 
 .itemThumb a{
+    font-size: 16px;
     color:#006d67;
+}
+
+.itemThumb .icon{
+    width:25px;
+    height:25px;
+    max-height: 63px;
+    margin-right: 10px;
 }
 
 .signature{
@@ -274,7 +283,7 @@ li.notHidden{
 
 .dockSeachResult > h2{
     margin-top: 15px;
-    margin-bottom: 40px;
+    margin-bottom: 60px;
     margin-left: 15px;
     float: left; font-size: 20px;
 }
@@ -358,12 +367,15 @@ li.notHidden{
 .resultList li:hover .icon.dark{
     display:none;
 }
-.dockSeachResult .loadAll{
+.dockSeachResult .loadAll, .dockSeachResult .loadAll{
+    font-size: 14px;
+    margin-top: 15px;
     text-align:right;
 }
 
 .dockSeachResult .loadAll a{
     color: #18ffff!important;
+    font-size: 14px;
 }
 
 
@@ -1584,6 +1596,7 @@ color:#FFFFFF;
     width: 18px;
     height: 18px;
     background-size: 100%;
+    cursor: pointer;
 }
 
 
@@ -1860,8 +1873,10 @@ color:#FFFFFF;
             min-width: 10px;
             margin-left: 10px;
             padding: 0;
-            margin-top: 7px;
-        }
+            margin-top: 6px;
+        
+            cursor: pointer;
+}
         
         
     #dock #searchField {
@@ -2016,7 +2031,7 @@ color:#FFFFFF;
                     top: 0;
                     left: 0;
                     right: 0;
-                    margin-top: -1em;
+                    margin-top: -1.5em;
                 }
 
                 .list:empty,
@@ -3167,6 +3182,10 @@ margin-bottom: 3px;
                 #dashBoard .appList li{
                     background: #00bcd4;
                 }
+                
+                #dashBoard .appList li:hover{
+                    background: #303030;
+                }
             
                 #dashBoard li{
                     padding: 5px;
@@ -3826,6 +3845,7 @@ and (max-width : 320px) {
     font-size:16px;
     border: none;
     display: inline-block;
+    cursor: pointer;
 }
 
 .antiButton{

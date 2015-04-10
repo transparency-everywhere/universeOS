@@ -83,7 +83,7 @@ var feed = new function(){
         var feedContent = '<div class="feedContent">'+feedData['feed']+'</div>';
                 if(feedData['type'] === 'showThumb'){
                     debug.log('     showItemThumb');
-                    feedContent = '<div class="feedAttachment">'+item.showItemThumb(feedData['attachedItem'], feedData['attachedItemId'])+'</div>';
+                    feedContent += '<div class="feedAttachment">'+item.showItemThumb(feedData['attachedItem'], feedData['attachedItemId'])+'</div>';
                 }
         
         //load comments

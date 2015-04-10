@@ -193,9 +193,10 @@ class item {
            
             switch($itemType){
                 case 'folder':
-
-                    $folderData = $db->select('folders', array('id', $itemId));
-
+                    $folderClass = new folder($itemId);
+                    
+                    $folderData = $folderClass->getFolderData();
+                    
                     $title = $folderData['name'];
                     $shortTitle = $folderData['name'];
 
@@ -203,7 +204,7 @@ class item {
                     if($folderData['folder'] == 3){
                         $groupsClass = new groups();
                         $title = $groupsClass->getGroupName($folderData['name']).'´s Files';
-                                            $shortTitle = $title;
+                        $shortTitle = $title;
                     }
 
 
@@ -211,11 +212,11 @@ class item {
                     $link = "openFolder('$itemId')";
 
                     //define icon
-                    $img = "../../img/folder_dark.png";
+                    $img = "folder";
 
                     //define info 1
                     $info[0] = "path";
-                    $info[1] = $folderData['path'];
+                    $info[1] = '/'.$folderClass->getPath(false);
 
                 break;
                 case 'element':
@@ -228,7 +229,7 @@ class item {
                     $link = "openElement('$itemId')";
 
                     //define icon
-                    $img = "filesystem/element.png";
+                    $img = "filesystem";
 
                     //define info 1
                     $info[0] = "type";
@@ -255,14 +256,12 @@ class item {
                             
                             $folderClass = new folder($elementData['folder']);
                             
-                            $img = "../../".$folderClass->getPath()."thumbs/".$fileData['filename'];
+                            $img = "file";
 
                             //the column which normaly includes the icon needs to fill out the full width
                             $imgColumnStyle = "colspan=\"2\"";
                     }else{
-                    $img = "fileIcons/";
-                    $classFiles = new files();
-                    $img .= $classFiles->getFileIcon($fileData['type']);
+                    $img = "file";
                     //define info 1
                     $info[0] = "size";
                     $info[1] = round($fileData['size']/(1024*1024), 2)." MB";
@@ -279,9 +278,7 @@ class item {
                     $link = "openFile('$linkData[type]', '".$linkData['typeId']."', '$shortTitle')";
 
                     //define linkIcon
-                    $img = "fileIcons/";
-                    $classFiles = new files();
-                    $img .= $classFiles->getFileIcon($linkData[type]);
+                    $img = "link";
 
                     //define info 1
                     $info[0] = "type";
@@ -301,16 +298,10 @@ class item {
             $return = "<div class=\"itemThumb\">
                 <table width=\"100%\" cellspacing=\"0\">";
 
-                    //add spacer
-                    if(!empty($info[0]) || !empty($info[1])){
-            $return .= "<tr style=\"height: 10px\">
-                        <td></td>
-                    </tr>";
-                    }
              //add icon/thumbnail
              $return .= "<tr>
-                        <td style=\"min-width: 34px;\" valign=\"top\" $imgColumnStyle>
-                            <img src=\"gfx/icons/$img\"/>
+                        <td style=\"width: 35px;\" valign=\"top\" $imgColumnStyle>
+                            <i class=\"icon blue-$img\"></i>
                         </td>";
 
                     //add information

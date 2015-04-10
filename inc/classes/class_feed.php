@@ -248,7 +248,7 @@ class feed {
        $values['validity'] = $validity;
        $values['type'] = $type;
        $values['attachedItem'] = $attachedItem;
-       $values['attachedItem'] = $attachedItemId;
+       $values['attachedItemId'] = $attachedItemId;
        $values['privacy'] = $privacy;
        $db = new db();
        $id = $db->insert('feed', $values);
