@@ -1103,7 +1103,7 @@ var sec =  new function() {
         score += (variationCount - 1) * 10;
 
         return parseInt(score);
-    }
+    };
                 
     //standard password cypher used in processRegistration(), login() and updatePassword();
     this.passwordCypher = function (password, type, itemId, salt) {

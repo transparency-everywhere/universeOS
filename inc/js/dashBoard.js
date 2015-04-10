@@ -55,17 +55,17 @@ var dashBoard = new function(){
 	};
 	
 	this.slideUp = function(){
-			$('#dashGrid').animate({marginBottom: 0}, 1000, function() {
-				$('#dashBoard').removeClass('up');
-				$('#dashBoardBG').removeClass('up');
+			$('#dashGrid').animate({marginBottom: 0}, 900, function() {
+                                $('#dock #toggleDashboardButton').removeClass('white-chevron-up');
+                                $('#dock #toggleDashboardButton').addClass('white-chevron-down');
 			});
 			this.view = 'up';
 	};
 	this.slideDown = function(){
 		
-			$('#dashGrid').animate({marginBottom: -300}, 750, function() {
-				$('#dashBoard').addClass('up');
-				$('#dashBoardBG').addClass('up');
+			$('#dashGrid').animate({marginBottom: -300}, 300, function() {
+                                $('#dock #toggleDashboardButton').removeClass('white-chevron-down');
+                                $('#dock #toggleDashboardButton').addClass('white-chevron-up');
 			});
 			this.view = 'down';
 	};

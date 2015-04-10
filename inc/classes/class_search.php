@@ -157,7 +157,7 @@ class search{
                 $output .= '<ul class="list resultList">';
                 foreach($items AS $suggestData){
                     if($i<$limit){
-                        $output .= $this->buildLI(showUserPicture($suggestData['userid'], "30", NULL, TRUE), "showProfile('".$suggestData['userid']."');", $suggestData['username'], true);
+                        $output .= $this->buildLI(showUserPicture($suggestData['userid'], "30", NULL, TRUE), "User.showProfile('".$suggestData['userid']."');", $suggestData['username'], true);
 
                         $output .= $this->generateSearchResultContext('user', $suggestData['userid']);
                     
@@ -386,7 +386,7 @@ class search{
             case 'user':
                 if(proofLogin()){
                     
-                    $options[] = array('icon'=>'blue-plus', 'title'=>'Add User', 'action'=>'showProfile(\''.$item_id.'\');');
+                    $options[] = array('icon'=>'blue-plus', 'title'=>'Add User', 'action'=>'User.showProfile(\''.$item_id.'\');');
                 
                 }
                 break;
