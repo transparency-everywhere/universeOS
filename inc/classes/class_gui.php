@@ -37,7 +37,7 @@ class gui {
         echo '<li><span class="next icon white-arrow-right" onclick="player.next();"></span></li>';
         echo '<li></li>';
         echo '</ul></td>';
-        echo "                    <td align=\"right\" id=\"clockDiv\" style=\"color: #FFFFFF; float: right\"></td>\n";
+        echo "                    <td align=\"right\" style=\"color: #FFFFFF; float: right\"><a href=\"#\" id=\"clockDiv\" style=\"color: #FFFFFF; float: right\" onclick=\"calendar.show();\"></a></td>\n";
         echo "                </tr>\n";
         echo "            </table>\n";
         echo "        </div>\n";

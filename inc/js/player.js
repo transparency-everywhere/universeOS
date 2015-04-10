@@ -36,9 +36,11 @@ var player = new function(){
         this.applicationVar.create('Player', 'html', '<div id="playerFrame"></div>',{width: 5, height:  4, top: 0, left: 4, hidden: true});
         
         
+        var initHTML = '<center><span class="icon blue-play" style="width: 70px;height: 70px; margin-top:15px;"></span>';
+            initHTML += '<h1 style="margin-top:0;">Create playlists and add videos</h1></center>';
 	this.tabs = new tabs('#playerFrame');
         this.tabs.init();
-	this.tabs.addTab('Home', 'html','asd');
+	this.tabs.addTab('Home', 'html',initHTML);
     };
     this.show = function(){
         player.applicationVar.show();

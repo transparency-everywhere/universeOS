@@ -160,9 +160,11 @@ class search{
                         $output .= $this->buildLI(showUserPicture($suggestData['userid'], "30", NULL, TRUE), "showProfile('".$suggestData['userid']."');", $suggestData['username'], true);
 
                         $output .= $this->generateSearchResultContext('user', $suggestData['userid']);
+                    
                     }else{
-                        $loadAll = '<div class="loadAll" data-type="users">results '.$i.' of '.$numberOfItems.' <a href="#">show all</a></div>';
+                        $loadAll = '<div class="loadAll" data-type="users">results '.$limit.' of '.$numberOfItems.' <a href="#">show all</a></div>';
                     }
+                    $i++;
                 }
                 $output .= '</ul>';
                 break;
@@ -175,7 +177,7 @@ class search{
                     if($i<$limit){
                             $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', 'openFolder(\''.$suggestData['id'].'\');', $suggestData['name'], true, true, 'folder', $suggestData['id']);
                     }else{
-                        $loadAll = '<div class="loadAll" data-type="folder">results '.$i.' of '.$numberOfItems.' <a href="#">show all</a></div>';
+                        $loadAll = '<div class="loadAll" data-type="folder">results '.$limit.' of '.$numberOfItems.' <a href="#">show all</a></div>';
                     }
                     $i++;
                 }
@@ -190,10 +192,10 @@ class search{
                 $output .= '<ul class="list resultList">';
                 foreach($items AS $suggestData){
                     if($i<$limit){
-                            $output .= $this->buildLI('<<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', 'openElement(\''.$suggestData['id'].'\');', $suggestData['title']);
+                            $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', 'openElement(\''.$suggestData['id'].'\');', $suggestData['title']);
 
                     }else{
-                        $loadAll = '<div class="loadAll" data-type="elements">results '.$i.' of '.$numberOfItems.' <a href="#">show all</a></div>';
+                        $loadAll = '<div class="loadAll" data-type="elements">results '.$limit.' of '.$numberOfItems.' <a href="#">show all</a></div>';
                     }
                     $i++;
                 }
@@ -207,7 +209,7 @@ class search{
                     if($i<$limit){
                     $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "openFile('$suggestData[type]', '$suggestData[id]', '$suggestData[title]');", $suggestData['title']);
                     }else{
-                        $loadAll = '<div class="loadAll" data-type="files">results '.$i.' of '.$numberOfItems.' <a href="#">show all</a></div>';
+                        $loadAll = '<div class="loadAll" data-type="files">results '.$limit.' of '.$numberOfItems.' <a href="#">show all</a></div>';
                     }
                     $i++;
                 }
@@ -221,7 +223,7 @@ class search{
                     if($i<$limit){
                         $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "groups.showProfile(".$suggestData['id'].");return false",$suggestData['title']);
                     }else{
-                        $loadAll = '<div class="loadAll" data-type="groups">results '.$i.' of '.$numberOfItems.' <a href="#">show all</a></div>';
+                        $loadAll = '<div class="loadAll" data-type="groups">results '.$limit.' of '.$numberOfItems.' <a href="#">show all</a></div>';
                     }
                     $i++;
                 }
@@ -236,7 +238,7 @@ class search{
                     if($i<$limit){
                     $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "openFile('wikipedia', '".urlencode($item->Text)."', '".urlencode(substr("$item->Text", 0, 10))."');", $item->Text);
                     }else{
-                        $loadAll = '<div class="loadAll" data-type="wiki">results '.$i.' of '.$numberOfItems.' <a href="#">show all</a></div>';
+                        $loadAll = '<div class="loadAll" data-type="wiki">results '.$limit.' of '.$numberOfItems.' <a href="#">show all</a></div>';
                     }
                     $i++;
                 }
@@ -252,14 +254,14 @@ class search{
 
                         $youtubeClass = new youtube($item2->id);
                         $vId = $youtubeClass->getId();
-                        $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "openFile('youTube', '', '".urlencode(substr("$item2->title", 0, 10))."', '$vId');", substr("$item2->title", 0, 40), true);
+                        $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "openFile('youTube', '', '".urlencode(substr("$item2->title", 0, 10))."', '$vId');", substr("$item2->title", 0, 23), true);
 
 
                         $data = xml2array($item2->link);
                         $output .= $this->generateSearchResultContext('youtube', $data['@attributes']['href']);
 
                     }else{
-                        $loadAll = '<div class="loadAll" data-type="youtube">results '.$i.' of '.$numberOfItems.' <a href="#">show all</a></div>';
+                        $loadAll = '<div class="loadAll" data-type="youtube">results '.$limit.' of '.$numberOfItems.' <a href="#">show all</a></div>';
                     }
                     $i++;
                 }

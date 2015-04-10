@@ -140,7 +140,7 @@ var registration = new function(){
 
         //hide registration form, show loading wheel
             $('.registerBox div').hide();
-            jsAlert('', 'The universe is creating your keypair now, this may take some minutes..');
+            gui.alert('The universe is creating your keypair now, this may take some minutes..');
             $('.registerBox img').show();
 
 
@@ -175,7 +175,7 @@ var registration = new function(){
                                         var res = result;
                                             if(res == 1){
                                                     //load checked message
-                                                    jsAlert('','You just joined the universeOS');
+                                                    gui.alert('You just joined the universeOS');
                                                     $('.registerBox').slideUp('');
 
                                                     $('#loginUsername').val(username);
@@ -246,7 +246,7 @@ function login(){
 	                                $('#bodywrap').slideUp();
 	                                window.location.href='index.php';
 	                            }else{
-	                                jsAlert('', 'Wrong username and password combination.');
+	                                gui.alert('Wrong username and password combination.');
 	                            }
 	                            return false;
 	                       }, "html");

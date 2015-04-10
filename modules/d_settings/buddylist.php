@@ -2,23 +2,11 @@
       session_start();
   include_once("../../inc/config.php");
   include_once("../../inc/functions.php");
-    if(isset($_POST[submit])){
-        $newAlias = htmlspecialchars($_POST[alias]);
-        mysql_query("UPDATE buddylist SET alias='$newAlias' WHERE owner='$_SESSION[userid]' && buddy='$_POST[buddy]'");
-        jsAlert("worked:)");
-    }
 ?>
          <div id="content">
              
-             
          <h2>Your Buddies</h2>
 	         <?
-	         
-	            if(isset($_GET[delete])){
-	                mysql_query("DELETE FROM buddylist WHERE owner='$_SESSION[userid]' && buddy='".mysql_real_escape_string($_GET['buddy'])."' LIMIT 1");
-	                mysql_query("DELETE FROM buddylist WHERE owner='".mysql_real_escape_string($_GET['buddy'])."' && buddy='$_SESSION[userid]' LIMIT 1");
-	                jsAlert("worked :(");
-	            }
 			 echo"<ul>";
                          $buddylistData = new buddylist();
 			 $buddies = $buddylistData->buddyListArray();

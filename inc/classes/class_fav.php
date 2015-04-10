@@ -16,6 +16,7 @@ class fav {
     function select($user){
         $dbClass = new db();
         $favs = $dbClass->select('fav', array('user', $user));
+        $result = array();
         foreach($favs AS $favData) {
             //get favs from table favs and select them from the appropriate table. 
             if($favData['type'] == "folder"){

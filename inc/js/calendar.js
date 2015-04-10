@@ -95,6 +95,7 @@ var calendar = new function(){
 									html += '<li class="header" onclick="calendar.toggleTasks();">Tasks<span class="toggleTrigger icon white-chevron-down pull-right"></span><a href="#" class="pull-right" onclick="tasks.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon white-plus"></i></a></li>';
 									html += '<li style="display:none;"><input type="checkbox" id="hideDoneTasks" onclick="calendar.toggleDoneTasks();" checked>&nbsp;hide done</li>';
 								html += '</ul>';
+                                                                
 								html += '<ul id="events">';
 									html += '<li class="header">Events<span class="toggleTrigger icon white-chevron-down pull-right"></span><a href="#" class="pull-right" onclick="events.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon white-plus"></i></a></li>';
 									//events will apend to this list
@@ -104,7 +105,7 @@ var calendar = new function(){
 						html += '</div>';
 						
                                                 this.applicationVar = new application('calendarApplication');
-			  			this.applicationVar.create('Calendar', 'html', html,{width: 2, height:  2, top: 0, left: 9});
+			  			this.applicationVar.create('Calendar', 'html', html,{width: 6, height:  5, top: 0, left: 3});
 			  			
 			  			
                                                 $('#side .toggleTrigger').click(function(){
@@ -440,7 +441,7 @@ var calendar = new function(){
 						loadedDays++;
 					}
 					$('.dropdown-toggle').dropdown();//init day dropdowns
-					this.loader = setTimeout(calendar.loadEvents, 1000);
+					this.loader = setTimeout(function(){calendar.loadTasks(); calendar.loadEvents();}, 1000);
 			  };
 	
 	this.loadWeek = function(startStamp){
@@ -638,7 +639,7 @@ var calendar = new function(){
 						}
 					});
 					
-			  		$('#calendarView .button').unbind('click');
+			  		//$('#calendarView .button').unbind('click');
 			  		
 			  		$('#calendarView #month').click(function(){
 			  				calendar.loadMonth(calendar.shownTimeObject);
@@ -666,18 +667,18 @@ var calendar = new function(){
 			  	};
 	
 	this.loadMonthsIntoSide = function(date){
-			  		var d = new Date(date);
-			  		d.setMonth(0);
-			  		d.setDate(1);
-			  		d.setHours(0);
-			  		d.setMinutes(0);
-			  		d.setSeconds(0);
-			  		d.setMilliseconds(0);
-			  		
-					var monthHTML = '<li class="header">Events</header>';
-					
-					
-					for(var monthCounter=0; monthCounter < 12; monthCounter++){
+		var d = new Date(date);
+		d.setMonth(0);
+		d.setDate(1);
+		d.setHours(0);
+		d.setMinutes(0);
+		d.setSeconds(0);
+		d.setMilliseconds(0);
+		
+		var monthHTML = '<li class="header">Events</header>';
+		
+		
+		for(var monthCounter=0; monthCounter < 12; monthCounter++){
 						var monthClass = '';
 						if(monthCounter === month){
 							monthClass = 'current';
@@ -686,16 +687,15 @@ var calendar = new function(){
 						
 						d.setMonth( d.getMonth( ) + 1 );
 					}
-					
-					//apend month and trigger to load month into sidebar
-					$('#side #events').html(monthHTML);
-					
-					$('#months .header').click(function(){
+		
+		//apend month and trigger to load month into sidebar
+		$('#side #events').html(monthHTML);
+		
+		$('#months .header').click(function(){
 						$('#side #events li').not('.header').slideToggle();
 					});
 			  		
-			  		
-			  	};
+	};
 	
 	this.loadEventsIntoSide = function(date){
 			  		var d = new Date(date);
@@ -799,160 +799,151 @@ var calendar = new function(){
 var events = new function(){
 	
 	this.getData = function(eventId){
-			  		var res;
-			  		$.ajax({
-				      url:"api.php?action=getEventData",
-				      async: false,  
-					  type: "POST",
-					  data: { 
-					  	eventId : eventId
-					  	 },
-				      success:function(data) {
-				         res = $.parseJSON(data); 
-				      }
-				   });
-				   return res;
-			  	};
+            
+            return api.query('api/calendar/events/getEventData/',{eventId : eventId});
+	};
 	
-	this.create = function(startStamp, stopStamp, title, place, privacyShow, privacyEdit){
-			  		
-				    $.ajax({
-				      url:"api/item/privacy/load/",
-				      async: false,  
-					  type: "POST",
-					  data: { 
-					  	startStamp : startStamp,
-					  	stopStamp : stopStamp,
-					  	title : title,
-					  	place : place,
-					  	privacyShow : privacyShow,
-					  	privacyEdit : privacyEdit
-					  	 },
-				      success:function(data) {
-				         result = data; 
-				      }
-				   });
+	this.create = function(startStamp, stopStamp, title, place, privacy, callback){
+            var result="";
+            $.ajax({
+                url:"api/calendar/events/create/",
+                async: false,  
+                type: "POST",
+                data: $.param({startStamp : startStamp,stopStamp : stopStamp,title : title,place : place})+'&'+privacy,
+                success:function(data) {
+                   result = data;
+                   if(typeof callback === 'function'){
+                       callback(); //execute callback if var callback is function
+                   }
+                }
+            });
+            return result;
 				   
-			  	};
+	};
 	this.addForm = function(startstamp){
 			  		var d = new Date(startstamp*1000);
 			  		
 			  		var formattedDate = calendar.beautifyDate((d.getMonth())+1)+'/'+calendar.beautifyDate(d.getDate())+'/'+d.getFullYear();
 			  		
-			  		var content  = '<form id="createEvent" method="post">';
-			  				content += '<table class="formTable">';
-					  		    content += '<tr>';
-					  		    	content += '<td style="width:65px;">';
-					  		    	content += 'Title:';
-					  		    	content += '</td>';
-					  		    	content += '<td>';
-					  		    	content += '<input type="text" name="title" id="eventTitle">';
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'Place:';
-					  		    	content += '</td>';
-					  		    	content += '<td>';
-					  		    	content += '<input type="text" name="place" id="eventPlace">';
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'Day:';
-					  		    	content += '</td>';
-					  		    	content += '<td>';
-					  		    	content += '<input type="text" name="startDate" id="startDate" class="startDate datepicker" value="'+formattedDate+'" style="width: 72px;">';
-					  		    	content += '&nbsp;<input type="text" name="startTime" id="startTime" class="startTime eventTime" value="15:30" style="width: 37px;"><span class="endDate eventTime">&nbsp;to&nbsp;</span>';
-					  		    	content += '&nbsp;<input type="text" name="endTime" id="endTime" class="endTime eventTime" value="16:30" style="width: 37px;">';
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'All-Day:';
-					  		    	content += '</td>';
-					  		    	content += '<td>';
-					  		    	content += '<input type="checkbox" name="allDay" id="eventAllDay" value="true" onclick="$(\'.eventTime\').toggle();">';
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td>';
-					  		    	content += 'Privacy:';
-					  		    	content += '</td>';
-					  		    	content += '<td>';
-                                                                    content += '<div id=\'privacyField\'></div>';
-					  		    	content += '</td>';
-					  		    content += '</tr>';
-					  		    content += '<tr>';
-					  		    	content += '<td valign="top" style="padding-top: 15px;">';
-					  		    	content += 'Users:';
-					  		    	content += '</td>';
-					  		    	content += '<td style="padding-top: 15px;">';
-					  		    	content += '<div class="userSelectionInput"></div>';
-					  		    	content += '</td>';
-			  		    	content += '</table>';
-			  		    content += '</form>';
-			  		var onSubmit = function() {
-			  			$('#createEvent').submit();
-  					};
-  					
-  					//create modal
-              		modal.create('Create New Event', content, [onSubmit, 'Save']);
-              		
-              		//init datepicker in modal
-              		$('.datepicker').datepicker();
-              		
-              		$('.userSelectionInput').userSearch();
-              		
-              		
-              		$('#createEvent').submit(function(e){
-              			e.preventDefault();
-              			
-              			if($('#eventTitle').val().length > 0 && $('#startDate').val().length > 0 && $('#endTime').val().length > 0){
-              				
-	              			$.post("api.php?action=createEvent",$(this).serialize(),function(data){
-					            if(data.length === 0){
-					            	calendar.loadEvents();
-					            	calendar.loadEventsIntoSide(new Date(calendar.shownTimeObject.getFullYear(), calendar.shownTimeObject.getMonth(), 1, 0, 0, 0));
-					            	jsAlert('','The Event has been added');
-					            	$('.blueModal').slideUp();
-					            }else{
-					            	jsAlert('', data);
-					            }
-							});
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        var formModal = new gui.modal();
 
-              			}else{
-              				jsAlert('', 'You need to fill out all the fields.');
-              			}
-              			
-              			
-              			return false;
-              		});
-                        
-                        privacy.load('#privacyField', 'f//f', true);
-                        
+                                        var fieldArray = [];
+                                        var options = [];
+                                        options['headline'] = '';
+                                        options['buttonTitle'] = 'Save';
+                                        options['noButtons'] = true;
+
+                                        var field0 = [];
+                                        field0['caption'] = 'Title';
+                                        field0['required'] = true;
+                                        field0['inputName'] = 'eventTitle';
+                                        field0['type'] = 'text';
+                                        fieldArray[0] = field0;
+
+                                        var field1 = [];
+                                        field1['caption'] = 'Place';
+                                        field1['inputName'] = 'eventPlace';
+                                        field1['type'] = 'text';
+                                        fieldArray[1] = field1;
+
+
+                                        var field = "<input type='text' name='startDate' id='startDate' class='startDate datepicker' value='"+formattedDate+"' style='width: 72px;margin-right:5px;'>";
+					field += "&nbsp;<input type='text' name='startTime' id='startTime' class='startTime eventTime' value='15:30' style='width: 37px;'><span class='endDate eventTime'>&nbsp;to&nbsp;</span>";
+					field += "&nbsp;<input type='text' name='endTime' id='endTime' class='endTime eventTime' value='16:30' style='width: 37px;'>";
+					  		    	
+
+                                        var field2 = [];
+                                        field2['caption'] = 'Day';
+                                        field2['inputName'] = 'day';
+                                        field2['type'] = 'html';
+                                        field2['value'] = field;
+                                        fieldArray[2] = field2;
+
+                                        var field3 = [];
+                                        field3['caption'] = 'All-Day';
+                                        field3['type'] = 'html';
+                                        field3['value'] = "<input type='checkbox' name='allDay' id='eventAllDay' value='true' onclick='$(\'.eventTime\').toggle();'>";
+                                        fieldArray[3] = field3;
+
+                                        var field4 = [];
+                                        field4['caption'] = 'Privacy';
+                                        field4['type'] = 'privacy';
+                                        field4['value'] = 'f//f';
+                                        fieldArray[4] = field4;
+
+                                        var field5 = [];
+                                        field5['caption'] = '';
+                                        field5['type'] = 'html';
+                                        field5['value'] = "<div style='margin-top:30px'></div>";
+                                        fieldArray[5] = field5;
+
+                                        var field6 = [];
+                                        field6['caption'] = 'Users';
+                                        field6['type'] = 'html';
+                                        field6['value'] = "<div class='userSelectionInput'></div>";
+                                        fieldArray[6] = field6;
+
+                                        var modalOptions = {};
+                                        modalOptions['buttonTitle'] = 'Create Event';
+
+                                        modalOptions['action'] = function(){
+                                                if($('#eventTitle').val().length > 0 && $('#startDate').val().length > 0 && $('#endTime').val().length > 0){
+                                                        var callback = function(){
+                                                            calendar.loadEvents();
+                                                            calendar.loadEventsIntoSide(new Date(calendar.shownTimeObject.getFullYear(), calendar.shownTimeObject.getMonth(), 1, 0, 0, 0));
+                                                            gui.alert('The Event has been added');
+                                                            $('.blueModal').slideUp()
+                                                        };
+                                                        
+                                                        var startDate = $('#startDate').val();
+                                                        if($('#eventAllDay').is('checked')){
+                                                            var startDate = new Date($('#startDate').val()+"-00:00");
+                                                            var stopDate = new Date($('#startDate').val()+"-23:59");
+                                                            
+                                                            var startTime = startDate.getTime()/1000-3599;
+                                                            var stopTime = stopDate.getTime()/1000-3599;
+                                                            //$startTime = strtotime($_POST['startDate']."-00:00")-3599;
+                                                            //$stopTime = strtotime($_POST['startDate']."-23:59")-3599; //no idea why, but it works	
+                                                        }else{
+                                                            var startDate = new Date($('#startDate').val()+"-"+$('#startTime').val());
+                                                            var stopDate = new Date($('#startDate').val()+"-"+$('#endTime').val());
+                                                            
+                                                            var startTime = startDate.getTime()/1000;
+                                                            var stopTime = stopDate.getTime()/1000;
+                                                            //$startTime = strtotime($_POST['startDate']."-".$_POST['startTime']);
+                                                            //$stopTime = strtotime($_POST['startDate']."-".$_POST['endTime']);
+                                                        }
+                                                        
+                                                        events.create(startTime, stopTime, $('#createEventFormContainer #eventTitle').val(),  $('#createEventFormContainer #eventPlace').val(), $('#createEventFormContainer #privacyField :input').serialize(), callback);
+
+                                                }else{
+                                                    gui.alert('You need to fill out all the fields.');
+                                                }};
+                                        formModal.init('Create Event', '<div id="createEventFormContainer"></div>', modalOptions);
+                                        gui.createForm('#createEventFormContainer',fieldArray, options);
+                                        
+                                        
+                                        //init datepicker in modal
+                                        $('.datepicker').datepicker();
+
+                                        $('.userSelectionInput').userSearch();
+              		
 			  	};
 	
 	this.join = function(originalEventId, addToVisitors){
-			  		var result;
-				    $.ajax({
-				      url:"api.php?action=joinEvent",
-				      async: false,  
-					  type: "POST",
-					  data: { 
-					  	 originalEventId: originalEventId,
-					  	 addToVisitors: addToVisitors
-					  	 },
-				      success:function(data) {
-				      	if(data){
-				        	result = $.parseJSON(data); 
-				      	}
-				      }
-				   });
-				   
-				   return result;
+            
+            return api.query('api/calendar/events/join/',{originalEventId: originalEventId,addToVisitors: addToVisitors});
 			  		
-			  	};
+	};
 	
 	this.joinForm = function(originalEventId){
 			  		
@@ -985,8 +976,8 @@ var events = new function(){
 			  		    content += '</form>';
 			  		    
 			  		var onSubmit = function(){
-			  									events.join($('#joinEvent #originalEventId').val(), $('#joinEvent #addToVisitors').is(':checked'));
-			  									};
+                                            events.join($('#joinEvent #originalEventId').val(), $('#joinEvent #addToVisitors').is(':checked'));
+			  		};
   					//create modal
               		modal.create('Join the event "'+eventData.title+'"', content, [onSubmit, 'Save']);
 			  	};
@@ -1112,23 +1103,6 @@ var events = new function(){
 			  	};
 	
 	this.get = function(startStamp, stopStamp, privacy){
-			  		var result;
-				    $.ajax({
-				      url:"api.php?action=getEvents",
-				      async: false,  
-					  type: "POST",
-					  data: { 
-					  	 startStamp: startStamp,
-					  	 stopStamp: stopStamp,
-					  	 privacy: privacy
-					  	 },
-				      success:function(data) {
-				      	if(data){
-				        	result = $.parseJSON(data); 
-				      	}
-				      }
-				   });
-				   
-				   return result;
-			  	};
+            return api.query('api/calendar/events/getEvents/',{ startStamp: startStamp,stopStamp: stopStamp,privacy: privacy});
+	};
 };

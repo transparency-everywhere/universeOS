@@ -20,7 +20,7 @@ var tasks = new function(){
 	};
 	
 	this.addForm = function(startstamp){
-		if(typeof startstamp === undefined)
+		if(typeof startstamp !== 'undefined')
 			var d = new Date(startstamp*1000);
 		else
 			var d = new Date();
@@ -28,85 +28,87 @@ var tasks = new function(){
 		
 		var formattedDate = calendar.beautifyDate((d.getMonth())+1)+'/'+calendar.beautifyDate(d.getDate())+'/'+d.getFullYear();
 		
-		var content  = '<table class="formTable">';
-				content += '<form id="createTask" method="post">';
-		  		    content += '<tr>';
-		  		    	content += '<td>';
-		  		    	content += 'Title:';
-		  		    	content += '</td>';
-		  		    	content += '<td>';
-		  		    	content += '<input type="text" name="title" id="taskTitle">';
-		  		    	content += '</td>';
-		  		    content += '</tr>';
-		  		    content += '<tr>';
-		  		    	content += '<td>';
-		  		    	content += 'Description:';
-		  		    	content += '</td>';
-		  		    	content += '<td>';
-		  		    	content += '<textarea name="description" id="taskDescription"></textarea>';
-		  		    	content += '</td>';
-		  		    content += '</tr>';
-		  		    content += '<tr>';
-		  		    	content += '<td>';
-		  		    	content += 'Day:';
-		  		    	content += '</td>';
-		  		    	content += '<td>';
-		  		    	content += '<input type="text" name="date" id="date" class="date datepicker" value="'+formattedDate+'" style="width: 72px;">';
-		  		    	content += '&nbsp;<input type="text" name="time" id="time" class="time eventTime" value="15:30" style="width: 37px;">';
-		  		    	content += '</td>';
-		  		    content += '</tr>';
-		  		    content += '<tr>';
-		  		    	content += '<td>';
-		  		    	content += 'Status:';
-		  		    	content += '</td>';
-		  		    	content += '<td>';
-		  		    	content += '<select name="status">';
-		  		    	content += '<option value="pending">Pending</option>';
-		  		    	content += '<option value="done">Done</option>';
-		  		    	content += '</select>';
-		  		    	content += '</td>';
-		  		    content += '</tr>';
-		  		    content += '<tr>';
-		  		    	content += '<td>';
-		  		    	content += 'Privacy:';
-		  		    	content += '</td>';
-		  		    	content += '<td>';
-		  		    	content += privacy.show('f//f', true);
-		  		    	content += '</td>';
-		  		    content += '</tr>';
-		    	content += '</form>';
-		    content += '</table>';
-		var onSubmit = function() {
-			$('#createTask').submit();
-		};
-		
-		//create modal
-              modal.create('Create New Task', content, [onSubmit, 'Save']);
+                     
+                var formModal = new gui.modal();
 
+                var fieldArray = [];
+                var options = [];
+                options['headline'] = '';
+                options['buttonTitle'] = 'Save';
+                options['noButtons'] = true;
+
+                var field0 = [];
+                field0['caption'] = 'Title';
+                field0['required'] = true;
+                field0['inputName'] = 'taskTitle';
+                field0['type'] = 'text';
+                fieldArray[0] = field0;
+
+                var field1 = [];
+                field1['caption'] = 'taskDescreption';
+                field1['inputName'] = 'taskDescription';
+                field1['type'] = 'text';
+                fieldArray[1] = field1;
+
+
+                var field = "<input type='text' name='date' id='date' class='date datepicker' value='"+formattedDate+"' style='width: 72px;'>";
+		field += "&nbsp;<input type='text' name='time' id='time' class='time eventTime' value='15:30' style='width: 37px;'>";
+
+                var field2 = [];
+                field2['caption'] = 'Day';
+                field2['inputName'] = 'day';
+                field2['type'] = 'html';
+                field2['value'] = field;
+                fieldArray[2] = field2;
+                
+                var captions = ['Pending', 'Done'];
+                var type_ids = ['pending', 'done'];
+
+                var field3 = [];
+                field3['caption'] = 'Status';
+                field3['inputName'] = 'status';
+                field3['values'] = type_ids;
+                field3['captions'] = captions;
+                field3['type'] = 'dropdown';
+                fieldArray[3] = field3;
+                
+                var field4 = [];
+                field4['caption'] = 'Privacy';
+                field4['type'] = 'privacy';
+                field4['value'] = 'f//f';
+                fieldArray[4] = field4;
+                
+                var modalOptions = {};
+                modalOptions['buttonTitle'] = 'Create Task';
+
+
+
+                modalOptions['action'] = function(){
+                    //@redone
+                    if($('#taskTitle').val().length > 0 && $('#createTaskFormContainer #date').val().length > 0 && $('#createTaskFormContainer #time').val().length > 0){
+                        
+                        var startDate = new Date($('#createTaskFormContainer #date').val()+"-"+$('#createTaskFormContainer #time').val());
+                        
+                        var startTime = startDate.getTime()/1000;
+                                                            
+                        tasks.create(User.userid, startTime, $('#taskTitle').val(), $('#taskDescription').val(), $('#createTaskFormContainer #status').val(), $('#createTaskFormContainer #privacyField :input').serialize(), function(){
+                            
+                                            calendar.loadTasks();
+                                            gui.alert('The Task has been added.');
+                                            $('.blueModal').slideUp();
+                                            updateDashbox('task');
+                        });
+                    }else{
+                           gui.alert('You need to fill out all the fields.');
+                    }
+                };
+                
+                formModal.init('Create Task', '<div id="createTaskFormContainer"></div>', modalOptions);
+                gui.createForm('#createTaskFormContainer',fieldArray, options);
+                                        
+		
               //init datepicker in modal
               $('.datepicker').datepicker();
-
-              $('#createTask').submit(function(e){
-                      e.preventDefault();
-                      if($('#taskTitle').val().length > 0 && $('#date').val().length > 0 && $('#time').val().length > 0){
-                              $.post("api.php?action=createTask",$(this).serialize(),function(data){
-                                            if(data.length === 0){
-                                              calendar.loadTasks();
-                                              jsAlert('','The Task has been added.');
-                                              $('.blueModal').slideUp();
-                                              updateDashbox('task');
-                                          }else{
-                                              jsAlert('', data);
-                                          }
-                                      });
-
-                      }else{
-                              jsAlert('', 'You need to fill out all the fields.');
-                      }
-
-
-                      return false;
-              });
 	};
 	
 	this.get = function(startStamp, stopStamp, privacy){
@@ -248,24 +250,22 @@ var tasks = new function(){
                                       return false;
                               });
 	};
-	this.create = function(user, timestamp, title, description, privacy){
-		
-	    $.ajax({
-	      url:"api.php?action=createTask",
-	      async: false,  
-		  type: "POST",
-		  data: { 
-		  	user : user,
-		  	timestamp : timestamp,
-		  	title : title,
-		  	description : description,
-		  	privacy : privacy
-		  	 },
-	      success:function(data) {
-	         result = data; 
-	      }
-	   });
-	};
+	this.create = function(user, timestamp, title, description, status, privacy, callback){
+            var result="";
+            $.ajax({
+                url:'api/calendar/tasks/create/',
+                async: false,
+                type: "POST",
+                data: $.param({user : user, timestamp: timestamp, title: title, description: description, status: status})+'&'+privacy,
+                success:function(data) {
+                   result = data;
+                   if(typeof callback === 'function'){
+                       callback(); //execute callback if var callback is function
+                   }
+                }
+            });
+            return result;
+        };
 	this.markAsDone = function(id){
                 api.query('api.php?action=markTaskAsDone', {eventid : id});
                 $('.task_'+id).addClass('doneTask');

@@ -10,11 +10,11 @@ html {
 body {
 	color: #313131;
 	font:normal print, arial,sans-serif;
-	font-family: ubuntu;
+	font-family: print;
 	font-style: normal;
 	line-height: 1.333em;
 	font-weight: 200!important;
-	font-size: 14px;
+	font-size: 16px;
 	font-variant: normal;
 	margin: 0;
 	padding: 0;
@@ -851,19 +851,19 @@ span.heading {
     margin: 20px 20px 0 15px;
 }
 
-#settings #updateProfileFormContainer .userPicture{
+#settings #updateProfileFormContainer .userPicture, #settings #groupAdminFormContainer .userPicture{
     border-radius: 0!important;
     width: 140px!important;
     height: 140px!important;
     border: none!important;
 }
 
-#settings #updateProfileFormContainer tr td:first-of-type{
+#settings #updateProfileFormContainer tr td:first-of-type, #settings #groupAdminFormContainer tr td:first-of-type{
     vertical-align:top;
     padding-top: 12px;
 }
 
-#settings #updateProfileFormContainer #changePicture{
+#settings #updateProfileFormContainer #changePicture, #settings #groupAdminFormContainer #changePicture{
     margin-top: 105px;
     float:right;
     margin-bottom: 15px;
@@ -1058,10 +1058,14 @@ color: #FFF;
     padding: 15px;
 }
 
+.feedEntry .icon-comment{
+    margin-top: 5px;
+}
+
 .feedEntry .itemSettingsButton{
     position: absolute;
-    right: 35px;
-    margin-top: 4px;
+    right: 3px;
+    margin-top: 1px;
 }
 
 #feedInput{
@@ -2616,8 +2620,8 @@ del.bar{
 }
 
 .profileMainNav{
-    border-top: 1px solid red;
-    border-bottom: 1px solid red;
+    border-top: 1px solid #dcdcdc;
+    border-bottom: 1px solid #dcdcdc;
     height: 43px;
     margin:0;
 }
@@ -2626,8 +2630,10 @@ del.bar{
    float: left;
     background-color: #eceff1;
     width: 22%;
-    height: 40px;
-    line-height: 40px;
+    
+   height: 41px;
+    
+   line-height: 41px;
     padding: 0 10px;
     margin-right:1px;
     cursor:pointer;
@@ -2670,7 +2676,9 @@ del.bar{
 .profileMain .profile_tab li>div, .grayList li>div{
     background-color: #eceff1;
     margin:10px;
-    height: 75px;
+    margin-left: 0;
+    min-height: 35px;
+    max-height: 75px;
     position: relative;
 }
 
@@ -3135,7 +3143,7 @@ margin-bottom: 3px;
 	}
         
         .dashBox footer .white-plus{
-            margin-bottom: -10px;
+            margin-bottom: 0px!important;
         }
 	
 	.dashBox > div, .dashBox > ul {
@@ -3196,6 +3204,9 @@ margin-bottom: 3px;
 	
                 #dashBoard .appList{
                     border-right: none;
+                }
+                #dashBoard .appList li{
+                    background: #00bcd4;
                 }
             
                 #dashBoard li{

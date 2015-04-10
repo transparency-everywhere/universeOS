@@ -251,13 +251,12 @@ var elements = new function(){
         
         modalOptions['action'] = function(){
             var callback = function(){
-                jsAlert('', 'The element has been added');
+                gui.alert('The element has been added');
                 $('.blueModal').remove();
                 filesystem.tabs.updateTabContent(1 , filesystem.generateFullFileBrowser(parent_folder));
             };
             elements.create(parent_folder, $('#createElementFormContainer #title').val(), $('#createElementFormContainer #type').val(),  $('#createElementFormContainer #privacyField :input').serialize(),callback);
         };
-        privacy.load('#privacyField', '', true);
         formModal.init('Create Element', '<div id="createElementFormContainer"></div>', modalOptions);
         gui.createForm('#createElementFormContainer',fieldArray, options);
     };
@@ -323,7 +322,7 @@ var elements = new function(){
         
         modalOptions['action'] = function(){
             var callback = function(){
-                jsAlert('', 'The element has been updated');
+                gui.alert('The element has been updated');
                 $('.blueModal').remove();
                 filesystem.tabs.updateTabContent(1 , filesystem.generateFullFileBrowser(elementData.folder));
             };

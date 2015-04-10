@@ -49,6 +49,23 @@ class groups{
             return $members;
         }
         
+        
+        public function updateGroupPicture($groupId, $fileArray){
+            $groupData = $this->getGroupData($groupId);
+            $fileClass = new files();
+            $fileId = $fileClass->addFile($fileArray, $groupData['groupPictureElement'], $groupData['homeFolder'], 'p', $groupId);
+
+            $file = new file($fileId);
+            $fileData = $file->getFileData();
+
+            $db = new db();
+            $db->update('groups', array('groupPicture'=>$fileData['filename']), array('id',$groupId));
+
+            echo '<script>';
+            echo 'parent.settings.showUpdateProfileForm();';
+            echo '</script>';
+        }
+        
         public function getOpenRequests($userid=NULL){
             if(empty($userid))
                     $userid = getUser();
@@ -143,6 +160,24 @@ class groups{
                     $data = $db->select('groups', array('id', $groupId), array('title'));
                     return $data['title'];
                 }
+                
+          
+        function getPicture($groupId){
+
+                $groupData = $this->getGroupData($groupId);
+
+                //check if user is standard user
+                if(empty($groupData['groupPicture'])){
+                        $src = universeBasePath.'/gfx/standardusersm.png';
+                }else{
+                        $src = universeBasePath.'/upload/groupFiles/'.$groupId.'/'.$groupData['groupPicture'];
+                }
+                $mime = mime_content_type($src);
+
+                $file = fopen($src, 'r');
+                $output = base64_encode(fread($file, filesize($src)));
+                return 'data:'.$mime.';base64,'.$output;
+        }
 
         function countGroupMembers($groupId){
                 $total = mysql_query("SELECT COUNT(*) FROM `groupAttachments` WHERE `group`='$groupId' AND `item`='user' AND `validated`='1' "); 
@@ -151,7 +186,6 @@ class groups{
             }
 
         function createGroup($title, $privacy, $description, $users){
-
 
                     $userid = getUser();
 
@@ -178,13 +212,29 @@ class groups{
                         }}
                         $folderCLass = new folder();
                         $groupFolder = $folderCLass->create("3", $groupId, $userid, "$groupId//$groupId");
+                        
+                        //create thumb folders || NOT LISTED IN DB!
+                        $path3 = universeBasePath."//upload//groupFiles//$groupId//thumb";
+                        $path4 = universeBasePath."//upload//groupFiles//$groupId//thumb//25";
+                        $path5 = universeBasePath."//upload//groupFiles//$groupId//thumb//40";
+                        $path6 = universeBasePath."//upload//groupFiles//$groupId//thumb//300";
+                        mkdir($path3);  //Creates Thumbnail Folder
+                        mkdir($path4); //Creates Thumbnail Folder
+                        mkdir($path5); //Creates Thumbnail Folder
+                        mkdir($path6); //Creates Thumbnail Folder
+                        
+                        
                         $element = new element();
-                        $groupElement = $element->create($groupFolder, $title, "other", $userid,  "$groupId//$groupId");
+                        $groupElement = $element->create($groupFolder, "groupElement", "groupElement", $userid,  "$groupId//$groupId");
+                        
+                        //picture element
+                        $groupPictureElement = $element->create($groupFolder, "groupPicture", "groupPicture", $userid,  "$groupId//$groupId");
                         
                         unset($values);
                         $values['homeFolder'] = $groupFolder;
                         $values['homeElement'] = $groupElement;
-                        $db->update('groups', $values);
+                        $values['groupPictureElement'] = $groupPictureElement;
+                        $db->update('groups', $values, array('id', $groupId));
                         
                                 //add user which added group to group and validate
                                 unset($values);

@@ -546,7 +546,7 @@ switch($action){
 //events
 	case 'createEvent':
 		
-		
+		//@del
 		if($_POST['allDay'] == "true"){
 		
 			$startTime = strtotime($_POST['startDate']."-00:00")-3599;
@@ -591,16 +591,19 @@ switch($action){
 		echo $_POST['allDay'];
 		break;
 	case 'joinEvent':
+            //@old
 		$events = new events();
 		$events->joinEvent($_POST['originalEventId'], getUser(), $_POST['addToVisitors']);
 		break;
 	case 'getEvents':
+            //@old
 		
 		$events = new events();
 		echo json_encode($events->get(getUser(), $_POST['startStamp'], $_POST['stopStamp'], $_POST['privacy']));
 		
 		break;
 	case 'getEventData':
+            //@old
 		
 		
 		$events = new events();

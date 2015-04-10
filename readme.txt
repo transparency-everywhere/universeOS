@@ -20,31 +20,20 @@ Update
 
 
 todo
-    update handlers
-        groups
-            dashboard
-            settings
-                groups
-                groupadmin
-            profile
-        
-        playlists
+    group admin
 
-        buddylist
-            add user
-            remove user
+    forms
+        events.addForm
+        events.updateForm (?)
 
-        calendar
-            updateDay
-            updateTasks
-            updateEvents
-
+        shortcuts.create
+        shortcuts.update
+        shortcuts.verifyRemoval
 
     all onclick to bind(?)
 
     group profile button feedback
         button feedback
-
 
     fix raster
 
@@ -54,8 +43,6 @@ todo
 
     pabst rightclick .rightclick, data-type data-typeId
 
-    comments auflösen, alle comments werden feeds :/
-
     add type xml and json to openlink
 
     registration
@@ -63,10 +50,6 @@ todo
 
     group admin
         change group picture
-
-        members
-
-        showprivacy active class groups
 
 Recent:                                                         Release Message
 

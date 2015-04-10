@@ -1,67 +1,54 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of newPHPClass
- *
- * @author niczem
- */
-class playlists {
+//This file is published by transparency-everywhere with the best deeds.
+//Check transparency-everywhere.com for further information.
+//Licensed under the CC License, Version 4.0 (the "License");
+//you may not use this file except in compliance with the License.
+//You may obtain a copy of the License at
+//
+//https://creativecommons.org/licenses/by/4.0/legalcode
+//
+//Unless required by applicable law or agreed to in writing, software
+//distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//See the License for the specific language governing permissions and
+//limitations under the License.
+//
+//@author nicZem for Tranpanrency-everywhere.com
+class playlist{
     
-        public $id;
+    public $id;
 
-        function __construct($id=NULL){
-            if($id != NULL){
-                $this->id = $id;
-            }
-
-        }
-        
-        function createPlaylist($title, $privacy, $user=null){
-            if(empty($user)){
-                $user = getUser();
-            }
-            
-            $values['user'] = $user;
-            $values['title'] = $title;
-            $values['privacy'] = $privacy;
-            
-            $db = new db();
-            return $db->insert('playlist', $values);
-        }
+    function __construct($id=NULL){
+        $this->setId($id);
+    }
     
-	function getPlaylists($userid=NULL){
-            $playlists;
-            if(empty($userid))
-                    $userid = getUser();
-            $db = new db();
-            $playlists = $db->shiftResult($db->select('playlists', array('user', $userid)),'id');
-            
-            foreach($playlists AS $data){
-                    $playlists[] = $data['id'];
-            }
-            return $playlists;
-	}
-        
-        function select(){
-            $db = new db();
-            return $db->select('playlist', array('id', $this->id));
+    function setId($id=NULL){
+        if($id != NULL){
+            $this->id = $id;
         }
+    }
+    function getGroupPlaylistArray($type='show', $group_id=NULL){
+        $query = "(INSTR(`privacy`, '{$group_id}') > 0)";
         
-	function getPlaylistTitle($playlistId=NULL){
-            if(empty($playlistId))
-                $playlistId = $this->id;
-                $db = new db();
-		$data = $db->select('playlist', array('id', $playlistId), array('title'));
-		return $data['title'];
-	}
+        
+        $db = new db();
+        $result = $db->shiftResult($db->query('SELECT `id`, `title`, `privacy`, `user` FROM `playlists` WHERE '.$query), 'id');
+        $ids = array();
+        $titles[] = array();
+        foreach($result AS $playListsData){
+            if(authorize($playListsData['privacy'], $type, $playListsData['user'])){
+	            $ids[] = $playListsData['id'];
+	            $titles[] = $playListsData['title'];
+            }
+        }
+			
+	$return['ids'] = $ids;
+	$return['titles'] = $titles;
 	
-	function getUserPlaylistArray($userId=null, $type='show'){
+	return $return;
+    }
+    function getUserPlaylistArray($type='show', $userId=NULL){
 		if($userId == null){
 			$userId = getUser();
 		}
@@ -71,14 +58,14 @@ class playlists {
                 
                 
 		//get all the groups in which the current user is
-        foreach($userGroupsQuery AS $userGroupsData){
-            $userGroups[] = $userGroupsData['group'];
-        }
-        
-        //add them to the query
-        foreach($userGroups AS &$userGroup){
-                $query = "$query OR (INSTR(`privacy`, '{$userGroup}') > 0)";
-        }
+                foreach($userGroupsQuery AS $userGroupsData){
+                    $userGroups[] = $userGroupsData['group'];
+                }
+
+                //add them to the query
+                foreach($userGroups AS &$userGroup){
+                        $query = "$query OR (INSTR(`privacy`, '{$userGroup}') > 0)";
+                }
 		
 		$buddylistClass = new buddylist();
 			//get playlists from friends
@@ -87,7 +74,7 @@ class playlists {
                 $query .= "OR (INSTR(`user`, '{$buddies}') > 0)";
         
             //get playlists for user and groups
-            $playListsSql = mysql_query("SELECT id, title, privacy, user FROM playlist WHERE user='".getUser()."' $query");
+            $playListsSql = mysql_query("SELECT id, title, privacy, user FROM playlists WHERE user='".getUser()."' $query");
             while($playListsData = mysql_fetch_array($playListsSql)){
                 if(authorize($playListsData['privacy'], $type, $playListsData['user'])){
 	                $ids[] = $playListsData['id'];
@@ -101,110 +88,105 @@ class playlists {
 			return $return;
         
 		
-	}
-	
-	function showPlaylist($id, $query=NULL){
-		if(!empty($id))
-			$query = "id='$id'";
-		
-        $playListSql = mysql_query("SELECT * FROM playlist WHERE $query");
-        $playListData = mysql_fetch_array($playListSql);
-		?>
-		<table cellspacing="0" width="100%">                
-                            <?php
-                            $i = 0;
-                            $query = commaToOr("$playListData[folders]", "id");
-                            $playListFolderSql = mysql_query("SELECT * FROM folders WHERE $query");
-                            while($playListFolderData = mysql_fetch_array($playListFolderSql)){
-
-                            if(checkAuthorisation(folder, $playListFolderData['id'])){;
-                            ?>
-                                    <tr class="strippedRow">
-                                        <td><img src="./modules/filesystem/icons/folder.png" width="30px"></td>
-                                        <td>&nbsp;<?=$playListFolderData['name']?></td>
-                                    </tr>
-
-                            <?php 
-                            $i++;
-
-                            }}
-                            $query = commaToOr($playListData['elements'], "id");
-                            $playListFolderSql = mysql_query("SELECT id, title FROM elements WHERE $query");
-                            while($playListFolderData = mysql_fetch_array($playListFolderSql)){
-
-                            if(checkAuthorisation($playListFolderData['privacy'])){   
-                            ?>
-
-                                    <tr class="strippedRow">
-                                        <td><img src="./modules/filesystem/icons/file.png" width="30px"></td>
-                                        <td>&nbsp;e_<?=$playListFolderData['title']?></td>
-                                    </tr>
-                        <?php 
-                            $i++;
-
-                            }}
-                            $query = commaToOr("$playListData[files]", "id");    
-                            $playListFolderSql = mysql_query("SELECT * FROM files WHERE $query");
-                            while($playListFolderData = mysql_fetch_array($playListFolderSql)){
-
-                            if(checkAuthorisation($playListFolderData['privacy'])){
-                            if($delete){
-                                $deleteRow = "<td><a href=\"doit.php?action=deleteFromPlaylist&playlist=$playListId&type=file&itemId=".$playListFolderData['id']."\" target=\"submitter\"><i class=\"icon icon-minus\"></i></a></td>";
-                            }
-                            ?>
-                                    <tr class="strippedRow playListfileNo<?=$playListFolderData['id'];?>">
-                                        <td><img src="./modules/filesystem/icons/file.png" width="30px"></td>
-                                        <td>&nbsp;<?=$playListFolderData['title']?></td>
-                                        <?=$deleteRow;?>
-                                    </tr>
-                            <?php
-                            $i++; }}
-                            $query = commaToOr($playListData['links'], "id");
-                            $playListFolderSql = mysql_query("SELECT * FROM links WHERE $query");
-                            while($playListFolderData = mysql_fetch_array($playListFolderSql)){
-
-                            if(checkAuthorisation($playListFolderData['privacy'])){    
-                                if($playListLinkData['type'] == "youTube"){
-
-                                }
-                            if($delete){
-                                $deleteRow = "<td><a href=\"doit.php?action=deleteFromPlaylist&playlist=$playListId&type=link&itemId=".$playListFolderData['id']."\" target=\"submitter\"><i class=\"icon icon-minus\"></i></a></td>";
-                            }
-
-                            ?>
-
-                                    <tr class="strippedRow playListlinkNo<?=$playListFolderData['id'];?>">
-                                        <td><img src="./gfx/icons/fileIcons/youTube.png" width="20px" style="margin: 5px;"></td>
-                                        <td>&nbsp;<a href="javascript: nextPlaylistItem('<?=$playListData['id'];?>', '<?=$i;?>')"><?=$playListFolderData['title']?></a></td>
-                                        <?=$deleteRow;?>
-                                    </tr>
-                        <?php
-                            $i++; }}
-                            $videos = explode(";", $playListData['youTube'], -1);
-                            foreach($videos as &$vId){
-                            if($delete){
-                                $deleteRow = "<td><a href=\"doit.php?action=deleteFromPlaylist&playlist=$playListId&type=youTube&itemId=$vId\" target=\"submitter\"><i class=\"icon icon-minus\"></i></a></td>";
-                            }
-                            ?>
-                                    <tr class="strippedRow playListyouTubeNo<?=$vId;?> tooltipper" onmouseover="mousePop('youTube', '<?=$vId;?>', '');" onmouseout="$('.mousePop').hide();">
-                                        <td><img src="./gfx/icons/fileIcons/youTube.png" width="20px" style="margin: 5px;"></td>
-                                        <td>&nbsp;<a href="javascript: nextPlaylistItem('<?=$playListData['id'];?>', '<?=$i;?>')">Youtube Video</a></td>
-                                        <?=$deleteRow;?>
-                                    </tr>
-                            <?php
-                            $i++;
-
-                            }?>
-                                </table>
-		<?php
-	}
-	
-	function update($title, $privacy){
-            $values['title'] = $title;
-            $values['privacy'] = $privacy;
-            
-            $db = new db();
-            return $db->update('playlist', $values, array('id', $this->id));
+    }
+    function select(){
+        $db = new db();
+        return $db->select('playlists', array('id', $this->id));
+    }
+    function getPlaylistTitle($playlistId=NULL){
+               if(empty($playlistId))
+                   $playlistId = $this->id;
+                   $db = new db();
+            $data = $db->select('playlists', array('id', $playlistId), array('title'));
+            return $data['title'];
+    }
+    
+    public function create($options){
+       $title = $options['title'];
+       $element = $options['element'];
+       $privacy = $options['privacy'];
+       if(empty($options['items'])){
+            $items = array();
+       }else{
+            $items = $options['items'];
+       }
+       
+       
+       echo '...creating file';
+       $files = new files();
+       $file_id = $files->createFile($element, $title, $title.'.json', '', $privacy);
+       echo 'file created...';
+       
+       $values['title'] = $title;
+       $values['file_id'] = $file_id;
+       $values['user'] = getUser();
+       $values['privacy'] = $privacy;
+       
+       $db = new db();
+       $db->insert('playlists', $values);
+       
+       $playlist_content = json_encode(array('info'=>$values, 'items'=>$items));
+       
+       $files->updateFileContent($file_id, $playlist_content);
+       
+       
+       
+       
+    }
+    
+    
+    public function pushItem($item){
+        
+        $playlistData = $this->select();
+        $fileClass = new file($playlistData['file_id']);
+        $playlistObject = json_decode($fileClass->read());
+        
+        $item['order_id'] = count($playlistObject->items);
+        
+        $playlistObject->items[] = $item;
+        
+        $fileClass->overwrite(json_encode($playlistObject));
+        
+    }
+    
+    //removes item from playlist
+    //@param order_id order_id of the item that shall be deleted
+    public function removeItem($order_id){
+        
+        $playlistData = $this->select();
+        $fileClass = new file($playlistData['file_id']);
+        $playlistObject = json_decode($fileClass->read());
+        
+        $items = $playlistObject->items;
+        
+        //get array element with order_id = $order_id
+        foreach($items AS $key=>$item){
+            if($item->order_id == $order_id){
+                
+                //key of the element that needs to be deleted
+                $key_to_delete = $key;
+            }
         }
-	
+        
+        echo $key_to_delete;
+        
+        //delete element from array
+        unset($items[$key_to_delete]);
+        
+        //resort array
+        rsort($items);
+        
+        //resort order_ids and push item to final result
+        foreach($items AS $key=>$item){
+            $item->order_id = $key;
+            $result[] = $item;
+        }
+        
+        
+        $playlistObject->items = $result;
+        
+        
+        $fileClass->overwrite(json_encode($playlistObject));
+    }
+    
 }

@@ -59,21 +59,21 @@ var groups = new function(){
             
         };
         
-        this.generateUserList = function(group_id){
+        this.generateMemberList = function(group_id){
+            var groupData = this.getData(group_id);
             var usersInGroup = this.getUsers(group_id);
+            var listItems = [];
+            var buttons = '';
             $.each(usersInGroup, function(index, value){
-//                var adminButton = '';
-//                if(groupdata.isAdmin){
-//                    adminButton = '<a href="#" class="button" onclick="settings.showGroupAdminForm('+value+'); return false">Admin</a>';
-//                }
-                listItems.push({'text':'<div onclick="User.showProfile('+value+')"><span class="icon icon-group"></span><span class="username" style="font-size:18px; padding-top: 5px;">'+useridToUsername(value)+'</span>', 'buttons':'<a href="#" class="button" onclick="groups.leave(\''+value+'\'); return false">Leave</a>'});
+                if(groupData.isAdmin)
+                    buttons = "<a href='#' class='button' onclick='groups.removeUser(\""+group_id+"\",\""+value+"\"); return false' style='position: absolute;right: 10px;margin-top: -45px;'>Remove User</a>";
+                listItems.push({
+                    'text':"<div onclick='User.showProfile("+value+")'><span class='icon blue-user' style='display:inline-block;height: 25px;width: 25px;margin-bottom: -6px;margin-left: 3px;'></span><span class='username' style='font-size:18px; padding-top: 5px; display:inline-block;height: 25px;margin-top: 5px;'>"+useridToUsername(value)+"</span></div>",
+                    'buttons':buttons});
             });
             return gui.generateGrayList(listItems);
         };
         
-        this.getPlaylists = function(group_id){
-            
-        };
         this.generateProfile = function(group_id){
             var groupdata = this.getData(group_id);
             var buttons='',buttonText = '', buttonClass = '', buttonAction = '', adminButton = '', onClick = '';
@@ -139,17 +139,18 @@ var groups = new function(){
                                 output += '<li data-type="members">Members</li>';
                             output += '</ul>';
                             output += '<div class="content">';
-
-                                output += '<div class="profile_tab favorites_tab">';
-                                    output += fav.show(1);
-                                output += '</div>';
+                                
                                 output += '<div class="profile_tab files_tab">'+filesystem.showFileBrowser(groupdata['homeFolder'])+'</div>';
                                 output += '<div class="profile_tab playlists_tab">';
-
+                                    var groupPlaylists = playlists.getGroupPlaylists(group_id);
+                                    $.each(groupPlaylists['ids'], function(index, id){
+                                        
+                                    });
                                 output += '</div>';
 
 
                                 output += '<div class="profile_tab activity_tab" style="display:block"></div>';
+                                output += '<div class="profile_tab members_tab">'+groups.generateMemberList(group_id)+'</div>';
 
 
 
@@ -222,10 +223,7 @@ var groups = new function(){
         this.update = function(groupId, title, description, type, membersInvite){
             
             callback = function(){
-              gui.alert('The group has been updated'); 
-              if($('#updateGroupFormContainer')){
-                  groups.showUpdateGroupForm(groupId);
-              };
+              gui.alert('The group has been updated');
             };
             api.query('api/groups/update/', { group_id : groupId, title: title, description: description, type: type, members_invite: membersInvite },callback);
         };
@@ -249,14 +247,17 @@ var groups = new function(){
             api.query('api/groups/removeFromAdmins/', { group_id : groupId, user_id: userId },callback);
             
         };
+        this.removeUser = function(groupId, userId){
+            alert('not implemented yet!');
+        };
         this.getUsers = function(groupId){
             
             return api.query('api/groups/getUsers/', { group_id : groupId });
         
         };
         this.showPicture = function(group_id){
-            
-            return "<div class=\"userPicture userPicture_2\" style=\"background: url('data:image\/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAjCAYAAAAe2bNZAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAABipJREFUeNrMWEuIHFUUve\/Vq6qe7ulvejLG+IkMBhfibCISmaBoRMgyG0lExA9kJUYXom4Cuo4oghj8bASFRBFEN0EDulGiWYgbPxCN0UkmM5Ppme7qrs+r9zy3ujsxk2SsDiakhuqurnqv7rnn3nfufSOstXS9HJKuo0M9eujnkSYYMFkrehRpwmnJc+UmT8mtjiBXG\/tdLzG\/usKSNYZSjBWjgLkSDziwHF7liPGS58z4rtwuASbR1o0ScxyAtbgSZkadwMzAKDXGvRdLvvM0fk+BkYyBgi93j\/uFvYud6KUgTD4nMTIYm58OvNxzZHFd2T3kK7FjbrlHnSglAzDZYyFofdm7s1l2P44TvS1K7ffOCIAUxzYXlgGYDfXiuzo1O46f6ZAD48gXkvI84pOLXbDm+tWi+858O7zHGBGJnICUq5ycYDhH5IORNrtOt3rkcJJgavovZ7JQKUHLQczPpz0l7kNID+cGY1OdO0quK55oBSGAGZJCkk4vDjEbFhjd6cVU8JyHlLSH8yqZipLcYDgl7ko0A7Fk0vSyoPkjBdA4MVNhbHLnsbKUW4FLcZKWU5Mt7P+cxdFLEtE0Jr\/CK30ZDy9xwMHUjjCYjBCKRig3yuRcTTi6eG9EgnLTDhiJGEFs1AiFEupuT8DCHSOU1nkS+cufSnOupsFxDOfDI4z\/HT6MoMBiEGEwlCNkn+J8eYS8+XoNMYdYyiylhjqkemEveyxAp+\/65xKCgV0ihD\/g5hF8P5ADy5\/Il29Wo2N9Yo3g90ewLXE9tKPmF+YyFXWVS41KlZLB6vK8AvmeB71IB2LWn4S\/F\/BxNEO\/pkTSfsxaGSoh+5imhrTuZddxnFCnG0AYJa77NpTMCovIEPbCDvXQqGTqqhMKQweAfADz+iHM+BTHrE2fx8\/X12DlCEa+NQyDMRrlQVIUhaj4IQkWRegP32OfpLQXtxBSOuQ4NgPDkh\/FmgooQDoxAJlkYSwUXEID9QaG18HSPrmq8IC9WSmc3WBSx3FMCoU00TFZjENpoIQdBwhjOT9NvraTwyJlP77nGyqwhheIrDbRQckyaNIszBwCZg\/XB+MknuOxcRzBnkYKyHMtxv\/YAwsUR8PRumWiWnxVZrHXZJFXGhLBoJqVsRlHUiNOEhqmQF4pywUm87rfz25tlItvbmhWjiZa72x3wyyNmBH2OYpi1CO95ebJ2rf1SvE53NrMOHTGms2hM2sciWaPzURpzN8+US8\/ibBs60ax3+r0aCXooRl3ETvTlzVLWZM1u7BMYaI310pjr21cX9mnHOenpXb3Czj0VdCLj+F9xlEyHxj2AH5w4m26sVl9rDRWeBxJOrXUDmi5E1IPS9KFVRexYCCZx2KoZGi40FwttNq0sNSm0phb9T13plwszJTGx6hU8I5g\/mdLK8FHwHRmtY6J6Vc+zF7oKsWdHLNx6w3N2l6wscvodHKhFVALLHA+eBjDydgX6svTPkxUDWZZt+QAfK1cpGppjKSSJ1c64XunF1v7sdXpmEEzkIHJehSgnGzUnm1US\/t6UVyfX+oQ5wSvGFCNJd\/XDJY9MULC93OqX2p05oWl6niRJmrjqKHyx9kzS49gEfwiYUgNe49mvfx2pVTYc+LUPC21e+SjNy64Kktc1gNO4gv0dcRVKKB0HocWxlorQRbGjetr0xO18penF5fvBeiTquh7LMO7ce757cQsxWgrx3w3A6i1pqtxcKi5of977izVK6WbEKodSOwDKoCyAtV0u9NBX2u4iUZepnQ1\/x1g0340fDDfDbrUMYI5I7VzIqH3T5goQlyL2HFZ3kQLuiYHA+jAnBI2fuo2h9T9E6g9lloHjmskFFbVNfy\/RGQYCNEzt7vh3XVJ6q\/Q1rY0nNLUuDwapnYD+KrwXgxj\/NUN9hWH5eLfKFrQRkPLZUWzFU9MnerZGrYqFHRT+0HTp0+gD2Usngru+fheNxBF5mqSWxy6sIfk5eUOnhWpb2COjawqM7xljQfPeI5Gji7COd72riA7gnZCAbwNmKUEmvNHG7Fz+t2ngxkOp9DgRUxKY2DYrALDYJvUZzHBuTAwLFelBj87OyApxULq4mYKMLzXy17ERv4RYACDOhC2dc0EDgAAAABJRU5ErkJggg=='); border-color: red; width: 20px;height:  20px;background-size: 100%;border-radius:10px\"><\/div>";
+            var pic = api.query('api/groups/getPicture/',{group_id: group_id});
+            return "<div class=\"userPicture\" style=\"background: url('"+pic+"'); border-color: red; width: 20px;height:  20px;background-size: 100%;border-radius:10px\"><\/div>";
 
         };
         
@@ -384,7 +385,7 @@ var groups = new function(){
 
             modalOptions['action'] = function(){
                 var callback = function(){
-                    jsAlert('', 'The group has been updated');
+                    gui.alert('', 'The group has been updated');
                     $('.blueModal').remove();
                 };
                 
@@ -463,8 +464,9 @@ var groups = new function(){
                         gui.alert('The group could not be created', 'Create Group');
                     }else{
                         
-                        jsAlert('', 'The group has been created');
+                        gui.alert( 'The group has been created');
                         $('.blueModal').remove();
+                        groups.updateGUI();
                     }
                 };
                 var invitedUsers = [];
@@ -495,6 +497,8 @@ var groups = new function(){
             alert('needs to be written');
         };
 	
+        
+        
 };
 
         
