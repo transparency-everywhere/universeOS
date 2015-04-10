@@ -714,6 +714,47 @@ li.notHidden{
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#f2f2f2',GradientType=0 ); /* IE6-9 */
 }
 
+span.icons {
+    display: inline-block;
+    min-width: 21px
+}
+
+span.title {
+    display: inline-block;
+    width: 35%;
+    
+}
+
+span.date {
+    display: inline-block;
+    width: 15%;
+    
+}
+
+span.size {
+    display: inline-block;
+    width: 15%;
+    
+}
+
+span.buttons {
+    display: inline-block;
+    float: right;
+    width: 30%;
+    
+}
+
+span.heading {
+    display: block;
+    clear: both;
+    margin: 10px 0 10px 0;
+    color:  #00bcd4;
+    font-size: 20px;
+    font-weight: 300;
+    text-align: left;
+}
+
+
 .pepperSteakButton{
     height: 35px;
 }

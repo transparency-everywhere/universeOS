@@ -441,6 +441,9 @@ var filesystem =  new function() {
     icons['chev_down'] = 'chevron-down';
     icons['chev_left'] = 'chevron-left';
     icons['chev_right'] = 'chevron-right';
+    icons['small_symbols'] = 'small-symbols';
+    icons['large_symbols'] = 'large-symbols';
+    icons['list'] = 'list';
     
     //files
     icons['undefined'] = 'archive';
