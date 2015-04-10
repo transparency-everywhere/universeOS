@@ -10,6 +10,10 @@ Update
         public: public->1
                 not publ->0
 
+        +groupPictureElement
+        +groupPucture (varchar 255)
+
+
 
     add table playlists/Delete Table 'playlist'
 
@@ -141,6 +145,10 @@ Components
     Filesystem
         Open Files and Links
             
+
+session_storage
+    config
+        proofLogin
         
 		
 Files and the use of them
