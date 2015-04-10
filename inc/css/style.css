@@ -810,19 +810,19 @@ li.notHidden{
     margin: 20px 20px 0 15px;
 }
 
-#settings #updateProfileFormContainer .userPicture{
+#settings #updateProfileFormContainer .userPicture, #settings #groupAdminFormContainer .userPicture{
     border-radius: 0!important;
     width: 140px!important;
     height: 140px!important;
     border: none!important;
 }
 
-#settings #updateProfileFormContainer tr td:first-of-type{
+#settings #updateProfileFormContainer tr td:first-of-type, #settings #groupAdminFormContainer tr td:first-of-type{
     vertical-align:top;
     padding-top: 12px;
 }
 
-#settings #updateProfileFormContainer #changePicture{
+#settings #updateProfileFormContainer #changePicture, #settings #groupAdminFormContainer #changePicture{
     margin-top: 105px;
     float:right;
     margin-bottom: 15px;
@@ -2579,8 +2579,8 @@ del.bar{
 }
 
 .profileMainNav{
-    border-top: 1px solid red;
-    border-bottom: 1px solid red;
+    border-top: 1px solid #dcdcdc;
+    border-bottom: 1px solid #dcdcdc;
     height: 43px;
     margin:0;
 }
@@ -2589,8 +2589,10 @@ del.bar{
    float: left;
     background-color: #eceff1;
     width: 22%;
-    height: 40px;
-    line-height: 40px;
+    
+   height: 41px;
+    
+   line-height: 41px;
     padding: 0 10px;
     margin-right:1px;
     cursor:pointer;
@@ -2633,6 +2635,7 @@ del.bar{
 .profileMain .profile_tab li>div, .grayList li>div{
     background-color: #eceff1;
     margin:10px;
+    margin-left: 0;
     min-height: 35px;
     max-height: 75px;
     position: relative;
@@ -3160,6 +3163,9 @@ margin-bottom: 3px;
 	
                 #dashBoard .appList{
                     border-right: none;
+                }
+                #dashBoard .appList li{
+                    background: #00bcd4;
                 }
             
                 #dashBoard li{

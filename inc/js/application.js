@@ -19,8 +19,6 @@ var applications = new function(){
         
         var apps = [];
         
-        var standardIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAARNJREFUWMNjYBgFo2AUkAdEgTgTiKcC8RQgTgdiYXpYzAjEeUD8DYhfAfE2KH4DxJ+BOJXWDigD4t9AnA/ErEjibFC5v0CcTSvLVaCWJ+NRAwqdH0AsRwsHtALxVWg04ALMQHwPiGtp4YCdQDyZCHUxQBxECwccgYbCgAGQA1oGyvJIIP4IzWpviMB3gTiUWpazAPEXIJ4GjV9i8Eyog5mo4QAeIP4PxDZY5OyA2BqLuANUDwctHWAAFQdhrYFwgBIQ/wLin1gKHro4AAQWAvGcgYoCEDgMxPsG0gHrgHj1QDoAF6CJA+xI0OMM1cNOrUbIDWhNuIFIfB2IL1GzKJYH4k4gnkEk7gBi2dGW6ygYBcQAAHKhV6RVQmrvAAAAAElFTkSuQmCC';
-        
         //reader
         var app = [];
         app['title'] = 'reader';
@@ -28,7 +26,7 @@ var applications = new function(){
         app['className'] = 'reader'; // name of the the javascript class object
         app['active'] = true;
         app['position'] = {width: 5, height:  4, top: 0, left: 4, hidden: true};
-        app['icon'] = standardIcon;
+        app['icon'] = 'gfx/applicationIcons/white/reader.svg';
         apps[0] = app;
         
         //filesystem
@@ -38,7 +36,7 @@ var applications = new function(){
         app['className'] = 'filesystem'; // name of the the javascript class object
         app['active'] = true;
         app['position'] = {width: 8, height:  5, top: 0, left: 2};
-        app['icon'] = standardIcon;
+        app['icon'] = 'gfx/applicationIcons/white/filesystem.svg';
         apps[1] = app;
         
         
@@ -52,7 +50,7 @@ var applications = new function(){
             app['active'] = true;
             app['className'] = 'feed'; // name of the the javascript class object
             app['position'] = {width: 2, height:  5, top: 0, left: 0};
-            app['icon'] = standardIcon;
+            app['icon'] = 'gfx/applicationIcons/white/feed.svg';
             apps[2] = app;
             
             //chat
@@ -62,7 +60,7 @@ var applications = new function(){
             app['className'] = 'chat'; // name of the the javascript class object
             app['active'] = true;
             app['position'] = {width: 2, height:  2, top: 0, left: 5, hidden:true};
-            app['icon'] = standardIcon;
+            app['icon'] = 'gfx/applicationIcons/white/chat.svg';
             apps[3] = app;
 
             //settings
@@ -72,7 +70,7 @@ var applications = new function(){
             app['className'] = 'settings'; // name of the the javascript class object
             app['active'] = false;
             app['position'] = {width: 2, height:  5, top: 0, left: 0};
-            app['icon'] = standardIcon;
+            app['icon'] = 'gfx/applicationIcons/white/settings.svg';
 
             apps[4] = app;
 
@@ -83,7 +81,7 @@ var applications = new function(){
             app['className'] = 'calendar'; // name of the the javascript class object
             app['active'] = false;
             app['position'] = {width: 2, height:  2, top: 0, left: 9};
-            app['icon'] = standardIcon;
+            app['icon'] = 'gfx/applicationIcons/white/calendar.svg';
             apps[5] = app;
 
 
@@ -94,7 +92,7 @@ var applications = new function(){
             app['source'] = 'buddylist.js';
             app['active'] = true;
             app['position'] = {width: 2, height:  5, top: 0, left: 9};
-            app['icon'] = standardIcon;
+            app['icon'] = 'gfx/applicationIcons/white/buddylist.svg';
             apps[6] = app;
             
             //buddylist
@@ -104,7 +102,7 @@ var applications = new function(){
             app['source'] = 'player.js';
             app['active'] = true;
             app['position'] = {width: 2, height:  5, top: 0, left: 9};
-            app['icon'] = standardIcon;
+            app['icon'] = 'gfx/applicationIcons/white/player.svg';
             apps[7] = app;
         }
         
