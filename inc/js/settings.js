@@ -159,18 +159,12 @@ var settings = new function(){
             output += '<h3>Use the search to look for people you know</h3>';
             
         }else{
-            output += '<ul class="grayList">';
             var listItems = [];
             
             $.each(settings_buddylist, function(index, value){
-               listItems.push({'text':User.showPicture(value)+useridToUsername(value), 'buttons':'</div><button class="button" onclick="buddylist.removeBuddy(\''+value+'\');">Unfriend</button></li>'});
-               output += '<li><div>'; 
-               output += User.showPicture(value);
-               output += useridToUsername(value);
-
-               output += '</div><button class="button" onclick="buddylist.removeBuddy(\''+value+'\');">Unfriend</button></li>'; 
+               var text = User.showPicture(value)+'<h3 style="margin-top: 20px">'+useridToUsername(value)+'</h3><span style="font-size:14px;">'+User.getRealName(value)+'</span>'+item.showItemSettings('user', value);
+               listItems.push({'text':text, 'buttons':'<button class="button" onclick="buddylist.removeBuddy(\''+value+'\');">Unfriend</button>'});
             });
-            output += '</ul>';
             output += gui.generateGrayList(listItems);
         }
         output += '</div>';

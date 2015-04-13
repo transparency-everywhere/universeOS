@@ -696,12 +696,13 @@ var User = new function(){
                                 
                                 output += '<ul>';
                                 var profile_playlists = playlists.getUserPlaylists('show',user_id);
-                                $.each(profile_playlists['ids'], function(index, value){
-                                    output += '<li onclick="playlists.showInfo(\''+value+'\');"><div><span class="icon icon-playlist"></span>';
-                                    output += '<span  style="font-size:18px; padding-top: 5px;" onclick="">'+profile_playlists['titles'][index]+'</span>';
-                                    //output += item.showItemSettings('user', value);
-                                    output += '</div></li>';
-                                });
+                                if(profile_playlists['ids'])
+                                    $.each(profile_playlists['ids'], function(index, value){
+                                        output += '<li onclick="playlists.showInfo(\''+value+'\');"><div><span class="icon icon-playlist"></span>';
+                                        output += '<span  style="font-size:18px; padding-top: 5px;" onclick="">'+profile_playlists['titles'][index]+'</span>';
+                                        //output += item.showItemSettings('user', value);
+                                        output += '</div></li>';
+                                    });
                                 output += '</ul>';
                             output += '</div>';
                             
@@ -795,12 +796,14 @@ var User = new function(){
         gui.alert('Goodbye :)', '');
         api.query('api/user/logout/index.php', {},function(data){
              
-            window.location.href=window.location.href;
+            location.reload();
         });
     };
     this.getRealName = function(userid){
         var realname = this.getProfileInfo(userid)['realname'];
-        console.log(realname);
+        if(empty(realname)){
+            realname = 'Juergen Vogel';
+        }
         return realname;
     };
     

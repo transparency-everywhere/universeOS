@@ -64,14 +64,15 @@ var groups = new function(){
             var usersInGroup = this.getUsers(group_id);
             var listItems = [];
             var buttons = '';
-            $.each(usersInGroup, function(index, value){
-                if(groupData.isAdmin)
-                    buttons = "<a href='#' class='button' onclick='groups.removeUser(\""+group_id+"\",\""+value+"\"); return false' style='position: absolute;right: 10px;margin-top: -45px;'>Remove User</a>";
-                listItems.push({
-                    'text':"<div onclick='User.showProfile("+value+")'><span class='icon blue-user' style='display:inline-block;height: 25px;width: 25px;margin-bottom: -6px;margin-left: 3px;'></span><span class='username' style='font-size:18px; padding-top: 5px; display:inline-block;height: 25px;margin-top: 5px;'>"+useridToUsername(value)+"</span></div>",
-                    'buttons':buttons});
-            });
-            return gui.generateGrayList(listItems);
+            if(usersInGroup)
+                $.each(usersInGroup, function(index, value){
+                    if(groupData.isAdmin)
+                        buttons = "<a href='#' class='button' onclick='groups.removeUser(\""+group_id+"\",\""+value+"\"); return false' style='position: absolute;right: 10px;margin-top: -45px;'>Remove User</a>";
+                    listItems.push({
+                        'text':"<div onclick='User.showProfile("+value+")'><span class='icon blue-user' style='display:inline-block;height: 25px;width: 25px;margin-bottom: -6px;margin-left: 3px;'></span><span class='username' style='font-size:18px; padding-top: 5px; display:inline-block;height: 25px;margin-top: 5px;'>"+useridToUsername(value)+"</span></div>",
+                        'buttons':buttons});
+                });
+                return gui.generateGrayList(listItems);
         };
         
         this.generateProfile = function(group_id){
