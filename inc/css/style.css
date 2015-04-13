@@ -50,7 +50,7 @@ input[type=text], input[type=password]{
 }
 
 h3{
-    font-size: 13pt;
+    font-size: 18px;
     line-height: none;
 }
 
@@ -1082,13 +1082,19 @@ color: #FFF;
 
 #feedInput{
 	position: absolute;
-        top: 10px;
-        right: 10px;
-        width: 200px;
-        height: 40px;
-        font-size: 25px;
+        
+	top: 10px;
+        
+        
+	right: 10px;
+	display: block;
+        
+	height: 40px;
+        
+	font-size: 25px;
         padding: 8px;
-        resize: none;
+        
+	resize: none;
 }
 
 #feedInputBar{
@@ -2692,8 +2698,7 @@ del.bar{
     background-color: #eceff1;
     margin:10px;
     margin-left: 0;
-    min-height: 35px;
-    max-height: 75px;
+    height: 75px;
     position: relative;
 }
 
@@ -3225,7 +3230,7 @@ margin-bottom: 3px;
                 }
                 
                 #dashBoard .appList li:hover{
-                    background: #303030;
+                    background: #18ffff;
                 }
             
                 #dashBoard li{
