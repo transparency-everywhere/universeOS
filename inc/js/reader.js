@@ -239,8 +239,13 @@ var reader = new function(){
         return output;
         
     };
-    this.openLink = function(){
-        //wikipedia, youtube, rss
-        
+    this.openLink = function(type, link, title){
+        switch(type){
+            case 'youtube':
+                
+                player.openItem(type, link);
+                
+                break;
+        }
     };
 };

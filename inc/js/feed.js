@@ -222,7 +222,7 @@ var feed = new function(){
     this.generateHeader = function(){
         var output="";
         output += "<div class=\"windowHeader\" id=\"feedheader\">";
-        output += "            <i class=\"icon dark-pencil\" style=\"height: 32px; width: 32px; top: 14px;position: absolute;right: 213px;\"></i>";
+        output += "            <i class=\"icon dark-pencil\" style=\"height: 32px; width: 32px; top: 14px;position: absolute;right: 226px;\"></i>";
         output += "            <form id=\"feedInputForm\" method=\"post\" action=\" doit.php?action=createFeed\" target=\"submitter\">";
         output += "            <div style=\"margin: 15px;\">";
         output += "                        <textarea id=\"feedInput\" name=\"feedInput\" onclick=\"$(this).val('');\">What's Up?<\/textarea>";

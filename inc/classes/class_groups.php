@@ -159,7 +159,7 @@ class groups{
                     $db = new db();
                     $data = $db->select('groups', array('id', $groupId), array('title'));
                     return $data['title'];
-                }
+        }
                 
           
         function getPicture($groupId){

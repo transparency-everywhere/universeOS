@@ -78,7 +78,7 @@ class message{
 		return $return;
 	}
 	function getMessages($userid, $buddyId, $limit){
-		$chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' && receiver='$buddyId' OR sender='$buddyId' && receiver='$userid' ORDER BY timestamp DESC LIMIT $limit");
+		$chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' && receiver='".save($buddyId)."' OR sender='".save($buddyId)."' && receiver='".save($userid)."' ORDER BY timestamp DESC LIMIT ".save($limit)."");
 		while($chatData =  mysql_fetch_array($chatSQL)){
 			$id = $chatData['id'];
 			$return[$id] = $chatData;
@@ -196,10 +196,18 @@ class message{
    }
    
 }
-
-	
-	
-	
+//
+//class im{
+//    function __construct($type, $itemId){
+//        
+//    }
+//    function getMessages(){
+//        
+//    }
+//}
+//	
+//	
+//	
 	
 	
 	

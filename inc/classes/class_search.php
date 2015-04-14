@@ -254,7 +254,7 @@ class search{
 
                         $youtubeClass = new youtube($item2->id);
                         $vId = $youtubeClass->getId();
-                        $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "openFile('youTube', '', '".urlencode(substr("$item2->title", 0, 10))."', '$vId');", substr("$item2->title", 0, 23), true);
+                        $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "player.openItem('youtube', 'http://www.youtube.com/watch?v=$vId');", substr("$item2->title", 0, 23), true);
 
 
                         $data = xml2array($item2->link);

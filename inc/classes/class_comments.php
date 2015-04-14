@@ -85,9 +85,9 @@ function showComments($type, $itemid) {
     
             <div class="shadow subComment commentBox<?=$comment_data['id'];?>" id="<?=$type;?>Comment" style="background-color: #FFF;">
                 <?=userSignature($comment_data['author'], $comment_data['timestamp']);?>
-                <br><?=$comment_data['text'];?><br><br>
+                <div style="padding: 8px; "><?=$comment_data['text'];?></div>
 
-                <div style="padding: 15px; ">
+                <div style="padding: 8px; ">
                     <div>
                         <span style="float:left;">
                         <?=$item->showScore();?>
@@ -115,8 +115,9 @@ function showComments($type, $itemid) {
     $contextMenu = new contextMenu('comment', $comment_data['id']);
     $item = new item('comment', $comment_data['id']);
     ?>
-    <?=$contextMenu->showItemSettings();?>
+    <div style="padding: 15px; ">
     <?=$comment_data['text'];?>
+    </div>
         <div style="padding: 15px; margin-bottom: 20px;">
             <div>
                 <div style="float:left;">
@@ -125,7 +126,7 @@ function showComments($type, $itemid) {
             </div>
             <a href="javascript:showSubComment(<?=$jsId;?>);" class="btn btn-mini" style="float: right; margin-right: 30px; color: #606060;">
                 <i class="icon icon-comment"></i>
-            </a>
+            </a><?=$contextMenu->showItemSettings();?>
         </div>
         <div class="shadow subComment" id="comment<?=$jsId;?>" style="display: none;"></div>
     </div>

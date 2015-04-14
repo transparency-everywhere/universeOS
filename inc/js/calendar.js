@@ -499,7 +499,7 @@ var calendar = new function(){
 			  		date.setMilliseconds(0);
 					
 					var startStamp = date.getTime()/1000;
-					var stopStamp = date.getTime()/1000;
+					var stopStamp = date.getTime()/1000+86400;
 					
 					var html = '';
 					
@@ -598,14 +598,14 @@ var calendar = new function(){
 						
 						var nextWeek = new Date(calendar.shownTimeObject.getTime()+(7*86400000));
 						
-						$('#calendarViewDetail #text').html(calendar.shownTimeObject.getDate()+'.'+calendar.shownTimeObject.getMonth()+1+' - '+nextWeek.getDate()+'.'+nextWeek.getMonth()+1);
+						$('#calendarViewDetail #text').html(calendar.pad2(calendar.shownTimeObject.getDate())+'.'+calendar.pad2(calendar.shownTimeObject.getMonth()+1)+' - '+calendar.pad2(nextWeek.getDate())+'.'+calendar.pad2(nextWeek.getMonth()+1));
 						
 			  		}else if(type == 'day'){
 			  			
 				  		$('#calendarView .button').removeClass('active');
 				  		$('#day').addClass('active');
 				  		
-						$('#calendarViewDetail #text').html(calendar.shownTimeObject.getDate()+'.'+calendar.shownTimeObject.getMonth()+1);
+						$('#calendarViewDetail #text').html(calendar.pad2(calendar.shownTimeObject.getDate())+'.'+calendar.pad2(calendar.shownTimeObject.getMonth()+1));
 						
 						
 						
@@ -659,6 +659,10 @@ var calendar = new function(){
 			  		});
 			  		
 			  	};
+                                
+        this.pad2 = function(d) {
+            return (d < 10) ? '0' + d.toString() : d.toString();
+        };
 	
 	this.getMonthName = function(month){
 					var monthName = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");

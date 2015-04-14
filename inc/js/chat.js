@@ -27,7 +27,42 @@ var chat = new function(){
     };
     this.show = function(){
         this.applicationVar.show();
-    }
+    };
+    //type - user or group
+    this.getMessages = function(type, itemId, limit, offset){
+        
+    };
+    this.generateLeftFrame = function(){
+        var html;
+        html = '<div class="chatLeftFrame">';
+            html += '<header>';
+            html += '</header>';
+        
+        html += '</div>';
+        return html;
+    };
+    this.openDialog = function(userid){
+        var username = useridToUsername(userid);
+        chat.applicationVar.show();
+      
+      	//check if dialoge allready exists
+        if($("#test_"+ username +"").length == 0){
+
+            userid = usernameToUserid(username);
+            
+            var chatFrameHTML = chat.generateLeftFrame();
+                chatFrameHTML += '<div class="chatRightFrame">'+gui.loadPage("modules/chat/chatreload.php?buddy="+username+"")+'</div>';
+            
+            chat.tabs.addTab(username, '',chatFrameHTML);
+
+            openDialogueInterval = window.setInterval("chatDecrypt(userid)", 500);
+        }else{
+            //if dialoge doesnt exists => bring dialoge to front..
+
+
+
+        }
+    };
 };
 
 //IM CHAT  
@@ -141,21 +176,7 @@ function chatDecrypt(userid){
 }
 
 function openChatDialoge(username){
-      chat.applicationVar.show();
-      
-      	//check if dialoge allready exists
-          if($("#test_"+ username +"").length == 0){
-          	
-          	userid = usernameToUserid(username);
-                chat.tabs.addTab(username, '',gui.loadPage("modules/chat/chatreload.php?buddy="+username+""));
-              
-              openDialogueInterval = window.setInterval("chatDecrypt(userid)", 500);
-          }else{
-          	//if dialoge doesnt exists => bring dialoge to front..
-          	
-          	
-
-          }
+    chat.openDialog(usernameToUserid(username));
  }
  
   

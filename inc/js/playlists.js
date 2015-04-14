@@ -346,7 +346,6 @@ var playlists = new function(){
         var item_id = options['item_id'];
         var order_id = options['order_id'];
         var playlist_id = options['playlist_id'];
-        
         var onStop = function(){playlists.playPlaylistRow(playlist_id, order_id+1);};
         
         if(this.activePlaylist.playlist_id !== playlist_id){
@@ -355,7 +354,7 @@ var playlists = new function(){
         
         switch(type){
             case 'youtube':
-                player.loadYoutubeVideo(playlists.getPlaylistTabObject(playlist_id), item_id,onStop);
+                player.loadItem(playlists.getPlaylistTabObject(playlist_id), type, item_id,onStop);
                 break;
         }
     };

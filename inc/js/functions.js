@@ -587,7 +587,7 @@ var User = new function(){
         var username = useridToUsername(userid);
         
         var output="";
-            output += "<div class=\"signature\" style=\"background: #EDEDED; border-bottom: 1px solid #c9c9c9;\">";
+            output += "<div class=\"signature\" style=\"background: #F9F9F9;\">";
             output += "    <table width=\"100%\">";
             output += "        <tr width=\"100%\">";
             if(reverse){

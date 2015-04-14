@@ -41,9 +41,6 @@ class user {
             //update db
             $values['hash'] = $hash;
             $db->update('user', $values, array('userid', $userid));
-
-            $feedClass = new feed();
-            $feedClass->create($_SESSION['userid'], "is logged in", "60", "feed", "p");
             
             $userClass = new user();
             $userClass->updateActivity($_SESSION['userid']);
@@ -435,7 +432,7 @@ function userSignature($userid, $timestamp, $subpath = NULL, $reverse=NULL){
         $subPath = NULL;
     }
       ?>
-    <div class="signature" style="background: #EDEDED; border-bottom: 1px solid #c9c9c9;">
+    <div class="signature" style="background: #F9F9F9;">
     <table width="100%">
         <tr width="100%">
             <?php
