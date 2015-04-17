@@ -286,12 +286,11 @@ var universe = new function(){
         
         gui.loadScript('inc/js/im.js');
         
-        
         gui.loadScript('inc/js/groups.js');
         
+        gui.loadScript('inc/js/shortcuts.js');
         
         applications.init();
-        
         
         //init draggable windows
         init.GUI();
@@ -481,7 +480,6 @@ var universe = new function(){
     };
 };
 
-  
 var User = new function(){
     this.userid;
     
@@ -1224,7 +1222,7 @@ var tabs = function(parentIdentifier){
                         
                         var headerId = randomString(6, '#aA');
                         
-			$(parentIdentifier+' .tabFrame header ul').append('<li id='+headerId+' data-tab="'+(numberOfTabs+1)+'" data-parent-identifier="'+parentIdentifier+'" data-title="'+title+'" class="active">'+title+'<span class="close">x</span></li>');
+			$(parentIdentifier+' .tabFrame header ul').append('<li id='+headerId+' data-tab="'+(numberOfTabs+1)+'" data-parent-identifier="'+parentIdentifier+'" data-title="'+title+'" class="active">'+title+'<span class="close"><i class="icon dark-close"></i></span></li>');
 
                         $(parentIdentifier+' .tabFrame .tab').hide();
                         

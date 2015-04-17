@@ -233,7 +233,7 @@ var feed = new function(){
         output += "                                <input type=\"submit\" style=\"float:right;\" value=\"submit\" class=\"btn\">";
         output += "                        <\/div>";
         output += "                    <\/div>";
-        output += "                    <div id=\"addFeedPrivacy\" class=\"coolGradient\">";
+        output += "                    <div id=\"addFeedPrivacy\" style=\"background: #030303\">";
         output += "                    <\/div>";
         output += "                    <\/form>";
         output += "                    <\/div>";

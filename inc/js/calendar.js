@@ -660,9 +660,6 @@ var calendar = new function(){
 			  		
 			  	};
                                 
-        this.pad2 = function(d) {
-            return (d < 10) ? '0' + d.toString() : d.toString();
-        };
 	
 	this.getMonthName = function(month){
 					var monthName = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
@@ -719,22 +716,22 @@ var calendar = new function(){
 			  		d.setSeconds(-1);
 			  		var stopStamp = d.getTime()/1000;
 			  		
-			  		
-			  			var appointments = events.get(startStamp, stopStamp);
-						var list = '';
+			  		//events
+			  		var appointments = events.get(startStamp, stopStamp);
+					var list = '';
 					
-							if(appointments){
-								$.each( appointments, function( key, value ) {
-								
-								  if($('#sideEvent_'+value.id).length === 0){
-								  	
-									  var startDate = new Date(value.startStamp*1000);
-									  var endDate = new Date(value.stopStamp*1000);
-									  list += '<li data-eventId="'+value.id+'" onclick="events.show('+value.id+', '+privacy.authorize(value.privacy, value.user)+');" id="sideEvent_'+value.id+'"><span class="icon white-bell"></span>'+value.title+'</li>';
-									
-								  }
-								 });
-							}
+					if(appointments){
+						$.each( appointments, function( key, value ) {
+						
+						  if($('#sideEvent_'+value.id).length === 0){
+						  	
+							  var startDate = new Date(value.startStamp*1000);
+							  var endDate = new Date(value.stopStamp*1000);
+							  list += '<li data-eventId="'+value.id+'" onclick="events.show('+value.id+', '+privacy.authorize(value.privacy, value.user)+');" id="sideEvent_'+value.id+'"><span class="icon white-bell"></span>'+value.title+'</li>';
+							
+						  }
+						 });
+					}
 					//apend month and trigger to load month into sidebar
 					$('#side #events').append(list);
 					$('#events .header').unbind('click');
@@ -743,6 +740,7 @@ var calendar = new function(){
 					});
 			  		
 			  		
+                                        
 			  	};
 	
 	this.beautifyDate =function(value){
@@ -751,6 +749,9 @@ var calendar = new function(){
 			  		}
 			  		return value;
 				};
+        this.pad2 = function(d) {
+            return (d < 10) ? '0' + d.toString() : d.toString();
+        };
 	
 	this.getAppointmentsForDay = function(time){
 					var array = [];
