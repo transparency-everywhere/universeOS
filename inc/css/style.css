@@ -267,6 +267,7 @@ li.notHidden{
 .dockSeachResult{
     position: absolute;
     right: 0px;
+    top: 0;
     bottom: 0px;
     width: 30%;
     z-index: 9998;
@@ -285,7 +286,9 @@ li.notHidden{
     margin-top: 15px;
     margin-bottom: 60px;
     margin-left: 15px;
-    float: left; font-size: 20px;
+    float: left; 
+    font-weight: 200;
+    font-size: 20px;
 }
 
 .dockSeachResult > .listContainer:first-of-type{
