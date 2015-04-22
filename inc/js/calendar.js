@@ -906,7 +906,7 @@ var events = new function(){
                                                         var callback = function(){
                                                             calendar.loadEvents();
                                                             calendar.loadEventsIntoSide(new Date(calendar.shownTimeObject.getFullYear(), calendar.shownTimeObject.getMonth(), 1, 0, 0, 0));
-                                                            gui.alert('The Event has been added');
+                                                            gui.alert('The Event has been added', 'Events');
                                                             $('.blueModal').slideUp()
                                                         };
                                                         
@@ -1091,15 +1091,15 @@ var events = new function(){
               					
 	              			$.post("api.php?action=updateEvent",searchString,function(data){
 					            if(empty(data)){
-					            	jsAlert('', 'The event has been updated.');
+					            	gui.alert('The event has been updated.', 'Events');
 					            	$('.blueModal').slideUp();
 					            }else{
-					            	jsAlert('', data);
+					            	gui.alert(data, 'Events', 'error');
 					            }
 					        });
 
               			}else{
-              				jsAlert('', 'You need to fill out all the fields.');
+              				gui.alert('You need to fill out all the fields.', 'Events', 'error');
               			}
               			
               			

@@ -521,6 +521,9 @@ var gui = new function(){
             default:
                 alertClass = 'alert-info';
                 break;
+            case 'danger'||'error':
+                alertClass = 'alert-danger';
+                break;
         }
         $('#alerter').append('<div class="alert '+alertClass+'"><button type="button" class="close" data-dismiss="alert">&times;</button>'+message+'</div>');
         $('.alert').delay(8000).fadeOut(function(){
