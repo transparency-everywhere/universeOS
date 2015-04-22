@@ -224,6 +224,10 @@ li.notHidden{
 	background-image: url('../../gfx/standarduser.png');
 }
 
+div.leftNav span.icon {
+    width: 22px;
+    height: 22px;
+}
 
 /* search */
 .dockSeachResult .userPicture {
@@ -715,35 +719,31 @@ li.notHidden{
     background: -ms-linear-gradient(top, #eaeaea 0%,#f2f2f2 100%); /* IE10+ */
     background: linear-gradient(to bottom, #eaeaea 0%,#f2f2f2 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#f2f2f2',GradientType=0 ); /* IE6-9 */
-}
+}   
 
 span.icons {
     display: inline-block;
-    min-width: 21px
+    width: 100%;
 }
 
 span.title {
     display: inline-block;
-    width: 35%;
+    width: 100%;
     
 }
 
 span.date {
-    display: inline-block;
-    width: 15%;
+    display: none;
     
 }
 
 span.size {
-    display: inline-block;
-    width: 15%;
+    display: none;
     
 }
 
 span.buttons {
-    display: inline-block;
-    float: right;
-    width: 30%;
+    display: none;
     
 }
 
@@ -755,6 +755,16 @@ span.heading {
     font-size: 20px;
     font-weight: 300;
     text-align: left;
+}
+
+span.icons span.icon {
+    width: 80px;
+    height: 80px;
+}
+
+div#showElement.frameRight ul li {
+    display: inline-block;
+    width: 50%
 }
 
 
@@ -1466,6 +1476,17 @@ color: #FFF;
 		overflow: auto; 
 		padding: 15px;
 	}
+        
+.imageReader .mainImage {
+      background-color: #263238;
+}         
+.imageReader .mainImage img {
+      margin: 0 auto;
+}        
+.imageReader .previewImages {
+      background-color: #37474f;
+      overflow: auto;
+}
 	
 	/*chat*/
 #chat {
