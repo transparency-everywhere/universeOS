@@ -27,7 +27,7 @@ if(!$login) {
     echo '<div id="bodywrap">';
         include('views/guestpage/guest_area.html');
 
-        echo '<div id="alerter" class="container"></div><div id="loader"></div><iframe name="submitter" style="display:none;" id="submitter"></iframe>';
+        echo '<div id="alerter"></div><div id="loader"></div><iframe name="submitter" style="display:none;" id="submitter"></iframe>';
         echo '<div id="suggest">';
         echo '</div>';
     echo '</div>';
@@ -46,7 +46,7 @@ if(!$login) {
 }
 else{
     echo '<script>User.userid = '.getUser().';</script>';
-    echo '<div id="alerter" class="container"></div>';
+    echo '<div id="alerter"></div>';
     
     include("modules/desktop/dashboard.php");
     echo    '<div id="bodywrap">';
