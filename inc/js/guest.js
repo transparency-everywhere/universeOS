@@ -29,6 +29,15 @@ function randomString(length, chars) {
 
 
 var registration = new function(){
+    this.updateRegHintBox = function(html){
+        this.resetRegHintBox();
+        $('#regHintBox').hide();
+        $('#clearBox').append('<div>'+html+'</div>');
+    };
+    this.resetRegHintBox = function(){
+        $('#regHintBox').show();
+        $('#clearBox').children().not('#regHintBox').remove();
+    };
     this.checkReg = function(username, password, passwordRepeat){
         
                 var valuee,check,usernameLengthCheck,checkBox,passwordCheck;
@@ -88,6 +97,7 @@ var registration = new function(){
                 if (score > 80){
                     bg = '#719005';
                     html = '<a style="color: green">Nice! Your password is pretty secure.</a><div class="arrow-right"></div>';
+                    registration.resetRegHintBox();
                 }
                 else if (score > 60){
                     bg = '#c47800';
@@ -96,6 +106,15 @@ var registration = new function(){
                 else if (score < 60){
                     bg = '#790125';
                     html = '<a style="color: green">Uh-Oh! My mom could crack that password!</a><div class="arrow-right"></div>';
+                }
+                
+                //show password hints
+                if(score<80){
+                    support.loadArticle('Create secure passwords', function(data){
+                        var jsonObject = JSON.parse(data);
+                        var text = nl2br($(jsonObject.parse.text['*']+'').not('#source, .mw-editsection, #toc').text());
+                        registration.updateRegHintBox(text);
+                    });
                 }
                 $('.registerBox p').html(help);
                 $('#checkPasswordStatus').html(html);
@@ -136,9 +155,9 @@ var registration = new function(){
 	});
     };
     this.processRegistration = function(username, password){
-        
+            registration.resetRegHintBox();
 
-        //hide registration form, show loading wheel
+            //hide registration form, show loading wheel
             $('.registerBox div').hide();
             gui.alert('The universe is creating your keypair now, this may take some minutes..');
             $('.registerBox img').show();
@@ -198,7 +217,7 @@ var registration = new function(){
             $('#regUsername').on('blur',function(){
                 registration.checkUsername('regUsername');
             });
-            $('#registrationForm #password').on('blur',function(){
+            $('#registrationForm #password').on('keyup',function(){
                 registration.checkPassword('password');
             });
             

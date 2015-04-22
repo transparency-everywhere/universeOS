@@ -1043,7 +1043,7 @@ color: #FFF;
     top: 61px;
     left: 0px;
     right: 0px;
-    height: 90px;
+    height: 225px;
     padding: 5px;
     z-index: 1;
     overflow: auto;
@@ -1075,10 +1075,11 @@ color: #FFF;
 }
 
 .feedEntry{
-    margin: 5px;
-    /* border: 1px solid #dcdcdc; */
-    min-width: 48%;
-    max-width: 350px;
+    margin: 3%;
+    border: 1px solid #dcdcdc;
+    border-top: 0;
+    border-left: 0;
+    width: 94%;
     float: left;
     position: relative;  
     -webkit-box-shadow: 4px 4px 11px 1px rgba(179,179,179,0.68); -moz-box-shadow: 4px 4px 11px 1px rgba(179,179,179,0.68); box-shadow: 4px 4px 11px 1px rgba(179,179,179,0.68);
@@ -1086,17 +1087,22 @@ color: #FFF;
 
 .feedEntry:nth-child(odd)
 {
-    float: left;
+    /* float: left; */
     clear: both;
 }
 .feedEntry:nth-child(even) 
 {
-    float: right;
+    /* float: right; */
     margin-top: 10px;
 }
 
 .feedEntry .feedAttachment, .feedEntry .options, .feedEntry .commentLoadingArea, .feedEntry .feedContent{
     padding: 15px;
+    padding-bottom: 7px;
+}
+
+.feedEntry .options .scoreButton{
+    margin-left: -7px;
 }
 
 .feedEntry .icon-comment{
@@ -1105,7 +1111,7 @@ color: #FFF;
 
 .feedEntry .itemSettingsButton{
     position: absolute;
-    right: 3px;
+    right: 7px;
     margin-top: 1px;
 }
 
@@ -1811,8 +1817,9 @@ color:#FFFFFF;
 #alerter{
 	position: absolute;
 	left: 50%;
-	margin-left: -470px;
+	margin-left: -155px;
 	z-index: 99999;
+	top: 20px;
 	margin-top:20px;
 }
 
@@ -1907,7 +1914,9 @@ color:#FFFFFF;
             border-bottom: 0;
             cursor: pointer;
             height: 40px;
-        }
+        
+            min-width: 140px;
+}
         
         
         .tabFrame>header li.active{
@@ -1995,7 +2004,8 @@ input#searchField {}
         	position: absolute;
 			right: 5px;
 			bottom: 10px;
-			width: 220px;
+			
+        	width: 245px;
 			height: 20px;
 			font-size: 20px;
         }
@@ -3345,7 +3355,7 @@ margin-bottom: 3px;
                     border-width: 1px;
                     border-color: #a0a0a0;
                     border-style: solid;
-                    width: 75px;
+                    width: 85px;
                     height: 35px;
                 }
                 .privacySettings {
@@ -3758,7 +3768,7 @@ a#text {}
 			}
 			
 			.calendarFrame.monthView .day .eventList{
-				max-height:70px; overflow:auto;
+				max-height: 58px; overflow:auto;
 			}
 			
 			
@@ -3942,7 +3952,7 @@ and (max-width : 320px) {
 .button{
     color: #FFF;
     background-color:  #00bcd4;
-    width: 100px;
+    min-width: 100px;
     margin-top: 2.5px;
     height: 35px;
     padding: 7px 7px;
@@ -3951,6 +3961,7 @@ and (max-width : 320px) {
     border: none;
     display: inline-block;
     cursor: pointer;
+    margin-right: 3px;
 }
 
 .antiButton{

@@ -286,12 +286,11 @@ var universe = new function(){
         
         gui.loadScript('inc/js/im.js');
         
-        
         gui.loadScript('inc/js/groups.js');
         
+        gui.loadScript('inc/js/shortcuts.js');
         
         applications.init();
-        
         
         //init draggable windows
         init.GUI();
@@ -481,7 +480,6 @@ var universe = new function(){
     };
 };
 
-  
 var User = new function(){
     this.userid;
     
@@ -1183,15 +1181,43 @@ var sec =  new function() {
 		    	if(result == 1){
 		    		
 	    			parent.localStorage.currentUser_passwordHashMD5 = passwordHashMD5New;
-		    		jsAlert('', 'Your password has been changed');
+		    		gui.alert('Your password has been changed', 'Security');
 		    	}else{
-		    		jsAlert('', result);
+		    		gui.alert(result, 'Security');
 		    	}
 	    	}, "html");
 	    
 	    
-    }
+    };
 };
+
+
+
+var support = new function(){
+    
+    this.loadArticle = function(title, callback){
+        var url = 'http://wiki.transparency-everywhere.com/en/api.php?action=parse&page='+encodeURIComponent(title)+'&format=json';
+        console.log(url);
+        var ret = api.loadSource(url, callback);
+        if(!callback)
+            return ret;
+    };
+    this.loadSection = function(article_title, section_title, callback){
+        section_title = section_title.replace(' ', '_');
+        article_title = article_title.replace(' ', '_');
+        this.loadArticle(article_title, function(data){
+            
+            var html = JSON.parse(data);
+            html = html.parse.text['*'];
+            var returnString;
+            //console.log(html.parse.text['*']);
+            var i = 0;
+            console.log($(html+'').children('#'+section_title).parent().nextUntil('h2').text());
+        });
+    };
+};
+
+
 var tabs = function(parentIdentifier){
     this.parentIdentifier = parentIdentifier;
     this.tabHistory = [];
@@ -1224,7 +1250,7 @@ var tabs = function(parentIdentifier){
                         
                         var headerId = randomString(6, '#aA');
                         
-			$(parentIdentifier+' .tabFrame header ul').append('<li id='+headerId+' data-tab="'+(numberOfTabs+1)+'" data-parent-identifier="'+parentIdentifier+'" data-title="'+title+'" class="active">'+title+'<span class="close">x</span></li>');
+			$(parentIdentifier+' .tabFrame header ul').append('<li id='+headerId+' data-tab="'+(numberOfTabs+1)+'" data-parent-identifier="'+parentIdentifier+'" data-title="'+title+'" class="active">'+title+'<span class="close"><i class="icon dark-close"></i></span></li>');
 
                         $(parentIdentifier+' .tabFrame .tab').hide();
                         

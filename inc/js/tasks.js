@@ -235,15 +235,15 @@ var tasks = new function(){
                                               $.post("api.php?action=updateTask",searchString,function(data){
 
                                                           if(empty(data)){
-                                                              jsAlert('', 'The event has been updated.');
+                                                              gui.alert('The task has been updated.', 'Tasks');
                                                               $('.blueModal').slideUp();
                                                           }else{
-                                                              jsAlert('', data);
+                                                              gui.alert(data, 'Events', 'error');
                                                           }
                                                       });
 
                                       }else{
-                                              jsAlert('', 'You need to fill out all the fields.');
+                                              gui.alert('You need to fill out all the fields.', 'Tasks', 'error');
                                       }
 
 

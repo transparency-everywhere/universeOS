@@ -241,7 +241,9 @@ var gui = new function(){
                                 fieldData.showGrid = true;
                             }
                             //getMiniFileBrowser(folder, element, level, showGrid, select)
+                            mainHTML += '<td>';
                             mainHTML += filesystem.getMiniFileBrowser(fieldData.folder, fieldData.element, fieldData.level, fieldData.showGrid, 'folder');
+                            mainHTML += '</td>';
                             break;
                         case 'element':
                             if(typeof fieldData.folder === 'undefined'){
@@ -256,7 +258,9 @@ var gui = new function(){
                             if(typeof fieldData.showGrid === 'undefined'){
                                 fieldData.showGrid = true;
                             }
+                            mainHTML += '<td>';
                             mainHTML += filesystem.getMiniFileBrowser(fieldData.folder, fieldData.element, fieldData.level, fieldData.showGrid,'element');
+                            mainHTML += '</td>';
                             break;
                             
                         case 'html':
@@ -516,6 +520,9 @@ var gui = new function(){
         switch(type){
             default:
                 alertClass = 'alert-info';
+                break;
+            case 'danger'||'error':
+                alertClass = 'alert-danger';
                 break;
         }
         $('#alerter').append('<div class="alert '+alertClass+'"><button type="button" class="close" data-dismiss="alert">&times;</button>'+message+'</div>');

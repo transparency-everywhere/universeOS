@@ -1,5 +1,14 @@
 Pleas mark stuff thats depraciated with @old
 
+Video
+    youtube
+    vimeo
+    tape.tv
+    dailymotion
+    myvideo
+    twitch
+
+
 Update
     Delete Users where cypher is md5 or sha512
 
@@ -24,11 +33,11 @@ Update
 
 
 todo
+    dock envelop -> commit icon bei nachricht active class gleich turquise
+
     group admin
 
     forms
-        events.addForm
-        events.updateForm (?)
 
         shortcuts.create
         shortcuts.update
@@ -42,6 +51,8 @@ todo
     fix raster
 
     add protection to userPicture element, groupicture element etc
+
+    item.share icon -> blue-retweet
 
     fade in applications
 
@@ -212,4 +223,4 @@ Files and the use of them
 				reload.php
 			
 	
-	
+	USER CRYPTICO!

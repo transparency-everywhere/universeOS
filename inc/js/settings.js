@@ -554,9 +554,9 @@ var settings = new function(){
                     updatePassword($('#oldPassword').val(), $('#newPassword').val(), localStorage.currentUser_userid);
                     $('.changePassword').slideUp();
             }else if($('#newPassword').val().length === 0){
-                    jsAlert('', 'The password is to short');
+                    gui.alert('The password is to short', 'Security', 'error');
             }else{
-                    jsAlert('The passwords dont match');
+                    gui.alert('The passwords don\'t match', 'Security', 'error');
             }
     };
 

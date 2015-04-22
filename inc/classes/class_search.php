@@ -104,9 +104,21 @@ class search{
 
                 break;
                 
+            case 'vimeo':
+                //vimeo
+                $vimeo_access_token = 'ace10c8c2e411f308504cfafe237225c';
+                $xml2 = xml::curler("https://api.vimeo.com/videos?query=$qEncoded&access_token=$vimeo_access_token");
+                foreach ($xml2->entry as $item2) {
+                    $youtubeClass = new youtube($item2->id);
+                    $vId = $youtubeClass->getId();
+                    $results[] = $item2;
+                }
+
+                break;
+                
             case 'spotify':
                 $xml3 = xml::curler("http://ws.spotify.com/search/1/track?q=$qEncoded");
-                $i = 0;
+                
                 foreach ($xml3->track as $item3) {
                     $results[] = $item3;
                 }
@@ -419,3 +431,8 @@ class search{
 
 
 
+class services{
+    function search($service, $q, $limit, $offset){
+        
+    }
+}

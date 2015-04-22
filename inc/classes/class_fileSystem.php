@@ -223,16 +223,15 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
         //if folder is empty => load file list
         if($folder !== NULL && !empty($folder)){
             
-            $query = "WHERE folder='$folder' ORDER BY name ASC";
-            $query2 = "WHERE folder='$folder' ORDER BY name ASC";
+            $query = "WHERE `folder`='$folder' ORDER BY `name` ASC";
+            $query2 = "WHERE `folder`='$folder' ORDER BY `title` ASC";
 
 	        	
 	        $filefsql = mysql_query("SELECT * FROM folders $query");
 	        while($filefdata = mysql_fetch_array($filefsql)) {
-	        	
-		        if(authorize($filefdata['privacy'], "show", $filefdata['creator'])){
-				$action['folders'] = "$('.folder".$filefdata['id']."LoadingFrame').loadOuter('doit.php?action=loadMiniBrowser&folder=".$filefdata['id']."&level=$level&select=$select');return false;";
-		        $trigger['folders'] = "$('.miniFileBrowser .choosenItem').html('<span class=\'icon white-archive\'></span>&nbsp;$filefdata[name]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'folder\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'".$filefdata['id']."\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow:visible').slideUp();";
+		        if(authorize($filefdata['privacy'], "show", $filefdata['creator'])){                                    
+				$action['folders'] = "$('.folder".$filefdata['id']."LoadingFrame').replaceWith(filesystem.getMiniFileBrowser(".$filefdata['id'].", '', $level, 0, '$select'));return false;";
+                                $trigger['folders'] = "$('.miniFileBrowser .choosenItem').html('<span class=\'icon white-archive\'></span>&nbsp;$filefdata[name]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'folder\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'".$filefdata['id']."\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow:visible').slideUp();";
 				
 					
 		        ?>
@@ -265,8 +264,8 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 	
 		        if(authorize($fileddata[privacy], "show", $fileddata[author])){
 		        	
-				
-				$action['elements'] = "$('.element".$fileddata['id']."LoadingFrame').loadOuter('doit.php?action=loadMiniBrowser&element=".$fileddata['id']."&level=$level&select=$select');return false;";
+                                                                                                                                
+				$action['elements'] = "$('.element".$fileddata['id']."LoadingFrame').replaceWith(filesystem.getMiniFileBrowser('', ".$fileddata['id'].", $level, 'false', '$select'));return false;";
                                 $trigger['elements'] = "$('.miniFileBrowser .choosenItem').html('<span class=\'icon white-archive\'></span>&nbsp;$title<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'element\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'".$fileddata['id']."\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow:visible').slideUp();";
 						
 		        ?>
@@ -710,3 +709,7 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
         
         return $output;
     }
+    
+    
+    
+    

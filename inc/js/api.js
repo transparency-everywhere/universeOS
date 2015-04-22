@@ -50,7 +50,38 @@ var api = new function(){
         });
         return result;
     };
-    
+    this.loadSource = function(URL, callback){
+        
+        var async;
+        if(typeof callback !== 'undefined'){
+            async = true;
+        }else{
+            async = false;
+        };
+        var result;
+        $.ajax({
+            type: 'POST',
+            url: 'api/getPage/',
+            data: {url: URL},
+            success:function(data){
+                if(!async){
+                    try
+                    {
+                        result = JSON.parse(data);
+                    }
+                    catch(e)
+                    {
+                       result = data;
+                    }
+                }else{
+                    result = callback(data);
+                    
+                }
+            },
+            async:async
+        });
+        return result;
+    };
     
     
 };

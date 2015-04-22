@@ -30,12 +30,10 @@ $messageClass->markAsRead($buddyid, $userid);
 if(empty($_GET['initter'])){
  ?>
       <div class="chatMainFrame">
-          <header class="grayBar">
+          <header>
           	  <!-- toggle description key box -->
               <span><a href="javascript: toggleKey('<?=$buddyid;?>');" id="toggleKey_<?=$buddyid;?>"><i class="lockIcon"></i></a></span>
               
-              <!-- buddydata -->
-              <span><?=showUserPicture($buddyData['userid'], 20);?></span>
               <span><a href="#" onclick="showProfile(<?=$buddyData['userid'];?>); return false;"><?=$buddyData['username'];?></a></span>
           </header>
           <!-- box for caht encription key -->
@@ -50,7 +48,7 @@ if(empty($_GET['initter'])){
 			  <?
 			  $messageClass->showMessages($userid, $buddyid, "0,10");
 		      unset($intWindows);?>
-              <div onclick="chatLoadMore('<?=$buddyid;?>', '1');">...load more</div>
+              <div onclick="chatLoadMore('<?=$buddyid;?>', '1');" class="loadMore">...load more</div>
           </div>
           <?
           if(empty($_GET[initter])){ ?>
@@ -64,7 +62,7 @@ if(empty($_GET['initter'])){
               <li><a href="#" onclick="popper('doit.php?action=chatSendItem&buddy=<?php echo $buddyData['userid'];?>');">Send File</a></li>
           </ul>
       </div>
-      <footer class="blackGradient">
+      <footer>
           <center style="margin-top: 6px;">
               <form action="#" method="post" target="submitter"  autocomplete="off" onsubmit="chatMessageSubmit('<?=$buddyid;?>'); return false;">
                   <a class="btn" onclick="$('.chatAdditionalSettings').toggle();">
@@ -72,7 +70,6 @@ if(empty($_GET['initter'])){
                   </a>
                   <input type="text" placeholder="type a message..." name="message" class="input border-radius chatInput" id="chatInput_<?=$buddyid;?>" style="">
 				  <input type="hidden" name="cryption" value="false" id="chatCryptionMarker_<?=$buddyid;?>">
-                  <input type="submit" value="Send" class="btn">
               </form>
           </center>
       </footer>
