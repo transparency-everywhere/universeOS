@@ -225,6 +225,7 @@ and (max-width : 320px) {
     float:left;
     color:#FFF;
     margin-bottom: 10px;
+    overflow: auto;
 }
 
 .guestBox.registerBox{
@@ -338,7 +339,7 @@ and (max-width : 320px) {
     color: #FFF!important;
     padding-right: 5px;
     text-align: left;
-    width: 300px;
+    width: 320px;
     margin-left: 325px;
 }
 

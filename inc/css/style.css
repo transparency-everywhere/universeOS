@@ -1796,8 +1796,9 @@ color:#FFFFFF;
 #alerter{
 	position: absolute;
 	left: 50%;
-	margin-left: -470px;
+	margin-left: -155px;
 	z-index: 99999;
+	top: 20px;
 	margin-top:20px;
 }
 
