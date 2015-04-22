@@ -1181,15 +1181,43 @@ var sec =  new function() {
 		    	if(result == 1){
 		    		
 	    			parent.localStorage.currentUser_passwordHashMD5 = passwordHashMD5New;
-		    		jsAlert('', 'Your password has been changed');
+		    		gui.alert('Your password has been changed', 'Security');
 		    	}else{
-		    		jsAlert('', result);
+		    		gui.alert(result, 'Security');
 		    	}
 	    	}, "html");
 	    
 	    
-    }
+    };
 };
+
+
+
+var support = new function(){
+    
+    this.loadArticle = function(title, callback){
+        var url = 'http://wiki.transparency-everywhere.com/en/api.php?action=parse&page='+encodeURIComponent(title)+'&format=json';
+        console.log(url);
+        var ret = api.loadSource(url, callback);
+        if(!callback)
+            return ret;
+    };
+    this.loadSection = function(article_title, section_title, callback){
+        section_title = section_title.replace(' ', '_');
+        article_title = article_title.replace(' ', '_');
+        this.loadArticle(article_title, function(data){
+            
+            var html = JSON.parse(data);
+            html = html.parse.text['*'];
+            var returnString;
+            //console.log(html.parse.text['*']);
+            var i = 0;
+            console.log($(html+'').children('#'+section_title).parent().nextUntil('h2').text());
+        });
+    };
+};
+
+
 var tabs = function(parentIdentifier){
     this.parentIdentifier = parentIdentifier;
     this.tabHistory = [];
