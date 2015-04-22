@@ -2,14 +2,14 @@
 
 var shortcuts = new function(){
               	
-    this.getData = function(folder_id){
-        
+    this.getData = function(shortcut_id){
+        return api.query('api/shortcuts/getData/', {shortcut_id: shortcut_id});
     };
     this.create = function(parentType, parentId, type, typeId, title, callback){
         api.query('api/shortcuts/create/', {parent_type:parentType, parent_id: parentId, type: type, type_id: typeId, title: title},callback);
     };
-    this.pdateShortcut = function(){
-        
+    this.delete = function(id, callback){
+	return api.query('api/shortcuts/delete/',{shortcut_id : id},callback);
     };
     this.showChooseShortcutTypeForm = function(parentType, parentId){
       
@@ -115,6 +115,25 @@ var shortcuts = new function(){
         formModal.init('Create Shortcut in '+parentType+' '+title, '<div id="createShortcutFormContainer"></div>', modalOptions);
         gui.createForm('#createShortcutFormContainer',fieldArray, options);
         
+    };
+    this.verifyShortcutRemoval = function(id){
+                var confirmParameters = {};
+        var shortcutData = shortcuts.getData(id);
+        confirmParameters['title'] = 'Delete Shortcut';
+        confirmParameters['text'] = 'Are you sure to delete this shortcut?';
+        confirmParameters['submitButtonTitle'] = 'Delete';
+        confirmParameters['submitFunction'] = function(){
+            shortcuts.delete(id, function(){
+                filesystem.tabs.updateTabContent(1 , filesystem.generateFullFileBrowser(shortcutData['parentId']));
+                gui.alert('The shortcut has been deleted');
+            });
+        };
+        confirmParameters['cancelButtonTitle'] = 'Cancel';
+        confirmParameters['cancelFunction'] = function(){
+            //alert('cancel');
+        };
+        
+        gui.confirm(confirmParameters);
     };
     
 };

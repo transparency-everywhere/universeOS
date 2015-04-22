@@ -40,6 +40,10 @@ class shortcut {
             return true;
         }
     }
+    function getData($linkId){
+        $db = new db();
+        return $db->select('internLinks', array('id', $linkId));
+    }
     
     function deleteInternLinks($parentType, $parentId){
         $db = new db();
