@@ -716,16 +716,33 @@ div.leftNav span.icon {
     background: -ms-linear-gradient(top, #eaeaea 0%,#f2f2f2 100%); /* IE10+ */
     background: linear-gradient(to bottom, #eaeaea 0%,#f2f2f2 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#f2f2f2',GradientType=0 ); /* IE6-9 */
-}   
+} 
+
+
+
+
+#attributes {
+    display:none;
+}
 
 span.icons {
-    display: inline-block;
+    display: block;
+    text-align: center;
     width: 100%;
+    height: 60px;
+}
+
+span.icons span.icon {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
 }
 
 span.title {
-    display: inline-block;
+    display: block;
+    text-align: center;
     width: 100%;
+    height: 50px;
     
 }
 
@@ -743,7 +760,7 @@ span.buttons {
     display: none;
     
 }
-
+  
 span.heading {
     display: block;
     clear: both;
@@ -754,14 +771,28 @@ span.heading {
     text-align: left;
 }
 
-span.icons span.icon {
-    width: 80px;
-    height: 80px;
+div#showElement.frameRight ul li {  
+    display: block;
+    float: left;
+    width: 130px;
+    height: 110px;
+    margin: 2px;
 }
 
-div#showElement.frameRight ul li {
-    display: inline-block;
-    width: 50%
+div#showElement.frameRight ul li:hover {
+    background-color: #cfd8dc;
+    
+    span.buttons {
+        display: block;
+        width: 30px;
+        margin-top: -114px;
+        margin-left: 82px;
+        text-align: center;
+    }
+    
+    span.buttons .scoreButton {
+        display:none;
+    }
 }
 
 
@@ -1476,13 +1507,25 @@ color: #FFF;
         
 .imageReader .mainImage {
       background-color: #263238;
-}         
+      text-align: center;
+}  
+
 .imageReader .mainImage img {
-      margin: 0 auto;
-}        
+      display: inline-block;
+}     
+
 .imageReader .previewImages {
-      background-color: #37474f;
-      overflow: auto;
+    background-color: #37474f;
+    overflow: auto;
+    height: 150px;
+    padding: 5px;
+}    
+
+.imageReader .previewImages img {
+    display: block;
+    float: left;
+    height: 100%;
+    margin-right: 5px;
 }
 	
 	/*chat*/
