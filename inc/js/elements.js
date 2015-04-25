@@ -34,11 +34,11 @@ var elements = new function(){
                 header += item.showScoreButton('element', element);
                 header += '<a href=\"#\" id=\"settingsButton\" onclick=\"$(\'.elementSettings' + element + '\').slideToggle(\'slow\'); return false\" title=\"more...\">' + filesystem.generateIcon('settings', 'grey') + '</a>';  
             header += '</span>';
-            header += '<ul class="elementSettings elementSettings' + element + '">';		 
-                header += '<li><a href="#" onclick="filesystem.showCreateUFFForm(\'' + element + '\'); " target="submitter">' + filesystem.generateIcon('file', 'blue') + '&nbsp;Create an UFF</a></li>';
-                header += '<li><a href="#" onclick="links.showCreateLinkForm(\'' + element + '\');">' + filesystem.generateIcon('file', 'blue') + '&nbsp;Add a link</a></li>';		  			
-                header += '<li><a href="#" onclick="filesystem.openUploadTab(\'' + element + '\');">' + filesystem.generateIcon('link', 'blue') + '&nbsp;Upload files</a></li>';
-            header += '</ul>';
+            header += '<div class="elementSettings dropdown"><ul class="elementSettings elementSettings' + element + '">';		 
+                header += '<li onclick="filesystem.showCreateUFFForm(\'' + element + '\'); ">' + filesystem.generateIcon('file', 'white') + '&nbsp;Create an UFF</li>';
+                header += '<li onclick="links.showCreateLinkForm(\'' + element + '\');">' + filesystem.generateIcon('link', 'white') + '&nbsp;Add a link</li>';		  			
+                header += '<li onclick="filesystem.openUploadTab(\'' + element + '\');">' + filesystem.generateIcon('file', 'white') + '&nbsp;Upload files</li>';
+            header += '</ul></div>';
         header += "</header>";
         var html = filesystem.generateLeftNav();
         html += '<div id="showElement" class="frameRight">';
@@ -59,11 +59,13 @@ var elements = new function(){
         var image = "";
         var date = "";
         var type = "";
+        html += '<div id="attributes">';
         html += '<span class="icons"></span>';
         html += '<span class="title">Name</span>';
         html += '<span class="date">Date</span>';
         html += '<span class="size">Size</span>';
-        html += '<span class="buttons"></span>'
+        html += '<span class="buttons"></span>';
+        html += '</div>';
         html += '<ul>';
         html += '<span class="heading">Files</span>';
         $.each(fileList, function(key, value){
@@ -80,7 +82,7 @@ var elements = new function(){
                 date = new Date(data['timestamp']*1000).toString().substr(11, 5) + new Date(data['timestamp']*1000).toString().substr(4, 4) + new Date(data['timestamp']*1000).toString().substr(8, 2); //year + month + day
                 image = filesystem.generateIcon(data['type']);
                 html += '<li data-id="' + data['id'] + '" data-type="' + data['type'] + '" data-title="' + data['title'] + '" data-date="' + date + '" data-size="' + data['size'] + '">';
-                    html += '<span class="icons">&nbsp;' + image + '</span>';
+                    html += '<span class="icons"><a href="./out/?file=' + data['id'] + '" onclick="reader.' + type + '(\'' + data['id'] + '\'); return false">' + image + '</a></span>';
                     html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="reader.' + type + '(\'' + data['id'] + '\'); return false">' + data['title'] + '</a></span>';
                     html += '<span class="date">' + date + '</span>';
                     html += '<span class="size">' + Math.round(data['size']/1024) + ' kB</span>';
@@ -114,7 +116,7 @@ var elements = new function(){
                 date = new Date(data['timestamp']*1000).toString().substr(11, 5) + new Date(data['timestamp']*1000).toString().substr(4, 4) + new Date(data['timestamp']*1000).toString().substr(8, 2); //year + month + day
                 image = filesystem.generateIcon(data['type']);
                 html += '<li data-id="' + data['id'] + '" data-type="' + data['type'] + '" data-title="' + data['title'] + '" data-date="' + date + '" data-size="' + data['size'] + '">';
-                    html += '<span class="icons">&nbsp;' + image + '</span>';
+                    html += '<span class="icons"><a href="./out/?file=' + data['id'] + '" onclick="reader.' + type + '(\'' + data['id'] + '\'); return false">' + image + '</a></span>';
                     html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="reader.' + type + '(\'' + data['id'] + '\'); return false">' + data['title'] + '</a></span>';
                     html += '<span class="date">' + date + '</span>';
                     html += '<span class="size">' + Math.round(data['size']/1024) + ' kB</span>';
@@ -148,7 +150,7 @@ var elements = new function(){
                 date = new Date(data['timestamp']*1000).toString().substr(11, 5) + new Date(data['timestamp']*1000).toString().substr(4, 4) + new Date(data['timestamp']*1000).toString().substr(8, 2); //year + month + day
                 image = filesystem.generateIcon(data['type']);
                 html += '<li data-id="' + data['id'] + '" data-type="' + data['type'] + '" data-title="' + data['title'] + '" data-date="' + date + '" data-size="' + data['size'] + '">';
-                    html += '<span class="icons">&nbsp;' + image + '</span>';
+                    html += '<span class="icons"><a href="./out/?file=' + data['id'] + '" onclick="reader.' + type + '(\'' + data['id'] + '\'); return false">' + image + '</a></span>';
                     html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="reader.' + type + '(\'' + data['id'] + '\'); return false">' + data['title'] + '</a></span>';
                     html += '<span class="date">' + date + '</span>';
                     html += '<span class="size"></span>';

@@ -772,16 +772,40 @@ li.notHidden{
     background: -ms-linear-gradient(top, #eaeaea 0%,#f2f2f2 100%); /* IE10+ */
     background: linear-gradient(to bottom, #eaeaea 0%,#f2f2f2 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#f2f2f2',GradientType=0 ); /* IE6-9 */
+
 }
 
 span.icons {
     display: inline-block;
     min-width: 21px
+} 
+
+
+
+
+#attributes {
+    display:none;
+}
+
+span.icons {
+    display: block;
+    text-align: center;
+    width: 100%;
+    height: 60px;
+}
+
+span.icons span.icon {
+    display: inline-block;
+    width: 35%;
+    width: 60px;
+    height: 60px;
 }
 
 span.title {
-    display: inline-block;
-    width: 35%;
+    display: block;
+    text-align: center;
+    width: 100%;
+    height: 50px;
     
 }
 
@@ -803,7 +827,7 @@ span.buttons {
     width: 30%;
     
 }
-
+  
 span.heading {
     display: block;
     clear: both;
@@ -814,7 +838,29 @@ span.heading {
     text-align: left;
 }
 
+div#showElement.frameRight ul li {  
+    display: block;
+    float: left;
+    width: 130px;
+    height: 110px;
+    margin: 2px;
+}
 
+div#showElement.frameRight ul li:hover{
+    background-color: #cfd8dc;
+}
+
+div#showElement.frameRight ul li:hover span.buttons {
+    display: block;
+    width: 30px;
+    margin-top: -114px;
+    margin-left: 82px;
+    text-align: center;
+}
+    
+div#showElement.frameRight ul li:hover span.buttons .scoreButton {
+    display:none;
+}
 .pepperSteakButton{
     height: 35px;
 }
@@ -843,7 +889,7 @@ span.heading {
 }
 
 .leftNav > ul > li:hover {
-    background: #C7C7C7;
+    background: #FFFFFF;
 }
 
 .leftNav > ul > li.header{
@@ -1274,6 +1320,10 @@ color: #FFF;
 	clear:both;
 }
 
+.filetable tr:hover{
+	background-color: #cfd8dc;
+}
+
 .filetable tr td:first-of-type img{
     margin-right: 5px;
     margin-left: 5px;
@@ -1358,6 +1408,39 @@ color: #FFF;
 .shareBox .btn img{
 	margin-bottom: -5px;
 }
+
+ul .elementSettings {
+    display: none;
+}
+
+.dropdown li {
+    height: auto!important;
+    width: 100%!important;
+    cursor: pointer;
+    margin: 0!important;
+    background-color: #37474f;
+    color: #ffffff;
+    padding: 3px;
+    border: 1px #263238;
+    border-top-style: none;
+    border-bottom-style: solid;
+    border-left-style: none;
+    border-right-style: none;
+}
+
+.dropdown li:hover {
+    background-color: #263238!important;
+}
+
+.dropdown li:active {
+    background-color: #263238!important;
+}
+
+
+
+
+
+
 /* reader */
 
 
@@ -1428,71 +1511,83 @@ color: #FFF;
     cursor:pointer;
 }
 
-	.openFile header{
-		height:40px;
-		cursor: default;
-                vertical-align: middle;
-	}
-	
-	.openFile header .title{
-            color:  #313131;
-            font-size: 16px; /* Näherungswert aufgrund einer Schriftersetzung */
-            font-weight: 150;
-            text-align: left;
-	}
-	.openFile header .icon{
-            width: 24px;
-            height: 24px;
-	}
-	.openFile header .itemSettingsButton{
-	}
-	
-	.openFile header span>span{
-	}
 
-            .uffViewerMain{
-                position: absolute;
-                top: 40px;
-                right: 150px;
-                bottom: 0px;
-                left: 0px;
-                overflow: auto;
-            }
-            
-            .uffViewerMain ol{
-                list-style-type:decimal;
-            }
-            
-            .uffViewerMain li{
-                height: auto;
-            }
 
-            .uffViewerNav{
-                position: absolute;
-                top: 40px;
-                right: 0px;
-                bottom: 0px;
-                width: 150px;
-                background: #FFFFFF;
-                border-left: 1px solid #c9c9c9;
-            }
-            
-            .uffDocumentSettings{
-                position: absolute;
-                margin-top: 40px;
-                background: #E5E5E5;
-                height: 24px;
-                padding: 3px;
-                border-bottom: 1px solid #c9c9c9;
-                border-right: 1px solid #c9c9c9;
-            }
-            
-            .cke_editor_1{
-                position: absolute;
-                top: 0px;
-                right: 150px;
-                bottom: 0px;
-            }
+
+
+.openFile header{
+    display: block;
+    height: 40px;
+    vertical-align: middle;
+}
+.openFile header .title{
+    display: inline-block;
+    color:  #313131;
+    font-size: 16px;
+    font-weight: 150;
+    text-align: left;
+}
+.openFile header .icon{
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+}
+.openFile header .itemSettingsButton{
+    display: inline-block;
+}
+.openFile header .scoreButton{
+    display: inline-block;
+}
+
+.openFile header span>span{
+}
+
+
+
+
+.uffViewerMain{
+    position: absolute;
+    top: 40px;
+    right: 150px;
+    bottom: 0px;
+    left: 0px;
+    overflow: auto;
+}
+
+.uffViewerMain ol{
+    list-style-type:decimal;
+}
+
+.uffViewerMain li{
+    height: auto;
+}
+
+.uffViewerNav{
+    position: absolute;
+    top: 40px;
+    right: 0px;
+    bottom: 0px;
+    width: 150px;
+    background: #FFFFFF;
+    border-left: 1px solid #c9c9c9;
+}
+
+.uffDocumentSettings{
+    position: absolute;
+    margin-top: 40px;
+    background: #E5E5E5;
+    height: 24px;
+    padding: 3px;
+    border-bottom: 1px solid #c9c9c9;
+    border-right: 1px solid #c9c9c9;
+}
+
+.cke_editor_1{
+    position: absolute;
+    top: 0px;
+    right: 150px;
+    bottom: 0px;
+}
 
 	.iframeFrame{
 		position: absolute;
@@ -1523,6 +1618,33 @@ color: #FFF;
 		overflow: auto; 
 		padding: 15px;
 	}
+        
+.imageReader .mainImage {
+    background-color: #263238;
+    overflow: auto;
+    text-align: center;
+}  
+
+.imageReader .mainImage img {
+    display: inline-block;
+    width: 500px;
+}     
+
+.imageReader .previewImages {
+    background-color: #37474f;
+    overflow-y: hidden;
+    overflow-x: auto;
+    height: 150px;
+    width: auto;
+    padding: 5px;
+}    
+
+.imageReader .previewImages img {
+    display: block;
+    float: left;
+    height: 100%;
+    margin-right: 5px;
+}
 	
 	/*chat*/
 #chat {
@@ -2503,8 +2625,7 @@ margin-bottom: -5px;
 }
 
 
-.rightclick, .itemSettingsWindow, .fileBrowserSettings{
-    
+.rightclick, .itemSettingsWindow{
     background-color: #37474f;
 }
 
@@ -2523,7 +2644,30 @@ margin-bottom: -5px;
 }
 
 .fileBrowserSettings{
-	display: none;
+    display: none;
+}
+
+.fileBrowserSettings li{
+    height: auto!important;
+    width: 100%!important;
+    cursor: pointer;
+    margin: 0!important;
+    background-color: #37474f;
+    color: #ffffff!important;
+    padding: 3px;
+    border: 1px #263238;
+    border-top-style: none;
+    border-bottom-style: solid;
+    border-left-style: none;
+    border-right-style: none;
+}
+
+.fileBrowserSettings li:hover{
+    background-color: #263238!important;
+}
+
+.fileBrowserSettings li:active{
+    background-color: #00bcd4!important;
 }
 
 .itemSettingsWindow ul, .rightclick ul{
