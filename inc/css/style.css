@@ -245,6 +245,12 @@ li.notHidden{
     color: #FFF;
 }
 
+#searchMenu header #toggleSearchMenu{
+    position:absolute; 
+    top: 32px; 
+    right: 284px;
+}
+
 #searchMenu header h2{
     size: 20px;
     font-weight: 200;
@@ -2148,22 +2154,6 @@ color:#FFFFFF;
         
             cursor: pointer;
 }
-        
-        
-    #dock #searchField {
-        bottom: 5px;
-        font-size: 17px;
-        position: absolute;
-        left: 210px;
-        vertical-align: bottom;
-        width: 180px;
-        height: 30px;
-    
-        border: none;
-        padding-left: 7px;
-}
-
-input#searchField {}    
         
         #dock #clockDiv{
         	position: absolute;
