@@ -18,5 +18,5 @@
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
 
-$user = new user($_POST['userid']);
+$user = new user($_POST['user_id']);
 echo json_encode($user->getProfileInfo());

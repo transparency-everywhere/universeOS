@@ -345,7 +345,6 @@ var gui = new function(){
     };
     this.createDropdown = function(values, captions, preselected, caption){
         var html = '';
-        html = '<option>'+caption+'</option>';
         $.each(values, function( index, value ) {
             var selected;
             if(typeof preselected !== 'undefined'){
