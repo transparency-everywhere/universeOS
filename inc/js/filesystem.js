@@ -20,7 +20,7 @@ var filesystem =  new function() {
         var html = '<div id="fileBrowserFrame"></div>';
         var grid = {width: 6, height:  4, top: 7, left: 0};
         if(proofLogin())
-            grid = {width: 6, height:  5, top: 0, left: 3};
+            grid = {width: 6, height:  8, top: 0, left: 3};
         this.applicationVar = new application('filesystem');
         this.applicationVar.create('Filesystem', 'html', html, grid);
         this.tabs = new tabs('#fileBrowserFrame');
@@ -38,8 +38,8 @@ var filesystem =  new function() {
         html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'pupularity\'));return false"><a href="#">' + filesystem.generateIcon('suggestion', 'blue') + ' Suggestions</a></li>';		  			
         html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'1\'));return false"><a href="#">' + filesystem.generateIcon('filesystem', 'blue') + ' All Files</a></li>';		  			
         html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'document\'));return false"><a href="#">' + filesystem.generateIcon('file', 'blue') + ' Documents</a></li>';		  			
-        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'audio\'));return false"><a href="#">' + filesystem.generateIcon('audio', 'blue') + ' Audio Files</a></li>';		  			
-        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'video\'));return false"><a href="#">' + filesystem.generateIcon('video', 'blue') + ' Video Files</a></li>';		  			
+        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'audio\'));return false"><a href="#">' + filesystem.generateIcon('playlist', 'blue') + ' Audio Files</a></li>';		  			
+        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'video\'));return false"><a href="#">' + filesystem.generateIcon('play', 'blue') + ' Video Files</a></li>';		  			
         if(proofLogin()){
             html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'fav\'));return false"><a href="#">' + filesystem.generateIcon('fav', 'blue') + ' Fav</a></li>';		  			
         }
@@ -446,14 +446,20 @@ var filesystem =  new function() {
     icons['list'] = 'list';
     icons['fav'] = 'heart';
     icons['suggestion'] = 'star';
-    icons['audio'] = 'playlist';
-    icons['video'] = 'play';
+    icons['playlist'] = 'playlist';
+    icons['play'] = 'play';
+    icons['location'] = 'location';
+    icons['maximize'] = 'maximize';
+    icons['minimize'] = 'minimize';
+    icons['close'] = 'close';
+    icons['question'] = 'question';
     
     
     //files
     icons['filesystem'] = 'filesystem';
     icons['undefined'] = 'question';
     icons['file'] = 'file';
+    icons['shortcut'] = 'share-apple';
     icons['audio/mpeg'] = 'file';
     icons['audio/wav'] = 'file';
     icons['audio'] = 'file';
@@ -474,8 +480,16 @@ var filesystem =  new function() {
     icons['image'] = 'image';
     
     //3rd parties
+    icons['rss'] = 'rss';
     icons['youtube'] = 'youtube';
     icons['wiki'] = 'wikipedia';
+    icons['facebook'] = 'sc-facebook';
+    icons['github'] = 'sc-github';
+    icons['google'] = 'sc-google-plus';
+    icons['instragram'] = 'sc-instagram';
+    icons['linkedin'] = 'sc-linkedin';
+    icons['twitter'] = 'sc-twitter';
+    icons['vk'] = 'sc-vk';
 
     if(typeof fileType === 'undefined' || fileType === 'undefined' || icons[fileType] === 'undefined'){
         icons[fileType] = 'archive'; //should be replaced with unknown file icon

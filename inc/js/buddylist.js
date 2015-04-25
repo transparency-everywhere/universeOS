@@ -122,7 +122,7 @@ var buddylist = new function(){
         output += "</div>";
 	
         this.applicationVar = new application('buddylist');
-	this.applicationVar.create('Buddylist', 'html', output,{width: 2, height:  5, top: 0, left: 9});
+	this.applicationVar.create('Buddylist', 'html', output,{width: 2, height:  8, top: 0, left: 9});
 	
     };
     this.reload = function(){
