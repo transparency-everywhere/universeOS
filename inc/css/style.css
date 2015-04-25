@@ -773,11 +773,6 @@ li.notHidden{
     background: linear-gradient(to bottom, #eaeaea 0%,#f2f2f2 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#f2f2f2',GradientType=0 ); /* IE6-9 */
 
-}
-
-span.icons {
-    display: inline-block;
-    min-width: 21px
 } 
 
 
@@ -796,7 +791,6 @@ span.icons {
 
 span.icons span.icon {
     display: inline-block;
-    width: 35%;
     width: 60px;
     height: 60px;
 }
@@ -810,21 +804,17 @@ span.title {
 }
 
 span.date {
-    display: inline-block;
-    width: 15%;
+    display: none;
     
 }
 
 span.size {
-    display: inline-block;
-    width: 15%;
+    display: none;
     
 }
 
 span.buttons {
-    display: inline-block;
-    float: right;
-    width: 30%;
+    display: none;
     
 }
   
@@ -861,6 +851,8 @@ div#showElement.frameRight ul li:hover span.buttons {
 div#showElement.frameRight ul li:hover span.buttons .scoreButton {
     display:none;
 }
+
+
 .pepperSteakButton{
     height: 35px;
 }
@@ -1257,6 +1249,10 @@ color: #FFF;
 
 #filesystem {
     
+}
+
+#filesystem tr.greyHover{
+    cursor: pointer;
 }
 
 #filesystem .frameRight{

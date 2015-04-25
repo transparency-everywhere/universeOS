@@ -36,10 +36,10 @@ var filesystem =  new function() {
         var html = '          <div class="leftNav">';		  			
         html += '              <ul>';		  			
         html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'pupularity\'));return false"><a href="#">' + filesystem.generateIcon('suggestion', 'blue') + ' Suggestions</a></li>';		  			
-        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'1\'));return false"><a href="#">' + filesystem.generateIcon('file', 'blue') + ' All Files</a></li>';		  			
+        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'1\'));return false"><a href="#">' + filesystem.generateIcon('filesystem', 'blue') + ' All Files</a></li>';		  			
         html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'document\'));return false"><a href="#">' + filesystem.generateIcon('file', 'blue') + ' Documents</a></li>';		  			
-        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'audio\'));return false"><a href="#">' + filesystem.generateIcon('file', 'blue') + ' Audio Files</a></li>';		  			
-        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'video\'));return false"><a href="#">' + filesystem.generateIcon('file', 'blue') + ' Video Files</a></li>';		  			
+        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'audio\'));return false"><a href="#">' + filesystem.generateIcon('audio', 'blue') + ' Audio Files</a></li>';		  			
+        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'video\'));return false"><a href="#">' + filesystem.generateIcon('video', 'blue') + ' Video Files</a></li>';		  			
         if(proofLogin()){
             html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'fav\'));return false"><a href="#">' + filesystem.generateIcon('fav', 'blue') + ' Fav</a></li>';		  			
         }
@@ -136,9 +136,9 @@ var filesystem =  new function() {
             if(!empty(folder) && (folder !== "1") && is_numeric(folder)){
                 if(parentFolderData['folder'] !== "1")
                     parentFolderData = folders.getData(folder);                    
-                html += '                        <tr height="30" class="greyHover">';		  			
+                html += '                        <tr height="30" class="greyHover" onclick="openFolder(' + parentFolderData['folder'] + '); return false;">';		  			
                 html += '                            <td width="30">&nbsp;' + filesystem.generateIcon('folder') + '</td>';		  			
-                html += '                            <td><a href="#" onclick="openFolder(' + parentFolderData['folder'] + '); return false;">...</a></td>';		  			
+                html += '                            <td><a href="#">...</a></td>';		  			
                 html += '                            <td width="50px"></td>';		  			
                 html += '                            <td width="50px"></td>';		  			
                 html += '                        </tr>';
@@ -425,7 +425,7 @@ var filesystem =  new function() {
     //general
     icons['settings'] = 'gear';
     icons['folder'] = 'folder';
-    icons['element'] = 'filesystem';
+    icons['element'] = 'archive';
     icons['download'] = 'download';
     icons['link'] = 'external-link';
     icons['RSS'] = 'rss';
@@ -446,10 +446,13 @@ var filesystem =  new function() {
     icons['list'] = 'list';
     icons['fav'] = 'heart';
     icons['suggestion'] = 'star';
+    icons['audio'] = 'playlist';
+    icons['video'] = 'play';
     
     
     //files
-    icons['undefined'] = 'archive';
+    icons['filesystem'] = 'filesystem';
+    icons['undefined'] = 'question';
     icons['file'] = 'file';
     icons['audio/mpeg'] = 'file';
     icons['audio/wav'] = 'file';
