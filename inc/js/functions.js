@@ -198,12 +198,11 @@ var init = new function(){
                         
                         
                         $('#searchTrigger').bind('click', function(){
-                            $('#bodywrap').animate({
-                                    marginLeft: -337
-                            }, 700);
-                            $('#searchMenu').animate({
-                                    marginRight: 0
-                            }, 700);
+                            search.toggleSearchMenu();
+                        });
+                        
+                        $('#searchMenu #toggleSearchMenu').bind('click',function(){
+                            search.toggleSearchMenu();
                         });
         };
 	
