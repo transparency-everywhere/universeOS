@@ -136,7 +136,7 @@ class search{
         }else{
             $liAppendix = '';
         }
-        $title = htmlentities(substr($title, 0, 33));
+        $title = htmlentities(substr($title, 0, 22));
         
         $output = '<li '.$liAppendix.'>';
             $output .=  $icon;
@@ -370,10 +370,17 @@ class search{
 
         }
 
-
-        $youtubes = $this->getSearchResults('youtube');
+            $youtubes = $this->getSearchResults('youtube');
+        
+            
+            unset($youtubes[0]); // remove item at index 0
+            $youtubes = array_values($youtubes); // 'reindex' array
+        
+        
         $icon = 'dark-youtube';
         if(count($youtubes) > 0){
+            
+            
             $output .= "<div class=\"listContainer\">";
             $output .= $this->parseLists('youtube', $youtubes);
             $output .= '<header>Youtube</header>';

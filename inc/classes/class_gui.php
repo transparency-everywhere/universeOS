@@ -38,6 +38,9 @@ class gui {
         echo '<li></li>';
         echo '</ul></td>';
         echo "                    <td align=\"right\" style=\"color: #FFFFFF; float: right\"><a href=\"#\" id=\"clockDiv\" style=\"color: #FFFFFF; float: right\" onclick=\"calendar.show();\"></a></td>\n";
+        
+        echo "                    <td align=\"right\" style=\"color: #FFFFFF; float: right\"><a href='#search' title='search something' id='searchTrigger'><span class='icon white-search'></span></a></td>\n";
+        
         echo "                </tr>\n";
         echo "            </table>\n";
         echo "        </div>\n";
@@ -51,7 +54,7 @@ class gui {
                     'en' => 'English' , 
                     'aa' => 'Afar' , 
                     'ab' => 'Abkhazian' , 
-                    'af' => 'Afrikaans' , 
+                    'af' => 'Afrikaans' ,
                     'am' => 'Amharic' , 
                     'ar' => 'Arabic' , 
                     'as' => 'Assamese' , 
