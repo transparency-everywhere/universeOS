@@ -39,16 +39,22 @@ if(!$login) {
     echo analytic_script;
     
     include('actions/openFileFromLink.php');
+    include('views/guestpage/search_menu.html');
 
     echo '</body>';
     echo '</html>';
        
 }
 else{
+    //set userid
     echo '<script>User.userid = '.getUser().';</script>';
+    
     echo '<div id="alerter"></div>';
     
+    //include dashboard
     include("modules/desktop/dashboard.php");
+    
+    
     echo    '<div id="bodywrap">';
     echo        '<ul id="systemAlerts">';
     echo        '</ul>';
@@ -61,17 +67,17 @@ else{
         echo        '<ul></ul>';
     echo        '</div>';
     
-    echo        '<div id="playListPlayer">';
-    
-   include("playListplayer.php");
-    
-    echo        '</div>';
-    
-    echo    '</div>';
+//    echo        '<div id="playListPlayer">';
+//    
+//    echo        '</div>';
     
     $gui = new gui();
     $gui->showDock();
 
+    echo    '</div>';
+    
+    include('views/guestpage/search_menu.html');
+    
     include('actions/openFileFromLink.php');
     
     echo '</body>';

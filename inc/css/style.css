@@ -224,13 +224,64 @@ li.notHidden{
 	background-image: url('../../gfx/standarduser.png');
 }
 
-div.leftNav span.icon {
-    width: 22px;
-    height: 22px;
-}
 
 /* search */
-.dockSeachResult .userPicture {
+
+#searchTrigger{
+    position: absolute;
+    right: 5px;
+    bottom: 0;
+}
+
+#searchMenu{
+    position:absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    width: 337px;
+    margin-right: -337px;
+    padding: 20px;
+    background: #607d8b;
+    color: #FFF;
+}
+
+#searchMenu header h2{
+    size: 20px;
+    font-weight: 200;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+#searchMenu header ul{
+    position: absolute;
+    color:  #18ffff; 
+}
+
+#searchMenu header ul#selectSource{
+    left: 20px;
+}
+
+#searchMenu header ul#selectType{
+    left: 120px;
+}
+
+
+#searchMenu header input[type=text]{
+    width: 100%;
+    height: 40px;
+    font-size: 16px;
+    margin-top: 35px;
+}
+
+
+#searchMenu header .icon{
+    height: 24px;
+    width: 24px;
+    position:absolute;
+    right: 26px;
+    margin-top: -30px;
+}
+#searchMenu .userPicture {
 	margin: 1px 5px;
 }
 
@@ -268,25 +319,21 @@ div.leftNav span.icon {
 
 	/*docksearch result and boxes inside
 	background is ldefined in .fancy*/
-.dockSeachResult{
-    position: absolute;
-    right: 0px;
-    top: 0;
-    bottom: 0px;
-    width: 30%;
-    z-index: 9998;
-    background: #607d8b;
-    color: #FFF;
-}
+        
+        
 
-.dockSeachResult, .dockSeachResult a, .dockSeachResult a:link, .dockSeachResult a:visited{
-    color:  #fefefe;
+#searchMenu, #searchMenu a, #searchMenu a:link, #searchMenu a:visited{
+    color: #fefefe;
     font-size: 20px; /* Näherungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: left;
 }
+        #searchMenu #loadingArea{
+            margin-top: 50px;
+        }
 
-.dockSeachResult > h2{
+   
+#searchMenu > h2{
     margin-top: 15px;
     margin-bottom: 60px;
     margin-left: 15px;
@@ -295,22 +342,18 @@ div.leftNav span.icon {
     font-size: 20px;
 }
 
-.dockSeachResult > .listContainer:first-of-type{
+#searchMenu > .listContainer:first-of-type{
 	clear: left;
 }
-.dockSeachResult > .listContainer{
+#searchMenu > .listContainer{
 	margin: 50px 15px;
 	margin-bottom: 0px;
 }
 
-.dockSeachResult .list{
+#searchMenu .list{
 	background: #ffffff;
 	max-height: 100px;
 	overflow: auto;
-}
-
-.resultList>li:hover{
-    background: #00bcd4;
 }
 
 
@@ -321,9 +364,14 @@ div.leftNav span.icon {
     border-bottom: 1px solid #607d8b;
 }
 .resultList li a, .resultList li a:link,.resultList li a:visited, .resultList li a:active{
-    font-size: 19px;
-    color:  #313131;
+    color: #313131!important;
     font-size: 14px;
+}
+.resultList li:hover{
+    background-color: #00bcd4;
+}
+.resultList li:hover a, .resultList li:hover a:link,.resultList li:hover a:visited, .resultList li:hover a:active{
+    color: #fefefe!important;
 }
 
 .resultList li .icon, .resultList li .userPicture{
@@ -352,7 +400,11 @@ div.leftNav span.icon {
 }
 
 .resultList>li:hover>a, .resultList>li:hover>a:link,.resultList>li:hover>a:visited{
-    color:#FFF;
+    color: #313131;
+}
+
+.resultList li:hover a{
+    color: #FFF;
 }
 
 .resultList li .icon-gear, .resultList li .white-gear{
@@ -374,16 +426,17 @@ div.leftNav span.icon {
 .resultList li:hover .icon.dark{
     display:none;
 }
-.dockSeachResult .loadAll, .dockSeachResult .loadAll{
+#searchMenu .loadAll, #searchMenu .loadAll{
     font-size: 14px;
     margin-top: 15px;
     text-align:right;
 }
 
-.dockSeachResult .loadAll a{
+#searchMenu .loadAll a{
     color: #18ffff!important;
     font-size: 14px;
 }
+
 
 
 .windowHeader {
@@ -719,6 +772,12 @@ div.leftNav span.icon {
     background: -ms-linear-gradient(top, #eaeaea 0%,#f2f2f2 100%); /* IE10+ */
     background: linear-gradient(to bottom, #eaeaea 0%,#f2f2f2 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#f2f2f2',GradientType=0 ); /* IE6-9 */
+
+}
+
+span.icons {
+    display: inline-block;
+    min-width: 21px
 } 
 
 
@@ -737,6 +796,7 @@ span.icons {
 
 span.icons span.icon {
     display: inline-block;
+    width: 35%;
     width: 60px;
     height: 60px;
 }
@@ -750,17 +810,21 @@ span.title {
 }
 
 span.date {
-    display: none;
+    display: inline-block;
+    width: 15%;
     
 }
 
 span.size {
-    display: none;
+    display: inline-block;
+    width: 15%;
     
 }
 
 span.buttons {
-    display: none;
+    display: inline-block;
+    float: right;
+    width: 30%;
     
 }
   
@@ -797,8 +861,6 @@ div#showElement.frameRight ul li:hover span.buttons {
 div#showElement.frameRight ul li:hover span.buttons .scoreButton {
     display:none;
 }
-
-
 .pepperSteakButton{
     height: 35px;
 }
@@ -2105,12 +2167,14 @@ input#searchField {}
         
         #dock #clockDiv{
         	position: absolute;
-			right: 5px;
+			
+        	right: 38px;
 			bottom: 10px;
 			
         	width: 245px;
 			height: 20px;
-			font-size: 20px;
+			
+        	font-size: 20px;
         }
         
         .dockPlayer{
@@ -2240,7 +2304,9 @@ input#searchField {}
                 if empty(used in dockmenu ajax stuff)*/
                 .listContainer {
                     position: relative;
-                }
+                
+                    margin-bottom: 40px;
+}
 
                 .listContainer header {
                     position: absolute;
@@ -4198,4 +4264,4 @@ background-color: #00bcd4;
         .custom-dropdown--large .custom-dropdown__select { padding-right: 1.3em }
         .custom-dropdown--small .custom-dropdown__select { padding-right: .5em }
     }
-}
+}!

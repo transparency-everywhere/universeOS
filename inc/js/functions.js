@@ -169,6 +169,7 @@ var init = new function(){
 				delay(function(){
 					var search;
 					
+                                        var $loadingArea = $('#searchMenu #loadingArea');
 					search = $("#searchField").val();
 					if (search.length > 1)
 					{
@@ -179,22 +180,32 @@ var init = new function(){
 							data: "search=" + search,
 							success: function(message)
 							{
-								$("#suggest").empty();
+								$loadingArea.empty();
 						  		if (message.length > 1)
 								{						
-									$("#suggest").append(message);
+									$loadingArea.append(message);
 								}
 							}
 						});
 					}
 					else
 					{
-						$("#suggest").empty();
+                                            $loadingArea.empty();
 					}
 					
 				}, 500 );
 			});
-};
+                        
+                        
+                        $('#searchTrigger').bind('click', function(){
+                            $('#bodywrap').animate({
+                                    marginLeft: -337
+                            }, 700);
+                            $('#searchMenu').animate({
+                                    marginRight: 0
+                            }, 700);
+                        });
+        };
 	
 	//this function is called to initialzie GUI
 	//all needed functions are collected here
@@ -478,6 +489,49 @@ var universe = new function(){
                 break;
         };
     };
+};
+
+var telescope = new function(){
+    this.init = function(){
+        var grid = {width: 5, height:  4, top: 6, left: 3, hidden: false};
+        if(proofLogin())
+            grid = {width: 8, height:  8, top: 1, left: 2, hidden: false};
+        this.applicationVar = new application('telescope');
+        this.applicationVar.create('Telescope', 'html', "<div id='telescopeFrame'></div>", grid);
+        
+        
+	this.tabs = new tabs('#telescopeFrame');
+        this.tabs.init();
+	this.tabs.addTab('Home', '','this is a tab inside the telescope');
+    };
+    this.query = function(){
+        var html;
+        
+        html = '<header>';
+            html += '<ul>';
+                html += '<li><span class="icon icon-link"></span></li>';
+                html += '<li><span class="icon icon-link"></span></li>';
+                html += '<li><span class="icon icon-link"></span></li>';
+                html += '<li><span class="icon icon-link"></span></li>';
+            html += '</ul>';
+            html += '<input type="text" placeholder="search>';
+            html += '<div>';
+                html += '<ul>';
+                    html += '<li>Everything</li>';
+                html += '</ul>';
+                html += '<ul>';
+                    html += '<li>the Universe</li>';
+                html += '</ul>';
+                html += '<ul>';
+                    html += '<li>any time</li>';
+                html += '</ul>';
+                html += '<ul>';
+                    html += '<li>any language</li>';
+                html += '</ul>';
+            html += '</div>';
+        html += '<header>';
+    };
+        
 };
 
 var User = new function(){
@@ -968,6 +1022,30 @@ var hash = new function(){
 	};
         
 var search = new function(){
+    this.toggleSearchMenu = function(){
+        
+        var $searchMenu = $('#searchMenu');
+        var ms = 700;
+        if($searchMenu.hasClass('open')){
+            
+            $('#bodywrap').animate({
+                    marginLeft: 0
+            }, ms);
+            $searchMenu.animate({
+                    marginRight: -337
+            }, ms);  
+            $searchMenu.removeClass('open');
+        }else{
+          
+            $('#bodywrap').animate({
+                    marginLeft: -337
+            }, ms);
+            $searchMenu.animate({
+                    marginRight: 0
+            }, ms);  
+            $searchMenu.addClass('open');
+        }
+    };
     this.initResultHandlers = function(query){
                 item.initRightClick();
                 $('.resultList a:link, .resultList .icon-gear, .resultList .white-gear').unbind('click');
