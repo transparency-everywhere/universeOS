@@ -123,13 +123,14 @@ h3{
 
 .windowMenu{
     position: absolute;
-    right: 10px;
-    top: 10px;
+    right: 6px;
+    top: 6px;
 }
 
 .windowMenu .icon{
-   width: 20px;
-height: 20px;
+   width: 32px;
+
+   height: 32px;
 }
 
 
@@ -883,8 +884,7 @@ div#showElement.frameRight ul li:hover span.buttons .scoreButton {
     margin: 0px;
     padding: 10px;
     cursor:pointer;
-    font-size: 18px;
-    vertical-align: middle;
+    font-size: 20px;
 }
 
 .leftNav > ul > li:hover {
@@ -906,11 +906,6 @@ div#showElement.frameRight ul li:hover span.buttons .scoreButton {
 
 .leftNav > ul > li img{
     
-}
-
-.leftNav span.icon {
-    height: 25px;
-    width: 25px;
 }
 
 .frameRight{

@@ -863,6 +863,10 @@ var User = new function(){
     };
 };        
 
+function showProfile(userid){
+    User.showProfile(userid);
+};
+
 function useridToUsername(id){
 		if(usernames[id] == undefined){
 			
