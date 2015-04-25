@@ -34,11 +34,11 @@ var elements = new function(){
                 header += item.showScoreButton('element', element);
                 header += '<a href=\"#\" id=\"settingsButton\" onclick=\"$(\'.elementSettings' + element + '\').slideToggle(\'slow\'); return false\" title=\"more...\">' + filesystem.generateIcon('settings', 'grey') + '</a>';  
             header += '</span>';
-            header += '<ul class="elementSettings elementSettings' + element + '">';		 
-                header += '<li><a href="#" onclick="filesystem.showCreateUFFForm(\'' + element + '\'); " target="submitter">' + filesystem.generateIcon('file', 'blue') + '&nbsp;Create an UFF</a></li>';
-                header += '<li><a href="#" onclick="links.showCreateLinkForm(\'' + element + '\');">' + filesystem.generateIcon('file', 'blue') + '&nbsp;Add a link</a></li>';		  			
-                header += '<li><a href="#" onclick="filesystem.openUploadTab(\'' + element + '\');">' + filesystem.generateIcon('link', 'blue') + '&nbsp;Upload files</a></li>';
-            header += '</ul>';
+            header += '<div class="elementSettings dropdown"><ul class="elementSettings elementSettings' + element + '">';		 
+                header += '<li onclick="filesystem.showCreateUFFForm(\'' + element + '\'); ">' + filesystem.generateIcon('file', 'white') + '&nbsp;Create an UFF</li>';
+                header += '<li onclick="links.showCreateLinkForm(\'' + element + '\');">' + filesystem.generateIcon('link', 'white') + '&nbsp;Add a link</li>';		  			
+                header += '<li onclick="filesystem.openUploadTab(\'' + element + '\');">' + filesystem.generateIcon('file', 'white') + '&nbsp;Upload files</li>';
+            header += '</ul></div>';
         header += "</header>";
         var html = filesystem.generateLeftNav();
         html += '<div id="showElement" class="frameRight">';

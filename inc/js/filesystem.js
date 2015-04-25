@@ -85,12 +85,12 @@ var filesystem =  new function() {
                     if(!empty(folderId) && is_numeric(folderId)){
                         html += '        	<ul class="fileBrowserSettings fileBrowserSettings' + folderId + '">';		  			
                         if(proofLogin()){
-                            html += '                       <li><a href="#" onclick="fav.add(\'folder\', ' + folderId + ')">Fav</a></li>';
+                            html += '                       <li onclick="fav.add(\'folder\', ' + folderId + ')">' + filesystem.generateIcon('fav', 'white') + 'Add to favorites</li>';
                         }		  			
                         if(privacy.authorize(folderData['privacy'], folderData['creator'])){
-                            html += '        		<li><a href="#" onclick="javascript: elements.showCreateElementForm(\'' + folderId + '\');return false">Add Element</a></li>';
-                            html += '                       <li><a href="#" onclick="javascript: folders.showCreateFolderForm(' + folderId + ');return false">Add Folder</a></li>';
-                            html += '        		<li><a href="#" onclick="javascript: popper(\'doit.php?action=addInternLink&parentFolder=' + folderId + '&reload=1\');return false">Add Shortcut</a></li>';
+                            html += '        		<li onclick="javascript: elements.showCreateElementForm(\'' + folderId + '\');return false">' + filesystem.generateIcon('element', 'white') + 'Add element</li>';
+                            html += '                       <li onclick="javascript: folders.showCreateFolderForm(' + folderId + ');return false">' + filesystem.generateIcon('folder', 'white') + 'Add folder</li>';
+                            html += '        		<li onclick="javascript: popper(\'doit.php?action=addInternLink&parentFolder=' + folderId + '&reload=1\');return false">' + filesystem.generateIcon('shortcut', 'white') + 'Add shortcut</li>';
                         }		  			
                         html += '        	</ul>';
                     }
