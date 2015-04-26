@@ -171,7 +171,7 @@ var elements = new function(){
         });
         html += '</ul>';
         if(i === 0){
-            html += '<ul><li>';
+            html = '<ul><li>';
             html += '<span>';
             html += 'This Element is empty.';
             html += '</span>';
