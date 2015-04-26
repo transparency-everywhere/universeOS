@@ -1172,6 +1172,8 @@ color: #FFF;
     left: 0px;
     overflow: auto;
     background-color: #FFFFFF;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
 
 .feedEntry{
@@ -1216,20 +1218,21 @@ color: #FFF;
 }
 
 #feedInput{
-	        position: absolute;
-	        top: 10px;
-        right: 10px;
-        width: 200px;
-        height: 40px;
+        
+        
+        
+	        height: 40px;
         font-size: 25px;
         padding: 8px;
 
 	resize: none;
+	        width: 100%;
+	        margin-left: -10px;
 }
 
 #feedInputBar{
     position: absolute;
-    top: 60px;
+    top: 49px;
     right: 10px;
     width: 195px;
 }
