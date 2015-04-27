@@ -323,7 +323,7 @@ class contextMenu{
 			
 			  	$report['title'] = 'Report';
 			    $report['href'] = '#';
-			  	$report['onclick'] = "javascript: popper('doit.php?action=reportFile&fileId=$itemId')";
+			  	$report['onclick'] = "javascript:filesystem.showReportFileForm($itemId);";
 			  
 			  	$download['title'] = 'download';
 			  	$download['href'] = "./out/download/?fileId=$itemId";

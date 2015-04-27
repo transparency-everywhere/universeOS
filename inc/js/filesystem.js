@@ -512,6 +512,54 @@ var filesystem =  new function() {
     this.getMiniFileBrowser = function(folder, element, level, showGrid, select){
         return api.query('api/item/loadMiniFileBrowser/', {folder: folder, element: element, level: level, showGrid: showGrid, select: select});
     };
+    
+    this.showReportFileForm = function(file_id){
+        
+        var formModal = new gui.modal();
+        
+        var fieldArray = [];
+        var options = [];
+        options['headline'] = '';
+        options['buttonTitle'] = 'Save';
+        options['noButtons'] = true;
+        
+        var captions = ['Copyrights', 'Human Rights', 'Other'];
+        var type_ids = ['Copyrights', 'Human Rights', 'Other'];
+        
+        var field0 = [];
+        field0['caption'] = 'Reason';
+        field0['required'] = true;
+        field0['inputName'] = 'reason';
+        field0['type'] = 'dropdown';
+        field0['values'] = type_ids;
+        field0['captions'] = captions;
+        fieldArray[0] = field0;
+        
+        var field1 = [];
+        field1['caption'] = 'Message';
+        field1['inputName'] = 'message';
+        field1['type'] = 'text';
+        fieldArray[1] = field1;
+        
+        
+        
+        var modalOptions = {};
+        modalOptions['buttonTitle'] = 'Report File';
+        
+        modalOptions['action'] = function(){
+            var callback = function(){
+                gui.alert('The message has been sent. We will process it as soon as possible.');
+                $('.blueModal').remove();
+            };
+            filesystem.reportFile(file_id, $('#reportFileFormContainer #reason').val(), $('#reportFileFormContainer #message').val(), callback);
+        };
+        formModal.init('Report File', '<div id="reportFileFormContainer"></div>', modalOptions);
+        gui.createForm('#reportFileFormContainer',fieldArray, options);
+    };
+    this.reportFile = function(file_id, reason, message, callback){
+      api.query('api/files/report/', {file_id: file_id, reason:reason, message:message});
+      callback();
+    };
 };
 //@param select folder/element
 function loadMiniFileBrowser($target, folder, element, level, showGrid, select){
