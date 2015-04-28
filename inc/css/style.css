@@ -859,6 +859,13 @@ div#showElement.frameRight ul li:hover span.buttons .scoreButton {
     display:none;
 }
 
+.white-header {
+    height:40px;
+    border: 1px solid #cfd8dc;
+    border-top-style: none;
+    border-right-style: none;
+    border-left-style: none;
+}
 
 .pepperSteakButton{
     height: 35px;
@@ -893,15 +900,6 @@ div#showElement.frameRight ul li:hover span.buttons .scoreButton {
 
 .leftNav > ul > li.header{
     background: #37474f;
- /* Old browsers */
- /* FF3.6+ */
- /* Chrome,Safari4+ */
- /* Chrome10+,Safari5.1+ */
- /* Opera 11.10+ */
- /* IE10+ */
- /* W3C */
- /* IE6-9 */
-
 }
 
 .leftNav > ul > li img{
@@ -1263,11 +1261,10 @@ color: #FFF;
 }
 
 #filesystem {
-    
 }
 
-#filesystem tr.greyHover{
-    cursor: pointer;
+#filesystem tr {
+    cursor: pointer
 }
 
 #filesystem .frameRight{
@@ -1534,24 +1531,27 @@ ul .elementSettings {
     display: block;
     height: 40px;
     vertical-align: middle;
+    border: 1px solid #cfd8dc;
+    border-top-style: none;
+    border-right-style: none;
+    border-left-style: none;
 }
 .openFile header .title{
-    display: inline-block;
+    display: inline;
     color:  #313131;
     font-size: 16px;
     font-weight: 150;
     text-align: left;
 }
 .openFile header .icon{
-    display: inline-block;
     width: 24px;
     height: 24px;
 }
 .openFile header .itemSettingsButton{
-    display: inline-block;
+    display: inline;
 }
 .openFile header .scoreButton{
-    display: inline-block;
+    display: inline;
 }
 
 .openFile header span>span{

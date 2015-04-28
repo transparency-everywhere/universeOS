@@ -154,13 +154,13 @@ var filesystem =  new function() {
                         if(folder === "3"){
                             name = groups.getTitle(value['data']['name']) + '\'s Groupfiles'; // value['data']['name']) because groupid = foldername
                         }
-                        html += '                <tr oncontextmenu="showMenu(\'folder' + value['data']['id'] + '\'); return false;" height="30" class="greyHover">';
+                        html += '                <tr oncontextmenu="showMenu(\'folder' + value['data']['id'] + '\'); return false;" onclick="openFolder(\'' + value['data']['id'] + '\'); return false;" height="30" class="greyHover">';
                         html += '                <td width="30">';
                         if(rightClick){
                             html += ''; //hier muss die rightClick function noch eingebunden werden!!
                         }
                         html += '                    &nbsp;' + filesystem.generateIcon('folder') + '</td>';
-                        html += '                    <td><a href="#" onclick="openFolder(\'' + value['data']['id'] + '\'); return false;">' + name + '</a></td>';
+                        html += '                    <td><a href="#">' + name + '</a></td>';
                         html += '                    <td width="80px">';
                         html += item.showScoreButton('folder', value['data']['id']);
                         html += '                    </td>';
@@ -175,9 +175,9 @@ var filesystem =  new function() {
 
                     if(value['type'] === "element"){
                         var title = value['data']['title'];
-                        html += "                        <tr oncontextmenu=\"showMenu('element" + value['data']['id'] + "'); return false;\" height=\"30\">";
+                        html += "                        <tr oncontextmenu=\"showMenu('element" + value['data']['id'] + "'); return false;\" onclick=\"elements.open('" + value['data']['id'] + "'); return false;\" height=\"30\">";
                         html += "                           <td width=\"30\">&nbsp;" + filesystem.generateIcon('element') + "</td>";
-                        html += "                           <td><a href=\"#\" onclick=\"elements.open('" + value['data']['id'] + "'); return false;\">" + title + "</a></td>"; //openElement wird zu elements.open
+                        html += "                           <td><a href=\"#\">" + title + "</a></td>"; //openElement wird zu elements.open
                         html += "                           <td width=\"80px\">" + item.showScoreButton('element', value['data']['id']) + "</td>";
                         html += "                           <td width=\"30px\">";
                         if(rightClick){
