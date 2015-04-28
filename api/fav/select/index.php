@@ -19,6 +19,8 @@
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
 
+error_reporting(E_ALL);
+
 $fav = new fav();
 echo json_encode($fav->select($_POST['user']));
 ?>
