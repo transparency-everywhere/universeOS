@@ -188,7 +188,7 @@ var application = function(id){
 			output += '<p class="windowMenu">';
 				output += '<a href="javascript:'+id+'.applicationVar.hide();"><span class="icon dark-minimize"></span></a>';
 				output += '<a href="#" onclick="'+id+'.applicationVar.fullscreen();" class="fullScreenIcon"><span class="icon dark-maximize"></span></a>';
-                                output += '<a href="#"><span class="icon dark-close"></span></a>'
+                                output += '<a href="javascript:'+id+'.applicationVar.hide();"><span class="icon dark-close"></span></a>'
 			output += '</p>';
 		output += '</header>';
 		output += '<div class="inhalt autoflow" id="'+id+'Main">'+content+'</div>';
@@ -230,6 +230,8 @@ var application = function(id){
 	this.fullscreen = function(){
             var moduleId = this.id;
               	$('#'+moduleId+' .fullScreenIcon').attr("onClick",moduleId+".applicationVar.returnFromFullScreen()");
+              	$('#'+moduleId+' .fullScreenIcon .icon').removeClass('dark-maximize');
+              	$('#'+moduleId+' .fullScreenIcon .icon').addClass('dark-contract');
               	 window.fullScreenOldX = $('#'+moduleId).width();
               	 window.fullScreenOldY = $('#'+moduleId).height();
               	 var position = $('#'+moduleId).position();
@@ -251,6 +253,8 @@ var application = function(id){
 	this.returnFromFullScreen = function(){
           var id = this.id;
           $('#'+id+' .fullScreenIcon').attr("onClick",id+".applicationVar.fullscreen()");
+          $('#'+id+' .fullScreenIcon .icon').removeClass('dark-contract');
+          $('#'+id+' .fullScreenIcon .icon').addClass('dark-maximize');
             var returnFullScreenCSS = {
                   'position' : 'absolute',
                   'top' : window.fullScreenOldMarginY,

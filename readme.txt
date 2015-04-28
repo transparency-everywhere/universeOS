@@ -33,6 +33,11 @@ Update
 
 
 todo
+    score
+        farbiger kasten weg
+        positive ergebnisse #313131;
+        negative in #607d8b
+
     dock envelop -> commit icon bei nachricht active class gleich turquise
 
     group admin

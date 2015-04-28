@@ -1,4 +1,5 @@
 <?php
+
 //This file is published by transparency-everywhere with the best deeds.
 //Check transparency-everywhere.com for further information.
 //Licensed under the CC License, Version 4.0 (the "License");
@@ -17,6 +18,7 @@
 
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
-
-$user = new user();
-echo json_encode($user->getProfileInfo($_POST['user_id']));
+                    
+                    
+$timstamp = time();
+mysql_query("INSERT INTO `adminMessages` (`timestamp` ,`author` ,`category` ,`type` ,`message`) VALUES ('$time', '".getUser()."', '1', '".mysql_real_escape_string($_POST['reason'])."', 'reported file id: ".mysql_real_escape_string($_POST['file_id'])."     ".mysql_real_escape_string($_POST['message'])."');");

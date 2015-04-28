@@ -56,7 +56,9 @@ var settings = new function(){
         return api.query('api/user/updateProfileInfo/', { realname:realname,city:city,hometown:hometown, birthdate:birthdate, school:school, university:university, work:work});
     };
     this.updatePrivacy = function(values){
-        api.query('api/user/updatePrivacy/', {values: values});
+        api.query('api/user/updatePrivacy/', {values: values}, function(){
+            gui.alert('Your privacy has been updated', 'Settings');
+        });
     };
     
     

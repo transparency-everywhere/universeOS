@@ -69,6 +69,7 @@ var tasks = new function(){
                 field3['inputName'] = 'status';
                 field3['values'] = type_ids;
                 field3['captions'] = captions;
+                field3['preselected'] = 'pending';
                 field3['type'] = 'dropdown';
                 fieldArray[3] = field3;
                 

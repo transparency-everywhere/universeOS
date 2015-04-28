@@ -1874,6 +1874,8 @@ else if($_GET['action'] == "feedUpload"){
             }}
             }
 else if($_GET['action'] == "reportFile"){
+    //@del
+    
                 if(isset($_POST['submit'])){
                     $timstamp = time();
                     jsAlert("A report message has been send");

@@ -16,6 +16,7 @@
 
 var buddylist = new function(){
     this.checksum;
+    this.ap
     this.getBuddies = function(user_id){ 
         if(typeof user_id === 'undefined'){
             var user_id = '';
@@ -124,6 +125,9 @@ var buddylist = new function(){
         this.applicationVar = new application('buddylist');
 	this.applicationVar.create('Buddylist', 'html', output,{width: 2, height:  8, top: 0, left: 9});
 	
+    };
+    this.show = function(){
+        this.applicationVar.show();
     };
     this.reload = function(){
         var html = this.generateBuddylist();
