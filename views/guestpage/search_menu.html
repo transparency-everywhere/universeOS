@@ -3,10 +3,15 @@
         <a href="#" id="toggleSearchMenu" onclick="search.toggleSearchMenu();"><span class="icon white-close"></span></a>
         <h2>Search</h2>
         <ul id="selectSource">
-            <li>Everything</li>
+            <li class="trigger">Everything <span class="icon blue-chevron-down"></span></li>
+            <li data-value="text">Text</li>
+            <li data-value="video">Video</li>
+            <li data-value="audio">Audio</li>
         </ul>
         <ul id="selectType">
-            <li>the Universe</li>
+            <li class="trigger">Everything <span class="icon blue-chevron-down"></span></li>
+            <li data-value="universe">the Universe</li>
+            <li data-value="web">the Web</li>
         </ul>
         <input type="text" placeholder="search" id="searchField">
         <span class="icon blue-search"></span>

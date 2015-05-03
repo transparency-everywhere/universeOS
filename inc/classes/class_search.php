@@ -300,6 +300,65 @@ class search{
         $output .= $loadAll;
         return $output;
     }
+    function parseSearchJSON(){
+        $result = array();
+        if(proofLogin()){
+            $users = $this->getSearchResults('users');
+        }
+        if(count($users) > 0){
+            $result['users'] = $users;
+        }
+
+
+        $folders = $this->getSearchResults('folders');
+        if(count($folders) > 0){
+            
+            $result['folders'] = $folders;
+            
+        }
+
+
+        $elements = $this->getSearchResults('elements');
+        if(count($elements) > 0){
+            $result['elements'] = $elements;
+        }
+
+
+        $files = $this->getSearchResults('files');
+        if(count($files) > 0){
+            $result['files'] = $files;
+        }
+
+        $groups = $this->getSearchResults('groups');
+        if(count($groups) > 0){
+            $result['groups'] = $groups;
+        }
+
+            $wikis = $this->getSearchResults('wiki');
+            if(count($wikis) > 0){
+                $result['wikis'] = $wikis;
+
+        }
+
+        $youtubes = $this->getSearchResults('youtube');
+        
+        
+        unset($youtubes[0]); // remove item at index 0
+        $youtubes = array_values($youtubes); // 'reindex' array
+        
+        
+        if(count($youtubes) > 0){
+            
+            $result['youtubes'] = $youtubes;
+        }
+
+        $spotifies = $this->getSearchResults('spotifies');
+        if(count($spotifies) > 0){
+            $result['spotifies'] = $spotifies;
+        }
+
+        return $result;
+    }
     function parseSearchResults(){
     
         

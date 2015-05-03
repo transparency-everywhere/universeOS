@@ -204,6 +204,16 @@ var init = new function(){
                         $('#searchMenu #toggleSearchMenu').bind('click',function(){
                             search.toggleSearchMenu();
                         });
+                        
+                        
+                $('#searchMenu header ul li').not('.trigger').click(function(){
+                    $(this).toggleClass('active');
+                });
+                        
+                $('#searchMenu header ul .trigger').click(function(){
+                    $(this).parent().toggleClass('active');
+                    $(this).parent().children('li').not('.trigger').toggle();
+                });
         };
 	
 	//this function is called to initialzie GUI
@@ -629,6 +639,14 @@ var User = new function(){
     this.getGroups = function(){
         return api.query('api/user/getGroups/', { });
     };
+    this.getHistory = function(){
+      return [
+          {type:'file', itemId: 2, timestamp: 123456},
+          {type:'link', itemId: 2, timestamp: 123456},
+          {type:'link', itemId: 'http://something.com', timestamp: 123456}
+          
+      ]  
+    };
     this.inGroup = function(group_id){
         return jQuery.inArray(group_id+'', User.getGroups());
     };
@@ -1025,10 +1043,22 @@ var hash = new function(){
 	};
         
 var search = new function(){
+    this.getFilters = function(){
+        var result = {'source':[], 'type':[]};
+        $('#searchMenu header #selectSource li.active').not('.trigger').each(function(){
+            result.source.push($(this).attr('data-value'));
+        });
+        $('#searchMenu header #selectType li.active').not('.trigger').each(function(){
+            result.type.push($(this).attr('data-value'));
+        });
+        return result;
+    };
     this.toggleSearchMenu = function(){
         
         var $searchMenu = $('#searchMenu');
         var ms = 700;
+        
+        $('#bodywrap').unbind('click');
         if($searchMenu.hasClass('open')){
             
             $('#bodywrap').animate({
@@ -1038,6 +1068,7 @@ var search = new function(){
                     marginRight: -337
             }, ms);  
             $searchMenu.removeClass('open');
+            
         }else{
           
             $('#bodywrap').animate({
@@ -1047,6 +1078,10 @@ var search = new function(){
                     marginRight: 0
             }, ms);  
             $searchMenu.addClass('open');
+            
+            $('#bodywrap').bind('click', function(){
+                search.toggleSearchMenu();
+            });
         }
     };
     this.initResultHandlers = function(query){

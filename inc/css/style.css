@@ -252,6 +252,7 @@ li.notHidden{
     right: 284px;
 }
 
+
 #searchMenu header h2{
     size: 20px;
     font-weight: 200;
@@ -269,7 +270,24 @@ li.notHidden{
 }
 
 #searchMenu header ul#selectType{
-    left: 120px;
+    left: 150px;
+}
+#searchMenu header ul.active{
+    box-shadow:1px 3px 8px 0px rgba(0, 0, 0, 0.3);
+    background-color: #37474f;
+}
+
+#searchMenu header ul li{
+    display:none;
+    padding: 5px;
+}
+
+#searchMenu header ul li.trigger{
+    display:block;
+}
+
+#searchMenu header ul li.active{
+    color:#c9c9c9;
 }
 
 
@@ -281,12 +299,12 @@ li.notHidden{
 }
 
 
-#searchMenu header .icon{
+#searchMenu header .blue-search, #searchMenu header .white-close{
     height: 24px;
     width: 24px;
     position:absolute;
     right: 26px;
-    margin-top: -30px;
+    margin-top: -33px;
 }
 #searchMenu .userPicture {
 	margin: 1px 5px;
