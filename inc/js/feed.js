@@ -68,9 +68,13 @@ var feed = new function(){
             //which js will handle as object 
             //which fucks jQuery.each up. 
             //.length was the easiest solution 
+            
             $.each(loadedFeeds,function(index, value){
+                last_feed_loaded = value.id;
                 output += feed.generateSingleFeed(value);
             });
+            $(this).attr('data-last',last_feed_loaded);
+            
             $(this).prepend(output);
 
             

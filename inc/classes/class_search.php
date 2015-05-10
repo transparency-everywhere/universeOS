@@ -300,66 +300,112 @@ class search{
         $output .= $loadAll;
         return $output;
     }
-    function parseSearchJSON(){
+    function parseSearchResultsJSON(){
+    
         $result = array();
+        
+        $icon = 'dark-sc-facebook';
+        $iconStyle = 'height: 30px;width: 30px;';
+        $output = '';
         if(proofLogin()){
             $users = $this->getSearchResults('users');
         }
+            $result['users'] = '';
         if(count($users) > 0){
-            $result['users'] = $users;
+            $result['users'] = '';
+            $result['users'] .= "<div class=\"listContainer\">";
+            $result['users']  .= $this->parseLists('users', $users);
+            $result['users']  .= '<header>Users</header>';
+            $result['users']  .= '</div>';
         }
 
 
         $folders = $this->getSearchResults('folders');
+        $icon = 'dark-folder';
+            $result['folders'] = '';
         if(count($folders) > 0){
+            $result['folders']  .= "<div class=\"listContainer\">";
+            $result['folders'] .= $this->parseLists('folders', $folders);
             
-            $result['folders'] = $folders;
             
+            $result['folders'] .= '<header>Folders</header>';
+            $result['folders'] .= '</div>';
         }
 
 
         $elements = $this->getSearchResults('elements');
+        $icon = 'dark-archive';
+            $result['elements'] = '';
         if(count($elements) > 0){
-            $result['elements'] = $elements;
+            $result['elements'] .= "<div class=\"listContainer\">";
+            $result['elements'] .= $this->parseLists('elements', $folders);
+            $result['elements'] .= '<header>Elements</header>';
+            $result['elements'] .= '</div>';
         }
 
 
         $files = $this->getSearchResults('files');
+        $icon = 'dark-file';
+            $result['files'] = '';
         if(count($files) > 0){
-            $result['files'] = $files;
+            $result['files'] .= "<div class=\"listContainer\">";
+            $result['files'] .= $this->parseLists('files', $files);
+            
+            $result['files'] .= '<header>Files</header>';
+            $result['files'] .= '</div>';
         }
 
         $groups = $this->getSearchResults('groups');
+        $icon = 'dark-group';
         if(count($groups) > 0){
-            $result['groups'] = $groups;
+            $result['groups'] .= "<div class=\"listContainer\">";
+            $result['groups'] .= $this->parseLists('groups', $groups);
+            $result['groups'] .= '<header>Groups</header>';
+            $result['groups'] .= '</div>';
         }
 
             $wikis = $this->getSearchResults('wiki');
+            $icon = 'dark-wikipedia';
+            $result['wikis'] = '';
             if(count($wikis) > 0){
-                $result['wikis'] = $wikis;
+                $result['wikis'] .= "<div class=\"listContainer\">";
+                $result['wikis'] .= $this->parseLists('wiki', $wikis);
+                $result['wikis'] .= '<header>Wiki</header>';
+                $result['wikis'] .= '</div>';
 
         }
 
-        $youtubes = $this->getSearchResults('youtube');
+            $youtubes = $this->getSearchResults('youtube');
+        
+            
+            unset($youtubes[0]); // remove item at index 0
+            $youtubes = array_values($youtubes); // 'reindex' array
         
         
-        unset($youtubes[0]); // remove item at index 0
-        $youtubes = array_values($youtubes); // 'reindex' array
-        
-        
+        $icon = 'dark-youtube';
+            $result['youtubes'] = '';
         if(count($youtubes) > 0){
             
-            $result['youtubes'] = $youtubes;
+            
+            $result['youtubes'] .= "<div class=\"listContainer\">";
+            $result['youtubes'] .= $this->parseLists('youtube', $youtubes);
+            $result['youtubes'] .= '<header>Youtube</header>';
+            $result['youtubes'] .= '</div>';
         }
 
+        $icon = 'dark-spotify';
         $spotifies = $this->getSearchResults('spotifies');
+            $result['spotifies'] = '';
         if(count($spotifies) > 0){
-            $result['spotifies'] = $spotifies;
+            $result['spotifies'] .= "<div class=\"listContainer\">";
+            $result['spotifies'] .= $this->parseLists('spotifies', $spotifies);
+            $result['spotifies'] .= '<header>Spotify</header>';
+            $result['spotifies'] .= '</div>';
         }
 
-        return $result;
-    }
-    function parseSearchResults(){
+        return json_encode($result);
+}
+function parseSearchResults(){
     
         
         $icon = 'dark-sc-facebook';

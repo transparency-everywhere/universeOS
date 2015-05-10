@@ -239,6 +239,7 @@ li.notHidden{
     top:0;
     right:0;
     bottom:0;
+    overflow: auto;
     width: 337px;
     margin-right: -337px;
     padding: 20px;
@@ -355,7 +356,8 @@ li.notHidden{
 }
         #searchMenu #loadingArea{
             margin-top: 50px;
-        }
+        
+}
 
    
 #searchMenu > h2{
@@ -462,7 +464,39 @@ li.notHidden{
     font-size: 14px;
 }
 
+#telescope .tab header{
+    margin:15px;
+}
 
+#telescope #telescopeInput{
+    margin-left: 10px;
+    height: 38px;
+    width: 55%;
+}
+
+#telescope #filterList li, #telescope #filterList, #telescope .icon-search, #telescope #telescopeInput{
+    float: left;
+}
+
+#telescope .tab .icon{
+    margin-top: -1px;
+}
+#telescope .icon-search{
+    position:absolute;
+    margin-left: -38px;
+    margin-top: 1px!important;
+}
+
+
+#telescope .leftNav li{
+    padding-left: 15px;
+    display: none;
+}
+
+#telescope .leftNav .categoryTitle{
+    display: block;
+    padding-left: 5px;
+}
 
 .windowHeader {
     position:absolute;
@@ -891,7 +925,7 @@ div#showElement.frameRight ul li:hover span.buttons .scoreButton {
 
 .leftNav{
     position: absolute;
-    width: 170px;
+    width: 175px;
     top: 0px;
     bottom: 0px;
     left: 0px;
@@ -934,7 +968,7 @@ div#showElement.frameRight ul li:hover span.buttons .scoreButton {
     top: 0px;
     right: 0px;
     bottom: 0px;
-    left: 170px;
+    left: 175px;
     padding-right: 0px;
     margin-right: 0px;
     overflow: auto;
@@ -1290,7 +1324,7 @@ color: #FFF;
 }
 
 #filesystem .tabFrame>header{
-    left:170px;
+    left: 175px;
 }
 
 #filesystem .tabFrame>.tab{

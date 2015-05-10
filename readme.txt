@@ -229,3 +229,14 @@ Files and the use of them
 			
 	
 	USER CRYPTICO!
+
+
+
+Handlers docu
+
+application                             the application you want the service top be opened (e.g. Reader or Player)
+regex                                   a regex to check links if they include your service
+open($target, link, onStop)             method to generate html which can display you service
+search(query, offset, limit)            search for 'query'. Limit is the maximum of returned results, starting from offset
+getTitle(link)                          converts link to title
+getDescription(link)                    converts link to description

@@ -150,6 +150,8 @@ include('classes/class_tasks.php');
 
 include('classes/class_im.php');
 
+include('classes/class_handlers.php');
+
 
 
 

@@ -167,26 +167,26 @@ var init = new function(){
 			{
 				
 				delay(function(){
-					var search;
 					
                                         var $loadingArea = $('#searchMenu #loadingArea');
-					search = $("#searchField").val();
-					if (search.length > 1)
+					var searchValue = $("#searchField").val();
+					if (searchValue.length > 1)
 					{
-						$.ajax(
-						{
-							type: "POST",
-							url: "modules/suggestions/dockSearch.php",
-							data: "search=" + search,
-							success: function(message)
-							{
-								$loadingArea.empty();
-						  		if (message.length > 1)
-								{						
-									$loadingArea.append(message);
-								}
-							}
-						});
+                                                $loadingArea.html(search.loadResults(searchValue));
+//						$.ajax(
+//						{
+//							type: "POST",
+//							url: "modules/suggestions/dockSearch.php",
+//							data: "search=" + search,
+//							success: function(message)
+//							{
+//								$loadingArea.empty();
+//						  		if (message.length > 1)
+//								{						
+//									$loadingArea.append(message);
+//								}
+//							}
+//						});
 					}
 					else
 					{
@@ -233,11 +233,11 @@ var init = new function(){
 		//fade in applications
                 
                 $('*').on('scroll',function(){
-                 $('.itemSettingsWindow, .rightClick').hide();
+                 $('.itemSettingsWindow').hide();
                 });
                 
                 $('body').on('click',function(){
-                 $('.itemSettingsWindow, .rightClick').hide();
+                 $('.itemSettingsWindow').hide();
                 });
                 
                 item.initSettingsToggle();
@@ -513,32 +513,42 @@ var telescope = new function(){
         this.tabs.init();
 	this.tabs.addTab('Home', '','this is a tab inside the telescope');
     };
-    this.query = function(){
+    this.initHandlers = function(){
+        $('#telescope .leftNav .categoryTitle').bind('click', function(){
+           $(this).nextUntil('.categoryTitle').slideToggle();
+        });
+    };
+    this.query = function(query){
         var html;
         
         html = '<header>';
-            html += '<ul>';
+            html += '<ul id="filterList">';
                 html += '<li><span class="icon icon-link"></span></li>';
-                html += '<li><span class="icon icon-link"></span></li>';
-                html += '<li><span class="icon icon-link"></span></li>';
-                html += '<li><span class="icon icon-link"></span></li>';
+                html += '<li><span class="icon icon-image"></span></li>';
+                html += '<li><span class="icon icon-youtube"></span></li>';
+                html += '<li><span class="icon icon-file"></span></li>';
+                html += '<li><span class="icon icon-user"></span></li>';
             html += '</ul>';
-            html += '<input type="text" placeholder="search>';
-            html += '<div>';
-                html += '<ul>';
-                    html += '<li>Everything</li>';
-                html += '</ul>';
-                html += '<ul>';
-                    html += '<li>the Universe</li>';
-                html += '</ul>';
-                html += '<ul>';
-                    html += '<li>any time</li>';
-                html += '</ul>';
-                html += '<ul>';
-                    html += '<li>any language</li>';
-                html += '</ul>';
-            html += '</div>';
-        html += '<header>';
+            html += '<input type="text" id="telescopeInput" placeholder="search">';
+            html += '<span class="icon icon-search"></span>';
+        html += '</header>';
+        html += "<div class='leftNav dark' style='top: 65px; background: #37474f;border-top: 1px solid #dcdcdc;'>";
+        html +=    '<ul>';
+        html +=       '<li class="categoryTitle"><span class="icon blue-gear"></span>universeOS</li>';
+        html +=       '<li><span class="icon blue-folder"></span>Folders</li>';
+        html +=       '<li><span class="icon blue-archive"></span>Collections</li>';
+        html +=       '<li><span class="icon blue-file"></span>Files</li>';
+        html +=       '<li>&nbsp;</li>';
+        html +=       '<li><span class="icon blue-eye"></span>Public</li>';
+        html +=       '<li><span class="icon blue-eye"></span>Hidden</li>';
+        html +=       '<li class="categoryTitle"><span class="icon blue-eye"></span>Web</li>';    
+        html +=       '<li class="categoryTitle"></li>';//empty title row at the end of navigation, otherwise the toggle function doesnt work                                                                                   
+        html +=   '</ul>';
+        html += '</div>';
+        html += "<div class='frameRight' style='top:65px;border-top: 1px solid #dcdcdc;' id='settingsFrame'>";
+        html += '</div>';
+        this.tabs.addTab(query, '', html);
+        this.initHandlers();
     };
         
 };
@@ -1054,7 +1064,6 @@ var search = new function(){
         return result;
     };
     this.toggleSearchMenu = function(){
-        
         var $searchMenu = $('#searchMenu');
         var ms = 700;
         
@@ -1088,7 +1097,7 @@ var search = new function(){
                 item.initRightClick();
                 $('.resultList a:link, .resultList .icon-gear, .resultList .white-gear').unbind('click');
 		$('.resultList a:link').bind('click', function(){
-			$('.dockSeachResult').hide('slow');
+			search.toggleSearchMenu();
                         $('#searchField').val('');
 		});
                 
@@ -1105,6 +1114,33 @@ var search = new function(){
     };
     this.extendResults = function(query, type, limit, offset){
         return api.query('api/search/extendResults/', {query:query, type:type, limit:limit, offset:offset});
+    };
+    //basicQuery is used inside the docksearch
+    //query is used inside telescope
+    this.basicQuery = function(query){
+        api.query('api/search/query/',{query:query});
+    };
+    this.loadResults = function(query){
+        var html = '';
+        var results = api.query('api/search/loadDockList/',{query:query});
+        
+        html += results.users;
+        
+        html += results.folders;
+        
+        html += results.elements;
+        
+        html += results.files;
+        
+        html += results.groups;
+        
+        html += results.wikis;
+        
+        html += results.youtubes;
+        
+        html += results.spotifies;
+        
+        return html;
     };
 };
 
@@ -2140,22 +2176,136 @@ function nl2br(str, is_xhtml) {
 };
 
 var handler = new function(){
-  this.open = function(type, itemId){
+  this.query = function(handler_title, query, offset, max_results){
+      return api.query('api/handlers/', {
+          'handler_title':handler_title,
+          'action':'query',
+          'parameters': {
+              'query':query,
+              'offset':offset,
+              'max_results':max_results
+          }
+          
+      });
+  };
+  this.getTitle = function(handler_title, url){
       
-  }  
+      
+      return api.query('api/handlers/', {
+          'handler_title':handler_title,
+          'action':'query',
+          'parameters': {
+              'url':url
+          }
+          
+      });
+      
+  };
+  this.getDescription = function(handler_title, url){
+      
+      return api.query('api/handlers/', {
+          'handler_title':handler_title,
+          'action':'query',
+          'parameters': {
+              'url':url
+          }
+          
+      });
+  };
+  this.getThumbnail = function(handler_title, url){
+      
+      return api.query('api/handlers/', {
+          'handler_title':handler_title,
+          'action':'query',
+          'parameters': {
+              'url':url
+          }
+          
+      });
+  };
 };
 
-//var handlers = [
-//    'youtube'=> {
-//                    application : 'reader',
-//                    regex : '',
-//                    open : function(){
-//
-//                    };
-//                    prev : function(){
-//                    };
-//                    next : function(){
-//                    };
-//                },
-//    
-//];
+var handlers = {
+    'youtube': {
+                    application : 'reader',
+                    regex : /((http|https):\/\/)?(www\.)?(youtube\.com)(\/)?([a-zA-Z0-9\-\.]+)\/?/,
+                    open : function($target, link, onStop){
+                            var videoId;
+                            if(is_url(link)){
+                                videoId = youtubeURLToVideoId(link);
+                            }else{
+                                videoId = link;
+                            }
+                            var tempThis = this;
+
+                            //generate random player id
+                            //otherwise multiple videos
+                            //can not be opened
+                            var playerId = gui.generateId();
+
+                            var output="";
+                            output += "        <div id=\"ytplayer_"+playerId+"\"><\/div>";
+
+                            $target.html(output);
+
+                            // Load the IFrame Player API code asynchronously.
+                            var tag = document.createElement('script');
+                            tag.src = "http://www.youtube.com/player_api";
+                            var firstScriptTag = document.getElementsByTagName('script')[0];
+                            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+                            //yt player api is added in plugins.js
+                            var ytplayer;
+                            ytplayer = new YT.Player('ytplayer_'+playerId, {
+                              height: '100%',
+                              width: '100%',
+                              videoId: videoId,
+                              autoplay: 1,
+                              events: {
+                                'onReady': onPlayerReady
+                              }
+                            });
+
+                            function onPlayerReady(){
+                                ytplayer.playVideo();
+                            }
+
+                            if(typeof onStop === 'function'){
+                              ytplayer.addEventListener('onStateChange', function(state){
+                                  if(state.data === 0){
+                                      onStop();
+                                  }
+                                  if(state.data === 1){
+                                      var callback = function(){
+                                          ytplayer.pauseVideo();
+                                      };
+                                      tempThis.updateActiveItemPause(callback);
+                                  }
+                                  if(state.data === 2){
+                                      var callback = function(){
+                                          ytplayer.playVideo();
+                                      };
+                                      tempThis.updateActiveItemPlay(callback);
+                                  }
+                              });
+                            }
+
+                    },
+                    
+                    getTitle : function(link){
+                        handler.getTitle('youtube', link);
+                    },
+                    getDescription : function(link){
+                        handler.getDescription('youtube', link);
+                    },
+                    getThumbnail : function(link){
+                        handler.getThumbnail('youtube', link);
+                    },
+                    query: function(query, offset, max_results){
+                        handler.query('youtube', query, offset, max_results);
+                    }
+                    
+                }
+    
+};
+
