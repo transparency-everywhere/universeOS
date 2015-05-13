@@ -280,7 +280,16 @@ li.notHidden{
 
 #searchMenu header ul li{
     display:none;
-    padding: 5px;
+    line-height: 20px;
+    padding: 4px;
+}
+
+span.icon.blue-chevron-down {}
+#searchMenu header ul li .icon{
+	width: 18px;
+	
+	height: 18px;
+	margin-bottom: -3px;
 }
 
 #searchMenu header ul li.trigger{
@@ -1924,8 +1933,8 @@ color:#FFFFFF;
 
 .icon{
     display: inline-block;
-    width: 18px;
-    height: 18px;
+    width: 32px;
+    height: 32px;
     background-size: 100%;
     cursor: pointer;
 }

@@ -23,8 +23,9 @@
  */
 class handler {
     public function getHandler($handler_title){
-        
         $handlers[] = ['title'=>'youtube', 'class_name'=>'youtube_handler'];
+        $handlers[] = ['title'=>'wikipedia', 'class_name'=>'wikipedia_handler'];
+        $handlers[] = ['title'=>'folders', 'class_name'=>'folder_handler'];
         
         foreach($handlers AS $handler){
             if($handler_title == $handler['title'])
@@ -33,6 +34,7 @@ class handler {
         
     }
     public function api($handler_title, $action, $parameters){
+        error_reporting(E_ALL);
         $handler = $this->getHandler($handler_title);
         
         if(!$handler){
@@ -43,6 +45,15 @@ class handler {
         switch($action){
             case 'query':
                 echo json_encode($handler_class->query($parameters['query'], $parameters['offset'], $parameters['max_results']));
+                break;
+            case 'getTitle':
+                echo json_encode($handler_class->getTitle($parameters['url']));
+                break;
+            case 'getDescription':
+                echo $handler_class->getDescription($parameters['url']);
+                break;
+            case 'getThumbnail':
+                echo $handler_class->getThumbnail($parameters['url']);
                 break;
         }
     }
