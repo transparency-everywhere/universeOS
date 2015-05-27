@@ -23,9 +23,11 @@
  */
 class handler {
     public function getHandler($handler_title){
-        $handlers[] = ['title'=>'youtube', 'class_name'=>'youtube_handler'];
-        $handlers[] = ['title'=>'wikipedia', 'class_name'=>'wikipedia_handler'];
-        $handlers[] = ['title'=>'folders', 'class_name'=>'folder_handler'];
+        $handlers[] = array('title'=>'youtube', 'class_name'=>'youtube_handler');
+        $handlers[] = array('title'=>'wikipedia', 'class_name'=>'wikipedia_handler');
+        $handlers[] = array('title'=>'folders', 'class_name'=>'folder_handler');
+        $handlers[] = array('title'=>'elements', 'class_name'=>'element_handler');
+        $handlers[] = array('title'=>'files', 'class_name'=>'file_handler');
         
         foreach($handlers AS $handler){
             if($handler_title == $handler['title'])
@@ -38,12 +40,13 @@ class handler {
         $handler = $this->getHandler($handler_title);
         
         if(!$handler){
-            return []; 
+            return array(); 
         }
         include('handlers/'.$handler['title'].'/class.php');
         $handler_class = new $handler['class_name']();
         switch($action){
             case 'query':
+                
                 echo json_encode($handler_class->query($parameters['query'], $parameters['offset'], $parameters['max_results']));
                 break;
             case 'getTitle':

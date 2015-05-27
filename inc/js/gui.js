@@ -497,11 +497,14 @@ var gui = new function(){
     };
     
     this.shorten = function(text, maxLength){
-        var ret = text;
-        if (ret.length > maxLength) {
-            ret = ret.substr(0,maxLength-3) + "...";
-        }
-        return ret;
+        if(typeof text !== 'undefined'){
+            var ret = text+'';
+            if (ret.length > maxLength) {
+                ret = ret.substr(0,maxLength-3) + "...";
+            }
+            return ret;
+        }else
+            return '';
     };
     
     this.generateId = function(){

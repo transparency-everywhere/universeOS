@@ -195,7 +195,7 @@ class element {
                 }
             }
             if(empty($result)){
-                $result = [];
+                $result = array();
             }
             return $result;
         }

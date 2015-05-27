@@ -17,7 +17,7 @@
 
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
-
+error_reporting(E_ALL);
         $classUser = new user();
         $classUser->create($_POST['username'], $_POST['password'], $_POST['authSalt'], $_POST['keySalt'], $_POST['privateKey'], $_POST['publicKey']);
 	

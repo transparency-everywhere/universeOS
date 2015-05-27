@@ -373,6 +373,10 @@ var filesystem =  new function() {
         return api.query('api/files/select/', { file_id : file_id});
         
     };
+    this.getFileTitle = function(file_id){
+        var fileData = this.getFileData(file_id);
+        return fileData['title'];
+    };
     
     this.openUploadTab = function(element){
         filesystem.applicationVar.show();

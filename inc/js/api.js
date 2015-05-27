@@ -17,7 +17,7 @@
 
 
 var api = new function(){
-    this.basePath = 'http://localhost/universe';
+    this.basePath = 'http://dev.transparency-everywhere.com/universeos/';
     
     this.query = function(action, parameters, callback){
         var async;

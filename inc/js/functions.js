@@ -2245,10 +2245,13 @@ var handlers = {
                         return handler.getDescription('youtube', link);
                     },
                     getThumbnail : function(link){
-                        return handler.getThumbnail('youtube', link);
+                        return '<img src="'+handler.getThumbnail('youtube', link)+'"/>'
                     },
                     query: function(query, offset, max_results){
                         return handler.query('youtube', query, offset, max_results);
+                    },
+                    handler: function(link){
+                        alert('we opened it');
                     }
                     
                 },
@@ -2266,7 +2269,11 @@ var handlers = {
                         return handler.getDescription('wikipedia', link);
                     },
                     getThumbnail : function(link){
-                        return handler.getThumbnail('wikipedia', link);
+                        var apiResult = handler.getThumbnail('wikipedia', link);
+                        if(apiResult)
+                            return '<img src="'+apiResult+'"/>';
+                        else
+                            return '<span class="icon icon-wikipedia"></span>';
                     },
                     query: function(query, offset, max_results){
                         return handler.query('wikipedia', query, offset, max_results);
@@ -2282,6 +2289,54 @@ var handlers = {
                     },
                     query: function(query, offset, max_results){
                         return handler.query('folders', query, offset, max_results);
+                    },
+                    getTitle: function(id){
+                        return folders.folderIdToFolderTitle(id);
+                    },
+                    getDescription: function(id){
+                        return 'wubba dubba du. wubbta asdasd';
+                    },
+                    getThumbnail: function(id){
+                        return '<span class="icon icon-folder"></span>';
+                    },
+                    handler: function(id){
+                        folders.open(id);
+                    }
+                    
+                },
+    'collections': {
+                    query: function(query, offset, max_results){
+                        return handler.query('elements', query, offset, max_results);
+                    },
+                    getTitle: function(id){
+                        return elements.getTitle(id);
+                    },
+                    getDescription: function(id){
+                        return 'wubba dubba du. wubbta asdasd';
+                    },
+                    getThumbnail: function(id){
+                        return '<span class="icon icon-archive"></span>';
+                    },
+                    handler: function(id){
+                        elements.open(id);
+                    }
+                    
+                },
+    'files': {
+                    query: function(query, offset, max_results){
+                        return handler.query('files', query, offset, max_results);
+                    },
+                    getTitle: function(id){
+                        return folders.folderIdToFolderTitle(id);
+                    },
+                    getDescription: function(id){
+                        return 'wubba dubba du. wubbta asdasd';
+                    },
+                    getThumbnail: function(id){
+                        return '<span class="icon icon-folder"></span>';
+                    },
+                    handler: function(id){
+                        files.open(id);
                     }
                     
                 }
