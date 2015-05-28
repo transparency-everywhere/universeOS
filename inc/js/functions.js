@@ -15,8 +15,13 @@ var focus = true;
 $(document).ready(function(){
         
         universe.init();
+        
+        $( "#blueList" ).click(function() {
+            alert( "Klappt" );
+        });
     
 });
+
 
 //window functions
 var init = new function(){
@@ -1580,6 +1585,21 @@ function feedLoadMore(destination ,type, user, limit){
        
 
 //filesystem
+
+function smallSymbols() {
+    alert( "smallSymbols" );
+    $('#showElement').addClass('smallSymbols');
+}
+function largeSymbols() {
+    alert( "largeSymbols" );
+    $('#showElement').addClass('largeSymbols');
+}
+function listView() {
+    alert( "listView" );
+    $('#showElement').removeClass('smallSymbols');
+    $('#showElement').removeClass('largeSymbols');
+    
+}
 
 function initUploadify(id, uploader, element, timestamp, token){
 		

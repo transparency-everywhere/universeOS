@@ -1,4 +1,4 @@
-//        This file is published by transparency - everywhere with the best deeds.
+//        This file is published by Transparency Everywhere with the best deeds.
 //        Check transparency - everywhere.com for further information.
 //        Licensed under the CC License, Version 4.0 (the "License");
 //        you may not use this file except in compliance with the License.
@@ -419,8 +419,10 @@ var filesystem =  new function() {
         return api.query('api/files/read/', { file_id : file_id});
     };
     
-    this.generateIcon = function(fileType, color){
+    this.generateIcon = function(fileType, color, id, onclick){
     var icons = {};
+    var identifier;
+    var onclicker;
     
     //general
     icons['settings'] = 'gear';
@@ -503,8 +505,21 @@ var filesystem =  new function() {
     if(typeof color === 'undefined' || color === 'undefined' || color !== 'white' && color !== 'icon' && color !== 'blue'){
         color = 'dark';
     }
+    
+    if(typeof id === 'undefined' || id === 'undefined'){
+        identifier = '';
+    } else {
+        identifier = ' id="' + id + '"';
+    }
+    
+    if(typeof onclick === 'undefined' || onclick === 'undefined'){
+        onclicker = '';
+    } else {
+        onclicker = ' onclick="' + onclick + '"';
+    }
+    
 
-    return '<span class="icon ' + color + '-' + icons[fileType] + '"></span>';
+    return '<span class="icon ' + color + '-' + icons[fileType] + '"' + identifier + onclicker + '></span>';
     
 
 };
