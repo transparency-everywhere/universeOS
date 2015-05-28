@@ -68,19 +68,29 @@ var feed = new function(){
             //which js will handle as object 
             //which fucks jQuery.each up. 
             //.length was the easiest solution 
+            
             $.each(loadedFeeds,function(index, value){
+                last_feed_loaded = value.id;
                 output += feed.generateSingleFeed(value);
             });
+            $(this).attr('data-last',last_feed_loaded);
+            
             $(this).prepend(output);
 
             
         });
         
     };
+    this.feedText = function(text){
+        
+
+        return text.replace(/\\r\\n/g,'<br>');
+      
+    };
     this.generateSingleFeed = function(feedData){
         debug.log('generateSingleFeedInitalized...');
         
-        var feedContent = '<div class="feedContent">'+feedData['feed']+'</div>';
+        var feedContent = '<div class="feedContent">'+feed.feedText(feedData['feed'])+'fg</div>';
                 if(feedData['type'] === 'showThumb'){
                     debug.log('     showItemThumb');
                     feedContent += '<div class="feedAttachment">'+item.showItemThumb(feedData['attachedItem'], feedData['attachedItemId'])+'</div>';
@@ -119,7 +129,7 @@ var feed = new function(){
         html += "        <\/div>";
         
         this.applicationVar = new application('feed');
-	this.applicationVar.create('Feed', 'html', html,{width: 2, height:  5, top: 0, left: 0});
+	this.applicationVar.create('Feed', 'html', html,{width: 2, height:  8, top: 1, left: 0});
 	
         
         var feedClass = new Feed('global', '.feedMain');

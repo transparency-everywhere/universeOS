@@ -2088,17 +2088,11 @@ else if($_GET['action'] == "logout"){
             	
             }
 else if($_GET['action'] == "tester"){
-            	
-//				//mysql_query("DELETE FROM messages WHERE 1=1");
-//				$db = new db();
-//
-//				$array['one'] = 'uno';
-//				$array['two'] = 'dos';
-//				$array['three'] = 'quatro';
-//				
-
-    $db = new db();
-    var_dump($db->select('user', array('userid', 1,'OR','userid',2,'OR','userid',3)));
+    echo 'test';
+    error_reporting(E_ALL);
+    include('inc/classes/handlers/youtube/class.php');
+    $yt =  new youtube_handler();
+    echo var_dump($yt->query('test', 0, 100));
         
 }
 ?>

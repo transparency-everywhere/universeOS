@@ -188,6 +188,11 @@ var elements = new function(){
         return api.query('api/elements/select/',{element_id : element_id});
     };
     
+    this.getTitle = function(element_id){
+        var elementData = this.getData(element_id);
+        return elementData['title'];
+    };
+    
     this.getAuthorData = function(user_id){
         return api.query('api/elements/getAuthorData/',{user_id : user_id});
     };

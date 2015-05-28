@@ -180,7 +180,7 @@ class user {
         $db = new db();
         $data = $db->select('user', array('username', $username), array('username'));
 
-        if(empty($data['username'])){
+        if(empty($data['username'])||$data['username'] == 't'){
             $time = time();
             
             $values['password'] = $password;
@@ -188,6 +188,7 @@ class user {
             $values['username'] = $username;
             $values['email'] = ''; //could be usefull for businesses
             $values['regdate'] = $time;
+            $values['usergroup'] = 1;
             $values['lastactivity'] = $time;
             
             $db = new db();

@@ -62,7 +62,7 @@ function shorten($text, $chars_limit)
     }
 }
 function array_delete($array, $element) {
-    return array_diff($array, [$element]);
+    return array_diff($array, array($element));
 }
 
 
@@ -149,6 +149,8 @@ include('classes/class_events.php');
 include('classes/class_tasks.php');
 
 include('classes/class_im.php');
+
+include('classes/class_handlers.php');
 
 
 

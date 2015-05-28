@@ -172,26 +172,26 @@ var init = new function(){
 			{
 				
 				delay(function(){
-					var search;
 					
                                         var $loadingArea = $('#searchMenu #loadingArea');
-					search = $("#searchField").val();
-					if (search.length > 1)
+					var searchValue = $("#searchField").val();
+					if (searchValue.length > 1)
 					{
-						$.ajax(
-						{
-							type: "POST",
-							url: "modules/suggestions/dockSearch.php",
-							data: "search=" + search,
-							success: function(message)
-							{
-								$loadingArea.empty();
-						  		if (message.length > 1)
-								{						
-									$loadingArea.append(message);
-								}
-							}
-						});
+                                                $loadingArea.html(search.loadResults(searchValue));
+//						$.ajax(
+//						{
+//							type: "POST",
+//							url: "modules/suggestions/dockSearch.php",
+//							data: "search=" + search,
+//							success: function(message)
+//							{
+//								$loadingArea.empty();
+//						  		if (message.length > 1)
+//								{						
+//									$loadingArea.append(message);
+//								}
+//							}
+//						});
 					}
 					else
 					{
@@ -209,6 +209,16 @@ var init = new function(){
                         $('#searchMenu #toggleSearchMenu').bind('click',function(){
                             search.toggleSearchMenu();
                         });
+                        
+                        
+                $('#searchMenu header ul li').not('.trigger').click(function(){
+                    $(this).toggleClass('active');
+                });
+                        
+                $('#searchMenu header ul .trigger').click(function(){
+                    $(this).parent().toggleClass('active');
+                    $(this).parent().children('li').not('.trigger').toggle();
+                });
         };
 	
 	//this function is called to initialzie GUI
@@ -228,11 +238,11 @@ var init = new function(){
 		//fade in applications
                 
                 $('*').on('scroll',function(){
-                 $('.itemSettingsWindow, .rightClick').hide();
+                 $('.itemSettingsWindow').hide();
                 });
                 
                 $('body').on('click',function(){
-                 $('.itemSettingsWindow, .rightClick').hide();
+                 $('.itemSettingsWindow').hide();
                 });
                 
                 item.initSettingsToggle();
@@ -495,49 +505,6 @@ var universe = new function(){
     };
 };
 
-var telescope = new function(){
-    this.init = function(){
-        var grid = {width: 5, height:  4, top: 6, left: 3, hidden: false};
-        if(proofLogin())
-            grid = {width: 8, height:  8, top: 1, left: 2, hidden: false};
-        this.applicationVar = new application('telescope');
-        this.applicationVar.create('Telescope', 'html', "<div id='telescopeFrame'></div>", grid);
-        
-        
-	this.tabs = new tabs('#telescopeFrame');
-        this.tabs.init();
-	this.tabs.addTab('Home', '','this is a tab inside the telescope');
-    };
-    this.query = function(){
-        var html;
-        
-        html = '<header>';
-            html += '<ul>';
-                html += '<li><span class="icon icon-link"></span></li>';
-                html += '<li><span class="icon icon-link"></span></li>';
-                html += '<li><span class="icon icon-link"></span></li>';
-                html += '<li><span class="icon icon-link"></span></li>';
-            html += '</ul>';
-            html += '<input type="text" placeholder="search>';
-            html += '<div>';
-                html += '<ul>';
-                    html += '<li>Everything</li>';
-                html += '</ul>';
-                html += '<ul>';
-                    html += '<li>the Universe</li>';
-                html += '</ul>';
-                html += '<ul>';
-                    html += '<li>any time</li>';
-                html += '</ul>';
-                html += '<ul>';
-                    html += '<li>any language</li>';
-                html += '</ul>';
-            html += '</div>';
-        html += '<header>';
-    };
-        
-};
-
 var User = new function(){
     this.userid;
     
@@ -633,6 +600,14 @@ var User = new function(){
     
     this.getGroups = function(){
         return api.query('api/user/getGroups/', { });
+    };
+    this.getHistory = function(){
+      return [
+          {type:'file', itemId: 2, timestamp: 123456},
+          {type:'link', itemId: 2, timestamp: 123456},
+          {type:'link', itemId: 'http://something.com', timestamp: 123456}
+          
+      ]  
     };
     this.inGroup = function(group_id){
         return jQuery.inArray(group_id+'', User.getGroups());
@@ -1030,10 +1005,21 @@ var hash = new function(){
 	};
         
 var search = new function(){
+    this.getFilters = function(){
+        var result = {'source':[], 'type':[]};
+        $('#searchMenu header #selectSource li.active').not('.trigger').each(function(){
+            result.source.push($(this).attr('data-value'));
+        });
+        $('#searchMenu header #selectType li.active').not('.trigger').each(function(){
+            result.type.push($(this).attr('data-value'));
+        });
+        return result;
+    };
     this.toggleSearchMenu = function(){
-        
         var $searchMenu = $('#searchMenu');
         var ms = 700;
+        
+        $('#bodywrap').unbind('click');
         if($searchMenu.hasClass('open')){
             
             $('#bodywrap').animate({
@@ -1043,6 +1029,7 @@ var search = new function(){
                     marginRight: -337
             }, ms);  
             $searchMenu.removeClass('open');
+            
         }else{
           
             $('#bodywrap').animate({
@@ -1052,13 +1039,17 @@ var search = new function(){
                     marginRight: 0
             }, ms);  
             $searchMenu.addClass('open');
+            
+            $('#bodywrap').bind('click', function(){
+                search.toggleSearchMenu();
+            });
         }
     };
     this.initResultHandlers = function(query){
                 item.initRightClick();
                 $('.resultList a:link, .resultList .icon-gear, .resultList .white-gear').unbind('click');
 		$('.resultList a:link').bind('click', function(){
-			$('.dockSeachResult').hide('slow');
+			search.toggleSearchMenu();
                         $('#searchField').val('');
 		});
                 
@@ -1075,6 +1066,33 @@ var search = new function(){
     };
     this.extendResults = function(query, type, limit, offset){
         return api.query('api/search/extendResults/', {query:query, type:type, limit:limit, offset:offset});
+    };
+    //basicQuery is used inside the docksearch
+    //query is used inside telescope
+    this.basicQuery = function(query){
+        api.query('api/search/query/',{query:query});
+    };
+    this.loadResults = function(query){
+        var html = '';
+        var results = api.query('api/search/loadDockList/',{query:query});
+        
+        html += results.users;
+        
+        html += results.folders;
+        
+        html += results.elements;
+        
+        html += results.files;
+        
+        html += results.groups;
+        
+        html += results.wikis;
+        
+        html += results.youtubes;
+        
+        html += results.spotifies;
+        
+        return html;
     };
 };
 
@@ -2125,22 +2143,223 @@ function nl2br(str, is_xhtml) {
 };
 
 var handler = new function(){
-  this.open = function(type, itemId){
+  this.query = function(handler_title, query, offset, max_results){
+      return api.query('api/handlers/', {
+          'handler_title':handler_title,
+          'action':'query',
+          'parameters': {
+              'query':query,
+              'offset':offset,
+              'max_results':max_results
+          }
+      });
+  };
+  this.getTitle = function(handler_title, url){
       
-  }  
+      
+      return api.query('api/handlers/', {
+          'handler_title':handler_title,
+          'action':'getTitle',
+          'parameters': {
+              'url':url
+          }
+          
+      });
+      
+  };
+  this.getDescription = function(handler_title, url){
+      
+      return api.query('api/handlers/', {
+          'handler_title':handler_title,
+          'action':'getDescription',
+          'parameters': {
+              'url':url
+          }
+          
+      });
+  };
+  this.getThumbnail = function(handler_title, url){
+      
+      return api.query('api/handlers/', {
+          'handler_title':handler_title,
+          'action':'getThumbnail',
+          'parameters': {
+              'url':url
+          }
+          
+      });
+  };
 };
 
-//var handlers = [
-//    'youtube'=> {
-//                    application : 'reader',
-//                    regex : '',
-//                    open : function(){
-//
-//                    };
-//                    prev : function(){
-//                    };
-//                    next : function(){
-//                    };
-//                },
-//    
-//];
+var handlers = {
+    'youtube': {
+                    application : 'reader',
+                    regex : /((http|https):\/\/)?(www\.)?(youtube\.com)(\/)?([a-zA-Z0-9\-\.]+)\/?/,
+                    open : function($target, link, onStop){
+                            var videoId;
+                            if(is_url(link)){
+                                videoId = youtubeURLToVideoId(link);
+                            }else{
+                                videoId = link;
+                            }
+                            var tempThis = this;
+
+                            //generate random player id
+                            //otherwise multiple videos
+                            //can not be opened
+                            var playerId = gui.generateId();
+
+                            var output="";
+                            output += "        <div id=\"ytplayer_"+playerId+"\"><\/div>";
+
+                            $target.html(output);
+
+                            // Load the IFrame Player API code asynchronously.
+                            var tag = document.createElement('script');
+                            tag.src = "http://www.youtube.com/player_api";
+                            var firstScriptTag = document.getElementsByTagName('script')[0];
+                            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+                            //yt player api is added in plugins.js
+                            var ytplayer;
+                            ytplayer = new YT.Player('ytplayer_'+playerId, {
+                              height: '100%',
+                              width: '100%',
+                              videoId: videoId,
+                              autoplay: 1,
+                              events: {
+                                'onReady': onPlayerReady
+                              }
+                            });
+
+                            function onPlayerReady(){
+                                ytplayer.playVideo();
+                            }
+
+                            if(typeof onStop === 'function'){
+                              ytplayer.addEventListener('onStateChange', function(state){
+                                  if(state.data === 0){
+                                      onStop();
+                                  }
+                                  if(state.data === 1){
+                                      var callback = function(){
+                                          ytplayer.pauseVideo();
+                                      };
+                                      tempThis.updateActiveItemPause(callback);
+                                  }
+                                  if(state.data === 2){
+                                      var callback = function(){
+                                          ytplayer.playVideo();
+                                      };
+                                      tempThis.updateActiveItemPlay(callback);
+                                  }
+                              });
+                            }
+
+                    },
+                    
+                    getTitle : function(link){
+                        return handler.getTitle('youtube', link);
+                    },
+                    getDescription : function(link){
+                        return handler.getDescription('youtube', link);
+                    },
+                    getThumbnail : function(link){
+                        return '<img src="'+handler.getThumbnail('youtube', link)+'"/>'
+                    },
+                    query: function(query, offset, max_results){
+                        return handler.query('youtube', query, offset, max_results);
+                    },
+                    handler: function(link){
+                        alert('we opened it');
+                    }
+                    
+                },
+    'wikipedia': {
+                    application : 'reader',
+                    regex : /((http|https):\/\/)?(www\.)?(wikipedia\.org)(\/)?([a-zA-Z0-9\-\.]+)\/?/,
+                    open : function($target, link, onStop){
+                            
+
+                    },
+                    getTitle : function(link){
+                        return handler.getTitle('wikipedia', link);
+                    },
+                    getDescription : function(link){
+                        return handler.getDescription('wikipedia', link);
+                    },
+                    getThumbnail : function(link){
+                        var apiResult = handler.getThumbnail('wikipedia', link);
+                        if(apiResult)
+                            return '<img src="'+apiResult+'"/>';
+                        else
+                            return '<span class="icon icon-wikipedia"></span>';
+                    },
+                    query: function(query, offset, max_results){
+                        return handler.query('wikipedia', query, offset, max_results);
+                    }
+                    
+                },
+    'folders': {
+                    application : 'reader',
+                    regex : /((http|https):\/\/)?(www\.)?(wikipedia\.org)(\/)?([a-zA-Z0-9\-\.]+)\/?/,
+                    open : function($target, link, onStop){
+                            
+
+                    },
+                    query: function(query, offset, max_results){
+                        return handler.query('folders', query, offset, max_results);
+                    },
+                    getTitle: function(id){
+                        return folders.folderIdToFolderTitle(id);
+                    },
+                    getDescription: function(id){
+                        return 'wubba dubba du. wubbta asdasd';
+                    },
+                    getThumbnail: function(id){
+                        return '<span class="icon icon-folder"></span>';
+                    },
+                    handler: function(id){
+                        folders.open(id);
+                    }
+                    
+                },
+    'collections': {
+                    query: function(query, offset, max_results){
+                        return handler.query('elements', query, offset, max_results);
+                    },
+                    getTitle: function(id){
+                        return elements.getTitle(id);
+                    },
+                    getDescription: function(id){
+                        return 'wubba dubba du. wubbta asdasd';
+                    },
+                    getThumbnail: function(id){
+                        return '<span class="icon icon-archive"></span>';
+                    },
+                    handler: function(id){
+                        elements.open(id);
+                    }
+                    
+                },
+    'files': {
+                    query: function(query, offset, max_results){
+                        return handler.query('files', query, offset, max_results);
+                    },
+                    getTitle: function(id){
+                        return folders.folderIdToFolderTitle(id);
+                    },
+                    getDescription: function(id){
+                        return 'wubba dubba du. wubbta asdasd';
+                    },
+                    getThumbnail: function(id){
+                        return '<span class="icon icon-folder"></span>';
+                    },
+                    handler: function(id){
+                        files.open(id);
+                    }
+                    
+                }
+    
+};
+

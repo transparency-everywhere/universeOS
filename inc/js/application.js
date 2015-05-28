@@ -39,6 +39,16 @@ var applications = new function(){
         app['icon'] = 'gfx/applicationIcons/white/filesystem.svg';
         apps[1] = app;
         
+        //filesystem
+        var app = [];
+        app['title'] = 'telescope';
+        app['source'] = 'telescope.js';
+        app['className'] = 'telescope'; // name of the the javascript class object
+        app['active'] = true;
+        app['position'] = {width: 8, height:  5, top: 0, left: 2, hidden:true};
+        app['icon'] = 'gfx/applicationIcons/white/telescope.svg';
+        apps[2] = app;
+        
         
         
         
@@ -51,7 +61,7 @@ var applications = new function(){
             app['className'] = 'feed'; // name of the the javascript class object
             app['position'] = {width: 2, height:  5, top: 0, left: 0};
             app['icon'] = 'gfx/applicationIcons/white/feed.svg';
-            apps[2] = app;
+            apps[3] = app;
             
             //chat
             var app = [];
@@ -61,7 +71,7 @@ var applications = new function(){
             app['active'] = true;
             app['position'] = {width: 2, height:  2, top: 0, left: 5, hidden:true};
             app['icon'] = 'gfx/applicationIcons/white/chat.svg';
-            apps[3] = app;
+            apps[4] = app;
 
             //settings
             var app = [];
@@ -72,7 +82,7 @@ var applications = new function(){
             app['position'] = {width: 2, height:  5, top: 0, left: 0};
             app['icon'] = 'gfx/applicationIcons/white/settings.svg';
 
-            apps[4] = app;
+            apps[5] = app;
 
             //calendar
             var app = [];
@@ -82,7 +92,7 @@ var applications = new function(){
             app['active'] = false;
             app['position'] = {width: 2, height:  2, top: 0, left: 9};
             app['icon'] = 'gfx/applicationIcons/white/calendar.svg';
-            apps[5] = app;
+            apps[6] = app;
 
 
             //buddylist
@@ -93,7 +103,7 @@ var applications = new function(){
             app['active'] = true;
             app['position'] = {width: 2, height:  5, top: 0, left: 9};
             app['icon'] = 'gfx/applicationIcons/white/buddylist.svg';
-            apps[6] = app;
+            apps[7] = app;
             
             //buddylist
             var app = [];
@@ -103,7 +113,7 @@ var applications = new function(){
             app['active'] = true;
             app['position'] = {width: 2, height:  5, top: 0, left: 9};
             app['icon'] = 'gfx/applicationIcons/white/player.svg';
-            apps[7] = app;
+            apps[8] = app;
         }
         
         return apps;

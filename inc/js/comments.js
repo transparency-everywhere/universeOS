@@ -15,6 +15,12 @@
         
 
 var comments = new function(){
+    
+    this.init = function(){
+        
+    };
+    
+    
   this.loadSubComments = function(commentId){
       
     $("#comment" + commentId + "").load("showComment.php?type=comment&id=" + commentId +"");

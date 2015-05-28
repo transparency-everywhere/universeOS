@@ -48,7 +48,7 @@ class db{
         public function shiftResult($result, $testColumn){
             //check if result is array (if result is empty the sql string will be returned)
             if(!is_array($result)){
-                return [];
+                return array();
             }
             
             

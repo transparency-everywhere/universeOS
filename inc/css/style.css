@@ -239,6 +239,7 @@ li.notHidden{
     top:0;
     right:0;
     bottom:0;
+    overflow: auto;
     width: 337px;
     margin-right: -337px;
     padding: 20px;
@@ -251,6 +252,7 @@ li.notHidden{
     top: 32px; 
     right: 284px;
 }
+
 
 #searchMenu header h2{
     size: 20px;
@@ -269,7 +271,33 @@ li.notHidden{
 }
 
 #searchMenu header ul#selectType{
-    left: 120px;
+    left: 150px;
+}
+#searchMenu header ul.active{
+    box-shadow:1px 3px 8px 0px rgba(0, 0, 0, 0.3);
+    background-color: #37474f;
+}
+
+#searchMenu header ul li{
+    display:none;
+    line-height: 20px;
+    padding: 4px;
+}
+
+span.icon.blue-chevron-down {}
+#searchMenu header ul li .icon{
+	width: 18px;
+	
+	height: 18px;
+	margin-bottom: -3px;
+}
+
+#searchMenu header ul li.trigger{
+    display:block;
+}
+
+#searchMenu header ul li.active{
+    color:#c9c9c9;
 }
 
 
@@ -281,12 +309,12 @@ li.notHidden{
 }
 
 
-#searchMenu header .icon{
+#searchMenu header .blue-search, #searchMenu header .white-close{
     height: 24px;
     width: 24px;
     position:absolute;
     right: 26px;
-    margin-top: -30px;
+    margin-top: -33px;
 }
 #searchMenu .userPicture {
 	margin: 1px 5px;
@@ -337,7 +365,8 @@ li.notHidden{
 }
         #searchMenu #loadingArea{
             margin-top: 50px;
-        }
+        
+}
 
    
 #searchMenu > h2{
@@ -442,6 +471,155 @@ li.notHidden{
 #searchMenu .loadAll a{
     color: #18ffff!important;
     font-size: 14px;
+}
+
+#telescope .tab>header{
+    margin:15px;
+}
+
+#telescope #telescopeInput{
+    margin-left: 10px;
+    height: 38px;
+    width: 55%;
+}
+
+#telescope #filterList li, #telescope #filterList, #telescope .icon-search, #telescope #telescopeInput{
+    float: left;
+}
+
+#telescope #filterList li.active .brightIcon{
+    display: none;
+}
+
+#telescope #filterList li .blueIcon{
+    display: none;
+}
+
+#telescope #filterList li.active .blueIcon{
+    display: block;
+}
+
+#telescope .tab .icon{
+    margin-top: -1px;
+}
+#telescope .icon-search{
+    position:absolute;
+    margin-left: -38px;
+    margin-top: 1px!important;
+}
+
+
+#telescope .leftNav{
+    top: 65px;
+    right: 0;
+    left: 0;
+    height: 41px;
+    width: 100%;
+    
+    
+}
+
+#telescope .leftNav:after { 
+   content: " ";
+   display: block; 
+   height: 0; 
+   clear: both;
+}
+
+#telescope .leftNav .toggleLeftNav{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#telescope .frameRight{
+    top: 106px;
+    right: 0;
+    left: 0;
+    bottom: 0;
+}
+
+#telescope .leftNav li{
+    padding-left: 15px;
+    float:left;
+}
+
+#telescope .leftNav li.spacer:hover{
+    background: none;
+}
+
+#telescope .leftNav .categoryTitle{
+    display: block;
+    padding-left: 5px;
+}
+
+#telescope .frameRight ul header>div{
+    display:table-cell;
+    border-right: 1px solid #dcdcdc;
+    padding:0 5px;
+    vertical-align: middle;
+}
+
+#telescope .frameRight ul li{
+    clear:both;  
+    margin-top: 25px;
+}
+
+#telescope .frameRight ul li h2{  margin-top: 0;
+    font-size:17px;
+}
+
+#telescope .frameRight ul li div:first-of-type div:first-of-type{
+    padding:15px;  padding-top: 5px;
+    float:left;
+}
+#telescope .frameRight ul li div:first-of-type div:first-of-type img{
+    width:50px;
+}
+
+#telescope .frameRight ul li div:first-of-type div:first-of-type .icon{
+    width:50px;
+    height:50px;  margin-top: -10px;
+}
+
+#telescope .frameRight ul li div:last-of-type{
+    overflow: auto;
+}
+
+
+/*table  view*/
+#telescope .frameRight ul.table>*{
+    display:table-row;
+}
+#telescope .frameRight ul.table>*>*{
+    display:table-cell;
+}
+#telescope .frameRight ul.table>*>*>*{
+    display: inline-block;
+}
+#telescope .frameRight ul.table>*>*>.icon,#telescope .frameRight ul.table>*>*>img{
+    max-width:30px;
+}
+
+
+#telescope .frameRight ul.thumbSmall>header{
+    
+}
+
+#telescope .frameRight ul.thumbSmall>li{
+    float: left;
+    width: 110px;
+    height: 110px;
+    clear: none;
+    margin: 15px;
+}
+
+#telescope .frameRight ul.thumbBig>li{
+    float: left;
+    width: 150px;
+    height: 150px;
+    clear: none;
+    margin: 15px;
 }
 
 
@@ -1112,7 +1290,7 @@ span.heading  {
 
 .leftNav{
     position: absolute;
-    width: 170px;
+    width: 175px;
     top: 0px;
     bottom: 0px;
     left: 0px;
@@ -1155,7 +1333,7 @@ span.heading  {
     top: 0px;
     right: 0px;
     bottom: 0px;
-    left: 170px;
+    left: 175px;
     padding-right: 0px;
     margin-right: 0px;
     overflow: auto;
@@ -1469,7 +1647,7 @@ color: #FFF;
 
 #feedInputBar{
     position: absolute;
-    top: 49px;
+    top: 50px;
     right: 10px;
     width: 195px;
 }
@@ -1511,7 +1689,7 @@ color: #FFF;
 }
 
 #filesystem .tabFrame>header{
-    left:170px;
+    left: 175px;
 }
 
 #filesystem .tabFrame>.tab{
@@ -2111,8 +2289,8 @@ color:#FFFFFF;
 
 .icon{
     display: inline-block;
-    width: 18px;
-    height: 18px;
+    width: 32px;
+    height: 32px;
     background-size: 100%;
     cursor: pointer;
 }

@@ -20,7 +20,7 @@ var filesystem =  new function() {
         var html = '<div id="fileBrowserFrame"></div>';
         var grid = {width: 6, height:  4, top: 7, left: 0};
         if(proofLogin())
-            grid = {width: 6, height:  8, top: 0, left: 3};
+            grid = {width: 6, height:  8, top: 1, left: 3};
         this.applicationVar = new application('filesystem');
         this.applicationVar.create('Filesystem', 'html', html, grid);
         this.tabs = new tabs('#fileBrowserFrame');
@@ -372,6 +372,10 @@ var filesystem =  new function() {
         
         return api.query('api/files/select/', { file_id : file_id});
         
+    };
+    this.getFileTitle = function(file_id){
+        var fileData = this.getFileData(file_id);
+        return fileData['title'];
     };
     
     this.openUploadTab = function(element){

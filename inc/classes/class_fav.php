@@ -15,7 +15,7 @@
 class fav {
     function select($user){
         $dbClass = new db();
-        $favs = $dbClass->select('fav', array('user', $user));
+        $favs = $dbClass->shiftResult($dbClass->select('fav', array('user', $user)), 'type');
         $result = array();
         foreach($favs AS $favData) {
             //get favs from table favs and select them from the appropriate table. 
@@ -66,7 +66,8 @@ class fav {
                 $user = getUser();
         }
         $userClass = new user($user);
-        $userFavs = $userClass->getFav();
+        $userFavs = $this->select($user);
+        
         $i = 0;
         $output = '';
         
