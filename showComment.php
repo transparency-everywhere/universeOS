@@ -16,7 +16,7 @@ if(isset($_POST['comment'])) {
         $(this).load('doit.php?action=showSingleComment&type=<?=$_POST[type];?>&itemid=<?=$_POST[itemid];?>');
     });
     </script>
-    <?
+    <?php
     
     
 }

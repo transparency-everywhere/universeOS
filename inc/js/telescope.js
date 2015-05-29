@@ -161,11 +161,21 @@ var telescope = new function(){
     };
     
     this.buildThumb = function(type, selector){
-        console.log(type);
         var html;
             html = '<div>'+handlers[type].getThumbnail(selector)+'<h2>'+gui.shorten(handlers[type].getTitle(selector), 50)+'</h2></div>';
             html += '<div>'+nl2br(gui.shorten(handlers[type].getDescription(selector), 100))+'</div>';
-        
+            html += '<div></div>';
+            var itemType;
+            switch(type){
+                
+                default:
+                    itemType = 'link';
+                    break;
+                case 'file'||'element'||'folder'||'user':
+                    itemType = type;
+                    break;
+            }
+            html += '<div>'+item.showItemSettings(itemType,selector)+'</div>';
         return html;
     };
     
@@ -213,11 +223,11 @@ var telescope = new function(){
                     header += 'Size';
                 header += '</div>';
                 header += '<div style="min-width: 110px;">';
-                    header += '<span class="headerbuttons"><span class="icon icon-list" data-type="table"></span><span class="icon icon-small-symbols" data-type="thumbSmall"></span><span class="icon icon-large-symbols" data-type="thumbBig"></span>';
+                    header += '<span class="headerbuttons"><span class="icon blue-list" data-type="table"></span><span class="icon icon-small-symbols" data-type="thumbSmall"></span><span class="icon icon-large-symbols" data-type="thumbBig"></span>';
                 header += '</div>';
             header += '</header>';
 
-            html += '<ul class="telescopeList">'+header+telescope.parseResults(results)+'</ul>';
+            html += '<ul class="telescopeList table">'+header+telescope.parseResults(results)+'</ul>';
         html += '</div>';
         return html;
     };

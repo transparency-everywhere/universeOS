@@ -30,9 +30,13 @@ Update
 
     check if our server serves svg files as image/svg, not as text/plain (regbox - loading bubbles)
 
-
+    
 
 todo
+    get rid of
+        mysql_query
+        $.post, $.ajax
+
     score
         farbiger kasten weg
         positive ergebnisse #313131;
