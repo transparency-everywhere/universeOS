@@ -20,7 +20,7 @@ var filesystem =  new function() {
         var html = '<div id="fileBrowserFrame"></div>';
         var grid = {width: 6, height:  4, top: 7, left: 0};
         if(proofLogin())
-            grid = {width: 6, height:  8, top: 1, left: 3};
+            grid = {width: 6, height:  8, top: 0, left: 3};
         this.applicationVar = new application('filesystem');
         this.applicationVar.create('Filesystem', 'html', html, grid);
         this.tabs = new tabs('#fileBrowserFrame');
@@ -136,11 +136,11 @@ var filesystem =  new function() {
             if(!empty(folder) && (folder !== "1") && is_numeric(folder)){
                 if(parentFolderData['folder'] !== "1")
                     parentFolderData = folders.getData(folder);                    
-                html += '                        <tr height="30" class="greyHover" onclick="openFolder(' + parentFolderData['folder'] + '); return false;">';		  			
-                html += '                            <td width="30">&nbsp;' + filesystem.generateIcon('folder') + '</td>';		  			
+                html += '                        <tr class="greyHover" onclick="openFolder(' + parentFolderData['folder'] + '); return false;">';		  			
+                html += '                            <td>' + filesystem.generateIcon('folder') + '</td>';		  			
                 html += '                            <td><a href="#">...</a></td>';		  			
-                html += '                            <td width="50px"></td>';		  			
-                html += '                            <td width="50px"></td>';		  			
+                html += '                            <td></td>';		  			
+                html += '                            <td></td>';		  			
                 html += '                        </tr>';
             }
 
@@ -154,17 +154,16 @@ var filesystem =  new function() {
                         if(folder === "3"){
                             name = groups.getTitle(value['data']['name']) + '\'s Groupfiles'; // value['data']['name']) because groupid = foldername
                         }
-                        html += '                <tr oncontextmenu="showMenu(\'folder' + value['data']['id'] + '\'); return false;" onclick="openFolder(\'' + value['data']['id'] + '\'); return false;" height="30" class="greyHover">';
-                        html += '                <td width="30">';
+                        html += '                <tr class="greyHover" oncontextmenu="showMenu(\'folder' + value['data']['id'] + '\'); return false;" onclick="openFolder(\'' + value['data']['id'] + '\'); return false;" height="30" class="greyHover">';
                         if(rightClick){
                             html += ''; //hier muss die rightClick function noch eingebunden werden!!
                         }
-                        html += '                    &nbsp;' + filesystem.generateIcon('folder') + '</td>';
-                        html += '                    <td><a href="#">' + name + '</a></td>';
-                        html += '                    <td width="80px">';
+                        html += '                    <td>' + filesystem.generateIcon('folder') + '</td>';
+                        html += '                    <td>' + name + '</td>';
+                        html += '                    <td>';
                         html += item.showScoreButton('folder', value['data']['id']);
                         html += '                    </td>';
-                        html += '                    <td width="30px">';
+                        html += '                    <td>';
                         if(proofLogin()){
                             html += item.showItemSettings('folder', value['data']['id']);
                         }
@@ -175,11 +174,11 @@ var filesystem =  new function() {
 
                     if(value['type'] === "element"){
                         var title = value['data']['title'];
-                        html += "                        <tr oncontextmenu=\"showMenu('element" + value['data']['id'] + "'); return false;\" onclick=\"elements.open('" + value['data']['id'] + "'); return false;\" height=\"30\">";
-                        html += "                           <td width=\"30\">&nbsp;" + filesystem.generateIcon('element') + "</td>";
-                        html += "                           <td><a href=\"#\">" + title + "</a></td>"; //openElement wird zu elements.open
-                        html += "                           <td width=\"80px\">" + item.showScoreButton('element', value['data']['id']) + "</td>";
-                        html += "                           <td width=\"30px\">";
+                        html += "                        <tr class=\"greyHover\" oncontextmenu=\"showMenu('element" + value['data']['id'] + "'); return false;\" onclick=\"elements.open('" + value['data']['id'] + "'); return false;\" height=\"30\">";
+                        html += "                           <td>" + filesystem.generateIcon('element') + "</td>";
+                        html += "                           <td>" + title + "</td>";
+                        html += "                           <td>" + item.showScoreButton('element', value['data']['id']) + "</td>";
+                        html += "                           <td>";
                         if(rightClick){
                             html += item.showItemSettings('element', value['data']['id']);
                         }
@@ -510,13 +509,13 @@ var filesystem =  new function() {
         color = 'dark';
     }
     
-    if(typeof id === 'undefined' || id === 'undefined'){
+    if(typeof id === 'undefined' || id === 'undefined' || id === ''){
         identifier = '';
     } else {
         identifier = ' id="' + id + '"';
     }
     
-    if(typeof onclick === 'undefined' || onclick === 'undefined'){
+    if(typeof onclick === 'undefined' || onclick === 'undefined' || onclick === ''){
         onclicker = '';
     } else {
         onclicker = ' onclick="' + onclick + '"';

@@ -15,10 +15,6 @@ var focus = true;
 $(document).ready(function(){
         
         universe.init();
-        
-        $( "#blueList" ).click(function() {
-            alert( "Klappt" );
-        });
     
 });
 
@@ -1605,15 +1601,14 @@ function feedLoadMore(destination ,type, user, limit){
 //filesystem
 
 function smallSymbols() {
-    alert( "smallSymbols" );
+    $('#showElement').removeClass('largeSymbols');
     $('#showElement').addClass('smallSymbols');
 }
 function largeSymbols() {
-    alert( "largeSymbols" );
+    $('#showElement').removeClass('smallSymbols');
     $('#showElement').addClass('largeSymbols');
 }
 function listView() {
-    alert( "listView" );
     $('#showElement').removeClass('smallSymbols');
     $('#showElement').removeClass('largeSymbols');
     
@@ -1626,7 +1621,7 @@ function initUploadify(id, uploader, element, timestamp, token){
 	                    'formData'     : {
 	                            'timestamp' : timestamp,
 	                            'token'     : token,
-	                            'element'     : element
+	                            'element'   : element
 	                    },
 	                    'swf'      : 'inc/plugins/uploadify/uploadify.swf',
 	                    'uploader' : uploader,

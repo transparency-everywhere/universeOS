@@ -40,15 +40,19 @@ var reader = new function(){
     };
     this.openFile = function(file_id){
         var fileData = filesystem.getFileData(file_id);
+        var zoomInString = 'zoomIn(' + fileData['folder'] + ')';
+        var zoomOutString = 'zoomOut(' + fileData['folder'] + ')';
         
         var header = "<header class=\"white-gradient\">";
         header += filesystem.generateIcon(fileData['type'], 'grey');
         header += "<span class=\"title\">" + fileData['title'] + "</span>";
         header += '<div class="whiteGradientScoreButton">' + item.showScoreButton('file', file_id) + '</div>';
-        header += filesystem.generateIcon('download', 'grey');
+        header += '<a href="./out/download/?fileId=' + file_id + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download', 'grey') + '</a>';
         header += item.showItemSettings('file', file_id);
-        header += '<div id="zoom_in">' + filesystem.generateIcon('plus', 'grey') + '</div>';
-        header += '<div id="zoom_out">' + filesystem.generateIcon('minus', 'grey') + '</div>';
+        if(fileData['type'] === 'image' || fileData['type'] === 'image/jpeg' || fileData['type'] === 'image/png' || fileData['type'] === 'image/tiff' || fileData['type'] === 'image/gif') {
+            header += '<div id="zoom_in">' + filesystem.generateIcon('plus', 'grey', '', zoomInString) + '</div>';
+            header += '<div id="zoom_out">' + filesystem.generateIcon('minus', 'grey', '', zoomOutString) + '</div>';
+        }
         header += "</header>";
         
         var output = '';
@@ -68,7 +72,7 @@ var reader = new function(){
                     output += "<div class=\"fileWindow\" id=\"fileWindowId\">";
                         output += "<div class=\"imageReader\">";
                             output += "<div class=\"mainImage\">";
-                                output += "<img src=\"" + path + "\" />";
+                                output += "<img src=\"" + path + "\" / id=\"viewedPicture_" + fileData['folder'] + "\">";
                             output += "</div>";
                             output += "<div class=\"previewImages\">";
                                 $.each(elements.getFileList(fileData['folder']), function(key, value){
