@@ -174,26 +174,13 @@ var init = new function(){
 					if (searchValue.length > 1)
 					{
                                                 $loadingArea.html(search.loadResults(searchValue));
-//						$.ajax(
-//						{
-//							type: "POST",
-//							url: "modules/suggestions/dockSearch.php",
-//							data: "search=" + search,
-//							success: function(message)
-//							{
-//								$loadingArea.empty();
-//						  		if (message.length > 1)
-//								{						
-//									$loadingArea.append(message);
-//								}
-//							}
-//						});
 					}
 					else
 					{
                                             $loadingArea.empty();
 					}
 					
+					search.initResultHandlers(searchValue);
 				}, 500 );
 			});
                         
@@ -1054,13 +1041,21 @@ var search = new function(){
                 });
                 
                 $('.dockSeachResult .loadAll a').click(function(){
-                    var type = $(this).parent().attr('data-type');
-                    $(this).parent().parent().children('ul').replaceWith(search.extendResults(query,type, 40, 0));
-                    $(this).parent().remove();
-                    search.initResultHandlers(query);
+//                    var type = $(this).parent().attr('data-type');
+//                    $(this).parent().parent().children('ul').replaceWith(search.extendResults(query,type, 40, 0));
+//                    $(this).parent().remove();
+//                    search.initResultHandlers(query);
+
+                });
+                
+                $('#searchMenu #openInTelescope').unbind('click');
+                $('#searchMenu #openInTelescope').bind('click', function(){
+                    telescope.query(query);
+                    search.toggleSearchMenu();
                 });
     };
     this.extendResults = function(query, type, limit, offset){
+        
         return api.query('api/search/extendResults/', {query:query, type:type, limit:limit, offset:offset});
     };
     //basicQuery is used inside the docksearch

@@ -54,24 +54,29 @@ function addComment($type, $itemid, $author, $message){
         return $num_rows;
     }
     
+    public function loadComments($type, $item_id){
+        $db = new db();
+        return $db->shiftResult($db->select('comments', array('type', $type, '&&', 'typeid', $item_id)),"typeid");
+    }
+    
 function showComments($type, $itemid) {
     if(proofLogin()){?>
     <div id="<?=$type;?>Comment_<?=$itemid;?>">
-    <div class="shadow commentRow">
-      <center>
-          <form action="showComment.php" method="post" id="addComment" target="submitter">
-              <table>
-                  <tr>
-                      <td style="padding: 0 10px;"><?=showUserPicture($_SESSION['userid'], "30");?></td>
-                      <td style="vertical-align:middle;"><input type="text" name="comment" placeholder="write commenta.." class="commentField" style="width: 100%!important;"></td>
-                      <td style="padding: 0 10px;"><input type="submit" value="send" class="button" name="submitComment" style="width:auto;"></td>
-                      <td width="10"></td>
+        <div class="shadow commentRow">
+          <center>
+              <form action="showComment.php" method="post" id="addComment" target="submitter">
+                  <table>
+                      <tr>
+                          <td style="padding: 0 10px;"><?=showUserPicture($_SESSION['userid'], "30");?></td>
+                          <td style="vertical-align:middle;"><input type="text" name="comment" placeholder="write commenta.." class="commentField" style="width: 100%!important;"></td>
+                          <td style="padding: 0 10px;"><input type="submit" value="send" class="button" name="submitComment" style="width:auto;"></td>
+                          <td width="10"></td>
 
-                  </tr><input type="hidden" name="itemid" value="<?=$itemid;?>"><input type="hidden" name="user" value="<?=$_SESSION['userid'];?>"><input type="hidden" name="type" value="feed">
-              </table>
-          </form>
-      </center>
-    </div>
+                      </tr><input type="hidden" name="itemid" value="<?=$itemid;?>"><input type="hidden" name="user" value="<?=$_SESSION['userid'];?>"><input type="hidden" name="type" value="feed">
+                  </table>
+              </form>
+          </center>
+        </div>
 
     <?php
     }
