@@ -44,11 +44,11 @@ var reader = new function(){
         var header = "<header class=\"white-gradient\">";
         header += filesystem.generateIcon(fileData['type'], 'grey');
         header += "<span class=\"title\">" + fileData['title'] + "</span>";
-        header += item.showScoreButton('file', file_id);
+        header += '<div class="whiteGradientScoreButton">' + item.showScoreButton('file', file_id) + '</div>';
         header += filesystem.generateIcon('download', 'grey');
         header += item.showItemSettings('file', file_id);
-        header += filesystem.generateIcon('plus', 'grey');
-        header += filesystem.generateIcon('minus', 'grey');
+        header += '<div id="zoom_in">' + filesystem.generateIcon('plus', 'grey') + '</div>';
+        header += '<div id="zoom_out">' + filesystem.generateIcon('minus', 'grey') + '</div>';
         header += "</header>";
         
         var output = '';

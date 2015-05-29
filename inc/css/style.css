@@ -963,24 +963,28 @@ span.icon.blue-chevron-down {}
 
 
 
-#attributes {
+
+/*Small symbols view*/
+
+
+.smallSymbols #attributes {
     display:none;
 }
 
-span.icons {
+.smallSymbols span.icons {
     display: block;
     text-align: center;
     width: 100%;
     height: 60px;
 }
 
-span.icons span.icon {
+.smallSymbols span.icons span.icon {
     display: inline-block;
     width: 60px;
     height: 60px;
 }
 
-span.title {
+.smallSymbols span.title {
     display: block;
     text-align: center;
     width: 100%;
@@ -988,22 +992,22 @@ span.title {
     
 }
 
-span.date {
+.smallSymbols span.date {
     display: none;
     
 }
 
-span.size {
+.smallSymbols span.size {
     display: none;
     
 }
 
-span.buttons {
+.smallSymbols span.buttons {
     display: none;
     
 }
   
-span.heading {
+.smallSymbols span.heading {
     display: block;
     clear: both;
     margin: 10px 0 10px 0;
@@ -1013,7 +1017,7 @@ span.heading {
     text-align: left;
 }
 
-div#showElement.frameRight ul li {  
+.smallSymbols .frameRight ul li {  
     display: block;
     float: left;
     width: 130px;
@@ -1021,11 +1025,11 @@ div#showElement.frameRight ul li {
     margin: 2px;
 }
 
-div#showElement.frameRight ul li:hover{
+.smallSymbols .frameRight ul li:hover{
     background-color: #cfd8dc;
 }
 
-div#showElement.frameRight ul li:hover span.buttons {
+.smallSymbols .frameRight ul li:hover span.buttons {
     display: block;
     width: 30px;
     margin-top: -114px;
@@ -1033,17 +1037,252 @@ div#showElement.frameRight ul li:hover span.buttons {
     text-align: center;
 }
     
-div#showElement.frameRight ul li:hover span.buttons .scoreButton {
+.smallSymbols .frameRight ul li:hover span.buttons .scoreButton {
     display:none;
 }
 
-.white-header {
+.smallSymbols .white-header {
     height:40px;
     border: 1px solid #cfd8dc;
     border-top-style: none;
     border-right-style: none;
     border-left-style: none;
 }
+
+.smallSymbols #greyList {
+    display: inline-block;
+}
+
+.smallSymbols #blueList {
+    display: none;
+}
+
+.smallSymbols #greySmall {
+    display: none;
+}
+
+.smallSymbols #blueSmall {
+    display: inline-block;
+}
+
+.smallSymbols #greyLarge {
+    display: inline-block;
+    
+}
+
+.smallSymbols #blueLarge {
+    display: none;
+}
+
+
+
+/*Large symbol view*/
+
+
+.largeSymbols #attributes {
+    display:none;
+}
+
+.largeSymbols span.icons {
+    display: block;
+    text-align: center;
+    width: 100%;
+    height: 128px;
+}
+
+.largeSymbols span.icons span.icon {
+    display: inline-block;
+    width: 128px;
+    height: 128px;
+}
+
+.largeSymbols span.title {
+    display: block;
+    text-align: center;
+    width: 100%;
+    height: 50px;
+    
+}
+
+.largeSymbols span.date {
+    display: none;
+    
+}
+
+.largeSymbols span.size {
+    display: none;
+    
+}
+
+.largeSymbols span.buttons {
+    display: none;
+    
+}
+  
+.largeSymbols span.heading {
+    display: block;
+    clear: both;
+    margin: 10px 0 10px 0;
+    color:  #00bcd4;
+    font-size: 20px;
+    font-weight: 300;
+    text-align: left;
+}
+
+.largeSymbols .frameRight ul li {  
+    display: block;
+    float: left;
+    width: 190px;
+    height: 200px;
+    margin: 2px;
+}
+
+.largeSymbols .frameRight ul li:hover{
+    background-color: #cfd8dc;
+}
+
+.largeSymbols .frameRight ul li:hover span.buttons {
+    display: block;
+    width: 30px;
+    margin-top: -114px;
+    margin-left: 82px;
+    text-align: center;
+}
+    
+.largeSymbols .frameRight ul li:hover span.buttons .scoreButton {
+    display:none;
+}
+
+.largeSymbols .white-header {
+    height:40px;
+    border: 1px solid #cfd8dc;
+    border-top-style: none;
+    border-right-style: none;
+    border-left-style: none;
+}
+
+.largeSymbols #greyList {
+    display: inline-block;
+}
+
+.largeSymbols #blueList {
+    display: none;
+}
+
+.largeSymbols #greySmall {
+    display: inline-block;
+}
+
+.largeSymbols #blueSmall {
+    display: none;
+}
+
+.largeSymbols #greyLarge {
+    display: none;
+}
+
+.largeSymbols #blueLarge {
+    display: inline-block;
+}
+
+
+
+
+/*List view*/
+
+
+#attributes  {
+}
+
+span.icons  {
+    display: inline-block;
+    min-width: 21px;
+}
+
+span.icons span.icon  {
+    width: auto;
+}
+
+span.title  {
+    display: inline-block;
+    width: 35%;
+    
+}
+
+span.date  {
+    display: inline-block;
+    width: 15%;
+    
+}
+
+span.size  {
+    display: inline-block;
+    width: 15%;
+    
+}
+
+span.buttons  {
+    display: inline-block;
+    float: right;
+    width: 30%;
+    
+}
+
+span.heading  {
+    display: block;
+    clear: both;
+    margin: 10px 0 10px 0;
+    color:  #00bcd4;
+    font-size: 20px;
+    font-weight: 300;
+    text-align: left;
+}
+
+.frameRight ul li  {
+    display: inline-block;
+    width: 100%
+}
+
+.white-header  {
+/*muss bei diesem view eventuell raus*/
+    height:40px;
+    border: 1px solid #cfd8dc;
+    border-top-style: none;
+    border-right-style: none;
+    border-left-style: none;
+}
+
+#greyList  {
+    display: none;
+}
+
+#blueList  {
+    display: inline-block;
+}
+
+#greySmall  {
+    
+    display: inline-block;
+}
+
+#blueSmall  {
+    display: none;
+
+}
+
+#greyLarge  {
+    
+    display: inline-block;
+}
+
+#blueLarge  {
+    display: none;
+
+}
+
+
+
+
 
 .pepperSteakButton{
     height: 35px;
