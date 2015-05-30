@@ -26,18 +26,64 @@ var reader = new function(){
     this.init = function(){
         var grid = {width: 5, height:  4, top: 6, left: 3, hidden: true};
         if(proofLogin())
-            grid = {width: 8, height:  8, top: 1, left: 2, hidden: true};
+            grid = {width: 8, height:  8, top: 0, left: 2};
         this.applicationVar = new application('reader');
         this.applicationVar.create('Reader', 'url', 'modules/reader/index.php', grid);
         
         
 	this.tabs = new tabs('#readerFrame');
         this.tabs.init();
-	this.tabs.addTab('Home', '',gui.loadPage('modules/reader/fav.php'));
+	this.tabs.addTab('Home', '', reader.generateHomeTab());
     };
     this.show = function(){
         reader.applicationVar.show();
     };
+    this.generateHomeTab = function(){
+        var html = '';
+        html += '<div>USERPICTURE Hidiho, USERNAME, good to see you back!</div>';
+        html += '<div>';
+            html += '<ul>';
+                html += '<li>' + filesystem.generateIcon('home', 'blue') + '</li>';
+                html += '<li>Groups</li>';
+                html += '<li>Favorites</li>';
+                html += '<li>Playlist</li>';
+                html += '<li>News</li>';
+                html += '<li>My Files</li>';
+            html += '</ul>';
+        html += '</div>';
+        html += '<div>';
+            html += '<div>';
+                html += '<span>' + filesystem.generateIcon('clock', 'blue') + ' Display History</span>';
+                html += '<span>FILTER</span>';
+            html += '</div>';
+            html += '<div>';
+                html += '<ul>';
+                    html += '<li>File1</li><li>File2</li><li>File3</li><li>File4</li><li>File5</li>';
+                html += '</ul>';
+            html += '</div>';
+        html += '</div>';
+        html += '<div>';
+            html += '<div>';
+                html += '<span>' + filesystem.generateIcon('suggestion', 'blue') + ' Popular in the universe</span>';
+                html += '<span>FILTER</span>';
+            html += '</div>';
+            html += '<div>';
+                html += '<ul>';
+                    html += '<li>Featured1</li><li>Featured2</li><li>Featured3</li>';
+                html += '</ul>';
+            html += '</div>';
+            html += '<div>';
+                html += '<ul>';
+                    html += '<li>File1</li><li>File2</li><li>File3</li><li>File4</li><li>File5</li>';
+                html += '</ul>';
+            html += '</div>';
+        html += '</div>';
+        
+        
+        
+        return html;
+            
+    }
     this.openFile = function(file_id){
         var fileData = filesystem.getFileData(file_id);
         var zoomInString = 'zoomIn(' + fileData['folder'] + ')';

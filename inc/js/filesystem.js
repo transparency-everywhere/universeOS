@@ -20,7 +20,7 @@ var filesystem =  new function() {
         var html = '<div id="fileBrowserFrame"></div>';
         var grid = {width: 6, height:  4, top: 7, left: 0};
         if(proofLogin())
-            grid = {width: 6, height:  8, top: 0, left: 3};
+            grid = {width: 6, height:  8, top: 0, left: 3, hidden: true};
         this.applicationVar = new application('filesystem');
         this.applicationVar.create('Filesystem', 'html', html, grid);
         this.tabs = new tabs('#fileBrowserFrame');
@@ -428,6 +428,7 @@ var filesystem =  new function() {
     var onclicker;
     
     //general
+    icons['home'] = 'home';
     icons['settings'] = 'gear';
     icons['folder'] = 'folder';
     icons['element'] = 'archive';
@@ -450,6 +451,7 @@ var filesystem =  new function() {
     icons['large_symbols'] = 'large-symbols';
     icons['list'] = 'list';
     icons['fav'] = 'heart';
+    icons['clock'] = 'clock';
     icons['suggestion'] = 'star';
     icons['playlist'] = 'playlist';
     icons['play'] = 'play';
