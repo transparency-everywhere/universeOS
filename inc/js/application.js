@@ -19,16 +19,6 @@ var applications = new function(){
         
         var apps = [];
         
-        //reader
-        var app = [];
-        app['title'] = 'reader';
-        app['source'] = 'reader.js';
-        app['className'] = 'reader'; // name of the the javascript class object
-        app['active'] = true;
-        app['position'] = {width: 5, height:  4, top: 0, left: 4, hidden: true};
-        app['icon'] = 'gfx/applicationIcons/white/reader.svg';
-        apps[0] = app;
-        
         //filesystem
         var app = [];
         app['title'] = 'filesystem';
@@ -37,9 +27,19 @@ var applications = new function(){
         app['active'] = true;
         app['position'] = {width: 8, height:  5, top: 0, left: 2};
         app['icon'] = 'gfx/applicationIcons/white/filesystem.svg';
+        apps[0] = app;
+        
+        //reader
+        var app = [];
+        app['title'] = 'reader';
+        app['source'] = 'reader.js';
+        app['className'] = 'reader'; // name of the the javascript class object
+        app['active'] = true;
+        app['position'] = {width: 5, height:  4, top: 0, left: 4, hidden: true};
+        app['icon'] = 'gfx/applicationIcons/white/reader.svg';
         apps[1] = app;
         
-        //filesystem
+        //telescope
         var app = [];
         app['title'] = 'telescope';
         app['source'] = 'telescope.js';

@@ -97,7 +97,8 @@ h3{
 }
 
 .greyHover:hover, .greyHover .active{
-    background: #eee;
+    background: #cfd8dc;
+    cursor: pointer;
 }
 
 /*defines content of a window with overflow auto - etc.*/
@@ -1020,271 +1021,93 @@ span.icon.blue-chevron-down {}
 
 
 
-/*Small symbols view*/
+/*Files and folders table*/
 
-
-.smallSymbols #attributes {
-    display:none;
+#filesystem {
 }
 
-.smallSymbols span.icons {
-    display: block;
-    text-align: center;
-    width: 100%;
-    height: 60px;
+#filesystem .fileBrowser table.filetable > tr {
+    cursor: pointer;
 }
 
-.smallSymbols span.icons span.icon {
-    display: inline-block;
-    width: 60px;
-    height: 60px;
-}
-
-.smallSymbols span.title {
-    display: block;
-    text-align: center;
-    width: 100%;
-    height: 50px;
-    
-}
-
-.smallSymbols span.date {
-    display: none;
-    
-}
-
-.smallSymbols span.size {
-    display: none;
-    
-}
-
-.smallSymbols span.buttons {
-    display: none;
-    
-}
-  
-.smallSymbols span.heading {
-    display: block;
-    clear: both;
-    margin: 10px 0 10px 0;
-    color:  #00bcd4;
-    font-size: 20px;
-    font-weight: 300;
-    text-align: left;
-}
-
-.smallSymbols .frameRight ul li {  
-    display: block;
-    float: left;
-    width: 130px;
-    height: 110px;
-    margin: 2px;
-}
-
-.smallSymbols .frameRight ul li:hover{
-    background-color: #cfd8dc;
-}
-
-.smallSymbols .frameRight ul li:hover span.buttons {
-    display: block;
+#filesystem .fileBrowser table.filetable > tr > td {
     width: 30px;
-    margin-top: -114px;
-    margin-left: 82px;
-    text-align: center;
-}
-    
-.smallSymbols .frameRight ul li:hover span.buttons .scoreButton {
-    display:none;
+    border: 1px dotted red;
 }
 
-.smallSymbols .white-header {
-    height:40px;
-    border: 1px solid #cfd8dc;
-    border-top-style: none;
-    border-right-style: none;
-    border-left-style: none;
+#filesystem .frameRight{
+    top: 40px;
 }
 
-.smallSymbols #greyList {
-    display: inline-block;
+#filesystem .tabFrame > header{
+    left: 175px;
 }
 
-.smallSymbols #blueList {
-    display: none;
+#filesystem .tabFrame > .tab{
+    top:0;
 }
 
-.smallSymbols #greySmall {
-    display: none;
+#filesystem .leftNav li img{
+    height: 20px;
+    margin-bottom: 5px;
 }
 
-.smallSymbols #blueSmall {
-    display: inline-block;
+#filesystem .path {
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    height: 40px;
+    overflow: none;
+    border-bottom: 1px solid #dcdcdc;
+    color: #313131;
+    padding-top: 10px;
+    padding-left: 10px;
 }
 
-.smallSymbols #greyLarge {
-    display: inline-block;
-    
+#filesystem .path #settingsButton{
+    float:right;margin-top: -5px;
 }
 
-.smallSymbols #blueLarge {
-    display: none;
+#filesystem .path #settingsButton .icon{
+    margin-right: -4px;
 }
 
 
 
-/*Large symbol view*/
+/*List view / standard view for showElement*/
 
 
-.largeSymbols #attributes {
-    display:none;
+#filesystem .tabFrame .frameRight .icon  {
+    height: 25px;
+    width: 25px;
 }
 
-.largeSymbols span.icons {
-    display: block;
-    text-align: center;
-    width: 100%;
-    height: 128px;
-}
-
-.largeSymbols span.icons span.icon {
-    display: inline-block;
-    width: 128px;
-    height: 128px;
-}
-
-.largeSymbols span.title {
-    display: block;
-    text-align: center;
-    width: 100%;
-    height: 50px;
-    
-}
-
-.largeSymbols span.date {
-    display: none;
-    
-}
-
-.largeSymbols span.size {
-    display: none;
-    
-}
-
-.largeSymbols span.buttons {
-    display: none;
-    
-}
-  
-.largeSymbols span.heading {
-    display: block;
-    clear: both;
-    margin: 10px 0 10px 0;
-    color:  #00bcd4;
-    font-size: 20px;
-    font-weight: 300;
-    text-align: left;
-}
-
-.largeSymbols .frameRight ul li {  
-    display: block;
-    float: left;
-    width: 190px;
-    height: 200px;
-    margin: 2px;
-}
-
-.largeSymbols .frameRight ul li:hover{
-    background-color: #cfd8dc;
-}
-
-.largeSymbols .frameRight ul li:hover span.buttons {
-    display: block;
-    width: 30px;
-    margin-top: -114px;
-    margin-left: 82px;
-    text-align: center;
-}
-    
-.largeSymbols .frameRight ul li:hover span.buttons .scoreButton {
-    display:none;
-}
-
-.largeSymbols .white-header {
-    height:40px;
-    border: 1px solid #cfd8dc;
-    border-top-style: none;
-    border-right-style: none;
-    border-left-style: none;
-}
-
-.largeSymbols #greyList {
-    display: inline-block;
-}
-
-.largeSymbols #blueList {
-    display: none;
-}
-
-.largeSymbols #greySmall {
-    display: inline-block;
-}
-
-.largeSymbols #blueSmall {
-    display: none;
-}
-
-.largeSymbols #greyLarge {
-    display: none;
-}
-
-.largeSymbols #blueLarge {
-    display: inline-block;
-}
-
-
-
-
-/*List view*/
-
-
-#attributes  {
-}
-
-span.icons  {
+#filesystem .frameRight span.icons  {
     display: inline-block;
     min-width: 21px;
 }
 
-span.icons span.icon  {
+#filesystem .frameRight span.icons span.icon  {
     width: auto;
 }
 
-span.title  {
+#filesystem .frameRight span.title  {
     display: inline-block;
     width: 35%;
-    
 }
 
-span.date  {
+#filesystem .frameRight span.date, #filesystem .frameRight span.size  {
     display: inline-block;
     width: 15%;
-    
 }
 
-span.size  {
-    display: inline-block;
-    width: 15%;
-    
-}
-
-span.buttons  {
+#filesystem .frameRight span.buttons  {
     display: inline-block;
     float: right;
     width: 30%;
-    
 }
 
-span.heading  {
+#filesystem .frameRight span.heading  {
     display: block;
     clear: both;
     margin: 10px 0 10px 0;
@@ -1294,13 +1117,28 @@ span.heading  {
     text-align: left;
 }
 
-.frameRight>ul>li  {
+#filesystem .tabFrame .frameRight > ul > li  {
     display: inline-block;
-    width: 100%
+    width: 100%;
 }
 
-.white-header  {
-/*muss bei diesem view eventuell raus*/
+#filesystem .tabFrame .frameRight > ul > li:hover{
+    background-color: #cfd8dc;
+}
+
+#filesystem .tabFrame .frameRight #blueList, #filesystem .tabFrame .frameRight #greySmall, #filesystem .tabFrame .frameRight #greyLarge {
+    display: inline-block;
+}
+
+#filesystem .tabFrame .frameRight #greyList, #filesystem .tabFrame .frameRight #blueSmall, #filesystem .tabFrame .frameRight #blueLarge {
+    display: none;
+}
+
+#filesystem .tabFrame .frameRight .scoreButtonWhiteGradient, #filesystem .tabFrame .frameRight .headerbuttons #settingsButton {
+    display: inline-block;
+}
+
+#filesystem .tabFrame .frameRight .white-header {
     height:40px;
     border: 1px solid #cfd8dc;
     border-top-style: none;
@@ -1308,36 +1146,142 @@ span.heading  {
     border-left-style: none;
 }
 
-#greyList  {
+#filesystem .tabFrame .frameRight .white-header .dropdown ul.elementSettings {
     display: none;
 }
 
-#blueList  {
-    display: inline-block;
+
+
+
+
+/*small symbols view*/
+#filesystem .tabFrame .frameRight.smallSymbols > ul > li{
+    float: left;
+    clear: none;
+    width: 130px;
+    margin: 2px;
 }
 
-#greySmall  {
+#filesystem .tabFrame .frameRight.smallSymbols > ul > li:hover span.buttons {
+    display: block;
+    width: 30px;
+    margin-top: -114px;
+    margin-left: 82px;
+    text-align: center;
+}
+
+#filesystem .tabFrame .frameRight.smallSymbols > ul > li span.icons {
+    display: block;
+    text-align: center;
+    width: 100%;
+    height: 70px;
+}
+
+#filesystem .tabFrame .frameRight.smallSymbols > ul > li span.icons span.icon {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    margin-top: 5px;
+    border-radius: 3px;
+    border-width: 1px;
+    border-color:  #dcdcdc;
+    border-style: solid;
+    background-color:  #ffffff;
+}
+
+#filesystem .tabFrame .frameRight.smallSymbols > ul > li:hover span.icons span.icon {
+    border-color:  #00bcd4;
+}
+
+#filesystem .tabFrame .frameRight.smallSymbols > ul > li span.title {
+    display: block;
+    text-align: center;
+    width: 100%;
+}
+
+#filesystem .tabFrame .frameRight.smallSymbols #attributes, #filesystem .tabFrame .frameRight.smallSymbols > ul > li span.date, #filesystem .tabFrame .frameRight.smallSymbols > ul > li span.size, #filesystem .tabFrame .frameRight.smallSymbols > ul > li span.buttons {
+    display: none;
+}
     
+#filesystem .tabFrame .frameRight.smallSymbols > ul > li:hover span.buttons .scoreButton {
+    display:none;
+}
+
+#filesystem .tabFrame .frameRight.smallSymbols #greyList, #filesystem .tabFrame .frameRight.smallSymbols #blueSmall {
     display: inline-block;
 }
 
-#blueSmall  {
+#filesystem .tabFrame .frameRight.smallSymbols #blueList, #filesystem .tabFrame .frameRight.smallSymbols #greySmall {
     display: none;
-
 }
 
-#greyLarge  {
+
+
+
+
+
+
+/*Large symbols view*/
+#filesystem .tabFrame .frameRight.largeSymbols > ul > li{
+    float: left;
+    clear: none;
+    width: 190px;
+    margin: 2px;
+}
+
+#filesystem .tabFrame .frameRight.largeSymbols > ul > li:hover span.buttons {
+    display: block;
+    width: 30px;
+    margin-top: -114px;
+    margin-left: 82px;
+    text-align: center;
+}
+
+#filesystem .tabFrame .frameRight.largeSymbols > ul > li span.icons {
+    display: block;
+    text-align: center;
+    width: 100%;
+    height: 148px;
+}
+
+#filesystem .tabFrame .frameRight.largeSymbols > ul > li span.icons span.icon {
+    display: inline-block;
+    width: 128px;
+    height: 128px;
+    margin-top: 10px;
+    border-radius: 3px;
+    border-width: 1px;
+    border-color:  #dcdcdc;
+    border-style: solid;
+    background-color:  #ffffff;
+}
+
+#filesystem .tabFrame .frameRight.largeSymbols > ul > li:hover span.icons span.icon {
+    border-color:  #00bcd4;
+    border-width: 2px;
+}
+
+#filesystem .tabFrame .frameRight.largeSymbols > ul > li span.title {
+    display: block;
+    text-align: center;
+    width: 100%;
+}
+
+#filesystem .tabFrame .frameRight.largeSymbols #attributes, #filesystem .tabFrame .frameRight.largeSymbols > ul > li span.date, #filesystem .tabFrame .frameRight.largeSymbols > ul > li span.size, #filesystem .tabFrame .frameRight.largeSymbols > ul > li span.buttons {
+    display: none;
+}
     
+#filesystem .tabFrame .frameRight.largeSymbols > ul > li:hover span.buttons .scoreButton {
+    display:none;
+}
+
+#filesystem .tabFrame .frameRight.largeSymbols #greyList, #filesystem .tabFrame .frameRight.largeSymbols #blueLarge {
     display: inline-block;
 }
 
-#blueLarge  {
+#filesystem .tabFrame .frameRight.largeSymbols #blueList, #filesystem .tabFrame .frameRight.largeSymbols #greyLarge {
     display: none;
-
 }
-
-
-
 
 
 .pepperSteakButton{
@@ -1733,92 +1677,6 @@ color: #FFF;
     color: #FFFFFF;
 }
 
-#filesystem {
-}
-
-#filesystem tr {
-    cursor: pointer
-}
-
-#filesystem .frameRight{
-    top: 40px;
-}
-
-#filesystem .tabFrame>header{
-    left: 175px;
-}
-
-#filesystem .tabFrame>.tab{
-    top:0;
-}
-
-#filesystem .leftNav li img{
-    height: 20px;
-    margin-bottom: 5px;
-}
-
-#filesystem .path {
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    height: 40px;
-    overflow: none;
-    border-bottom: 1px solid #dcdcdc;
-    color: #313131;
-    padding-top: 10px;
-    padding-left: 10px;
-}
-
-#filesystem .path #settingsButton{
-    float:right;margin-top: -5px;
-}
-
-#filesystem .path #settingsButton .icon{
-    margin-right: -4px;
-}
-
-
-#filesystem td{
-    padding-top:2px;
-}
-#filelist {
-    position: relative;
-    height: 60%;
-    margin-bottom: 60px;
-    background-color: #7abcff;
-    overflow: auto;
-}
-
-.fileHeader{
-    height: 30px;
-    color: #000000;
-    font-size: 11px;
-}
-
-.filetable{
-    width: 100%;
-    overflow: scroll;
-    line-height:0px;
-}
-
-.filetable tr{
-	clear:both;
-}
-
-.filetable tr:hover{
-	background-color: #cfd8dc;
-}
-
-.filetable tr td:first-of-type img{
-    margin-right: 5px;
-    margin-left: 5px;
-}
-
-.filetable tr td:first-of-type .icon{
-    width: 30px;
-    height: 30px;
-}
-
 .autoFlow{
     overflow: auto;
 }
@@ -1931,6 +1789,10 @@ ul .elementSettings {
 
 #reader {
     
+}
+
+#reader .tabFrame .white-gradient > div {
+    display: inline-block;
 }
 
 .readerHeaderField{

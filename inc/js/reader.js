@@ -26,29 +26,79 @@ var reader = new function(){
     this.init = function(){
         var grid = {width: 5, height:  4, top: 6, left: 3, hidden: true};
         if(proofLogin())
-            grid = {width: 8, height:  8, top: 1, left: 2, hidden: true};
+            grid = {width: 8, height:  8, top: 0, left: 2};
         this.applicationVar = new application('reader');
         this.applicationVar.create('Reader', 'url', 'modules/reader/index.php', grid);
         
         
 	this.tabs = new tabs('#readerFrame');
         this.tabs.init();
-	this.tabs.addTab('Home', '',gui.loadPage('modules/reader/fav.php'));
+	this.tabs.addTab('Home', '', reader.generateHomeTab());
     };
     this.show = function(){
         reader.applicationVar.show();
     };
+    this.generateHomeTab = function(){
+        var html = '';
+        html += '<div>USERPICTURE Hidiho, USERNAME, good to see you back!</div>';
+        html += '<div>';
+            html += '<ul>';
+                html += '<li>' + filesystem.generateIcon('home', 'blue') + '</li>';
+                html += '<li>Groups</li>';
+                html += '<li>Favorites</li>';
+                html += '<li>Playlist</li>';
+                html += '<li>News</li>';
+                html += '<li>My Files</li>';
+            html += '</ul>';
+        html += '</div>';
+        html += '<div>';
+            html += '<div>';
+                html += '<span>' + filesystem.generateIcon('clock', 'blue') + ' Display History</span>';
+                html += '<span>FILTER</span>';
+            html += '</div>';
+            html += '<div>';
+                html += '<ul>';
+                    html += '<li>File1</li><li>File2</li><li>File3</li><li>File4</li><li>File5</li>';
+                html += '</ul>';
+            html += '</div>';
+        html += '</div>';
+        html += '<div>';
+            html += '<div>';
+                html += '<span>' + filesystem.generateIcon('suggestion', 'blue') + ' Popular in the universe</span>';
+                html += '<span>FILTER</span>';
+            html += '</div>';
+            html += '<div>';
+                html += '<ul>';
+                    html += '<li>Featured1</li><li>Featured2</li><li>Featured3</li>';
+                html += '</ul>';
+            html += '</div>';
+            html += '<div>';
+                html += '<ul>';
+                    html += '<li>File1</li><li>File2</li><li>File3</li><li>File4</li><li>File5</li>';
+                html += '</ul>';
+            html += '</div>';
+        html += '</div>';
+        
+        
+        
+        return html;
+            
+    }
     this.openFile = function(file_id){
         var fileData = filesystem.getFileData(file_id);
+        var zoomInString = 'zoomIn(' + fileData['folder'] + ')';
+        var zoomOutString = 'zoomOut(' + fileData['folder'] + ')';
         
         var header = "<header class=\"white-gradient\">";
         header += filesystem.generateIcon(fileData['type'], 'grey');
         header += "<span class=\"title\">" + fileData['title'] + "</span>";
         header += '<div class="whiteGradientScoreButton">' + item.showScoreButton('file', file_id) + '</div>';
-        header += filesystem.generateIcon('download', 'grey');
+        header += '<a href="./out/download/?fileId=' + file_id + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download', 'grey') + '</a>';
         header += item.showItemSettings('file', file_id);
-        header += '<div id="zoom_in">' + filesystem.generateIcon('plus', 'grey') + '</div>';
-        header += '<div id="zoom_out">' + filesystem.generateIcon('minus', 'grey') + '</div>';
+        if(fileData['type'] === 'image' || fileData['type'] === 'image/jpeg' || fileData['type'] === 'image/png' || fileData['type'] === 'image/tiff' || fileData['type'] === 'image/gif') {
+            header += '<div id="zoom_in">' + filesystem.generateIcon('plus', 'grey', '', zoomInString) + '</div>';
+            header += '<div id="zoom_out">' + filesystem.generateIcon('minus', 'grey', '', zoomOutString) + '</div>';
+        }
         header += "</header>";
         
         var output = '';
@@ -68,7 +118,7 @@ var reader = new function(){
                     output += "<div class=\"fileWindow\" id=\"fileWindowId\">";
                         output += "<div class=\"imageReader\">";
                             output += "<div class=\"mainImage\">";
-                                output += "<img src=\"" + path + "\" />";
+                                output += "<img src=\"" + path + "\" / id=\"viewedPicture_" + fileData['folder'] + "\">";
                             output += "</div>";
                             output += "<div class=\"previewImages\">";
                                 $.each(elements.getFileList(fileData['folder']), function(key, value){
