@@ -480,6 +480,19 @@ CREATE TABLE IF NOT EXISTS `userGroups` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
+--
+-- Daten für Tabelle `userGroups`
+--
+
+INSERT INTO `userGroups` (`id`, `title`, `showAdminPanel`, `protectFileSystemItems`, `editProtectedFilesystemItem`, `undeletableFilesystemItems`, `editUndeletableFilesystemItems`) VALUES
+(1, 'admin', 1, 1, 1, 1, 1),
+(2, 'standard user', 0, 0, 0, 0, 0);
+
+
+-- admins need to be 0
+UPDATE `userGroups` SET `id`=0 WHERE `id`=1;
+UPDATE `userGroups` SET `id`=1 WHERE `id`=2;
+
 -- --------------------------------------------------------
 
 --

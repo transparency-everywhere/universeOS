@@ -34,14 +34,12 @@ class wikipedia_handler {
         
         $results = json_decode($output, true);
         
-        //var_dump($results);
         //get next page token from result in case that extendResultFunction is called
         
         $wiki_titles = array();
-        
         foreach($results['query']['search'] AS $result){
             if($result['title']){
-                $wiki_titles[] = 'http://en.wikipedia.org/wiki/Germany/'.$result['title'];
+                $wiki_titles[] = 'http://en.wikipedia.org/wiki/'.$result['title'];
                 $max_results--;
             }
         }

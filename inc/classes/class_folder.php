@@ -31,6 +31,7 @@ class folder {
             $folderData = $dbClass->select('folders', array('id', $superiorFolder));
             $folderClass = new folder($superiorFolder);
             $folderpath = universeBasePath . '/' . $folderClass->getPath() . urldecode("$titleURL");
+            echo $folderpath;
             if (!file_exists("$folderpath")) {
                 mkdir($folderpath);
                 $time = time();
@@ -151,12 +152,13 @@ class folder {
         else
             $path = '';
         $folderArray = $this->loadFolderArray("path");
-        $folderArray = array_reverse($folderArray['names'], true);
-        foreach ($folderArray as &$folder) {
-            $folder = urldecode($folder);
-            $path .= "$folder/";
+        if(is_array($folderArray['names'])){
+                $folderArray = array_reverse($folderArray['names'], true);
+            foreach ($folderArray as $folder) {
+                $folder = urldecode($folder);
+                $path .= "$folder/";
+            }
         }
-
         return $path;
     }
 

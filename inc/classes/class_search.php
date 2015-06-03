@@ -42,6 +42,7 @@ class search{
         $k = $limit+1; //limit+1 because the parseSearchResults function needs to check if the "load all" button is shown
         $results = array();
         
+        $handlers = new handler();
         switch($type){
             case'users':
                 
@@ -86,22 +87,17 @@ class search{
                 break;
                 
             case 'wiki':
-                $xml = xml::curler("http://en.wikipedia.org/w/api.php?action=opensearch&limit=$k&namespace=0&format=xml&search=$qEncoded");
-                foreach ($xml->Section->Item as $item) {
-                    $results[]  = $item;
+                $handlers = new handler();
+                foreach(json_decode($handlers->api('wikipedia', 'query', array('query'=>$qEncoded, 'offset'=> 0, 'max_results'=>$k))) AS $result){
+                    $results[] = $result;
                 }
                 break;
                 
             case 'youtube':
-
-                //youtube
-                $xml2 = xml::curler("http://gdata.youtube.com/feeds/api/videos?max-results=$k&restriction=DE&q=$qEncoded");
-                foreach ($xml2->entry as $item2) {
-                    $youtubeClass = new youtube($item2->id);
-                    $vId = $youtubeClass->getId();
-                    $results[] = $item2;
+                $handlers = new handler();
+                foreach(json_decode($handlers->api('youtube', 'query', array('query'=>$qEncoded, 'offset'=> 0, 'max_results'=>$k))) AS $result){
+                    $results[] = $result;
                 }
-
                 break;
                 
             case 'vimeo':
@@ -245,10 +241,13 @@ class search{
                 $icon = 'wikipedia';
                 $i = 0;
                 $output .= '<ul class="list resultList">';
+                
+                $handler = new handler();
                 foreach($items AS $item){
 
+                    $title = 'test';
                     if($i<$limit){
-                    $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "openFile('wikipedia', '".urlencode($item->Text)."', '".urlencode(substr("$item->Text", 0, 10))."');", $item->Text);
+                    $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "openFile('wikipedia', '".urlencode($title)."', '".urlencode(substr($title, 0, 10))."');", $title);
                     }else{
                         $loadAll = '<div class="loadAll" data-type="wiki">results '.$limit.' of '.$numberOfItems.' <a href="#">show all</a></div>';
                     }
@@ -260,17 +259,16 @@ class search{
                 $icon = 'youtube';
                 $i = 0;
                 $output .= '<ul class="list resultList">';
+                
+                $handler = new handler();
                 foreach($items AS $item2){
 
                     if($i<$limit){
-
-                        $youtubeClass = new youtube($item2->id);
-                        $vId = $youtubeClass->getId();
-                        $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "player.openItem('youtube', 'http://www.youtube.com/watch?v=$vId');", substr("$item2->title", 0, 23), true);
+                        $title = $handler->api('youtube', 'getTitle', array('url'=>$item2));
+                        $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "player.openItem('youtube', '$item2');", substr($title, 0, 23), true);
 
 
-                        $data = xml2array($item2->link);
-                        $output .= $this->generateSearchResultContext('youtube', $data['@attributes']['href']);
+                        $output .= $this->generateSearchResultContext('youtube', $item2);
 
                     }else{
                         $loadAll = '<div class="loadAll" data-type="youtube">results '.$limit.' of '.$numberOfItems.' <a href="#">show all</a></div>';
@@ -378,9 +376,9 @@ class search{
             $youtubes = $this->getSearchResults('youtube');
         
             
-            unset($youtubes[0]); // remove item at index 0
-            $youtubes = array_values($youtubes); // 'reindex' array
-        
+//            unset($youtubes[0]); // remove item at index 0
+//            $youtubes = array_values($youtubes); // 'reindex' array
+//        
         
         $icon = 'dark-youtube';
             $result['youtubes'] = '';
@@ -405,7 +403,7 @@ class search{
 
         return json_encode($result);
 }
-function parseSearchResults(){
+    function parseSearchResults(){
     
         
         $icon = 'dark-sc-facebook';

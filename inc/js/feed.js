@@ -117,6 +117,23 @@ var feed = new function(){
         debug.log('...generateSingleFeed finished');
         return output;
     };
+    this.create = function(content, privacy,callback){
+        
+            var result="";
+            $.ajax({
+                url:"api/feed/create/",
+                async: false,  
+                type: "POST",
+                data: $.param({content : content})+'&'+privacy,
+                success:function(data) {
+                   result = data;
+                   if(typeof callback === 'function'){
+                       callback(); //execute callback if var callback is function
+                   }
+                }
+            });
+            return result;
+    };
     this.init = function(){
         
         var html = this.generateHeader();

@@ -10,7 +10,14 @@ var telescope = new function(){
         
 	this.tabs = new tabs('#telescopeFrame');
         this.tabs.init();
-	this.tabs.addTab('Home', '','this is a tab inside the telescope');
+        
+        
+        var html;
+        
+        html = this.generateHeader('');
+        
+        
+	this.tabs.addTab('Home', '', html);
     };
     this.getFilters = function($li){
         var results = [];
@@ -25,26 +32,48 @@ var telescope = new function(){
         
         return results;
     };
+    this.applyFilterCategories = function($li){
+        
+    };
     this.applyFilters = function($li){
         var filters = telescope.getFilters($li);
         
         var $base = $li.parentsUntil('#telescope').find('.telescopeList');
         
-        $base.find('li').hide();
-        
-        if(filters.length > 0)
-            $.each(filters, function(index, value){
-                $base.find('.type_'+value).show();
-            });
-        else
-            //if no filter is active -> show all results
-            $base.find('li').show();
+        //if class is active -> show lists with type
+        if($li.hasClass('active') === true){
+            $base.find('li').hide();
+
+            if(filters.length > 0)
+                $.each(filters, function(index, value){
+                    $base.find('.type_'+value).show();
+                });
+            else
+                //if no filter is active -> show all results
+                $base.find('li').show();
+        }else{
+            //if class is not active -> show lists with 
+            $base.find('li.type_'+$li.attr('data-type')).hide();
+        }
         
     };
     
     this.initHandlers = function(){
+        $('#telescope .leftNav .categoryTitle').unbind('click');
         $('#telescope .leftNav .categoryTitle').bind('click', function(){
-           $(this).nextUntil('.categoryTitle').slideToggle();
+            
+            
+           $(this).toggleClass('active');
+           $('#telescope .leftNav .categoryTitle').not(this).removeClass('active');
+           var $searchFrame = $(this).parent().parent().parent();
+           $(this).parent().find('li').not('.categoryTitle').hide();
+           if($(this).hasClass('active') === true){
+                $searchFrame.addClass('navOpen');
+                $(this).nextUntil('.categoryTitle').slideDown();
+           }else{
+                $searchFrame.removeClass('navOpen');
+                $(this).nextUntil('.categoryTitle').slideUp();
+           }
         });
         $('#telescope .leftNav li').not('.categoryTitle').unbind('click');
         
@@ -117,6 +146,14 @@ var telescope = new function(){
             
         });
     };
+    
+    this.foldLeftNav = function(){
+        
+    };
+    
+    //apply filters
+    
+    //load results from api
     this.loadResults = function(query){
         var results = {};
         //universe
@@ -137,8 +174,9 @@ var telescope = new function(){
         
         return results;
     };
+    
+    //updates result in opened telescope tab
     this.updateResult = function(query){
-        
         var results = this.loadResults(query);
         return this.generateNav(results)+this.generateFrame(results);
     };
@@ -160,10 +198,12 @@ var telescope = new function(){
         return html;
     };
     
+    
+    //builds result thumb
     this.buildThumb = function(type, selector){
         var html;
-            html = '<div>'+handlers[type].getThumbnail(selector)+'<h2>'+gui.shorten(handlers[type].getTitle(selector), 50)+'</h2></div>';
-            html += '<div>'+nl2br(gui.shorten(handlers[type].getDescription(selector), 100))+'</div>';
+            html = '<div>'+handlers[type].getThumbnail(selector)+'<h2>'+gui.shorten(handlers[type].getTitle(selector), 28)+'</h2></div>';
+            html += '<div>'+nl2br(gui.shorten(handlers[type].getDescription(selector), 50))+'</div>';
             html += '<div></div>';
             var itemType;
             switch(type){
@@ -179,6 +219,7 @@ var telescope = new function(){
         return html;
     };
     
+    //parses results to li
     this.parseResult = function(type, results){
         var html = '';
         $.each(results, function(index, value){
@@ -187,18 +228,37 @@ var telescope = new function(){
         return html;
     };
     
+    this.generateHeader = function(query){
+        
+        var html;
+        
+        html = '<header>';
+            html += '<ul id="filterList">';
+                html += '<li data-type="link"><span class="icon icon-link brightIcon"></span><span class="icon blue-link blueIcon"></span></li>';
+                html += '<li data-type="image"><span class="icon icon-image brightIcon"></span><span class="icon blue-image blueIcon"></span></li>';
+                html += '<li data-type="video"><span class="icon icon-youtube brightIcon"></span><span class="icon blue-youtube blueIcon"></span></li>';
+                html += '<li data-type="file"><span class="icon icon-file brightIcon"></span><span class="icon blue-file blueIcon"></span></li>';
+                html += '<li data-type="user"><span class="icon icon-user brightIcon"></span><span class="icon blue-user blueIcon"></span></li>';
+            html += '</ul>';
+            html += '<input type="text" id="telescopeInput" placeholder="search" value="'+query+'">';
+            html += '<span class="icon icon-search"></span>';
+        html += '</header>';
+        return html;
+    }
+    
     this.generateNav = function(results){
         var html;
         html = "<div class='leftNav dark' style='background: #37474f;border-top: 1px solid #dcdcdc;'>";
         html +=    '<ul>';
-        html +=       '<li class="categoryTitle"><span class="icon blue-gear"></span>universeOS</li>';
-        html +=       '<li data-type="folder"><span class="icon blue-folder"></span>Folders'+this.showResultLength(results.folders.length)+'</li>';
-        html +=       '<li data-type="collection"><span class="icon blue-archive"></span>Collections'+this.showResultLength(results.collections.length)+'</li>';
-        html +=       '<li data-type="file"><span class="icon blue-file"></span>Files'+this.showResultLength(results.files.length)+'</li>';
-        html +=       '<li class="spacer"></li>';
-        html +=       '<li data-type="folder"><span class="icon blue-eye"></span>Public</li>';
-        html +=       '<li data-type="folder"><span class="icon blue-eye"></span>Hidden</li>';
-        html +=       '<li class="categoryTitle"><span class="icon blue-rss"></span>Web</li>';
+        html +=       '<li class="categoryTitle active" style="margin-left:1px;"><span class="icon blue-reader"></span>Everything</li>';
+        html +=       '<li style="margin-left:130px;" class="categoryTitle"><span class="icon blue-gear"></span>universeOS</li>';
+        html +=       '<li data-type="folders"><span class="icon blue-folder"></span>Folders'+this.showResultLength(results.folders.length)+'</li>';
+        html +=       '<li data-type="collections"><span class="icon blue-archive"></span>Collections'+this.showResultLength(results.collections.length)+'</li>';
+        html +=       '<li data-type="files"><span class="icon blue-file"></span>Files'+this.showResultLength(results.files.length)+'</li>';
+//        html +=       '<li class="spacer"></li>';
+//        html +=       '<li data-type="folder"><span class="icon blue-eye"></span>Public</li>';
+//        html +=       '<li data-type="folder"><span class="icon blue-eye"></span>Hidden</li>';
+        html +=       '<li style="margin-left:270px;" class="categoryTitle"><span class="icon blue-rss"></span>Web</li>';
         html +=       '<li data-type="youtube"><span class="icon blue-youtube"></span>Youtube'+this.showResultLength(results.youtube.length)+'</li>';
         html +=       '<li data-type="wikipedia"><span class="icon blue-wikipedia"></span>Wikipedia'+this.showResultLength(results.wikipedia.length)+'</li>';
         html +=       '<li class="categoryTitle spacer"></li>';//empty title row at the end of navigation, otherwise the toggle function doesnt work
@@ -213,7 +273,7 @@ var telescope = new function(){
         html = "<div class='frameRight' style='border-top: 1px solid #dcdcdc;' id='telescopeFrame'>";
         
             header = '<header>';
-                header += '<div style="width: 250px;">';
+                header += '<div style="width: 300px;">';
                     header += 'Name';
                 header += '</div>';
                 header += '<div>';
@@ -227,27 +287,18 @@ var telescope = new function(){
                 header += '</div>';
             header += '</header>';
 
-            html += '<ul class="telescopeList table">'+header+telescope.parseResults(results)+'</ul>';
+        html += '<ul class="telescopeList table">'+header+telescope.parseResults(results)+'</ul>';
         html += '</div>';
         return html;
     };
     
     this.query = function(query){
-        
+        this.applicationVar.show();
         var results = this.loadResults(query);
         var html;
         
-        html = '<header>';
-            html += '<ul id="filterList">';
-                html += '<li data-type="link"><span class="icon icon-link brightIcon"></span><span class="icon blue-link blueIcon"></span></li>';
-                html += '<li data-type="image"><span class="icon icon-image brightIcon"></span><span class="icon blue-image blueIcon"></span></li>';
-                html += '<li data-type="video"><span class="icon icon-youtube brightIcon"></span><span class="icon blue-youtube blueIcon"></span></li>';
-                html += '<li data-type="file"><span class="icon icon-file brightIcon"></span><span class="icon blue-file blueIcon"></span></li>';
-                html += '<li data-type="user"><span class="icon icon-user brightIcon"></span><span class="icon blue-user blueIcon"></span></li>';
-            html += '</ul>';
-            html += '<input type="text" id="telescopeInput" placeholder="search" value="'+query+'">';
-            html += '<span class="icon icon-search"></span>';
-        html += '</header>';
+        html = this.generateHeader(query);
+        
         html += '<div class="searchFrame">';
         
         html += this.generateNav(results);
