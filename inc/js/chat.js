@@ -41,7 +41,7 @@ var chat = new function(){
         html += '</div>';
         return html;
     };
-    this.openDialog = function(userid){
+    this.openDialogue = function(userid){
         var username = useridToUsername(userid);
         chat.applicationVar.show();
       
@@ -55,7 +55,7 @@ var chat = new function(){
             
             chat.tabs.addTab(username, '',chatFrameHTML);
 
-            openDialogueInterval = window.setInterval("chatDecrypt(userid)", 500);
+            openDialogueInterval = window.setInterval("chatDecrypt("+userid+")", 500);
         }else{
             //if dialoge doesnt exists => bring dialoge to front..
 
@@ -176,7 +176,7 @@ function chatDecrypt(userid){
 }
 
 function openChatDialoge(username){
-    chat.openDialog(usernameToUserid(username));
+    chat.openDialogue(usernameToUserid(username));
  }
  
   

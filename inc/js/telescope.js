@@ -16,8 +16,25 @@ var telescope = new function(){
         
         html = this.generateHeader('');
         
+        var results = {'folders':[], 'collections':[], 'files':[], 'youtube':[],'wikipedia':[]};
+        
+        html += '<div class="searchFrame">';
+        
+        html += this.generateNav(results);
+        
+        html += this.generateFrame(results);
+        
+        html += '</div>';
+        
         
 	this.tabs.addTab('Home', '', html);
+        telescope.initHandlers();
+    };
+    //returns type for li.type_
+    this.getHandlerType = function(handlertype){
+        var types = [];
+        types['youtube'] = ['video', 'link'];
+        types['wikipedia'] = ['link'];
     };
     this.getFilters = function($li){
         var results = [];
@@ -41,21 +58,21 @@ var telescope = new function(){
         var $base = $li.parentsUntil('#telescope').find('.telescopeList');
         
         //if class is active -> show lists with type
+        //if empty filters, filters = [undefined, undefined, undefined], so filters.length is 3, thats why if(filters.length === 0) can't be use. instead var i is counted up and checked afterwards. if i === 0 -> show all list items.
+        var i = 0;
         if($li.hasClass('active') === true){
             $base.find('li').hide();
-
-            if(filters.length > 0)
                 $.each(filters, function(index, value){
                     $base.find('.type_'+value).show();
+                    i++;
                 });
-            else
-                //if no filter is active -> show all results
-                $base.find('li').show();
         }else{
             //if class is not active -> show lists with 
             $base.find('li.type_'+$li.attr('data-type')).hide();
         }
-        
+                if(i === 0){
+                    $base.find('li').show();
+                }
     };
     
     this.initHandlers = function(){
@@ -105,6 +122,7 @@ var telescope = new function(){
         
         //init toggle view buttons
         $('#telescope .frameRight .headerbuttons .icon').click(function(){
+            console.log('wubba');
             var classes = $(this).attr('class');
             
             

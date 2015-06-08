@@ -104,7 +104,7 @@ var calendar = new function(){
 							html += '</div>';
 						html += '</div>';
 						
-                                                this.applicationVar = new application('calendarApplication');
+                                                this.applicationVar = new application('calendar');
 			  			this.applicationVar.create('Calendar', 'html', html,{width: 6, height:  5, top: 0, left: 3});
 			  			
 			  			

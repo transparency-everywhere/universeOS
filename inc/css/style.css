@@ -4507,6 +4507,15 @@ and (max-width : 320px) {
 
 
 
+#playerMain .playerFrame{
+    position:absolute;
+    top: 0px;
+    right: 0 ;
+    bottom:0;
+    left: 0;
+}
+
+
 
 
 

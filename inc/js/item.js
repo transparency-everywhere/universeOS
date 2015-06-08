@@ -81,7 +81,7 @@ var item = new function(){
         var output = '<span class="scoreButton '+type+'_'+itemId+'">';
                 if(proofLogin())
                     output += '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('dislike', 'gray') + '</a>';
-                output += '<a class="btn btn-xs btn-success counter" href="#">'+score+'</a>';
+                output += '<a class="btn btn-xs counter" href="#">'+score+'</a>';
                 if(proofLogin())
                     output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('like', 'gray') + '</a>';
             output += '</span>';
@@ -193,6 +193,7 @@ var item = new function(){
     this.initSettingsToggle = function(){
        
         $(document).on("click", ".itemSettingsButton", function(e){
+                e.preventDefault();
                 var $settingsWindow = $(this).next('.itemSettingsWindow');
                 
                 //hide all itemSettingsWindows
