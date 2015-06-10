@@ -81,7 +81,7 @@ var item = new function(){
         var output = '<span class="scoreButton '+type+'_'+itemId+'">';
                 if(proofLogin())
                     output += '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('dislike', 'gray') + '</a>';
-                output += '<a class="btn btn-xs btn-success counter" href="#">'+score+'</a>';
+                output += '<a class="btn btn-xs counter" href="#">'+score+'</a>';
                 if(proofLogin())
                     output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('like', 'gray') + '</a>';
             output += '</span>';
@@ -119,7 +119,6 @@ var item = new function(){
                                         }
 					
 				}
-                                
 				list += "<li><a "+href+" "+onclick+" "+target+">"+option['title']+'</a></li>';  
 					
 				});
@@ -137,38 +136,46 @@ var item = new function(){
                         
 				return html;
     };
-    this.showItemSettings = function(type, itemId){
-        var options = this.getOptions(type, itemId);
+    
+    
+    this.buildList = function(options){
 	var list = '';
         var href = '';
         var onclick = '';
         var target = '';
-			$.each(options,function(index,option){
-                            
-                            
-				if(option['title']){
-					
-						onclick = '';
-                                }
-				if(option['href']){
-					href = 'href="'+option['href']+'"';
-					
-				}
-				if(option['onclick']){
-					if(href == 'href="#"'){
-						onclick = 'onclick="'+option['onclick']+'"';
-					}
-				}
-				if(option['target']){
-					if(href != 'href="#"'){
-						target = 'target="'+option['target']+'"';
-                                        }
-					
-				}
-                                
-				list += "<li><a "+href+" "+onclick+" "+target+">"+option['title']+'</a></li>';  
-					
-				});
+        
+	$.each(options,function(index,option){
+		if(option['title']){
+			
+				onclick = '';
+                }
+		if(option['href']){
+			href = 'href="'+option['href']+'"';
+			
+		}
+		if(option['onclick']){
+			if(href == 'href="#"'){
+				onclick = 'onclick="'+option['onclick']+'"';
+			}
+		}
+		if(option['target']){
+			if(href != 'href="#"'){
+				target = 'target="'+option['target']+'"';
+                        }
+			
+		}
+                if(typeof option['title'] !== 'undefined')
+                    list += "<li><a "+href+" "+onclick+" "+target+">"+option['title']+'</a></li>';
+	});
+        return list;
+    };
+    this.showItemSettings = function(type, itemId){
+        var options = this.getOptions(type, itemId);
+	var list = this.buildList(options);
+        var href = '';
+        var onclick = '';
+        var target = '';
+			
 					
 
 
@@ -186,6 +193,7 @@ var item = new function(){
     this.initSettingsToggle = function(){
        
         $(document).on("click", ".itemSettingsButton", function(e){
+                e.preventDefault();
                 var $settingsWindow = $(this).next('.itemSettingsWindow');
                 
                 //hide all itemSettingsWindows

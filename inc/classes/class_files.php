@@ -185,7 +185,6 @@ class files {
         
         $elementClass = new element($element);
         $path = $elementClass->getPath();
-        
         $myfile = fopen(universeBasePath.'/'.$path.'/'.$filename, "w");
         fwrite($myfile, $fileValue);
         fclose($myfile);

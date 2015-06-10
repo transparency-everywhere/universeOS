@@ -246,6 +246,7 @@ li.notHidden{
     padding: 20px;
     background: #607d8b;
     color: #FFF;
+    z-index: 9999;
 }
 
 #searchMenu header #toggleSearchMenu{
@@ -389,7 +390,6 @@ span.icon.blue-chevron-down {}
 
 #searchMenu .list{
 	background: #ffffff;
-	max-height: 100px;
 	overflow: auto;
 }
 
@@ -516,9 +516,16 @@ span.icon.blue-chevron-down {}
     left: 0;
     height: 41px;
     width: 100%;
-    
-    
 }
+
+#telescope .navOpen .leftNav{
+    height:80px;
+}
+
+#telescope .navOpen .frameRight{
+    top: 145px;
+}
+
 
 #telescope .leftNav:after { 
    content: " ";
@@ -543,6 +550,9 @@ span.icon.blue-chevron-down {}
 #telescope .leftNav li{
     padding-left: 15px;
     float:left;
+    display:none;  
+    margin-top: 40px;
+    
 }
 
 #telescope .leftNav li.spacer:hover{
@@ -550,8 +560,10 @@ span.icon.blue-chevron-down {}
 }
 
 #telescope .leftNav .categoryTitle{
-    display: block;
+    display: block;  
+    margin-top: 0;
     padding-left: 5px;
+    position:absolute;
 }
 
 #telescope .frameRight ul header>div{
@@ -561,7 +573,7 @@ span.icon.blue-chevron-down {}
     vertical-align: middle;
 }
 
-#telescope .frameRight ul li{
+#telescope .frameRight>ul>li{
     clear:both;  
     margin-top: 25px;
 }
@@ -598,10 +610,19 @@ span.icon.blue-chevron-down {}
 #telescope .frameRight ul.table>*>*>*{
     display: inline-block;
 }
-#telescope .frameRight ul.table>*>*>.icon,#telescope .frameRight ul.table>*>*>img{
-    max-width:30px;
+#telescope .frameRight ul.table>*>*>.icon{
+    width: 45px;
+    height: 45px;
+    margin-bottom: -15px;
 }
 
+#telescope .frameRight ul.table>*>*>img{
+    max-width: 28px;
+    margin: 7px;
+}
+
+#telescope .frameRight ul.table>*>* .icon{
+}
 
 #telescope .frameRight ul.thumbSmall>header{
     
@@ -613,6 +634,27 @@ span.icon.blue-chevron-down {}
     height: 110px;
     clear: none;
     margin: 15px;
+    padding:5px;
+    text-align:center;
+    overflow:hidden;
+    position:relative;
+}
+
+
+#telescope .frameRight ul.thumbSmall>li>*>.icon,#telescope .frameRight ul.thumbSmall>li>*>img{
+    width:48px;
+    height:48px;
+}
+
+#telescope .frameRight ul.thumbSmall>li .itemSettingsButton,#telescope .frameRight ul.thumbBig>li .itemSettingsButton{
+  position: absolute;
+  top: 18px;
+  right: 10px;
+  display: none;
+}
+
+#telescope .frameRight ul.thumbSmall>li:hover .itemSettingsButton,#telescope .frameRight ul.thumbBig>li:hover .itemSettingsButton{
+    display:block;
 }
 
 #telescope .frameRight ul.thumbBig>li{
@@ -621,6 +663,20 @@ span.icon.blue-chevron-down {}
     height: 200px;
     clear: none;
     margin: 15px;
+    padding:5px;
+    text-align:center;
+    position:relative;  
+    overflow: hidden;
+}
+
+
+#telescope .frameRight ul.thumbSmall>li:hover, #telescope .frameRight ul.thumbBig>li:hover{
+    background-color:  #cfd8dc;
+}
+
+#telescope .frameRight ul.thumbBig>li>*>.icon, #telescope .frameRight ul.thumbBig>li>*>img{
+    width:128px;
+    height:128px;
 }
 
 
@@ -4449,6 +4505,15 @@ and (max-width : 320px) {
     color:#FFF;
 }
 
+
+
+#playerMain .playerFrame{
+    position:absolute;
+    top: 0px;
+    right: 0 ;
+    bottom:0;
+    left: 0;
+}
 
 
 

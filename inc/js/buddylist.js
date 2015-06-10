@@ -89,7 +89,7 @@ var buddylist = new function(){
         $.each(buddies, function(index, value){
             checksum += value;
             var username = useridToUsername(value);
-            output += "                <tr class=\"height60 greyHover\">";
+            output += "                <tr class=\"height60 greyHover\" onclick=\"im.openDialogue('"+username+"');\">";
             output += "	                 <td style=\"padding:0 10px; width: 43px;\">"+User.showPicture(value, undefined, 40)+"<\/td>";
             output += "                  <td>";
             output += "                     <a href=\"#\" onclick=\"im.openDialogue('"+username+"');\">"+username+"<\/a>";

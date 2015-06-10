@@ -1075,7 +1075,8 @@ var search = new function(){
         
         html += results.files;
         
-        html += results.groups;
+        if(typeof results.groups !== 'undefined')
+            html += results.groups;
         
         html += results.wikis;
         

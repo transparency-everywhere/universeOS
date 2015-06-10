@@ -16,6 +16,11 @@
 
 var folders = new function(){
               	
+    this.open = function(folder_id){
+        filesystem.show();
+        filesystem.openFolder(folder_id);
+        return false;
+    };
     this.getData = function(folder_id){
 	return api.query('api/folders/select/', {folder_id : folder_id});
     };
