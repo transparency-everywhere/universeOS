@@ -43,7 +43,7 @@ class youtube_handler {
         
         foreach($results['items'] AS $result){
             //var_dump($result);
-            if($result['id']){
+            if($result['id']['videoId']){
                 $video_ids[] = 'http://www.youtube.com/watch?v='.$result['id']['videoId'];
                 $max_results--;
             }

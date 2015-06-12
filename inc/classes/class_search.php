@@ -245,9 +245,9 @@ class search{
                 $handler = new handler();
                 foreach($items AS $item){
 
-                    $title = 'test';
+                    
                     if($i<$limit){
-                    $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "openFile('wikipedia', '".urlencode($title)."', '".urlencode(substr($title, 0, 10))."');", $title);
+                        $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "handlers.wikipedia.handler('$item')", $item);
                     }else{
                         $loadAll = '<div class="loadAll" data-type="wiki">results '.$limit.' of '.$numberOfItems.' <a href="#">show all</a></div>';
                     }
@@ -265,7 +265,7 @@ class search{
 
                     if($i<$limit){
                         $title = $handler->api('youtube', 'getTitle', array('url'=>$item2));
-                        $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "player.openItem('youtube', '$item2');", substr($title, 0, 23), true);
+                        $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "handlers.youtube.handler('$item2');", substr($title, 0, 23), true);
 
 
                         $output .= $this->generateSearchResultContext('youtube', $item2);

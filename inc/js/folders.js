@@ -17,6 +17,7 @@
 var folders = new function(){
               	
     this.open = function(folder_id){
+        userHistory.push('folder', folder_id);
         filesystem.show();
         filesystem.openFolder(folder_id);
         return false;

@@ -576,6 +576,7 @@ span.icon.blue-chevron-down {}
 #telescope .frameRight>ul>li{
     clear:both;  
     margin-top: 25px;
+    cursor:pointer;
 }
 
 #telescope .frameRight ul li h2{  margin-top: 0;
@@ -599,11 +600,25 @@ span.icon.blue-chevron-down {}
     overflow: auto;
 }
 
+#telescope .frameRight ul{
+    margin: 0;
+    width:100%;
+}
 
 /*table  view*/
+
 #telescope .frameRight ul.table>*{
     display:table-row;
+    height: 45px;
 }
+
+
+#telescope .frameRight ul.table .itemSettingsButton{
+    padding: 0;
+    float: right;
+    margin: 0 6px -13px;
+}
+
 #telescope .frameRight ul.table>*>*{
     display:table-cell;
 }
@@ -618,7 +633,7 @@ span.icon.blue-chevron-down {}
 
 #telescope .frameRight ul.table>*>*>img{
     max-width: 28px;
-    margin: 7px;
+    margin: 7px 6px 7px 10px;
 }
 
 #telescope .frameRight ul.table>*>* .icon{
@@ -670,7 +685,7 @@ span.icon.blue-chevron-down {}
 }
 
 
-#telescope .frameRight ul.thumbSmall>li:hover, #telescope .frameRight ul.thumbBig>li:hover{
+#telescope .frameRight ul>li:hover, #telescope .frameRight ul>li:hover{
     background-color:  #cfd8dc;
 }
 
@@ -2854,7 +2869,7 @@ line-height: 18px;
 
 
 .itemSettingsButton{
-   height: 17px;
+   height: 35px;
    overflow: none;
    font-size: 12px;
    margin-top: -15px;

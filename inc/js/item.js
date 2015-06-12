@@ -125,7 +125,7 @@ var item = new function(){
 					
 
 
-			        var html = "<a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"btn btn-xs itemSettingsButton\">" + filesystem.generateIcon('settings', 'grey') + "</a>\n\
+			        var html = "<a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"itemSettingsButton\">" + filesystem.generateIcon('settings', 'grey') + "</a>\n\
                                 <div class=\"itemSettingsWindow\">\n\
                                             <ul>";
                                     html += list;
@@ -179,7 +179,7 @@ var item = new function(){
 					
 
 
-			        var html = "<a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"btn btn-xs itemSettingsButton\">" + filesystem.generateIcon('settings', 'grey') + "</a>\n\
+			        var html = "<a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"itemSettingsButton\">" + filesystem.generateIcon('settings', 'grey') + "</a>\n\
                                 <div class=\"itemSettingsWindow\">\n\
                                             <ul>";
                                     html += list;
