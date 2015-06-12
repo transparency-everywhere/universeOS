@@ -33,12 +33,12 @@ var reader = new function(){
         
 	this.tabs = new tabs('#readerFrame');
         this.tabs.init();
-	this.tabs.addTab('Home', '', reader.generateHomeTab());
+	this.tabs.addTab('Home', '', reader.generateStartpage());
     };
     this.show = function(){
         reader.applicationVar.show();
     };
-    this.generateHomeTab = function(){
+    this.generateStartpage = function(){
         var html = '';
         html += '<div>USERPICTURE Hidiho, USERNAME, good to see you back!</div>';
         html += '<div>';
@@ -83,6 +83,63 @@ var reader = new function(){
         
         return html;
             
+    }
+    this.initTabs = function(){
+        
+        var html;
+            
+        var history_items = history.getItems(); // erstmal ne function schreiben, die dummys liefert
+
+        html += '<div>';
+        
+            //generate home view
+            html += this.buildTab('home', 'clock', 'Display History', history_items, 'star', 'Popular in the universeOS', popular_items, feature);
+
+            //generate groups view
+            html += this.buildTab('groups', 'groups', 'Your groups', history_items, 'star', 'Popular groups', popular_items);
+
+            //generate favorites view
+            html += this.buildTab('favorites', 'fav', 'Your favorites', history_items);
+
+            //generate playlist view
+            html += this.buildTab('playlists', 'playlist', 'Your playlists', history_items, 'star', 'Popular playlists', popular_items);
+
+            //generate news view
+            html += this.buildTab('news', 'clock', 'News', history_items);
+
+            //generate my files view
+            html += this.buildTab('myFiles', 'file', 'Your files', history_items);
+
+        html += '</div>';
+        
+    }
+    this.buildTab = function(tab, iconA, titleA, itemsA, iconB, titleB, itemsB, feature){
+        //generate view
+        html += '<div class="' + tab + '">';
+            html += '<div>';
+                html += filesystem.generateIcon(iconA, 'blue') + titleA;
+            html += '</div>';
+            html += '<div>';
+                html += '<ul>';
+                    html += '<li>File1</li><li>File2</li><li>File3</li><li>File4</li><li>File5</li>';
+                html += '</ul>';
+            html += '</div>';
+        html += '</div>';
+        html += '<div>';
+            html += '<div>';
+                html += filesystem.generateIcon(iconB, 'blue') + titleB;
+            html += '</div>';
+            html += '<div>';
+                html += '<ul>';
+                    html += '<li>Featured1</li><li>Featured2</li><li>Featured3</li>';
+                html += '</ul>';
+            html += '</div>';
+            html += '<div>';
+                html += '<ul>';
+                    html += '<li>File1</li><li>File2</li><li>File3</li><li>File4</li><li>File5</li>';
+                html += '</ul>';
+            html += '</div>';
+        html += '</div>';
     }
     this.openFile = function(file_id){
         var fileData = filesystem.getFileData(file_id);
