@@ -120,6 +120,15 @@ var telescope = new function(){
         });
         
         
+        //init handlers on list
+        $('.telescopeList li').children().not('.settings').bind('click', function(e){
+            eval('handlers.'+$(this).parent().attr('data-type')+'.handler(\''+$(this).parent().attr('data-selector')+'\')');
+        });
+        
+        //init preventDefault for itemSettingsbutton
+        $('.telescopeList .itemSettingsButton').bind('click', function(e){
+        });
+        
         //init toggle view buttons
         $('#telescope .frameRight .headerbuttons .icon').click(function(){
             console.log('wubba');
@@ -219,29 +228,34 @@ var telescope = new function(){
     
     //builds result thumb
     this.buildThumb = function(type, selector){
-        var html;
-            html = '<div>'+handlers[type].getThumbnail(selector)+'<h2>'+gui.shorten(handlers[type].getTitle(selector), 28)+'</h2></div>';
-            html += '<div>'+nl2br(gui.shorten(handlers[type].getDescription(selector), 50))+'</div>';
-            html += '<div></div>';
-            var itemType;
-            switch(type){
-                
-                default:
-                    itemType = 'link';
-                    break;
-                case 'file'||'element'||'folder'||'user':
-                    itemType = type;
-                    break;
-            }
-            html += '<div>'+item.showItemSettings(itemType,selector)+'</div>';
-        return html;
+
+        if(selector !== null){
+            var html;
+                html = '<div>'+handlers[type].getThumbnail(selector)+'<h2>'+gui.shorten(handlers[type].getTitle(selector), 28)+'</h2></div>';
+                html += '<div>'+nl2br(gui.shorten(handlers[type].getDescription(selector), 50))+'</div>';
+                html += '<div></div>';
+                var itemType;
+                switch(type){
+
+                    default:
+                        itemType = 'link';
+                        break;
+                    case 'file'||'element'||'folder'||'user':
+                        itemType = type;
+                        break;
+                }
+                html += '<div class="settings">'+item.showItemSettings(itemType,selector)+'</div>';
+            return html;
+        }else{
+            return '';
+        }
     };
     
     //parses results to li
     this.parseResult = function(type, results){
         var html = '';
         $.each(results, function(index, value){
-            html += '<li class="type_'+type+'" onclick="handlers.'+type+'.handler(\''+value+'\')">'+telescope.buildThumb(type,value)+'</li>';
+            html += '<li class="type_'+type+'" data-type="'+type+'" data-selector="'+value+'">'+telescope.buildThumb(type,value)+'</li>';
         });
         return html;
     };

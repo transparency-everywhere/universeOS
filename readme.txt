@@ -37,8 +37,9 @@ todo
         mysql_query
         $.post, $.ajax
 
+
+
     score
-        farbiger kasten weg
         positive ergebnisse #313131;
         negative in #607d8b
 
@@ -47,7 +48,6 @@ todo
     group admin
 
     forms
-
         shortcuts.create
         shortcuts.update
         shortcuts.verifyRemoval

@@ -121,7 +121,7 @@ var filesystem =  new function() {
                         if(privacy.authorize(folderData['privacy'], folderData['creator'])){
                             html += '        		<li onclick="javascript: elements.showCreateElementForm(\'' + folderId + '\');return false">' + filesystem.generateIcon('element', 'white') + 'Add element</li>';
                             html += '                       <li onclick="javascript: folders.showCreateFolderForm(' + folderId + ');return false">' + filesystem.generateIcon('folder', 'white') + 'Add folder</li>';
-                            html += '        		<li onclick="javascript: popper(\'doit.php?action=addInternLink&parentFolder=' + folderId + '&reload=1\');return false">' + filesystem.generateIcon('shortcut', 'white') + 'Add shortcut</li>';
+                            html += '        		<li onclick="shortcuts.showChooseShortcutTypeForm(' + folderId + ');">' + filesystem.generateIcon('shortcut', 'white') + 'Add shortcut</li>';
                         }		  			
                         html += '        	</ul>';
                     }

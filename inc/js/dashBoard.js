@@ -20,8 +20,7 @@ function initDashClose(){
 	//init dashcloses
 	$('.dashBox .dashClose').click(function(){
 		$(this).parent('.dashBox').slideUp();
-	});	
-	
+	});
 }
     
 //dashboard
@@ -55,17 +54,19 @@ var dashBoard = new function(){
 	};
 	
 	this.slideUp = function(){
-			$('#dashGrid').animate({marginBottom: 0}, 900, function() {
-                                $('#dock #toggleDashboardButton').removeClass('white-chevron-up');
-                                $('#dock #toggleDashboardButton').addClass('white-chevron-down');
-			});
-			this.view = 'up';
+            $('#dashGrid').animate({ marginBottom: 0}, // what we are animating
+                    1000, // how fast we are animating
+                    'bounce', // the type of easing
+                    function() { // the callback
+                        $('#dock #toggleDashboardButton').removeClass('white-chevron-up').addClass('white-chevron-down');
+
+                    });
+                    this.view = 'up';
 	};
 	this.slideDown = function(){
 		
 			$('#dashGrid').animate({marginBottom: -300}, 300, function() {
-                                $('#dock #toggleDashboardButton').removeClass('white-chevron-down');
-                                $('#dock #toggleDashboardButton').addClass('white-chevron-up');
+                                $('#dock #toggleDashboardButton').removeClass('white-chevron-down').addClass('white-chevron-up');
 			});
 			this.view = 'down';
 	};

@@ -314,7 +314,7 @@ var universe = new function(){
             setInterval(function()
             {
                 universe.reload();
-            }, 3000);
+            }, 5000);
         }
 
 
@@ -1357,7 +1357,11 @@ var tabs = function(parentIdentifier){
                         }
                         
                         this.tabHistory.push(numberOfTabs+1);
-                        $(parentIdentifier+' .tabFrame').append('<div class="tab tab_'+(numberOfTabs+1)+'">'+content+'</div>');
+                        
+                        var $tab = $('<div class="tab tab_'+(numberOfTabs+1)+'"></div>');
+                        $tab.append(content);
+                        
+                        $(parentIdentifier+' .tabFrame').append($tab);
                         this.initClicks();
                         
                         return numberOfTabs+1;
@@ -1662,6 +1666,8 @@ function openElement(elementId, title){
 function openFile(type, typeId, title, typeInfo, extraInfo1, extraInfo2){
         
         title = 'Open '+title;
+        
+        userHistory.push(type, typeId);
         
         //bring reader to front
         reader.applicationVar.show();
@@ -2193,7 +2199,6 @@ var handlers = {
                             }else{
                                 videoId = link;
                             }
-                            var tempThis = this;
 
                             //generate random player id
                             //otherwise multiple videos
@@ -2236,13 +2241,13 @@ var handlers = {
                                       var callback = function(){
                                           ytplayer.pauseVideo();
                                       };
-                                      tempThis.updateActiveItemPause(callback);
+                                      player.updateActiveItemPause(callback);
                                   }
                                   if(state.data === 2){
                                       var callback = function(){
                                           ytplayer.playVideo();
                                       };
-                                      tempThis.updateActiveItemPlay(callback);
+                                      player.updateActiveItemPlay(callback);
                                   }
                               });
                             }
@@ -2262,7 +2267,7 @@ var handlers = {
                         return handler.query('youtube', query, offset, max_results);
                     },
                     handler: function(link){
-                        alert('we opened it');
+                        player.openItem('youtube', link);
                     }
                     
                 },
@@ -2288,8 +2293,11 @@ var handlers = {
                     },
                     query: function(query, offset, max_results){
                         return handler.query('wikipedia', query, offset, max_results);
+                    },
+                    handler: function(link){
+                        var title = this.getTitle(link);
+                        openFile('wikipedia', title, title);
                     }
-                    
                 },
     'folders': {
                     application : 'reader',
@@ -2352,5 +2360,15 @@ var handlers = {
                     
                 }
     
+};
+
+var userHistory = new function(){
+    this.storage = [];
+    this.push = function(type, item_id){
+        this.storage.unshift({type:type, item_id:item_id});
+    };
+    this.get = function(){
+        return this.storage;
+    };
 };
 

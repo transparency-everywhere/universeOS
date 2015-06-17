@@ -94,7 +94,7 @@ var player = new function(){
         
     };
     this.openItem = function(type, link){
-        
+        userHistory.push(type, link);
         var playerFrameId = gui.generateId();
         this.show();
         var tab_id = this.tabs.addTab('Playlist', 'html', '<div class="playerFrame" id="'+playerFrameId+'"></div>', function(){/*onclose*/});

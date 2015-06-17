@@ -17,6 +17,8 @@
 
 var elements = new function(){
     this.open = function(element){
+        
+        userHistory.push('element', element);
         filesystem.show();
         var elementData = this.getData(element);
         var elementAuthorData = this.getAuthorData(elementData['author']);
