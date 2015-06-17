@@ -1,5 +1,5 @@
 //initialize
-var sourceURL = 'http://localhost/universe';
+var sourceURL = 'http://localhost/universeOS';
 
 
 var usernames = [];
@@ -1627,9 +1627,9 @@ function initUploadify(id, uploader, element, timestamp, token){
 				        		eval(data); //no esta bien! que?
 				        	}
 				        },
-	                    'onUploadError' : function(file, errorCode, errorMsg, errorString) {
-	                        alert('The file ' + file.name + ' could not be uploaded: ' + errorString);
-	                    }
+                                        'onUploadError' : function(file, errorCode, errorMsg, errorString) {
+                                            alert('The file ' + file.name + ' could not be uploaded: ' + errorString);
+                                        }
 	            });
 	    });
                                 

@@ -47,7 +47,8 @@ $folder = $_GET[folder];
 <div id="upload">
 	<div id="uploadStepOne" class="uploadStep step">
 		<div>
-		<h1>Upload File</h1>
+		<h1>Upload File333333333333</h1>
+		<h1>Upload File333333333333</h1>
 			<?php
 			if(empty($_GET['element']) OR $_GET['element'] == "undefined"){
                                 $fileSystem = new fileSystem();
