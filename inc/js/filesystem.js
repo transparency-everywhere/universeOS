@@ -21,28 +21,34 @@ var filesystem =  new function() {
     this.generateUploadTab = function(element){
         var html = this.generateLeftNav();
         //alles aus upload.php in einer onestep lösung zusammenbauen
-        html += '<div id="showElement" class="frameRight">';
-            html += '<h1>Upload</h1>';
-            html += '<hr />';
-            html += '<span>You will upload files to this collection: ' + element + '</span>';
-            html += '<h2>Privacy settings:</h2>';
-            html += '<span>SETTINGS SETTINGS SETTINGS</span>';
-            html += '<div class="uploadPrivacy">SETTINGS SETTINGS SETTINGS</div>';
-            html += '<h2>Add files:</h2>';
-            html += '<span>SELECT BUTTON</span>';
-            html += '<span>FILES FILES FILES</span>';
-            html += '<span>CANCEL BUTTON     /     UPLOAD BUTTON</span>';
+        html += '<div class="frameRight">';
+            html += '<div class="uploadTab">';
+                html += '<h2>Upload</h1>';
+                html += '<hr />';
+                html += '<span>You will upload files to this collection: ' + element + '</span>';
+                html += '<h3>Privacy settings:</h2>';
+                html += '<div class="uploadPrivacy"></div>';
+                html += '<h3>Add files:</h2>';
+                html += '<div>';
+                    html += '<ul class="tempFilelist"></ul>';
+                    html += '<input id="uploader_file" name="feedFile" type="file" multiple="true">';
+                    html += '<div id="queue"></div>';
+                html += '</div>';
+                html += '<div class="uploaderCancelButton">Cancel</div>';
+                html += '<div class="uploaderUploadButton">Upload</div>';
+            html += '</div>';
         html += '</div>';
         privacy.load('.uploadPrivacy', 'p', 'true');
+        initUploadify('#uploader_file', 'doit.php?action=manageUpload&type=uploadTemp', element, 'timeStamp', 'salt');
         return html;
     };
     
     this.openUploadTab = function(element){
         filesystem.applicationVar.show();
-        var tabContent = this.generateLeftNav()+gui.loadPage('modules/filesystem/upload.php?element='+element);
-        filesystem.tabs.addTab('Upload', '', tabContent);
+//        var tabContent = this.generateLeftNav()+gui.loadPage('modules/filesystem/upload.php?element='+element);
+//        filesystem.tabs.addTab('Upload', '', tabContent);
         //wird zu:
-//        filesystem.tabs.addTab('Upload '+element, '', filesystem.generateUploadTab(element));
+        filesystem.tabs.addTab('Upload '+element, '', filesystem.generateUploadTab(element));
     }
     
     

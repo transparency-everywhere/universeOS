@@ -1826,7 +1826,17 @@ else if($_GET['action'] == "submitUploader"){
 			
 				
             }
-else if($_GET['action'] == "manageUpload"){
+
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            else if($_GET['action'] == "manageUpload"){
             	
             	switch($_GET['type']){
             		
@@ -1853,7 +1863,11 @@ else if($_GET['action'] == "manageUpload"){
             		
             	}
             }
-else if($_GET['action'] == "feedUpload"){
+
+            
+            
+            
+            else if($_GET['action'] == "feedUpload"){
             if(proofLogin()){
             if(empty($_FILES['feedFile']['tmp_name'])){
                 $error = "please select a file";
@@ -1873,7 +1887,18 @@ else if($_GET['action'] == "feedUpload"){
             addFile($file, $element, $folder, $privacy, $user);
             }}
             }
-else if($_GET['action'] == "reportFile"){
+
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            else if($_GET['action'] == "reportFile"){
     //@del
     
                 if(isset($_POST['submit'])){

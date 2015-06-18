@@ -100,8 +100,7 @@ $folder = $_GET[folder];
 		    <div style="margin-top:15px;">
 		    	
 		    	<ul class="tempFilelist"></ul>
-		    	
-		        <input id="uploader_file" name="feedFile" type="file" multiple="true" style="margin-top: 20px;">
+		    	<input id="uploader_file" name="feedFile" type="file" multiple="true" style="margin-top: 20px;">
 		    	<div id="queue"></div>
 		    </div>
 		</div>
