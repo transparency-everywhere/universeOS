@@ -26,7 +26,7 @@ var reader = new function(){
     this.init = function(){
         var grid = {width: 5, height:  4, top: 6, left: 3, hidden: true};
         if(proofLogin())
-            grid = {width: 8, height:  8, top: 0, left: 2};
+            grid = {width: 8, height:  8, top: 0, left: 2, hidden: true};
         this.applicationVar = new application('reader');
         this.applicationVar.create('Reader', 'url', 'modules/reader/index.php', grid);
         
@@ -40,32 +40,33 @@ var reader = new function(){
     };
     this.generateStartpage = function(){
         var html = '';
-        html += '<div>USERPICTURE Hidiho, USERNAME, good to see you back!</div>';
+        html += '<div>USERPICTURE Hidiho, '+ useridToUsername(User.userid) +', good to see you back!</div>';
         html += '<div>';
             html += '<ul>';
                 html += '<li>' + filesystem.generateIcon('home', 'blue') + '</li>';
                 html += '<li>Groups</li>';
                 html += '<li>Favorites</li>';
                 html += '<li>Playlist</li>';
-                html += '<li>News</li>';
                 html += '<li>My Files</li>';
             html += '</ul>';
         html += '</div>';
+        //alles ab hier wird dynamisch durch reader.initTabs() generiert
         html += '<div>';
             html += '<div>';
                 html += '<span>' + filesystem.generateIcon('clock', 'blue') + ' Display History</span>';
-                html += '<span>FILTER</span>';
             html += '</div>';
             html += '<div>';
                 html += '<ul>';
                     html += '<li>File1</li><li>File2</li><li>File3</li><li>File4</li><li>File5</li>';
                 html += '</ul>';
             html += '</div>';
+            html += '<div>';
+                html += '<span>SHOW MORE FUNCTION</span>';
+            html += '</div>';
         html += '</div>';
         html += '<div>';
             html += '<div>';
                 html += '<span>' + filesystem.generateIcon('suggestion', 'blue') + ' Popular in the universe</span>';
-                html += '<span>FILTER</span>';
             html += '</div>';
             html += '<div>';
                 html += '<ul>';
@@ -77,6 +78,9 @@ var reader = new function(){
                     html += '<li>File1</li><li>File2</li><li>File3</li><li>File4</li><li>File5</li>';
                 html += '</ul>';
             html += '</div>';
+            html += '<div>';
+                html += '<span>SHOW MORE FUNCTION</span>';
+            html += '</div>';
         html += '</div>';
         
         
@@ -84,11 +88,19 @@ var reader = new function(){
         return html;
             
     }
-    this.initTabs = function(){
+    this.initTabs = function(userid){
         
         var html;
             
-        var history_items = history.getItems(); // erstmal ne function schreiben, die dummys liefert
+        var history_items = User.getHistory(); //get array with three dummy entries (functions.js)
+        
+        var group_items = groups.get(userid); //get groups of the user
+        
+        var fav_items; //get favorites of the user
+        
+        var playlist_items; //get playlists of the user
+        
+        var myFiles_items; //get files of the user - machen wie in alter startseite (abfragen zusammenfassen) und dann via api als myFilesArray durchschleusen
 
         html += '<div>';
         
@@ -96,19 +108,16 @@ var reader = new function(){
             html += this.buildTab('home', 'clock', 'Display History', history_items, 'star', 'Popular in the universeOS', popular_items, feature);
 
             //generate groups view
-            html += this.buildTab('groups', 'groups', 'Your groups', history_items, 'star', 'Popular groups', popular_items);
+            html += this.buildTab('groups', 'groups', 'Your groups', group_items, 'star', 'Popular groups', popular_items);
 
             //generate favorites view
-            html += this.buildTab('favorites', 'fav', 'Your favorites', history_items);
+            html += this.buildTab('favorites', 'fav', 'Your favorites', fav_items);
 
             //generate playlist view
-            html += this.buildTab('playlists', 'playlist', 'Your playlists', history_items, 'star', 'Popular playlists', popular_items);
-
-            //generate news view
-            html += this.buildTab('news', 'clock', 'News', history_items);
+            html += this.buildTab('playlists', 'playlist', 'Your playlists', playlist_items, 'star', 'Popular playlists', popular_items);
 
             //generate my files view
-            html += this.buildTab('myFiles', 'file', 'Your files', history_items);
+            html += this.buildTab('myFiles', 'file', 'Your files', myFiles_items);
 
         html += '</div>';
         

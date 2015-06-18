@@ -16,11 +16,48 @@
 
 
 var filesystem =  new function() {
+    
+    
+    this.generateUploadTab = function(element){
+        var html = this.generateLeftNav();
+        //alles aus upload.php in einer onestep lösung zusammenbauen
+        html += '<div class="frameRight">';
+            html += '<div class="uploadTab">';
+                html += '<h2>Upload</h1>';
+                html += '<hr />';
+                html += '<span>You will upload files to this collection: ' + element + '</span>';
+                html += '<h3>Privacy settings:</h2>';
+                html += '<div class="uploadPrivacy"></div>';
+                html += '<h3>Add files:</h2>';
+                html += '<div>';
+                    html += '<ul class="tempFilelist"></ul>';
+                    html += '<input id="uploader_file" name="feedFile" type="file" multiple="true">';
+                    html += '<div id="queue"></div>';
+                html += '</div>';
+                html += '<div class="uploaderCancelButton">Cancel</div>';
+                html += '<div class="uploaderUploadButton">Upload</div>';
+            html += '</div>';
+        html += '</div>';
+        privacy.load('.uploadPrivacy', 'p', 'true');
+        initUploadify('#uploader_file', 'doit.php?action=manageUpload&type=uploadTemp', element, 'timeStamp', 'salt');
+        return html;
+    };
+    
+    this.openUploadTab = function(element){
+        filesystem.applicationVar.show();
+//        var tabContent = this.generateLeftNav()+gui.loadPage('modules/filesystem/upload.php?element='+element);
+//        filesystem.tabs.addTab('Upload', '', tabContent);
+        //wird zu:
+        filesystem.tabs.addTab('Upload '+element, '', filesystem.generateUploadTab(element));
+    }
+    
+    
+    
     this.init = function(){
         var html = '<div id="fileBrowserFrame"></div>';
         var grid = {width: 6, height:  4, top: 7, left: 0};
         if(proofLogin())
-            grid = {width: 6, height:  8, top: 0, left: 3, hidden: true};
+            grid = {width: 6, height:  8, top: 0, left: 3};
         this.applicationVar = new application('filesystem');
         this.applicationVar.create('Filesystem', 'html', html, grid);
         this.tabs = new tabs('#fileBrowserFrame');
@@ -376,11 +413,6 @@ var filesystem =  new function() {
         var fileData = this.getFileData(file_id);
         return fileData['title'];
     };
-    
-    this.openUploadTab = function(element){
-        filesystem.applicationVar.show();
-        filesystem.tabs.addTab('Upload', '',gui.loadPage('modules/filesystem/upload.php?element='+element));
-    }
     this.downloadFile = function(fileId){
         $('#submitter').attr('src','out/download/?fileId='+fileId);
     };

@@ -47,7 +47,8 @@ $folder = $_GET[folder];
 <div id="upload">
 	<div id="uploadStepOne" class="uploadStep step">
 		<div>
-		<h1>Upload File</h1>
+		<h1>Upload File333333333333</h1>
+		<h1>Upload File333333333333</h1>
 			<?php
 			if(empty($_GET['element']) OR $_GET['element'] == "undefined"){
                                 $fileSystem = new fileSystem();
@@ -99,8 +100,7 @@ $folder = $_GET[folder];
 		    <div style="margin-top:15px;">
 		    	
 		    	<ul class="tempFilelist"></ul>
-		    	
-		        <input id="uploader_file" name="feedFile" type="file" multiple="true" style="margin-top: 20px;">
+		    	<input id="uploader_file" name="feedFile" type="file" multiple="true" style="margin-top: 20px;">
 		    	<div id="queue"></div>
 		    </div>
 		</div>
