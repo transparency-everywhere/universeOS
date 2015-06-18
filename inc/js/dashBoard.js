@@ -56,7 +56,7 @@ var dashBoard = new function(){
 	this.slideUp = function(){
             $('#dashGrid').animate({ marginBottom: 0}, // what we are animating
                     1000, // how fast we are animating
-                    'bounce', // the type of easing
+                    'linear', // the type of easing
                     function() { // the callback
                         $('#dock #toggleDashboardButton').removeClass('white-chevron-up').addClass('white-chevron-down');
 

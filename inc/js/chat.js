@@ -43,22 +43,26 @@ var chat = new function(){
     };
     this.openDialogue = function(userid){
         var username = useridToUsername(userid);
+        
+        var chatFrameHTML = chat.generateLeftFrame();
+            chatFrameHTML += '<div class="chatRightFrame">'+gui.loadPage("modules/chat/chatreload.php?buddy="+username+"")+'</div>';
+            
+        
         chat.applicationVar.show();
       
       	//check if dialoge allready exists
         if($("#test_"+ username +"").length == 0){
 
             userid = usernameToUserid(username);
-            
-            var chatFrameHTML = chat.generateLeftFrame();
-                chatFrameHTML += '<div class="chatRightFrame">'+gui.loadPage("modules/chat/chatreload.php?buddy="+username+"")+'</div>';
-            
             chat.tabs.addTab(username, '',chatFrameHTML);
-
             openDialogueInterval = window.setInterval("chatDecrypt("+userid+")", 500);
+            
         }else{
             //if dialoge doesnt exists => bring dialoge to front..
-
+            var dialogue_tab_id = chat.tabs.getTabByTitle(username);
+            
+            chat.tabs.updateTabContent(dialogue_tab_id, chatFrameHTML);
+            chat.tabs.showTab(dialogue_tab_id)
 
 
         }
@@ -174,11 +178,6 @@ function chatDecrypt(userid){
     });
     return true;
 }
-
-function openChatDialoge(username){
-    chat.openDialogue(usernameToUserid(username));
- }
- 
   
 function chatLoadMore(username, limit){
      $.get("doit.php?action=chatLoadMore&buddy="+username+"&limit="+limit,function(data){

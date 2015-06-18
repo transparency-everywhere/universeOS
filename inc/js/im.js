@@ -20,20 +20,27 @@ var im = new function(){
     
     //opens message either as a notification, as a chat window or updates the chatwindow
     this.openMessage = function(messageData){
-        
+        if(messageData.receiver == User.userid)
+            this.openDialogue(messageData.sender);
+        else if(messageData.sender == User.userid)
+            this.openDialogue(messageData.receiver);
     };
     this.openDialogue = function(parameter){
-        if(is_numeric(parameter)){
-            var username = usernameToUserid(parameter);
+        if(!is_numeric(parameter)){
+            var userid= usernameToUserid(parameter);
         }else{
-            var username = parameter;
+            var userid = parameter;
         }
-        openChatDialoge(username);
+        chat.openDialogue(userid);
     };
     
     //proceeds data from reload function
     this.sync = function(data){
         $.each(data, function(key,value){
+            
+            if(value.id > im.lastMessageReceived)
+                im.lastMessageReceived = parseInt(value.id);
+            
             im.openMessage(value);
         });
     };
