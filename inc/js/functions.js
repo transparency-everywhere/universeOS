@@ -130,7 +130,6 @@ var init = new function(){
 //          'z-index' : '999'
 //              });
 	};
-	
 	this.dashBox = function(){
             //init dashcloses 
 			$('.dashBox .dashClose').click(function(){
@@ -173,7 +172,7 @@ var init = new function(){
 					var searchValue = $("#searchField").val();
 					if (searchValue.length > 1)
 					{
-                                                $loadingArea.html(search.loadResults(searchValue));
+                                                search.loadResults($loadingArea, searchValue);;
 					}
 					else
 					{
@@ -488,8 +487,30 @@ var universe = new function(){
     };
 };
 
+function time(){
+    return Math.floor(Date.now() / 1000);
+};
+
 var User = new function(){
     this.userid;
+    this.lastLoginCheck = 0;
+    this.loggedIn = false;
+    
+    this.proofLogin = function(){
+        if(time()-this.lastLoginCheck > 120){
+            var result = api.query('api.php?action=proofLogin', {});
+            this.lastLoginCheck = time();
+            if(result == '1'){
+                  this.loggedIn = true;
+                  return true;
+            }else{
+                  this.loggedIn = false;
+                  return false;
+            }
+        }else{
+            return this.loggedIn;
+        }
+    };
     
     this.updateGUI = function(userid){
             $('.userProfile').each(function(){
@@ -848,7 +869,7 @@ function useridToUsername(id){
 		}else{
 			return usernames[id];
 		}
-		
+                
 }
 
 function usernameToUserid(username){
@@ -912,12 +933,7 @@ function universeText(string){
 };
 
 function proofLogin(){
-    var result = api.query('api.php?action=proofLogin', {});
-    if(result == '1'){
-                  return true;
-              }else{
-                  return false;
-              }
+    return User.proofLogin();
 }
 			
 function searchUserByString(string, limit){
@@ -1063,28 +1079,34 @@ var search = new function(){
     this.basicQuery = function(query){
         api.query('api/search/query/',{query:query});
     };
-    this.loadResults = function(query){
+    this.loadResults = function($object, query){
         var html = '';
-        var results = api.query('api/search/loadDockList/',{query:query});
+        $object.html('...loading');
+        api.query('api/search/loadDockList/',{query:query},function(results){
+            var results = JSON.parse(results);
+            
+            html += results.users;
         
-        html += results.users;
+            html += results.folders;
+
+            html += results.elements;
+
+            html += results.files;
+
+            if(typeof results.groups !== 'undefined')
+                html += results.groups;
+
+            html += results.wikis;
+
+            html += results.youtubes;
+
+            html += results.spotifies;
+
+            $object.html(html);
+        });
         
-        html += results.folders;
         
-        html += results.elements;
         
-        html += results.files;
-        
-        if(typeof results.groups !== 'undefined')
-            html += results.groups;
-        
-        html += results.wikis;
-        
-        html += results.youtubes;
-        
-        html += results.spotifies;
-        
-        return html;
     };
 };
 
@@ -2369,6 +2391,29 @@ var userHistory = new function(){
     };
     this.get = function(){
         return this.storage;
+    };
+};
+
+var clientDB = new function(){
+    this.databases = {};
+    this.createDB = function(dbName){
+        this.databases[dbName] = TAFFY();
+    };
+    this.insert = function(dbName, values){
+        if($.isArray(values)){
+            //each array insert value
+            values.forEach(function(value){
+                this.databases[dbName].insert(values);
+            });
+        }else{
+            this.databases[dbName].insert(values);
+        }
+    };
+    this.update = function(dbName, values){
+        
+    };
+    this.select = function(dbName, object){
+        return this.databases[dbName](object);
     };
 };
 

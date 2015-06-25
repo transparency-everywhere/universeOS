@@ -108,7 +108,7 @@ var feed = new function(){
                 
                 output += item.showItemSettings('feed', feedData['id']);
                 
-                output += '<a href="javascript:comments.loadComments(\'feed\',\''+feedData['id']+'\');" class="btn btn-xs" style="color: #dcdcdc"><i class="icon icon-comment"></i></a>';
+                output += '<a href="javascript:comments.loadComments(\'feed\',\''+feedData['id']+'\');" class="btn btn-xs" style="color: #dcdcdc"><i class="icon icon-comment"></i>('+comments.count('feed',feedData['id'])+')</a>';
              
             output += '</div>';
             output += '<div class="commentLoadingArea" id="comment_feed_'+feedData['id']+'" style="display:none;"></div>';

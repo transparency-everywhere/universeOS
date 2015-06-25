@@ -15,12 +15,9 @@
 //
 //@author nicZem for Tranpanrency-everywhere.com
 
-include('../../../inc/config.php');
-include('../../../inc/functions.php');
+include('../../../../inc/config.php');
+include('../../../../inc/functions.php');
 
-
-var_dump($_POST['values']);
-
-$user = new userPrivacy(getUser());
-$user->updateRights($_POST['values']);
-
+$commentClass = new comments();
+echo $commentClass->countComment($_POST['type'], $_POST['itemid']);
+    

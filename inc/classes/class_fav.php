@@ -78,24 +78,26 @@ class fav {
             //derive the table and the image from fav-type
             if($type == "folder"){
                 $typeTable = "folders";
-                $img = "filesystem/folder.png";
+                $img = "folder";
                 $link = "openFolder($item); return false;";
             }else if($type == "element"){
                 $typeTable = "elements";
-                $img = "filesystem/element.png";
+                $img = "archive";
                 $link = "openElement($item); return false;";
             }else if($type == "file"){
                 $typeTable = "files";
                 $fileClass = new file($item);
                 $fileType = $fileClass->getFileType();
                 $filesClass = new files();
-                $img = "fileIcons/".$filesClass->getFileIcon($fileType);
+                //$img = "fileIcons/".$filesClass->getFileIcon($fileType);
+                $img = 'file';
             }else if($type == "link"){
                 $typeTable = "links";
                 $classLinks = new link();
                 $fileType = $classLinks->getType($item);
                 $filesClass = new files();
-                $img = "fileIcons/".$filesClass->getFileIcon($fileType);
+                //$img = "fileIcons/".$filesClass->getFileIcon($fileType);
+                $img = 'link';
             }
             $dbClass = new db();
             $favFolderData = $dbClass->select($typeTable, array('id', $item));
@@ -113,7 +115,7 @@ class fav {
             $i++;
 
                                         $output .= "<tr class=\"strippedRow\" onmouseup=\"showMenu('folder".$filefdata['id']."')\">";
-                                                $output .= "<td onmouseup=\"showMenu(".$favFolderData['id'].")\" width=\"35\">&nbsp;<img src=\"./gfx/icons/$img\" height=\"20\"></td>";
+                                                $output .= "<td onmouseup=\"showMenu(".$favFolderData['id'].")\" width=\"35\">&nbsp;<i class=\"icon-$img\"></i></td>";
                                                 $output .= "<td onmouseup=\"showMenu(".$favFolderData['id'].")\"><a href=\"#\" onclick=\"$link\">".$favFolderData['name'].""."".$favFolderData['title']."/</a></td>";
                     if($user == getUser()){
 

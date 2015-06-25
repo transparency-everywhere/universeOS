@@ -461,14 +461,9 @@ var groups = new function(){
             modalOptions['action'] = function(){
                 
                 var callback = function(data){
-                    if(data != '1'){
-                        gui.alert('The group could not be created', 'Create Group');
-                    }else{
-                        
                         gui.alert( 'The group has been created');
                         $('.blueModal').remove();
                         groups.updateGUI();
-                    }
                 };
                 var invitedUsers = [];
                 $('.blueModal .invitedBuddy').each(function(){
@@ -478,6 +473,7 @@ var groups = new function(){
                 
                 
                 groups.create($('.blueModal #title').val(), $('.blueModal #type').val(), $('.blueModal #description').val(), invitedUsers, callback);
+                
             };
             formModal.init('Create Group', '<div id="createGroupFormContainer"></div>', modalOptions);
             gui.createForm('#createGroupFormContainer',fieldArray, options);

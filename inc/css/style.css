@@ -2272,7 +2272,7 @@ color:#FFFFFF;
     width: 32px;
     height: 32px;
     background-size: 100%;
-    cursor: pointer;
+    cursor: default;
 }
 
 
@@ -2546,7 +2546,9 @@ color:#FFFFFF;
         #dock .icon{
             height: 30px;
             width:30px;
-        }
+        
+            cursor: pointer;
+}
         
         #dock #logout{
             min-width: 10px;

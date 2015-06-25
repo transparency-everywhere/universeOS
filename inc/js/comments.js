@@ -86,6 +86,11 @@ var comments = new function(){
         return html;
     };
     
+    this.count = function(type, item_id){
+        
+        return api.query('api/item/comments/count/', {'type':type, 'item_id':item_id});
+    };
+    
   this.loadSubComments = function(commentId){
       
     $("#comment" + commentId + "").html(comments.generate('comment', commentId));
