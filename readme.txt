@@ -30,12 +30,18 @@ Update
 
     check if our server serves svg files as image/svg, not as text/plain (regbox - loading bubbles)
 
+    Add session for each user
+        --->    registration get client identifier
+
     
 
 todo
     get rid of
         mysql_query
         $.post, $.ajax
+
+    api
+        api.query(data {if string->utf8} return if string -> JSescape);
 
 
 
@@ -46,11 +52,6 @@ todo
     dock envelop -> commit icon bei nachricht active class gleich turquise
 
     group admin
-
-    forms
-        shortcuts.create
-        shortcuts.update
-        shortcuts.verifyRemoval
 
     all onclick to bind(?)
 
@@ -78,7 +79,6 @@ todo
 Recent:                                                         Release Message
 
         modal
-            shortcuts
             tasks
             calendar ?
 
@@ -235,6 +235,13 @@ Files and the use of them
 	USER CRYPTICO!
 
 
+
+    Storage
+    Title       Type                Purpose                         Duration                Usage                                       Used for
+    clientDb    Client Storage      save data on the client side    session(browser)        js->clientDB class, api->backpacking        services, messages
+    mysql       Server Storage      save all kinds of data          until removal           php->db class
+    filesystem  Server Storage      save files and links            until removal           php->folders class, php->elements class,    folder, archives, files, links
+                                                                                            php->files class, php->links class
 
 Handlers docu
 

@@ -1681,6 +1681,8 @@ color: #FFF;
 }
 
 .feedEntry .options .scoreButton{
+    display: inline-block;
+    height: 30px;
     margin-left: -7px;
 }
 
@@ -1691,20 +1693,35 @@ color: #FFF;
 .feedEntry .itemSettingsButton{
     position: absolute;
     right: 7px;
-    margin-top: 1px;
+    margin-top: -5px;
+}
+
+.feedEntry .commentButton{
+    display: inline-block;
+    
+    margin: -7px 0 0px 5px;
+    font-size: 18px;
+    height: 30px;
+    cursor: pointer;
+    position: absolute;
+}
+
+.feedEntry .commentButton .icon{
+    height: 30px;
+    margin-bottom: -5px;
 }
 
 #feedInput{
         
         
         
-	        height: 40px;
+	height: 40px;
         font-size: 25px;
         padding: 8px;
 
 	resize: none;
-	        width: 100%;
-	        margin-left: -10px;
+	width: 100%;
+	margin-left: -10px;
 }
 
 #feedInputBar{
@@ -2272,7 +2289,6 @@ color:#FFFFFF;
     width: 32px;
     height: 32px;
     background-size: 100%;
-    cursor: default;
 }
 
 
@@ -3522,34 +3538,6 @@ font-family:"Courier New", Courier, monospace;
   -khtml-user-select: none;
   -webkit-user-select: none;
 }
-
-.smiley{ 
-    background: url(../../gfx/smileys.png) no-repeat top left;
-    display: inline-block;
-    vertical-align: top;
-}
-
-.smiley1{ background-position: 0 0; width: 15px; height: 15px; } 
-.smiley2{ background-position: 0 -65px; width: 15px; height: 15px; } 
-.smiley3{ background-position: 0 -130px; width: 15px; height: 15px; } 
-.smiley4{ background-position: 0 -195px; width: 15px; height: 15px; } 
-.smiley5{ background-position: 0 -260px; width: 15px; height: 15px; } 
-.smiley6{ background-position: 0 -325px; width: 15px; height: 15px; } 
-.smiley7{ background-position: 0 -390px; width: 15px; height: 15px; } 
-.smiley8{ background-position: 0 -455px; width: 15px; height: 15px; }
-
-.lockIcon{
-    background: url(../../gfx/icons/lock.png) no-repeat top left;
-    display: inline-block;
-    vertical-align: top; 
-    background-position: 0 0; width: 15px; height: 18px; 
-}
-
-.lockIcon.locked{
-    background: url(../../gfx/icons/locked.png) no-repeat top left;
-}
-
-
 
 /*PLUGINS/
 /*PLUGINS/

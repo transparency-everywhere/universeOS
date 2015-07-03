@@ -297,6 +297,8 @@ var universe = new function(){
         
         gui.loadScript('inc/js/shortcuts.js');
         
+        gui.loadScript('inc/js/session.js');
+        
         applications.init();
         
         //init draggable windows
@@ -325,6 +327,8 @@ var universe = new function(){
     this.reload = function(){
         //fetch request data like open filebrowsers & feeds
         var requests = [];
+        
+        requests.push({'fingerprint':session.getFingerprint()});
         
         //push uff documents to request
         $.each(reader.uffChecksums,function(index, value){
@@ -916,16 +920,49 @@ function universeTime(timestamp){
        
 function universeText(string){
     
-    string = string.replace(":'(", '<a class="smiley smiley1"></a>');
-    string = string.replace(":'(", '<a class="smiley smiley1"></a>');//crying smilye /&#039; = '
-    string = string.replace(':|', '<a class="smiley smiley2"></a>');
-    string = string.replace(';)', '<a class="smiley smiley3"></a>');
-    string = string.replace(':P', '<a class="smiley smiley4"></a>');
-    string = string.replace(':-D', '<a class="smiley smiley5"></a>');
-    string = string.replace(':D', '<a class="smiley smiley5"></a>');
-    string = string.replace(':)', '<a class="smiley smiley6"></a>');
-    string = string.replace(':(', '<a class="smiley smiley7"></a>');
-    string = string.replace(':-*', '<a class="smiley smiley8"></a>');
+    
+var smileys = [];
+smileys.push([['(yes)', '(y)'], 'yes']);
+smileys.push([[';)'], 'wink']);
+smileys.push([['O.o', 'O_o', 'O_ó'], 'weird']);
+smileys.push([[':P', ':p'], 'tongue']);
+smileys.push([[':O', ':o', 'O_O'], 'surprised']);
+smileys.push([['(s)', '(sun)'], 'sun']);
+smileys.push([['*'], 'star']);
+smileys.push([[':|'], 'speechless']);
+smileys.push([[':)'], 'smile']);
+smileys.push([['(z)'], 'sleep']);
+smileys.push([[':/'], 'skeptic']);
+smileys.push([[':('], 'sad']);
+smileys.push([['(p)','(puke)'], 'puke']);
+smileys.push([['(n)'], 'no']);
+smileys.push([[':x'], 'mute']);
+smileys.push([['>:('], 'angry']);
+smileys.push([['-.-','-_-'], 'annoyed']);
+smileys.push([['(a)','(anon)'], 'anon']);
+smileys.push([['8)'],'cool']);
+smileys.push([[":'("],'cry']);
+smileys.push([[':3'],'cute']);
+smileys.push([['3:)'],'devil']);
+smileys.push([['(d)','(dino)'],'dino']);
+smileys.push([[']:)'],'evil']); 
+smileys.push([['>:o', '>:O'],'furious']);
+smileys.push([['^_^'],'happy']);
+smileys.push([['<3'],'heart']);
+smileys.push([[':*',':-*'],'kiss']);
+smileys.push([[':D'],'laugh']);
+smileys.push([['(m)','(music)'],'music']);
+for(var index in smileys){
+    var smiley = smileys[index];
+    if(smiley[0].length > 1){
+        for(var codeIndex in smiley[0]){
+            string = string.replace(smiley[0][codeIndex], smileys[index][1]);
+        }
+    }else{
+        string = string.replace(smileys[index][0][0], smileys[index][1]);
+    }
+}
+
     string = string.replace("#(^|[^\"=]{1})(http://|ftp://|mailto:|https://)([^\s<>]+)([\s\n<>]|$)#sm","\\1<a target=\"_blank\" href=\"\\2\\3\">\\3</a>\\4");
        // # Links
         //$str = preg_replace_callback("#\[itemThumb type=(.*)\ typeId=(.*)\]#", 'showChatThumb' , $str);
@@ -2416,4 +2453,5 @@ var clientDB = new function(){
         return this.databases[dbName](object);
     };
 };
+
 

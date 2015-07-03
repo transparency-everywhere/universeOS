@@ -27,7 +27,7 @@ function reload($requests){
     $userCounter = 0;
     $eventCounter = 0;
     $messageCounter = 0;
-    
+    $fingerprint = $requests[0]['fingerprint'];
     foreach($requests AS $request){
         switch($request['action']){
             case'buddylist':
@@ -41,6 +41,9 @@ function reload($requests){
             case'IM':
                 if($request['subaction'] == 'sync'){
                     $im = new im();
+                    
+                    //in case of different clients with different sessions, here needs to be the client_id or something
+                    
                     $messagesToSync = $im->checkForMessages($request['data']['last_message_received']);
                     foreach($messagesToSync AS $messageData){
                         if(($messageData['receiver'] == getUser())&&($messageData['read']==1)){

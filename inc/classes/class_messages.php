@@ -134,7 +134,7 @@ class message{
 		    $message = universe::universeText($message);
 			
 			//show message
-		              echo '<div class="box-shadow chatMessage '.$class.'" data-id="'.$chatData['message'].'">';
+		              echo '<div class="box-shadow chatMessage '.$class.'" data-id="'.$chatData['id'].'">';
 		              	echo '<span class="username">';
 						echo showUserPicture($authorid, "15");
 						echo $authorName;

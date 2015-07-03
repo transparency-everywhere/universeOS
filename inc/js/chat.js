@@ -124,6 +124,8 @@ function chatDecrypt(userid){
     	
     	
     $('.chatMessage_'+userid).each(function(){
+        
+        
 
             //clear intervall which calls this function
             if($('.chatMessage_'+userid).length !== 0){
