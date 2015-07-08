@@ -2200,7 +2200,7 @@ ul .elementSettings {
 
 #chat .chatInput{
 	width: 60%; 
-	margin-bottom: -1px; 
+	margin-top: 3px; 
 	height: 40px;
 	-o-border-radius: 0px;
 	-moz-border-radius: 0px;
@@ -2246,8 +2246,8 @@ ul .elementSettings {
 .chatAdditionalSettings{
 	display:none;
 	position: absolute;
-	bottom: 40px;
-	left: 0px;
+	bottom: 60px;
+	right: 0px;
 	padding: 4px;
 	font-size: 8pt;
 	background-color: rgba(0, 0, 0, 0.8);
@@ -2263,6 +2263,12 @@ ul .elementSettings {
 
 .chatAdditionalSettings .smiley{
 	cursor: pointer;
+}
+
+.smiley{
+    width: 20px;
+    height:20px;
+    display: inline-block;
 }
 
 .chatAdditionalSettings a, .chatAdditionalSettings a:link{

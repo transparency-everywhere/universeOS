@@ -249,8 +249,158 @@ var gui = new function(){
     };
 };
 
+
+var session = new function(){
+    this.getGUID = function(){
+        //https://andywalpole.me/#!/blog/140739/using-javascript-create-guid-from-users-browser-information
+        var nav = window.navigator;
+        var screen = window.screen;
+        var guid = nav.mimeTypes.length;
+        guid += nav.userAgent.replace(/\D+/g, '');
+        guid += nav.plugins.length;
+        guid += screen.height || '';
+        guid += screen.width || '';
+        guid += screen.pixelDepth || '';
+        return guid;
+    };
+    
+    /**
+    * @function _guid
+    * @description Creates GUID for user based on several different browser variables
+    * It will never be RFC4122 compliant but it is robust
+    * @returns {Number}
+    * @private
+    */
+    this.getFingerprint = function(){
+        
+        
+        var guid = this.getGUID();
+        
+        
+        //hash the guid and return it
+	var salt = getSalt('auth', 'user_'+User.userid, localStorage.currentUser_shaPass);
+        var fingerprint =  hash.SHA512(guid+salt);
+        
+        //c.heck if fingerprint matches the one in a set cookie -> if not, update the fingerprint..
+        if(this.getSessionCookie().length&&this.getSessionCookie() != fingerprint){
+            this.updateFingerprintOnServer(this.getSessionCookie(), fingerprint,function(){
+                session.saveSessionCookie(fingerprint);
+            });
+        }
+
+        //setCookie('session_guid', guid, timeInDays);
+        
+        return fingerprint;
+    };
+    this.updateFingerprintOnServer = function(old_fingerprint, new_fingerprint, callBack){
+        api.query('api/sessions/updateFingerprint/', {old_fingerprint:old_fingerprint, new_fingerprint:new_fingerprint}, callBack);
+    };
+    this.showCreateSessionForm = function(){
+        
+    };
+    
+    this.create = function(type, title, callBack){
+        api.query('api/sessions/create/', {type:type, title:title, fingerprint: session.getFingerprint()},function(cookie_id){
+            if(typeof callBack === 'function'){
+                callBack(cookie_id);
+            }
+        });
+    };
+    
+    this.saveSessionCookie = function(guid, timeInDays){
+            setCookie('session_guid', guid, timeInDays);
+    };
+    this.getSessionCookie = function(){
+       return getCookie('session_guid');
+    };
+    this.updateSessionInfo = function(key, value, callback){
+        api.query('api/sessions/updateSessionInfo/', {key:key, value:value, fingerprint: session.getFingerprint()},function(){
+            if(typeof callback === 'function'){
+                callback();
+            }
+        });
+    };
+    this.getSessionInfo = function(callback){
+        return api.query('api/sessions/getSessionInfo/', {fingerprint:session.getFingerprint()}, callback);
+    };
+    
+    this.load = function(sessionInfo){
+        
+            im.lastMessageReceived = sessionInfo.lastMessageReceived;
+    };
+    
+    this.showAddSessionForm = function(){
+        
+        var formModal = new gui.modal();
+        
+        var fieldArray = [];
+        var options = [];
+        options['headline'] = '';
+        options['buttonTitle'] = 'Save';
+        options['noButtons'] = true;
+        
+        var field0 = [];
+        field0['caption'] = '';
+        field0['inputName'] = 'html';
+        field0['type'] = 'html';
+        field0['value'] = 'Should the session be saved permanent or should it be permanent?<br/><br/>';
+        field0['advanced'] = false;
+        fieldArray[0] = field0;
+        
+        var captions = ['permanent', 'temporarily'];
+        var type_ids = ['permanent', 'temporarily'];
+        
+        var field1 = [];
+        field1['caption'] = 'Type: ';
+        field1['inputName'] = 'type';
+        field1['values'] = type_ids;
+        field1['captions'] = captions;
+        field1['type'] = 'dropdown';
+        fieldArray[1] = field1;
+        
+        var field2 = [];
+        field2['caption'] = 'Title: ';
+        field2['inputName'] = 'title';
+        field2['type'] = 'text';
+        field2['value'] = navigator.sayswho;
+
+        fieldArray[2] = field2;
+        
+        
+        
+        
+        
+        var modalOptions = {};
+        modalOptions['buttonTitle'] = 'Add Session';
+        
+        modalOptions['action'] = function(){
+            var callback = function(){
+                
+                //save session cookie, in case the browser updates or an plugin is installed
+                session.saveSessionCookie(session.getGUID(), 31);
+                gui.alert('The element has been added');
+                $('.blueModal').remove();
+                universe.reloadState = true;
+            };
+            session.create($('#addSessionFormContainer #type').val(), $('#addSessionFormContainer #title').val(), callback);
+        };
+        formModal.init('Unrecognized Browser', '<div id="addSessionFormContainer"></div>', modalOptions);
+        gui.createForm('#addSessionFormContainer',fieldArray, options);
+        
+        $('#addSessionFormContainer #type').change(function(){
+            console.log($(this).val());
+            if($(this).val() === 'temporarily')
+                $('#addSessionFormContainer #title').hide();
+            
+            else if($(this).val() === 'permanent')
+                $('#addSessionFormContainer #title').show();
+        })
+    };
+};
+
 var universe = new function(){
     this.notificationArray = [];
+    this.reloadState = true;
     this.init = function(){
         
         gui.loadScript('inc/js/privacy.js');
@@ -297,8 +447,6 @@ var universe = new function(){
         
         gui.loadScript('inc/js/shortcuts.js');
         
-        gui.loadScript('inc/js/session.js');
-        
         applications.init();
         
         //init draggable windows
@@ -310,11 +458,24 @@ var universe = new function(){
         //init bootstrap alert
         $(".alert").alert();
         
-        //init reload
+        
+        
+        //init reload and load sessionInformation
         if(proofLogin()){
+            universe.sessionInfo = session.getSessionInfo();
+            
+            if(universe.sessionInfo.length === 0){
+                universe.reloadState = false;
+                session.showAddSessionForm();
+            }
+            session.load(universe.sessionInfo);
+            
+            
+            
             setInterval(function()
             {
-                universe.reload();
+                if(universe.reloadState)
+                    universe.reload();
             }, 5000);
         }
 
@@ -328,7 +489,7 @@ var universe = new function(){
         //fetch request data like open filebrowsers & feeds
         var requests = [];
         
-        requests.push({'fingerprint':session.getFingerprint()});
+        requests[0] = {'fingerprint':session.getFingerprint()};
         
         //push uff documents to request
         $.each(reader.uffChecksums,function(index, value){
@@ -342,7 +503,7 @@ var universe = new function(){
                                                             }
                         });
                     }
-                });
+        });
         
         if(proofLogin())
         //push buddylist checksum
@@ -388,9 +549,10 @@ var universe = new function(){
         
         //@async
         var temp = this;
-        $.each(response, function(key, value){
-            temp.handleReloadTypes(value);
-        });
+        if(response)
+            $.each(response, function(key, value){
+                temp.handleReloadTypes(value);
+            });
         
     };
     this.generateMessage = function(userid, message){
@@ -398,8 +560,6 @@ var universe = new function(){
     };
     this.handleReloadTypes = function(responseElement){
         switch(responseElement.action){
-            
-            
             case'buddylist':
                 if(responseElement.subaction === 'reload'){
                     buddylist.reload();
@@ -486,6 +646,13 @@ var universe = new function(){
                 if(responseElement.subaction === 'sync'){
                     feed.reload(responseElement.data.type, responseElement.data.typeId);
                 };
+                break;
+                
+            case 'sessions':
+                if(responseElement.subaction === 'not_found'){
+                    universe.reloadState = false;
+                    session.showAddSessionForm();
+                }
                 break;
         };
     };
@@ -921,52 +1088,52 @@ function universeTime(timestamp){
 function universeText(string){
     
     
-var smileys = [];
-smileys.push([['(yes)', '(y)'], 'yes']);
-smileys.push([[';)'], 'wink']);
-smileys.push([['O.o', 'O_o', 'O_ó'], 'weird']);
-smileys.push([[':P', ':p'], 'tongue']);
-smileys.push([[':O', ':o', 'O_O'], 'surprised']);
-smileys.push([['(s)', '(sun)'], 'sun']);
-smileys.push([['*'], 'star']);
-smileys.push([[':|'], 'speechless']);
-smileys.push([[':)'], 'smile']);
-smileys.push([['(z)'], 'sleep']);
-smileys.push([[':/'], 'skeptic']);
-smileys.push([[':('], 'sad']);
-smileys.push([['(p)','(puke)'], 'puke']);
-smileys.push([['(n)'], 'no']);
-smileys.push([[':x'], 'mute']);
-smileys.push([['>:('], 'angry']);
-smileys.push([['-.-','-_-'], 'annoyed']);
-smileys.push([['(a)','(anon)'], 'anon']);
-smileys.push([['8)'],'cool']);
-smileys.push([[":'("],'cry']);
-smileys.push([[':3'],'cute']);
-smileys.push([['3:)'],'devil']);
-smileys.push([['(d)','(dino)'],'dino']);
-smileys.push([[']:)'],'evil']); 
-smileys.push([['>:o', '>:O'],'furious']);
-smileys.push([['^_^'],'happy']);
-smileys.push([['<3'],'heart']);
-smileys.push([[':*',':-*'],'kiss']);
-smileys.push([[':D'],'laugh']);
-smileys.push([['(m)','(music)'],'music']);
-for(var index in smileys){
-    var smiley = smileys[index];
-    if(smiley[0].length > 1){
-        for(var codeIndex in smiley[0]){
-            string = string.replace(smiley[0][codeIndex], smileys[index][1]);
+    var smileys = [];
+    smileys.push([['(yes)', '(y)'], 'yes']);
+    smileys.push([[';)'], 'wink']);
+    smileys.push([['O.o', 'O_o', 'O_ó'], 'weird']);
+    smileys.push([[':P', ':p'], 'tongue']);
+    smileys.push([[':O', ':o', 'O_O'], 'surprised']);
+    smileys.push([['(s)', '(sun)'], 'sun']);
+    smileys.push([['*'], 'star']);
+    smileys.push([[':|'], 'speechless']);
+    smileys.push([[':)'], 'smile']);
+    smileys.push([['(z)'], 'sleep']);
+    smileys.push([[':/'], 'skeptic']);
+    smileys.push([[':('], 'sad']);
+    smileys.push([['(p)','(puke)'], 'puke']);
+    smileys.push([['(n)'], 'no']);
+    smileys.push([[':x'], 'mute']);
+    smileys.push([['>:('], 'angry']);
+    smileys.push([['-.-','-_-'], 'annoyed']);
+    smileys.push([['(a)','(anon)'], 'anon']);
+    smileys.push([['8)'],'cool']);
+    smileys.push([[":'("],'cry']);
+    smileys.push([[':3'],'cute']);
+    smileys.push([['3:)'],'devil']);
+    smileys.push([['(d)','(dino)'],'dino']);
+    smileys.push([[']:)'],'evil']); 
+    smileys.push([['>:o', '>:O'],'furious']);
+    smileys.push([['^_^'],'happy']);
+    smileys.push([['<3'],'heart']);
+    smileys.push([[':*',':-*'],'kiss']);
+    smileys.push([[':D'],'laugh']);
+    smileys.push([['(m)','(music)'],'music']);
+    for(var index in smileys){
+        var smiley = smileys[index];
+        if(smiley[0].length > 1){
+            for(var codeIndex in smiley[0]){
+                string = string.replace(smiley[0][codeIndex], '<span class="smiley emoticon-'+smileys[index][1]+'"></span>');
+            }
+        }else{
+            string = string.replace(smileys[index][0][0], '<span class="smiley emoticon-'+smileys[index][1]+'"></span>');
         }
-    }else{
-        string = string.replace(smileys[index][0][0], smileys[index][1]);
     }
-}
 
     string = string.replace("#(^|[^\"=]{1})(http://|ftp://|mailto:|https://)([^\s<>]+)([\s\n<>]|$)#sm","\\1<a target=\"_blank\" href=\"\\2\\3\">\\3</a>\\4");
        // # Links
         //$str = preg_replace_callback("#\[itemThumb type=(.*)\ typeId=(.*)\]#", 'showChatThumb' , $str);
-   return string;
+    return string;
 };
 
 function proofLogin(){
@@ -2455,3 +2622,19 @@ var clientDB = new function(){
 };
 
 
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    }
+    return "";
+}

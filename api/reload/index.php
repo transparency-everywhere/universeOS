@@ -19,6 +19,7 @@ include('../../inc/config.php');
 include('../../inc/functions.php');
 
 function reload($requests){
+    require('../../inc/classes/class_sessions.php');
     $user = getUser();
     
     $buddylist = new buddylist();
@@ -27,7 +28,15 @@ function reload($requests){
     $userCounter = 0;
     $eventCounter = 0;
     $messageCounter = 0;
+    
+    //if the client fingerprint isn't found for user()->push result to show "add session popup"
     $fingerprint = $requests[0]['fingerprint'];
+    $sessions = new sessions();
+    if(!$sessions->checkFingerprint($fingerprint)){
+        $result[] = array('action'=>'sessions','subaction'=>'not_found');
+    }
+//    if()
+    
     foreach($requests AS $request){
         switch($request['action']){
             case'buddylist':
@@ -50,7 +59,8 @@ function reload($requests){
                             $messageCounter++;
                         }
                     }
-                    $result[] = array('action'=>'IM','subaction'=>'sync', 'data'=>$messagesToSync);
+                    if($messagesToSync)
+                        $result[] = array('action'=>'IM','subaction'=>'sync', 'data'=>$messagesToSync);
                 }
                 break;
             case 'UFF':

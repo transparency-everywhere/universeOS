@@ -57,19 +57,20 @@ if(empty($_GET['initter'])){
       </div>
       <div class="chatAdditionalSettings" onclick="$(this).hide(); return true;">
           <ul>
-              <li><a class="smiley smiley1" onclick="addStrToChatInput('<?=$buddyid;?>', ':\'(');"></a><a class="smiley smiley2" onclick="addStrToChatInput('<?=$buddyid;?>', ':|');"></a><a class="smiley smiley3" onclick="addStrToChatInput('<?=$buddyid;?>', ';)');"></a><a class="smiley smiley4" onclick="addStrToChatInput('<?=$buddyid;?>', ':P');"></a></li>
-              <li><a class="smiley smiley5" onclick="addStrToChatInput('<?=$buddyid;?>', ':D');"></a><a class="smiley smiley6" onclick="addStrToChatInput('<?=$buddyid;?>', ':)');"></a><a class="smiley smiley7" onclick="addStrToChatInput('<?=$buddyid;?>', ':(');"></a><a class="smiley smiley8" onclick="addStrToChatInput('<?=$buddyid;?>', ':-*');"></a></li>
-              <li><a href="#" onclick="popper('doit.php?action=chatSendItem&buddy=<?php echo $buddyData['userid'];?>');">Send File</a></li>
+              <li><a class="smiley emoticon-smile" data-code=":)"></a><a class="smiley emoticon-tongue" data-code=":p"></a><a class="smiley emoticon-wink" data-code=";)"></a><a class="smiley emoticon-surprised" data-code=":o"></a></li>
+              <li><a class="smiley emoticon-laugh" data-code=":D"></a><a class="smiley emoticon-cute" data-code=":3"></a><a class="smiley emoticon-sad" data-code=":("></a><a class="smiley emoticon-cry" data-code=":'("></a></li>
+              <li><a href="#" onclick="popper('doit.php?action=chatSendItem&buddy=<?php echo $buddyData['userid'];?>');" class="sendFile">Send File</a></li>
           </ul>
       </div>
       <footer>
           <center style="margin-top: 6px;">
               <form action="#" method="post" target="submitter"  autocomplete="off" onsubmit="chatMessageSubmit('<?=$buddyid;?>'); return false;">
-                  <a class="btn" onclick="$('.chatAdditionalSettings').toggle();">
-                      <i class="icon-plus"></i>
-                  </a>
-                  <input type="text" placeholder="type a message..." name="message" class="input border-radius chatInput" id="chatInput_<?=$buddyid;?>" style="">
-				  <input type="hidden" name="cryption" value="false" id="chatCryptionMarker_<?=$buddyid;?>">
+                    <a class="btn pull-right" onclick="$('.chatAdditionalSettings').toggle();">
+                        <i class="icon icon-paperclip"></i>
+                    </a>
+                    <input type="text" placeholder="type a message..." name="message" class="input border-radius chatInput pull-right" id="chatInput_<?=$buddyid;?>" style="">
+                    <input type="hidden" name="cryption" value="false" id="chatCryptionMarker_<?=$buddyid;?>">
+
               </form>
           </center>
       </footer>

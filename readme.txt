@@ -10,6 +10,8 @@ Video
 
 
 Update
+    +sessions
+
     Delete Users where cypher is md5 or sha512
 
     user
@@ -36,6 +38,10 @@ Update
     
 
 todo
+    docu
+        usage of document.cookie
+            session
+
     get rid of
         mysql_query
         $.post, $.ajax

@@ -15,7 +15,7 @@
 
 
 var im = new function(){
-    this.lastMessageReceived = 1;
+    this.lastMessageReceived;
     this.openChatWindows = []; //array(userid1, userid2, userid3 etc...)
     
     //opens message either as a notification, as a chat window or updates the chatwindow
@@ -37,9 +37,10 @@ var im = new function(){
     //proceeds data from reload function
     this.sync = function(data){
         $.each(data, function(key,value){
-            
-            if(value.id > im.lastMessageReceived)
+            if(parseInt(value.id) > parseInt(im.lastMessageReceived) || typeof im.lastMessageReceived === 'undefined'){
                 im.lastMessageReceived = parseInt(value.id);
+                session.updateSessionInfo('lastMessageReceived',parseInt(value.id));
+            }
             
             im.openMessage(value);
         });

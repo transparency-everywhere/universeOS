@@ -66,6 +66,12 @@ var chat = new function(){
 
 
         }
+        $('.chatAdditionalSettings a').unbind('click');
+        $('.chatAdditionalSettings a').bind('click', function(){
+            var code = $(this).attr('data-code');
+            var $chatInput = $(this).parent().parent().parent().parent().find('.chatInput');
+            $chatInput.val($chatInput.val()+code);
+        });
     };
 };
 
@@ -155,11 +161,11 @@ function chatDecrypt(userid){
             }else{
 
 
-            var privateKey = cypher.getPrivateKey('user', localStorage.currentUser_userid);
+                var privateKey = cypher.getPrivateKey('user', localStorage.currentUser_userid);
 
 
-            //encrypt random key with privateKey
-            var randKey = sec.asymDecrypt(privateKey, message[0]);
+                //encrypt random key with privateKey
+                var randKey = sec.asymDecrypt(privateKey, message[0]);
 
 
             }
@@ -167,15 +173,14 @@ function chatDecrypt(userid){
 
     if(randKey !== null){
         //encrypt message with random key
-                    console.log('sym');
         var content = htmlentities(sec.symDecrypt(randKey, message[1]));
 
             }else{
                     content = 'The key is not stored anymore';
             }
 
-
-            $(this).html(content);
+            
+            $(this).html(universeText(content));
             $(this).removeClass('chatMessage_'+userid);
     });
     return true;

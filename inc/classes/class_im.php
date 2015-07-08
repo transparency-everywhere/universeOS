@@ -29,35 +29,4 @@ class im {
  
 }
 
-class sessions{
-    
-    function createSession($title, $identifier){
-        
-        $db = new db();
-        $db->insert('sessions', array('title'=>$title, 'identifier'=>$identifier, 'user'=>getUser()));
-        
-    }
-    function getSessionInformation($session_identifier, $information_title){
-        
-        $db = new db();
-        $data = $db->select('sessions', array('user', getUser(), '&&', 'identifier', $session_identifier));
-        
-        $parsed_information = json_decode($data['sessionInfo']);
-        
-        return $parsed_information[$information_title];
-    }
-    function updateSessionInformation($session_identifier, $options){
-        //select data from db and parse json
-        $db = new db();
-        $data = $db->select('sessions', array('user', getUser(), '&&', 'identifier', $session_identifier));
-        $parsed_information = json_decode($data['sessionInfo']);
-        
-        foreach($options AS $index=>$value){
-            $parsed_information[$index] = $value;
-        }
-        $db->update('sessions', json_encode($options), array('user', getUser(), '&&', 'identifier', $session_identifier));
-    }
-    
-}
-
 
