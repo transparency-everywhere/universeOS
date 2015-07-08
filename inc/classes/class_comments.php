@@ -49,7 +49,7 @@ function addComment($type, $itemid, $author, $message){
     }
    
     function countComment($type, $itemid){
-        $result = mysql_query("SELECT * FROM comments WHERE type='$type' && typeid='$itemid' ORDER BY timestamp");
+        $result = mysql_query("SELECT `typeid` FROM `comments` WHERE type='".mysql_real_escape_string($type)."' && typeid='".mysql_real_escape_string($itemid)."'");
         $num_rows = mysql_num_rows($result);
         return $num_rows;
     }

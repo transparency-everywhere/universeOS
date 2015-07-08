@@ -324,6 +324,10 @@ var telescope = new function(){
         return html;
     };
     
+    this.appendResults = function(){
+        
+    };
+    
     this.query = function(query){
         this.applicationVar.show();
         var results = this.loadResults(query);

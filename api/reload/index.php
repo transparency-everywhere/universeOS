@@ -19,6 +19,7 @@ include('../../inc/config.php');
 include('../../inc/functions.php');
 
 function reload($requests){
+    require('../../inc/classes/class_sessions.php');
     $user = getUser();
     
     $buddylist = new buddylist();
@@ -27,6 +28,14 @@ function reload($requests){
     $userCounter = 0;
     $eventCounter = 0;
     $messageCounter = 0;
+    
+    //if the client fingerprint isn't found for user()->push result to show "add session popup"
+    $fingerprint = $requests[0]['fingerprint'];
+    $sessions = new sessions();
+    if(!$sessions->checkFingerprint($fingerprint)){
+        $result[] = array('action'=>'sessions','subaction'=>'not_found');
+    }
+//    if()
     
     foreach($requests AS $request){
         switch($request['action']){
@@ -41,13 +50,17 @@ function reload($requests){
             case'IM':
                 if($request['subaction'] == 'sync'){
                     $im = new im();
+                    
+                    //in case of different clients with different sessions, here needs to be the client_id or something
+                    
                     $messagesToSync = $im->checkForMessages($request['data']['last_message_received']);
                     foreach($messagesToSync AS $messageData){
                         if(($messageData['receiver'] == getUser())&&($messageData['read']==1)){
                             $messageCounter++;
                         }
                     }
-                    $result[] = array('action'=>'IM','subaction'=>'sync', 'data'=>$messagesToSync);
+                    if($messagesToSync)
+                        $result[] = array('action'=>'IM','subaction'=>'sync', 'data'=>$messagesToSync);
                 }
                 break;
             case 'UFF':

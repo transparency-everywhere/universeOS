@@ -18,7 +18,6 @@
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
 
-error_reporting(E_ALL);
 
 var_dump($_POST['values']);
 

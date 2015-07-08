@@ -211,7 +211,7 @@ class groups{
                             $db->insert('groupAttachments', $values);
                         }}
                         $folderCLass = new folder();
-                        $groupFolder = $folderCLass->create("3", $groupId, $userid, "$groupId//$groupId");
+                        $groupFolder = $folderCLass->create("3", $groupId, $userid, "$groupId//$groupId", false);
                         
                         //create thumb folders || NOT LISTED IN DB!
                         $path3 = universeBasePath."//upload//groupFiles//$groupId//thumb";

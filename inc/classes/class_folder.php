@@ -21,7 +21,7 @@ class folder {
         }
     }
 
-    function create($superiorFolder, $title, $user, $privacy) {
+    function create($superiorFolder, $title, $user, $privacy, $createFeed = true) {
 
         if (strpos($title, '/') == false) {
             $titleURL = urlencode($title);
@@ -31,7 +31,6 @@ class folder {
             $folderData = $dbClass->select('folders', array('id', $superiorFolder));
             $folderClass = new folder($superiorFolder);
             $folderpath = universeBasePath . '/' . $folderClass->getPath() . urldecode("$titleURL");
-            echo $folderpath;
             if (!file_exists("$folderpath")) {
                 mkdir($folderpath);
                 $time = time();
@@ -44,10 +43,12 @@ class folder {
                 $values['privacy'] = $privacy;
                 $db = new db();
                 $folderId = $db->insert('folders', $values);
-                $feed = "has created a folder";
-
-                $feedClass = new feed();
-                $feedClass->create($user, $feed, "", "showThumb", $privacy, "folder", $folderId);
+                
+                if($createFeed){
+                    $feed = "has created a folder";
+                    $feedClass = new feed();
+                    $feedClass->create($user, $feed, "", "showThumb", $privacy, "folder", $folderId);
+                }
                 //return true;
 
                 return $folderId;

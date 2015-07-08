@@ -17,6 +17,5 @@
 
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
-error_reporting(E_ALL);
 $playlistClass = new playlist($_POST['playlist']);
 echo $playlistClass->removeItem($_POST['order_id']);

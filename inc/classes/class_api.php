@@ -18,6 +18,18 @@ limitations under the License.
 */
 
 class api{
+        public function handleRequest($type, $request, $function){
+            switch($type){
+                case 'int':
+                    
+                    break;
+                case 'char':
+                    break;
+                
+                
+                $function($parameter);
+            }
+        }
 	public function useridToUsername($request){
 		if(is_numeric($request)){
 			//only a single request
