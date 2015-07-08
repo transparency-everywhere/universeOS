@@ -45,7 +45,7 @@ var filesystem =  new function() {
     
     this.openUploadTab = function(element){
         filesystem.applicationVar.show();
-        var tabContent = gui.loadPage('modules/filesystem/upload.php?element='+element); //left nav missing in this solution
+        var tabContent = gui.loadPage('modules/filesystem/upload.php?element='+element); //left nav missing in this solution filesystem.generateLeftNav()+
         filesystem.tabs.addTab('Upload', '', tabContent);
         //wird zu:
 //        filesystem.tabs.addTab('Upload '+element, '', filesystem.generateUploadTab(element));
