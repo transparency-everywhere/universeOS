@@ -778,9 +778,21 @@ var User = new function(){
     };
     this.getHistory = function(){
       return [
-          {type:'file', itemId: 2, timestamp: 123456},
-          {type:'link', itemId: 2, timestamp: 123456},
-          {type:'link', itemId: 'http://something.com', timestamp: 123456}
+          {type:'file', itemId: 2, title:'history dummy 1', timestamp: 123456},
+          {type:'link', itemId: 2, title:'history dummy 2', timestamp: 123456},
+          {type:'file', itemId: 2, title:'history dummy 3', timestamp: 123456},
+          {type:'element', itemId: 2, title:'history dummy 4', timestamp: 123456},
+          {type:'link', itemId: 'http://something.com', title:'history dummy 5', timestamp: 123456}
+          
+      ]  
+    };
+    this.getFavHistory = function(){
+      return [
+          {type:'file', itemId: 2, title:'history fav dummy 1', timestamp: 123456},
+          {type:'folder', itemId: 5, title:'history fav dummy 2', timestamp: 123456},
+          {type:'file', itemId: 2, title:'history fav 3', timestamp: 123456},
+          {type:'element', itemId: 2, title:'h f d 4', timestamp: 123456},
+          {type:'link', itemId: 'http://something.com', title:'h f d 5', timestamp: 123456}
           
       ]  
     };

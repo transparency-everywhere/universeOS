@@ -39,116 +39,184 @@ var reader = new function(){
         reader.applicationVar.show();
     };
     this.generateStartpage = function(){
+        console.log('generateStartpage');
         var html = '';
-        html += '<div>USERPICTURE Hidiho, '+ useridToUsername(User.userid) +', good to see you back!</div>';
-        html += '<div>';
-            html += '<ul>';
-                html += '<li>' + filesystem.generateIcon('home', 'blue') + '</li>';
-                html += '<li>Groups</li>';
-                html += '<li>Favorites</li>';
-                html += '<li>Playlist</li>';
-                html += '<li>My Files</li>';
-            html += '</ul>';
-        html += '</div>';
-        //alles ab hier wird dynamisch durch reader.initTabs() generiert
-        html += '<div>';
-            html += '<div>';
-                html += '<span>' + filesystem.generateIcon('clock', 'blue') + ' Display History</span>';
-            html += '</div>';
-            html += '<div>';
+        if(proofLogin()){
+            html += '<div>USERPICTURE Hidiho, '+ useridToUsername(User.userid) +', good to see you back!</div>';
+            html += '<div class="startpageNavi">';
                 html += '<ul>';
-                    html += '<li>File1</li><li>File2</li><li>File3</li><li>File4</li><li>File5</li>';
+                    html += '<li>' + filesystem.generateIcon('home', 'blue') + '</li>';
+                    html += '<li>Groups</li>';
+                    html += '<li>Favorites</li>';
+                    html += '<li>Playlist</li>';
+                    html += '<li>My Files</li>';
                 html += '</ul>';
             html += '</div>';
-            html += '<div>';
-                html += '<span>SHOW MORE FUNCTION</span>';
-            html += '</div>';
-        html += '</div>';
-        html += '<div>';
-            html += '<div>';
-                html += '<span>' + filesystem.generateIcon('suggestion', 'blue') + ' Popular in the universe</span>';
-            html += '</div>';
-            html += '<div>';
-                html += '<ul>';
-                    html += '<li>Featured1</li><li>Featured2</li><li>Featured3</li>';
-                html += '</ul>';
-            html += '</div>';
-            html += '<div>';
-                html += '<ul>';
-                    html += '<li>File1</li><li>File2</li><li>File3</li><li>File4</li><li>File5</li>';
-                html += '</ul>';
-            html += '</div>';
-            html += '<div>';
-                html += '<span>SHOW MORE FUNCTION</span>';
-            html += '</div>';
-        html += '</div>';
-        
+            //alles ab hier wird dynamisch durch reader.initTabs() generiert
+            html += reader.initTabs();
+
+//            html += '<div>';
+//                html += '<div>';
+//                    html += '<span>' + filesystem.generateIcon('clock', 'blue') + ' Display History</span>';
+//                html += '</div>';
+//                html += '<div>';
+//                    html += '<ul>';
+//                        html += '<li>File1</li><li>File2</li><li>File3</li><li>File4</li><li>File5</li>';
+//                    html += '</ul>';
+//                html += '</div>';
+//                html += '<div>';
+//                    html += '<span>SHOW MORE FUNCTION</span>';
+//                html += '</div>';
+//            html += '</div>';
+//            html += '<div>';
+//                html += '<div>';
+//                    html += '<span>' + filesystem.generateIcon('suggestion', 'blue') + ' Popular in the universe</span>';
+//                html += '</div>';
+//                html += '<div>';
+//                    html += '<ul>';
+//                        html += '<li>Featured1</li><li>Featured2</li><li>Featured3</li>';
+//                    html += '</ul>';
+//                html += '</div>';
+//                html += '<div>';
+//                    html += '<ul>';
+//                        html += '<li>File1</li><li>File2</li><li>File3</li><li>File4</li><li>File5</li>';
+//                    html += '</ul>';
+//                html += '</div>';
+//                html += '<div>';
+//                    html += '<span>SHOW MORE FUNCTION</span>';
+//                html += '</div>';
+//            html += '</div>';
+        } else {
+            //hier die "not logged in startpage" zusammenfriemeln
+            html = '';
+        }
         
         
         return html;
             
     }
-    this.initTabs = function(userid){
+    this.initTabs = function(){
+        console.log('initTabs');
         
-        var html;
+        var html = '';
             
-        var history_items = User.getHistory(); //get array with three dummy entries (functions.js)
+            
+        var history_items = User.getHistory(); //get array with 5 dummy entries (functions.js)
         
-        var group_items = groups.get(userid); //get groups of the user
+        var popular_items = filesystem.getPopularItemsArray(); //get popular public items
         
-        var fav_items; //get favorites of the user
+        var feature = true; //wtf feature?!
         
-        var playlist_items; //get playlists of the user
         
-        var myFiles_items; //get files of the user - machen wie in alter startseite (abfragen zusammenfassen) und dann via api als myFilesArray durchschleusen
+        var group_items = groups.getGroupArray(User.userid); //get groups of the user
+        
+        var popular_groups; //popular groups > public and with the highest membercount
+        
+        
+        var fav_history = User.getFavHistory(); //get latest 5 favorites of the user
+        
+        var fav_items = fav.getFavArray(User.userid); //get favorites of the user   
+        
+        
+        var playlist_items; //get playlists of the user !!!BEI MIR LASSEN SICH GERADE KEINE PLAYLISTS ERSTELLEN
+        
+        var popular_playlists; //get popular public playlists !!!BEI MIR LASSEN SICH GERADE KEINE PLAYLISTS ERSTELLEN
+        
+        
+        var myFiles_items; //get files of the user - looks like filesystem - machen wie in alter startseite (abfragen zusammenfassen) und dann via api als myFilesArray durchschleusen
 
-        html += '<div>';
+
+        html += '<div class="startpageTabs">';
         
             //generate home view
-            html += this.buildTab('home', 'clock', 'Display History', history_items, 'star', 'Popular in the universeOS', popular_items, feature);
+            html += this.buildTab('home', 'clock', 'Display History', history_items, 'suggestion', 'Popular in the universeOS', popular_items, feature);
 
             //generate groups view
-            html += this.buildTab('groups', 'groups', 'Your groups', group_items, 'star', 'Popular groups', popular_items);
+            html += this.buildTab('groups', 'groups', 'My groups', group_items, 'suggestion', 'Popular groups', popular_groups);
 
             //generate favorites view
-            html += this.buildTab('favorites', 'fav', 'Your favorites', fav_items);
-
-            //generate playlist view
-            html += this.buildTab('playlists', 'playlist', 'Your playlists', playlist_items, 'star', 'Popular playlists', popular_items);
-
-            //generate my files view
-            html += this.buildTab('myFiles', 'file', 'Your files', myFiles_items);
+            html += this.buildTab('favorites', 'clock', 'My latest favorites', fav_history, 'fav', 'All my favorites', fav_items);
+//
+//            //generate playlist view
+//            html += this.buildTab('playlists', 'playlist', 'Your playlists', playlist_items, 'suggestion', 'Popular playlists', popular_playlists);
+//
+//            //generate my files view
+//            html += this.buildTab('myFiles', 'file', 'My files', myFiles_items);
 
         html += '</div>';
+        return html;
         
     }
     this.buildTab = function(tab, iconA, titleA, itemsA, iconB, titleB, itemsB, feature){
+        console.log('buildTab');
         //generate view
-        html += '<div class="' + tab + '">';
-            html += '<div>';
-                html += filesystem.generateIcon(iconA, 'blue') + titleA;
+        var html = '';
+        html += '<div class="' + tab + ' readerStartTab">';
+            html += '<div class="' + tab + ' sectionA">';
+                html += '<div class="' + tab + ' iconA">';
+                    html += filesystem.generateIcon(iconA, 'blue');
+                html += '</div>';
+                html += '<div class="' + tab + ' titleA">';
+                    html += titleA;
+                html += '</div>';
+                html += '<div class="' + tab + ' itemsA">';
+                    html += '<ul>';
+                    if(typeof itemsA !== 'undefined' || itemsA !== undefined){
+                        var onclick = "";
+                        $.each(itemsA, function(key, value){
+                            if( value['type'] === 'element'){
+                                onclick = "onclick=\"elements.open('" + value['itemId'] + "'); return false;\"";
+                            } else if( value['type'] === 'file'){
+                                onclick = "onclick=\"reader.openFile('" + value['itemId'] + "'); return false;\"";
+                            } else if( value['type'] === 'link'){
+                                onclick = "onclick=\"reader.openLink('" + value['itemId'] + "'); return false;\"";
+                            }
+                            html += '<li ' + onclick + '>';
+                                html += '<div class="' + tab + ' itemsA icon">' + filesystem.generateIcon(value['type']) + '</div>';
+                                html += '<div class="' + tab + ' itemsA title">' + value['title'] + '</div>';
+                            html += '</li>';
+                        });
+                    };
+                    html += '</ul>';
+                html += '</div>';
             html += '</div>';
-            html += '<div>';
-                html += '<ul>';
-                    html += '<li>File1</li><li>File2</li><li>File3</li><li>File4</li><li>File5</li>';
-                html += '</ul>';
+            html += '<div class="' + tab + ' sectionB">';
+                html += '<div class="' + tab + ' iconB">';
+                    html += filesystem.generateIcon(iconB, 'blue');
+                html += '</div>';
+                html += '<div class="' + tab + ' titleB">';
+                    html += titleB;
+                html += '</div>';
+                if(feature){
+                    html += '<div class="' + tab + ' feature">';
+                        html += '<ul>';
+                            html += '<li>Featured1</li><li>Featured2</li><li>Featured3</li>';
+                        html += '</ul>';
+                    html += '</div>';
+                }
+                html += '<div class="' + tab + ' itemsB">';
+                    html += '<ul>';
+                    if(typeof itemsB !== 'undefined' || itemsB !== undefined){
+                        var onclick = "";
+                        $.each(itemsB, function(key, value){
+                            if( value['type'] === 'element'){
+                                onclick = "onclick=\"elements.open('" + value['itemId'] + "'); return false;\"";
+                            } else if( value['type'] === 'file'){
+                                onclick = "onclick=\"reader.openFile('" + value['itemId'] + "'); return false;\"";
+                            } else if( value['type'] === 'link'){
+                                onclick = "onclick=\"reader.openLink('" + value['itemId'] + "'); return false;\"";
+                            }
+                            html += '<li ' + onclick + '>';
+                                html += '<div class="' + tab + ' itemsB icon">' + filesystem.generateIcon(value['type']) + '</div>';
+                                html += '<div class="' + tab + ' itemsB title">' + value['title'] + '</div>';
+                            html += '</li>';
+                        });
+                    };
+                    html += '</ul>';
+                html += '</div>';
             html += '</div>';
         html += '</div>';
-        html += '<div>';
-            html += '<div>';
-                html += filesystem.generateIcon(iconB, 'blue') + titleB;
-            html += '</div>';
-            html += '<div>';
-                html += '<ul>';
-                    html += '<li>Featured1</li><li>Featured2</li><li>Featured3</li>';
-                html += '</ul>';
-            html += '</div>';
-            html += '<div>';
-                html += '<ul>';
-                    html += '<li>File1</li><li>File2</li><li>File3</li><li>File4</li><li>File5</li>';
-                html += '</ul>';
-            html += '</div>';
-        html += '</div>';
+        return html;
     }
     this.openFile = function(file_id){
         var fileData = filesystem.getFileData(file_id);

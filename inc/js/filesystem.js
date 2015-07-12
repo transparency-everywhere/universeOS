@@ -613,6 +613,17 @@ var filesystem =  new function() {
       api.query('api/files/report/', {file_id: file_id, reason:reason, message:message});
       callback();
     };
+              	
+    this.getPopularItemsArray = function(){
+        var items = folders.getItems('pupularity');            
+        var popArray = [];
+            $.each(items, function(key, value){
+                if(value['type'] === 'folder')
+                    value['data']['title'] = value['data']['name'];
+                popArray.push({type: value['type'], itemId: value['data']['id'], title: value['data']['title'], timestamp: ''});
+            });
+	return popArray;
+    };
 };
 //@param select folder/element
 function loadMiniFileBrowser($target, folder, element, level, showGrid, select){

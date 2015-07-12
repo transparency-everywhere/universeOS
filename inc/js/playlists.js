@@ -126,11 +126,13 @@ var playlists = new function(){
     //@param type - show or edit
     this.getUserPlaylists = function(type, user_id){
         if(typeof user_id === 'undefined')
-        var user_id = User.userid;
+            var user_id = User.userid;
         return api.query('api/playlists/getUserPlaylists/', { type : type, user_id: user_id});
     };
             
     
+    //returns all playlists which the group has access to
+    //@param type - show or edit
     this.getGroupPlaylists = function(type, group_id){
         return api.query('api/playlists/getGroupPlaylists/', { type : type, group_id:group_id});
     };

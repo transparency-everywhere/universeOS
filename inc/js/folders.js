@@ -44,6 +44,7 @@ var folders = new function(){
 	});
 	return result;
     };
+    
     this.update = function(folderId, parent_folder, title, privacy, callback){
         
         var result="";
