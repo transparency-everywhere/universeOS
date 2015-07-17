@@ -28,6 +28,17 @@ var fav = new function(){
 	});
 	return result;
     };
+    this.getFavArray = function(user){
+        var favs = this.select(user);
+        var favArray = [];
+        $.each(favs, function(key, value){
+            if(typeof value['data']['name'] !== 'undefined' && value['data']['name'] !== ""){
+                value['data']['title'] = value['data']['name'];
+            }
+            favArray.push({type:value['type'], itemId: value['data']['id'], title:value['data']['title'], timestamp: ''});
+        });
+        return favArray;
+    };
     this.show = function(user){
         var html = '<table width="100%">';		  			
         var favs = this.select(user);

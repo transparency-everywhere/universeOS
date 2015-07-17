@@ -200,6 +200,17 @@ var groups = new function(){
             return api.query('api/groups/getData/', { group_id : groupId });
             
         };
+        this.getGroupArray = function(userid){
+            
+            var groupIds = this.get(userid);
+            var groupArray = [];
+            $.each(groupIds, function(key, value){
+                var data = groups.getData(value);
+                groupArray.push({type:'group', itemId: data['id'], title:data['title'], timestamp: ''});
+            });
+            return groupArray;
+            
+        };
         this.deleteUserFromGroup = function(groupId, userId){
             
             

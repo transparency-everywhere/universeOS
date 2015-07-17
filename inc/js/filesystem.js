@@ -45,10 +45,10 @@ var filesystem =  new function() {
     
     this.openUploadTab = function(element){
         filesystem.applicationVar.show();
-//        var tabContent = this.generateLeftNav()+gui.loadPage('modules/filesystem/upload.php?element='+element);
-//        filesystem.tabs.addTab('Upload', '', tabContent);
+        var tabContent = gui.loadPage('modules/filesystem/upload.php?element='+element); //left nav missing in this solution filesystem.generateLeftNav()+
+        filesystem.tabs.addTab('Upload', '', tabContent);
         //wird zu:
-        filesystem.tabs.addTab('Upload '+element, '', filesystem.generateUploadTab(element));
+//        filesystem.tabs.addTab('Upload '+element, '', filesystem.generateUploadTab(element));
     }
     
     
@@ -485,6 +485,7 @@ var filesystem =  new function() {
     icons['fav'] = 'heart';
     icons['clock'] = 'clock';
     icons['suggestion'] = 'star';
+    icons['star'] = 'star';
     icons['playlist'] = 'playlist';
     icons['play'] = 'play';
     icons['location'] = 'location';
@@ -530,7 +531,7 @@ var filesystem =  new function() {
     icons['twitter'] = 'sc-twitter';
     icons['vk'] = 'sc-vk';
 
-    if(typeof fileType === 'undefined' || fileType === 'undefined' || icons[fileType] === 'undefined'){
+    if(typeof fileType === 'undefined' || fileType === undefined || icons[fileType] === 'undefined'){
         icons[fileType] = 'archive'; //should be replaced with unknown file icon
     }
     if(color === 'grey' || color === 'gray'){
@@ -539,17 +540,17 @@ var filesystem =  new function() {
     if(color === 'blue'){
         color = 'blue';
     }
-    if(typeof color === 'undefined' || color === 'undefined' || color !== 'white' && color !== 'icon' && color !== 'blue'){
+    if(typeof color === 'undefined' || color === undefined || color !== 'white' && color !== 'icon' && color !== 'blue'){
         color = 'dark';
     }
     
-    if(typeof id === 'undefined' || id === 'undefined' || id === ''){
+    if(typeof id === 'undefined' || id === undefined || id === ''){
         identifier = '';
     } else {
         identifier = ' id="' + id + '"';
     }
     
-    if(typeof onclick === 'undefined' || onclick === 'undefined' || onclick === ''){
+    if(typeof onclick === 'undefined' || onclick === undefined || onclick === ''){
         onclicker = '';
     } else {
         onclicker = ' onclick="' + onclick + '"';
@@ -611,6 +612,17 @@ var filesystem =  new function() {
     this.reportFile = function(file_id, reason, message, callback){
       api.query('api/files/report/', {file_id: file_id, reason:reason, message:message});
       callback();
+    };
+              	
+    this.getPopularItemsArray = function(){
+        var items = folders.getItems('pupularity');            
+        var popArray = [];
+            $.each(items, function(key, value){
+                if(value['type'] === 'folder')
+                    value['data']['title'] = value['data']['name'];
+                popArray.push({type: value['type'], itemId: value['data']['id'], title: value['data']['title'], timestamp: ''});
+            });
+	return popArray;
     };
 };
 //@param select folder/element

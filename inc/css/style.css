@@ -96,11 +96,6 @@ h3{
 	margin-bottom:0px;
 }
 
-.greyHover:hover, .greyHover .active{
-    background: #cfd8dc;
-    cursor: pointer;
-}
-
 /*defines content of a window with overflow auto - etc.*/
 .windowContent{
     position: absolute;
@@ -1087,6 +1082,21 @@ span.icon.blue-chevron-down {}
     font-size: 16px; /* Näherungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: center;
+}
+
+#filesystem .fileBrowser {
+}
+
+#filesystem .fileBrowser .filetable{
+    width: 100%;
+}
+
+#filesystem .fileBrowser .greyHover{
+}
+
+#filesystem .fileBrowser .greyHover:hover, .greyHover .active{
+    background: #cfd8dc;
+    cursor: pointer;
 }
 
 #filesystem .fileBrowser table.filetable > tr {

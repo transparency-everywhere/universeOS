@@ -14,8 +14,9 @@ distributed under the License is distributed on an "AS IS" BASIS,
 See the License for the specific language governing permissions and
 limitations under the License.
 
-@author nicZem for Tranpanrency-everywhere.com
-*/
+       @author nicZem for transparency-everywhere.com
+       @author pabst for transparency-everywhere.com
+ */
 
 class api{
         public function handleRequest($type, $request, $function){
@@ -151,5 +152,23 @@ class api{
 			}
 			
 		
+	}
+	public function tempFileUpload(){
+//					case 'uploadTemp':
+//						
+//						//upload temp_file
+//                                                $file = $_FILES['Filedata'];
+//						
+//						$user = getUser();
+//                                                $filesClass = new files();
+//						$id = $filesClass->uploadTempfile($file, $_POST['element'], '', $privacy, $user);
+//                                                
+//						$li = "<li data-fileid=\"$id\">     <img src=\"gfx/icons/fileIcons/".$filesClass->getFileIcon($filesClass->getMime($file['name']))."\" height=\"16\">     ".$file['name']."      <input type=\"hidden\" name=\"uploadedFiles[]\" value=\"$id\">    <i class=\"icon-remove pointer pull-right\" onclick=\"$(this).parent(\\'li\\').remove()\"></i></li>";
+//						
+//						//add file to filelist in the uploader
+//						echo'$(".tempFilelist").append(\''.$li.'\');';
+//						
+//						//echo'</script>';
+//					break;
 	}
 }
