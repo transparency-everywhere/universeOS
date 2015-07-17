@@ -17,6 +17,5 @@
 
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
-error_reporting(E_ALL);
 $playlistClass = new playlist($_POST['playlist']);
 echo $playlistClass->pushItem(array('item_type'=>$_POST['item_type'],'item_id'=>$_POST['item_id']));

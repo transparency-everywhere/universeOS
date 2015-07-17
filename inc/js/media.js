@@ -66,15 +66,8 @@ var media = function(url){
       };
     };
     this.getTitle = function(){
-        var data = this.getData();
-        switch(this.type){
-            case'youtube':
-                return data.title.$t;
-                break;
-            case'vimeo':
-                return data[0].title;
-                break;
-        }
+        
+        return handlers[this.type].getTitle(this.URL);
     };
     this.loadPlayer = function($element, options){
         var videoID = this.getId();

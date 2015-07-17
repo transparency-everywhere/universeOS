@@ -148,10 +148,18 @@ var playlists = new function(){
         }else{
             itemList = '<ul class="dynamicList">';
             $.each(playlistFileContent.items, function(key, value){
-                console.log(value);
-                var info = item.getInfo(value.item_type, value.item_id);
+                if(value.item_type !== 'youtube'){
+                    value.item_type = value.item_type+'s';
+                }
+                
+                var output = '<div class="itemPreview">';
+                output += '<div class="previewImage">'+handlers[value.item_type].getThumbnail(value.item_id)+'</div>';
+                output += '<div class="caption">'+handlers[value.item_type].getTitle(value.item_id)+'</div>';
+                output += '<div class="actionArea"><a href="#" onclick="playlists.removeItemFromPlaylist(\''+playlist_id+'\',\''+value.order_id+'\');"><i class="icon white-minus"></i></a></div>';
+                output += '</div>';
+                
                 itemList += '<li class="playlistItem_'+playlist_id+'_'+value.order_id+'" >';
-                    itemList += item.generateInfo(info.image, info.title, '<a href="#" onclick="playlists.removeItemFromPlaylist(\''+playlist_id+'\',\''+value.order_id+'\');"><i class="icon white-minus"></i></a>');
+                    itemList += output;
                     itemList += '<span class="icon white-play" onclick="playlists.playPlaylistRow(\''+playlist_id+'\', \''+value.order_id+'\');"></span>';
                 itemList += '</li>';
             });
@@ -313,6 +321,7 @@ var playlists = new function(){
         modalOptions['action'] = function(){
             playlists.pushItem($('#pushItemToPlaylistFormContainer #playlist').val(), item_type, item_id, function(){
                 gui.alert('The item has been added to the playlist');
+                $('.blueModal').remove();
             });
         };
         
@@ -381,7 +390,6 @@ var playlists = new function(){
     
     this.playPlaylistRow = function(playlist_id, order_id){
         
-       
         var playlistData = playlists.getData(playlist_id);
         var playlistFileContent = filesystem.readFile(playlistData['file_id']);
         var tempThis = this;
@@ -393,6 +401,7 @@ var playlists = new function(){
                    //push playlist id to value array for playItem function
                    value['playlist_id'] = playlist_id;
                    
+                   playlists.openPlaylistTab(playlist_id);
                    playlists.playItem(value);
                    
                    //update activePlaylist
@@ -413,6 +422,8 @@ var playlists = new function(){
     this.playPlaylist = function(playlist_id){
         this.openPlaylistTab(playlist_id);
         this.playPlaylistRow(playlist_id, 0);
+        
+        $('.blueModal').remove();
     };
     
         

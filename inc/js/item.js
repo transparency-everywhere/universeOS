@@ -36,17 +36,19 @@ var item = new function(){
     
     
     this.generateItemPreview = function(item_type, item_id){
-        var itemInfo = item.getInfo(item_type, item_id);
-        
+        //var itemInfo = item.getInfo(item_type, item_id);
+        if(item_type !== 'youtube'){
+            item_type = item_type+'s';
+        }
         var html = '<table class=\'itemPreview\'>';
                 html += '<tr>';
                     html += '<td>';
-                        html += '<img src=\''+itemInfo.image+'\'/>';
+                        html += handlers[item_type].getThumbnail(item_id);
                     html += '</td>';
                     html += '<td>';
                         html += '<table>';
-                            html += '<tr><td><h3>'+itemInfo.title+'</h3></td></tr>';
-                            html += '<tr><td>'+itemInfo.subtitle+'</td></tr>';
+                            html += '<tr><td><h3>'+handlers[item_type].getTitle(item_id)+'</h3></td></tr>';
+                            html += '<tr><td>'+gui.shorten(handlers[item_type].getDescription(item_id),120)+'</td></tr>';
                         html += '</table>';
                     html += '</td>';
                 html += '</tr>';

@@ -55,19 +55,16 @@ var dashBoard = new function(){
 	
 	this.slideUp = function(){
             $('#dashGrid').animate({ marginBottom: 0}, // what we are animating
-                    1000, // how fast we are animating
-                    'linear', // the type of easing
-                    function() { // the callback
-                        $('#dock #toggleDashboardButton').removeClass('white-chevron-up').addClass('white-chevron-down');
+                    300, // how fast we are animating
+                    'linear');                        $('#dock #toggleDashboardButton').removeClass('white-chevron-up').addClass('white-chevron-down');
 
-                    });
                     this.view = 'up';
 	};
 	this.slideDown = function(){
 		
-			$('#dashGrid').animate({marginBottom: -300}, 300, function() {
-                                $('#dock #toggleDashboardButton').removeClass('white-chevron-down').addClass('white-chevron-up');
-			});
+			$('#dashGrid').animate({marginBottom: -300}, 300);
+                                                        $('#dock #toggleDashboardButton').removeClass('white-chevron-down').addClass('white-chevron-up');
+
 			this.view = 'down';
 	};
 	this.toggle = function(){

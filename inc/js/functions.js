@@ -278,7 +278,7 @@ var session = new function(){
         
         
         //hash the guid and return it
-	var salt = getSalt('auth', 'user_'+User.userid, localStorage.currentUser_shaPass);
+	var salt = getSalt('auth', User.userid, localStorage.currentUser_shaPass);
         var fingerprint =  hash.SHA512(guid+salt);
         
         //c.heck if fingerprint matches the one in a set cookie -> if not, update the fingerprint..
@@ -801,7 +801,7 @@ var User = new function(){
                 output += "            <td>";
                 output += "                <table>";
                 output += "                    <tr>";
-                output += "                        <td style=\"font-size: 16px;line-height: 17px;\" align=\"left\"><a href=\"#\" onclick=\"showProfile("+userid+");\">"+username+"<\/a><\/td>";
+                output += "                        <td style=\"font-size: 16px;line-height: 17px;\" align=\"left\"><a href=\"#\" onclick=\"User.showProfile("+userid+");\">"+username+"<\/a><\/td>";
                 output += "                    <\/tr>             ";
                 output += "                    <tr>";
                 output += "                        <td style=\"font-size: 12px;line-height: 23px;\">";
@@ -816,7 +816,7 @@ var User = new function(){
                 output += "            <td>";
                 output += "                <table>";
                 output += "                    <tr>";
-                output += "                        <td style=\"font-size: 10pt;\">&nbsp;"+username+"<\/td>";
+                output += "                        <td style=\"font-size: 10pt;\">&nbsp;<a href=\"#\" onclick=\"User.showProfile('"+userid+"')\">"+username+"<\/td>";
                 output += "                    <\/tr>             ";
                 output += "                    <tr>";
                 output += "                        <td style=\"font-size: 08pt;\">&nbsp;<i>";
@@ -841,11 +841,11 @@ var User = new function(){
         if(typeof profile_userdata['realname'] !== 'undefined'){
             realname = '<span class="realName">'+profile_userdata['realname']+'</span>';
         }
-        if(typeof profile_userdata.home !== 'undefined'){
+        if(typeof profile_userdata.home !== 'undefined' && profile_userdata.home.length > 0){
             city += '<span class="city">from '+profile_userdata.home+'</span>';
         }
-        if(typeof profile_userdata.place !== 'undefined'){
-            city += '<span class="home">from '+profile_userdata.home+'</span>';
+        if(typeof profile_userdata.place !== 'undefined' && profile_userdata.place.length > 0){
+            city += '<span class="place">lives in '+profile_userdata.place+'</span>';
         }
         
         var buttons = '';
@@ -931,8 +931,9 @@ var User = new function(){
                                 output += '</ul>';
                             output += '</div>';
                             
-                            output += '<div class="profile_tab info_tab">';
-                            
+                            //userinfo
+                            output += '<div class="profile_tab info_tab" style="padding:15px;">';
+                            var i = 0;
                                 $.each(profile_userdata, function(key, value){
                                     switch(key){
                                         case 'home':
@@ -947,15 +948,23 @@ var User = new function(){
                                         case 'university1':
                                             key = 'university';
                                             break;
+                                        case 'homefolder':
+                                            key = 0;
+                                            break;
                                     }
-                                    if(!is_numeric(key)){
+                                    if(!is_numeric(key)&&!empty(value)){
+                                        i++;
                                         output += '<span class="'+key+'"><label>'+key+'</label>'+value+'</span>';
                                     }
                                 });
+                                if(i === 0){
+                                    output += 'the user didn\'t published any user information';
+                                }
+                                
                             
                             output += '</div>';
                             
-                            
+                            //groups
                             output += '<div class="profile_tab groups_tab">';
                             
                                 output += '<ul>';
@@ -1249,6 +1258,7 @@ var search = new function(){
         }
     };
     this.initResultHandlers = function(query){
+        console.log(query);
                 item.initRightClick();
                 $('.resultList a:link, .resultList .icon-gear, .resultList .white-gear').unbind('click');
 		$('.resultList a:link').bind('click', function(){
@@ -1260,18 +1270,18 @@ var search = new function(){
                         $(this).parent().next('li').slideToggle();
                 });
                 
-                $('.dockSeachResult .loadAll a').click(function(){
-//                    var type = $(this).parent().attr('data-type');
-//                    $(this).parent().parent().children('ul').replaceWith(search.extendResults(query,type, 40, 0));
-//                    $(this).parent().remove();
-//                    search.initResultHandlers(query);
-
+                var openInTelescope = function(){
+                    telescope.query(query);
+                    search.toggleSearchMenu();
+                };
+                $('#searchMenu .loadAll a').unbind('click');
+                $('#searchMenu .loadAll a').bind('click', function(){
+                    openInTelescope();
                 });
                 
                 $('#searchMenu #openInTelescope').unbind('click');
                 $('#searchMenu #openInTelescope').bind('click', function(){
-                    telescope.query(query);
-                    search.toggleSearchMenu();
+                    openInTelescope();
                 });
     };
     this.extendResults = function(query, type, limit, offset){
@@ -1307,6 +1317,8 @@ var search = new function(){
             html += results.spotifies;
 
             $object.html(html);
+            
+            search.initResultHandlers(query);
         });
         
         
@@ -2484,10 +2496,11 @@ var handlers = {
                         return handler.getTitle('youtube', link);
                     },
                     getDescription : function(link){
-                        return handler.getDescription('youtube', link);
+                        return handler.getDescription('youtube', link).replace(/^"(.+(?="$))"$/, '$1');
                     },
                     getThumbnail : function(link){
-                        return '<img src="'+handler.getThumbnail('youtube', link)+'"/>'
+                        
+                        return '<img src=\''+handler.getThumbnail('youtube', link).replace(/^"(.+(?="$))"$/, '$1')+'\'/>';
                     },
                     query: function(query, offset, max_results){
                         return handler.query('youtube', query, offset, max_results);

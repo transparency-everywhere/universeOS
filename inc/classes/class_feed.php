@@ -25,7 +25,7 @@ class feed {
         $where = $this->generateWhere($type, $typeId, '0,1');
         
         $db = new db();
-        $data=$db->query("SELECT `id` FROM feed $where");
+        $data=$db->shiftResult($db->query("SELECT `id` FROM feed $where"), 'id');
         return $data['id'];
         
     }

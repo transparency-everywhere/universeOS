@@ -113,7 +113,7 @@ var registration = new function(){
                     support.loadArticle('Create secure passwords', function(data){
                         var jsonObject = JSON.parse(data);
                         var text = nl2br($(jsonObject.parse.text['*']+'').not('#source, .mw-editsection, #toc').text());
-                        registration.updateRegHintBox(text);
+                        registration.updateRegHintBox(text.replace(/\[edit\]/g, ''));
                     });
                 }
                 $('.registerBox p').html(help);

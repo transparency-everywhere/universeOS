@@ -90,7 +90,7 @@ var feed = new function(){
     this.generateSingleFeed = function(feedData){
         debug.log('generateSingleFeedInitalized...');
         
-        var feedContent = '<div class="feedContent">'+feed.feedText(feedData['feed'])+'fg</div>';
+        var feedContent = '<div class="feedContent">'+feed.feedText(feedData['feed'])+'</div>';
                 if(feedData['type'] === 'showThumb'){
                     debug.log('     showItemThumb');
                     feedContent += '<div class="feedAttachment">'+item.showItemThumb(feedData['attachedItem'], feedData['attachedItemId'])+'</div>';
@@ -260,7 +260,7 @@ var feed = new function(){
         output += "                                <input type=\"submit\" style=\"float:right;\" value=\"submit\" class=\"btn\">";
         output += "                        <\/div>";
         output += "                    <\/div>";
-        output += "                    <div id=\"addFeedPrivacy\" style=\"background: #030303\">";
+        output += "                    <div id=\"addFeedPrivacy\">";
         output += "                    <\/div>";
         output += "                    <\/form>";
         output += "                    <\/div>";

@@ -246,7 +246,7 @@ li.notHidden{
     padding: 20px;
     background: #607d8b;
     color: #FFF;
-    z-index: 9999;
+    z-index: 99999;
 }
 
 #searchMenu header #toggleSearchMenu{
@@ -278,6 +278,7 @@ li.notHidden{
 #searchMenu header ul.active{
     box-shadow:1px 3px 8px 0px rgba(0, 0, 0, 0.3);
     background-color: #37474f;
+    z-index:1;
 }
 
 #searchMenu header ul li{
@@ -1624,7 +1625,7 @@ color: #FFF;
     padding: 5px;
     z-index: 1;
     overflow: auto;
-    color: #FFFFFF;
+    background: #FFFFFF;
     display: none;
 }
 
@@ -2291,6 +2292,7 @@ color:#FFFFFF;
 
 
 .icon{
+    cursor:default;
     display: inline-block;
     width: 32px;
     height: 32px;
@@ -2565,12 +2567,17 @@ color:#FFFFFF;
             margin-top: 12px;
         }
         
-        #dock .icon{
+        #dock .white-search{
             height: 30px;
             width:30px;
-        
             cursor: pointer;
-}
+        }
+        
+        #dock .white-search, #dock .white-chevron-up, #dock .white-logout{
+            height: 30px;
+            width:30px;
+            cursor: pointer;
+        }
         
         #dock #logout{
             min-width: 10px;
@@ -3719,7 +3726,7 @@ margin-bottom: 3px;
 
 	#dashBoard{
 		bottom: 0;
-		z-index: 99999;
+		z-index: 99998;
 		position: absolute;
 		height: 250px;
 		padding: 0 10px;
@@ -3961,7 +3968,6 @@ margin-bottom: 3px;
 					position: relative;
 					font-size: 20px;
 					line-height: 30px;
-                                        color:#FFF;
                                 }
 				
 				.privacySettings ul{
