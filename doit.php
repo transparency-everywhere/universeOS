@@ -1786,7 +1786,29 @@ else if($_GET['action'] == "showItemThumb"){
                             </div>
                         </div>
                 </div>
-            <?    
+            <? 
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             }
 else if($_GET['action'] == "validateTempFile"){
     $classFile = new file($_POST['fileid']);
@@ -1796,6 +1818,14 @@ else if($_GET['action'] == "validateTempFile"){
 				 	echo'false';
 				
             }
+            
+            
+            
+            
+            
+            
+            
+            
 else if($_GET['action'] == "submitUploader"){
 			//handler for form submit in upload.php
 			//adds privacy and removes temp status
@@ -1844,7 +1874,7 @@ else if($_GET['action'] == "submitUploader"){
 					case 'uploadTemp':
 						
 						//upload temp_file
-            			$file = $_FILES['Filedata'];
+                                                $file = $_FILES['Filedata'];
 						
 						$user = getUser();
                                                 $filesClass = new files();
@@ -1857,6 +1887,10 @@ else if($_GET['action'] == "submitUploader"){
 						
 						//echo'</script>';
 						break;
+                                                
+                                                
+                                                
+                                                
 					case 'validateUpload':
 						
 						break;
