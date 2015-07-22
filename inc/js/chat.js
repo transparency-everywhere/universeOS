@@ -45,13 +45,13 @@ var chat = new function(){
         var username = useridToUsername(userid);
         
         var chatFrameHTML = chat.generateLeftFrame();
-            chatFrameHTML += '<div class="chatRightFrame">'+gui.loadPage("modules/chat/chatreload.php?buddy="+username+"")+'</div>';
+            chatFrameHTML += '<div class="chatRightFrame chatFrame_'+userid+'">'+gui.loadPage("modules/chat/chatreload.php?buddy="+username+"")+'</div>';
             
         
         chat.applicationVar.show();
       
       	//check if dialoge allready exists
-        if($("#test_"+ username +"").length == 0){
+        if($(".chatFrame_"+ userid).length == 0){
 
             userid = usernameToUserid(username);
             chat.tabs.addTab(username, '',chatFrameHTML);

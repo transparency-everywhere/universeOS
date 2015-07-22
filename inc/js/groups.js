@@ -204,6 +204,8 @@ var groups = new function(){
             
             var groupIds = this.get(userid);
             var groupArray = [];
+           if(!groupIds)
+               return groupArray;
             $.each(groupIds, function(key, value){
                 var data = groups.getData(value);
                 groupArray.push({type:'group', itemId: data['id'], title:data['title'], timestamp: ''});
