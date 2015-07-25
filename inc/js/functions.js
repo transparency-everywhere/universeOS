@@ -1566,7 +1566,7 @@ var support = new function(){
 
 var tabs = function(parentIdentifier){
     this.parentIdentifier = parentIdentifier;
-    this.tabHistory = [];
+    this.tabHistory = [0];  //start history with tab 0
 		this.init = function(){
                     parentIdentifier = this.parentIdentifier;
 			$(parentIdentifier).append('<div class="tabFrame"><header><ul></ul></header></div>');

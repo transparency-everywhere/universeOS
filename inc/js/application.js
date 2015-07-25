@@ -31,8 +31,8 @@ var applications = new function(){
         
         //reader
         var app = [];
-        app['title'] = 'reader';
-        app['source'] = 'reader.js';
+        app['title'] = 'Display';
+        app['source'] = 'reader.js'; //display was called reader before
         app['className'] = 'reader'; // name of the the javascript class object
         app['active'] = true;
         app['position'] = {width: 5, height:  4, top: 0, left: 4, hidden: true};
