@@ -161,21 +161,18 @@ var feed = new function(){
                     $( "#addFeedPrivacy" ).animate({ top: "100px" }, 500 );
                     privacy.init();
                 });
-                    $(this).focusout(function(){
-                        
-//                        if($('#feedInput').val().length == 0){
-//                            $( "#feedheader" ).animate({ height: "61px" }, 500 );
-//                            $( "#feedFrame" ).animate({ top: "61px" }, 500 );
-//                            $('#feedInputBar').slideUp(500);
-//                            $( "#addFeedPrivacy" ).animate({ top: "61px" }, 500 );
-//                            $('#addFeedPrivacy').slideUp(500);
-//
-//                        }
-                    });
             });
             
-            $('#feedInputForm').submit(function(){
-                $(this).submit();
+            $('#feedInputForm').submit(function(e){
+                e.preventDefault();
+                feed.create($('#feedInput').val(), $('#addFeedPrivacy .privacySettings  :input').serialize(),function(){
+                    $( "#feedheader" ).animate({ height: "61px" }, 500 );
+                    $( "#feedFrame" ).animate({ top: "61px" }, 500 );
+                    $('#feedInputBar').slideUp(500);
+                    $( "#addFeedPrivacy" ).animate({ top: "61px" }, 500 );
+                    $('#addFeedPrivacy').slideUp(500);
+                    feed.reload($('.feedMain .feedFrame').attr('data-type'));
+                });
                 $('#feedInput').val('');
             });
             

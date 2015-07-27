@@ -28,7 +28,7 @@ var reader = new function(){
         if(proofLogin())
             grid = {width: 8, height:  8, top: 0, left: 2, hidden: true};
         this.applicationVar = new application('reader');
-        this.applicationVar.create('Reader', 'url', 'modules/reader/index.php', grid);
+        this.applicationVar.create('Display', 'url', 'modules/reader/index.php', grid);
         
         
 	this.tabs = new tabs('#readerFrame');
