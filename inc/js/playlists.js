@@ -430,16 +430,20 @@ var playlists = new function(){
     
     this.getPlaylistArray = function(userid){
         var playlists = this.getUserPlaylists('show', userid);
-        if(playlists !== undefined){
-                var playlistArray = [];
-                var i = 0;
-                $.each(playlists, function(key, value){
-                    console.log(key);                  
-                    playlistArray.push({type:'group', itemId: value[key][i], title:value[key][i], timestamp: ''});
-                    i++;
-                });
-                return playlistArray;
-            }
+        var playlistArray = [];
+        if(playlists === undefined){
+            return playlistArray;
+        } else {
+            var i = 0;
+            var titles = playlists['titles'];
+            var ids = playlists['ids'];
+            
+            $.each(ids,function(index,value){               
+                playlistArray.push({type:'playlist', itemId: value, title: titles[index], timestamp: ''});
+                i++;
+            });
+            return playlistArray;
+        }
     };
     
         

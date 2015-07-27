@@ -1879,6 +1879,115 @@ ul .elementSettings {
     
 }
 
+#reader .readerStartpage .welcomearea {
+    height: 100px;
+}
+
+#reader .readerStartpage .navi ul {
+    margin: 0;
+    padding: 0;
+}
+
+#reader .readerStartpage .navi li {
+    display: inline-block;
+    float: left;
+    width: 23.33%;
+    height: 40px;
+    text-align: center;
+    background-color: #eceff1;
+    border-right: 1px solid #ffffff;
+}
+
+#reader .readerStartpage .navi li:first-of-type {
+    width: auto;
+}
+
+#reader .readerStartpage .tabs .singletab,  
+#reader .readerStartpage .tabs .singletab .sectionA > .itemsA,
+#reader .readerStartpage .tabs .singletab .sectionB > .itemsB, 
+#reader .readerStartpage .tabs .singletab .sectionA > .iconA, 
+#reader .readerStartpage .tabs .singletab .sectionB > .iconB  {
+    clear: both;
+}
+
+#reader .readerStartpage .tabs .singletab .sectionA > .itemsA,
+#reader .readerStartpage .tabs .singletab .sectionB > .itemsB {
+    margin: 20px 0 20px 0;
+}
+
+#reader .readerStartpage .tabs .singletab .sectionA > div, 
+#reader .readerStartpage .tabs .singletab .sectionA > .itemsA > ul > li, 
+#reader .readerStartpage .tabs .singletab .sectionB > div, 
+#reader .readerStartpage .tabs .singletab .sectionB > .itemsB > ul > li  {
+    float: left;
+}
+
+#reader .readerStartpage .tabs .singletab .sectionA > .titleA,
+#reader .readerStartpage .tabs .singletab .sectionB > .titleB {
+    font-family: Ubuntu;
+    color:  #00bcd4;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+
+#reader .readerStartpage .tabs .singletab ul > li {
+    float: left;
+    clear: none;
+    width: 130px;
+    margin: 2px;
+}
+
+#reader .readerStartpage .tabs .singletab ul > li div.icon {
+    display: block;
+    text-align: center;
+    width: 100%;
+    height: 70px;
+}
+
+#reader .readerStartpage .tabs .singletab ul > li div.icon span.icon {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    margin-top: 5px;
+    border-radius: 3px;
+    border-width: 1px;
+    border-color:  #dcdcdc;
+    border-style: solid;
+    background-color:  #ffffff;
+}
+
+#reader .readerStartpage .tabs .singletab ul > li:hover span.icons span.icon {
+    border-color:  #00bcd4;
+}
+
+#reader .readerStartpage .tabs .singletab ul > li div.title {
+    display: block;
+    text-align: center;
+    width: 100%;
+}
+
+#reader .readerStartpage .tabs {
+    
+}
+
+#reader .readerStartpage .tabs {
+    
+}
+
+#reader .readerStartpage {
+    
+}
+
+#reader .readerStartpage {
+    
+}
+
+#reader .readerStartpage {
+    
+}
+
 #reader .tabFrame .white-gradient > div {
     display: inline-block;
 }
