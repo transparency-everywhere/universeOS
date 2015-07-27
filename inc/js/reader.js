@@ -91,7 +91,7 @@ var reader = new function(){
             html = '';
         }
         
-        
+        console.log('generateStartpage done');
         return html;
             
     }
@@ -144,6 +144,7 @@ var reader = new function(){
             html += this.buildTab('myFiles', 'file', 'My files', myFiles_items);
 
         html += '</div>';
+        console.log('initTabs done');
         return html;
     }
     this.buildTab = function(tab, iconA, titleA, itemsA, iconB, titleB, itemsB, feature){
