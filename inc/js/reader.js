@@ -99,56 +99,55 @@ var reader = new function(){
         console.log('initTabs');
         
         var html = '';
-//            
-//            
-//        var history_items = User.getHistory(); //get array with 5 dummy entries (functions.js)
-//        
-//        var popular_items = filesystem.getPopularItemsArray(); //get popular public items
-//        
-//        var feature = true; //wtf feature?!
-//        
-//        
-//        var group_items = groups.getGroupArray(User.userid); //get groups of the user
-//        
-//        var popular_groups; //popular groups > public and with the highest membercount
-//        
-//        
-//        var fav_history = User.getFavHistory(); //get latest 5 favorites of the user
-//        
-//        var fav_items = fav.getFavArray(User.userid); //get favorites of the user   
-//        
-//        
-//        var playlist_items; //get playlists of the user !!!BEI MIR LASSEN SICH GERADE KEINE PLAYLISTS ERSTELLEN
-//        
-//        var popular_playlists; //get popular public playlists !!!BEI MIR LASSEN SICH GERADE KEINE PLAYLISTS ERSTELLEN
-//        
-//        
-//        var myFiles_items; //get files of the user - looks like filesystem - machen wie in alter startseite (abfragen zusammenfassen) und dann via api als myFilesArray durchschleusen
-//
-//
-//        html += '<div class="startpageTabs">';
-//        
-////            //generate home view
-////            html += this.buildTab('home', 'clock', 'Display History', history_items, 'suggestion', 'Popular in the universeOS', popular_items, feature);
-////
-////            //generate groups view
-////            html += this.buildTab('groups', 'groups', 'My groups', group_items, 'suggestion', 'Popular groups', popular_groups);
-////
-////            //generate favorites view
-////            html += this.buildTab('favorites', 'clock', 'My latest favorites', fav_history, 'fav', 'All my favorites', fav_items);
-////
-////            //generate playlist view
-////            html += this.buildTab('playlists', 'playlist', 'Your playlists', playlist_items, 'suggestion', 'Popular playlists', popular_playlists);
-////
-////            //generate my files view
-////            html += this.buildTab('myFiles', 'file', 'My files', myFiles_items);
-//
-//        html += '</div>';
-        console.log('lalala');
+            
+            
+        var history_items = User.getHistory(); //get array with 5 dummy entries (functions.js)
+        
+        var popular_items = filesystem.getPopularItemsArray(); //get popular public items
+        
+        var feature = true; //wtf feature?!
+        
+        
+        var group_items = groups.getGroupArray(User.userid); //get groups of the user
+        
+        var popular_groups; //popular groups > public and with the highest membercount
+        
+        
+        var fav_history = User.getFavHistory(); //get latest 5 favorites of the user
+        
+        var fav_items = fav.getFavArray(User.userid); //get favorites of the user   
+        
+        
+        var playlist_items; //get playlists of the user !!! .getUserPlaylists wirft net so den scheiß raus, wie geht das?!
+        
+        var popular_playlists; //get popular public playlists !!!
+        
+        
+        var myFiles_items; //get files of the user - looks like filesystem - machen wie in alter startseite (abfragen zusammenfassen) und dann via api als myFilesArray durchschleusen
+
+
+        html += '<div class="startpageTabs">';
+        
+            //generate home view
+            html += this.buildTab('home', 'clock', 'Display History', history_items, 'suggestion', 'Popular in the universeOS', popular_items, feature);
+
+            //generate groups view
+            html += this.buildTab('groups', 'groups', 'My groups', group_items, 'suggestion', 'Popular groups', popular_groups);
+
+            //generate favorites view
+            html += this.buildTab('favorites', 'clock', 'My latest favorites', fav_history, 'fav', 'All my favorites', fav_items);
+
+            //generate playlist view
+            html += this.buildTab('playlists', 'playlist', 'Your playlists', playlist_items, 'suggestion', 'Popular playlists', popular_playlists);
+
+            //generate my files view
+            html += this.buildTab('myFiles', 'file', 'My files', myFiles_items);
+
+        html += '</div>';
         return html;
     }
     this.buildTab = function(tab, iconA, titleA, itemsA, iconB, titleB, itemsB, feature){
-        console.log('buildTab');
+        console.log('buildTab ' + tab);
         //generate view
         var html = '';
         html += '<div class="' + tab + ' readerStartTab">';

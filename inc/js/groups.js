@@ -203,12 +203,14 @@ var groups = new function(){
         this.getGroupArray = function(userid){
             
             var groupIds = this.get(userid);
-            var groupArray = [];
-            $.each(groupIds, function(key, value){
-                var data = groups.getData(value);
-                groupArray.push({type:'group', itemId: data['id'], title:data['title'], timestamp: ''});
-            });
-            return groupArray;
+            if(groupIds !== undefined){
+                var groupArray = [];
+                $.each(groupIds, function(key, value){
+                    var data = groups.getData(value);
+                    groupArray.push({type:'group', itemId: data['id'], title:data['title'], timestamp: ''});
+                });
+                return groupArray;
+            }
             
         };
         this.deleteUserFromGroup = function(groupId, userId){
