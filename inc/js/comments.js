@@ -86,9 +86,21 @@ var comments = new function(){
         return html;
     };
     
-    this.count = function(type, item_id){
-        
-        return api.query('api/item/comments/count/', {'type':type, 'item_id':item_id});
+    this.count = function(type, itemId){
+        //if type or itemId is array, handle as request for multiple items
+        if(typeof type === 'object' || typeof itemId === 'object'){
+            var requestType = type;
+            var requests = [];
+            $.each(itemId,function(index, value){
+                //you can also enter a single type instead of multiple values
+                if(typeof type === 'object'){
+                    requestType = type[index];
+                }
+                requests.push({ type : requestType, item_id: value});
+            });
+            return api.query('api/item/comments/count/', { request: requests});
+        }else
+            return api.query('api/item/comments/count/', { request: [{type : type, item_id: itemId}]});
     };
     
   this.loadSubComments = function(commentId){

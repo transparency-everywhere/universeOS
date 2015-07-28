@@ -18,5 +18,11 @@
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
     
-    $item = new item($_POST['type'], $_POST['itemId']);
-    echo $item->getScore();
+
+$requestFunction = function($request){
+    $item = new item($request['type'], $request['itemId']);
+    return $item->getScore();
+};
+
+$api = new api();
+$api->handleRequest($_POST['request'], $requestFunction);

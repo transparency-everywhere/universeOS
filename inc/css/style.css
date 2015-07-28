@@ -256,12 +256,13 @@ li.notHidden{
     size: 20px;
     font-weight: 200;
     margin-top: 0;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 #searchMenu header ul{
     position: absolute;
     color:  #18ffff; 
+    margin-top: 3px;
 }
 
 #searchMenu header ul#selectSource{
@@ -277,6 +278,9 @@ li.notHidden{
     z-index:1;
 }
 
+#searchMenu header ul:first-of-type li{
+	margin-left: -2px;
+}
 #searchMenu header ul li{
     display:none;
     line-height: 20px;
@@ -305,6 +309,7 @@ span.icon.blue-chevron-down {}
     height: 40px;
     font-size: 16px;
     margin-top: 35px;
+    margin-left: 2px;
 }
 
 
@@ -312,8 +317,8 @@ span.icon.blue-chevron-down {}
     height: 24px;
     width: 24px;
     position:absolute;
-    right: 26px;
-    margin-top: -33px;
+    right: -275px;
+    margin-top: -22px;
 }
 #searchMenu .userPicture {
 	margin: 1px 5px;
@@ -356,6 +361,9 @@ span.icon.blue-chevron-down {}
         
         
 
+
+#openInTelescope{
+}
 #searchMenu, #searchMenu a, #searchMenu a:link, #searchMenu a:visited{
     color: #fefefe;
     font-size: 20px; /* Näherungswert aufgrund einer Schriftersetzung */
@@ -365,6 +373,7 @@ span.icon.blue-chevron-down {}
         #searchMenu #loadingArea{
             margin-top: 50px;
         
+            margin-left: 3px;
 }
 
    

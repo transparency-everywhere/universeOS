@@ -22,7 +22,6 @@ var Feed = function(type, $selector, initTypeId){
     this.updateLastFeedReceived = function(feedId){
         if(parseInt(feedId)>parseInt(this.last_feed_received)){
             this.last_feed_received = feedId;
-            
         }
     };
     this.init = function(initType, initTypeId, limit){
@@ -34,12 +33,20 @@ var Feed = function(type, $selector, initTypeId){
         var pointer = this;
         var loadedFeeds = this.loadFeeds(initType, initTypeId, limit);
         
+        //prepare preloading of comments.count, item.getScore etc.
+        var feedIds = [];
         $.each(loadedFeeds,function(index, value){
-            output += pointer.generateSingleFeed(value);
+            feedIds.push(value.id);
         });
-        
-        
-        
+        var commentCounts  = comments.count('feed', feedIds);
+        var feedScores = item.getScore('feed', feedIds);
+        var i = 0;
+        $.each(loadedFeeds,function(index, value){
+            value['commentCount'] = commentCounts[i];
+            value['score'] = feedScores[i];
+            output += pointer.generateSingleFeed(value);
+            i++;
+        });
         return '<div class="feedFrame" id="'+this.frame_id+'" data-type="'+this.initType+'" data-last="'+this.last_feed_received+'">'+output+'</div>';
         
     };
@@ -108,7 +115,7 @@ var feed = new function(){
                 
                 output += item.showItemSettings('feed', feedData['id']);
                 
-                output += '<a href="javascript:comments.loadComments(\'feed\',\''+feedData['id']+'\');" class="commentButton" style="color: #dcdcdc"><i class="icon icon-comment"></i>('+comments.count('feed',feedData['id'])+')</a>';
+                output += '<a href="javascript:comments.loadComments(\'feed\',\''+feedData['id']+'\');" class="commentButton" style="color: #dcdcdc"><i class="icon icon-comment"></i>('+feedData['commentCount']+')</a>';
              
             output += '</div>';
             output += '<div class="commentLoadingArea" id="comment_feed_'+feedData['id']+'" style="display:none;"></div>';

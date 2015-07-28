@@ -1,62 +1,60 @@
-<h4>
-    universe.reload()
-</h4>
-        <div>
-            <table>
-                <tr>
-                    <td>Action</td>
-                    <td>Subaction</td>
-                    <td>Data request</td>
-                    <td>Data response</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Buddylist</td>
-                    <td>request</td>
-                    <td></td>
-                    <td>userid</td>
-                    <td>Will be added to response, if buddyrequest is available.<br>No request needed.</td>
-                </tr>
-                <tr>
-                    <td>Buddylist</td>
-                    <td>reload</td>
-                    <td>buddy_checksum</td>
-                    <td></td>
-                    <td>Compares buddy_checksum and checks if buddylist needs to be reloaded.<br>Only data in request required and no data needed in response</td>
-                </tr>
-                <tr class="firstRowOfType">
-                    <td>Groups</td>
-                    <td>openRequest</td>
-                    <td></td>
-                    <td>group_id<br>author(userid of the user who sended the request)</td>
-                    <td>Will be added to response, if buddyrequest is available.<br>No request needed.</td>
-                </tr>
-                <tr>
-                    <td>IM</td>
-                    <td>sync</td>
-                    <td>last_message_received</td>
-                    <td>for each message between client.last_message_received - client.highest id:<br>
-                        id(message_id),<br>receiver<br>sender</td>
-                    <td>Will be added to request if IM is active<br>Will be added to response if client last_message_received != last_message_received in the db</td>
-                </tr>
-                <tr>
-                    <td>UFF</td>
-                    <td>sync</td>
-                    <td>file_id (file_id of UFF file)<br>checksum (client checksum of UFF file)</td>
-                    <td>file_id<br>content</td>
-                    <td>Will be added to request if UFF file is open<br>Will be added to response if response.checksum != file checksum</td>
-                </tr>
-                <tr>
-                    <td>Feed</td>
-                    <td>sync</td>
-                    <td>type, (,type_id), last_id</td>
-                    <td>type, (,type_id)</td>
-                </tr>
-                <tr>
-                    <td>Notification</td>
-                    <td>push</td>
-                    <td>no request needed</td>
-                    <td></td>
-                </tr>
-            </table>
-        </div>
+<h2>
+    Api usage
+</h2>
+<h3>
+    Simple Usage
+</h3>
+<p>
+    If you want to make simple requests, you need to have an api call on the client side and a a server side function which replies to the api call.<br>
+    In this example we write a count function for the comment class. Every comment belongs to a parent item with an itemId (e.g. a 'folder' with the id '1337').
+</p>
+<h4>Client Side JS</h4>
+<p>On the client side the request could look like this</p>
+
+    comments.count = function(type, item_id){
+        return api.query('api/item/comments/count/', {'type':type, 'item_id':item_id});
+    };
+<h4>Serverside PHP</h4>
+<p>To return a result, we need to access the commentclass and execute the count method with the given parameters:</p>
+
+    $commentClass = new comments();
+    echo $commentClass->countComment($_POST['type'], $_POST['itemid']);
+
+<h4>Usage</h4> 
+<p>You can use the function now inside the universe like this:</p>
+comments.count('folder',1);     //returns an integer(e.g "2")
+
+
+<h3>Advanced usage with api::handleRequest</h3>
+<p>If you want to make it possible that the api returns multiple values you need to prepare client function for arrays and handle the api call in an anonymous function</p>
+<p>To let this happen, all parameters need to be added to the parameters array, which has a length of 1 in case of a single request:</p>
+<h4>Client Side JS</h4>
+
+    comments.count = function(type, itemId){
+        
+        
+        
+        //if type or itemId is array, handle as request for multiple items
+        if(typeof type === 'object' || typeof itemId === 'object'){
+            var requestType = type;
+            var requests = [];
+            $.each(itemId,function(index, value){
+                //you can also enter a single type instead of multiple values
+                if(typeof type === 'object'){
+                    requestType = type[index];
+                }
+                requests.push({ type : requestType, itemId: value});
+            });
+            return api.query('api/item/comments/count/', { request: requests});
+        }else
+            return api.query('api/item/comments/count/', { request: [{type : type, itemId: itemId}]});
+    };
+<h4>Server Side PHP</h4>
+    $requestFunction = function($request){
+
+        $commentClass = new comments();
+        return $commentClass->countComment($request['type'], $request['itemid']);
+    };
+
+    $api = new api();
+    $api->handleRequest($_POST['request'], $requestFunction);

@@ -31,7 +31,20 @@ var item = new function(){
     };
     
     this.getScore = function(type, itemId){
-        return api.query('api/item/getScore/', { type : type, itemId: itemId});
+        //if type or itemId is array, handle as request for multiple items
+        if(typeof type === 'object' || typeof itemId === 'object'){
+            var requestType = type;
+            var requests = [];
+            $.each(itemId,function(index, value){
+                //you can also enter a single type instead of multiple values
+                if(typeof type === 'object'){
+                    requestType = type[index];
+                }
+                requests.push({ type : requestType, itemId: value});
+            });
+            return api.query('api/item/getScore/', { request: requests});
+        }else
+            return api.query('api/item/getScore/', { request: [{type : type, itemId: itemId}]});
     };
     
     
@@ -77,17 +90,23 @@ var item = new function(){
     
     this.showScoreButton = function(type, itemId){
         
-        var score = this.getScore(type, itemId);
+        if(typeof itemId === 'array'){
+            
+        }else{
+            
+            var score = this.getScore(type, itemId);
+
+
+            var output = '<span class="scoreButton '+type+'_'+itemId+'">';
+                    if(proofLogin())
+                        output += '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('dislike', 'gray') + '</a>';
+                    output += '<a class="btn btn-xs counter" href="#">'+score+'</a>';
+                    if(proofLogin())
+                        output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('like', 'gray') + '</a>';
+                output += '</span>';
+            return output;
         
-        
-        var output = '<span class="scoreButton '+type+'_'+itemId+'">';
-                if(proofLogin())
-                    output += '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('dislike', 'gray') + '</a>';
-                output += '<a class="btn btn-xs counter" href="#">'+score+'</a>';
-                if(proofLogin())
-                    output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('like', 'gray') + '</a>';
-            output += '</span>';
-        return output;
+        }
     };
     
     this.getOptions = function(type, itemId){

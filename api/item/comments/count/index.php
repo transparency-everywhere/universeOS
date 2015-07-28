@@ -18,6 +18,13 @@
 include('../../../../inc/config.php');
 include('../../../../inc/functions.php');
 
-$commentClass = new comments();
-echo $commentClass->countComment($_POST['type'], $_POST['itemid']);
+
+$requestFunction = function($request){
+    
+    $commentClass = new comments();
+    return $commentClass->countComment($request['type'], $request['item_id']);
+};
+
+$api = new api();
+$api->handleRequest($_POST['request'], $requestFunction);
     
