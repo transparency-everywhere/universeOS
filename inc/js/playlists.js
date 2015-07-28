@@ -428,5 +428,23 @@ var playlists = new function(){
         $('.blueModal').remove();
     };
     
+    this.getPlaylistArray = function(userid){
+        var playlists = this.getUserPlaylists('show', userid);
+        var playlistArray = [];
+        if(playlists === undefined){
+            return playlistArray;
+        } else {
+            var i = 0;
+            var titles = playlists['titles'];
+            var ids = playlists['ids'];
+            
+            $.each(ids,function(index,value){               
+                playlistArray.push({type:'playlist', itemId: value, title: titles[index], timestamp: ''});
+                i++;
+            });
+            return playlistArray;
+        }
+    };
+    
         
 };
