@@ -191,12 +191,12 @@ var filesystem =  new function() {
                         if(folder === "3"){
                             name = groups.getTitle(value['data']['name']) + '\'s Groupfiles'; // value['data']['name']) because groupid = foldername
                         }
-                        html += '                <tr class="greyHover" oncontextmenu="showMenu(\'folder' + value['data']['id'] + '\'); return false;" onclick="openFolder(\'' + value['data']['id'] + '\'); return false;" height="30" class="greyHover">';
+                        html += '                <tr class="greyHover" oncontextmenu="showMenu(\'folder' + value['data']['id'] + '\'); return false;" height="30" class="greyHover">';
                         if(rightClick){
                             html += ''; //hier muss die rightClick function noch eingebunden werden!!
                         }
-                        html += '                    <td>' + filesystem.generateIcon('folder') + '</td>';
-                        html += '                    <td>' + name + '</td>';
+                        html += '                    <td onclick="openFolder(' + value['data']['id'] + '); return false;">' + filesystem.generateIcon('folder') + '</td>';
+                        html += '                    <td onclick="openFolder(' + value['data']['id'] + '); return false;">' + name + '</td>';
                         html += '                    <td>';
                         html += item.showScoreButton('folder', value['data']['id']);
                         html += '                    </td>';
@@ -211,9 +211,9 @@ var filesystem =  new function() {
 
                     if(value['type'] === "element"){
                         var title = value['data']['title'];
-                        html += "                        <tr class=\"greyHover\" oncontextmenu=\"showMenu('element" + value['data']['id'] + "'); return false;\" onclick=\"elements.open('" + value['data']['id'] + "'); return false;\" height=\"30\">";
-                        html += "                           <td>" + filesystem.generateIcon('element') + "</td>";
-                        html += "                           <td>" + title + "</td>";
+                        html += "                        <tr class=\"greyHover\" oncontextmenu=\"showMenu('element" + value['data']['id'] + "'); return false;\" height=\"30\">";
+                        html += "                           <td onclick=\"elements.open('" + value['data']['id'] + "'); return false;\">" + filesystem.generateIcon('element') + "</td>";
+                        html += "                           <td onclick=\"elements.open('" + value['data']['id'] + "'); return false;\">" + title + "</td>";
                         html += "                           <td>" + item.showScoreButton('element', value['data']['id']) + "</td>";
                         html += "                           <td>";
                         if(rightClick){
