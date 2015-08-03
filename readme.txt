@@ -103,14 +103,6 @@ Recent:                                                         Release Message
         Security
             3rd Party Applications like Youtube                     x   
             groups.getData
-        
-        Playlists
-            createFile
-            createPlaylist
-        
-
-        update Font to ubuntu
-        
 
 
 	Update from running version:
@@ -170,13 +162,6 @@ Components
 
     Filesystem
         Open Files and Links
-            
-
-session_storage
-    config
-        proofLogin
-        
-		
 Files and the use of them
 
 	PHP
