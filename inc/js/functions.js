@@ -280,7 +280,6 @@ var session = new function(){
     */
     this.getFingerprint = function(){
         
-        
         var guid = this.getGUID();
         
         
@@ -410,29 +409,17 @@ var universe = new function(){
     this.reloadState = true;
     this.init = function(){
         var scripts = [];
-        
         scripts.push('inc/js/privacy.js');
-        
         scripts.push('inc/js/gui.js');
-        
         scripts.push('inc/js/modal.js');
-        
         scripts.push('inc/js/item.js');
-        
         scripts.push('inc/js/links.js');
-        
         scripts.push('inc/js/api.js');
-        
         scripts.push('inc/js/folders.js');
-        
         scripts.push('inc/js/elements.js');
-        
         scripts.push('inc/js/fav.js');
-        
         scripts.push('inc/js/playlists.js');
-        
         scripts.push('inc/js/notification.js');
-        
         scripts.push('inc/js/tasks.js');
         scripts.push('inc/js/dashBoard.js');
         scripts.push('inc/js/browser.js');
@@ -444,8 +431,6 @@ var universe = new function(){
         scripts.push('inc/js/im.js');
         scripts.push('inc/js/groups.js');
         scripts.push('inc/js/shortcuts.js');
-        
-        
         var scriptsToLoad = [
             {
                 'host':'dev.transparency-everywhere.com',
@@ -453,8 +438,6 @@ var universe = new function(){
                 'scripts': scripts
             }
         ];
-        
-        
         //fctn start
         loadScripts(scriptsToLoad, function(){
             
