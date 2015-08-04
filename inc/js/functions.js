@@ -36,6 +36,20 @@ function loadScripts(scriptObject, callback){
         }
     });
 };
+var gui = {};
+gui.loadScript = function(url){
+    
+        // get some kind of XMLHttpRequest
+        var xhrObj = new XMLHttpRequest();
+        // open and send a synchronous request
+        xhrObj.open('GET', url, false);
+        xhrObj.send('');
+        // add the returned content to a newly created script tag
+        var se = document.createElement('script');
+        se.type = "text/javascript";
+        se.text = xhrObj.responseText;
+        document.getElementsByTagName('head')[0].appendChild(se);
+};
 
 $(document).ready(function(){
         
@@ -408,75 +422,157 @@ var universe = new function(){
     this.notificationArray = [];
     this.reloadState = true;
     this.init = function(){
-        var scripts = [];
-        scripts.push('inc/js/privacy.js');
-        scripts.push('inc/js/gui.js');
-        scripts.push('inc/js/modal.js');
-        scripts.push('inc/js/item.js');
-        scripts.push('inc/js/links.js');
-        scripts.push('inc/js/api.js');
-        scripts.push('inc/js/folders.js');
-        scripts.push('inc/js/elements.js');
-        scripts.push('inc/js/fav.js');
-        scripts.push('inc/js/playlists.js');
-        scripts.push('inc/js/notification.js');
-        scripts.push('inc/js/tasks.js');
-        scripts.push('inc/js/dashBoard.js');
-        scripts.push('inc/js/browser.js');
-        scripts.push('inc/js/UFF.js');
-        scripts.push('inc/js/comments.js');
-        scripts.push('inc/js/media.js');
-        scripts.push('inc/js/application.js');
-        scripts.push('inc/js/debug.js');
-        scripts.push('inc/js/im.js');
-        scripts.push('inc/js/groups.js');
-        scripts.push('inc/js/shortcuts.js');
-        var scriptsToLoad = [
-            {
-                'host':'dev.transparency-everywhere.com',
-                'dir':'universeos',
-                'scripts': scripts
-            }
-        ];
-        //fctn start
-        loadScripts(scriptsToLoad, function(){
+        
+         gui.loadScript('inc/js/privacy.js');
+        
+        gui.loadScript('inc/js/gui.js');
+        
+        gui.loadScript('inc/js/modal.js');
+        
+        gui.loadScript('inc/js/item.js');
+        
+        gui.loadScript('inc/js/links.js');
+        
+        gui.loadScript('inc/js/api.js');
+        
+        gui.loadScript('inc/js/folders.js');
+        
+        gui.loadScript('inc/js/elements.js');
+        
+        gui.loadScript('inc/js/fav.js');
+        
+        gui.loadScript('inc/js/playlists.js');
+        
+        gui.loadScript('inc/js/notification.js');
+        
+        gui.loadScript('inc/js/tasks.js');
+        
+        gui.loadScript('inc/js/dashBoard.js');
+        
+        gui.loadScript('inc/js/browser.js');
+        
+        gui.loadScript('inc/js/UFF.js');
+        
+        gui.loadScript('inc/js/comments.js');
+        
+        gui.loadScript('inc/js/media.js');
+        
+        gui.loadScript('inc/js/application.js');
+        
+        gui.loadScript('inc/js/debug.js');
+        
+        gui.loadScript('inc/js/im.js');
+        
+        gui.loadScript('inc/js/groups.js');
+        
+        gui.loadScript('inc/js/shortcuts.js');
+        
+        applications.init();
+        
+        //init draggable windows
+        init.GUI();
+        
+        //init bootstrap popover
+        $('.bsPopOver').popover();
+        
+        //init bootstrap alert
+        $(".alert").alert();
+        
+        
+        
+        //init reload and load sessionInformation
+        if(proofLogin()){
+            universe.sessionInfo = session.getSessionInfo();
             
-            applications.init();
-
-            //init draggable windows
-            init.GUI();
-
-            //init bootstrap popover
-            $('.bsPopOver').popover();
-
-            //init bootstrap alert
-            $(".alert").alert();
-
-
-
-            //init reload and load sessionInformation
-            if(proofLogin()){
-                universe.sessionInfo = session.getSessionInfo();
-
-                if(universe.sessionInfo.length === 0){
-                    universe.reloadState = false;
-                    session.showAddSessionForm();
-                }
-                session.load(universe.sessionInfo);
-
-
-
-                setInterval(function()
-                {
-                    if(universe.reloadState)
-                        universe.reload();
-                }, 5000);
+            if(universe.sessionInfo.length === 0){
+                universe.reloadState = false;
+                session.showAddSessionForm();
             }
+            session.load(universe.sessionInfo);
+            
+            
+            
+            setInterval(function()
+            {
+                if(universe.reloadState)
+                    universe.reload();
+            }, 5000);
+        }
 
 
-            //loads clock into the dock, yeah.
-            clock();
-        });
+        //loads clock into the dock, yeah.
+        clock();
+        
+//        
+//        var scripts = [];
+//        scripts.push('inc/js/privacy.js');
+//        scripts.push('inc/js/gui.js');
+//        scripts.push('inc/js/modal.js');
+//        scripts.push('inc/js/item.js');
+//        scripts.push('inc/js/links.js');
+//        scripts.push('inc/js/api.js');
+//        scripts.push('inc/js/folders.js');
+//        scripts.push('inc/js/elements.js');
+//        scripts.push('inc/js/fav.js');
+//        scripts.push('inc/js/playlists.js');
+//        scripts.push('inc/js/notification.js');
+//        scripts.push('inc/js/tasks.js');
+//        scripts.push('inc/js/dashBoard.js');
+//        scripts.push('inc/js/browser.js');
+//        scripts.push('inc/js/UFF.js');
+//        scripts.push('inc/js/comments.js');
+//        scripts.push('inc/js/media.js');
+//        scripts.push('inc/js/application.js');
+//        scripts.push('inc/js/debug.js');
+//        scripts.push('inc/js/im.js');
+//        scripts.push('inc/js/groups.js');
+//        scripts.push('inc/js/shortcuts.js');
+//        var scriptsToLoad = [
+//            {
+//                'host':'dev.transparency-everywhere.com',
+//                'dir':'universeos',
+//                'scripts': scripts
+//            }
+//        ];
+//        //fctn start
+//        loadScripts(scriptsToLoad, function(){
+//            
+//            applications.init();
+//
+//            //init draggable windows
+//            init.GUI();
+//
+//            //init bootstrap popover
+//            $('.bsPopOver').popover();
+//
+//            //init bootstrap alert
+//            $(".alert").alert();
+//
+//
+//
+//            //init reload and load sessionInformation
+//            if(proofLogin()){
+//                universe.sessionInfo = session.getSessionInfo();
+//
+//                if(universe.sessionInfo.length === 0){
+//                    universe.reloadState = false;
+//                    session.showAddSessionForm();
+//                }
+//                session.load(universe.sessionInfo);
+//
+//
+//
+//                setInterval(function()
+//                {
+//                    if(universe.reloadState)
+//                        universe.reload();
+//                }, 5000);
+//            }
+//
+//
+//            //loads clock into the dock, yeah.
+//            clock();
+//        });
         
                 
         
