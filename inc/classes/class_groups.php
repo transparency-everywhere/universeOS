@@ -154,6 +154,26 @@ class groups{
                     }
                     return $data;
                 }
+                
+        function getPublicGroups(){
+                    $db = new db();
+                    $groupClass = new Groups();
+                    $groups = $db->select('groups', array('public', '1'));
+                    $ids = [];
+                    $counts = [];
+                    foreach ($groups as $group) {
+                        $counts[] = $groupClass->countGroupMembers($group['id']);
+                        $ids[] = $group['id'];
+                    }
+                    array_multisort($counts, $ids); //sort ids by count
+                    krsort($ids); //id with highest count first (high to low)
+                    $ids = array_slice($ids, 0, 9); //choose just the first 10 puplic groups
+
+//                    if($data['admin'] == getUser()){
+//                        $data['isAdmin'] = true;
+//                    }
+                    return $ids;
+                }
 
         function getGroupName($groupId){
                     $db = new db();

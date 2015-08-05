@@ -1892,6 +1892,11 @@ ul .elementSettings {
     height: 100px;
 }
 
+#reader .readerStartpage .navi {
+  float: left;
+  width: 100%;
+}
+
 #reader .readerStartpage .navi ul {
     margin: 0;
     padding: 0;
@@ -1899,19 +1904,33 @@ ul .elementSettings {
 
 #reader .readerStartpage .navi li {
     display: inline-block;
-    float: left;
-    width: 23.33%;
+    float: left;    
+    width: -moz-calc(25% - 10px);
+    width: -webkit-calc(25% - 10px);
+    width: calc(25% - 10px);
     height: 40px;
     text-align: center;
     background-color: #eceff1;
     border-right: 1px solid #ffffff;
+    cursor: pointer;
+    line-height: 2.4;
 }
 
 #reader .readerStartpage .navi li:first-of-type {
     width: auto;
 }
 
+#reader .readerStartpage .tabs .singletab {
+    display: none;
+}
+
+#reader .readerStartpage .tabs .singletab:first-of-type {
+    display: block;
+}
+
 #reader .readerStartpage .tabs .singletab,  
+#reader .readerStartpage .tabs .singletab .sectionA,
+#reader .readerStartpage .tabs .singletab .sectionB,
 #reader .readerStartpage .tabs .singletab .sectionA > .itemsA,
 #reader .readerStartpage .tabs .singletab .sectionB > .itemsB, 
 #reader .readerStartpage .tabs .singletab .sectionA > .iconA, 
@@ -1924,11 +1943,22 @@ ul .elementSettings {
     margin: 20px 0 20px 0;
 }
 
+#reader .readerStartpage .tabs .singletab .sectionA,
 #reader .readerStartpage .tabs .singletab .sectionA > div, 
 #reader .readerStartpage .tabs .singletab .sectionA > .itemsA > ul > li, 
+#reader .readerStartpage .tabs .singletab .sectionB,
 #reader .readerStartpage .tabs .singletab .sectionB > div, 
 #reader .readerStartpage .tabs .singletab .sectionB > .itemsB > ul > li  {
     float: left;
+}
+
+#reader .readerStartpage .tabs .singletab .sectionA {
+    width:100%;
+}
+
+#reader .readerStartpage .tabs .singletab .sectionB {
+    background-color: #eceff1;
+    width:100%;
 }
 
 #reader .readerStartpage .tabs .singletab .sectionA > .titleA,

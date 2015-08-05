@@ -46,11 +46,11 @@ var reader = new function(){
                 html += '<div class="welcomearea">USERPICTURE Hidiho, '+ useridToUsername(User.userid) +', good to see you back!</div>';
                 html += '<div class="navi">';
                     html += '<ul>';
-                        html += '<li>' + filesystem.generateIcon('home', 'blue') + '</li>';
-                        html += '<li>Groups</li>';
-                        html += '<li>Favorites</li>';
-                        html += '<li>Playlist</li>';
-                        html += '<li>My Files</li>';
+                        html += "<li onclick=\"$( '.hometab' ).show();$( '.groupstab' ).hide();$( '.favoritestab' ).hide();$( '.playliststab' ).hide();$( '.myFilestab' ).hide();return false\">" + filesystem.generateIcon('home', 'blue') + '</li>';
+                        html += "<li onclick=\"$( '.hometab' ).hide();$( '.groupstab' ).show();$( '.favoritestab' ).hide();$( '.playliststab' ).hide();$( '.myFilestab' ).hide();return false\">Groups</li>";
+                        html += "<li onclick=\"$( '.hometab' ).hide();$( '.groupstab' ).hide();$( '.favoritestab' ).show();$( '.playliststab' ).hide();$( '.myFilestab' ).hide();return false\">Favorites</li>";
+                        html += "<li onclick=\"$( '.hometab' ).hide();$( '.groupstab' ).hide();$( '.favoritestab' ).hide();$( '.playliststab' ).show();$( '.myFilestab' ).hide();return false\">Playlists</li>";
+                        html += "<li onclick=\"$( '.hometab' ).hide();$( '.groupstab' ).hide();$( '.favoritestab' ).hide();$( '.playliststab' ).hide();$( '.myFilestab' ).show();return false\">My Files</li>";
                     html += '</ul>';
                 html += '</div>';
                 //alles ab hier wird dynamisch durch reader.initTabs() generiert
@@ -111,7 +111,7 @@ var reader = new function(){
         
         var group_items = groups.getGroupArray(User.userid); //get groups of the user
         
-        var popular_groups; //popular groups > public and with the highest membercount
+        var popular_groups = groups.getPublicGroupArray(User.userid); //popular groups > public and with the highest membercount
         
         
         var fav_history = User.getFavHistory(); //get latest 5 favorites of the user
@@ -121,7 +121,7 @@ var reader = new function(){
         
         var playlist_items = playlists.getPlaylistArray(User.userid); //get playlists of the user
         
-        var popular_playlists; //get popular public playlists
+        var public_playlists; //get popular public playlists
         
         
         var myFiles_items; //get files of the user - looks like filesystem - machen wie in alter startseite (abfragen zusammenfassen) und dann via api als myFilesArray durchschleusen
@@ -139,7 +139,7 @@ var reader = new function(){
             html += this.buildTab('favorites', 'clock', 'My latest favorites', fav_history, 'fav', 'All my favorites', fav_items);
 
             //generate playlist view
-            html += this.buildTab('playlists', 'playlist', 'Your playlists', playlist_items, 'suggestion', 'Popular playlists', popular_playlists);
+            html += this.buildTab('playlists', 'playlist', 'Your playlists', playlist_items, 'suggestion', 'The latest public playlists', public_playlists);
 
             //generate my files view
             html += this.buildTab('myFiles', 'file', 'My files', myFiles_items);

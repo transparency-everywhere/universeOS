@@ -5,6 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+error_reporting(E_ALL);
 
 /**
  * Description of newPHPClass
