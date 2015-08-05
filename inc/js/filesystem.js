@@ -23,23 +23,27 @@ var filesystem =  new function() {
         //alles aus upload.php in einer onestep lösung zusammenbauen
         html += '<div class="frameRight">';
             html += '<div class="uploadTab">';
-                html += '<h2>Upload</h1>';
-                html += '<hr />';
-                html += '<span>You will upload files to this collection: ' + element + '</span>';
-                html += '<h3>Privacy settings:</h2>';
-                html += '<div class="uploadPrivacy"></div>';
-                html += '<h3>Add files:</h2>';
-                html += '<div>';
-                    html += '<ul class="tempFilelist"></ul>';
-                    html += '<input id="uploader_file" name="feedFile" type="file" multiple="true">';
-                    html += '<div id="queue"></div>';
-                html += '</div>';
-                html += '<div class="uploaderCancelButton">Cancel</div>';
-                html += '<div class="uploaderUploadButton">Upload</div>';
+                html += '<form action="api/files/submitUploader/" method="post" target="submitter">';
+                    html += '<h2>Upload</h1>';
+                    html += '<hr />';
+                    html += '<span>You will upload files to this collection: ' + element + '</span>';
+                    html += '<h3>Privacy settings:</h2>';
+                    html += '<div class="uploadPrivacy"></div>';
+                    html += '<h3>Add files:</h2>';
+                    html += '<div>';
+                        html += '<ul class="tempFilelist"></ul>';
+                        html += '<input id="uploader_file" name="feedFile" type="file" multiple="true">';
+                        html += '<div id="queue"></div>';
+                    html += '</div>';
+                    html += '<div class="uploaderCancelButton">Cancel</div>';
+                    html += '<div class="uploaderUploadButton"><input type="submit" value="Upload" class="submitUpload"></div>';
+                html += '</form>';
             html += '</div>';
         html += '</div>';
         privacy.load('.uploadPrivacy', 'p', 'true');
-        initUploadify('#uploader_file', 'doit.php?action=manageUpload&type=uploadTemp', element, 'timeStamp', 'salt');
+        initUploadify('#uploader_file', 'api/files/uploadTemp/', element, '', ''); //the two empty strings are timeStamp and salt - could be empty
+        var tabId = 
+        console.log($( '#' + tabId + ' #privacyField :input').serialize());
         return html;
     };
     

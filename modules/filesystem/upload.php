@@ -43,12 +43,12 @@ $folder = $_GET[folder];
             display:block;
         }
 </style>
-<form action="doit.php?action=submitUploader" method="post" target="submitter">
+<form action='api/files/submitUploader/' method="post" target="submitter">
 <div id="upload">
 	<div id="uploadStepOne" class="uploadStep step">
 		<div>
-		<h1>Upload File333333333333</h1>
-		<h1>Upload File333333333333</h1>
+		<h1>Upload File</h1>
+		<h1>Upload File</h1>
 			<?php
 			if(empty($_GET['element']) OR $_GET['element'] == "undefined"){
                                 $fileSystem = new fileSystem();
@@ -70,7 +70,7 @@ $folder = $_GET[folder];
 			?>
 		</div>
 		<footer>
-			<a href="#" onclick="$('#uploadStepOne').hide(); $('#uploadStepTwo').show(); initUploadify('#uploader_file', 'doit.php?action=manageUpload&type=uploadTemp', $('.choosenTypeId').val(), '<?=$timeStamp;?>', '<?=$salt;?>'); privacy.init();" class="btn btn-xs pull-right">Next</a>
+			<a href="#" onclick="$('#uploadStepOne').hide(); $('#uploadStepTwo').show(); initUploadify('#uploader_file', 'api/files/uploadTemp/', $('.choosenTypeId').val(), '<?=$timeStamp;?>', '<?=$salt;?>'); privacy.init();" class="btn btn-xs pull-right">Next</a>
 		</footer>
 	</div>
 	<div id="uploadStepTwo" class="uploadStep step">

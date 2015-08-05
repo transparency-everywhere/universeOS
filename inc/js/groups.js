@@ -200,9 +200,29 @@ var groups = new function(){
             return api.query('api/groups/getData/', { group_id : groupId });
             
         };
+        this.getPublicGroups = function(){
+            var groupId = 0;
+            return api.query('api/groups/getPublicGroups/', { group_id : groupId });
+            
+        };
         this.getGroupArray = function(userid){
             
             var groupIds = this.get(userid);
+
+            var groupArray = [];
+            if(groupIds === undefined){
+                return groupArray;
+            } else {
+                $.each(groupIds, function(key, value){
+                    var data = groups.getData(value);
+                    groupArray.push({type:'group', itemId: data['id'], title:data['title'], timestamp: ''});
+                });
+                return groupArray;
+            }
+        };
+        this.getPublicGroupArray = function(userid){
+            
+            var groupIds = this.getPublicGroups();
 
             var groupArray = [];
             if(groupIds === undefined){
