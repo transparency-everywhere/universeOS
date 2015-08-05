@@ -22,18 +22,14 @@ class buddylist{
 		$user = save($user);
 		$buddy = save($buddyid);
 		$timestamp = time();
-                
-                
-                $check = mysql_query("SELECT * FROM buddylist WHERE (owner='".$user."' && buddy='$buddy') OR (buddy='".$user."' && owner='$buddy')");
-		$checkData = mysql_fetch_array($check);
-		
+        $dbClass = new db();
+        $checkData = $dbClass->query("SELECT * FROM buddylist WHERE (owner='".$user."' && buddy='$buddy') OR (buddy='".$user."' && owner='$buddy')");
         if(!isset($checkData['owner'])){
         	$message = true;
             if($buddy == $user){
 				//buddy = user
                 $message = false;
             }
-            $dbClass = new db();
             $requestData = $dbClass->select('user', array('userid', $buddy));
 			
             if($requestData['priv_buddyRequest'] == "1"){

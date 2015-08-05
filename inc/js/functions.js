@@ -529,8 +529,8 @@ var universe = new function(){
 //        scripts.push('inc/js/shortcuts.js');
 //        var scriptsToLoad = [
 //            {
-//                'host':'dev.transparency-everywhere.com',
-//                'dir':'universeos',
+//                'host':'universeos.org',
+//                'dir':'',
 //                'scripts': scripts
 //            }
 //        ];
@@ -1688,7 +1688,8 @@ var tabs = function(parentIdentifier){
                         
                         var headerId = randomString(6, '#aA');
                         
-			$(parentIdentifier+' .tabFrame header ul').append('<li id='+headerId+' data-tab="'+(numberOfTabs+1)+'" data-parent-identifier="'+parentIdentifier+'" data-title="'+title+'" class="active">'+title+'<span class="close"><i class="icon dark-close"></i></span></li>');
+                        $(parentIdentifier+' .tabFrame header ul li').removeClass('active');
+			$(parentIdentifier+' .tabFrame header ul').append('<li id='+headerId+' data-tab="'+(numberOfTabs+1)+'" data-parent-identifier="'+parentIdentifier+'" data-title="'+title+'" class="active">'+gui.shorten(title, 15)+'<span class="close"><i class="icon white-close"></i><i class="icon blue-close"></i></span></li>');
 
                         $(parentIdentifier+' .tabFrame .tab').hide();
                         
@@ -1704,6 +1705,7 @@ var tabs = function(parentIdentifier){
                         $tab.append(content);
                         
                         $(parentIdentifier+' .tabFrame').append($tab);
+                        
                         this.initClicks();
                         
                         return numberOfTabs+1;
@@ -1716,7 +1718,7 @@ var tabs = function(parentIdentifier){
                             ret = $(this).attr('data-tab');
                         }
                     });
-                            return ret;
+                    return ret;
                 };
                 //returns #uniqueId
                 this.getTabIdByTabNumber = function(tabNumber){
@@ -1735,6 +1737,10 @@ var tabs = function(parentIdentifier){
 		this.showTab = function(tab){
                     this.tabHistory.push(tab);
                     parentIdentifier = this.parentIdentifier;
+                    
+                    $(parentIdentifier+' .tabFrame header ul li').removeClass('active');
+                    $(parentIdentifier+' .tabFrame header ul li#'+this.getTabIdByTabNumber(tab)).addClass('active');
+
                     $(parentIdentifier+' .tabFrame .tab').hide();
                     $(parentIdentifier+' .tabFrame .tab.tab_'+tab).show();
 		};
@@ -1771,6 +1777,13 @@ var tabs = function(parentIdentifier){
                     $(parentIdentifier+' .tabFrame .tab.tab_'+tab_identifier).html(content);
 			
 		};
+                this.updateTabTitle = function(tab_identifier, title){
+                    parentIdentifier = this.parentIdentifier;
+                    $(parentIdentifier+' .tabFrame header ul li').each(function(){
+                        if($(this).attr('data-tab') == tab_identifier)
+                            $(this).html(gui.shorten(title,15));
+                    });
+                };
 		this.removeTab = function(tab_identifier){
                     parentIdentifier = this.parentIdentifier;
                     
@@ -1827,11 +1840,13 @@ function isStored(messageId){
               
 //general functions
 function empty(value){
-	  	if(value.length == 0) {
+                if(typeof value === 'undefined')
+                    return true;
+	  	if(value.length === 0)
 	  		return true;
-	  	}else{
+	  	else
 	  		return false;
-	  	}
+	  	
 	  }
 
 function maxLength(string, maxlength){
@@ -2597,12 +2612,14 @@ var handlers = {
                                       var callback = function(){
                                           ytplayer.pauseVideo();
                                       };
+                                      console.log('pause');
                                       player.updateActiveItemPause(callback);
                                   }
                                   if(state.data === 2){
                                       var callback = function(){
                                           ytplayer.playVideo();
                                       };
+                                      console.log('play');
                                       player.updateActiveItemPlay(callback);
                                   }
                               });
@@ -2768,4 +2785,17 @@ function getCookie(cname) {
         if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
     }
     return "";
+}
+/**
+ * Overwrites obj1's values with obj2's and adds obj2's if non existent in obj1
+ * @param obj1
+ * @param obj2
+ * @returns obj3 a new object based on obj1 and obj2
+ */
+function merge_options(obj1,obj2){
+    //http://stackoverflow.com/questions/171251/how-can-i-merge-properties-of-two-javascript-objects-dynamically
+    var obj3 = {};
+    for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
+    for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
+    return obj3;
 }

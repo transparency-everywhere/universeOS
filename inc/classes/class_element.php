@@ -216,9 +216,8 @@ class element {
                 $db = new db();
 
                 $i = 0;
-                
-                $fileListSQL = mysql_query("SELECT * FROM files WHERE $query");
-                while($fileListData = mysql_fetch_array($fileListSQL)) {
+                $files = $db->shiftResult($db->query("SELECT * FROM files WHERE $query"),'id');
+                foreach($files AS $file) {
                     $i++;
                     if(authorize($fileListData['privacy'], "show", $fileListData['owner'])){
                     $title10 = substr("$fileListData[title]", 0, 10);
@@ -294,8 +293,8 @@ class element {
                         <?php
 
                 }}
-                $linkListSQL = mysql_query("SELECT * FROM links WHERE $query");
-                while($linkListData = mysql_fetch_array($linkListSQL)) {
+                $links = $db->shiftResult($db->query("SELECT * FROM links WHERE $query"),'id');
+                foreach($links AS $linkListData) {
                     $title10 = substr($linkListData['title'], 0, 10);
 
                     $link = "$link&id=".$linkListData['id'];
@@ -338,9 +337,8 @@ class element {
                     }
 
 
-
-                    $shortCutSql = mysql_query("SELECT * FROM internLinks $shortCutQuery");
-                    while($shortCutData = mysql_fetch_array($shortCutSql)){
+                    $shortCuts = $db->shiftResult($db->query("SELECT * FROM internLinks $shortCutQuery"), 'id');
+                    foreach($shortCuts AS $shortCutData){
                         $i++;
                         if($shortCutData['type'] == "file"){
                             

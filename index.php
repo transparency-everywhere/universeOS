@@ -32,7 +32,6 @@ echo '<body onclick="clearMenu()" onload="clock()'.$userData['startLink'].'">';
 if(!$login) {
     $_SESSION['loggedOut'] = true;
     
-    echo '<script type="text/javascript" src="inc/js/guest.js"></script>';
     echo '<link rel="stylesheet" type="text/css" href="inc/css/guest.css" media="all" />';
     echo '<div id="bodywrap">';
         include('views/guestpage/guest_area.html');
@@ -51,12 +50,14 @@ if(!$login) {
     include('actions/openFileFromLink.php');
     include('views/guestpage/search_menu.html');
 
+    include("views/header/scripts.html");
+    echo '<script type="text/javascript" src="inc/js/guest.js"></script>';
     echo '</body>';
-    echo '</html>';
        
 }
 else{
     //set userid
+    include("views/header/scripts.html");
     echo '<script>User.userid = '.getUser().';</script>';
     
     echo '<div id="alerter"></div>';

@@ -2670,11 +2670,32 @@ color:#FFFFFF;
             height: 40px;
         
             min-width: 140px;
-}
-        
+        }
         
         .tabFrame>header li.active{
             background:#fff;
+        }
+        
+        .tabFrame>header li .close{
+            opacity: 1;
+        }
+        
+        .tabFrame>header li .close .icon{
+             display:none; 
+            
+             height: 20px;
+            
+             width: 14px;
+        
+             position: absolute;
+             margin-left: -10px;
+             margin-top: 5px;
+        }
+        
+        .tabFrame>header li.active .close .blue-close,
+        .tabFrame>header li .close:hover .white-close,
+        .tabFrame>header li .close .white-close{
+            display:block;
         }
         
         

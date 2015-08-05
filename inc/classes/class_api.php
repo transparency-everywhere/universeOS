@@ -59,8 +59,10 @@ class api{
 	public function searchUserByString($string, $limit){
 		$q = save($string);
 		$k = save($limit);
-		$userSuggestSQL = mysql_query("SELECT userid, username, realname FROM user WHERE username LIKE '%$q%' OR realname LIKE '%$q%' OR email='$q' OR userid='$q' LIMIT 0,10");
-		while ($suggestData = mysql_fetch_array($userSuggestSQL)) {
+                $db = new db();
+                $results = $db->shiftResult($db->query("SELECT userid, username, realname FROM user WHERE username LIKE '%$q%' OR realname LIKE '%$q%' OR email='$q' OR userid='$q' LIMIT 0,10"), 'userid');
+	
+		foreach($results AS $suggestData) {
 			
 			
 			if(!isset($return[$userid])){		//only return every user once
