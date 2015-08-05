@@ -70,9 +70,8 @@ class fav {
         
         $i = 0;
         $output = '';
-        
         foreach($userFavs AS $filefdata){
-            $item = $filefdata['item'];
+            $item = $filefdata['data']['id'];
             $type = $filefdata['type'];
 
             //derive the table and the image from fav-type
@@ -101,6 +100,8 @@ class fav {
             }
             $dbClass = new db();
             $favFolderData = $dbClass->select($typeTable, array('id', $item));
+            
+            
                 if(isset($favFolderData['name'])){
                     $favFolderData['title'] = $favFolderData['name'];
                 }else{
@@ -131,6 +132,77 @@ class fav {
                 $output .="You don't have any favourites so far. Add folders, elements, files, playlists or other items to your favourites and they will appear here.";
                 $output .="</td>";
             $output .="</tr>";
+        }
+        return $output;
+    }
+    function showUL($user=NULL){
+        if($user == NULL){
+                $user = getUser();
+        }
+        $userClass = new user($user);
+        $userFavs = $this->select($user);
+        
+        $i = 0;
+        $output = '';
+        foreach($userFavs AS $filefdata){
+            $item = $filefdata['data']['id'];
+            $type = $filefdata['type'];
+
+            //derive the table and the image from fav-type
+            if($type == "folder"){
+                $typeTable = "folders";
+                $img = "folder";
+                $link = "openFolder($item); return false;";
+            }else if($type == "element"){
+                $typeTable = "elements";
+                $img = "archive";
+                $link = "openElement($item); return false;";
+            }else if($type == "file"){
+                $typeTable = "files";
+                $fileClass = new file($item);
+                $fileType = $fileClass->getFileType();
+                $filesClass = new files();
+                //$img = "fileIcons/".$filesClass->getFileIcon($fileType);
+                $img = 'file';
+            }else if($type == "link"){
+                $typeTable = "links";
+                $classLinks = new link();
+                $fileType = $classLinks->getType($item);
+                $filesClass = new files();
+                //$img = "fileIcons/".$filesClass->getFileIcon($fileType);
+                $img = 'link';
+            }
+            $dbClass = new db();
+            $favFolderData = $dbClass->select($typeTable, array('id', $item));
+            
+            
+                if(isset($favFolderData['name'])){
+                    $favFolderData['title'] = $favFolderData['name'];
+                }else{
+                    $favFolderData['name'] = ''; //fix so the notice 'undefined index' won't be shown anymore
+                }
+
+            if($i%2 == 0){
+                $color="FFFFFF";
+            }else {
+                $color="e5f2ff";
+            }
+            $i++;
+
+                $output .= "<li onmouseup=\"showMenu('folder".$filefdata['id']."')\">";
+                        $output .= "<a class=\"pull-left\" href=\"#\" onclick=\"$link\"><i class=\"icon white-$img\" style=\"height:22px; width:22px; margin-bottom:-6px;\"></i>".substr($favFolderData['title'], 0,6)."/</a>";
+                if($user == getUser()){
+
+                        $output .= "<a class=\"btn btn-mini pull-right\" onclick=\"fav.remove('$type', '$item')\"><i class=\"icon white-minus\" style=\"height:22px; width:22px;\"></i></a>";
+
+                }
+
+                $output .= "</li>";
+        }
+        if($i == 0){
+            $output .="<li>";
+                $output .="You don't have any favourites so far. Add folders, elements, files, playlists or other items to your favourites and they will appear here.";
+            $output .="</li>";
         }
         return $output;
     }
@@ -174,7 +246,7 @@ class fav {
         $db = new db();
         if($db->delete('fav', array('type', $type, '&&', 'item', $item))){
             return true;
-        }	
+        }
     }
 }
 

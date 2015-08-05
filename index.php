@@ -16,9 +16,19 @@ if(getUser()){
     $userData['startLink'] = ''; //otherwise notice 'undefined index'
 }
 
-include("inc/header.php");
+include("views/header/header.html");
 echo '<body onclick="clearMenu()" onload="clock()'.$userData['startLink'].'">';
 
+        //define bg-image
+        if(!empty($userdata['backgroundImg'])){ 
+            ?>
+            <style type="text/css">
+                body{
+                    background-image: url(<?=$userdata['backgroundImg'];?>);
+                    background-attachment: no-repeat;
+                }
+            </style>
+            <? }
 if(!$login) {
     $_SESSION['loggedOut'] = true;
     

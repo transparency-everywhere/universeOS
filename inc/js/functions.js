@@ -1,7 +1,7 @@
 //initialize
 var universeConfig = {};
-universeConfig.host = 'localhost';
-universeConfig.dir = 'universeOS';
+universeConfig.host = '192.168.0.35';
+universeConfig.dir = 'universe';
 var sourceURL = 'http://'+universeConfig.host+'/'+universeConfig.dir+'/';
 
 
@@ -1714,6 +1714,18 @@ var tabs = function(parentIdentifier){
                     $(parentIdentifier+' .tabFrame header ul li').each(function(){
                         if($(this).attr('data-title') == tabTitle){
                             ret = $(this).attr('data-tab');
+                        }
+                    });
+                            return ret;
+                };
+                //returns #uniqueId
+                this.getTabIdByTitle = function(tabTitle){
+                    var tabNumber = this.getTabByTitle(tabTitle);
+                    parentIdentifier = this.parentIdentifier;
+                    var ret;
+                    $(parentIdentifier+' .tabFrame header ul li').each(function(){
+                        if($(this).attr('data-tab') == tabNumber){
+                            ret = $(this).attr('id');
                         }
                     });
                             return ret;
