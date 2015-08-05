@@ -1719,8 +1719,7 @@ var tabs = function(parentIdentifier){
                             return ret;
                 };
                 //returns #uniqueId
-                this.getTabIdByTitle = function(tabTitle){
-                    var tabNumber = this.getTabByTitle(tabTitle);
+                this.getTabIdByTabNumber = function(tabNumber){
                     parentIdentifier = this.parentIdentifier;
                     var ret;
                     $(parentIdentifier+' .tabFrame header ul li').each(function(){
@@ -1729,6 +1728,9 @@ var tabs = function(parentIdentifier){
                         }
                     });
                             return ret;
+                };
+                this.getTabIdByTitle = function(tabTitle){
+                    return this.getTabIdByTabNumber(this.getTabByTitle(tabTitle));
                 };
 		this.showTab = function(tab){
                     this.tabHistory.push(tab);
