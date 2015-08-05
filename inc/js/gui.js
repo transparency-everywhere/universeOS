@@ -413,16 +413,20 @@ var gui = new function(){
             });
 	}
     };
-    this.loadScript = function(url){
-        // get some kind of XMLHttpRequest
-        var xhrObj = new XMLHttpRequest();
-        // open and send a synchronous request
-        xhrObj.open('GET', url, false);
-        xhrObj.send('');
+    this.loadScript = function(selector){
+        if(typeof selector === 'string'){
+            
+            // get some kind of XMLHttpRequest
+            var xhrObj = new XMLHttpRequest();
+            // open and send a synchronous request
+            xhrObj.open('GET', selector, false);
+            xhrObj.send('');
+            var text = xhrObj.responseText;
+        }
         // add the returned content to a newly created script tag
         var se = document.createElement('script');
         se.type = "text/javascript";
-        se.text = xhrObj.responseText;
+        se.text = text;
         document.getElementsByTagName('head')[0].appendChild(se);
         
     };

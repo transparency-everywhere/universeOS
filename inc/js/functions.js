@@ -1,7 +1,7 @@
 //initialize
 var universeConfig = {};
-universeConfig.host = '192.168.0.35';
-universeConfig.dir = 'universe';
+universeConfig.host = 'dev.transparency-everywhere.com';
+universeConfig.dir = 'universeos';
 var sourceURL = 'http://'+universeConfig.host+'/'+universeConfig.dir+'/';
 
 
