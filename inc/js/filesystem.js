@@ -18,7 +18,7 @@
 var filesystem =  new function() {
     
     
-    this.generateUploadTab = function(element){
+    this.generateUploadTab = function(element, tabId){
         var html = this.generateLeftNav();
         //alles aus upload.php in einer onestep lösung zusammenbauen
         html += '<div class="frameRight">';
@@ -26,13 +26,14 @@ var filesystem =  new function() {
                 html += '<form action="api/files/submitUploader/" method="post" target="submitter">';
                     html += '<h2>Upload</h1>';
                     html += '<hr />';
-                    html += '<span>You will upload files to this collection: ' + element + '</span>';
+                    html += '<span>You will upload files to this collection:</span>';
+                    html += '<span>' + elements.getTitle(element) + '</span>' + filesystem.generateIcon('element', 'white');
                     html += '<h3>Privacy settings:</h2>';
                     html += '<div class="uploadPrivacy"></div>';
                     html += '<h3>Add files:</h2>';
                     html += '<div>';
-                        html += '<ul class="tempFilelist"></ul>';
                         html += '<input id="uploader_file" name="feedFile" type="file" multiple="true">';
+                        html += '<ul class="tempFilelist"></ul>';
                         html += '<div id="queue"></div>';
                     html += '</div>';
                     html += '<div class="uploaderCancelButton">Cancel</div>';
@@ -41,18 +42,18 @@ var filesystem =  new function() {
             html += '</div>';
         html += '</div>';
         privacy.load('.uploadPrivacy', 'p', 'true');
-        initUploadify('#uploader_file', 'api/files/uploadTemp/', element, '', ''); //the two empty strings are timeStamp and salt - could be empty
-        var tabId = 
-        console.log($( '#' + tabId + ' #privacyField :input').serialize());
         return html;
     };
     
     this.openUploadTab = function(element){
         filesystem.applicationVar.show();
-        var tabContent = gui.loadPage('modules/filesystem/upload.php?element='+element); //left nav missing in this solution filesystem.generateLeftNav()+
-        filesystem.tabs.addTab('Upload', '', tabContent);
+//        var tabContent = gui.loadPage('modules/filesystem/upload.php?element='+element); //left nav missing in this solution filesystem.generateLeftNav()+
+//        filesystem.tabs.addTab('Upload', '', tabContent);
         //wird zu:
-//        filesystem.tabs.addTab('Upload '+element, '', filesystem.generateUploadTab(element));
+        var tabId = filesystem.tabs.addTab('Upload '+element, '', '');
+        filesystem.tabs.updateTabContent(tabId,filesystem.generateUploadTab(element, tabId));
+        initUploadify('#uploader_file', 'api/files/uploadTemp/', element, '', ''); //the two empty strings are timeStamp and salt - could be empty
+
     }
     
     
