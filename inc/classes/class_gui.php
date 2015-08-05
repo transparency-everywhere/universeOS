@@ -210,7 +210,7 @@ class gui {
 
 
 
-function universeTime($unixtime){
+    function universeTime($unixtime){
      $time = time();
      $difference = ($time - $unixtime);
      if($difference < 60){

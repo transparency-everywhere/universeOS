@@ -145,7 +145,8 @@ var playlists = new function(){
         var playlistFileContent = filesystem.readFile(playlistData['file_id']);
         
         var itemList;
-        if(typeof playlistFileContent.items === 'undefined' || playlistFileContent.items.length === 0){
+        console.log(playlistFileContent);
+        if(typeof playlistFileContent.items === 'undefined' || playlistFileContent.items === null){
             itemList = 'This playlist is empty';
         }else{
             itemList = '<ul class="dynamicList">';
@@ -174,7 +175,7 @@ var playlists = new function(){
         modalOptions['buttonTitle'] = 'Play Playlist';
         
         modalOptions['action'] = function(){
-            playlists.playPlaylist(playlist_id)
+            playlists.playPlaylist(playlist_id);
         };
         formModal.init('Playlist '+playlistData['title'], html, modalOptions);
         
@@ -235,7 +236,6 @@ var playlists = new function(){
                 gui.alert('', 'The playlist has been updated');
                 $('.blueModal').remove();
             };
-            console.log($('#createElementFormContainer #privacyField :input').serialize());
             playlists.update(playlist_id, $('#createElementFormContainer #title').val(), $('#createElementFormContainer #privacyField :input').serialize(),callback);
         };
         privacy.load('#privacyField', playlistData['privacy'], true);
@@ -351,7 +351,7 @@ var playlists = new function(){
         
     };
     
-    
+    //calls 
     this.playItem = function(options){
         var type = options['item_type'];
         var item_id = options['item_id'];
@@ -389,7 +389,8 @@ var playlists = new function(){
         player.updateActiveItemObject(tab, '', true, {'playlist_id':playlist_id,'order_id':order_id});
                    
     };
-    
+    //opens playlistdata, reads all rows and opens row with row = order_id
+    //calls playlists.playItem and updates activeItemObject
     this.playPlaylistRow = function(playlist_id, order_id){
         
         var playlistData = playlists.getData(playlist_id);
@@ -403,7 +404,7 @@ var playlists = new function(){
                    //push playlist id to value array for playItem function
                    value['playlist_id'] = playlist_id;
                    
-                   playlists.openPlaylistTab(playlist_id);
+                   //playlists.openPlaylistTab(playlist_id); always opens new tab
                    playlists.playItem(value);
                    
                    //update activePlaylist
@@ -422,6 +423,7 @@ var playlists = new function(){
     };
     
     this.playPlaylist = function(playlist_id){
+        
         this.openPlaylistTab(playlist_id);
         this.playPlaylistRow(playlist_id, 0);
         
@@ -431,7 +433,7 @@ var playlists = new function(){
     this.getPlaylistArray = function(userid){
         var playlists = this.getUserPlaylists('show', userid);
         var playlistArray = [];
-        if(playlists === undefined){
+        if(playlists.ids === null){
             return playlistArray;
         } else {
             var i = 0;

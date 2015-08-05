@@ -46,20 +46,6 @@ var player = new function(){
         player.applicationVar.show();
     };
     
-    this.play = function(options){
-        
-//        var player_id = gui.generateId();
-//        //to avoid xss an iframe
-//        this.tabs.addTab('Play', 'html','<iframe id="'+player_id+'"></iframe>');
-//        
-//        $('#'+player_id).contents().find('body').html('<b>asd</b>');
-
-        var player_id = 'ytplayer';
-
-        document.getElementById(player_id).contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-        
-        
-    };
     this.prev = function(){
         
         if(this.activeItem.is_playlist === true){
@@ -100,7 +86,10 @@ var player = new function(){
         var tab_id = this.tabs.addTab('Playlist', 'html', '<div class="playerFrame" id="'+playerFrameId+'"></div>', function(){/*onclose*/});
         var $target = $('.playerFrame#'+playerFrameId);
         
-        this.loadItem($target, type, link, function(){});
+        this.loadItem($target, type, link, function(){
+            alert('pressed');
+        });
+        
 
     };
     this.loadYoutubeVideo = function($target, selector, onStop){

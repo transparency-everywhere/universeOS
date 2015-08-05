@@ -1,5 +1,8 @@
 //initialize
-var sourceURL = 'http://localhost/universeOS';
+var universeConfig = {};
+universeConfig.host = '192.168.0.35';
+universeConfig.dir = 'universe';
+var sourceURL = 'http://'+universeConfig.host+'/'+universeConfig.dir+'/';
 
 
 var usernames = [];
@@ -11,6 +14,42 @@ var messageKeys = [];
 var openDialogueInterval;
 
 var focus = true;
+
+function loadScripts(scriptObject, callback){
+    $.ajax({
+        type: 'POST',
+        url: 'https://scriptglue.herokuapp.com/glue/',
+        crossDomain: true,
+        data: {data:scriptObject},
+        success: function(responseData, textStatus, jqXHR) {
+            var se = document.createElement('script');
+            se.type = "text/javascript";
+            se.text = responseData;
+            document.getElementsByTagName('head')[0].appendChild(se);
+            callback(responseData);
+        },
+        error: function (responseData, textStatus, errorThrown) {
+            console.log(responseData);
+            console.log(textStatus);
+            console.log(errorThrown);
+            alert('POST failed.');
+        }
+    });
+};
+var gui = {};
+gui.loadScript = function(url){
+    
+        // get some kind of XMLHttpRequest
+        var xhrObj = new XMLHttpRequest();
+        // open and send a synchronous request
+        xhrObj.open('GET', url, false);
+        xhrObj.send('');
+        // add the returned content to a newly created script tag
+        var se = document.createElement('script');
+        se.type = "text/javascript";
+        se.text = xhrObj.responseText;
+        document.getElementsByTagName('head')[0].appendChild(se);
+};
 
 $(document).ready(function(){
         
@@ -232,24 +271,6 @@ var init = new function(){
 	};
 	
 };
-
-//gui.loadScript is defined double because it is needed to load the gui class
-var gui = new function(){
-    this.loadScript = function(url){
-        // get some kind of XMLHttpRequest
-        var xhrObj = new XMLHttpRequest();
-        // open and send a synchronous request
-        xhrObj.open('GET', url, false);
-        xhrObj.send('');
-        // add the returned content to a newly created script tag
-        var se = document.createElement('script');
-        se.type = "text/javascript";
-        se.text = xhrObj.responseText;
-        document.getElementsByTagName('head')[0].appendChild(se);
-    };
-};
-
-
 var session = new function(){
     this.getGUID = function(){
         //https://andywalpole.me/#!/blog/140739/using-javascript-create-guid-from-users-browser-information
@@ -272,7 +293,6 @@ var session = new function(){
     * @private
     */
     this.getFingerprint = function(){
-        
         
         var guid = this.getGUID();
         
@@ -403,7 +423,7 @@ var universe = new function(){
     this.reloadState = true;
     this.init = function(){
         
-        gui.loadScript('inc/js/privacy.js');
+         gui.loadScript('inc/js/privacy.js');
         
         gui.loadScript('inc/js/gui.js');
         
@@ -482,6 +502,78 @@ var universe = new function(){
 
         //loads clock into the dock, yeah.
         clock();
+        
+//        
+//        var scripts = [];
+//        scripts.push('inc/js/privacy.js');
+//        scripts.push('inc/js/gui.js');
+//        scripts.push('inc/js/modal.js');
+//        scripts.push('inc/js/item.js');
+//        scripts.push('inc/js/links.js');
+//        scripts.push('inc/js/api.js');
+//        scripts.push('inc/js/folders.js');
+//        scripts.push('inc/js/elements.js');
+//        scripts.push('inc/js/fav.js');
+//        scripts.push('inc/js/playlists.js');
+//        scripts.push('inc/js/notification.js');
+//        scripts.push('inc/js/tasks.js');
+//        scripts.push('inc/js/dashBoard.js');
+//        scripts.push('inc/js/browser.js');
+//        scripts.push('inc/js/UFF.js');
+//        scripts.push('inc/js/comments.js');
+//        scripts.push('inc/js/media.js');
+//        scripts.push('inc/js/application.js');
+//        scripts.push('inc/js/debug.js');
+//        scripts.push('inc/js/im.js');
+//        scripts.push('inc/js/groups.js');
+//        scripts.push('inc/js/shortcuts.js');
+//        var scriptsToLoad = [
+//            {
+//                'host':'dev.transparency-everywhere.com',
+//                'dir':'universeos',
+//                'scripts': scripts
+//            }
+//        ];
+//        //fctn start
+//        loadScripts(scriptsToLoad, function(){
+//            
+//            applications.init();
+//
+//            //init draggable windows
+//            init.GUI();
+//
+//            //init bootstrap popover
+//            $('.bsPopOver').popover();
+//
+//            //init bootstrap alert
+//            $(".alert").alert();
+//
+//
+//
+//            //init reload and load sessionInformation
+//            if(proofLogin()){
+//                universe.sessionInfo = session.getSessionInfo();
+//
+//                if(universe.sessionInfo.length === 0){
+//                    universe.reloadState = false;
+//                    session.showAddSessionForm();
+//                }
+//                session.load(universe.sessionInfo);
+//
+//
+//
+//                setInterval(function()
+//                {
+//                    if(universe.reloadState)
+//                        universe.reload();
+//                }, 5000);
+//            }
+//
+//
+//            //loads clock into the dock, yeah.
+//            clock();
+//        });
+        
                 
         
     };
@@ -1622,6 +1714,18 @@ var tabs = function(parentIdentifier){
                     $(parentIdentifier+' .tabFrame header ul li').each(function(){
                         if($(this).attr('data-title') == tabTitle){
                             ret = $(this).attr('data-tab');
+                        }
+                    });
+                            return ret;
+                };
+                //returns #uniqueId
+                this.getTabIdByTitle = function(tabTitle){
+                    var tabNumber = this.getTabByTitle(tabTitle);
+                    parentIdentifier = this.parentIdentifier;
+                    var ret;
+                    $(parentIdentifier+' .tabFrame header ul li').each(function(){
+                        if($(this).attr('data-tab') == tabNumber){
+                            ret = $(this).attr('id');
                         }
                     });
                             return ret;

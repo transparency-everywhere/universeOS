@@ -214,9 +214,9 @@ class dashBoard{
 			$title = "Your Favorites";
 			
 			$output .= "<div>";
-				$output .= "<table width=\"100%\">";
-					$output .= $favClass->show();
-				$output .= "</table>";
+				$output .= "<ul id=\"favList\">";
+					$output .= $favClass->showUL();
+				$output .= "</ul>";
 			$output .= "</div>";
 		
 			$output = $this->showDashBox($title, $output," ", "fav", $grid);

@@ -19,12 +19,8 @@
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
 
-    	
-include('../../../inc/config.php');
-include('../../../inc/functions.php');
-
 
 //set privacy
 $favClass = new fav();
-echo $favClass->remove($_POST['type'], $_POST['typeid']);
+echo $favClass->remove($_POST['type'], $_POST['typeId']);
 ?>
