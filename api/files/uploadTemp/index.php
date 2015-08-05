@@ -21,16 +21,14 @@ include('../../../inc/functions.php');
 
 
 //upload temp_file
-                                                $file = $_FILES['Filedata'];
-						
-						$user = getUser();
-                                                $filesClass = new files();
-						$id = $filesClass->uploadTempfile($file, $_POST['element'], '', $privacy, $user);
-                                                
-						$li = "<li data-fileid=\"$id\">     <img src=\"gfx/icons/fileIcons/".$filesClass->getFileIcon($filesClass->getMime($file['name']))."\" height=\"16\">     ".$file['name']."      <input type=\"hidden\" name=\"uploadedFiles[]\" value=\"$id\">    <i class=\"icon-remove pointer pull-right\" onclick=\"$(this).parent(\\'li\\').remove()\"></i></li>";
-						
-						//add file to filelist in the uploader
-						echo'$(".tempFilelist").append(\''.$li.'\');';
-						
-						//echo'</script>';
+$file = $_FILES['Filedata'];
+
+$user = getUser();
+$filesClass = new files();
+$id = $filesClass->uploadTempfile($file, $_POST['element'], '', $privacy, $user);
+
+$li = "<li data-fileid=\"$id\">     <img src=\"gfx/icons/fileIcons/".$filesClass->getFileIcon($filesClass->getMime($file['name']))."\" height=\"16\">     ".$file['name']."      <input type=\"hidden\" name=\"uploadedFiles[]\" value=\"$id\">    <i class=\"icon-remove pointer pull-right\" onclick=\"$(this).parent(\\'li\\').remove()\"></i></li>";
+
+//add file to filelist in the uploader
+echo'$(".tempFilelist").append(\''.$li.'\');';
 ?>

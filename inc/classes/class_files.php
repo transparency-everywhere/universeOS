@@ -414,11 +414,12 @@ class file{
     function validateTempFile($privacy){
                 $fileId = $this->id;
 	 	$path = $this->getPath();
+                echo $path;
 		$oldpath = $path.'.temp';
 		if(rename(universeBasePath.'/'.$oldpath, universeBasePath.'/'.$path)){
                         $db = new db();
                         $values['temp'] = '0';
-                        $values['satus'] = '1';
+                        $values['status'] = '1';
                         $values['privacy'] = $privacy;
 		 	if($db->update('files', $values, array('id', $fileId))){
 		 		return true;

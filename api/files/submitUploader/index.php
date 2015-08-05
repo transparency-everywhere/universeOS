@@ -27,7 +27,7 @@ include('../../../inc/functions.php');
 $customShow = $_POST['privacyCustomSee'];
 $customEdit = $_POST['privacyCustomEdit'];
 
-$privacy = exploitPrivacy("$_POST[privacyPublic]", "$_POST[privacyHidden]", $customEdit, $customShow);
+$privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
 
 $files = $_POST['uploadedFiles'];
 $successfullUploadedFiles = 0;
@@ -35,11 +35,12 @@ foreach($files AS $file){
         $woff .= $file;
         $fileClass = new file($file);
         if($fileClass->validateTempFile($privacy)){
-                $successfullUploadedFiles++;
-        }else
-                $filesWithError[] = $file; //add fileid to error list
+            $successfullUploadedFiles++;
+        }else{
+            $filesWithError[] = $file; //add fileid to error list
+        }
 }
-echo'<script>parent.deleteTab("Upload File");</script>';
+//echo'<script>parent.deleteTab("Upload File");</script>';
 jsAlert("The files have successfully been added to the Element.");
 			
 				
