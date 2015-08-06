@@ -920,10 +920,10 @@ var User = new function(){
                 output += "            <td>";
                 output += "                <table>";
                 output += "                    <tr>";
-                output += "                        <td style=\"font-size: 10pt;\">&nbsp;<a href=\"#\" onclick=\"User.showProfile('"+userid+"')\">"+username+"<\/td>";
+                output += "                        <td style=\"\">&nbsp;<a href=\"#\" onclick=\"User.showProfile('"+userid+"')\">"+username+"<\/td>";
                 output += "                    <\/tr>             ";
                 output += "                    <tr>";
-                output += "                        <td style=\"font-size: 08pt;\">&nbsp;<i>";
+                output += "                        <td style=\"font-size: 12px;\">&nbsp;<i>";
                 output += universeTime(timestamp)+"<\/i>";
                 output += "                        <\/td>";
                 output += "                    <\/tr>";

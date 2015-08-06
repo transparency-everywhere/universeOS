@@ -366,7 +366,7 @@ span.icon.blue-chevron-down {}
 }
 #searchMenu, #searchMenu a, #searchMenu a:link, #searchMenu a:visited{
     color: #fefefe;
-    font-size: 20px; /* Näherungswert aufgrund einer Schriftersetzung */
+    font-size: 20px; /* NÃ¤herungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: left;
 }
@@ -469,7 +469,7 @@ span.icon.blue-chevron-down {}
 .resultList li:hover .icon.dark{
     display:none;
 }
-#searchMenu .loadAll, #searchMenu .loadAll{
+#searchMenu .loadAll,Â #searchMenu .loadAll{
     font-size: 14px;
     margin-top: 15px;
     text-align:right;
@@ -1067,7 +1067,7 @@ span.icon.blue-chevron-down {}
     height: 35px;
     font-family: Ubuntu;
     color:  #fefefe;
-    font-size: 16px;/* Näherungswert aufgrund einer Schriftersetzung */
+    font-size: 16px;/* NÃ¤herungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: left;
 }
@@ -1097,7 +1097,7 @@ span.icon.blue-chevron-down {}
     height: 35px;
     font-family: Ubuntu;
     color:  #ffffff;
-    font-size: 16px; /* Näherungswert aufgrund einer Schriftersetzung */
+    font-size: 16px; /* NÃ¤herungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: center;
     line-height: 2.2;
@@ -1111,7 +1111,7 @@ span.icon.blue-chevron-down {}
     height: 35px;
     font-family: Ubuntu;
     color:  #ffffff;
-    font-size: 16px; /* Näherungswert aufgrund einer Schriftersetzung */
+    font-size: 16px; /* NÃ¤herungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: center;
     float: right;
@@ -1642,7 +1642,7 @@ color: #FFF;
     margin-right: 20px;
 }
 
-#mailList {
+#mailListÂ {
     width: 450px;
     margin-left: 150px;
 }
@@ -1682,7 +1682,7 @@ color: #FFF;
 	line-height: 8px;
 }
 
-#buddyListTable { 
+#buddyListTableÂ { 
     overflow: none;
 }
     
@@ -1812,7 +1812,7 @@ color: #FFF;
     display: inline-block;
     
     margin: -7px 0 0px 5px;
-    font-size: 18px;
+    font-size: 16px;
     height: 30px;
     cursor: pointer;
     position: absolute;
@@ -1820,7 +1820,7 @@ color: #FFF;
 
 .feedEntry .commentButton .icon{
     height: 30px;
-    margin-bottom: -5px;
+    margin-bottom: -7px;
 }
 
 #feedInput{
@@ -1853,7 +1853,7 @@ color: #FFF;
     padding: 2px;
 }
 
-#feedTable { 
+#feedTableÂ { 
     overflow: none;
 }
 
@@ -2550,7 +2550,7 @@ color:#FFFFFF;
     
 }
 
-#pepperSteakItem {
+#pepperSteakItemÂ {
     background-color: #72aa00; 
 }
 
@@ -2649,7 +2649,7 @@ color:#FFFFFF;
 .white-gradient {
     background-color: rgb(255, 255, 255);font-family: Ubuntu;
     color:  #313131;
-    font-size: 16px; /* Näherungswert aufgrund einer Schriftersetzung */
+    font-size: 16px; /* NÃ¤herungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: left;
 }
@@ -2663,11 +2663,11 @@ color:#FFFFFF;
     box-sizing: border-box;
 }
 
-.floatRight {
+.floatRightÂ {
     float: right;
 }
 
-.clear {
+.clearÂ {
     clear: both;
 }
 
@@ -3467,7 +3467,8 @@ del.bar{
 .commentRow{
     background: #ededed;
     height: 50px;
-	padding: 10px 5px;
+	
+    padding: 10px 0px;
 }
 
 .commentRow input[type=submit]{
@@ -3702,7 +3703,7 @@ display: block;
 
 
 
-#profileWrap {
+#profileWrapÂ {
     position: absolute;
     margin-top: 20%;
     margin-left: 50%;
