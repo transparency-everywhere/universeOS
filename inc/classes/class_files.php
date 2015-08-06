@@ -262,10 +262,12 @@ class files {
             // audio/video
             'mp3' => 'audio/mpeg',
             'wav' => 'audio/wav',
+            'ogg' => 'audio/ogg',
             'qt' => 'video/quicktime',
             'mov' => 'video/quicktime',
             'mp4' => 'video/mp4',
             'm4v' => 'video/mp4',
+            'ogv' => 'video/ogg',
 
             // adobe
             'pdf' => 'application/pdf',

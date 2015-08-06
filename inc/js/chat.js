@@ -118,7 +118,7 @@ function chatMessageSubmit(userid){
            			var buddyName = useridToUsername(userid);
            			
            			$('#test_'+buddyName).load('modules/chat/chatreload.php?buddy='+buddyName+'&initter=1');
-           			$('#chatInput_'+userid).val('');
+           			$('#chatInput_'+userid).val('').focus();
                     
                 }else{
                     alert('There was an error sending the message.');

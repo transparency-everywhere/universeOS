@@ -2128,7 +2128,14 @@ ul .elementSettings {
 .openFile header span>span{
 }
 
-
+.openFile video{
+    position: absolute;
+    top: 40px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
 
 
 .uffViewerMain{

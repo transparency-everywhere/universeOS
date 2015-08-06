@@ -1781,8 +1781,9 @@ var tabs = function(parentIdentifier){
                     parentIdentifier = this.parentIdentifier;
                     $(parentIdentifier+' .tabFrame header ul li').each(function(){
                         if($(this).attr('data-tab') == tab_identifier)
-                            $(this).html(gui.shorten(title,15));
+                            $(this).html(gui.shorten(title,15)+'<span class="close"><i class="icon white-close"></i><i class="icon blue-close"></i></span>');
                     });
+                    this.initClicks();
                 };
 		this.removeTab = function(tab_identifier){
                     parentIdentifier = this.parentIdentifier;
@@ -2557,6 +2558,15 @@ var handler = new function(){
           
       });
   };
+  this.getLinkHandlerName = function(link){
+      var ret = null;
+      $.each(handlers, function(index, value){
+          if(value.regex && link.match(value.regex)){
+             ret = index;
+          }
+      });
+      return ret;
+  };
 };
 
 var handlers = {
@@ -2649,11 +2659,13 @@ var handlers = {
                     application : 'reader',
                     regex : /((http|https):\/\/)?(www\.)?(wikipedia\.org)(\/)?([a-zA-Z0-9\-\.]+)\/?/,
                     open : function($target, link, onStop){
+                            var title = this.getTitle(link);
+                            var langCode = link.match(/((http|https):\/\/)?((www|(.*?))\.)?(wikipedia\.org)(\/)?([a-zA-Z0-9\-\.]+)\/?/, '');
                             
-
+                            $target.html('<iframe style="border:none;position: absolute; top: 0; left: 0; height: 100%;width: 100%;right: 0;" src="https://'+langCode[4]+'.wikipedia.org/w/index.php?title='+title+'&printable=yes"></iframe>');
                     },
                     getTitle : function(link){
-                        return handler.getTitle('wikipedia', link);
+                        return link.replace(/((http|https):\/\/)?((www|(.*?))\.)(wikipedia\.org)(\/)?([a-zA-Z0-9\-\.]+)\/?/, '');
                     },
                     getDescription : function(link){
                         return handler.getDescription('wikipedia', link);
@@ -2670,12 +2682,11 @@ var handlers = {
                     },
                     handler: function(link){
                         var title = this.getTitle(link);
-                        openFile('wikipedia', title, title);
+                        reader.tabs.addTab('title', 'someHtml');
                     }
                 },
     'folders': {
                     application : 'reader',
-                    regex : /((http|https):\/\/)?(www\.)?(wikipedia\.org)(\/)?([a-zA-Z0-9\-\.]+)\/?/,
                     open : function($target, link, onStop){
                             
 
@@ -2735,7 +2746,8 @@ var handlers = {
     'links': {
                     handler: function(id){
                         var linkData = links.getData(id);
-                        reader.openLink(linkData['type'].toLowerCase(), linkData.link, linkData.title);
+                        console.log(linkData['type']+'asdasd');
+                        reader.openLink(handler.getLinkHandlerName(linkData['link']), linkData.link, linkData.title);
                     }
     }
                 
