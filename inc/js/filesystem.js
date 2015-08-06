@@ -26,15 +26,17 @@ var filesystem =  new function() {
                 html += '<form action="api/files/submitUploader/" method="post" target="submitter">';
                     html += '<h2>Upload</h1>';
                     html += '<hr />';
-                    html += '<span>You will upload files to this collection:</span>';
-                    html += '<span>' + elements.getTitle(element) + '</span>' + filesystem.generateIcon('element', 'white');
+                    html += '<div class="uploaderHeader">';
+                        html += '<div>You will upload files to this collection:</div>';
+                        html += '<div class="titleAndIcon">' + elements.getTitle(element) + filesystem.generateIcon('element', 'white') + '</div>';
+                    html += '</div>';
                     html += '<h3>Privacy settings:</h2>';
                     html += '<div class="uploadPrivacy"></div>';
                     html += '<h3>Add files:</h2>';
                     html += '<div>';
                         html += '<input id="uploader_file" name="feedFile" type="file" multiple="true">';
-                        html += '<ul class="tempFilelist"></ul>';
                         html += '<div id="queue"></div>';
+                        html += '<ul class="tempFilelist"></ul>';
                     html += '</div>';
                     html += '<div class="uploaderCancelButton">Cancel</div>';
                     html += '<div class="uploaderUploadButton"><input type="submit" value="Upload" class="submitUpload"></div>';
@@ -196,7 +198,7 @@ var filesystem =  new function() {
                         if(folder === "3"){
                             name = groups.getTitle(value['data']['name']) + '\'s Groupfiles'; // value['data']['name']) because groupid = foldername
                         }
-                        html += '                <tr class="greyHover" oncontextmenu="showMenu(\'folder' + value['data']['id'] + '\'); return false;" class="greyHover">';
+                        html += '                <tr class="greyHover" oncontextmenu="showMenu(\'folder' + value['data']['id'] + '\'); return false;">';
                         if(rightClick){
                             html += ''; //hier muss die rightClick function noch eingebunden werden!!
                         }
@@ -468,7 +470,7 @@ var filesystem =  new function() {
     icons['home'] = 'home';
     icons['settings'] = 'gear';
     icons['folder'] = 'folder';
-    icons['element'] = 'archive';
+    icons['element'] = 'filesystem';
     icons['download'] = 'download';
     icons['link'] = 'external-link';
     icons['RSS'] = 'rss';
