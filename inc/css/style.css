@@ -1511,6 +1511,53 @@ span.icon.blue-chevron-down {}
     margin-bottom: -9px;
 }
 
+
+
+
+.pepperSteakButton{
+    height: 35px;
+}
+
+.leftNav{
+    position: absolute;
+    width: 175px;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    overflow: auto;
+    background: #cfd8dc;
+    color: #323232;
+}
+
+.leftNav a, leftNav a:link{
+	color: #323232;
+}
+
+.leftNav > ul > li{
+    list-style: none;
+    margin: 0px;
+    padding: 10px;
+    cursor:pointer;
+    font-size: 20px;
+}
+
+.leftNav > ul > li:hover {
+    background: #FFFFFF;
+}
+
+.leftNav > ul > li.header{
+    background: #37474f;
+}
+
+.leftNav > ul > li img{
+    
+}
+
+.leftNav span.icon {
+    height: 21px;
+    width: 25px;
+}
+
 .frameRight{
     position: absolute;
     top: 0px;
