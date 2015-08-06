@@ -74,101 +74,30 @@ var player = new function(){
         $dockPlay.bind('click',callback);
     };
     this.loadItem = function($target, type, selector, onStop){
-        this.services[type].open($target, selector, onStop);
+        console.log(type);
+        handlers[type].open($target, selector, onStop);
         this.updateActiveItemObject($target.attr('id'), type);
         $('.dockPlayer').show();
-        
     };
+    //adds tab and loads item
     this.openItem = function(type, link){
         userHistory.push(type, link);
         var playerFrameId = gui.generateId();
         this.show();
-        var tab_id = this.tabs.addTab('Playlist', 'html', '<div class="playerFrame" id="'+playerFrameId+'"></div>', function(){/*onclose*/});
+        var tab_id = this.tabs.addTab('Player', 'html', '<div class="playerFrame" id="'+playerFrameId+'"></div>', function(){/*onclose*/});
         var $target = $('.playerFrame#'+playerFrameId);
         
-        this.loadItem($target, type, link, function(){
-            alert('pressed');
+        this.loadItem($target, type, link, 
+        //onStop function
+        function(){
+            $('.dockPlayer').hide();
         });
-        
-
+        //
+        this.tabs.updateTabTitle(tab_id,handlers[type].getTitle(link));
     };
     this.loadYoutubeVideo = function($target, selector, onStop){
-        
-        this.services.youtube.open($target, selector, onStop);
+        handlers.youtube.open($target, selector, onStop);
         //update active Object
         this.updateActiveItemObject($target.attr('id'), 'youtube');
     };
-    
-    //services need the following methods:
-    //open($target, link, onStop)
-    //getTitle(link)
-    this.services = {
-        youtube : {
-            open : function($target, link, onStop){
-                    var videoId;
-                    if(is_url(link)){
-                        videoId = youtubeURLToVideoId(link);
-                    }else{
-                        videoId = link;
-                    }
-                    var tempThis = this;
-
-                    //generate random player id
-                    //otherwise multiple videos
-                    //can not be opened
-                    var playerId = gui.generateId();
-
-                    var output="";
-                    output += "        <div id=\"ytplayer_"+playerId+"\"><\/div>";
-
-                    $target.html(output);
-
-                    // Load the IFrame Player API code asynchronously.
-                    var tag = document.createElement('script');
-                    tag.src = "http://www.youtube.com/player_api";
-                    var firstScriptTag = document.getElementsByTagName('script')[0];
-                    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-                    //yt player api is added in plugins.js
-                    var ytplayer;
-                    ytplayer = new YT.Player('ytplayer_'+playerId, {
-                      height: '100%',
-                      width: '100%',
-                      videoId: videoId,
-                      autoplay: 1,
-                      events: {
-                        'onReady': onPlayerReady
-                      }
-                    });
-
-                    function onPlayerReady(){
-                        ytplayer.playVideo();
-                    }
-
-                    if(typeof onStop === 'function'){
-                      ytplayer.addEventListener('onStateChange', function(state){
-                          if(state.data === 0){
-                              onStop();
-                          }
-                          if(state.data === 1){
-                              var callback = function(){
-                                  ytplayer.pauseVideo();
-                              };
-                              tempThis.updateActiveItemPause(callback);
-                          }
-                          if(state.data === 2){
-                              var callback = function(){
-                                  ytplayer.playVideo();
-                              };
-                              tempThis.updateActiveItemPlay(callback);
-                          }
-                      });
-                    }
-                
-            },
-            getTitle : function(link){
-                return 'Youtube Video';
-            }
-        }
-    }
 };

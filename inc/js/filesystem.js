@@ -60,7 +60,7 @@ var filesystem =  new function() {
     
     this.init = function(){
         var html = '<div id="fileBrowserFrame"></div>';
-        var grid = {width: 6, height:  4, top: 7, left: 0};
+        var grid = {width: 6, height:  4, top: 7, left: 6};
         if(proofLogin())
             grid = {width: 6, height:  8, top: 1, left: 3};
         this.applicationVar = new application('filesystem');

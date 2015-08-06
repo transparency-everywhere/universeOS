@@ -395,13 +395,6 @@ var reader = new function(){
         
     };
     this.openLink = function(type, link, title){
-        //just youtube and wikipedia links
-        switch(type){
-            case 'youtube':
-                
-                player.openItem(type, link);
-                
-                break;
-        }
+        player.openItem(type, link);
     };
 };

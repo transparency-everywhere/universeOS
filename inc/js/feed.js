@@ -61,6 +61,7 @@ var Feed = function(type, $selector, initTypeId){
 };
 
 var feed = new function(){
+    this.app
     this.reload = function(type){
         
         $('.feedFrame[data-type="'+type+'"]').each(function(){
@@ -250,6 +251,10 @@ var feed = new function(){
             $('#submitVote').show();
             });
     };
+    this.show = function(){
+        this.applicationVar.show();
+    };
+    
     this.generateHeader = function(){
         var output="";
         output += "<div class=\"windowHeader\" id=\"feedheader\">";

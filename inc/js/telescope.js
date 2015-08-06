@@ -346,5 +346,9 @@ var telescope = new function(){
         this.tabs.addTab(query, '', html);
         this.initHandlers();
     };
+    
+    this.show = function(){
+        this.applicationVar.show();
+    }
         
 };

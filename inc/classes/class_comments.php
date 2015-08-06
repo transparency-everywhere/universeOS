@@ -49,9 +49,11 @@ function addComment($type, $itemid, $author, $message){
     }
    
     function countComment($type, $itemid){
-        $result = mysql_query("SELECT `typeid` FROM `comments` WHERE type='".mysql_real_escape_string($type)."' && typeid='".mysql_real_escape_string($itemid)."'");
-        $num_rows = mysql_num_rows($result);
-        return $num_rows;
+//        $result = mysql_query("SELECT `typeid` FROM `comments` WHERE type='".mysql_real_escape_string($type)."' && typeid='".mysql_real_escape_string($itemid)."'");
+//        $num_rows = mysql_num_rows($result);
+        $db = new db();
+        $data = $db->query("SELECT COUNT(`typeid`) AS number FROM `comments` WHERE type='".mysql_real_escape_string($type)."' && typeid='".mysql_real_escape_string($itemid)."'");
+        return $data['number'];
     }
     
     public function loadComments($type, $item_id){
@@ -81,8 +83,8 @@ function showComments($type, $itemid) {
     <?php
     }
     if($type == "comment"){
-        $comment_sql = mysql_query("SELECT * FROM comments WHERE type='$type' && typeid='$itemid' ORDER BY timestamp DESC");
-        while($comment_data = mysql_fetch_array($comment_sql)) {
+        $comments = $this->get($type, $itemid);
+        foreach($comments AS $comment_data) {
             $contextMenu = new contextMenu('comment', $comment_data['id']);
             $item = new item('comment', $comment_data['id']);
         ?>
@@ -109,8 +111,9 @@ function showComments($type, $itemid) {
     }else{
      $commentClass = new comments();
         
-    $comment_sql = mysql_query("SELECT * FROM comments WHERE type='$type' && typeid='$itemid' ORDER BY timestamp DESC");
-    while($comment_data = mysql_fetch_array($comment_sql)) {
+    
+    $comments = $this->get($type, $itemid);
+    foreach($comments AS $comment_data) {
     $jsId = $comment_data['id'];
     
     
@@ -138,6 +141,11 @@ function showComments($type, $itemid) {
 <?php
 }}
 echo"</div>";
+}
+
+function get($type, $itemId){
+    $db = new db();
+    return $db->query("SELECT * FROM comments WHERE type='$type' && typeid='$itemId' ORDER BY timestamp DESC");
 }
 
 //@del
@@ -170,9 +178,8 @@ function showFeedComments($feedid){
 
 
     <?php
-
-    $comment_sql = mysql_query("SELECT * FROM comments WHERE type='feed' && typeid='$feedid' ORDER BY timestamp DESC");
-    while($comment_data = mysql_fetch_array($comment_sql)) {
+    $comments = $this->get('feed', $feedid);
+    foreach($comments AS $comment_data){
         $contextMenu = new contextMenu('comment', $comment_data['id']);
         $item = new item('comment', $comment_data['id']);
         ?>
