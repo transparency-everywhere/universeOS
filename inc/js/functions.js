@@ -1118,7 +1118,7 @@ var User = new function(){
     this.getPrivacy = function(){
         return api.query('api/user/getPrivacy/', {});
     };
-};        
+};
 
 function showProfile(userid){
     User.showProfile(userid);

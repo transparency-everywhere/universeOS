@@ -161,7 +161,7 @@ class groups{
                     $groups = $db->select('groups', array('public', '1'));
                     $ids = array();
                     $counts = array();
-                    foreach ($groups as $group) {
+                    foreach ($groups as $group){
                         $counts[] = $groupClass->countGroupMembers($group['id']);
                         $ids[] = $group['id'];
                     }
