@@ -448,5 +448,22 @@ var playlists = new function(){
         }
     };
     
+    this.getPublicPlaylists = function(){
+        return api.query('api/playlists/getPublicPlaylists/', {});
+    };
+    
+    this.getPublicPlaylistArray = function(){
+        var playlists = this.getPublicPlaylists();
+        var playlistArray = [];
+        if(playlists['ids'] === null){
+            return playlistArray;
+        } else {
+            $.each(playlists,function(index,value){               
+                playlistArray.push({type:'playlist', itemId: value['id'], title: value['title'], timestamp: ''});
+            });
+            return playlistArray;
+        }
+    };
+    
         
 };

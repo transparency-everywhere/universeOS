@@ -384,6 +384,16 @@ class files {
         
         return $image;
     }
+    
+    
+    function getMyFiles($userid){
+        $dbClass = new db();
+        $files = $dbClass->select('files', array('owner', $userid, 'AND', 'status', '1'));
+        $folder = $dbClass->select('folders', array('creator', $userid));
+        $elements = $dbClass->select('elements', array('author', $userid));
+        $data = array( 'files' => $files, 'folder' => $folder, 'elements' => $elements);
+        return $data;
+    }
          
     //put your code here
 }
@@ -494,6 +504,9 @@ class file{
             $fileData = $db->select('files', array('id', $fileId), array('type'));
             return $fileData['type'];
         }
+        
+        
+        
     function delete(){
         $fileId = $this->id;
         $dbClass = new db();

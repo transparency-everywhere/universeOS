@@ -32,11 +32,21 @@ var fav = new function(){
         var favs = this.select(user);
         var favArray = [];
         $.each(favs, function(key, value){
+            var timestamp = '';
             if(typeof value['data']['name'] !== 'undefined' && value['data']['name'] !== ""){
                 value['data']['title'] = value['data']['name'];
             }
-            favArray.push({type:value['type'], itemId: value['data']['id'], title:value['data']['title'], timestamp: ''});
+            if(value['data']['timestamp'] > 10000000){
+                timestamp = value['data']['timestamp'];
+            }
+            favArray.push({type:value['type'], itemId: value['data']['id'], title:value['data']['title'], timestamp: timestamp});
         });
+        return favArray;
+    };
+    this.getFavHistory = function(){
+        var favArray = this.getFavArray(User.userid); //get favorites
+        favArray.reverse(); //latest favorites first
+        favArray.slice(0,9); //just the 10 latest favorites
         return favArray;
     };
     this.show = function(user){

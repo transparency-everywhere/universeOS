@@ -43,7 +43,7 @@ var reader = new function(){
         var html = '';
         if(proofLogin()){
             html += '<div class="readerStartpage">';
-                html += '<div class="welcomearea">USERPICTURE Hidiho, '+ useridToUsername(User.userid) +', good to see you back!</div>';
+                html += '<div class="welcomearea"><div class="userPicture"><img src="' + getUserPicture(User.userid) + '"></div><div class="welcomeText">Hidiho, '+ useridToUsername(User.userid) +',<br />good to see you!<div></div>';
                 html += '<div class="navi">';
                     html += '<ul>';
                         html += "<li onclick=\"$( '.hometab' ).show();$( '.groupstab' ).hide();$( '.favoritestab' ).hide();$( '.playliststab' ).hide();$( '.myFilestab' ).hide();return false\">" + filesystem.generateIcon('home', 'blue') + '</li>';
@@ -56,37 +56,6 @@ var reader = new function(){
                 //alles ab hier wird dynamisch durch reader.initTabs() generiert
                 html += reader.initTabs();
             html += '</div>';
-//            html += '<div>';
-//                html += '<div>';
-//                    html += '<span>' + filesystem.generateIcon('clock', 'blue') + ' Display History</span>';
-//                html += '</div>';
-//                html += '<div>';
-//                    html += '<ul>';
-//                        html += '<li>File1</li><li>File2</li><li>File3</li><li>File4</li><li>File5</li>';
-//                    html += '</ul>';
-//                html += '</div>';
-//                html += '<div>';
-//                    html += '<span>SHOW MORE FUNCTION</span>';
-//                html += '</div>';
-//            html += '</div>';
-//            html += '<div>';
-//                html += '<div>';
-//                    html += '<span>' + filesystem.generateIcon('suggestion', 'blue') + ' Popular in the universe</span>';
-//                html += '</div>';
-//                html += '<div>';
-//                    html += '<ul>';
-//                        html += '<li>Featured1</li><li>Featured2</li><li>Featured3</li>';
-//                    html += '</ul>';
-//                html += '</div>';
-//                html += '<div>';
-//                    html += '<ul>';
-//                        html += '<li>File1</li><li>File2</li><li>File3</li><li>File4</li><li>File5</li>';
-//                    html += '</ul>';
-//                html += '</div>';
-//                html += '<div>';
-//                    html += '<span>SHOW MORE FUNCTION</span>';
-//                html += '</div>';
-//            html += '</div>';
         } else {
             //hier die "not logged in startpage" zusammenfriemeln
             html = '';
@@ -114,17 +83,17 @@ var reader = new function(){
         var popular_groups = groups.getPublicGroupArray(User.userid); //popular groups > public and with the highest membercount
         
         
-        var fav_history = User.getFavHistory(); //get latest 5 favorites of the user
+        var fav_history = fav.getFavHistory(); //get latest 5 favorites of the user
         
         var fav_items = fav.getFavArray(User.userid); //get favorites of the user   
         
         
         var playlist_items = playlists.getPlaylistArray(User.userid); //get playlists of the user
         
-        var public_playlists; //get popular public playlists
+        var public_playlists = playlists.getPublicPlaylistArray(); //get latest public playlists
         
         
-        var myFiles_items; //get files of the user - looks like filesystem - machen wie in alter startseite (abfragen zusammenfassen) und dann via api als myFilesArray durchschleusen
+        var myFiles_items = filesystem.getMyFiles(User.userid); //get folder, elements and files of the user
 
 
         html += '<div class="tabs">';

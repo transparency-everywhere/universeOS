@@ -1102,6 +1102,7 @@ span.icon.blue-chevron-down {}
 }
 
 #filesystem .fileBrowser .greyHover{
+    height: 30px;
 }
 
 #filesystem .fileBrowser .greyHover:hover, .greyHover .active{
@@ -1109,13 +1110,24 @@ span.icon.blue-chevron-down {}
     cursor: pointer;
 }
 
-#filesystem .fileBrowser table.filetable > tr {
+#filesystem .fileBrowser table.filetable  tr {
     cursor: pointer;
 }
 
-#filesystem .fileBrowser table.filetable > tr > td {
+#filesystem .fileBrowser table.filetable tr > td:nth-of-type(1) {
     width: 30px;
-    border: 1px dotted red;
+}
+
+#filesystem .fileBrowser table.filetable tr > td:nth-of-type(2) {
+    width: auto;
+}
+
+#filesystem .fileBrowser table.filetable tr > td:nth-of-type(3) {
+    width: 90px;
+}
+
+#filesystem .fileBrowser table.filetable tr > td:nth-of-type(4) {
+    width: 37px;
 }
 
 #filesystem .frameRight{
@@ -1367,11 +1379,11 @@ span.icon.blue-chevron-down {}
 }
 
 
-.pepperSteakButton{
+#filesystem  .pepperSteakButton{
     height: 35px;
 }
 
-.leftNav{
+#filesystem .leftNav{
     position: absolute;
     width: 175px;
     top: 0px;
@@ -1382,31 +1394,31 @@ span.icon.blue-chevron-down {}
     color: #323232;
 }
 
-.leftNav a, leftNav a:link{
+#filesystem .leftNav a, leftNav a:link{
 	color: #323232;
 }
 
-.leftNav > ul > li{
+#filesystem .leftNav > ul > li{
     list-style: none;
     margin: 0px;
     padding: 10px;
     cursor:pointer;
-    font-size: 20px;
+    font-size: 18px;
 }
 
-.leftNav > ul > li:hover {
+#filesystem .leftNav > ul > li:hover {
     background: #FFFFFF;
 }
 
-.leftNav > ul > li.header{
+#filesystem .leftNav > ul > li.header{
     background: #37474f;
 }
 
-.leftNav > ul > li img{
+#filesystem .leftNav > ul > li img{
     
 }
 
-.leftNav span.icon {
+#filesystem .leftNav span.icon {
     height: 21px;
     width: 25px;
 }
@@ -1890,6 +1902,17 @@ ul .elementSettings {
 
 #reader .readerStartpage .welcomearea {
     height: 100px;
+}
+
+
+#reader .readerStartpage .welcomearea .userPicture {
+    border: none;
+    padding: 30px;
+}
+
+
+#reader .readerStartpage .welcomearea .welcomeText {
+    padding: 30px 0 0 0;
 }
 
 #reader .readerStartpage .navi {
