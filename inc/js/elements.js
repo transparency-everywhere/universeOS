@@ -24,7 +24,7 @@ var elements = new function(){
         var elementAuthorData = this.getAuthorData(elementData['author']);
         var link = "./modules/reader/showfile.php?type=" + elementData['type'];
         var header = "<header class=\"white-header\">";
-            header += filesystem.generateIcon(elementData['type'], 'grey');
+            header += filesystem.generateIcon('element', 'grey');
             header += "<span class=\"elementtitle\">" + elementData['title'] + "</span>";
             header += '<span class="headerbuttons">'; 
                 header += filesystem.generateIcon('list', 'grey', 'greyList', 'listView()');
@@ -33,6 +33,7 @@ var elements = new function(){
                 header += filesystem.generateIcon('small_symbols', 'blue', 'blueSmall');
                 header += filesystem.generateIcon('large_symbols', 'grey', 'greyLarge', 'largeSymbols()');
                 header += filesystem.generateIcon('large_symbols', 'blue', 'blueLarge');
+//                header += '<span>|</span> ';
                 header += '<div class="scoreButtonWhiteGradient">' + item.showScoreButton('element', element) + '</div>';
                 header += '<a href=\"#\" id=\"settingsButton\" onclick=\"$(\'.elementSettings' + element + '\').slideToggle(\'slow\'); return false\" title=\"more...\">' + filesystem.generateIcon('settings', 'grey') + '</a>';  
             header += '</span>';
@@ -64,9 +65,9 @@ var elements = new function(){
         var handlerType;
         html += '<div id="attributes">';
         html += '<span class="icons"></span>';
-        html += '<span class="title">Name</span>';
-        html += '<span class="date">Date</span>';
-        html += '<span class="size">Size</span>';
+        html += '<span class="title">| Name</span>';
+        html += '<span class="date">| Date</span>';
+        html += '<span class="size">| Size</span>';
         html += '<span class="buttons"></span>';
         html += '</div>';
         html += '<ul>';

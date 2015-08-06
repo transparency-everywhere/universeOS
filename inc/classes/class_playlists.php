@@ -189,4 +189,12 @@ class playlist{
         $fileClass->overwrite(json_encode($playlistObject));
     }
     
+    function getPublicPlaylists(){
+        $db = new db();
+        $playlists =  $db->select('playlists', array('privacy', 'p'));
+        arsort($playlists); //latest public playlist first
+        $playlists = array_slice($playlists, 0, 9); //just choose the latest 10 playlists
+        return $playlists;
+    }
+    
 }

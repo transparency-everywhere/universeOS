@@ -18,7 +18,7 @@
 var filesystem =  new function() {
     
     
-    this.generateUploadTab = function(element, tabId){
+    this.generateUploadTab = function(element){
         var html = this.generateLeftNav();
         //alles aus upload.php in einer onestep lösung zusammenbauen
         html += '<div class="frameRight">';
@@ -26,15 +26,17 @@ var filesystem =  new function() {
                 html += '<form action="api/files/submitUploader/" method="post" target="submitter">';
                     html += '<h2>Upload</h1>';
                     html += '<hr />';
-                    html += '<span>You will upload files to this collection:</span>';
-                    html += '<span>' + elements.getTitle(element) + '</span>' + filesystem.generateIcon('element', 'white');
+                    html += '<div class="uploaderHeader">';
+                        html += '<div>You will upload files to this collection:</div>';
+                        html += '<div class="titleAndIcon">' + elements.getTitle(element) + filesystem.generateIcon('element', 'white') + '</div>';
+                    html += '</div>';
                     html += '<h3>Privacy settings:</h2>';
                     html += '<div class="uploadPrivacy"></div>';
                     html += '<h3>Add files:</h2>';
                     html += '<div>';
                         html += '<input id="uploader_file" name="feedFile" type="file" multiple="true">';
-                        html += '<ul class="tempFilelist"></ul>';
                         html += '<div id="queue"></div>';
+                        html += '<ul class="tempFilelist"></ul>';
                     html += '</div>';
                     html += '<div class="uploaderCancelButton">Cancel</div>';
                     html += '<div class="uploaderUploadButton"><input type="submit" value="Upload" class="submitUpload"></div>';
@@ -51,7 +53,7 @@ var filesystem =  new function() {
 //        filesystem.tabs.addTab('Upload', '', tabContent);
         //wird zu:
         var tabId = filesystem.tabs.addTab('Upload '+element, '', '');
-        filesystem.tabs.updateTabContent(tabId,filesystem.generateUploadTab(element, tabId));
+        filesystem.tabs.updateTabContent(tabId,filesystem.generateUploadTab(element));
         initUploadify('#uploader_file', 'api/files/uploadTemp/', element, '', ''); //the two empty strings are timeStamp and salt - could be empty
 
     }
@@ -196,7 +198,7 @@ var filesystem =  new function() {
                         if(folder === "3"){
                             name = groups.getTitle(value['data']['name']) + '\'s Groupfiles'; // value['data']['name']) because groupid = foldername
                         }
-                        html += '                <tr class="greyHover" oncontextmenu="showMenu(\'folder' + value['data']['id'] + '\'); return false;" height="30" class="greyHover">';
+                        html += '                <tr class="greyHover" oncontextmenu="showMenu(\'folder' + value['data']['id'] + '\'); return false;">';
                         if(rightClick){
                             html += ''; //hier muss die rightClick function noch eingebunden werden!!
                         }
@@ -216,7 +218,7 @@ var filesystem =  new function() {
 
                     if(value['type'] === "element"){
                         var title = value['data']['title'];
-                        html += "                        <tr class=\"greyHover\" oncontextmenu=\"showMenu('element" + value['data']['id'] + "'); return false;\" height=\"30\">";
+                        html += "                        <tr class=\"greyHover\" oncontextmenu=\"showMenu('element" + value['data']['id'] + "'); return false;\">";
                         html += "                           <td onclick=\"elements.open('" + value['data']['id'] + "'); return false;\">" + filesystem.generateIcon('element') + "</td>";
                         html += "                           <td onclick=\"elements.open('" + value['data']['id'] + "'); return false;\">" + title + "</td>";
                         html += "                           <td>" + item.showScoreButton('element', value['data']['id']) + "</td>";
@@ -227,7 +229,7 @@ var filesystem =  new function() {
                         html += "                           </td>";
                         html += "                        </tr>";
                         if(rightClick){
-                            html += ''; //hier muss die rightClick function noch eingebunden werden!!
+                            html += ''; //option to add rightClick function, currently deactivated
                         }
                     }
                 });
@@ -468,7 +470,7 @@ var filesystem =  new function() {
     icons['home'] = 'home';
     icons['settings'] = 'gear';
     icons['folder'] = 'folder';
-    icons['element'] = 'archive';
+    icons['element'] = 'filesystem';
     icons['download'] = 'download';
     icons['link'] = 'external-link';
     icons['RSS'] = 'rss';
@@ -498,6 +500,8 @@ var filesystem =  new function() {
     icons['minimize'] = 'minimize';
     icons['close'] = 'close';
     icons['question'] = 'question';
+    icons['user'] = 'user';
+    icons['group'] = 'group';
     
     
     //files
@@ -628,6 +632,33 @@ var filesystem =  new function() {
                 popArray.push({type: value['type'], itemId: value['data']['id'], title: value['data']['title'], timestamp: ''});
             });
 	return popArray;
+    };
+    this.getMyFiles = function(userid){
+        var data = api.query('api/files/getMyFiles/', {userid : userid});
+        var files = data['files'];
+        var folder = data['folder'];
+        var elements = data['elements'];
+        var myFiles = [];
+        
+        if(typeof folder !== 'string'){
+            $.each(folder, function(key, value){
+                myFiles.push({type: 'folder', itemId: value['id'], title: value['name'], timestamp: value['timestamp']});
+            });
+        }
+        
+        if(typeof elements !== 'string'){
+            $.each(elements, function(key, value){
+                myFiles.push({type: 'element', itemId: value['id'], title: value['title'], timestamp: value['timestamp']});
+            });
+        }
+        
+        if(typeof files !== 'string'){
+            $.each(files, function(key, value){
+                myFiles.push({type: value['type'], itemId: value['id'], title: value['filename'], timestamp: value['timestamp']});
+            });
+        }
+        
+        return myFiles;
     };
 };
 //@param select folder/element

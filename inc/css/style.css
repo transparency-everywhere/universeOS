@@ -1056,33 +1056,41 @@ span.icon.blue-chevron-down {}
 #filesystem .uploadTab {
     background-color: #607d8b;
     color: #fefefe;
+    width: 500px;
+    margin: 20px;
+    padding: 20px;
 }
 
-#filesystem #uploader_file #shadow-root input {
-    display: inline-block;
+#filesystem .uploadTab #uploader_file {
     background-color:  #00bcd4;
-    width: 100px;
+    width: 200px;
     height: 35px;
     font-family: Ubuntu;
-    color:  #ffffff;
-    font-size: 16px; /* Näherungswert aufgrund einer Schriftersetzung */
+    color:  #fefefe;
+    font-size: 16px;/* Näherungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
-    text-align: center;
+    text-align: left;
 }
 
-#filesystem .uploaderUploadButton {
-    display: inline-block;
+#filesystem .uploadTab .uploaderHeader .titleAndIcon {
     background-color:  #00bcd4;
-    width: 100px;
+    width: 100%;
     height: 35px;
-    font-family: Ubuntu;
-    color:  #ffffff;
-    font-size: 16px; /* Näherungswert aufgrund einer Schriftersetzung */
-    font-weight: 300;
-    text-align: center;
 }
 
-#filesystem .uploaderCancelButton {
+#filesystem .uploadTab .uploadPrivacy header {
+    display: none;
+}
+
+#filesystem .uploadTab .uploaderUploadButton {
+
+}
+
+#filesystem .uploadTab .space {
+    width: auto;
+}
+
+#filesystem .uploadTab .uploaderCancelButton {
     display: inline-block;
     background-color:  #37474f;
     width: 100px;
@@ -1092,6 +1100,27 @@ span.icon.blue-chevron-down {}
     font-size: 16px; /* Näherungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: center;
+    line-height: 2.2;
+    float: left;
+}
+
+#filesystem .uploadTab .uploaderUploadButton {
+    display: inline-block;
+    background-color:  #00bcd4;
+    width: 100px;
+    height: 35px;
+    font-family: Ubuntu;
+    color:  #ffffff;
+    font-size: 16px; /* Näherungswert aufgrund einer Schriftersetzung */
+    font-weight: 300;
+    text-align: center;
+    float: right;
+}
+
+#filesystem .uploadTab .uploaderUploadButton .submitUpload {
+    background-color: #00bcd4;
+    border: none;
+    line-height: 2.2;
 }
 
 #filesystem .fileBrowser {
@@ -1102,6 +1131,7 @@ span.icon.blue-chevron-down {}
 }
 
 #filesystem .fileBrowser .greyHover{
+    height: 30px;
 }
 
 #filesystem .fileBrowser .greyHover:hover, .greyHover .active{
@@ -1109,13 +1139,24 @@ span.icon.blue-chevron-down {}
     cursor: pointer;
 }
 
-#filesystem .fileBrowser table.filetable > tr {
+#filesystem .fileBrowser table.filetable  tr {
     cursor: pointer;
 }
 
-#filesystem .fileBrowser table.filetable > tr > td {
+#filesystem .fileBrowser table.filetable tr > td:nth-of-type(1) {
     width: 30px;
-    border: 1px dotted red;
+}
+
+#filesystem .fileBrowser table.filetable tr > td:nth-of-type(2) {
+    width: auto;
+}
+
+#filesystem .fileBrowser table.filetable tr > td:nth-of-type(3) {
+    width: 90px;
+}
+
+#filesystem .fileBrowser table.filetable tr > td:nth-of-type(4) {
+    width: 37px;
 }
 
 #filesystem .frameRight{
@@ -1148,7 +1189,8 @@ span.icon.blue-chevron-down {}
 }
 
 #filesystem .path #settingsButton{
-    float:right;margin-top: -5px;
+    float:right;
+    margin-top: -5px;
 }
 
 #filesystem .path #settingsButton .icon{
@@ -1165,29 +1207,48 @@ span.icon.blue-chevron-down {}
     width: 25px;
 }
 
+#filesystem .tabFrame #showElement .scoreButton {
+    margin-left: 0;
+}
+
 #filesystem .frameRight span.icons  {
     display: inline-block;
     min-width: 21px;
 }
 
 #filesystem .frameRight span.icons span.icon  {
-    width: auto;
+    width: 25px;
 }
 
 #filesystem .frameRight span.title  {
     display: inline-block;
-    width: 35%;
-}
+    width: -moz-calc(100% - 395px);
+    width: -webkit-calc(100% - 395px);
+    width: calc(100% - 395px);}
 
 #filesystem .frameRight span.date, #filesystem .frameRight span.size  {
     display: inline-block;
-    width: 15%;
+    width: 110px;
+}
+
+ #filesystem .frameRight span.size  {
+    display: inline-block;
+    width: 100px;
 }
 
 #filesystem .frameRight span.buttons  {
     display: inline-block;
     float: right;
-    width: 30%;
+    width: 160px;
+}
+
+#filesystem .frameRight span.buttons > * {
+    margin: 0;
+    padding: 0;
+}
+
+#filesystem .frameRight span.buttons > a > span.icon-gear {
+    margin-bottom: -8px;
 }
 
 #filesystem .frameRight span.heading  {
@@ -1227,6 +1288,39 @@ span.icon.blue-chevron-down {}
     border-top-style: none;
     border-right-style: none;
     border-left-style: none;
+}
+
+#filesystem .tabFrame .frameRight .white-header > span {
+    display: block;
+    float: left;
+}
+
+#filesystem .tabFrame .frameRight .white-header > .icon {
+    width: 32px;
+}
+
+#filesystem .tabFrame .frameRight .white-header > .elementtitle {
+    width: auto;
+    font-size: 22px;
+    line-height: 1.6;
+}
+
+#filesystem .tabFrame .frameRight .white-header > .headerbuttons {
+    width: 200px;
+    float: right;
+}
+
+#filesystem .tabFrame .frameRight .white-header > .headerbuttons .icon {
+    width: 25px;
+    height: 25px;
+}
+
+#filesystem .tabFrame .frameRight .white-header > .headerbuttons > .icon, #filesystem .tabFrame .frameRight .white-header > .headerbuttons > a > .icon {
+    margin-top: 7px;
+}
+
+#filesystem .tabFrame .frameRight .white-header > .headerbuttons > * {
+    float: left;
 }
 
 #filesystem .tabFrame .frameRight .white-header .dropdown ul.elementSettings {
@@ -1367,11 +1461,11 @@ span.icon.blue-chevron-down {}
 }
 
 
-.pepperSteakButton{
+#filesystem  .pepperSteakButton{
     height: 35px;
 }
 
-.leftNav{
+#filesystem .leftNav{
     position: absolute;
     width: 175px;
     top: 0px;
@@ -1382,31 +1476,31 @@ span.icon.blue-chevron-down {}
     color: #323232;
 }
 
-.leftNav a, leftNav a:link{
+#filesystem .leftNav a, leftNav a:link{
 	color: #323232;
 }
 
-.leftNav > ul > li{
+#filesystem .leftNav > ul > li{
     list-style: none;
     margin: 0px;
     padding: 10px;
     cursor:pointer;
-    font-size: 20px;
+    font-size: 18px;
 }
 
-.leftNav > ul > li:hover {
+#filesystem .leftNav > ul > li:hover {
     background: #FFFFFF;
 }
 
-.leftNav > ul > li.header{
+#filesystem .leftNav > ul > li.header{
     background: #37474f;
 }
 
-.leftNav > ul > li img{
+#filesystem .leftNav > ul > li img{
     
 }
 
-.leftNav span.icon {
+#filesystem .leftNav span.icon {
     height: 21px;
     width: 25px;
 }
@@ -1890,6 +1984,17 @@ ul .elementSettings {
 
 #reader .readerStartpage .welcomearea {
     height: 100px;
+}
+
+
+#reader .readerStartpage .welcomearea .userPicture {
+    border: none;
+    padding: 30px;
+}
+
+
+#reader .readerStartpage .welcomearea .welcomeText {
+    padding: 30px 0 0 0;
 }
 
 #reader .readerStartpage .navi {
