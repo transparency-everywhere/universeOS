@@ -74,6 +74,7 @@ var player = new function(){
         $dockPlay.bind('click',callback);
     };
     this.loadItem = function($target, type, selector, onStop){
+        console.log(type);
         handlers[type].open($target, selector, onStop);
         this.updateActiveItemObject($target.attr('id'), type);
         $('.dockPlayer').show();

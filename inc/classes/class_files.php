@@ -265,6 +265,7 @@ class files {
             'qt' => 'video/quicktime',
             'mov' => 'video/quicktime',
             'mp4' => 'video/mp4',
+            'm4v' => 'video/mp4',
 
             // adobe
             'pdf' => 'application/pdf',

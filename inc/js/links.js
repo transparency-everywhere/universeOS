@@ -17,7 +17,7 @@
         
 var links = new function(){
     this.getData = function(linkId){
-	return api.query('api/links/select', {link_id : linkId});
+	return api.query('api/links/select/', {link_id : linkId});
     };
     this.update = function(linkId, element, title,  type, privacy, link, callback){
         

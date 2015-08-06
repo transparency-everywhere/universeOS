@@ -423,7 +423,7 @@ var universe = new function(){
     this.reloadState = true;
     this.init = function(){
         
-         gui.loadScript('inc/js/privacy.js');
+        gui.loadScript('inc/js/privacy.js');
         
         gui.loadScript('inc/js/gui.js');
         
@@ -2729,12 +2729,19 @@ var handlers = {
                         return '<span class="icon icon-folder"></span>';
                     },
                     handler: function(id){
-                        files.open(id);
+                        reader.openFile(id);
                     }
-                    
-                }
+                },
+    'links': {
+                    handler: function(id){
+                        var linkData = links.getData(id);
+                        reader.openLink(linkData['type'].toLowerCase(), linkData.link, linkData.title);
+                    }
+    }
+                
     
 };
+
 
 var userHistory = new function(){
     this.storage = [];

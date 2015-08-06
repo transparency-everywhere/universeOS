@@ -38,7 +38,7 @@ var elements = new function(){
             header += '</span>';
             header += '<div class="elementSettings dropdown"><ul class="elementSettings elementSettings' + element + '">';		 
                 header += '<li onclick="filesystem.showCreateUFFForm(\'' + element + '\'); ">' + filesystem.generateIcon('file', 'white') + '&nbsp;Create an UFF</li>';
-                header += '<li onclick="links.showCreateLinkForm(\'' + element + '\');">' + filesystem.generateIcon('link', 'white') + '&nbsp;Add a link</li>';		  			
+                header += '<li onclick="window.links.showCreateLinkForm(\'' + element + '\');">' + filesystem.generateIcon('link', 'white') + '&nbsp;Add a link</li>';		  			
                 header += '<li onclick="filesystem.openUploadTab(\'' + element + '\');">' + filesystem.generateIcon('file', 'white') + '&nbsp;Upload files</li>';
             header += '</ul></div>';
         header += "</header>";
@@ -61,6 +61,7 @@ var elements = new function(){
         var image = "";
         var date = "";
         var type = "";
+        var handlerType;
         html += '<div id="attributes">';
         html += '<span class="icons"></span>';
         html += '<span class="title">Name</span>';
@@ -71,24 +72,22 @@ var elements = new function(){
         html += '<ul>';
         html += '<span class="heading">Files</span>';
         $.each(fileList, function(key, value){
+            console.log(value);
             if(value['type'] === 'file' && value['data']['type'] !== 'image' && value['data']['type'] !== 'image/jpeg' && value['data']['type'] !== 'image/png' && value['data']['type'] !== 'image/gif' && value['data']['type'] !== 'image/tiff') {
                 //generate fileList for an element with an unordered list <ul>
                 var data = value['data'];
                 i++;
-                if(value['type'] === 'link'){
-                    type = "openLink"; // if type is link, use reader.openLink()
-                }
                 if(value['type'] === 'file'){
-                    type = "openFile"; // if type is file, use reader.openFile()
+                    handlerType = 'handlers.files.handler('+data['id']+');';
                 }
                 date = new Date(data['timestamp']*1000).toString().substr(11, 5) + new Date(data['timestamp']*1000).toString().substr(4, 4) + new Date(data['timestamp']*1000).toString().substr(8, 2); //year + month + day
                 image = filesystem.generateIcon(data['type']);
                 html += '<li data-id="' + data['id'] + '" data-type="' + data['type'] + '" data-title="' + data['title'] + '" data-date="' + date + '" data-size="' + data['size'] + '">';
-                    html += '<span class="icons"><a href="./out/?file=' + data['id'] + '" onclick="reader.' + type + '(\'' + data['id'] + '\'); return false">' + image + '</a></span>';
-                    html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="reader.' + type + '(\'' + data['id'] + '\'); return false">' + data['title'] + '</a></span>';
+                    html += '<span class="icons"><a href="./out/?file=' + data['id'] + '" onclick="'+handlerType+' return false">' + image + '</a></span>';
+                    html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="'+handlerType+' return false">' + data['title'] + '</a></span>';
                     html += '<span class="date">' + date + '</span>';
                     html += '<span class="size">' + Math.round(data['size']/1024) + ' kB</span>';
-                    html += '<span class="buttons">'
+                    html += '<span class="buttons">';
                         html += item.showScoreButton(value['type'], data['id']);
                         if(data['download']){
                             html += '<a href="./out/download/?fileId=' + data['id'] + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download', 'grey') + '</a>';
@@ -109,17 +108,14 @@ var elements = new function(){
                 //generate fileList for an element with an unordered list <ul>
                 var data = value['data'];
                 i++;
-                if(value['type'] === 'link'){
-                    type = "openLink"; // if type is link, use reader.openLink()
-                }
                 if(value['type'] === 'file'){
-                    type = "openFile"; // if type is file, use reader.openFile()
+                    handlerType = 'handlers.files.handler('+data['id']+');';
                 }
                 date = new Date(data['timestamp']*1000).toString().substr(11, 5) + new Date(data['timestamp']*1000).toString().substr(4, 4) + new Date(data['timestamp']*1000).toString().substr(8, 2); //year + month + day
                 image = filesystem.generateIcon(data['type']);
                 html += '<li data-id="' + data['id'] + '" data-type="' + data['type'] + '" data-title="' + data['title'] + '" data-date="' + date + '" data-size="' + data['size'] + '">';
-                    html += '<span class="icons"><a href="./out/?file=' + data['id'] + '" onclick="reader.' + type + '(\'' + data['id'] + '\'); return false">' + image + '</a></span>';
-                    html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="reader.' + type + '(\'' + data['id'] + '\'); return false">' + data['title'] + '</a></span>';
+                    html += '<span class="icons"><a href="./out/?file=' + data['id'] + '" onclick="'+handlerType+' return false">' + image + '</a></span>';
+                    html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="'+handlerType+' return false">' + data['title'] + '</a></span>';
                     html += '<span class="date">' + date + '</span>';
                     html += '<span class="size">' + Math.round(data['size']/1024) + ' kB</span>';
                     html += '<span class="buttons">'
@@ -139,21 +135,22 @@ var elements = new function(){
         });
         html += '<span class="heading">Links</span>';
         $.each(fileList, function(key, value){
+            console.log(value);
             if(value['type'] === 'link') {
                 //generate fileList for an element with an unordered list <ul>
                 var data = value['data'];
                 i++;
                 if(value['type'] === 'link'){
-                    type = "openLink"; // if type is link, use reader.openLink()
+                    handlerType = 'handlers.links.handler('+data['id']+');';
                 }
                 if(value['type'] === 'file'){
-                    type = "openFile"; // if type is file, use reader.openFile()
+                    handlerType = 'handlers.files.handler('+data['id']+');';
                 }
                 date = new Date(data['timestamp']*1000).toString().substr(11, 5) + new Date(data['timestamp']*1000).toString().substr(4, 4) + new Date(data['timestamp']*1000).toString().substr(8, 2); //year + month + day
                 image = filesystem.generateIcon(data['type']);
                 html += '<li data-id="' + data['id'] + '" data-type="' + data['type'] + '" data-title="' + data['title'] + '" data-date="' + date + '" data-size="' + data['size'] + '">';
-                    html += '<span class="icons"><a href="./out/?file=' + data['id'] + '" onclick="reader.' + type + '(\'' + data['id'] + '\'); return false">' + image + '</a></span>';
-                    html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="reader.' + type + '(\'' + data['id'] + '\'); return false">' + data['title'] + '</a></span>';
+                    html += '<span class="icons"><a href="./out/?file=' + data['id'] + '" onclick="'+handlerType+' return false">' + image + '</a></span>';
+                    html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="'+handlerType+' return false">' + data['title'] + '</a></span>';
                     html += '<span class="date">' + date + '</span>';
                     html += '<span class="size"></span>';
                     html += '<span class="buttons">'
@@ -219,7 +216,6 @@ var elements = new function(){
 	});
 	return result;
     };
-    
     this.showCreateElementForm = function(parent_folder){
         var formModal = new gui.modal();
         
