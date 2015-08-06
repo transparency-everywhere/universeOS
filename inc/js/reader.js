@@ -239,8 +239,7 @@ var reader = new function(){
             break;
             
             
-            case 'text/plain':
-            case 'text/x-c++':
+            case 'text/plain'||'text/x-c++':
                 var title = fileData['title'];
                 output += '<div class="openFile">';
                     output += header;
@@ -255,6 +254,7 @@ var reader = new function(){
             
             case 'audio':
             case 'audio/wav':
+            case 'audio/ogg':
             case 'audio/mpeg':
                 var title = fileData['title'];
                 output += '<div class="openFile">';
@@ -268,12 +268,13 @@ var reader = new function(){
                                 else if(fileData['type'] === "audio/mpeg"){
                                     output += "<source src=" + path + " type=\"audio/mpeg\">";
                                 }
+                                else if(fileData['type'] === "audio/ogg"){
+                                    output += "<source src=" + path + " type=\"audio/ogg\">";
+                                }
                                 else if(fileData['type'] === "audio"){
                                     output += "This audio file isn't compatible with HTML5. Please convert it to Ogg, Wav or MP3 files.";
                                 }
-                                else {
-                                    output += "Your browser does not support the audio element.";
-                                }
+                                output += "Your browser does not support the audio element.";
                             output += "</audio>";
                         output += "</div>";
                     output += '</div>';
@@ -303,9 +304,7 @@ var reader = new function(){
                                 else if(fileData['type'] === "video"){
                                     output += "This video isn't compatible with HTML5. Please convert it to Ogg, WebM or MP4 files.";
                                 }
-                                else {
-                                    output += "Your browser does not support HTML5 video.";
-                                }
+                                output += "Your browser does not support HTML5 video.";
                             output += "</video>";
                         output += "</div>";
                     output += '</div>';

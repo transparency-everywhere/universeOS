@@ -45,17 +45,14 @@ var comments = new function(){
         var loadedComments = comments.load(type,item_id);
         
         var html = '<div id="'+type+'Comment_'+item_id+'">';
-        html += '<div class="shadow commentRow">';
+        html += '<div class="commentRow">';
             html += '<center>';
                 html += '<form data-type="'+type+'" data-item="'+item_id+'" class="addComment" id="addComment" target="submitter">';
                     html += '<table>';
                         html += '<tr>';
-                            html += '<td style="padding: 0 10px;">'+User.showPicture(User.userid)+'</td>';
                             html += '<td style="vertical-align:middle;"><input type="text" name="comment" placeholder="write commenta.." class="commentField" style="width: 100%!important;"></td>';
                             html += '<td style="padding: 0 10px;"><input type="submit" value="send" class="button" name="submitComment" style="width:auto;"></td>';
-                            html += '<td width="10"></td>'
-
-                        html += '</tr><input type="hidden" name="itemid" value="<?=$itemid;?>"><input type="hidden" name="user" value="'+User.userid+'"><input type="hidden" name="type" value="feed">';
+                        html += '</tr><input type="hidden" name="itemid" value="'+item_id+'"><input type="hidden" name="user" value="'+User.userid+'"><input type="hidden" name="type" value="feed">';
                     html += '</table>';
                 html += '</form>';
             html += '</center>';
