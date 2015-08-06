@@ -42,11 +42,16 @@ a{
 
 a:hover, a:focus{
     text-decoration:none;
+    color: #00bcd4;
 }
 
 input[type=text], input[type=password]{
     color: #313131;
     padding: 0px 12px;
+}
+
+h1, h2{
+    font-size:24px;
 }
 
 h3{
@@ -72,25 +77,25 @@ h3{
 .fenster > header {
     color: #454545;
     cursor: move;
-    height: 40px;
+    height: 60px;
     overflow: hidden;
-    padding: 10px 0 0 10px;
+    padding: 20px 0 0 15px;
     text-overflow: ellipsis;
-    font-size: 18pt;
+    font-size: 24px;
     white-space: nowrap;
     box-sizing: border-box;
     border-bottom: 1px solid #dcdcdc;
 }
 .fenster .inhalt {
 	background-color: #FFF;
-        
-	top: 40px;
+	top: 60px;
         overflow: auto;
         position: absolute;
         left: 0;
         right: 0;
-        border-radius: 3px;
         bottom: 0;
+        border-bottom-left-radius: 3px;
+        border-bottom-right-radius: 3px;
 }
 .inhalt p {
 	margin-bottom:0px;
@@ -120,7 +125,7 @@ h3{
 .windowMenu{
     position: absolute;
     right: 6px;
-    top: 6px;
+    top: 14px;
 }
 
 .windowMenu .icon{
@@ -185,12 +190,11 @@ li.notHidden{
 
 .itemThumb a{
     font-size: 16px;
-    color:#006d67;
 }
 
 .itemThumb .icon{
-    width:25px;
-    height:25px;
+    width: 60px;
+    height: 60px;
     max-height: 63px;
     margin-right: 10px;
 }
@@ -366,7 +370,7 @@ span.icon.blue-chevron-down {}
 }
 #searchMenu, #searchMenu a, #searchMenu a:link, #searchMenu a:visited{
     color: #fefefe;
-    font-size: 20px; /* NÃ¤herungswert aufgrund einer Schriftersetzung */
+    font-size: 20px; /* Näherungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: left;
 }
@@ -469,7 +473,7 @@ span.icon.blue-chevron-down {}
 .resultList li:hover .icon.dark{
     display:none;
 }
-#searchMenu .loadAll,Â #searchMenu .loadAll{
+#searchMenu .loadAll, #searchMenu .loadAll{
     font-size: 14px;
     margin-top: 15px;
     text-align:right;
@@ -1067,7 +1071,7 @@ span.icon.blue-chevron-down {}
     height: 35px;
     font-family: Ubuntu;
     color:  #fefefe;
-    font-size: 16px;/* NÃ¤herungswert aufgrund einer Schriftersetzung */
+    font-size: 16px;/* Näherungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: left;
 }
@@ -1097,7 +1101,7 @@ span.icon.blue-chevron-down {}
     height: 35px;
     font-family: Ubuntu;
     color:  #ffffff;
-    font-size: 16px; /* NÃ¤herungswert aufgrund einer Schriftersetzung */
+    font-size: 16px; /* Näherungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: center;
     line-height: 2.2;
@@ -1111,7 +1115,7 @@ span.icon.blue-chevron-down {}
     height: 35px;
     font-family: Ubuntu;
     color:  #ffffff;
-    font-size: 16px; /* NÃ¤herungswert aufgrund einer Schriftersetzung */
+    font-size: 16px; /* Näherungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: center;
     float: right;
@@ -1145,6 +1149,8 @@ span.icon.blue-chevron-down {}
 
 #filesystem .fileBrowser table.filetable tr > td:nth-of-type(1) {
     width: 30px;
+    padding-left: 6px;
+    padding-top: 4px;
 }
 
 #filesystem .fileBrowser table.filetable tr > td:nth-of-type(2) {
@@ -1157,6 +1163,8 @@ span.icon.blue-chevron-down {}
 
 #filesystem .fileBrowser table.filetable tr > td:nth-of-type(4) {
     width: 37px;
+    padding-top: 7px;
+    padding-right: 8px;
 }
 
 #filesystem .frameRight{
@@ -1195,6 +1203,7 @@ span.icon.blue-chevron-down {}
 
 #filesystem .path #settingsButton .icon{
     margin-right: -4px;
+    margin-top: -8px;
 }
 
 
@@ -1203,8 +1212,6 @@ span.icon.blue-chevron-down {}
 
 
 #filesystem .tabFrame .frameRight .icon  {
-    height: 25px;
-    width: 25px;
 }
 
 #filesystem .tabFrame #showElement .scoreButton {
@@ -1264,6 +1271,7 @@ span.icon.blue-chevron-down {}
 #filesystem .tabFrame .frameRight > ul > li  {
     display: inline-block;
     width: 100%;
+    padding:10px;
 }
 
 #filesystem .tabFrame .frameRight > ul > li:hover{
@@ -1283,7 +1291,9 @@ span.icon.blue-chevron-down {}
 }
 
 #filesystem .tabFrame .frameRight .white-header {
-    height:40px;
+    height: 60px;
+    padding-top: 12px;
+    padding-right: 10px;
     border: 1px solid #cfd8dc;
     border-top-style: none;
     border-right-style: none;
@@ -1297,6 +1307,8 @@ span.icon.blue-chevron-down {}
 
 #filesystem .tabFrame .frameRight .white-header > .icon {
     width: 32px;
+    margin-left: 10px;
+    margin-top: 2px;
 }
 
 #filesystem .tabFrame .frameRight .white-header > .elementtitle {
@@ -1306,17 +1318,12 @@ span.icon.blue-chevron-down {}
 }
 
 #filesystem .tabFrame .frameRight .white-header > .headerbuttons {
-    width: 200px;
+    width: 226px;
     float: right;
 }
 
-#filesystem .tabFrame .frameRight .white-header > .headerbuttons .icon {
-    width: 25px;
-    height: 25px;
-}
-
 #filesystem .tabFrame .frameRight .white-header > .headerbuttons > .icon, #filesystem .tabFrame .frameRight .white-header > .headerbuttons > a > .icon {
-    margin-top: 7px;
+    margin-top: 2px;
 }
 
 #filesystem .tabFrame .frameRight .white-header > .headerbuttons > * {
@@ -1485,7 +1492,7 @@ span.icon.blue-chevron-down {}
     margin: 0px;
     padding: 10px;
     cursor:pointer;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 #filesystem .leftNav > ul > li:hover {
@@ -1501,8 +1508,7 @@ span.icon.blue-chevron-down {}
 }
 
 #filesystem .leftNav span.icon {
-    height: 21px;
-    width: 25px;
+    margin-bottom: -9px;
 }
 
 .frameRight{
@@ -1620,7 +1626,8 @@ span.icon.blue-chevron-down {}
 
 #privacySettings li div{
 background-color: #607d8b;
-padding: 5px 12px;
+padding: 12px 12px;
+height: 45px;
 margin-right: 20px;
 color: #FFF;
 }
@@ -1635,14 +1642,14 @@ color: #FFF;
 
 #privacySettings li.active div .icon{
     display: inline-block;
-    margin-bottom: -4px;
+    margin-bottom: -16px;
 }
 
 #privacySettings .button{
     margin-right: 20px;
 }
 
-#mailListÂ {
+#mailList {
     width: 450px;
     margin-left: 150px;
 }
@@ -1682,7 +1689,7 @@ color: #FFF;
 	line-height: 8px;
 }
 
-#buddyListTableÂ { 
+#buddyListTable { 
     overflow: none;
 }
     
@@ -1739,7 +1746,7 @@ color: #FFF;
     padding: 5px;
     z-index: 1;
     overflow: auto;
-    background: #FFFFFF;
+    background: #607d8b;
     display: none;
 }
 
@@ -1792,14 +1799,22 @@ color: #FFF;
     padding-bottom: 7px;
 }
 
+.feedEntry .options{
+    border-top: 1px solid #dcdcdc;
+    padding-top: 5px;
+}
+
 .feedEntry .options .scoreButton{
     display: inline-block;
     height: 30px;
+    margin-top: -3px;
+    margin-bottom: 2px;
     margin-left: -7px;
 }
 
 .feedEntry .icon-comment{
     margin-top: 5px;
+    
 }
 
 .feedEntry .itemSettingsButton{
@@ -1810,7 +1825,6 @@ color: #FFF;
 
 .feedEntry .commentButton{
     display: inline-block;
-    
     margin: -7px 0 0px 5px;
     font-size: 16px;
     height: 30px;
@@ -1824,13 +1838,10 @@ color: #FFF;
 }
 
 #feedInput{
-        
-        
-        
 	height: 40px;
-        font-size: 25px;
-        padding: 8px;
-
+        font-size: 16px;
+        padding: 10px;
+        overflow:hidden;
 	resize: none;
 	width: 100%;
 	margin-left: -10px;
@@ -1844,16 +1855,16 @@ color: #FFF;
 }
 
 #feedInputBar input[type=submit]{
-    background-color: #006d67;
     width: 80px;
     height: 35px;
     float: right;
     border-radius: 0;
     color: #FFF;
     padding: 2px;
+    margin: 0px;
 }
 
-#feedTableÂ { 
+#feedTable { 
     overflow: none;
 }
 
@@ -2057,13 +2068,13 @@ ul .elementSettings {
     float: left;
 }
 
-#reader .readerStartpage .tabs .singletab .sectionA {
+#reader .readerStartpage .tabs .singletab .sectionA, #reader .readerStartpage .tabs .singletab .sectionB {
     width:100%;
+    padding: 10px 10px;
 }
 
 #reader .readerStartpage .tabs .singletab .sectionB {
     background-color: #eceff1;
-    width:100%;
 }
 
 #reader .readerStartpage .tabs .singletab .sectionA > .titleA,
@@ -2550,7 +2561,7 @@ color:#FFFFFF;
     
 }
 
-#pepperSteakItemÂ {
+#pepperSteakItem {
     background-color: #72aa00; 
 }
 
@@ -2649,7 +2660,7 @@ color:#FFFFFF;
 .white-gradient {
     background-color: rgb(255, 255, 255);font-family: Ubuntu;
     color:  #313131;
-    font-size: 16px; /* NÃ¤herungswert aufgrund einer Schriftersetzung */
+    font-size: 16px; /* Näherungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: left;
 }
@@ -2663,11 +2674,11 @@ color:#FFFFFF;
     box-sizing: border-box;
 }
 
-.floatRightÂ {
+.floatRight {
     float: right;
 }
 
-.clearÂ {
+.clear {
     clear: both;
 }
 
@@ -2774,9 +2785,9 @@ color:#FFFFFF;
         }
         .tabFrame>header li {
             float: left;
-            padding: 10px 15px;
+            padding: 10px 10px;
             padding-bottom: 0;
-            background: #eee;
+            background: #eceff1;
             border-bottom: 0;
             cursor: pointer;
             height: 40px;
@@ -2815,7 +2826,6 @@ color:#FFFFFF;
         .tabFrame>.tab {
             position: absolute;
             top: 40px;
-            border-top: 1px solid #c9c9c9;
             left: 0;
             right: 0;
             bottom: 0;
@@ -3222,15 +3232,15 @@ font-weight:bold;
 }
 
 .scoreButton .icon{
-    width: 18px;
-    height: 18px;
+    width: 24px;
+    height: 24px;
     margin-top: 5px;
 }
 
 .scoreButton .counter{
 width: auto;
 min-width: 26px;
-border: 2px solid #a0a0a0;
+border:1px solid #607D8B;
 border-radius: 0;
 line-height: 18px;
 }
@@ -3465,14 +3475,16 @@ del.bar{
 
 
 .commentRow{
-    background: #ededed;
     height: 50px;
-	
-    padding: 10px 0px;
+    padding: 10px 0;
 }
 
 .commentRow input[type=submit]{
 	margin-top:-2px;
+}
+
+.commentLoadingArea .signature{
+    background:none;
 }
 
 .comment{
@@ -3490,10 +3502,9 @@ del.bar{
 }
 
 .subComment{
-    margin: 20px;
+    margin-top: 20px;
     background-color: #FFF;
     border: 1px solid #c9c9c9;
-    
     position: relative;
 }
 
@@ -3592,10 +3603,8 @@ del.bar{
 }
 
 .leftNav.dark li .icon{
-    width: 21px;
-    height: 21px;
     margin-right: 5px;
-    margin-bottom: -6px;
+    margin-bottom: -9px;
 }
 
 .leftNav.dark li.openChat{
@@ -3703,7 +3712,7 @@ display: block;
 
 
 
-#profileWrapÂ {
+#profileWrap {
     position: absolute;
     margin-top: 20%;
     margin-left: 50%;
@@ -4234,12 +4243,17 @@ margin-bottom: 3px;
                 .privacyButton{
                     display: inline-block;
                     padding: 6px 15px;
-                    border-width: 1px;
-                    border-color: #a0a0a0;
-                    border-style: solid;
                     width: 85px;
+                    background: #607d8b;
                     height: 35px;
+                    color: #FFF;
                 }
+                
+                .privacyButton:hover, .privacyButton:active{
+                    background: #37474f;
+                    color: #FFF;
+                }
+                
                 .privacySettings {
                     color: #313131;
                 }
@@ -4251,14 +4265,16 @@ margin-bottom: 3px;
 				
 				.privacySettings h2{
 					line-height: 23px;
-					font-size: 20px;
+					font-size: 16px;
                                         display: inline-block;
 				}
 				
 				.privacySettings > header{
+                                        color: #FFF;
 					position: relative;
-					font-size: 20px;
+					font-size: 16px;
 					line-height: 30px;
+                                        margin-bottom: 10px;
                                 }
 				
 				.privacySettings ul{
@@ -4266,7 +4282,7 @@ margin-bottom: 3px;
 				
  				.privacySettings>ul>li{
                                     margin-bottom: 12px;
-                                    padding: 5px;
+                                    padding: 3px;
                                     padding-left: 35px;
                                     clear: both;
                                     height: 40px;
@@ -4306,10 +4322,12 @@ margin-bottom: 3px;
  				
  				.privacySettings .sub{
  					margin-left: 25px;
- 					border-top: none;
- 					display:none;
-                                        height: auto;
- 				}
+                                        border-top: none;
+                                        display: none;
+                                        height: 40px;
+                                        padding-left: 35px;
+                                        padding-top: 0px;
+                                }
  				
  				.privacySettings .sub > div{
                                         width:45%;

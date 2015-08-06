@@ -46,16 +46,14 @@ var comments = new function(){
         
         var html = '<div id="'+type+'Comment_'+item_id+'">';
         html += '<div class="commentRow">';
-            html += '<center>';
                 html += '<form data-type="'+type+'" data-item="'+item_id+'" class="addComment" id="addComment" target="submitter">';
                     html += '<table>';
                         html += '<tr>';
-                            html += '<td style="vertical-align:middle;"><input type="text" name="comment" placeholder="write commenta.." class="commentField" style="width: 100%!important;"></td>';
+                            html += '<td style="vertical-align:middle;"><input type="text" name="comment" placeholder="comment ..." class="commentField" style="width: 100%!important;"></td>';
                             html += '<td style="padding: 0 10px;"><input type="submit" value="send" class="button" name="submitComment" style="width:auto;"></td>';
                         html += '</tr><input type="hidden" name="itemid" value="'+item_id+'"><input type="hidden" name="user" value="'+User.userid+'"><input type="hidden" name="type" value="feed">';
                     html += '</table>';
                 html += '</form>';
-            html += '</center>';
         html += '</div>';
         
         
@@ -63,7 +61,7 @@ var comments = new function(){
         $.each(loadedComments, function(index, commentData){
             
             html += '<div class="shadow subComment commentBox'+commentData['id']+'" id="'+commentData['type']+'Comment" style="background-color: #FFF;">';
-                html += User.showSignature(commentData.author, commentData.timestamp);
+                html += User.showSignature(commentData.author, commentData.timestamp, true);
                 html += '<div style="padding: 8px; ">'+commentData['text']+'</div>';
 
                 html += '<div style="padding: 8px; ">';

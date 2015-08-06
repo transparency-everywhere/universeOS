@@ -110,13 +110,13 @@ var feed = new function(){
         
         var output = '<div class="feedEntry feedNo'+feedData['id']+'">';
             debug.log('     showSignature');
-            output += User.showSignature(feedData['author'], feedData['timestamp'])+feedContent;
+            output += User.showSignature(feedData['author'], feedData['timestamp'], true)+feedContent;
             output += '<div class="options">';
                 output += item.showScoreButton('feed', feedData['id']);//load score button
                 
                 output += item.showItemSettings('feed', feedData['id']);
                 
-                output += '<a href="javascript:comments.loadComments(\'feed\',\''+feedData['id']+'\');" class="commentButton" style="color: #dcdcdc"><i class="icon icon-comment"></i>('+feedData['commentCount']+')</a>';
+                output += '<a href="javascript:comments.loadComments(\'feed\',\''+feedData['id']+'\');" class="commentButton" style="color: #607D80;"><i class="icon icon-comment"></i>('+feedData['commentCount']+')</a>';
              
             output += '</div>';
             output += '<div class="commentLoadingArea" id="comment_feed_'+feedData['id']+'" style="display:none;"></div>';
@@ -266,7 +266,7 @@ var feed = new function(){
         output += "                                <div class=\"btn-toolbar\" style=\"float: left;\">";
         output += "                                        <a class=\"privacyButton\" href=\"#\" onclick=\"$('#feedInput').focus(); $('#addFeedFile').hide('slow'); $('#addFeedPrivacy').slideToggle(500);\" title=\"privacy\"> Privacy <\/a>";
         output += "                                <\/div>";
-        output += "                                <input type=\"submit\" style=\"float:right;\" value=\"submit\" class=\"btn\">";
+        output += "                                <input type=\"submit\" style=\"float:right;\" value=\"Submit\" class=\"button\">";
         output += "                        <\/div>";
         output += "                    <\/div>";
         output += "                    <div id=\"addFeedPrivacy\">";

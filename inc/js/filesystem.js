@@ -181,7 +181,7 @@ var filesystem =  new function() {
                 if(parentFolderData['folder'] !== "1")
                     parentFolderData = folders.getData(folder);                    
                 html += '                        <tr class="greyHover" onclick="openFolder(' + parentFolderData['folder'] + '); return false;">';		  			
-                html += '                            <td>' + filesystem.generateIcon('folder') + '</td>';		  			
+                html += '                            <td>' + filesystem.generateIcon('folder', 'icon') + '</td>';		  			
                 html += '                            <td><a href="#">...</a></td>';		  			
                 html += '                            <td></td>';		  			
                 html += '                            <td></td>';		  			
@@ -202,7 +202,7 @@ var filesystem =  new function() {
                         if(rightClick){
                             html += ''; //hier muss die rightClick function noch eingebunden werden!!
                         }
-                        html += '                    <td onclick="openFolder(' + value['data']['id'] + '); return false;">' + filesystem.generateIcon('folder') + '</td>';
+                        html += '                    <td onclick="openFolder(' + value['data']['id'] + '); return false;">' + filesystem.generateIcon('folder', 'icon') + '</td>';
                         html += '                    <td onclick="openFolder(' + value['data']['id'] + '); return false;">' + name + '</td>';
                         html += '                    <td>';
                         html += item.showScoreButton('folder', value['data']['id']);
