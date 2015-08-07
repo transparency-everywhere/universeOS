@@ -28,7 +28,7 @@ class files {
                 $size = $file['size'];
                 $time = time();
                 $classFiles = new files();
-                $type = $classFiles->getMime($filename);
+                $type = $classFiles->getMime($file['name']);
 
                 $dbClass = new db();
                 

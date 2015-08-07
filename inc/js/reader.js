@@ -427,6 +427,12 @@ var reader = new function(){
                     onclick = "onclick=\"reader.openFile('" + value['itemId'] + "'); return false;\"";
                 } else if( value['type'] === 'link'){
                     onclick = "onclick=\"reader.openLink('" + value['itemId'] + "'); return false;\"";
+                } else if( value['type'] === 'folder'){
+                    onclick = "onclick=\"folders.open('" + value['itemId'] + "'); return false;\"";
+                } else if( value['type'] === 'group'){
+                    onclick = "onclick=\"groups.show('" + value['itemId'] + "'); return false;\"";
+                } else if( value['type'] === 'playlist'){
+                    onclick = "onclick=\"playlists.playPlaylist('" + value['itemId'] + "'); return false;\"";
                 }
                 html += '<li ' + onclick + '>';
                     html += '<div class="' + tab + ' itemsA icon">' + filesystem.generateIcon(value['type']) + '</div>';
