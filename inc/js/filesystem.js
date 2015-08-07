@@ -133,7 +133,7 @@ var filesystem =  new function() {
                         }		  			
                         if(privacy.authorize(folderData['privacy'], folderData['creator'])){
                             html += '        		<li onclick="javascript: elements.showCreateElementForm(\'' + folderId + '\');return false">' + filesystem.generateIcon('element', 'white') + 'Add element</li>';
-                            html += '                       <li onclick="javascript: folders.showCreateFolderForm(' + folderId + ');return false">' + filesystem.generateIcon('folder', 'white') + 'Add folder</li>';
+                            html += '                   <li onclick="javascript: folders.showCreateFolderForm(' + folderId + ');return false">' + filesystem.generateIcon('folder', 'white') + 'Add folder</li>';
                             html += '        		<li onclick="shortcuts.showChooseShortcutTypeForm(' + folderId + ');">' + filesystem.generateIcon('shortcut', 'white') + 'Add shortcut</li>';
                         }		  			
                         html += '        	</ul>';
@@ -181,7 +181,7 @@ var filesystem =  new function() {
                 if(parentFolderData['folder'] !== "1")
                     parentFolderData = folders.getData(folder);                    
                 html += '                        <tr class="greyHover" onclick="openFolder(' + parentFolderData['folder'] + '); return false;">';		  			
-                html += '                            <td>' + filesystem.generateIcon('folder', 'icon') + '</td>';		  			
+                html += '                            <td>' + filesystem.generateIcon('folder', 'grey') + '</td>';		  			
                 html += '                            <td><a href="#">...</a></td>';		  			
                 html += '                            <td></td>';		  			
                 html += '                            <td></td>';		  			
@@ -202,7 +202,7 @@ var filesystem =  new function() {
                         if(rightClick){
                             html += ''; //hier muss die rightClick function noch eingebunden werden!!
                         }
-                        html += '                    <td onclick="openFolder(' + value['data']['id'] + '); return false;">' + filesystem.generateIcon('folder', 'icon') + '</td>';
+                        html += '                    <td onclick="openFolder(' + value['data']['id'] + '); return false;">' + filesystem.generateIcon('folder', 'grey') + '</td>';
                         html += '                    <td onclick="openFolder(' + value['data']['id'] + '); return false;">' + name + '</td>';
                         html += '                    <td>';
                         html += item.showScoreButton('folder', value['data']['id']);
@@ -219,7 +219,7 @@ var filesystem =  new function() {
                     if(value['type'] === "element"){
                         var title = value['data']['title'];
                         html += "                        <tr class=\"greyHover\" oncontextmenu=\"showMenu('element" + value['data']['id'] + "'); return false;\">";
-                        html += "                           <td onclick=\"elements.open('" + value['data']['id'] + "'); return false;\">" + filesystem.generateIcon('element') + "</td>";
+                        html += "                           <td onclick=\"elements.open('" + value['data']['id'] + "'); return false;\">" + filesystem.generateIcon('element', 'grey') + "</td>";
                         html += "                           <td onclick=\"elements.open('" + value['data']['id'] + "'); return false;\">" + title + "</td>";
                         html += "                           <td>" + item.showScoreButton('element', value['data']['id']) + "</td>";
                         html += "                           <td>";

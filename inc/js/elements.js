@@ -48,6 +48,23 @@ var elements = new function(){
         html += header;
         html += this.showFileList(element);
         filesystem.tabs.addTab(elementData['title'], '', html);
+        var showElementWidth = document.getElementById("showElement").offsetWidth;
+        console.log(showElementWidth);
+        if(showElementWidth < 700){
+            $('#filesystem .frameRight span.size').hide();
+        }
+        if(showElementWidth < 850){
+            $('#filesystem .frameRight span.date').hide();
+        }        
+//        $('#showElement').resize(function(){
+//            if(showElementWidth < 700){
+//                $('#filesystem .frameRight span.size').hide();
+//            }
+//            if(showElementWidth < 850){
+//                $('#filesystem .frameRight span.date').hide();
+//            }
+//        });
+        
     };
     
     this.showFileList = function(element_id, grid){
@@ -64,11 +81,11 @@ var elements = new function(){
         var type = "";
         var handlerType;
         html += '<div id="attributes">';
-        html += '<span class="icons"></span>';
+        html += '<span class="icons">&nbsp;</span>';
         html += '<span class="title">| Name</span>';
-        html += '<span class="date">| Date</span>';
+        html += '<span class="buttons">| Settings</span>';
         html += '<span class="size">| Size</span>';
-        html += '<span class="buttons"></span>';
+        html += '<span class="date">| Date</span>';
         html += '</div>';
         html += '<ul>';
         html += '<span class="heading">Files</span>';
@@ -82,12 +99,10 @@ var elements = new function(){
                     handlerType = 'handlers.files.handler('+data['id']+');';
                 }
                 date = new Date(data['timestamp']*1000).toString().substr(11, 5) + new Date(data['timestamp']*1000).toString().substr(4, 4) + new Date(data['timestamp']*1000).toString().substr(8, 2); //year + month + day
-                image = filesystem.generateIcon(data['type']);
+                image = filesystem.generateIcon(data['type'], 'grey');
                 html += '<li data-id="' + data['id'] + '" data-type="' + data['type'] + '" data-title="' + data['title'] + '" data-date="' + date + '" data-size="' + data['size'] + '">';
                     html += '<span class="icons"><a href="./out/?file=' + data['id'] + '" onclick="'+handlerType+' return false">' + image + '</a></span>';
                     html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="'+handlerType+' return false">' + data['title'] + '</a></span>';
-                    html += '<span class="date">' + date + '</span>';
-                    html += '<span class="size">' + Math.round(data['size']/1024) + ' kB</span>';
                     html += '<span class="buttons">';
                         html += item.showScoreButton(value['type'], data['id']);
                         if(data['download']){
@@ -97,6 +112,15 @@ var elements = new function(){
                             html += item.showItemSettings(value['type'], data['id']);
                         }
                     html += '</span>';
+                    var size = Math.round(data['size']/1024);
+                    if(size <= 1000)
+                        size = size + ' kB';
+                    if(size >= 1000 && size < 1000000)
+                        size = Math.round(size/1024) + ' MB';
+                    if(size >= 1000000)
+                        size = Math.round(size/1024/1024*100)/100 + ' GB';
+                    html += '<span class="size">' + size + '</span>';
+                    html += '<span class="date">' + date + '</span>';
                 html += '</li>';
                 if(!grid){
                     html += ''; //hier muss die rightClick function noch eingebunden werden.
@@ -113,12 +137,10 @@ var elements = new function(){
                     handlerType = 'handlers.files.handler('+data['id']+');';
                 }
                 date = new Date(data['timestamp']*1000).toString().substr(11, 5) + new Date(data['timestamp']*1000).toString().substr(4, 4) + new Date(data['timestamp']*1000).toString().substr(8, 2); //year + month + day
-                image = filesystem.generateIcon(data['type']);
+                image = filesystem.generateIcon(data['type'], 'grey');
                 html += '<li data-id="' + data['id'] + '" data-type="' + data['type'] + '" data-title="' + data['title'] + '" data-date="' + date + '" data-size="' + data['size'] + '">';
                     html += '<span class="icons"><a href="./out/?file=' + data['id'] + '" onclick="'+handlerType+' return false">' + image + '</a></span>';
                     html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="'+handlerType+' return false">' + data['title'] + '</a></span>';
-                    html += '<span class="date">' + date + '</span>';
-                    html += '<span class="size">' + Math.round(data['size']/1024) + ' kB</span>';
                     html += '<span class="buttons">'
                         html += item.showScoreButton(value['type'], data['id']);
                         if(data['download']){
@@ -128,6 +150,15 @@ var elements = new function(){
                             html += item.showItemSettings(value['type'], data['id']);
                         }
                     html += '</span>';
+                    var size = Math.round(data['size']/1024);
+                    if(size <= 1000)
+                        size = size + ' kB';
+                    if(size >= 1000 && size < 1000000)
+                        size = Math.round(size/1024) + ' MB';
+                    if(size >= 1000000)
+                        size = Math.round(size/1024/1024*100)/100 + ' GB';
+                    html += '<span class="size">' + size + '</span>';
+                    html += '<span class="date">' + date + '</span>';
                 html += '</li>';
                 if(!grid){
                     html += ''; //hier muss die rightClick function noch eingebunden werden.
@@ -148,12 +179,10 @@ var elements = new function(){
                     handlerType = 'handlers.files.handler('+data['id']+');';
                 }
                 date = new Date(data['timestamp']*1000).toString().substr(11, 5) + new Date(data['timestamp']*1000).toString().substr(4, 4) + new Date(data['timestamp']*1000).toString().substr(8, 2); //year + month + day
-                image = filesystem.generateIcon(data['type']);
+                image = filesystem.generateIcon(data['type'], 'grey');
                 html += '<li data-id="' + data['id'] + '" data-type="' + data['type'] + '" data-title="' + data['title'] + '" data-date="' + date + '" data-size="' + data['size'] + '">';
                     html += '<span class="icons"><a href="./out/?file=' + data['id'] + '" onclick="'+handlerType+' return false">' + image + '</a></span>';
                     html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="'+handlerType+' return false">' + data['title'] + '</a></span>';
-                    html += '<span class="date">' + date + '</span>';
-                    html += '<span class="size"></span>';
                     html += '<span class="buttons">'
                         html += item.showScoreButton(value['type'], data['id']);
                         if(data['download']){
@@ -163,6 +192,15 @@ var elements = new function(){
                             html += item.showItemSettings(value['type'], data['id']);
                         }
                     html += '</span>';
+                    var size = Math.round(data['size']/1024);
+                    if(size <= 1000)
+                        size = size + ' kB';
+                    if(size >= 1000 && size < 1000000)
+                        size = Math.round(size/1024) + ' MB';
+                    if(size >= 1000000)
+                        size = Math.round(size/1024/1024*100)/100 + ' GB';
+                    html += '<span class="size">' + size + '</span>';
+                    html += '<span class="date">' + date + '</span>';
                 html += '</li>';
                 if(!grid){
                     html += ''; //hier muss die rightClick function noch eingebunden werden.
@@ -172,9 +210,9 @@ var elements = new function(){
         html += '</ul>';
         if(i === 0){
             html = '<ul><li>';
-            html += '<span>';
-            html += 'This Element is empty.';
-            html += '</span>';
+                html += '<span>';
+                    html += 'This Element is empty.';
+                html += '</span>';
             html += '</li></ul>';
         }
         return html;

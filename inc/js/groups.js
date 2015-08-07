@@ -48,7 +48,7 @@ var groups = new function(){
         };
         
         this.show = function(groupId){
-            this.showProfifile(groupId);
+            this.showProfile(groupId);
             return false;
         };
        

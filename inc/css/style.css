@@ -1220,33 +1220,41 @@ span.icon.blue-chevron-down {}
 
 #filesystem .frameRight span.icons  {
     display: inline-block;
-    min-width: 21px;
+    width: 32px;
+    height: 32px;
+    margin-top: 5px;
+    float: left;
 }
 
 #filesystem .frameRight span.icons span.icon  {
-    width: 25px;
+    width: 32px;
 }
 
 #filesystem .frameRight span.title  {
     display: inline-block;
-    width: -moz-calc(100% - 395px);
-    width: -webkit-calc(100% - 395px);
-    width: calc(100% - 395px);}
+    width: auto;
+    max-width: -moz-calc(100% - 202px);
+    max-width: -webkit-calc(100% - 202px);
+    max-width: calc(100% - 202px);
+    float: left;
+}
 
-#filesystem .frameRight span.date, #filesystem .frameRight span.size  {
+#filesystem .frameRight span.date {
     display: inline-block;
     width: 110px;
+    float: right;
 }
 
  #filesystem .frameRight span.size  {
     display: inline-block;
-    width: 100px;
+    width: 75px;
+    float: right;
 }
 
 #filesystem .frameRight span.buttons  {
     display: inline-block;
+    width: 170px;
     float: right;
-    width: 160px;
 }
 
 #filesystem .frameRight span.buttons > * {
@@ -1254,14 +1262,23 @@ span.icon.blue-chevron-down {}
     padding: 0;
 }
 
+#filesystem .frameRight span.buttons .btn {
+    margin-bottom: 6px;
+    padding: 0px;
+}
+
 #filesystem .frameRight span.buttons > a > span.icon-gear {
-    margin-bottom: -8px;
+    margin-bottom: -11px;
+}
+
+#filesystem .frameRight span.buttons > a > span.icon-download {
+    margin-bottom: -6px;
 }
 
 #filesystem .frameRight span.heading  {
     display: block;
     clear: both;
-    margin: 10px 0 10px 0;
+    padding: 10px 0 10px 0;
     color:  #00bcd4;
     font-size: 20px;
     font-weight: 300;
@@ -1271,7 +1288,8 @@ span.icon.blue-chevron-down {}
 #filesystem .tabFrame .frameRight > ul > li  {
     display: inline-block;
     width: 100%;
-    padding:10px;
+    padding:0px;
+    line-height: 2.6;
 }
 
 #filesystem .tabFrame .frameRight > ul > li:hover{
@@ -1303,6 +1321,16 @@ span.icon.blue-chevron-down {}
 #filesystem .tabFrame .frameRight .white-header > span {
     display: block;
     float: left;
+}
+
+#filesystem .tabFrame .frameRight .white-header .dropdown {
+    z-index: 1;
+    position: relative;
+    margin-top: 48px;
+}
+
+#filesystem .tabFrame .frameRight #attributes{
+    color: #607d8b;
 }
 
 #filesystem .tabFrame .frameRight .white-header > .icon {
@@ -1340,6 +1368,7 @@ span.icon.blue-chevron-down {}
 
 /*small symbols view*/
 #filesystem .tabFrame .frameRight.smallSymbols > ul > li{
+    position: relative;
     float: left;
     clear: none;
     width: 130px;
@@ -1352,6 +1381,18 @@ span.icon.blue-chevron-down {}
     margin-top: -114px;
     margin-left: 82px;
     text-align: center;
+}
+
+#filesystem .tabFrame .frameRight.smallSymbols > ul > li span.buttons a.btn.btn-mini{
+    position: absolute;
+    top: 5px;
+    right: 0px;
+}
+
+#filesystem .tabFrame .frameRight.smallSymbols > ul > li span.buttons .itemSettingsButton{
+    position: absolute;
+    top: 37px;
+    right: -1px;
 }
 
 #filesystem .tabFrame .frameRight.smallSymbols > ul > li span.icons {
@@ -1381,6 +1422,8 @@ span.icon.blue-chevron-down {}
     display: block;
     text-align: center;
     width: 100%;
+    max-width: none;
+    line-height: 1.3;
 }
 
 #filesystem .tabFrame .frameRight.smallSymbols #attributes, #filesystem .tabFrame .frameRight.smallSymbols > ul > li span.date, #filesystem .tabFrame .frameRight.smallSymbols > ul > li span.size, #filesystem .tabFrame .frameRight.smallSymbols > ul > li span.buttons {
@@ -1407,6 +1450,7 @@ span.icon.blue-chevron-down {}
 
 /*Large symbols view*/
 #filesystem .tabFrame .frameRight.largeSymbols > ul > li{
+    position: relative;
     float: left;
     clear: none;
     width: 190px;
@@ -1419,6 +1463,18 @@ span.icon.blue-chevron-down {}
     margin-top: -114px;
     margin-left: 82px;
     text-align: center;
+}
+
+#filesystem .tabFrame .frameRight.largeSymbols > ul > li span.buttons a.btn.btn-mini{
+    position: absolute;
+    top: 5px;
+    right: 0px;
+}
+
+#filesystem .tabFrame .frameRight.largeSymbols > ul > li span.buttons .itemSettingsButton{
+    position: absolute;
+    top: 37px;
+    right: 0px;
 }
 
 #filesystem .tabFrame .frameRight.largeSymbols > ul > li span.icons {
@@ -1442,13 +1498,15 @@ span.icon.blue-chevron-down {}
 
 #filesystem .tabFrame .frameRight.largeSymbols > ul > li:hover span.icons span.icon {
     border-color:  #00bcd4;
-    border-width: 2px;
+    border-width: 1px;
 }
 
 #filesystem .tabFrame .frameRight.largeSymbols > ul > li span.title {
     display: block;
     text-align: center;
     width: 100%;
+    max-width: none;
+    line-height: 1.3;
 }
 
 #filesystem .tabFrame .frameRight.largeSymbols #attributes, #filesystem .tabFrame .frameRight.largeSymbols > ul > li span.date, #filesystem .tabFrame .frameRight.largeSymbols > ul > li span.size, #filesystem .tabFrame .frameRight.largeSymbols > ul > li span.buttons {
@@ -1508,7 +1566,9 @@ span.icon.blue-chevron-down {}
 }
 
 #filesystem .leftNav span.icon {
-    margin-bottom: -9px;
+  margin-bottom: -11px;
+  width: 32px;
+  height: 32px;
 }
 
 
@@ -2079,6 +2139,10 @@ ul .elementSettings {
     line-height: 2.4;
 }
 
+#reader .readerStartpage .navi li:hover {
+    background-color: #cfd8dc;
+}
+
 #reader .readerStartpage .navi li:first-of-type {
     width: auto;
 }
@@ -2115,9 +2179,21 @@ ul .elementSettings {
     float: left;
 }
 
+#reader .readerStartpage .tabs .singletab .sectionA > .itemsA > ul > li:hover,
+#reader .readerStartpage .tabs .singletab .sectionB > .itemsB > ul > li:hover  {
+    background-color: #cfd8dc;
+    cursor: pointer;
+}
+
+#reader .readerStartpage .tabs .singletab .sectionA > .itemsA > ul > li.active,
+#reader .readerStartpage .tabs .singletab .sectionB > .itemsB > ul > li.active  {
+    background-color: #cfd8dc;
+}
+
 #reader .readerStartpage .tabs .singletab .sectionA, #reader .readerStartpage .tabs .singletab .sectionB {
     width:100%;
     padding: 10px 10px;
+    min-height: 160px;
 }
 
 #reader .readerStartpage .tabs .singletab .sectionB {
