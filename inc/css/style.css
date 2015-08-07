@@ -597,6 +597,20 @@ span.icon.blue-chevron-down {}
     vertical-align: middle;
 }
 
+#telescope .frameRight ul header{
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+}
+
+#telescope .frameRight ul header>div:last-of-type{
+    min-width: 110px;
+    float: right;
+    margin-top: -30px;
+    clear: right;
+}
+
 #telescope .frameRight>ul>li{
     clear:both;  
     margin-top: 25px;
@@ -627,6 +641,7 @@ span.icon.blue-chevron-down {}
 #telescope .frameRight ul{
     margin: 0;
     width:100%;
+    margin-top: 30px;
 }
 
 /*table  view*/
@@ -645,14 +660,15 @@ span.icon.blue-chevron-down {}
 
 #telescope .frameRight ul.table>*>*{
     display:table-cell;
+    padding-top: 5px;
 }
 #telescope .frameRight ul.table>*>*>*{
     display: inline-block;
 }
 #telescope .frameRight ul.table>*>*>.icon{
-    width: 45px;
-    height: 45px;
-    margin-bottom: -15px;
+    width: 32px;
+    height: 32px;
+    margin-bottom: -9px;
 }
 
 #telescope .frameRight ul.table>*>*>img{
@@ -2549,7 +2565,7 @@ ul .elementSettings {
         
 .imageReader .mainImage {
     background-color: #263238;
-    overflow: auto;
+    overflow: hidden;
     text-align: center;
 }  
 
@@ -4312,7 +4328,7 @@ margin-bottom: 3px;
 
 	.dashBox{
             color: #FFF;
-            width: 170px;
+            width: 180px;
             margin: 0 4px;
             position: relative;
             float: left;
@@ -4427,17 +4443,17 @@ margin-bottom: 3px;
                     padding-bottom: 12px;
                     cursor: pointer;
                     float: left;
-                    font-size: 14px;
+                    font-size: 16px;
                     line-height: 30px;
                     width: 161px!important;
                     height: 40px!important;
                     background: #1a1b1b;
                     margin-bottom: 15px;
-                    margin-right: 15px;
                 }
                 
                 #dashBoard li.overlength{
-                    height:auto!important;
+                   height: auto!important;
+                    background: none!important;
                 }
                 
                 #dashBoard tr{
@@ -4467,9 +4483,10 @@ margin-bottom: 3px;
                     margin-right: 15px;
                 }
                 #dashBoard .appList > li > img{
-                    margin-right:5px;
-                    margin-left:5px;
-                    width:15px;
+                    margin-right: 5px;
+                    margin-top: -4px;
+                    width: 32px;
+                    height: 32px;
                 }
                 #dashBoard li:hover{
                     background: #303030;

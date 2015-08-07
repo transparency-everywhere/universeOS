@@ -154,7 +154,7 @@ var feed = new function(){
         html += "        <\/div>";
         
         this.applicationVar = new application('feed');
-	this.applicationVar.create('Feed', 'html', html,{width: 2, height:  8, top: 1, left: 0});
+	this.applicationVar.create('Feed', 'html', html,{width: 3, height:  8, top: 1, left: 0});
 	
         
         var feedClass = new Feed('global', '.feedMain');

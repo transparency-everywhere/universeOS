@@ -142,7 +142,7 @@ class user {
         $db->update('user', array('userPicture'=>$fileData['filename']), array('userid',getUser()));
 
         echo '<script>';
-        echo 'parent.settings.showUpdateProfileForm();';
+        echo 'parent.settings.showUpdateProfileForm();User.updateUserpicture('.getUser().');gui.alert(\'Your userpicture has been changed. You will see the change after the next login.\');';
         echo '</script>';
         
     }

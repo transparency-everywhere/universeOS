@@ -34,7 +34,7 @@ var settings = new function(){
                 
                 
         this.applicationVar = new application('settings');
-	this.applicationVar.create('Settings', 'html', output,{width: 6, height:  5, top: 0, left: 3});
+	this.applicationVar.create('Settings', 'html', output,{width: 6, height:  7, top: 2, left: 3});
 	this.showUpdateProfileForm();
         
         $('.leftNav li').click(function(){
@@ -352,7 +352,7 @@ var settings = new function(){
         
         output += '#settingsFrame h3{display:block!important;clear:left!important;} #settingsFrame .userPicture{border-radius:0!important; width:120px!important;height:120px!important;} #settingsFrame #buttons{margin-top:50px;} #settingsFrame .userPicture{float: none;}';
         output += '</style>';
-        output += '<form target="submitter" onsubmit="alert(\'sdrft\');" action="api/user/uploadUserPicture/" id="userForm" enctype="multipart/form-data" method="post">';
+        output += '<form target="submitter" action="api/user/uploadUserPicture/" id="userForm" enctype="multipart/form-data" method="post">';
         
         output += '<h2>Current userpicture</h2>';
         output += User.showPicture(User.userid);

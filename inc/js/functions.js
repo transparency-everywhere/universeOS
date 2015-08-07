@@ -758,6 +758,9 @@ var User = new function(){
     this.userid;
     this.lastLoginCheck = 0;
     this.loggedIn = false;
+    this.updateUserpicture = function(){
+        return true;
+    };
     this.proofLogin = function(){
         if(time()-this.lastLoginCheck > 120){
             var result = api.query('api.php?action=proofLogin', {});
@@ -2708,7 +2711,7 @@ var handlers = {
                         return 'wubba dubba du. wubbta asdasd';
                     },
                     getThumbnail: function(id){
-                        return '<span class="icon icon-archive"></span>';
+                        return '<span class="icon icon-filesystem"></span>';
                     },
                     handler: function(id){
                         elements.open(id);
@@ -2726,7 +2729,7 @@ var handlers = {
                         return 'wubba dubba du. wubbta asdasd';
                     },
                     getThumbnail: function(id){
-                        return '<span class="icon icon-archive"></span>';
+                        return '<span class="icon icon-filesystem"></span>';
                     },
                     handler: function(id){
                         elements.open(id);
@@ -2757,8 +2760,6 @@ var handlers = {
                         reader.openLink(handler.getLinkHandlerName(linkData['link']), linkData.link, linkData.title);
                     }
     }
-                
-    
 };
 
 

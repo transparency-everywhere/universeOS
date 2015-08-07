@@ -211,7 +211,7 @@ var elements = new function(){
         if(i === 0){
             html = '<ul><li>';
                 html += '<span>';
-                    html += 'This Element is empty.';
+                    html += 'This Collection is empty.';
                 html += '</span>';
             html += '</li></ul>';
         }
@@ -291,17 +291,17 @@ var elements = new function(){
         
         
         var modalOptions = {};
-        modalOptions['buttonTitle'] = 'Create Element';
+        modalOptions['buttonTitle'] = 'Create Collection';
         
         modalOptions['action'] = function(){
             var callback = function(){
-                gui.alert('The element has been added');
+                gui.alert('The Collection has been added');
                 $('.blueModal').remove();
                 filesystem.tabs.updateTabContent(1 , filesystem.generateFullFileBrowser(parent_folder));
             };
             elements.create(parent_folder, $('#createElementFormContainer #title').val(), $('#createElementFormContainer #type').val(),  $('#createElementFormContainer #privacyField :input').serialize(),callback);
         };
-        formModal.init('Create Element', '<div id="createElementFormContainer"></div>', modalOptions);
+        formModal.init('Create Collection', '<div id="createElementFormContainer"></div>', modalOptions);
         gui.createForm('#createElementFormContainer',fieldArray, options);
     };
     
@@ -362,17 +362,17 @@ var elements = new function(){
         
         
         var modalOptions = {};
-        modalOptions['buttonTitle'] = 'Update Element';
+        modalOptions['buttonTitle'] = 'Update Collection';
         
         modalOptions['action'] = function(){
             var callback = function(){
-                gui.alert('The element has been updated');
+                gui.alert('The collection has been updated');
                 $('.blueModal').remove();
                 filesystem.tabs.updateTabContent(1 , filesystem.generateFullFileBrowser(elementData.folder));
             };
             elements.update(element, elementData['folder'], $('#createElementFormContainer #title').val(), $('#createElementFormContainer #type').val(),  $('#createElementFormContainer #privacyField :input').serialize(),callback);
         };
-        formModal.init('Update Element', '<div id="createElementFormContainer"></div>', modalOptions);
+        formModal.init('Update Collection', '<div id="createElementFormContainer"></div>', modalOptions);
         gui.createForm('#createElementFormContainer',fieldArray, options);
     };
     
@@ -401,7 +401,7 @@ var elements = new function(){
         confirmParameters['submitButtonTitle'] = 'Delete';
         confirmParameters['submitFunction'] = function(){
             elements.delete(elementId);
-            gui.alert('The element has been deleted');
+            gui.alert('The collection has been deleted');
             filesystem.tabs.updateTabContent(1 , filesystem.generateFullFileBrowser(elementData.folder));
             
         };
