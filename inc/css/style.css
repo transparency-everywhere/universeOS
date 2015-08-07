@@ -293,10 +293,11 @@ li.notHidden{
 
 span.icon.blue-chevron-down {}
 #searchMenu header ul li .icon{
-	width: 18px;
+	width: 32px;
 	
-	height: 18px;
-	margin-bottom: -3px;
+	height: 32px;
+	margin-bottom: -10px;
+	margin-top: -5px;
 }
 
 #searchMenu header ul li.trigger{
@@ -321,9 +322,16 @@ span.icon.blue-chevron-down {}
     height: 24px;
     width: 24px;
     position:absolute;
-    right: -275px;
     margin-top: -22px;
+    margin-left: 255px;
 }
+
+#searchMenu header .blue-search{
+    margin-top: -33px;
+    
+    margin-left: 265px;
+}
+
 #searchMenu .userPicture {
 	margin: 1px 5px;
 }
@@ -370,12 +378,12 @@ span.icon.blue-chevron-down {}
 }
 #searchMenu, #searchMenu a, #searchMenu a:link, #searchMenu a:visited{
     color: #fefefe;
-    font-size: 20px; /* Näherungswert aufgrund einer Schriftersetzung */
+    font-size: 20px; /* NÃƒÂ¤herungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: left;
 }
         #searchMenu #loadingArea{
-            margin-top: 50px;
+            margin-top: 35px;
         
             margin-left: 3px;
 }
@@ -473,7 +481,7 @@ span.icon.blue-chevron-down {}
 .resultList li:hover .icon.dark{
     display:none;
 }
-#searchMenu .loadAll, #searchMenu .loadAll{
+#searchMenu .loadAll,Ã‚Â #searchMenu .loadAll{
     font-size: 14px;
     margin-top: 15px;
     text-align:right;
@@ -512,6 +520,7 @@ span.icon.blue-chevron-down {}
 
 #telescope .tab .icon{
     margin-top: -1px;
+    display: inline-block;
 }
 #telescope .icon-search{
     position:absolute;
@@ -563,6 +572,7 @@ span.icon.blue-chevron-down {}
     display:none;  
     margin-top: 40px;
     
+    background: none;
 }
 
 #telescope .leftNav li.spacer:hover{
@@ -574,6 +584,10 @@ span.icon.blue-chevron-down {}
     margin-top: 0;
     padding-left: 5px;
     position:absolute;
+}
+
+#telescope .leftNav li.active{
+	background: #607d8b;
 }
 
 #telescope .frameRight ul header>div{
@@ -1071,7 +1085,7 @@ span.icon.blue-chevron-down {}
     height: 35px;
     font-family: Ubuntu;
     color:  #fefefe;
-    font-size: 16px;/* Näherungswert aufgrund einer Schriftersetzung */
+    font-size: 16px;/* NÃƒÂ¤herungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: left;
 }
@@ -1101,7 +1115,7 @@ span.icon.blue-chevron-down {}
     height: 35px;
     font-family: Ubuntu;
     color:  #ffffff;
-    font-size: 16px; /* Näherungswert aufgrund einer Schriftersetzung */
+    font-size: 16px; /* NÃƒÂ¤herungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: center;
     line-height: 2.2;
@@ -1115,7 +1129,7 @@ span.icon.blue-chevron-down {}
     height: 35px;
     font-family: Ubuntu;
     color:  #ffffff;
-    font-size: 16px; /* Näherungswert aufgrund einer Schriftersetzung */
+    font-size: 16px; /* NÃƒÂ¤herungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: center;
     float: right;
@@ -1554,8 +1568,8 @@ span.icon.blue-chevron-down {}
 }
 
 .leftNav span.icon {
-    height: 21px;
-    width: 25px;
+    height: 32px;
+    width: 32px;
 }
 
 .frameRight{
@@ -1696,7 +1710,7 @@ color: #FFF;
     margin-right: 20px;
 }
 
-#mailList {
+#mailListÃ‚Â {
     width: 450px;
     margin-left: 150px;
 }
@@ -1736,7 +1750,7 @@ color: #FFF;
 	line-height: 8px;
 }
 
-#buddyListTable { 
+#buddyListTableÃ‚Â { 
     overflow: none;
 }
     
@@ -1911,7 +1925,7 @@ color: #FFF;
     margin: 0px;
 }
 
-#feedTable { 
+#feedTableÃ‚Â { 
     overflow: none;
 }
 
@@ -2608,7 +2622,7 @@ color:#FFFFFF;
     
 }
 
-#pepperSteakItem {
+#pepperSteakItemÃ‚Â {
     background-color: #72aa00; 
 }
 
@@ -2707,7 +2721,7 @@ color:#FFFFFF;
 .white-gradient {
     background-color: rgb(255, 255, 255);font-family: Ubuntu;
     color:  #313131;
-    font-size: 16px; /* Näherungswert aufgrund einer Schriftersetzung */
+    font-size: 16px; /* NÃƒÂ¤herungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: left;
 }
@@ -2721,11 +2735,11 @@ color:#FFFFFF;
     box-sizing: border-box;
 }
 
-.floatRight {
+.floatRightÃ‚Â {
     float: right;
 }
 
-.clear {
+.clearÃ‚Â {
     clear: both;
 }
 
@@ -2825,7 +2839,8 @@ color:#FFFFFF;
             font-size: 16px;
             font-weight: 300;
             height: 40px;
-        }
+        
+}
         
         .tabFrame>header ul{
             
@@ -2851,20 +2866,17 @@ color:#FFFFFF;
         }
         
         .tabFrame>header li .close .icon{
-             display:none; 
-            
-             height: 20px;
-            
-             width: 14px;
-        
-             position: absolute;
-             margin-left: -10px;
-             margin-top: 5px;
+            display: none;
+            height: 20px;
+            width: 20px;
+            position: absolute;
+            margin-left: -16px;
+            margin-top: 1px;
         }
         
         .tabFrame>header li.active .close .blue-close,
-        .tabFrame>header li .close:hover .white-close,
-        .tabFrame>header li .close .white-close{
+        .tabFrame>header li .close:hover .icon-close,
+        .tabFrame>header li .close .icon-close{
             display:block;
         }
         
@@ -3593,6 +3605,7 @@ del.bar{
 
 .profile header .main span{
     display:block;
+    margin-left: 15px;
 }
 
 .profile header .main .place{
@@ -3601,6 +3614,8 @@ del.bar{
 
 .profile header .main .userName{
     font-size:24px;
+    margin-top: 15px;
+    margin-left: 15px;
 }
 
 .profileNavLeft{
@@ -3625,11 +3640,6 @@ del.bar{
     top: 140px;
 }
 
-.leftNav.dark li.active{
-    background: none!important;
-    color: #00bcd4;
-}
-
 .leftNav.dark li{
     padding: 0;
     color: #FFF;
@@ -3642,9 +3652,21 @@ del.bar{
     overflow: hidden;
     font-size: 16px;
 }
-.leftNav.dark li:hover{
+.leftNav.dark li .white{
+    display:none;
+}
+
+.leftNav.dark li:hover, .leftNav.dark li.active{
     background-color:  #00bcd4;
 }
+
+.leftNav.dark li:hover .icon,.leftNav.dark li.active .icon{
+    display:none;
+}
+.leftNav.dark li:hover .white, .leftNav.dark li.active .white{
+    display:inline-block;
+}
+
 .leftNav.dark li:active, .leftNav.dark li:focus{
     background-color:  #263238;
 }
@@ -3706,7 +3728,12 @@ del.bar{
     display:none;
 }
 
-.profileMain .profile_tab li, .grayList li{
+.profileMain .profile_tab>ul{
+    margin-left: 10px;
+    
+}
+
+.profileMain .profile_tab>ul li, .grayList li{
     float: left;
     width: 50%;
     cursor: pointer;
@@ -3759,7 +3786,7 @@ display: block;
 
 
 
-#profileWrap {
+#profileWrapÃ‚Â {
     position: absolute;
     margin-top: 20%;
     margin-left: 50%;
@@ -3784,7 +3811,6 @@ display: block;
     margin-left: 20;
     padding-bottom: 10px;
     background-color: #7abcff;
-    
 }
 
 .profileSlider{
@@ -4132,12 +4158,12 @@ margin-bottom: 3px;
             margin: 0 4px;
             position: relative;
             float: left;
-            height: 250px;
+            height: 240px;
 	}
 	
 	.dashBox .content{
             overflow: auto;
-            height: 190px;
+            height: 180px;
 	}
 	
 	.dashBox header{
@@ -4168,7 +4194,7 @@ margin-bottom: 3px;
 	}
         
         .dashBox footer .white-plus{
-            margin-bottom: 0px!important;
+            margin-top: -4px!important;
         }
 	
 	.dashBox > div, .dashBox > ul {
@@ -4245,11 +4271,15 @@ margin-bottom: 3px;
                     float: left;
                     font-size: 14px;
                     line-height: 30px;
-                    width: 130px!important;
+                    width: 161px!important;
                     height: 40px!important;
                     background: #1a1b1b;
                     margin-bottom: 15px;
                     margin-right: 15px;
+                }
+                
+                #dashBoard li.overlength{
+                    height:auto!important;
                 }
                 
                 #dashBoard tr{
@@ -4911,7 +4941,7 @@ and (max-width : 320px) {
 }
 
 .button:hover{
-    background: #FFF;
+    background: #18ffff;
 }
 
 .antiButton{

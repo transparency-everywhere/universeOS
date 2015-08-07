@@ -200,8 +200,8 @@ class fav {
                 $output .= "</li>";
         }
         if($i == 0){
-            $output .="<li>";
-                $output .="You don't have any favourites so far. Add folders, elements, files, playlists or other items to your favourites and they will appear here.";
+            $output .='<li class="overlength">';
+                $output .="You don't have any favourites so far.";
             $output .="</li>";
         }
         return $output;

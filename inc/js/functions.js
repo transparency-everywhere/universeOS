@@ -758,7 +758,6 @@ var User = new function(){
     this.userid;
     this.lastLoginCheck = 0;
     this.loggedIn = false;
-    
     this.proofLogin = function(){
         if(time()-this.lastLoginCheck > 120){
             var result = api.query('api.php?action=proofLogin', {});
@@ -774,7 +773,6 @@ var User = new function(){
             return this.loggedIn;
         }
     };
-    
     this.updateGUI = function(userid){
             $('.userProfile').each(function(){
                 if($(this).attr('data-userid') == userid){
@@ -782,8 +780,6 @@ var User = new function(){
                 }
             });
     };
-    
-    
     this.setUserId = function(id){
         
         this.userid = id;
@@ -793,18 +789,19 @@ var User = new function(){
     //the user is online and its red if the lastactivity defines that the user is offline.
 
 
-
         var border;
+        console.log(lastActivity);
         if(lastActivity === 1){
-                border = 'border-color: green';
+                border = 'border: 1px solid green';
             }else{
-                border = 'border-color: red';
+                border = 'border: none;';
             }
 
         return border;
     };
     this.showPicture = function(userid, lastActivity, size){
 	 
+        console.log(lastActivity);
         debug.log('showPicture initialized...');
         var userpicture = getUserPicture(userid);
         if(typeof lastActivity === 'undefined'){
@@ -834,9 +831,7 @@ var User = new function(){
                             var result = api.query('api.php?action=getLastActivity',{ request : request });
 		            
 		            if(is_numeric(request)){
-		                if(result.length > 0){
-		                    response = result;
-		                }
+                                return result;
 		            }else{
 		                var response = new Array();
 		                
@@ -864,7 +859,6 @@ var User = new function(){
         //data will only be returned if getUser()==userid or userid is on buddylist of getUser()
         return api.query('api/user/getAllData/', { user_id:userid });
     }
-    
     this.getGroups = function(){
         return api.query('api/user/getGroups/', { });
     };
@@ -982,9 +976,9 @@ var User = new function(){
                 //output  += '<div class="">';
                     output += '<div class="profileNavLeft leftNav dark">';
                         output += '<ul>';
-                            output += '<li data-type="favorites"><img src="gfx/profile/sidebar_fav.svg"/>Favorites</li>';
-                            output += '<li data-type="files"><img src="gfx/profile/sidebar_files.svg"/>Files</li>';
-                            output += '<li data-type="playlists"><img src="gfx/profile/sidebar_playlist.svg"/>Playlists</li>';
+                            output += '<li data-type="favorites"><span class="icon blue-heart"></span><span class="icon white-heart white"></span>Favorites</li>';
+                            output += '<li data-type="files"><span class="icon blue-file"></span><span class="icon white-file white"></span>Files</li>';
+                            output += '<li data-type="playlists"><span class="icon blue-playlist"></span><span class="icon white-playlist white"></span>Playlists</li>';
                             output += '<li class="openChat"><img src="gfx/chat_icon.svg"/>Open Chat</li>';
                         output += '</ul>';
                         output += '</div>';
@@ -1076,7 +1070,7 @@ var User = new function(){
                                 if(typeof profile_groups !== 'undefined'){
                                     $.each(profile_groups, function(index, value){
                                         output += '<li onclick="groups.showProfile('+value+')"><div><span class="icon icon-group"></span>';
-                                        output += '<span class="username" style="font-size:18px; padding-top: 5px;">'+groups.getTitle(value)+'</span>';
+                                        output += '<span class="username" style="font-size: 20px; padding-top: 10px;">'+groups.getTitle(value)+'</span>';
                                         output += '</div></li>';
                                     });
                                 }
@@ -1125,7 +1119,6 @@ var User = new function(){
         }
         return realname;
     };
-    
     this.getPrivacy = function(){
         return api.query('api/user/getPrivacy/', {});
     };
@@ -1659,149 +1652,149 @@ var support = new function(){
 var tabs = function(parentIdentifier){
     this.parentIdentifier = parentIdentifier;
     this.tabHistory = [0];  //start history with tab 0
-		this.init = function(){
-                    parentIdentifier = this.parentIdentifier;
-			$(parentIdentifier).append('<div class="tabFrame"><header><ul></ul></header></div>');
-                        
-		};
-                this.initClicks = function(){
-                    parentIdentifier = this.parentIdentifier;
-                    var classVar = this;
-                    $('.tabFrame>header li').click(function(){
-                            var tabId = $(this).attr('data-tab');
-                            var tabParentIdentifier = $(this).attr('data-parent-identifier');
-                            classVar.showTab(tabId);
-                            
+    this.init = function(){
+                        parentIdentifier = this.parentIdentifier;
+                            $(parentIdentifier).append('<div class="tabFrame"><header><ul></ul></header></div>');
+
+                    };
+    this.initClicks = function(){
+                        parentIdentifier = this.parentIdentifier;
+                        var classVar = this;
+                        $('.tabFrame>header li').click(function(){
+                                var tabId = $(this).attr('data-tab');
+                                var tabParentIdentifier = $(this).attr('data-parent-identifier');
+                                classVar.showTab(tabId);
+
+                                $(parentIdentifier+' .tabFrame header ul li').removeClass('active');
+                                $(this).addClass('active');
+                        });
+
+                        $('.tabFrame>header li .close').click(function(){
+                            var tabId = $(this).parent('li').attr('data-tab');
+                            var tabParentIdentifier = $(this).parent('li').attr('data-parent-identifier');
+                            classVar.removeTab(tabId);
+                        });
+                    };
+    this.addTab = function(title, contentType, content, onClose){
+                        parentIdentifier = this.parentIdentifier;
+                            var numberOfTabs = $(parentIdentifier+' .tabFrame .tab').length;
+
+                            var headerId = randomString(6, '#aA');
+
                             $(parentIdentifier+' .tabFrame header ul li').removeClass('active');
-                            $(this).addClass('active');
-                    });
-                    
-                    $('.tabFrame>header li .close').click(function(){
-                        var tabId = $(this).parent('li').attr('data-tab');
-                        var tabParentIdentifier = $(this).parent('li').attr('data-parent-identifier');
-                        classVar.removeTab(tabId);
-                    });
-                };
-		this.addTab = function(title, contentType, content, onClose){
-                    parentIdentifier = this.parentIdentifier;
-			var numberOfTabs = $(parentIdentifier+' .tabFrame .tab').length;
-                        
-                        var headerId = randomString(6, '#aA');
-                        
+                            $(parentIdentifier+' .tabFrame header ul').append('<li id='+headerId+' data-tab="'+(numberOfTabs+1)+'" data-parent-identifier="'+parentIdentifier+'" data-title="'+title+'" class="active">'+gui.shorten(title, 15)+'<span class="close"><i class="icon icon-close"></i><i class="icon blue-close"></i></span></li>');
+
+                            $(parentIdentifier+' .tabFrame .tab').hide();
+
+                            if(typeof onClose === 'function'){
+                                $('#'+headerId+' .close').click(function(){
+                                    onClose();
+                                });
+                            }
+
+                            this.tabHistory.push(numberOfTabs+1);
+
+                            var $tab = $('<div class="tab tab_'+(numberOfTabs+1)+'"></div>');
+                            $tab.append(content);
+
+                            $(parentIdentifier+' .tabFrame').append($tab);
+
+                            this.initClicks();
+
+                            return numberOfTabs+1;
+                    };
+    this.getTabByTitle = function(tabTitle){
+                        parentIdentifier = this.parentIdentifier;
+                        var ret;
+                        $(parentIdentifier+' .tabFrame header ul li').each(function(){
+                            if($(this).attr('data-title') == tabTitle){
+                                ret = $(this).attr('data-tab');
+                            }
+                        });
+                        return ret;
+                    };
+    //returns #uniqueId
+    this.getTabIdByTabNumber = function(tabNumber){
+                        parentIdentifier = this.parentIdentifier;
+                        var ret;
+                        $(parentIdentifier+' .tabFrame header ul li').each(function(){
+                            if($(this).attr('data-tab') == tabNumber){
+                                ret = $(this).attr('id');
+                            }
+                        });
+                                return ret;
+                    };
+    this.getTabIdByTitle = function(tabTitle){
+                        return this.getTabIdByTabNumber(this.getTabByTitle(tabTitle));
+                    };
+    this.showTab = function(tab){
+                        this.tabHistory.push(tab);
+                        parentIdentifier = this.parentIdentifier;
+
                         $(parentIdentifier+' .tabFrame header ul li').removeClass('active');
-			$(parentIdentifier+' .tabFrame header ul').append('<li id='+headerId+' data-tab="'+(numberOfTabs+1)+'" data-parent-identifier="'+parentIdentifier+'" data-title="'+title+'" class="active">'+gui.shorten(title, 15)+'<span class="close"><i class="icon white-close"></i><i class="icon blue-close"></i></span></li>');
+                        $(parentIdentifier+' .tabFrame header ul li#'+this.getTabIdByTabNumber(tab)).addClass('active');
 
                         $(parentIdentifier+' .tabFrame .tab').hide();
-                        
-                        if(typeof onClose === 'function'){
-                            $('#'+headerId+' .close').click(function(){
-                                onClose();
-                            });
-                        }
-                        
-                        this.tabHistory.push(numberOfTabs+1);
-                        
-                        var $tab = $('<div class="tab tab_'+(numberOfTabs+1)+'"></div>');
-                        $tab.append(content);
-                        
-                        $(parentIdentifier+' .tabFrame').append($tab);
-                        
-                        this.initClicks();
-                        
-                        return numberOfTabs+1;
-		};
-                this.getTabByTitle = function(tabTitle){
-                    parentIdentifier = this.parentIdentifier;
-                    var ret;
-                    $(parentIdentifier+' .tabFrame header ul li').each(function(){
-                        if($(this).attr('data-title') == tabTitle){
-                            ret = $(this).attr('data-tab');
-                        }
-                    });
-                    return ret;
-                };
-                //returns #uniqueId
-                this.getTabIdByTabNumber = function(tabNumber){
-                    parentIdentifier = this.parentIdentifier;
-                    var ret;
-                    $(parentIdentifier+' .tabFrame header ul li').each(function(){
-                        if($(this).attr('data-tab') == tabNumber){
-                            ret = $(this).attr('id');
-                        }
-                    });
-                            return ret;
-                };
-                this.getTabIdByTitle = function(tabTitle){
-                    return this.getTabIdByTabNumber(this.getTabByTitle(tabTitle));
-                };
-		this.showTab = function(tab){
-                    this.tabHistory.push(tab);
-                    parentIdentifier = this.parentIdentifier;
-                    
-                    $(parentIdentifier+' .tabFrame header ul li').removeClass('active');
-                    $(parentIdentifier+' .tabFrame header ul li#'+this.getTabIdByTabNumber(tab)).addClass('active');
+                        $(parentIdentifier+' .tabFrame .tab.tab_'+tab).show();
+                    };
 
-                    $(parentIdentifier+' .tabFrame .tab').hide();
-                    $(parentIdentifier+' .tabFrame .tab.tab_'+tab).show();
-		};
-                
-                //is used after closing a tab to show the last tab that was shown
-                this.showLastTab = function(current_tab){
-                    var last_tab;
-                    var i = this.tabHistory.length-1;
-                    
-                    
-                    //counts down until i = 0 (each array element)
-                    //proofs if tab exists
-                    //until last tab isnt the current tab or undefined 
-                    while((last_tab==current_tab||last_tab==undefined)&&i!==0){
-                        if(this.tabExists(this.tabHistory[i]))
-                            last_tab = this.tabHistory[i];
-                        i--;
-                    }
-                    this.showTab(last_tab);
-                };
-                this.tabExists = function(tab_identifier){
-                    parentIdentifier = this.parentIdentifier;
-                    if($(parentIdentifier+' .tabFrame .tab.tab_'+tab_identifier).length > 0){
-                        return true;
-                    }else{
-                        return false;
-                    }
-                };
-		this.updateTabContent = function(tab_identifier ,content){
-                    if(parseInt(tab_identifier) != tab_identifier){
-                        tab_identifier = this.getTabByTitle(tab_identifier);
-                    }
-                    parentIdentifier = this.parentIdentifier;
-                    $(parentIdentifier+' .tabFrame .tab.tab_'+tab_identifier).html(content);
-			
-		};
-                this.updateTabTitle = function(tab_identifier, title){
-                    parentIdentifier = this.parentIdentifier;
-                    $(parentIdentifier+' .tabFrame header ul li').each(function(){
-                        if($(this).attr('data-tab') == tab_identifier)
-                            $(this).html(gui.shorten(title,15)+'<span class="close"><i class="icon white-close"></i><i class="icon blue-close"></i></span>');
-                    });
-                    this.initClicks();
-                };
-		this.removeTab = function(tab_identifier){
-                    parentIdentifier = this.parentIdentifier;
-                    
-                    
-                    if($(parentIdentifier+' .tabFrame header ul li').length === 1){
-                        return true;
-                    }
-                    
-                    this.showLastTab(tab_identifier);
-                    $(parentIdentifier+' .tabFrame header ul li').each(function(){
-                        if($(this).attr('data-tab') == tab_identifier)
-                            $(this).remove();
-                    });
-                    $(parentIdentifier+' .tabFrame .tab.tab_'+tab_identifier).remove();
-                    
-		};
-		this.moveTab = function(parentIdentifier, tab){
+    //is used after closing a tab to show the last tab that was shown
+    this.showLastTab = function(current_tab){
+                        var last_tab;
+                        var i = this.tabHistory.length-1;
+
+
+                        //counts down until i = 0 (each array element)
+                        //proofs if tab exists
+                        //until last tab isnt the current tab or undefined 
+                        while((last_tab==current_tab||last_tab==undefined)&&i!==0){
+                            if(this.tabExists(this.tabHistory[i]))
+                                last_tab = this.tabHistory[i];
+                            i--;
+                        }
+                        this.showTab(last_tab);
+                    };
+    this.tabExists = function(tab_identifier){
+                        parentIdentifier = this.parentIdentifier;
+                        if($(parentIdentifier+' .tabFrame .tab.tab_'+tab_identifier).length > 0){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    };
+    this.updateTabContent = function(tab_identifier ,content){
+                        if(parseInt(tab_identifier) != tab_identifier){
+                            tab_identifier = this.getTabByTitle(tab_identifier);
+                        }
+                        parentIdentifier = this.parentIdentifier;
+                        $(parentIdentifier+' .tabFrame .tab.tab_'+tab_identifier).html(content);
+
+                    };
+    this.updateTabTitle = function(tab_identifier, title){
+                        parentIdentifier = this.parentIdentifier;
+                        $(parentIdentifier+' .tabFrame header ul li').each(function(){
+                            if($(this).attr('data-tab') == tab_identifier)
+                                $(this).html(gui.shorten(title,15)+'<span class="close"><i class="icon icon-close"></i><i class="icon blue-close"></i></span>');
+                        });
+                        this.initClicks();
+                    };
+    this.removeTab = function(tab_identifier){
+                        parentIdentifier = this.parentIdentifier;
+
+
+                        if($(parentIdentifier+' .tabFrame header ul li').length === 1){
+                            return true;
+                        }
+
+                        this.showLastTab(tab_identifier);
+                        $(parentIdentifier+' .tabFrame header ul li').each(function(){
+                            if($(this).attr('data-tab') == tab_identifier)
+                                $(this).remove();
+                        });
+                        $(parentIdentifier+' .tabFrame .tab.tab_'+tab_identifier).remove();
+
+                    };
+this.moveTab = function(parentIdentifier, tab){
 			
 		};
 };

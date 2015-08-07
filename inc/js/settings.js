@@ -20,11 +20,11 @@ var settings = new function(){
         var     output = '<div>';
                     output += "<div class='leftNav dark' style='top: 0; background: #37474f;'>";
                     output +=    '<ul>';
-                    output +=       '<li data-function="settings.showUpdateProfileForm();"><span class="icon blue-gear"></span>General</li>';
-                    output +=       '<li data-function="settings.showUpdatePrivacyForm();"><span class="icon blue-eye"></span>Privacy</li>';
-                    output +=       '<li data-function="settings.showUpdateBuddylistForm();"><span class="icon blue-user"></span>Buddylist</li>';
-                    output +=       '<li data-function="settings.showGroupsForm();"><span class="icon blue-group"></span>Groups</li>';
-                    output +=       '<li data-function="settings.showSecurityOverview();"><span class="icon blue-lock"></span>Security</li>';
+                    output +=       '<li data-function="settings.showUpdateProfileForm();"><span class="icon blue-gear"></span><span class="icon white-gear white"></span>General</li>';
+                    output +=       '<li data-function="settings.showUpdatePrivacyForm();"><span class="icon blue-eye"></span><span class="icon white-eye white"></span>Privacy</li>';
+                    output +=       '<li data-function="settings.showUpdateBuddylistForm();"><span class="icon blue-user"></span><span class="icon white-user white"></span>Buddylist</li>';
+                    output +=       '<li data-function="settings.showGroupsForm();"><span class="icon blue-group"></span><span class="icon white-group white"></span>Groups</li>';
+                    output +=       '<li data-function="settings.showSecurityOverview();"><span class="icon blue-lock"></span><span class="icon white-lock white"></span>Security</li>';
                     output +=   '</ul>';
                     output += '</div>';
                     output += "<div class='frameRight' style='top:0px;' id='settingsFrame'>";

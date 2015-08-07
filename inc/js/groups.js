@@ -126,10 +126,10 @@ var groups = new function(){
                     //output  += '<div class="">';
                         output += '<div class="profileNavLeft leftNav dark">';
                             output += '<ul>';
-                                output += '<li data-type="activity"><img src="gfx/profile/sidebar_fav.svg"/>Favorites</li>';
-                                output += '<li data-type="files"><img src="gfx/profile/sidebar_files.svg"/>Files</li>';
-                                output += '<li data-type="playlists"><img src="gfx/profile/sidebar_playlist.svg"/>Playlists</li>';
-                                output += '<li class="openChat"><img src="gfx/chat_icon.svg"/>Open Chat</li>';
+                                output += '<li data-type="activity"><span class="icon blue-heart"></span><span class="icon white-heart white"></span>Favorites</li>';
+                                output += '<li data-type="files"><span class="icon blue-file"></span><span class="icon white-file white"></span>Files</li>';
+                                output += '<li data-type="playlists"><span class="icon blue-playlist"></span><span class="icon white-playlist white"></span>Playlists</li>';
+//                                output += '<li class="openChat"><img src="gfx/chat_icon.svg"/>Open Chat</li>';
                             output += '</ul>';
                             output += '</div>';
                         output += '<div class="profileMain">';

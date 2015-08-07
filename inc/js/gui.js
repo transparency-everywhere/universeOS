@@ -527,7 +527,7 @@ var gui = new function(){
                 alertClass = 'alert-danger';
                 break;
         }
-        $('#alerter').append('<div class="alert '+alertClass+'"><button type="button" class="close" data-dismiss="alert">&times;</button>'+message+'</div>');
+        $('#alerter').append('<div class="alert '+alertClass+'">'+message+'</div>');
         $('.alert').delay(8000).fadeOut(function(){
 	    $(this).remove();
 	});
@@ -810,7 +810,6 @@ var gui = new function(){
       html += '</ul>';
       return html;
     };
-    
 };
               
         
