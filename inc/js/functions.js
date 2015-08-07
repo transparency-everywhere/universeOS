@@ -862,25 +862,21 @@ var User = new function(){
     this.getGroups = function(){
         return api.query('api/user/getGroups/', { });
     };
-    this.getHistory = function(){
-      return [
-          {type:'file', itemId: 2, title:'history dummy 1', timestamp: 123456},
-          {type:'link', itemId: 2, title:'history dummy 2', timestamp: 123456},
-          {type:'file', itemId: 2, title:'history dummy 3', timestamp: 123456},
-          {type:'element', itemId: 2, title:'history dummy 4', timestamp: 123456},
-          {type:'link', itemId: 'http://something.com', title:'history dummy 5', timestamp: 123456}
-          
-      ]  
-    };
-    this.getFavHistory = function(){
-      return [
-          {type:'file', itemId: 2, title:'history fav dummy 1', timestamp: 123456},
-          {type:'folder', itemId: 5, title:'history fav dummy 2', timestamp: 123456},
-          {type:'file', itemId: 2, title:'history fav 3', timestamp: 123456},
-          {type:'element', itemId: 2, title:'h f d 4', timestamp: 123456},
-          {type:'link', itemId: 'http://something.com', title:'h f d 5', timestamp: 123456}
-          
-      ]  
+    this.getHistoryArray = function(){
+        var history = userHistory.get();
+        var historyArray = [];
+        if(history === undefined){
+            return historyArray;
+        } else {
+            $.each(history, function(key, value){
+                console.log(value);
+                var type = value['type'];
+                var itemId = value['item_id'];
+                var title = handlers[type+'s'].getTitle(itemId);//plus "s" because handlers are in plural (element > elements)
+                historyArray.push({type: type, itemId: itemId, title: title, timestamp: ''});
+            });
+            return historyArray;
+        }
     };
     this.inGroup = function(group_id){
         return jQuery.inArray(group_id+'', User.getGroups());
@@ -2719,6 +2715,24 @@ var handlers = {
                     }
                     
                 },
+    'elements': {
+                    query: function(query, offset, max_results){
+                        return handler.query('elements', query, offset, max_results);
+                    },
+                    getTitle: function(id){
+                        return elements.getTitle(id);
+                    },
+                    getDescription: function(id){
+                        return 'wubba dubba du. wubbta asdasd';
+                    },
+                    getThumbnail: function(id){
+                        return '<span class="icon icon-archive"></span>';
+                    },
+                    handler: function(id){
+                        elements.open(id);
+                    }
+                    
+                },
     'files': {
                     query: function(query, offset, max_results){
                         return handler.query('files', query, offset, max_results);
@@ -2752,6 +2766,9 @@ var userHistory = new function(){
     this.storage = [];
     this.push = function(type, item_id){
         this.storage.unshift({type:type, item_id:item_id});
+        //hier hometab>displayhistory aktualisieren
+        console.log(User.getHistoryArray());
+        $("#reader .hometab .home.sectionA div.itemsA").html(reader.buildHistory(User.getHistoryArray()));
     };
     this.get = function(){
         return this.storage;

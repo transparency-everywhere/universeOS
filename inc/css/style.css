@@ -1072,36 +1072,78 @@ span.icon.blue-chevron-down {}
 }
 
 #filesystem .uploadTab {
+    position: relative;
     background-color: #607d8b;
     color: #fefefe;
-    width: 500px;
+    width: 400px;
     margin: 20px;
     padding: 20px;
 }
 
-#filesystem .uploadTab #uploader_file {
-    background-color:  #00bcd4;
-    width: 200px;
-    height: 35px;
+#filesystem .uploadTab form > .uploadify {
+    margin-bottom: 40px;
+}
+
+#filesystem .uploadTab form > .uploadify .uploadify-queue {
+    display: none;
+}
+
+#filesystem .uploadTab form > .uploadify #queue {
+    min-height: 25px;
+}
+
+#filesystem .uploadTab form > .uploadify .tempFilelist {
+    background-color: #ffffff;
+    color:  #313131;
+}
+
+#filesystem .uploadTab form > .uploadify .tempFilelist li {
+    clear: both;
+}
+
+#filesystem .uploadTab form > .uploadify .tempFilelist li > div {
+    display: inline-block;
+    padding: 5px;
+}
+
+#filesystem .uploadTab form > .uploadify .tempFilelist li > span.icon {
+    float: right;
+    cursor: pointer;
+}
+
+#filesystem .uploadTab #uploader_file #uploader_file-button, #filesystem .uploadTab #uploader_file #uploader_file-button:hover {
+    background-image: none!important;
+    background-color:  #00bcd4!important;
+    width: 150px!important;
+    height: 40px!important;
+    border: none!important;
     font-family: Ubuntu;
     color:  #fefefe;
-    font-size: 16px;/* NÃƒÂ¤herungswert aufgrund einer Schriftersetzung */
+    font-size: 16px;
     font-weight: 300;
-    text-align: left;
+    text-align: center;
+    line-height: 38px!important;
 }
 
 #filesystem .uploadTab .uploaderHeader .titleAndIcon {
     background-color:  #00bcd4;
     width: 100%;
-    height: 35px;
+    height: 40px;
+}
+
+#filesystem .uploadTab .uploaderHeader .titleAndIcon .title{
+    line-height: 2.3;
+    margin-left: 10px;
+}
+
+#filesystem .uploadTab .uploaderHeader .titleAndIcon .icon {
+    float: right;
+    margin-right: 10px;
+    margin-top: 3px;
 }
 
 #filesystem .uploadTab .uploadPrivacy header {
     display: none;
-}
-
-#filesystem .uploadTab .uploaderUploadButton {
-
 }
 
 #filesystem .uploadTab .space {
@@ -1112,33 +1154,35 @@ span.icon.blue-chevron-down {}
     display: inline-block;
     background-color:  #37474f;
     width: 100px;
-    height: 35px;
-    font-family: Ubuntu;
+    height: 40px;
     color:  #ffffff;
-    font-size: 16px; /* NÃƒÂ¤herungswert aufgrund einer Schriftersetzung */
+    font-size: 16px;
     font-weight: 300;
     text-align: center;
-    line-height: 2.2;
-    float: left;
+    line-height: 2.3;
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
 }
 
 #filesystem .uploadTab .uploaderUploadButton {
     display: inline-block;
     background-color:  #00bcd4;
     width: 100px;
-    height: 35px;
-    font-family: Ubuntu;
+    height: 40px;
     color:  #ffffff;
-    font-size: 16px; /* NÃƒÂ¤herungswert aufgrund einer Schriftersetzung */
+    font-size: 16px; 
     font-weight: 300;
     text-align: center;
-    float: right;
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
 }
 
 #filesystem .uploadTab .uploaderUploadButton .submitUpload {
     background-color: #00bcd4;
     border: none;
-    line-height: 2.2;
+    line-height: 2.3;
 }
 
 #filesystem .fileBrowser {
@@ -1234,33 +1278,41 @@ span.icon.blue-chevron-down {}
 
 #filesystem .frameRight span.icons  {
     display: inline-block;
-    min-width: 21px;
+    width: 32px;
+    height: 32px;
+    margin-top: 5px;
+    float: left;
 }
 
 #filesystem .frameRight span.icons span.icon  {
-    width: 25px;
+    width: 32px;
 }
 
 #filesystem .frameRight span.title  {
     display: inline-block;
-    width: -moz-calc(100% - 395px);
-    width: -webkit-calc(100% - 395px);
-    width: calc(100% - 395px);}
+    width: auto;
+    max-width: -moz-calc(100% - 202px);
+    max-width: -webkit-calc(100% - 202px);
+    max-width: calc(100% - 202px);
+    float: left;
+}
 
-#filesystem .frameRight span.date, #filesystem .frameRight span.size  {
+#filesystem .frameRight span.date {
     display: inline-block;
     width: 110px;
+    float: right;
 }
 
  #filesystem .frameRight span.size  {
     display: inline-block;
-    width: 100px;
+    width: 75px;
+    float: right;
 }
 
 #filesystem .frameRight span.buttons  {
     display: inline-block;
+    width: 153px;
     float: right;
-    width: 160px;
 }
 
 #filesystem .frameRight span.buttons > * {
@@ -1268,14 +1320,23 @@ span.icon.blue-chevron-down {}
     padding: 0;
 }
 
+#filesystem .frameRight span.buttons .btn {
+    margin-bottom: 6px;
+    padding: 0px;
+}
+
 #filesystem .frameRight span.buttons > a > span.icon-gear {
-    margin-bottom: -8px;
+    margin-bottom: -11px;
+}
+
+#filesystem .frameRight span.buttons > a > span.icon-download {
+    margin-bottom: -6px;
 }
 
 #filesystem .frameRight span.heading  {
     display: block;
     clear: both;
-    margin: 10px 0 10px 0;
+    padding: 10px 0 10px 0;
     color:  #00bcd4;
     font-size: 20px;
     font-weight: 300;
@@ -1285,7 +1346,8 @@ span.icon.blue-chevron-down {}
 #filesystem .tabFrame .frameRight > ul > li  {
     display: inline-block;
     width: 100%;
-    padding:10px;
+    padding:0px;
+    line-height: 2.6;
 }
 
 #filesystem .tabFrame .frameRight > ul > li:hover{
@@ -1317,6 +1379,16 @@ span.icon.blue-chevron-down {}
 #filesystem .tabFrame .frameRight .white-header > span {
     display: block;
     float: left;
+}
+
+#filesystem .tabFrame .frameRight .white-header .dropdown {
+    z-index: 1;
+    position: relative;
+    margin-top: 48px;
+}
+
+#filesystem .tabFrame .frameRight #attributes{
+    color: #607d8b;
 }
 
 #filesystem .tabFrame .frameRight .white-header > .icon {
@@ -1354,6 +1426,7 @@ span.icon.blue-chevron-down {}
 
 /*small symbols view*/
 #filesystem .tabFrame .frameRight.smallSymbols > ul > li{
+    position: relative;
     float: left;
     clear: none;
     width: 130px;
@@ -1366,6 +1439,18 @@ span.icon.blue-chevron-down {}
     margin-top: -114px;
     margin-left: 82px;
     text-align: center;
+}
+
+#filesystem .tabFrame .frameRight.smallSymbols > ul > li span.buttons a.btn.btn-mini{
+    position: absolute;
+    top: 5px;
+    right: 0px;
+}
+
+#filesystem .tabFrame .frameRight.smallSymbols > ul > li span.buttons .itemSettingsButton{
+    position: absolute;
+    top: 37px;
+    right: -1px;
 }
 
 #filesystem .tabFrame .frameRight.smallSymbols > ul > li span.icons {
@@ -1395,6 +1480,8 @@ span.icon.blue-chevron-down {}
     display: block;
     text-align: center;
     width: 100%;
+    max-width: none;
+    line-height: 1.3;
 }
 
 #filesystem .tabFrame .frameRight.smallSymbols #attributes, #filesystem .tabFrame .frameRight.smallSymbols > ul > li span.date, #filesystem .tabFrame .frameRight.smallSymbols > ul > li span.size, #filesystem .tabFrame .frameRight.smallSymbols > ul > li span.buttons {
@@ -1421,6 +1508,7 @@ span.icon.blue-chevron-down {}
 
 /*Large symbols view*/
 #filesystem .tabFrame .frameRight.largeSymbols > ul > li{
+    position: relative;
     float: left;
     clear: none;
     width: 190px;
@@ -1433,6 +1521,18 @@ span.icon.blue-chevron-down {}
     margin-top: -114px;
     margin-left: 82px;
     text-align: center;
+}
+
+#filesystem .tabFrame .frameRight.largeSymbols > ul > li span.buttons a.btn.btn-mini{
+    position: absolute;
+    top: 5px;
+    right: 0px;
+}
+
+#filesystem .tabFrame .frameRight.largeSymbols > ul > li span.buttons .itemSettingsButton{
+    position: absolute;
+    top: 37px;
+    right: 0px;
 }
 
 #filesystem .tabFrame .frameRight.largeSymbols > ul > li span.icons {
@@ -1456,13 +1556,15 @@ span.icon.blue-chevron-down {}
 
 #filesystem .tabFrame .frameRight.largeSymbols > ul > li:hover span.icons span.icon {
     border-color:  #00bcd4;
-    border-width: 2px;
+    border-width: 1px;
 }
 
 #filesystem .tabFrame .frameRight.largeSymbols > ul > li span.title {
     display: block;
     text-align: center;
     width: 100%;
+    max-width: none;
+    line-height: 1.3;
 }
 
 #filesystem .tabFrame .frameRight.largeSymbols #attributes, #filesystem .tabFrame .frameRight.largeSymbols > ul > li span.date, #filesystem .tabFrame .frameRight.largeSymbols > ul > li span.size, #filesystem .tabFrame .frameRight.largeSymbols > ul > li span.buttons {
@@ -1522,7 +1624,9 @@ span.icon.blue-chevron-down {}
 }
 
 #filesystem .leftNav span.icon {
-    margin-bottom: -9px;
+  margin-bottom: -11px;
+  width: 32px;
+  height: 32px;
 }
 
 
@@ -2093,8 +2197,12 @@ ul .elementSettings {
     line-height: 2.4;
 }
 
+#reader .readerStartpage .navi li:hover {
+    background-color: #cfd8dc;
+}
+
 #reader .readerStartpage .navi li:first-of-type {
-    width: auto;
+    width: 40px;
 }
 
 #reader .readerStartpage .tabs .singletab {
@@ -2129,9 +2237,21 @@ ul .elementSettings {
     float: left;
 }
 
+#reader .readerStartpage .tabs .singletab .sectionA > .itemsA > ul > li:hover,
+#reader .readerStartpage .tabs .singletab .sectionB > .itemsB > ul > li:hover  {
+    background-color: #cfd8dc;
+    cursor: pointer;
+}
+
+#reader .readerStartpage .tabs .singletab .sectionA > .itemsA > ul > li.active,
+#reader .readerStartpage .tabs .singletab .sectionB > .itemsB > ul > li.active  {
+    background-color: #cfd8dc;
+}
+
 #reader .readerStartpage .tabs .singletab .sectionA, #reader .readerStartpage .tabs .singletab .sectionB {
     width:100%;
     padding: 10px 10px;
+    min-height: 160px;
 }
 
 #reader .readerStartpage .tabs .singletab .sectionB {
@@ -2278,11 +2398,11 @@ ul .elementSettings {
 .openFile header{
     display: block;
     height: 40px;
-    vertical-align: middle;
     border: 1px solid #cfd8dc;
     border-top-style: none;
     border-right-style: none;
     border-left-style: none;
+    position: relative;
 }
 .openFile header .title{
     display: inline;
@@ -2290,10 +2410,48 @@ ul .elementSettings {
     font-size: 16px;
     font-weight: 150;
     text-align: left;
+    position: absolute;
+    top: 12px;
+    left: 34px;
 }
 .openFile header .icon{
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
+}
+.openFile header > span.icon {
+    position: absolute;
+    top: 5px;
+    left: 2px;
+}
+.openFile header > span.title {
+    position: absolute;
+    top: 10px;
+    left: 34px;
+}
+.openFile header > div.whiteGradientScoreButton {
+    position: absolute;
+    top: 0px;
+    right: 53px;
+}
+.openFile header > a.btn.btn-mini {
+    position: absolute;
+    top: -2px;
+    right: 17px;
+}
+.openFile header > a.itemSettingsButton {
+    position: absolute;
+    top: 13px;
+    right: 4px;
+}
+.openFile header > div#zoom_in {
+    position: absolute;
+    top: 4px;
+    right: 185px;
+}
+.openFile header > div#zoom_out {
+    position: absolute;
+    top: 4px;
+    right: 160px;
 }
 .openFile header .itemSettingsButton{
     display: inline;

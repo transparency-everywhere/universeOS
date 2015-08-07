@@ -5,10 +5,12 @@ include("inc/functions.php");
 $time = time();
 
 
-echo $time;
+//echo $time;
 
 
 
+                    $class = new files();
+                    var_dump($class->getMyFiles(1));
 
 
 

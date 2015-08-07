@@ -53,7 +53,7 @@ var reader = new function(){
                         html += "<li onclick=\"$( '.hometab' ).hide();$( '.groupstab' ).hide();$( '.favoritestab' ).hide();$( '.playliststab' ).hide();$( '.myFilestab' ).show();return false\">My Files</li>";
                     html += '</ul>';
                 html += '</div>';
-                //alles ab hier wird dynamisch durch reader.initTabs() generiert
+                //generate tabs
                 html += reader.initTabs();
             html += '</div>';
         } else {
@@ -71,7 +71,7 @@ var reader = new function(){
         var html = '';
             
             
-        var history_items = User.getHistory(); //get array with 5 dummy entries (functions.js)
+        var history_items = User.getHistoryArray(); //get array with 5 dummy entries (functions.js)
         
         var popular_items = filesystem.getPopularItemsArray(); //get popular public items
         
@@ -99,7 +99,7 @@ var reader = new function(){
         html += '<div class="tabs">';
         
             //generate home view
-            html += this.buildTab('home', 'clock', 'Display History', history_items, 'suggestion', 'Popular in the universeOS', popular_items, feature);
+            html += this.buildTab('home', 'clock', 'My current history', history_items, 'suggestion', 'Popular in the universeOS', popular_items, feature);
 
             //generate groups view
             html += this.buildTab('groups', 'group', 'My groups', group_items, 'suggestion', 'Popular groups', popular_groups);
@@ -108,7 +108,7 @@ var reader = new function(){
             html += this.buildTab('favorites', 'clock', 'My latest favorites', fav_history, 'fav', 'All my favorites', fav_items);
 
             //generate playlist view
-            html += this.buildTab('playlists', 'playlist', 'Your playlists', playlist_items, 'suggestion', 'The latest public playlists', public_playlists);
+            html += this.buildTab('playlists', 'playlist', 'My playlists', playlist_items, 'suggestion', 'The latest public playlists', public_playlists);
 
             //generate my files view
             html += this.buildTab('myFiles', 'file', 'My files', myFiles_items);
@@ -129,26 +129,38 @@ var reader = new function(){
                 html += '<div class="' + tab + ' titleA">';
                     html += titleA;
                 html += '</div>';
-                html += '<div class="' + tab + ' itemsA">';
-                    html += '<ul>';
-                    if(typeof itemsA !== 'undefined' || itemsA !== undefined){
-                        var onclick = "";
-                        $.each(itemsA, function(key, value){
-                            if( value['type'] === 'element'){
-                                onclick = "onclick=\"elements.open('" + value['itemId'] + "'); return false;\"";
-                            } else if( value['type'] === 'file'){
-                                onclick = "onclick=\"reader.openFile('" + value['itemId'] + "'); return false;\"";
-                            } else if( value['type'] === 'link'){
-                                onclick = "onclick=\"reader.openLink('" + value['itemId'] + "'); return false;\"";
-                            }
-                            html += '<li ' + onclick + '>';
-                                html += '<div class="' + tab + ' itemsA icon">' + filesystem.generateIcon(value['type']) + '</div>';
-                                html += '<div class="' + tab + ' itemsA title">' + value['title'] + '</div>';
-                            html += '</li>';
-                        });
-                    };
-                    html += '</ul>';
-                html += '</div>';
+                if(tab === 'home'){
+                    html += '<div class="' + tab + ' itemsA">';
+                        html += this.buildHistory(itemsA);
+                    html += '</div>';
+                } else {
+                    html += '<div class="' + tab + ' itemsA">';
+                        html += '<ul>';
+                        if(typeof itemsA !== 'undefined' || itemsA !== undefined){
+                            var onclick = "";
+                            $.each(itemsA, function(key, value){
+                                if( value['type'] === 'element'){
+                                    onclick = "onclick=\"elements.open('" + value['itemId'] + "'); return false;\"";
+                                } else if( value['type'] === 'file'){
+                                    onclick = "onclick=\"reader.openFile('" + value['itemId'] + "'); return false;\"";
+                                } else if( value['type'] === 'link'){
+                                    onclick = "onclick=\"reader.openLink('" + value['itemId'] + "'); return false;\"";
+                                } else if( value['type'] === 'folder'){
+                                    onclick = "onclick=\"folders.open('" + value['itemId'] + "'); return false;\"";
+                                } else if( value['type'] === 'group'){
+                                    onclick = "onclick=\"groups.show('" + value['itemId'] + "'); return false;\"";
+                                } else if( value['type'] === 'playlist'){
+                                    onclick = "onclick=\"playlists.playPlaylist('" + value['itemId'] + "'); return false;\"";
+                                }
+                                html += '<li ' + onclick + '>';
+                                    html += '<div class="' + tab + ' itemsA icon">' + filesystem.generateIcon(value['type']) + '</div>';
+                                    html += '<div class="' + tab + ' itemsA title">' + value['title'] + '</div>';
+                                html += '</li>';
+                            });
+                        };
+                        html += '</ul>';
+                    html += '</div>';
+                }
             html += '</div>';
             
             if(typeof itemsB !== 'undefined' || itemsB !== undefined){
@@ -176,6 +188,12 @@ var reader = new function(){
                             onclick = "onclick=\"reader.openFile('" + value['itemId'] + "'); return false;\"";
                         } else if( value['type'] === 'link'){
                             onclick = "onclick=\"reader.openLink('" + value['itemId'] + "'); return false;\"";
+                        } else if( value['type'] === 'folder'){
+                            onclick = "onclick=\"folders.open('" + value['itemId'] + "'); return false;\"";
+                        } else if( value['type'] === 'group'){
+                            onclick = "onclick=\"groups.show('" + value['itemId'] + "'); return false;\"";
+                        } else if( value['type'] === 'playlist'){
+                            onclick = "onclick=\"playlists.playPlaylist('" + value['itemId'] + "'); return false;\"";
                         }
                         html += '<li ' + onclick + '>';
                             html += '<div class="' + tab + ' itemsB icon">' + filesystem.generateIcon(value['type']) + '</div>';
@@ -395,5 +413,34 @@ var reader = new function(){
     };
     this.openLink = function(type, link, title){
         player.openItem(type, link);
+    };
+    this.buildHistory = function(userHistoryArray){
+        var itemsA = userHistoryArray;
+        var tab = 'home';
+        var html = '<ul>';
+        if(typeof itemsA !== 'undefined' || itemsA !== undefined){
+            var onclick = "";
+            $.each(itemsA, function(key, value){
+                if( value['type'] === 'element'){
+                    onclick = "onclick=\"elements.open('" + value['itemId'] + "'); return false;\"";
+                } else if( value['type'] === 'file'){
+                    onclick = "onclick=\"reader.openFile('" + value['itemId'] + "'); return false;\"";
+                } else if( value['type'] === 'link'){
+                    onclick = "onclick=\"reader.openLink('" + value['itemId'] + "'); return false;\"";
+                } else if( value['type'] === 'folder'){
+                    onclick = "onclick=\"folders.open('" + value['itemId'] + "'); return false;\"";
+                } else if( value['type'] === 'group'){
+                    onclick = "onclick=\"groups.show('" + value['itemId'] + "'); return false;\"";
+                } else if( value['type'] === 'playlist'){
+                    onclick = "onclick=\"playlists.playPlaylist('" + value['itemId'] + "'); return false;\"";
+                }
+                html += '<li ' + onclick + '>';
+                    html += '<div class="' + tab + ' itemsA icon">' + filesystem.generateIcon(value['type']) + '</div>';
+                    html += '<div class="' + tab + ' itemsA title">' + value['title'] + '</div>';
+                html += '</li>';
+            });
+        };
+        html += '</ul>'; 
+        return html;
     };
 };

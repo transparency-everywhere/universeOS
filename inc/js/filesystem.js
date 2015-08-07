@@ -27,16 +27,16 @@ var filesystem =  new function() {
                     html += '<h2>Upload</h1>';
                     html += '<hr />';
                     html += '<div class="uploaderHeader">';
-                        html += '<div>You will upload files to this collection:</div>';
-                        html += '<div class="titleAndIcon">' + elements.getTitle(element) + filesystem.generateIcon('element', 'white') + '</div>';
+                        html += '<div><h3>You will upload files to this collection:</h3></div>';
+                        html += '<div class="titleAndIcon"><span class="title">' + elements.getTitle(element) + '</span>' + filesystem.generateIcon('element', 'white') + '</div>';
                     html += '</div>';
                     html += '<h3>Privacy settings:</h2>';
                     html += '<div class="uploadPrivacy"></div>';
                     html += '<h3>Add files:</h2>';
-                    html += '<div>';
+                    html += '<div class="uploadify">';
                         html += '<input id="uploader_file" name="feedFile" type="file" multiple="true">';
-                        html += '<div id="queue"></div>';
                         html += '<ul class="tempFilelist"></ul>';
+                        html += '<div id="queue"></div>';
                     html += '</div>';
                     html += '<div class="uploaderCancelButton">Cancel</div>';
                     html += '<div class="uploaderUploadButton"><input type="submit" value="Upload" class="submitUpload"></div>';
@@ -133,7 +133,7 @@ var filesystem =  new function() {
                         }		  			
                         if(privacy.authorize(folderData['privacy'], folderData['creator'])){
                             html += '        		<li onclick="javascript: elements.showCreateElementForm(\'' + folderId + '\');return false">' + filesystem.generateIcon('element', 'white') + 'Add element</li>';
-                            html += '                       <li onclick="javascript: folders.showCreateFolderForm(' + folderId + ');return false">' + filesystem.generateIcon('folder', 'white') + 'Add folder</li>';
+                            html += '                   <li onclick="javascript: folders.showCreateFolderForm(' + folderId + ');return false">' + filesystem.generateIcon('folder', 'white') + 'Add folder</li>';
                             html += '        		<li onclick="shortcuts.showChooseShortcutTypeForm(' + folderId + ');">' + filesystem.generateIcon('shortcut', 'white') + 'Add shortcut</li>';
                         }		  			
                         html += '        	</ul>';
@@ -181,7 +181,7 @@ var filesystem =  new function() {
                 if(parentFolderData['folder'] !== "1")
                     parentFolderData = folders.getData(folder);                    
                 html += '                        <tr class="greyHover" onclick="openFolder(' + parentFolderData['folder'] + '); return false;">';		  			
-                html += '                            <td>' + filesystem.generateIcon('folder', 'icon') + '</td>';		  			
+                html += '                            <td>' + filesystem.generateIcon('folder', 'grey') + '</td>';		  			
                 html += '                            <td><a href="#">...</a></td>';		  			
                 html += '                            <td></td>';		  			
                 html += '                            <td></td>';		  			
@@ -202,7 +202,7 @@ var filesystem =  new function() {
                         if(rightClick){
                             html += ''; //hier muss die rightClick function noch eingebunden werden!!
                         }
-                        html += '                    <td onclick="openFolder(' + value['data']['id'] + '); return false;">' + filesystem.generateIcon('folder', 'icon') + '</td>';
+                        html += '                    <td onclick="openFolder(' + value['data']['id'] + '); return false;">' + filesystem.generateIcon('folder', 'grey') + '</td>';
                         html += '                    <td onclick="openFolder(' + value['data']['id'] + '); return false;">' + name + '</td>';
                         html += '                    <td>';
                         html += item.showScoreButton('folder', value['data']['id']);
@@ -219,7 +219,7 @@ var filesystem =  new function() {
                     if(value['type'] === "element"){
                         var title = value['data']['title'];
                         html += "                        <tr class=\"greyHover\" oncontextmenu=\"showMenu('element" + value['data']['id'] + "'); return false;\">";
-                        html += "                           <td onclick=\"elements.open('" + value['data']['id'] + "'); return false;\">" + filesystem.generateIcon('element') + "</td>";
+                        html += "                           <td onclick=\"elements.open('" + value['data']['id'] + "'); return false;\">" + filesystem.generateIcon('element', 'grey') + "</td>";
                         html += "                           <td onclick=\"elements.open('" + value['data']['id'] + "'); return false;\">" + title + "</td>";
                         html += "                           <td>" + item.showScoreButton('element', value['data']['id']) + "</td>";
                         html += "                           <td>";
@@ -474,6 +474,7 @@ var filesystem =  new function() {
     icons['download'] = 'download';
     icons['link'] = 'external-link';
     icons['RSS'] = 'rss';
+    icons['trash'] = 'trash';
     icons['dislike'] = 'dislike';
     icons['like'] = 'like';
     icons['minus'] = 'minus';
