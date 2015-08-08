@@ -1087,7 +1087,26 @@ span.icon.blue-chevron-down {}
 #filesystem {
 }
 
-#filesystem {
+#filesystem ul.elementSettings > li,
+#filesystem ul.fileBrowserSettings > li {
+    height: 40px!important;
+    position: relative;
+}
+
+#filesystem ul.elementSettings > li:nth-of-type(4){
+    display: none;
+}
+
+#filesystem ul.elementSettings > li > span.text,
+#filesystem ul.fileBrowserSettings > li > span.text {
+    position: absolute;
+    left: 40px;
+    top: 10px;
+}
+
+#filesystem ul.fileBrowserSettings > li > span.icon {
+    width: 32px;
+    height: 32px;
 }
 
 #filesystem .uploadTab {
@@ -1266,7 +1285,7 @@ span.icon.blue-chevron-down {}
     left: 0px;
     right: 0px;
     height: 40px;
-    overflow: none;
+    overflow: hidden;
     border-bottom: 1px solid #dcdcdc;
     color: #313131;
     padding-top: 10px;
@@ -1300,6 +1319,7 @@ span.icon.blue-chevron-down {}
     width: 32px;
     height: 32px;
     margin-top: 5px;
+    margin-left: 10px;
     float: left;
 }
 
@@ -1360,6 +1380,14 @@ span.icon.blue-chevron-down {}
     font-size: 20px;
     font-weight: 300;
     text-align: left;
+    margin-left: 10px;
+}
+
+#filesystem .frameRight span.emptyFileList  {
+    padding-left: 10px;
+    padding-right: 10px;
+    display: block;
+    min-height: 45px;
 }
 
 #filesystem .tabFrame .frameRight > ul > li  {
@@ -1408,6 +1436,10 @@ span.icon.blue-chevron-down {}
 
 #filesystem .tabFrame .frameRight #attributes{
     color: #607d8b;
+}
+
+#filesystem .tabFrame .frameRight #attributes span.icons{
+    width: 28px;
 }
 
 #filesystem .tabFrame .frameRight .white-header > .icon {
@@ -1477,6 +1509,7 @@ span.icon.blue-chevron-down {}
     text-align: center;
     width: 100%;
     height: 70px;
+    margin-left: 0;
 }
 
 #filesystem .tabFrame .frameRight.smallSymbols > ul > li span.icons span.icon {
@@ -1559,6 +1592,7 @@ span.icon.blue-chevron-down {}
     text-align: center;
     width: 100%;
     height: 148px;
+    margin-left: 0;
 }
 
 #filesystem .tabFrame .frameRight.largeSymbols > ul > li span.icons span.icon {

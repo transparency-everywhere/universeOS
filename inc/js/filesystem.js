@@ -129,12 +129,12 @@ var filesystem =  new function() {
                     if(!empty(folderId) && is_numeric(folderId)){
                         html += '        	<ul class="fileBrowserSettings fileBrowserSettings' + folderId + '">';		  			
                         if(proofLogin()){
-                            html += '                       <li onclick="fav.add(\'folder\', ' + folderId + ')">' + filesystem.generateIcon('fav', 'white') + 'Add to favorites</li>';
+                            html += '                       <li onclick="fav.add(\'folder\', ' + folderId + ')">' + filesystem.generateIcon('fav', 'white') + '<span class="text">Add to favorites</span></li>';
                         }		  			
                         if(privacy.authorize(folderData['privacy'], folderData['creator'])){
-                            html += '        		<li onclick="javascript: elements.showCreateElementForm(\'' + folderId + '\');return false">' + filesystem.generateIcon('element', 'white') + 'Add element</li>';
-                            html += '                   <li onclick="javascript: folders.showCreateFolderForm(' + folderId + ');return false">' + filesystem.generateIcon('folder', 'white') + 'Add folder</li>';
-                            html += '        		<li onclick="shortcuts.showChooseShortcutTypeForm(' + folderId + ');">' + filesystem.generateIcon('shortcut', 'white') + 'Add shortcut</li>';
+                            html += '        		<li onclick="javascript: elements.showCreateElementForm(\'' + folderId + '\');return false">' + filesystem.generateIcon('element', 'white') + '<span class="text">Add element</span></li>';
+                            html += '                   <li onclick="javascript: folders.showCreateFolderForm(' + folderId + ');return false">' + filesystem.generateIcon('folder', 'white') + '<span class="text">Add folder</span></li>';
+                            html += '        		<li onclick="shortcuts.showChooseShortcutTypeForm(' + folderId + ');">' + filesystem.generateIcon('shortcut', 'white') + '<span class="text">Add shortcut</span></li>';
                         }		  			
                         html += '        	</ul>';
                     }
@@ -200,7 +200,7 @@ var filesystem =  new function() {
                         }
                         html += '                <tr class="greyHover" oncontextmenu="showMenu(\'folder' + value['data']['id'] + '\'); return false;">';
                         if(rightClick){
-                            html += ''; //hier muss die rightClick function noch eingebunden werden!!
+                            html += ''; //option to add rightclick function
                         }
                         html += '                    <td onclick="openFolder(' + value['data']['id'] + '); return false;">' + filesystem.generateIcon('folder', 'grey') + '</td>';
                         html += '                    <td onclick="openFolder(' + value['data']['id'] + '); return false;">' + name + '</td>';
@@ -513,6 +513,7 @@ var filesystem =  new function() {
     icons['audio/mpeg'] = 'file';
     icons['audio/wav'] = 'file';
     icons['audio'] = 'file';
+    icons['video/avi'] = 'file';
     icons['video/mp4'] = 'file';
     icons['video'] = 'file';
     icons['UFF'] = 'file';
