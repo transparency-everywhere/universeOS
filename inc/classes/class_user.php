@@ -74,7 +74,7 @@ class user {
         $values['realname'] = sanitizeText($realname);
         $values['place'] = sanitizeText($city);
         $values['home'] = sanitizeText($hometown);
-        $values['birthdate'] = $birthdate;
+        $values['birthdate'] = sanitizeText($birthdate);
         $values['school1'] = sanitizeText($school);
         $values['university1'] = sanitizeText($university);
         $values['employer'] = sanitizeText($work);
