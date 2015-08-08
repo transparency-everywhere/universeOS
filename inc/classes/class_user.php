@@ -71,13 +71,13 @@ class user {
   	if(empty($userid)){
   		$userid = getUser();
   	}
-        $values['realname'] = $realname;
-        $values['place'] = $city;
-        $values['home'] = $hometown;
+        $values['realname'] = sanitizeText($realname);
+        $values['place'] = sanitizeText($city);
+        $values['home'] = sanitizeText($hometown);
         $values['birthdate'] = $birthdate;
-        $values['school1'] = $school;
-        $values['university1'] = $university;
-        $values['employer'] = $work;
+        $values['school1'] = sanitizeText($school);
+        $values['university1'] = sanitizeText($university);
+        $values['employer'] = sanitizeText($work);
         $db = new db();
         $db->update('user', $values, array('userid', $userid));
     }
@@ -176,6 +176,7 @@ class user {
   
     public function create($username, $password, $authSalt, $keySalt, $privateKey, $publicKey){
 
+        $username = sanitizeText($username);
         $username = $username;
         $db = new db();
         $data = $db->select('user', array('username', $username), array('username'));

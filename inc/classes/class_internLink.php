@@ -16,6 +16,7 @@ class shortcut {
 	function create($parentType, $parentId, $type, $typeId, $title=NULL){
 	//creates shortcut
 		
+                $title = sanitizeText($title);
 		//check if link allready exists
                 $db = new db();
                 $linkCheckData = $db->select('internLinks', array('type', $type, 'AND', 'typeId', $typeId), array('type'));

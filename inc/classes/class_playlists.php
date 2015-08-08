@@ -103,6 +103,7 @@ class playlist{
     
     public function create($options){
        $title = $options['title'];
+       $title = sanitizeText($title);
        $element = $options['element'];
        $privacy = $options['privacy'];
        if(empty($options['items'])){
