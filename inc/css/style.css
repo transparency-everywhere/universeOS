@@ -378,7 +378,7 @@ span.icon.blue-chevron-down {}
 }
 #searchMenu, #searchMenu a, #searchMenu a:link, #searchMenu a:visited{
     color: #fefefe;
-    font-size: 20px; /* NÃƒÆ’Ã‚Â¤herungswert aufgrund einer Schriftersetzung */
+    font-size: 20px; /* NÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¤herungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: left;
 }
@@ -481,7 +481,7 @@ span.icon.blue-chevron-down {}
 .resultList li:hover .icon.dark{
     display:none;
 }
-#searchMenu .loadAll,Ãƒâ€šÃ‚Â #searchMenu .loadAll{
+#searchMenu .loadAll,ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â #searchMenu .loadAll{
     font-size: 14px;
     margin-top: 15px;
     text-align:right;
@@ -1870,7 +1870,7 @@ color: #FFF;
     margin-right: 20px;
 }
 
-#mailListÃƒâ€šÃ‚Â {
+#mailListÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
     width: 450px;
     margin-left: 150px;
 }
@@ -1910,7 +1910,7 @@ color: #FFF;
 	line-height: 8px;
 }
 
-#buddyListTableÃƒâ€šÃ‚Â { 
+#buddyListTableÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â { 
     overflow: none;
 }
     
@@ -2085,7 +2085,7 @@ color: #FFF;
     margin: 0px;
 }
 
-#feedTableÃƒâ€šÃ‚Â { 
+#feedTableÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â { 
     overflow: none;
 }
 
@@ -2605,6 +2605,12 @@ ul .elementSettings {
     background-color: #263238;
     overflow: hidden;
     text-align: center;
+    position: absolute;
+    top: 40px;
+    right: 0;
+    bottom: 150px;
+    left: 0;
+    padding: 10px;
 }  
 
 .imageReader .mainImage img {
@@ -2619,6 +2625,10 @@ ul .elementSettings {
     height: 150px;
     width: auto;
     padding: 5px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
 }    
 
 .imageReader .previewImages img {
@@ -2834,7 +2844,7 @@ color:#FFFFFF;
     
 }
 
-#pepperSteakItemÃƒâ€šÃ‚Â {
+#pepperSteakItemÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
     background-color: #72aa00; 
 }
 
@@ -2933,7 +2943,7 @@ color:#FFFFFF;
 .white-gradient {
     background-color: rgb(255, 255, 255);font-family: Ubuntu;
     color:  #313131;
-    font-size: 16px; /* NÃƒÆ’Ã‚Â¤herungswert aufgrund einer Schriftersetzung */
+    font-size: 16px; /* NÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¤herungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: left;
 }
@@ -2947,11 +2957,11 @@ color:#FFFFFF;
     box-sizing: border-box;
 }
 
-.floatRightÃƒâ€šÃ‚Â {
+.floatRightÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
     float: right;
 }
 
-.clearÃƒâ€šÃ‚Â {
+.clearÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
     clear: both;
 }
 
@@ -3998,7 +4008,7 @@ display: block;
 
 
 
-#profileWrapÃƒâ€šÃ‚Â {
+#profileWrapÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
     position: absolute;
     margin-top: 20%;
     margin-left: 50%;
@@ -4828,21 +4838,19 @@ a#text {}
                         #calendarMainFrame .calendarPrivacyTrigger .icon{
                             float:right;
                             display:none
-                        }
+                        ;
+                            margin-top: 3px;
+}
                         
                         
                         #calendarMainFrame .calendarPrivacyTrigger .blue-check{
-                            display:block;
+                            display: inline-block;
                         }
                         #calendarMainFrame .calendarPrivacyTrigger.active .blue-check{
                             display:none;
                         }
                         #calendarMainFrame .calendarPrivacyTrigger.active .white-check{
-                            display: block;
-                        }
-                        
-                        #calendarMainFrame #side .icon{
-                            margin-bottom: -5px;
+                            display: inline-block;
                         }
                         
                         

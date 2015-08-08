@@ -398,7 +398,7 @@ var session = new function(){
                 
                 //save session cookie, in case the browser updates or an plugin is installed
                 session.saveSessionCookie(session.getGUID(), 31);
-                gui.alert('The element has been added');
+                gui.alert('The session has been added');
                 $('.blueModal').remove();
                 universe.reloadState = true;
             };

@@ -26,7 +26,7 @@ var reader = new function(){
     this.init = function(){
         var grid = {width: 5, height:  4, top: 6, left: 3, hidden: true};
         if(proofLogin())
-            grid = {width: 8, height:  8, top: 0, left: 2};
+            grid = {width: 8, height:  8, top: 0, left: 2, hidden: true};
         this.applicationVar = new application('reader');
         this.applicationVar.create('Display', 'url', 'modules/reader/index.php', grid);
         
@@ -43,7 +43,7 @@ var reader = new function(){
         var html = '';
         if(proofLogin()){
             html += '<div class="readerStartpage">';
-                html += '<div class="welcomearea"><div class="userPicture"><img style="max-width:100px; max-height: 100px; src="' + getUserPicture(User.userid) + '" onclick="User.showProfile(User.userid); return false"></div><div class="welcomeText">Hidiho, <a href="#" onclick="User.showProfile(User.userid); return false">'+ useridToUsername(User.userid) +'</a>,<br />good to see you!<div></div>';
+                html += '<div class="welcomearea"><div class="userPicture"><img style="max-width:100px; max-height: 100px;" src="' + getUserPicture(User.userid) + '" onclick="User.showProfile(User.userid); return false"></div><div class="welcomeText">Hidiho, <a href="#" onclick="User.showProfile(User.userid); return false">'+ useridToUsername(User.userid) +'</a>,<br />good to see you!<div></div>';
                 html += '<div class="navi">';
                     html += '<ul>';
                         html += "<li onclick=\"$( '.hometab' ).show();$( '.groupstab' ).hide();$( '.favoritestab' ).hide();$( '.playliststab' ).hide();$( '.myFilestab' ).hide();return false\">" + filesystem.generateIcon('home', 'blue') + '</li>';

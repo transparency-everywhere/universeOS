@@ -46,7 +46,7 @@ class files {
                 $folderpath = $folderClass->getPath();
 			
 			
-                $thumbPath = $folderpath."thumbs/";
+                $thumbPath = universeBasePath.'/'.$folderpath."thumbs/";
                 $imgName = basename($FileElementData['title']."_".$file['name']);
                 $elementName = rawurlencode($FileElementData['title'].'_');
                 $finalName = $FileElementData['title']."_".$file['name'];
@@ -61,11 +61,13 @@ class files {
 	                    $thumbPath= "$thumbPath";
 	                    $path = "$folderpath";
                             $imageClass = new image();
-	                    if(is_dir(universeBasePath.'/'.$thumbPath)){
-	                        $imageClass->mkthumb("$finalName",300,300,$path,"$thumbPath");
-	                    } else{
-	                        mkdir(universeBasePath.'/'.$thumbPath);
-	                        $imageClass->mkthumb("$finalName",300,300,$path,"$thumbPath");
+	                    if(is_dir($thumbPath)){
+                                $imageClass->mkthumb($finalName, 600, 600, universeBasePath.'/'.$folderpath, $thumbPath);
+	                    }else{
+                                $oldmask = umask(0);
+	                        mkdir($thumbPath,0755);
+                                umask($oldmask);
+                                $imageClass->mkthumb($finalName, 600, 600, universeBasePath.'/'.$folderpath, $thumbPath);
 	                    }
 	        }
             rename(universeBasePath.'/'.$folderpath.$finalName, universeBasePath.'/'.$folderpath.$finalName.".temp");
@@ -129,7 +131,7 @@ class files {
                     if(is_dir($thumbPath)){
                        $imageClass -> mkthumb($imgName,600,600,$folderpath,$thumbPath);
                     } else{
-                        mkdir($thumbPath);
+                        mkdir($thumbPath,0755);
                         $imageClass -> mkthumb($imgName,600,600,$folderpath,$thumbPath);
                     }
         }

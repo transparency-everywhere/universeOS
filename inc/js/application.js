@@ -208,7 +208,7 @@ var application = function(id){
 		$('#bodywrap').append(output);
                 
 		if(typeof style['hidden'] == 'undefined' || style['hidden'] !== true){
-                        $('#'+id+'.fenster').fadeIn(4000);
+                        $('#'+id+'.fenster').fadeIn(1000);
 		}
                   
 		
