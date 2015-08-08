@@ -455,7 +455,8 @@ var playlists = new function(){
     this.getPublicPlaylistArray = function(){
         var playlists = this.getPublicPlaylists();
         var playlistArray = [];
-        if(playlists['ids'] === null){
+        console.log(playlists);
+        if(playlists === null){
             return playlistArray;
         } else {
             $.each(playlists,function(index,value){               
