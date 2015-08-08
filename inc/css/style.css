@@ -378,7 +378,7 @@ span.icon.blue-chevron-down {}
 }
 #searchMenu, #searchMenu a, #searchMenu a:link, #searchMenu a:visited{
     color: #fefefe;
-    font-size: 20px; /* NÃƒÂ¤herungswert aufgrund einer Schriftersetzung */
+    font-size: 20px; /* NÃƒÆ’Ã‚Â¤herungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: left;
 }
@@ -481,7 +481,7 @@ span.icon.blue-chevron-down {}
 .resultList li:hover .icon.dark{
     display:none;
 }
-#searchMenu .loadAll,Ã‚Â #searchMenu .loadAll{
+#searchMenu .loadAll,Ãƒâ€šÃ‚Â #searchMenu .loadAll{
     font-size: 14px;
     margin-top: 15px;
     text-align:right;
@@ -597,18 +597,22 @@ span.icon.blue-chevron-down {}
     vertical-align: middle;
 }
 
-#telescope .frameRight ul header{
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
+#telescope .frameRight ul.thumbSmall header>div, #telescope .frameRight ul.thumbSmall header>div{
+    display:none;
 }
 
-#telescope .frameRight ul header>div:last-of-type{
-    min-width: 110px;
+#telescope .frameRight ul.thumbSmall header>div:last-of-type, #telescope .frameRight ul.thumbBig header>div:last-of-type{
+    display:block;
     float: right;
-    margin-top: -30px;
-    clear: right;
+}
+
+
+
+#telescope .frameRight ul header>div:last-of-type{
+    /* min-width: 110px; */
+    /* float: right; */
+    /* margin-top: -30px; */
+    /* clear: right; */
 }
 
 #telescope .frameRight>ul>li{
@@ -641,7 +645,6 @@ span.icon.blue-chevron-down {}
 #telescope .frameRight ul{
     margin: 0;
     width:100%;
-    margin-top: 30px;
 }
 
 /*table  view*/
@@ -1864,7 +1867,7 @@ color: #FFF;
     margin-right: 20px;
 }
 
-#mailListÃ‚Â {
+#mailListÃƒâ€šÃ‚Â {
     width: 450px;
     margin-left: 150px;
 }
@@ -1904,7 +1907,7 @@ color: #FFF;
 	line-height: 8px;
 }
 
-#buddyListTableÃ‚Â { 
+#buddyListTableÃƒâ€šÃ‚Â { 
     overflow: none;
 }
     
@@ -2079,7 +2082,7 @@ color: #FFF;
     margin: 0px;
 }
 
-#feedTableÃ‚Â { 
+#feedTableÃƒâ€šÃ‚Â { 
     overflow: none;
 }
 
@@ -2181,9 +2184,7 @@ ul .elementSettings {
     background-color: #37474f;
     color: #ffffff;
     padding: 3px;
-    border: 1px #263238;
     border-top-style: none;
-    border-bottom-style: solid;
     border-left-style: none;
     border-right-style: none;
 }
@@ -2830,7 +2831,7 @@ color:#FFFFFF;
     
 }
 
-#pepperSteakItemÃ‚Â {
+#pepperSteakItemÃƒâ€šÃ‚Â {
     background-color: #72aa00; 
 }
 
@@ -2929,7 +2930,7 @@ color:#FFFFFF;
 .white-gradient {
     background-color: rgb(255, 255, 255);font-family: Ubuntu;
     color:  #313131;
-    font-size: 16px; /* NÃƒÂ¤herungswert aufgrund einer Schriftersetzung */
+    font-size: 16px; /* NÃƒÆ’Ã‚Â¤herungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: left;
 }
@@ -2943,11 +2944,11 @@ color:#FFFFFF;
     box-sizing: border-box;
 }
 
-.floatRightÃ‚Â {
+.floatRightÃƒâ€šÃ‚Â {
     float: right;
 }
 
-.clearÃ‚Â {
+.clearÃƒâ€šÃ‚Â {
     clear: both;
 }
 
@@ -3624,7 +3625,7 @@ margin-bottom: -5px;
 }
 
 .itemSettingsWindow{
-    position: fixed;
+    /* position: fixed; */
     min-width: 100px;
     z-index: 9999;
     display: none;
@@ -3869,10 +3870,10 @@ del.bar{
 }
 
 .leftNav.dark li:hover .icon,.leftNav.dark li.active .icon{
-    display:none;
+    display: none!important;
 }
 .leftNav.dark li:hover .white, .leftNav.dark li.active .white{
-    display:inline-block;
+    display: inline-block!important;
 }
 
 .leftNav.dark li:active, .leftNav.dark li:focus{
@@ -3994,7 +3995,7 @@ display: block;
 
 
 
-#profileWrapÃ‚Â {
+#profileWrapÃƒâ€šÃ‚Â {
     position: absolute;
     margin-top: 20%;
     margin-left: 50%;
@@ -4713,7 +4714,7 @@ margin-bottom: 3px;
 				background-color: #3E3E3E;
 			}
 
-			#calendar{
+			#calendarMainFrame{
 				position: absolute;
 				background-color:#FFFFFF;
 				width: 100%;
@@ -4725,7 +4726,7 @@ margin-bottom: 3px;
 				left: 0;
 }
 			
-			#calendar>header{
+			#calendarMainFrame .inhalt>header{
 				height: 45px;
 				padding: 5px;
 				position:absolute;
@@ -4734,14 +4735,14 @@ margin-bottom: 3px;
 				left:0; /* Old browsers */ /* FF3.6+ */ /* Chrome,Safari4+ */ /* Chrome10+,Safari5.1+ */ /* Opera 11.10+ */ /* IE10+ */ /* W3C */ /* IE6-9 */
 			}
                         
-                        #calendar>header #calendarView .button{
+                        #calendarMainFrame>header #calendarView .button{
                             color:  #313131;
                             margin-right: 2px;
                             background-color:  #cfd8dc;
                             width: 70px;
                         }
                         
-                        #calendar>header #calendarView .button.active{
+                        #calendarMainFrame>header #calendarView .button.active{
                             background-color:  #607d8b;
                             color: #FFF;
                         }
@@ -4763,7 +4764,7 @@ margin-bottom: 3px;
 
 a#text {}
 			
-			#calendar #main>header{
+			#calendarMainFrame #main>header{
 				height: 25px;
 				background: #cfd8dc;
 				color:#FFFFFF;
@@ -4774,7 +4775,7 @@ a#text {}
 				z-index: 1;
 			}
 			
-			#calendar #main>header span{
+			#calendarMainFrame #main>header span{
 				width: 14.2857%;
 				float:left;
 				padding-left: 5px;
@@ -4783,15 +4784,15 @@ a#text {}
 				box-sizing: border-box;
 			}
 			
-			#calendar #main{
+			#calendarMainFrame #main{
 				position: absolute;
 				top: 49px;
-				left: 171px;
+				left: 175px;
 				bottom: 0px;
 				right: 0px;
 			}
 			
-			#calendar #side{
+			#calendarMainFrame #side{
 				position: relative;
 				bottom: 0px;
 				position: absolute;
@@ -4802,42 +4803,42 @@ a#text {}
 				color: #FFF;
 }
 			
-			#calendar #side #months{
+			#calendarMainFrame #side #months{
 				list-style: none;
 				padding: 0px;
 				border-bottom: #313131;
 			}
 			
-			#calendar #side #months .current{
+			#calendarMainFrame #side #months .current{
 				font-size: 15pt;
 			}
 			
-			#calendar #side ul li.header .icon-plus{
+			#calendarMainFrame #side ul li.header .icon-plus{
 				float:right;
 				display:none;
 			}
 			
-			#calendar #side ul li.header:hover .icon-plus{
+			#calendarMainFrame #side ul li.header:hover .icon-plus{
 				display:block;
 			}
                         
-                        #calendar .calendarPrivacyTrigger .icon{
+                        #calendarMainFrame .calendarPrivacyTrigger .icon{
                             float:right;
                             display:none
                         }
                         
                         
-                        #calendar .calendarPrivacyTrigger .blue-check{
+                        #calendarMainFrame .calendarPrivacyTrigger .blue-check{
                             display:block;
                         }
-                        #calendar .calendarPrivacyTrigger.active .blue-check{
+                        #calendarMainFrame .calendarPrivacyTrigger.active .blue-check{
                             display:none;
                         }
-                        #calendar .calendarPrivacyTrigger.active .white-check{
+                        #calendarMainFrame .calendarPrivacyTrigger.active .white-check{
                             display: block;
                         }
                         
-                        #calendar #side .icon{
+                        #calendarMainFrame #side .icon{
                             margin-bottom: -5px;
                         }
                         
@@ -4901,7 +4902,7 @@ a#text {}
 			}
 			
 			.calendarFrame .day:hover .dropdown{
-				display:block;
+				display: inline-block!important;
 			}
 			
 			.calendarFrame .day .dropdown.open{
@@ -4910,27 +4911,32 @@ a#text {}
 			
 			.calendarFrame .day header .dropdown{
 				display:none;
-			}
+			
+				min-width: 0;
+				width: 65px;
+}
 			
 			.day .dropdown-menu li .header{
 				font-size: 17px;
 				margin: 0px 15px;
 				padding: 4px 0 0px 4px;
 				cursor: default;
-				font-weight: bold;
 			}
 			.day .dropdown-menu li{
 				font-size: 15px;
 				text-align:left;
+			
+				color: #FFF;
+}
+			
+			{
 			}
 			
 			.day .dropdown-menu li .header:hover{
-				background:#FFFFFF;
-			}
+				background: none;
 			
-			.calendarFrame .day.today header{
-    color: #00bcd4;
-			}
+				color: #FFF;
+}
 			
 			.calendarFrame .day.weekend header{
 			}

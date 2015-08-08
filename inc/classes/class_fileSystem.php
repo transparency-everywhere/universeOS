@@ -176,6 +176,13 @@ class fileSystem {
     }
 
 function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true, $select=NULL){
+            
+            if($showGrid === 'false'||$showGrid != 1){
+                $showGrid = false;
+            }else{
+                $showGrid = true;
+            }
+
             if(!empty($folder))
                 $folder = mysql_real_escape_string ($folder);
             
@@ -230,7 +237,7 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 	        $filefsql = mysql_query("SELECT * FROM folders $query");
 	        while($filefdata = mysql_fetch_array($filefsql)) {
 		        if(authorize($filefdata['privacy'], "show", $filefdata['creator'])){                                    
-				$action['folders'] = "$('.folder".$filefdata['id']."LoadingFrame').replaceWith(filesystem.getMiniFileBrowser(".$filefdata['id'].", '', $level, 0, '$select'));return false;";
+				$action['folders'] = "$('.folder".$filefdata['id']."LoadingFrame').replaceWith(filesystem.getMiniFileBrowser(".$filefdata['id'].", '', $level, 'false', '$select'));return false;";
                                 $trigger['folders'] = "$('.miniFileBrowser .choosenItem').html('<span class=\'icon white-archive\'></span>&nbsp;$filefdata[name]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'folder\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'".$filefdata['id']."\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow:visible').slideUp();";
 				
 					

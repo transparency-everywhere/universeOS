@@ -32,7 +32,7 @@ var calendar = new function(){
             return colors[calendar.usedColors];
         };
 	this.show = function(){
-			  		if($('#calendar').length === 0){
+			  		if($('#calendarMain').length === 0){
 			  			calendar.init();
 			  		}else{
 			  			this.applicationVar.show();
@@ -41,7 +41,7 @@ var calendar = new function(){
 	
 	this.init = function(){
 			  		
-			  		var html = '<div id="calendar">';
+			  		var html = '<div id="calendarMainFrame">';
 			  				html += '<header>';
 			  					html += '<div class="pull-right" id="calendarViewDetail">';
 			  						html += '<a href="#" class="button" id="prev">&lt;&lt;</a>';
@@ -73,31 +73,31 @@ var calendar = new function(){
 						
 								html += '</div>';
 							html += '</div>';
-							html += '<div id="side" class="leftNav">';
+							html += '<div id="side" class="leftNav dark">';
 							
 								html += '<ul id="calendars">';
 									html += '<li class="header">Calendars<span class="toggleTrigger icon white-chevron-down pull-right"></span></li>';
 									
                                                                         //load general privacies (public only me etc)
-									html += '<li class="calendarPrivacyTrigger active" data-value="h">&nbsp;My Calendar <span class="icon white-check"></span><span class="icon blue-check"></span></li>';
-									html += '<li class="calendarPrivacyTrigger" data-value="p">&nbsp;Public <span class="icon white-check"></span><span class="icon blue-check"></span></li>';
-									html += '<li class="calendarPrivacyTrigger active" data-value="f">&nbsp;Friends <span class="icon white-check"></span><span class="icon blue-check"></span></li>';
+									html += '<li class="calendarPrivacyTrigger active" data-value="h">&nbsp;My Calendar <span class="icon white-check white"></span><span class="icon blue-check"></span></li>';
+									html += '<li class="calendarPrivacyTrigger" data-value="p">&nbsp;Public <span class="icon white-check white"></span><span class="icon blue-check"></span></li>';
+									html += '<li class="calendarPrivacyTrigger active" data-value="f">&nbsp;Friends <span class="icon white-check white"></span><span class="icon blue-check"></span></li>';
 									
 									//load groups into calendar list
 									var userGroups = groups.get();
 									if(userGroups){
 										$.each(groups.get(), function( index, value ) {
-											html += '<li class="calendarPrivacyTrigger" data-value="'+value+'"><i class="icon white-group" style="height:14px; width: 14px;"></i>'+groups.getTitle(value)+' <span class="icon white-check"></span><span class="icon blue-check"></span></li>';
+											html += '<li class="calendarPrivacyTrigger" data-value="'+value+'"><i class="icon white-group" style="height:14px; width: 14px;"></i>'+groups.getTitle(value)+' <span class="icon white-check white"></span><span class="icon blue-check"></span></li>';
 										});
 									}
 								html += '</ul>';
 								html += '<ul id="taskList">';
-									html += '<li class="header" onclick="calendar.toggleTasks();">Tasks<span class="toggleTrigger icon white-chevron-down pull-right"></span><a href="#" class="pull-right" onclick="tasks.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon white-plus"></i></a></li>';
+									html += '<li class="header" onclick="calendar.toggleTasks();">Tasks<span class="toggleTrigger icon white-chevron-down pull-right white"></span><span class="toggleTrigger icon blue-chevron-down pull-right"></span><a href="#" class="pull-right" onclick="tasks.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon white-plus white"></i><i class="icon blue-plus"></i></a></li>';
 									html += '<li style="display:none;"><input type="checkbox" id="hideDoneTasks" onclick="calendar.toggleDoneTasks();" checked>&nbsp;hide done</li>';
 								html += '</ul>';
                                                                 
 								html += '<ul id="events">';
-									html += '<li class="header">Events<span class="toggleTrigger icon white-chevron-down pull-right"></span><a href="#" class="pull-right" onclick="events.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon white-plus"></i></a></li>';
+									html += '<li class="header">Events<span class="toggleTrigger icon white-chevron-down pull-right white"></span><span class="toggleTrigger icon blue-chevron-down pull-right"></span><a href="#" class="pull-right" onclick="events.addForm('+this.todayTimeObject.getTime()/1000+')"><i class="icon white-plus white"></i><i class="icon blue-plus"></a></li>';
 									//events will apend to this list
 								html += '</ul>';
 								
@@ -727,7 +727,7 @@ var calendar = new function(){
 						  	
 							  var startDate = new Date(value.startStamp*1000);
 							  var endDate = new Date(value.stopStamp*1000);
-							  list += '<li data-eventId="'+value.id+'" onclick="events.show('+value.id+', '+privacy.authorize(value.privacy, value.user)+');" id="sideEvent_'+value.id+'"><span class="icon white-bell"></span>'+value.title+'</li>';
+							  list += '<li data-eventId="'+value.id+'" onclick="events.show('+value.id+', '+privacy.authorize(value.privacy, value.user)+');" id="sideEvent_'+value.id+'"><span class="icon white-bell white"></span><span class="icon blue-bell"></span>'+value.title+'</li>';
 							
 						  }
 						 });
