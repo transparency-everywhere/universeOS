@@ -40,7 +40,7 @@ foreach($files AS $file){
             $filesWithError[] = $file; //add fileid to error list
         }
 }
-//echo'<script>parent.deleteTab("Upload File");</script>';
+echo'<script> filesystem.tabs.removeTab(' + uploaderTabId + '); elements.open(\'' + element + '\', \'' + elementTabId + '\'); </script>';
 jsAlert("The files have successfully been added to the Element.");
 			
 				

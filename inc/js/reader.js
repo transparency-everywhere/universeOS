@@ -154,7 +154,7 @@ var reader = new function(){
                                 }
                                 html += '<li ' + onclick + '>';
                                     html += '<div class="' + tab + ' itemsA icon">' + filesystem.generateIcon(value['type']) + '</div>';
-                                    html += '<div class="' + tab + ' itemsA title">' + value['title'] + '</div>';
+                                    html += '<div class="' + tab + ' itemsA title">' + gui.shorten(value['title'], 30) + '</div>';
                                 html += '</li>';
                             });
                         };
@@ -197,7 +197,7 @@ var reader = new function(){
                         }
                         html += '<li ' + onclick + '>';
                             html += '<div class="' + tab + ' itemsB icon">' + filesystem.generateIcon(value['type']) + '</div>';
-                            html += '<div class="' + tab + ' itemsB title">' + value['title'] + '</div>';
+                            html += '<div class="' + tab + ' itemsB title">' + gui.shorten(value['title'], 30) + '</div>';
                         html += '</li>';
                     });
                     html += '</ul>';
@@ -228,6 +228,7 @@ var reader = new function(){
         var halfPath = '' + encodeURIComponent(folders.getPath(elements.getData(fileData['folder'])['folder']) + fileData['filename']);
         var secondHalf = halfPath.replace(/%2F/g, '/');
         var path = "./upload/" + secondHalf;
+        userHistory.push(fileData['type'], file_id, fileData['title']);
         
         switch(fileData['type']){
             //cases: text, uff, image, pdf?, audio?, video?
@@ -414,6 +415,7 @@ var reader = new function(){
     };
     this.openLink = function(type, link, title){
         player.openItem(type, link);
+        userHistory.push('link', id, title);
     };
     this.buildHistory = function(userHistoryArray){
         var itemsA = userHistoryArray;
@@ -436,10 +438,12 @@ var reader = new function(){
                     onclick = "onclick=\"groups.show('" + value['itemId'] + "'); return false;\"";
                 } else if( value['type'] === 'playlist'){
                     onclick = "onclick=\"playlists.playPlaylist('" + value['itemId'] + "'); return false;\"";
+                } else if( value['type'] === 'user'){
+                    onclick = "onclick=\"User.showProfile('" + value['itemId'] + "'); return false;\"";
                 }
                 html += '<li ' + onclick + '>';
                     html += '<div class="' + tab + ' itemsA icon">' + filesystem.generateIcon(value['type']) + '</div>';
-                    html += '<div class="' + tab + ' itemsA title">' + value['title'] + '</div>';
+                    html += '<div class="' + tab + ' itemsA title">' + gui.shorten(value['title'], 30) + '</div>';
                 html += '</li>';
             });
         };

@@ -426,7 +426,7 @@ var playlists = new function(){
         
         this.openPlaylistTab(playlist_id);
         this.playPlaylistRow(playlist_id, 0);
-        
+        userHistory.push('playlist', playlist_id, playlists.getTitle(playlist_id));
         $('.blueModal').remove();
     };
     

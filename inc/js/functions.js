@@ -873,7 +873,10 @@ var User = new function(){
             $.each(history, function(key, value){
                 var type = value['type'];
                 var itemId = value['item_id'];
-                var title = handlers[type+'s'].getTitle(itemId);//plus "s" because handlers are in plural (element > elements)
+                var title = value['title'];
+                if(typeof title === 'undefined' || title === null || title === ''){
+                    title = handlers[type+'s'].getTitle(itemId);//plus "s" because handlers are in plural (element > elements)
+                }
                 historyArray.push({type: type, itemId: itemId, title: title, timestamp: ''});
             });
             return historyArray;
@@ -1109,7 +1112,7 @@ var User = new function(){
             $(this).parent().parent().parent().find('.content .profile_tab').hide();
             $(this).parent().parent().parent().find('.content .'+type+'_tab').show();
         });
-        
+        userHistory.push('user', user_id, useridToUsername(user_id));
         
     };
     this.logout = function(){
@@ -2227,10 +2230,9 @@ function showMenu(id) {
 
    
 function playPlaylist(playlist, row, fileId){
-                  
-	              alert("lol a" + fileId + " b" + playlist + " c" + row + " ");
-	              $("#dockplayer").load("./player/dockplayer.php?file=" + fileId +"&reload=1&playList=" + playlist +"&row=" + row + "");
-	              play();
+    alert("lol a" + fileId + " b" + playlist + " c" + row + " ");
+    $("#dockplayer").load("./player/dockplayer.php?file=" + fileId +"&reload=1&playList=" + playlist +"&row=" + row + "");
+    play();
               }
 function playFileDock(fileId){
               	$("#dockplayer").load("./player/dockplayer.php?file=" + fileId +"&reload=1");
@@ -2772,9 +2774,11 @@ var handlers = {
 
 var userHistory = new function(){
     this.storage = [];
-    this.push = function(type, item_id){
-        this.storage.unshift({type:type, item_id:item_id});
-        //hier hometab>displayhistory aktualisieren
+    this.push = function(type, item_id, title){
+        if(typeof title === 'undefined')
+            title = '';
+        this.storage.unshift({type:type, item_id:item_id, title:title});
+        //reload history in display
         console.log(User.getHistoryArray());
         $("#reader .hometab .home.sectionA div.itemsA").html(reader.buildHistory(User.getHistoryArray()));
     };

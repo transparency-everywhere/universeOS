@@ -177,6 +177,7 @@ var groups = new function(){
                 $(this).parent().parent().parent().find('.content .profile_tab').hide();
                 $(this).parent().parent().parent().find('.content .'+type+'_tab').show();
             });
+            userHistory.push('group', group_id, groups.getTitle(group_id));
 
         };
         

@@ -23,7 +23,7 @@ var filesystem =  new function() {
         //alles aus upload.php in einer onestep lösung zusammenbauen
         html += '<div class="frameRight">';
             html += '<div class="uploadTab">';
-                html += '<form action="api/files/submitUploader/" method="post" target="submitter">';
+                html += '<form action="api/files/submitUploader/" method="post" target="submitter" data-uploadertab="' + uploaderTabId + '" data-elementtab="' + elementTabId + '" data-elementid="' + element + '">';
                     html += '<h2>Upload</h1>';
                     html += '<hr />';
                     html += '<div class="uploaderHeader">';
@@ -39,7 +39,7 @@ var filesystem =  new function() {
                         html += '<div id="queue"></div>';
                     html += '</div>';
                     html += '<div onclick="filesystem.tabs.removeTab(' + uploaderTabId + '); return false" class="uploaderCancelButton">Cancel</div>';
-                    html += '<div onclick="filesystem.tabs.removeTab(' + uploaderTabId + '); elements.open(\'' + element + '\', \'' + elementTabId + '\'); return false" class="uploaderUploadButton"><input type="submit" value="Upload" class="submitUpload"></div>';
+                    html += '<div class="uploaderUploadButton"><input type="submit" value="Upload" class="submitUpload"></div>';
                 html += '</form>';
             html += '</div>';
         html += '</div>';
@@ -52,7 +52,13 @@ var filesystem =  new function() {
         var uploaderTabId = filesystem.tabs.addTab('Upload in #'+element, '', '');
         filesystem.tabs.updateTabContent(uploaderTabId, filesystem.generateUploadTab(element, elementTabId, uploaderTabId));
         initUploadify('#uploader_file', 'api/files/uploadTemp/', element, '', ''); //the two empty strings are timeStamp and salt - could be empty
-
+        
+        $('.uploadTab form').unbind('submit');
+        $('.uploadTab form').bind('submit', function(){
+            var $form = $(this);
+            filesystem.tabs.removeTab($form.attr('data-uploadertab'));
+            elements.open($form.attr('data-elementid'), $form.attr('data-elementtab'));
+        });
     }
     
     
@@ -281,6 +287,7 @@ var filesystem =  new function() {
               	};
     this.openFolder = function(folderId){
         this.tabs.updateTabContent(1, this.generateFullFileBrowser(folderId));
+        userHistory.push('folder', folderId);
     };
     
     this.createUFF = function(element, title, filename, privacy, callback){
