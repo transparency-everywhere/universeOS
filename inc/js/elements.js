@@ -102,7 +102,7 @@ var elements = new function(){
                 image = filesystem.generateIcon(data['type'], 'grey');
                 html += '<li data-id="' + data['id'] + '" data-type="' + data['type'] + '" data-title="' + data['title'] + '" data-date="' + date + '" data-size="' + data['size'] + '">';
                     html += '<span class="icons"><a onclick="'+handlerType+' return false">' + image + '</a></span>';
-                    html += '<span class="title"><a onclick="'+handlerType+' return false">' + data['title'] + '</a></span>';
+                    html += '<span class="title"><a onclick="'+handlerType+' return false">' + gui.shorten(data['title'], 40) + '</a></span>';
                     html += '<span class="buttons">';
                         html += item.showScoreButton(value['type'], data['id']);
                         if(data['download']){
@@ -145,7 +145,7 @@ var elements = new function(){
                 image = filesystem.generateIcon(data['type'], 'grey');
                 html += '<li data-id="' + data['id'] + '" data-type="' + data['type'] + '" data-title="' + data['title'] + '" data-date="' + date + '" data-size="' + data['size'] + '">';
                     html += '<span class="icons"><a onclick="'+handlerType+' return false">' + image + '</a></span>';
-                    html += '<span class="title"><a onclick="'+handlerType+' return false">' + data['title'] + '</a></span>';
+                    html += '<span class="title"><a onclick="'+handlerType+' return false">' + gui.shorten(data['title'], 40) + '</a></span>';
                     html += '<span class="buttons">'
                         html += item.showScoreButton(value['type'], data['id']);
                         if(data['download']){
@@ -192,7 +192,7 @@ var elements = new function(){
                 image = filesystem.generateIcon(data['type'], 'grey');
                 html += '<li data-id="' + data['id'] + '" data-type="' + data['type'] + '" data-title="' + data['title'] + '" data-date="' + date + '" data-size="' + data['size'] + '">';
                     html += '<span class="icons"><a onclick="'+handlerType+' return false">' + image + '</a></span>';
-                    html += '<span class="title"><a onclick="'+handlerType+' return false">' + data['title'] + '</a></span>';
+                    html += '<span class="title"><a onclick="'+handlerType+' return false">' + gui.shorten(data['title'], 40) + '</a></span>';
                     html += '<span class="buttons">'
                         html += item.showScoreButton(value['type'], data['id']);
                         if(data['download']){
