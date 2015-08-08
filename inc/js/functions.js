@@ -793,7 +793,6 @@ var User = new function(){
 
 
         var border;
-        console.log(lastActivity);
         if(lastActivity === 1){
                 border = 'border: 1px solid green';
             }else{
@@ -804,7 +803,6 @@ var User = new function(){
     };
     this.showPicture = function(userid, lastActivity, size){
 	 
-        console.log(lastActivity);
         debug.log('showPicture initialized...');
         var userpicture = getUserPicture(userid);
         if(typeof lastActivity === 'undefined'){
@@ -872,7 +870,6 @@ var User = new function(){
             return historyArray;
         } else {
             $.each(history, function(key, value){
-                console.log(value);
                 var type = value['type'];
                 var itemId = value['item_id'];
                 var title = handlers[type+'s'].getTitle(itemId);//plus "s" because handlers are in plural (element > elements)

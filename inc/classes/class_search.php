@@ -507,7 +507,7 @@ class search{
             case 'user':
                 if(proofLogin()){
                     
-                    $options[] = array('icon'=>'blue-plus', 'title'=>'Add User', 'action'=>'User.showProfile(\''.$item_id.'\');');
+                    $options[] = array('icon'=>'blue-plus', 'title'=>'Add User', 'action'=>'buddylist.addBuddy(\''.$item_id.'\'); $(this).text(\'request sent\');');
                 
                 }
                 break;

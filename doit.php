@@ -743,7 +743,7 @@ else if($_GET['action'] == "chatSendItem"){
                                 		echo"<h3>Please choose a File from the Filesystem:</h3>";
                                 		echo"<div>";
                                                 $fileSystem = new fileSystem();
-						$fileSystem->showMiniFileBrowser("1");
+                                                $fileSystem->showMiniFileBrowser("1", '', '', true);
                                 		echo"</div>";
 									?>
                                 </div>

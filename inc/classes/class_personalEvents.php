@@ -7,7 +7,7 @@
  */
 
 /**
- * Description of newPHPClass
+ * Personalevents are the little popups you get (e.g. if someone sends a buddyrequest or comments one of your feed entries). For Events in the calendar, see 'class_events'.
  *
  * @author niczem
  */
@@ -15,7 +15,7 @@
 class personalEvents{
     
                 function get(){
-                    $personalEventSql = mysql_query("SELECT * FROM personalEvents WHERE owner='$_SESSION[userid]' AND seen='0'");
+                    $personalEventSql = mysql_query("SELECT * FROM personalEvents WHERE owner='".getUser()."' AND seen='0'");
                     while($personalEventData = mysql_fetch_array($personalEventSql)){
                         
 
@@ -74,4 +74,10 @@ class personalEvents{
                     return $db->insert('personalEvents', $values);
 	        
 		}
-	}
+                
+                //cleans for user
+                function clean($type, $info, $eventId){
+                    $db = new db();
+                    $db->delete('personalEvents', array('event', $type, '&&', 'info', $info, '&&', 'eventId', $eventId, '&&', 'owner', getUser()));
+                }
+}

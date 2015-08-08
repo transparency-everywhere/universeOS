@@ -80,15 +80,19 @@ var chat = new function(){
 //IM CHAT - needs to be put in own var
 function chatMessageSubmit(userid){
     	
-    	var publicKey = getPublicKey('user', userid); //get public key of receiver
+    	var publicKeyReceiver = getPublicKey('user', userid); //get public key of receiver
+        //@sec:
+    	var publicKeySender = getPublicKey('user', User.userid); //get public key of receiver
     	
     	var randKey = Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2); //generate random key
    	
     	var message = sec.symEncrypt(randKey, $('#chatInput_'+userid).val()); //encrypt message semitrically
 
-    	var symKey = sec.asymEncrypt(publicKey, randKey); //random generated key for symetric encryption
-   	
-    	var message = symKey+'////message////'+message; //message = symetric Key + sym encoded message with key = symKey
+    	var symKeyReceiver = sec.asymEncrypt(publicKeyReceiver, randKey); //asym encrypt random generated key for symetric encryption
+   	var symKeySender =  sec.asymEncrypt(publicKeySender, randKey); //asym encryptrandom generated key for symetric encryption
+        
+        
+    	var message = symKeyReceiver+';;;'+symKeySender+'////message////'+message; //message = symetric Key + sym encoded message with key = symKey
 
     	$('#chatInput_'+userid).val(message);
     	
@@ -154,6 +158,7 @@ function chatDecrypt(userid){
 
             //split content into key and message
             var message = content.split("////message////");
+            var messageKeys = message[0].split(';;;');
 
             //check if randKey is stored, if not get randKey from message, using the asym privateKey
             if(isStored(id)){
@@ -163,9 +168,14 @@ function chatDecrypt(userid){
 
                 var privateKey = cypher.getPrivateKey('user', localStorage.currentUser_userid);
 
+                //the message contains two keys which are splitted into the var messageKeys above
+                //if the first key(messageKeys[0]) doesn't work -> try to encrypt it with the other one(messageKeys[0])
 
                 //encrypt random key with privateKey
-                var randKey = sec.asymDecrypt(privateKey, message[0]);
+                var randKey = sec.asymDecrypt(privateKey, messageKeys[0]);
+               
+                if(randKey === null)
+                    var randKey = sec.asymDecrypt(privateKey, messageKeys[1]);
 
 
             }

@@ -40,7 +40,7 @@ function addComment($type, $itemid, $author, $message){
    }
 
    
-    function deleteComments($type, $itemid){
+function deleteComments($type, $itemid){
         $db = new db();
         
            if($db->delete('comments', array('type', $type, '&&', 'typeid', $itemid))){
@@ -48,7 +48,7 @@ function addComment($type, $itemid, $author, $message){
            }
     }
    
-    function countComment($type, $itemid){
+function countComment($type, $itemid){
 //        $result = mysql_query("SELECT `typeid` FROM `comments` WHERE type='".mysql_real_escape_string($type)."' && typeid='".mysql_real_escape_string($itemid)."'");
 //        $num_rows = mysql_num_rows($result);
         $db = new db();
@@ -56,40 +56,41 @@ function addComment($type, $itemid, $author, $message){
         return $data['number'];
     }
     
-    public function loadComments($type, $item_id){
+public function loadComments($type, $item_id){
         $db = new db();
         return $db->shiftResult($db->select('comments', array('type', $type, '&&', 'typeid', $item_id)),"typeid");
     }
     
 function showComments($type, $itemid) {
     if(proofLogin()){?>
-    <div id="<?=$type;?>Comment_<?=$itemid;?>">
-        <div class="shadow commentRow">
-          <center>
-              <form action="showComment.php" method="post" id="addComment" target="submitter">
-                  <table>
-                      <tr>
-                          <td style="padding: 0 10px;"><?=showUserPicture($_SESSION['userid'], "30");?></td>
-                          <td style="vertical-align:middle;"><input type="text" name="comment" placeholder="write commenta.." class="commentField" style="width: 100%!important;"></td>
-                          <td style="padding: 0 10px;"><input type="submit" value="send" class="button" name="submitComment" style="width:auto;"></td>
-                          <td width="10"></td>
+        <div id="<?=$type;?>Comment_<?=$itemid;?>">
+            <div class="shadow commentRow">
+              <center>
+                  <form action="showComment.php" method="post" id="addComment" target="submitter">
+                      <table>
+                          <tr>
+                              <td style="padding: 0 10px;"><?=showUserPicture($_SESSION['userid'], "30");?></td>
+                              <td style="vertical-align:middle;"><input type="text" name="comment" placeholder="write commenta.." class="commentField" style="width: 100%!important;"></td>
+                              <td style="padding: 0 10px;"><input type="submit" value="send" class="button" name="submitComment" style="width:auto;"></td>
+                              <td width="10"></td>
 
-                      </tr><input type="hidden" name="itemid" value="<?=$itemid;?>"><input type="hidden" name="user" value="<?=$_SESSION['userid'];?>"><input type="hidden" name="type" value="feed">
-                  </table>
-              </form>
-          </center>
-        </div>
-
+                          </tr><input type="hidden" name="itemid" value="<?=$itemid;?>"><input type="hidden" name="user" value="<?=$_SESSION['userid'];?>"><input type="hidden" name="type" value="feed">
+                      </table>
+                  </form>
+              </center>
+            </div>
     <?php
     }
+    
+    
     if($type == "comment"){
         $comments = $this->get($type, $itemid);
         foreach($comments AS $comment_data) {
+            $personalEvents->clean('comment', $comment_data['type'], $comment_data['id']);
+
             $contextMenu = new contextMenu('comment', $comment_data['id']);
             $item = new item('comment', $comment_data['id']);
         ?>
-    
-    
             <div class="shadow subComment commentBox<?=$comment_data['id'];?>" id="<?=$type;?>Comment" style="background-color: #FFF;">
                 <?=userSignature($comment_data['author'], $comment_data['timestamp']);?>
                 <div style="padding: 8px; "><?=$comment_data['text'];?></div>
@@ -109,43 +110,41 @@ function showComments($type, $itemid) {
             }
 
     }else{
-     $commentClass = new comments();
-        
+        $comments = $this->get($type, $itemid);
+        foreach($comments AS $comment_data) {
+            $jsId = $comment_data['id'];
+           ?>
+           <div class="shadow subComment commentBox<?=$comment_data['id'];?>" id="<?=$type;?>Comment">
+               <?=userSignature($comment_data['author'], $comment_data['timestamp']);
+               $contextMenu = new contextMenu('comment', $comment_data['id']);
+               $item = new item('comment', $comment_data['id']);
+               ?>
+               <div style="padding: 15px; ">
+                   <?=$comment_data['text'];?>
+               </div>
+               <div style="padding: 15px; margin-bottom: 20px;">
+                   <div>
+                       <div style="float:left;">
+                           <?=$item->showScore();?>
+                       </div>
+                   </div>
+                   <a href="javascript:showSubComment(<?=$jsId;?>);" class="btn btn-mini" style="float: right; margin-right: 30px; color: #606060;">
+                       <i class="icon icon-comment"></i>
+                   </a>
+                   <?=$contextMenu->showItemSettings();?>
+               </div>
+           <div class="shadow subComment" id="comment<?=$jsId;?>" style="display: none;"></div>
+       </div>
+       <?php
+       }
     
-    $comments = $this->get($type, $itemid);
-    foreach($comments AS $comment_data) {
-    $jsId = $comment_data['id'];
-    
-    
-    ?>
-    <div class="shadow subComment commentBox<?=$comment_data['id'];?>" id="<?=$type;?>Comment">
-    <?=userSignature($comment_data['author'], $comment_data['timestamp']);
-    $contextMenu = new contextMenu('comment', $comment_data['id']);
-    $item = new item('comment', $comment_data['id']);
-    ?>
-    <div style="padding: 15px; ">
-    <?=$comment_data['text'];?>
-    </div>
-        <div style="padding: 15px; margin-bottom: 20px;">
-            <div>
-                <div style="float:left;">
-                <?=$item->showScore();?>
-                </div>
-            </div>
-            <a href="javascript:showSubComment(<?=$jsId;?>);" class="btn btn-mini" style="float: right; margin-right: 30px; color: #606060;">
-                <i class="icon icon-comment"></i>
-            </a><?=$contextMenu->showItemSettings();?>
-        </div>
-        <div class="shadow subComment" id="comment<?=$jsId;?>" style="display: none;"></div>
-    </div>
-<?php
-}}
-echo"</div>";
+    }
+    echo"</div>";
 }
 
 function get($type, $itemId){
     $db = new db();
-    return $db->query("SELECT * FROM comments WHERE type='$type' && typeid='$itemId' ORDER BY timestamp DESC");
+    return $db->shiftResult($db->query("SELECT * FROM comments WHERE type='$type' && typeid='$itemId' ORDER BY timestamp DESC"), 'type');;
 }
 
 //@del
