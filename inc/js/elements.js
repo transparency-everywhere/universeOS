@@ -16,10 +16,25 @@
         
 
 var elements = new function(){
-    this.open = function(element){
-        
+    this.open = function(element, tabId){
+        var elementData = this.getData(element);
         userHistory.push('element', element);
         filesystem.show();
+        if(typeof tabId === 'undefined')
+            tabId = filesystem.tabs.addTab(elementData['title'], '', '');
+        filesystem.tabs.updateTabContent(tabId, this.generate(element, tabId));
+        
+        //hide size and date in showElement
+        var showElementWidth = document.getElementById("showElement").offsetWidth;
+        if(showElementWidth < 700){
+            $('#filesystem .frameRight span.size').hide();
+        }
+        if(showElementWidth < 850){
+            $('#filesystem .frameRight span.date').hide();
+        }        
+    };
+    this.generate = function(element, tabId){
+        
         var elementData = this.getData(element);
         var elementAuthorData = this.getAuthorData(elementData['author']);
         var link = "./modules/reader/showfile.php?type=" + elementData['type'];
@@ -40,30 +55,14 @@ var elements = new function(){
             header += '<div class="elementSettings dropdown"><ul class="elementSettings elementSettings' + element + '">';		 
                 header += '<li onclick="filesystem.showCreateUFFForm(\'' + element + '\'); ">' + filesystem.generateIcon('file', 'white') + '<span class="text">Create an UFF</span></li>';
                 header += '<li onclick="window.links.showCreateLinkForm(\'' + element + '\');">' + filesystem.generateIcon('link', 'white') + '<span class="text">Add a link</span></li>';		  			
-                header += '<li onclick="filesystem.openUploadTab(\'' + element + '\');">' + filesystem.generateIcon('file', 'white') + '<span class="text">Upload files</span></li>';
+                header += '<li onclick="filesystem.openUploadTab(\'' + element + '\', \'' + tabId + '\');">' + filesystem.generateIcon('file', 'white') + '<span class="text">Upload files</span></li>';
             header += '</ul></div>';
         header += "</header>";
         var html = filesystem.generateLeftNav();
         html += '<div id="showElement" class="frameRight">';
         html += header;
         html += this.showFileList(element);
-        filesystem.tabs.addTab(elementData['title'], '', html);
-        var showElementWidth = document.getElementById("showElement").offsetWidth;
-        console.log(showElementWidth);
-        if(showElementWidth < 700){
-            $('#filesystem .frameRight span.size').hide();
-        }
-        if(showElementWidth < 850){
-            $('#filesystem .frameRight span.date').hide();
-        }        
-//        $('#showElement').resize(function(){
-//            if(showElementWidth < 700){
-//                $('#filesystem .frameRight span.size').hide();
-//            }
-//            if(showElementWidth < 850){
-//                $('#filesystem .frameRight span.date').hide();
-//            }
-//        });
+        return html;
         
     };
     
@@ -225,7 +224,7 @@ var elements = new function(){
         if(i === 0){
             html = '<ul><li>';
                 html += '<span>';
-                    html += '<span class="emptyFileList">This Collection is empty. Click on the settings button above to upload or add some.<span class="emptyFileList">';
+                    html += '<span class="emptyFileList">This Collection is empty. Click on the settings button above to upload or add cool stuff.<span class="emptyFileList">';
                 html += '</span>';
             html += '</li></ul>';
         }
