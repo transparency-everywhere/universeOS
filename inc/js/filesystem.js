@@ -18,7 +18,7 @@
 var filesystem =  new function() {
     
     
-    this.generateUploadTab = function(element){
+    this.generateUploadTab = function(element, elementTabId, uploaderTabId){
         var html = this.generateLeftNav();
         //alles aus upload.php in einer onestep lösung zusammenbauen
         html += '<div class="frameRight">';
@@ -38,8 +38,8 @@ var filesystem =  new function() {
                         html += '<ul class="tempFilelist"></ul>';
                         html += '<div id="queue"></div>';
                     html += '</div>';
-                    html += '<div class="uploaderCancelButton">Cancel</div>';
-                    html += '<div class="uploaderUploadButton"><input type="submit" value="Upload" class="submitUpload"></div>';
+                    html += '<div onclick="filesystem.tabs.removeTab(' + uploaderTabId + '); return false" class="uploaderCancelButton">Cancel</div>';
+                    html += '<div onclick="filesystem.tabs.removeTab(' + uploaderTabId + '); elements.open(\'' + element + '\', \'' + elementTabId + '\'); return false" class="uploaderUploadButton"><input type="submit" value="Upload" class="submitUpload"></div>';
                 html += '</form>';
             html += '</div>';
         html += '</div>';
@@ -47,13 +47,10 @@ var filesystem =  new function() {
         return html;
     };
     
-    this.openUploadTab = function(element){
+    this.openUploadTab = function(element, elementTabId){
         filesystem.applicationVar.show();
-//        var tabContent = gui.loadPage('modules/filesystem/upload.php?element='+element); //left nav missing in this solution filesystem.generateLeftNav()+
-//        filesystem.tabs.addTab('Upload', '', tabContent);
-        //wird zu:
-        var tabId = filesystem.tabs.addTab('Upload '+element, '', '');
-        filesystem.tabs.updateTabContent(tabId,filesystem.generateUploadTab(element));
+        var uploaderTabId = filesystem.tabs.addTab('Upload in #'+element, '', '');
+        filesystem.tabs.updateTabContent(uploaderTabId, filesystem.generateUploadTab(element, elementTabId, uploaderTabId));
         initUploadify('#uploader_file', 'api/files/uploadTemp/', element, '', ''); //the two empty strings are timeStamp and salt - could be empty
 
     }
