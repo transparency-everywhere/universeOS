@@ -32,7 +32,7 @@ var filesystem =  new function() {
                     html += '</div>';
                     html += '<h3>Privacy settings:</h2>';
                     html += '<div class="uploadPrivacy"></div>';
-                    html += '<h3>Add files:</h2>';
+                    html += '<h3>Add files:<br /><small>Max. 20 megabyte per file</h2>';
                     html += '<div class="uploadify">';
                         html += '<input id="uploader_file" name="feedFile" type="file" multiple="true">';
                         html += '<ul class="tempFilelist"></ul>';
