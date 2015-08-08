@@ -225,7 +225,7 @@ var elements = new function(){
         if(i === 0){
             html = '<ul><li>';
                 html += '<span>';
-                    html += 'This Collection is empty.';
+                    html += '<span class="emptyFileList">This Collection is empty. Click on the settings button above to upload or add some.<span class="emptyFileList">';
                 html += '</span>';
             html += '</li></ul>';
         }
