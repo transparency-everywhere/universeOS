@@ -98,12 +98,12 @@ class api{
 				if(empty($userData['userPicture'])){
 					$src = 'gfx/standardusersm.png';
 				}else{
-					$src = 'upload/userFiles/'.$userid.'/thumbs/'.$userData['userPicture'];
+					$src = 'upload/userFiles/'.$userid.'/userPictures/thumb/300/'.$userData['userPicture'];
 				}
 				$mime = mime_content_type($src);
 				
-			    $file = fopen($src, 'r');
-			    $output = base64_encode(fread($file, filesize($src)));
+                                $file = fopen(universeBasePath.'/'.$src, 'r');
+                                $output = base64_encode(fread($file, filesize($src)));
 				$return[$userid] = 'data:'.$mime.';base64,'.$output;
 				
 			}
