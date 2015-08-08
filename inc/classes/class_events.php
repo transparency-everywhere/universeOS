@@ -22,6 +22,9 @@ limitations under the License.
 class events{
 	
 	public function create($user, $startStamp, $stopStamp, $title, $place, $privacy, $users, $originalEventId=0){
+                $title = sanitizeText($title);
+                $place = sanitizeText($place);
+            
 		$invitedUsers = $users;
                 $db = new db();
                 $values['user'] = $user;
@@ -67,7 +70,8 @@ class events{
 	}
 	
 	public function update($eventId, $startStamp, $stopStamp, $title, $place, $privacy){
-		
+		$title = sanitizeText($title);
+                $place = sanitizeText($place);
 		$db = new db();
 		$db->update('events', array('title'=>$title, 'place'=>$place, 'privacy'=>$privacy, 'startStamp'=>$startStamp,  'stopStamp'=>$stopStamp), array('id', $eventId));
 	}

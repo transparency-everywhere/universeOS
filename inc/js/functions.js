@@ -315,9 +315,6 @@ var session = new function(){
     this.updateFingerprintOnServer = function(old_fingerprint, new_fingerprint, callBack){
         api.query('api/sessions/updateFingerprint/', {old_fingerprint:old_fingerprint, new_fingerprint:new_fingerprint}, callBack);
     };
-    this.showCreateSessionForm = function(){
-        
-    };
     
     this.create = function(type, title, callBack){
         api.query('api/sessions/create/', {type:type, title:title, fingerprint: session.getFingerprint()},function(cookie_id){
@@ -404,6 +401,7 @@ var session = new function(){
             };
             session.create($('#addSessionFormContainer #type').val(), $('#addSessionFormContainer #title').val(), callback);
         };
+        options['action'] = modalOptions['action'];
         formModal.init('Unrecognized Browser', '<div id="addSessionFormContainer"></div>', modalOptions);
         gui.createForm('#addSessionFormContainer',fieldArray, options);
         
@@ -487,6 +485,9 @@ var universe = new function(){
             if(universe.sessionInfo.length === 0){
                 universe.reloadState = false;
                 session.showAddSessionForm();
+                
+                //automaticly submit the form container because it is so anoying..
+                $('#addSessionFormContainer .dynForm').submit();
             }
             session.load(universe.sessionInfo);
             
@@ -975,7 +976,7 @@ var User = new function(){
                             output += '<li data-type="favorites"><span class="icon blue-heart"></span><span class="icon white-heart white"></span>Favorites</li>';
                             output += '<li data-type="files"><span class="icon blue-file"></span><span class="icon white-file white"></span>Files</li>';
                             output += '<li data-type="playlists"><span class="icon blue-playlist"></span><span class="icon white-playlist white"></span>Playlists</li>';
-                            output += '<li class="openChat"><img src="gfx/chat_icon.svg"/>Open Chat</li>';
+                            output += '<li class="openChat" data-type="openChat"><img src="gfx/chat_icon.svg"/>Open Chat</li>';
                         output += '</ul>';
                         output += '</div>';
                     output += '<div class="profileMain">';
@@ -1092,6 +1093,16 @@ var User = new function(){
         $('.profileMainNav li, .profileNavLeft li').unbind('click');
         $('.profileMainNav li, .profileNavLeft li').bind('click', function(){
             var type = $(this).attr('data-type');
+            //if openChat openDialogue and return
+            if(type === 'openChat'){
+                if(buddylist.isBuddy(user_id))
+                   chat.openDialogue(user_id);
+                else
+                    gui.alert('You need to add '+useridToUsername(user_id)+' to your buddylist to start a chat');
+                return null;
+            }
+           
+              
             $(this).parent().parent().parent().find('.profileMainNav li').removeClass('active');
             $(this).parent().parent().parent().find('.profileNavLeft li').removeClass('active');
             $(this).addClass('active');
@@ -1191,36 +1202,36 @@ function universeText(string){
     
     
     var smileys = [];
-    smileys.push([['(yes)', '(y)'], 'yes']);
-    smileys.push([[';)'], 'wink']);
-    smileys.push([['O.o', 'O_o', 'O_ó'], 'weird']);
-    smileys.push([[':P', ':p'], 'tongue']);
-    smileys.push([[':O', ':o', 'O_O'], 'surprised']);
-    smileys.push([['(s)', '(sun)'], 'sun']);
-    smileys.push([['*'], 'star']);
-    smileys.push([[':|'], 'speechless']);
-    smileys.push([[':)'], 'smile']);
-    smileys.push([['(z)'], 'sleep']);
-    smileys.push([[':/'], 'skeptic']);
-    smileys.push([[':('], 'sad']);
-    smileys.push([['(p)','(puke)'], 'puke']);
-    smileys.push([['(n)'], 'no']);
-    smileys.push([[':x'], 'mute']);
-    smileys.push([['>:('], 'angry']);
-    smileys.push([['-.-','-_-'], 'annoyed']);
-    smileys.push([['(a)','(anon)'], 'anon']);
-    smileys.push([['8)'],'cool']);
-    smileys.push([[":'("],'cry']);
-    smileys.push([[':3'],'cute']);
-    smileys.push([['3:)'],'devil']);
-    smileys.push([['(d)','(dino)'],'dino']);
-    smileys.push([[']:)'],'evil']); 
-    smileys.push([['>:o', '>:O'],'furious']);
-    smileys.push([['^_^'],'happy']);
-    smileys.push([['<3'],'heart']);
-    smileys.push([[':*',':-*'],'kiss']);
-    smileys.push([[':D'],'laugh']);
-    smileys.push([['(m)','(music)'],'music']);
+    smileys.push([['(yes) ', '(y) '], 'yes']);
+    smileys.push([[';) '], 'wink']);
+    smileys.push([['O.o ', 'O_o ', 'O_ó '], 'weird']);
+    smileys.push([[':P ', ':p '], 'tongue']);
+    smileys.push([[':O ', ':o ', 'O_O'], 'surprised']);
+    smileys.push([['(s) ', '(sun) '], 'sun']);
+    smileys.push([['* '], 'star']);
+    smileys.push([[':| '], 'speechless']);
+    smileys.push([[':) '], 'smile']);
+    smileys.push([['(z) '], 'sleep']);
+    smileys.push([[':/ '], 'skeptic']);
+    smileys.push([[':( '], 'sad']);
+    smileys.push([['(p) ','(puke)'], 'puke']);
+    smileys.push([['(n) '], 'no']);
+    smileys.push([[':x '], 'mute']);
+    smileys.push([['>:( '], 'angry']);
+    smileys.push([['-.- ','-_- '], 'annoyed']);
+    smileys.push([['(a) ','(anon) '], 'anon']);
+    smileys.push([['8) '],'cool']);
+    smileys.push([[":' ("],'cry']);
+    smileys.push([[':3 '],'cute']);
+    smileys.push([['3:) '],'devil']);
+    smileys.push([['(d) ','(dino) '],'dino']);
+    smileys.push([[']:) '],'evil']); 
+    smileys.push([['>:o ', '>:O '],'furious']);
+    smileys.push([['^_^ '],'happy']);
+    smileys.push([['<3 '],'heart']);
+    smileys.push([[':* ',':-* '],'kiss']);
+    smileys.push([[':D '],'laugh']);
+    smileys.push([['(m) ','(music) '],'music']);
     for(var index in smileys){
         var smiley = smileys[index];
         if(smiley[0].length > 1){
@@ -1656,7 +1667,7 @@ var tabs = function(parentIdentifier){
     this.initClicks = function(){
                         parentIdentifier = this.parentIdentifier;
                         var classVar = this;
-                        $('.tabFrame>header li').click(function(){
+                        $(parentIdentifier+' .tabFrame>header li').click(function(){
                                 var tabId = $(this).attr('data-tab');
                                 var tabParentIdentifier = $(this).attr('data-parent-identifier');
                                 classVar.showTab(tabId);
@@ -1665,7 +1676,7 @@ var tabs = function(parentIdentifier){
                                 $(this).addClass('active');
                         });
 
-                        $('.tabFrame>header li .close').click(function(){
+                        $(parentIdentifier+' .tabFrame>header li .close').click(function(){
                             var tabId = $(this).parent('li').attr('data-tab');
                             var tabParentIdentifier = $(this).parent('li').attr('data-parent-identifier');
                             classVar.removeTab(tabId);
@@ -1776,7 +1787,6 @@ var tabs = function(parentIdentifier){
                     };
     this.removeTab = function(tab_identifier){
                         parentIdentifier = this.parentIdentifier;
-
 
                         if($(parentIdentifier+' .tabFrame header ul li').length === 1){
                             return true;

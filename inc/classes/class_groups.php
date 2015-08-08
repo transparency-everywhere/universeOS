@@ -206,7 +206,8 @@ class groups{
             }
 
         function createGroup($title, $privacy, $description, $users){
-
+                    $title = sanitizeText($title);
+                    $description = sanitizeText($description);
                     $userid = getUser();
 
                     //check if nessecary informations are given
@@ -281,6 +282,7 @@ class groups{
           }
 
         function update($groupId, $privacy, $description, $membersInvite){
+            $description = sanitizeText($description);
             if(is_string($membersInvite)){
                 $membersInvite = ($membersInvite === 'true');
             }

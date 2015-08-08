@@ -29,7 +29,8 @@ class element {
     }
     
     function create($folder, $title, $type, $user, $privacy){
-        
+        $title = sanitizeText($title);
+        $type = sanitizeText($type);
         
         $values['title'] = $title;
         $values['folder'] = $folder;
@@ -43,6 +44,8 @@ class element {
     }
     
     function update($folder, $title, $type, $privacy){
+        $title = sanitizeText($title);
+        $type = sanitizeText($type);
         if($elementId == NULL)
             $elementId = $this->id;
         $values['folder'] = $folder;

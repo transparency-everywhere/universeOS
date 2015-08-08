@@ -14,6 +14,9 @@
 class link {
 	function create($folder, $title, $type, $privacy, $link){
             
+                $title = sanitizeText($title);
+                $type = sanitizeText($type);
+                $link = sanitizeText($link);
 
                 $values['folder'] = $folder;
                 $values['type'] = $type;
@@ -36,6 +39,11 @@ class link {
 	}
         
         function update($linkId, $element, $title, $link, $type, $privacy){
+            
+            $title = sanitizeText($title);
+            $type = sanitizeText($type);
+            $link = sanitizeText($link);
+            
             $values['folder'] = $element;
             $values['title'] = $title;
             $values['link'] = $link;

@@ -29,10 +29,14 @@ class sessions{
         }
     }
     function createSession($identifier, $type, $title){
-        
         $db = new db();
-        $data = $db->query('SELECT `sessionInfo` FROM `sessions` WHERE `user`=\''.getUser().'\' ORDER BY `timestamp` DESC LIMT 1');
-        $values['sessionInfo'] = $data['sessionInfo'];
+        $data = $db->query('SELECT `sessionInfo` FROM `sessions` WHERE `user`=\''.getUser().'\' ORDER BY `id` DESC LIMT 1');
+        if($data['sessionInfo'] == 't')
+            $values['sessionInfo'] = '{}';
+        else
+            $values['sessionInfo'] = $data['sessionInfo'];
+        
+        
         
         
         $values['type'] = $type;
@@ -48,7 +52,7 @@ class sessions{
     function getSessionInformation($session_identifier){
         
         $db = new db();
-        $data = $db->select('sessions', array('user', getUser(), '&&', 'fingerprint', $session_identifier));
+        $data = $db->select('sessions', array('user', getUser(), '&&', 'fingerprint', $session_identifier), NULL, NULL, 1);
     
         if(is_array($data))
             

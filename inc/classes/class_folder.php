@@ -22,6 +22,7 @@ class folder {
     }
 
     function create($superiorFolder, $title, $user, $privacy, $createFeed = true) {
+        $title = sanitizeText($title);
 
         if (strpos($title, '/') == false) {
             $titleURL = urlencode($title);
@@ -69,6 +70,7 @@ class folder {
     }
 
     function update($parent_folder, $title, $privacy) {
+        $title = sanitizeText($title);
 
         $db = new db();
         $checkFolderData = $db->select('folders', array('id', $this->id));

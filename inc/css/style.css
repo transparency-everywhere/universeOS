@@ -860,6 +860,8 @@ span.icon.blue-chevron-down {}
     color:  #fefefe;
     margin-left: -200px;
     width: 400px;
+    max-height: 75%;
+    margin-bottom: 200px;
 }
 
 .blueModal > header{
@@ -2752,7 +2754,7 @@ ul .elementSettings {
 .dialoge .chatMessage{
     margin-top: 25px; 
     padding: 10px; 
-    padding-bottom: 10px;
+    padding-bottom: 10px;     -moz-user-select: text;    -webkit-user-select: text;    -ms-user-select: text;  
 }
 
 .dialoge .chatMessage .username,.dialoge .chatMessage .timestamp{

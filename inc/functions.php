@@ -6,6 +6,10 @@ include('classes/class_debug.php');
   $time = time();
 
   
+function sanitizeText($string){
+    return htmlspecialchars($string);
+}
+  
 /**
   * Validates if SESSION of last generated Captcha is equal to the submitted value
   *
