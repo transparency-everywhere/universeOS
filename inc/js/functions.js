@@ -1866,11 +1866,6 @@ function updatePictureStatus(userId, borderColor){
     $('.userPicture_'+userId).css('border-color', borderColor);
 }
 
-function showContent(content, title){
-  reader.applicationVar.show();
-  reader.tabs.addTab(title, '',gui.loadPage('showContent.php?content='+content));
-}
-
 function mousePop(type, id, html){
       $('.mousePop').remove();
       if($('#mousePop_'+type+id).length == 0){   

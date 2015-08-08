@@ -1,4 +1,8 @@
 <?php
+//this api is also used by the messenger so it can't be deleted right now
+
+
+
 if(!isset($_SESSION)){
     session_start();
 }
