@@ -59,7 +59,7 @@ if(empty($_GET['initter'])){
           <ul>
               <li><a class="smiley emoticon-smile" data-code=":)"></a><a class="smiley emoticon-tongue" data-code=":p"></a><a class="smiley emoticon-wink" data-code=";)"></a><a class="smiley emoticon-surprised" data-code=":o"></a></li>
               <li><a class="smiley emoticon-laugh" data-code=":D"></a><a class="smiley emoticon-cute" data-code=":3"></a><a class="smiley emoticon-sad" data-code=":("></a><a class="smiley emoticon-cry" data-code=":'("></a></li>
-              <li><a href="#" onclick="popper('doit.php?action=chatSendItem&buddy=<?php echo $buddyData['userid'];?>');" class="sendFile">Send File</a></li>
+              <!--<li><a href="#" onclick="popper('doit.php?action=chatSendItem&buddy=<?php echo $buddyData['userid'];?>');" class="sendFile">Send File</a></li>-->
           </ul>
       </div>
       <footer>

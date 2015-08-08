@@ -157,6 +157,7 @@ var folders = new function(){
             };
             folders.createFolder(parent_folder, $('#createElementFormContainer #title').val(), $('#createElementFormContainer #privacyField :input').serialize(),callback);
         };
+        options['action'] = modalOptions['action'];
         formModal.init('Create Folder', '<div id="createElementFormContainer"></div>', modalOptions);
         gui.createForm('#createElementFormContainer',fieldArray, options);
     };

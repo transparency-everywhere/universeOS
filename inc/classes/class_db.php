@@ -122,7 +122,7 @@ class db{
         *@collumns array columns that will be selcted ('*' if null)
         *@return array mysql_result 
         */
-        public function select($table, $primary=NULL, $columns=NULL, $order=NULL){
+        public function select($table, $primary=NULL, $columns=NULL, $order=NULL, $limit=NULL){
             $WHERE = $this->generateWhere($primary);
             
             
@@ -143,7 +143,14 @@ class db{
                 $ORDER = "";
             }
             
-                $query = "SELECT $columnQuery FROM `$table` $WHERE";
+            if(!empty($limit)){
+                $limit = mysql_real_escape_string($limit);
+                $LIMIT = "LIMIT $limit";
+            }else{
+                $LIMIT = "";
+            }
+            
+                $query = "SELECT $columnQuery FROM `$table` $WHERE $LIMIT";
                 $sql = mysql_query($query);
                 if($sql)
                 while($data = mysql_fetch_array($sql)){

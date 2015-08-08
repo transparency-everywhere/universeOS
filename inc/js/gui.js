@@ -18,6 +18,9 @@
 var gui = new function(){
     this.initWysiwyg = false; //is used in generateField and createForm to check if wysiwyg needs to be initialized
     this.initializeUploadify = false;
+    this.text = function(string){
+        return htmlspecialchars(string);
+    };
     this.generateList = function(values, captions, preselected, caption){
         var html = '';
         $.each(values, function( index, value ) {
@@ -287,7 +290,7 @@ var gui = new function(){
         });
 
 
-        var html =  '<form id="dynForm" class="dynForm">';
+        var html =  '<form id="dynForm" class="dynForm" onsubmit="return false";>';
         if(options['headline'].length > 0)
             html +=  '<h1>' + options['headline'] + '</h1>';
         html +=  '<table class="gui_form_table">';

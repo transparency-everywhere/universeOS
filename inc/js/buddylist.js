@@ -24,7 +24,9 @@ var buddylist = new function(){
 	return api.query('api/buddies/get/', {user_id:user_id});
     };
     this.isBuddy = function(buddy_id){
-        return $.inArray(buddy_id, buddylist.getBuddies())
+        if(typeof buddy_id !== 'string')
+            buddy_id= buddy_id.toString();
+        return ($.inArray(buddy_id, buddylist.getBuddies())!==-1)
     };
     this.addBuddy = function(userid){
         var res;
@@ -89,7 +91,7 @@ var buddylist = new function(){
         $.each(buddies, function(index, value){
             checksum += value;
             var username = useridToUsername(value);
-            output += "                <tr class=\"height60 greyHover\" onclick=\"im.openDialogue('"+username+"');\">";
+            output += "                <tr class=\"height60 greyHover\"\">";
             output += "	                 <td style=\"padding:0 10px; width: 43px;\">"+User.showPicture(value, undefined, 40)+"<\/td>";
             output += "                  <td>";
             output += "                     <a href=\"#\" onclick=\"im.openDialogue('"+username+"');\">"+username+"<\/a>";
