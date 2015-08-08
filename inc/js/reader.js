@@ -225,8 +225,9 @@ var reader = new function(){
         header += "</header>";
         
         var output = '';
-        var path = "./upload/" + folders.getPath(elements.getData(fileData['folder'])['folder']) + fileData['filename'];
-        console.log(fileData['type']);
+        var halfPath = '' + encodeURIComponent(folders.getPath(elements.getData(fileData['folder'])['folder']) + fileData['filename']);
+        var secondHalf = halfPath.replace(/%2F/g, '/');
+        var path = "./upload/" + secondHalf;
         
         switch(fileData['type']){
             //cases: text, uff, image, pdf?, audio?, video?

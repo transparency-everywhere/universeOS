@@ -52,7 +52,7 @@ var folders = new function(){
             url:"api/folders/update/",
             async: false,  
             type: "POST",
-            data: $.param({folder_id : folderId, title: title})+'&'+privacy,
+            data: $.param({folder_id : folderId, title: title.replace(/[^a-zA-Z0-9 _-]/g,'')})+'&'+privacy,
             success:function(data) {
                result = data;
                if(typeof callback === 'function'){
@@ -113,7 +113,7 @@ var folders = new function(){
             url:"api/folders/create/",
             async: false,  
             type: "POST",
-            data: $.param({folder : parent_folder, name: name})+'&'+privacy,
+            data: $.param({folder : parent_folder, name: name.replace(/[^a-zA-Z0-9 _-]/g,'')})+'&'+privacy,
             success:function(data) {
                result = data;
                if(typeof callback === 'function'){

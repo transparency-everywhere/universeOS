@@ -38,9 +38,9 @@ var elements = new function(){
                 header += '<a href=\"#\" id=\"settingsButton\" onclick=\"$(\'.elementSettings' + element + '\').slideToggle(\'slow\'); return false\" title=\"more...\">' + filesystem.generateIcon('settings', 'grey') + '</a>';  
             header += '</span>';
             header += '<div class="elementSettings dropdown"><ul class="elementSettings elementSettings' + element + '">';		 
-                header += '<li onclick="filesystem.showCreateUFFForm(\'' + element + '\'); ">' + filesystem.generateIcon('file', 'white') + '&nbsp;Create an UFF</li>';
-                header += '<li onclick="window.links.showCreateLinkForm(\'' + element + '\');">' + filesystem.generateIcon('link', 'white') + '&nbsp;Add a link</li>';		  			
-                header += '<li onclick="filesystem.openUploadTab(\'' + element + '\');">' + filesystem.generateIcon('file', 'white') + '&nbsp;Upload files</li>';
+                header += '<li onclick="filesystem.showCreateUFFForm(\'' + element + '\'); ">' + filesystem.generateIcon('file', 'white') + '<span class="text">Create an UFF</span></li>';
+                header += '<li onclick="window.links.showCreateLinkForm(\'' + element + '\');">' + filesystem.generateIcon('link', 'white') + '<span class="text">Add a link</span></li>';		  			
+                header += '<li onclick="filesystem.openUploadTab(\'' + element + '\');">' + filesystem.generateIcon('file', 'white') + '<span class="text">Upload files</span></li>';
             header += '</ul></div>';
         header += "</header>";
         var html = filesystem.generateLeftNav();
@@ -89,12 +89,13 @@ var elements = new function(){
         html += '</div>';
         html += '<ul>';
         html += '<span class="heading">Files</span>';
+        var f = 0; // count files
         $.each(fileList, function(key, value){
-            console.log(value);
             if(value['type'] === 'file' && value['data']['type'] !== 'image' && value['data']['type'] !== 'image/jpeg' && value['data']['type'] !== 'image/png' && value['data']['type'] !== 'image/gif' && value['data']['type'] !== 'image/tiff') {
                 //generate fileList for an element with an unordered list <ul>
                 var data = value['data'];
                 i++;
+                f++;
                 if(value['type'] === 'file'){
                     handlerType = 'handlers.files.handler('+data['id']+');';
                 }
@@ -123,16 +124,21 @@ var elements = new function(){
                     html += '<span class="date">' + date + '</span>';
                 html += '</li>';
                 if(!grid){
-                    html += ''; //hier muss die rightClick function noch eingebunden werden.
+                    html += '';  //option for rightClick
                 }
             }
         });
+        if (f === 0) {
+            html += '<span class="emptyFileList">No files uploaded. Click on the settings button above to upload or add them.</span>';
+        }
         html += '<span class="heading">Images</span>';
+        var f = 0;
         $.each(fileList, function(key, value){
             if(value['type'] === 'file' && (value['data']['type'] === 'image' || value['data']['type'] === 'image/jpeg' || value['data']['type'] === 'image/png' || value['data']['type'] === 'image/gif' || value['data']['type'] === 'image/tiff')) {
                 //generate fileList for an element with an unordered list <ul>
                 var data = value['data'];
                 i++;
+                f++;
                 if(value['type'] === 'file'){
                     handlerType = 'handlers.files.handler('+data['id']+');';
                 }
@@ -161,17 +167,22 @@ var elements = new function(){
                     html += '<span class="date">' + date + '</span>';
                 html += '</li>';
                 if(!grid){
-                    html += ''; //hier muss die rightClick function noch eingebunden werden.
+                    html += '';  //option for rightClick
                 }
             }
         });
+        if (f === 0) {
+            html += '<span class="emptyFileList">No images uploaded. Click on the settings button above to upload them.</span>';
+        }
         html += '<span class="heading">Links</span>';
+        var f = 0;
         $.each(fileList, function(key, value){
             console.log(value);
             if(value['type'] === 'link') {
                 //generate fileList for an element with an unordered list <ul>
                 var data = value['data'];
                 i++;
+                f++;
                 if(value['type'] === 'link'){
                     handlerType = 'handlers.links.handler('+data['id']+');';
                 }
@@ -203,10 +214,13 @@ var elements = new function(){
                     html += '<span class="date">' + date + '</span>';
                 html += '</li>';
                 if(!grid){
-                    html += ''; //hier muss die rightClick function noch eingebunden werden.
+                    html += ''; //option for rightClick
                 }
             }
         });
+        if (f === 0) {
+            html += '<span class="emptyFileList">No links added. Click on the settings button above to add them.</span>';
+        }
         html += '</ul>';
         if(i === 0){
             html = '<ul><li>';
@@ -245,7 +259,7 @@ var elements = new function(){
             url:"api/elements/create/",
             async: false,  
             type: "POST",
-            data: $.param({folder : folder, title: title, type: type})+'&'+privacy,
+            data: $.param({folder : folder, title: title.replace(/[^a-zA-Z0-9 _-]/g,''), type: type})+'&'+privacy,
             success:function(data) {
                result = data;
                if(typeof callback === 'function'){
@@ -311,7 +325,7 @@ var elements = new function(){
             url:"api/elements/update/",
             async: false,  
             type: "POST",
-            data: $.param({element_id:element_id,folder : folder, title: title, type: type})+'&'+privacy,
+            data: $.param({element_id:element_id,folder : folder, title: title.replace(/[^a-zA-Z0-9 _-]/g,''), type: type})+'&'+privacy,
             success:function(data) {
                result = data;
                if(typeof callback === 'function'){
