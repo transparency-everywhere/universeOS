@@ -43,7 +43,7 @@ var reader = new function(){
         var html = '';
         if(proofLogin()){
             html += '<div class="readerStartpage">';
-                html += '<div class="welcomearea"><div class="userPicture"><img style="max-width:100px; max-height: 100px; src="' + getUserPicture(User.userid) + '" onclick="User.showProfile(User.userid); return false"></div><div class="welcomeText">Hidiho, <a href="#" onclick="User.showProfile(User.userid); return false">'+ useridToUsername(User.userid) +'</a>,<br />good to see you!<div></div>';
+                html += '<div class="welcomearea"><div class="userPicture"><img style="max-width:100px; max-height: 100px;" src="' + getUserPicture(User.userid) + '" onclick="User.showProfile(User.userid); return false"></div><div class="welcomeText">Hidiho, <a href="#" onclick="User.showProfile(User.userid); return false">'+ useridToUsername(User.userid) +'</a>,<br />good to see you!<div></div>';
                 html += '<div class="navi">';
                     html += '<ul>';
                         html += "<li onclick=\"$( '.hometab' ).show();$( '.groupstab' ).hide();$( '.favoritestab' ).hide();$( '.playliststab' ).hide();$( '.myFilestab' ).hide();return false\">" + filesystem.generateIcon('home', 'blue') + '</li>';
