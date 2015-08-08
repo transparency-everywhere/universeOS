@@ -1,8 +1,3 @@
-.filetable tr td:first-of-type .icon{
-    width: 30px;
-    height: 30px;
-}
-
 .scoreButton .counter {
     margin-left: 65px;
 }
@@ -349,4 +344,58 @@ and (max-width : 320px) {
 
 .regError>*{
     color:#FFF!important;
+}
+
+
+/*filesystem*/
+
+#filesystem .filetable tr td:first-of-type .icon{
+    width: 30px;
+    height: 30px;
+}
+
+#filesystem .filetable .greyHover{
+    position: relative;
+}
+
+#filesystem .filetable .greyHover > td:nth-of-type(3) {
+    width: 1px!important;
+}
+
+#filesystem .itemSettingsButton {
+    display: none!important;
+}
+
+#filesystem .headerbuttons > span {
+    float: right!important;
+}
+
+#filesystem .headerbuttons > a {
+    display: none!important;
+}
+
+#filesystem header > span > .scoreButtonWhiteGradient {
+    display: none!important;
+}
+
+#filesystem .filetable tr > td:nth-of-type(3){
+    width: 1px;
+}
+
+#filesystem .filetable {
+}
+
+#filesystem .filetable {
+}
+
+#filesystem .tabFrame .frameRight > ul > li {
+    position: relative;
+}
+
+#filesystem .tabFrame .frameRight > ul > li {
+    position: relative;
+}
+
+#filesystem .tabFrame .frameRight > ul > li {
+    position: relative;
 }
