@@ -1393,6 +1393,7 @@ span.icon.blue-chevron-down {}
     width: 100%;
     padding:0px;
     line-height: 2.6;
+    cursor: pointer;
 }
 
 #filesystem .frameRight > ul > li:hover{
@@ -1404,9 +1405,7 @@ span.icon.blue-chevron-down {}
     padding-right: 10px;
     display: block;
     min-height: 45px;
-}
-
-#filesystem .frameRight > ul  span.emptyFileList  {
+    color: #607D8B;
     background-color: #FFFFFF;
 }
 
@@ -2325,6 +2324,7 @@ ul .elementSettings {
     width: 100%;
     cursor: default;
     background-color: #FFFFFF;
+    color: #607D8B;
 }
 
 #reader .readerStartpage .tabs .singletab .sectionA > .itemsA .emptyHistory:hover {
