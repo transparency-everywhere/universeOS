@@ -10,27 +10,8 @@ Video
 
 
 Update
-    +sessions
 
     Delete Users where cypher is md5 or sha512
-
-    user
-        +profile_info
-        move old userpictures from/userPictures
-    groups
-        public: public->1
-                not publ->0
-
-        +groupPictureElement
-        +groupPucture (varchar 255)
-
-
-
-    add table playlists/Delete Table 'playlist'
-
-    Add Table 'user_privacy_rights' and create entry for each user
-
-    check if our server serves svg files as image/svg, not as text/plain (regbox - loading bubbles)
 
     Add session for each user
         --->    registration get client identifier
@@ -82,12 +63,7 @@ todo
     group admin
         change group picture
 
-Recent:                                                         Release Message
-
-        modal
-            tasks
-            calendar ?
-
+Recent:
       Style
             Hover
                 .button, .anti-button
@@ -162,7 +138,10 @@ Components
 
     Filesystem
         Open Files and Links
-Files and the use of them
+
+
+
+Files and the use of them (outdated
 
 	PHP
 		inc/config.php		//mysql server confid
@@ -173,14 +152,7 @@ Files and the use of them
 							//into > 30 actions (e.g "addFolder", "addElement", "deleteFolder", "addGroup")
 							
 							//all the actions will be seperated in located in /actions/folders or actions/groups etc.
-							
-		guest.php 			//contains view for not registered user
-							
-		profile.php			//userprofile
-		group.php			//group profile
-		
-		
-		
+			
 		Modules and Apps
 		modules/
 				suggestions/
@@ -204,8 +176,9 @@ Files and the use of them
 	
 	CSS
 		inc/style.css		//all the css stuff
+		inc/guest.css		//all the css stuff
 	
-	Will be deleted
+	Will be deleted:
 		function checkAuthorisation => deprecated?
 		function showYoutubeVideo => no use at all
 		
@@ -214,31 +187,7 @@ Files and the use of them
 	Index.php
 		if !login
 			guest.php
-			
-			modules/reader.php
-			
 		
 		if login
 			js function reload()
 				reload.php
-			
-	
-	USER CRYPTICO!
-
-
-
-    Storage
-    Title       Type                Purpose                         Duration                Usage                                       Used for
-    clientDb    Client Storage      save data on the client side    session(browser)        js->clientDB class, api->backpacking        services, messages
-    mysql       Server Storage      save all kinds of data          until removal           php->db class
-    filesystem  Server Storage      save files and links            until removal           php->folders class, php->elements class,    folder, archives, files, links
-                                                                                            php->files class, php->links class
-
-Handlers docu
-
-application                             the application you want the service top be opened (e.g. Reader or Player)
-regex                                   a regex to check links if they include your service
-open($target, link, onStop)             method to generate html which can display you service
-search(query, offset, limit)            search for 'query'. Limit is the maximum of returned results, starting from offset
-getTitle(link)                          converts link to title
-getDescription(link)                    converts link to description
