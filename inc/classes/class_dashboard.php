@@ -95,8 +95,8 @@ class dashBoard{
 		
 		if(count($groups) == 0){
 			
-				$output .='<p style="font-size:15pt;padding: 5px; padding-top: 12px;">';
-				$output .="You don't have any messages so far. Search for friends, add them to your buddylist and open a chat dialoge to write a message.";
+				$output .='<p class="overlength">';
+				$output .="No Groups :/";
 				$output .="</p>";
 		}else{
 			

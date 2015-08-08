@@ -105,7 +105,7 @@ var calendar = new function(){
 						html += '</div>';
 						
                                                 this.applicationVar = new application('calendar');
-			  			this.applicationVar.create('Calendar', 'html', html,{width: 6, height:  5, top: 0, left: 3});
+			  			this.applicationVar.create('Calendar', 'html', html,{width: 8, height:  8, top: 2, left: 2});
 			  			
 			  			
                                                 $('#side .toggleTrigger').click(function(){

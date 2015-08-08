@@ -154,7 +154,7 @@ var feed = new function(){
         html += "        <\/div>";
         
         this.applicationVar = new application('feed');
-	this.applicationVar.create('Feed', 'html', html,{width: 2, height:  8, top: 1, left: 0});
+	this.applicationVar.create('Feed', 'html', html,{width: 3, height:  8, top: 1, left: 0});
 	
         
         var feedClass = new Feed('global', '.feedMain');
@@ -258,9 +258,9 @@ var feed = new function(){
     this.generateHeader = function(){
         var output="";
         output += "<div class=\"windowHeader\" id=\"feedheader\">";
-        output += "            <i class=\"icon dark-pencil\" style=\"height: 32px; width: 32px; top: 14px;position: absolute; left: 15px;\"></i>";
+        output += "            <i class=\"icon icon-pencil\" style=\"height: 32px; width: 32px; top: 14px;position: absolute; left: 15px;\"></i>";
         output += "            <form id=\"feedInputForm\" method=\"post\" action=\" doit.php?action=createFeed\" target=\"submitter\">";
-        output += "            <div style=\"position: absolute;top: 10px;right: 15px;left: 75px;\">";
+        output += "            <div style=\"position: absolute;top: 10px;right: 15px;left: 65px;\">";
         output += "                        <textarea id=\"feedInput\" name=\"feedInput\" onclick=\"$(this).val('');\">What's Up?<\/textarea>";
         output += "                        <div style=\"\" id=\"feedInputBar\">";
         output += "                                <div class=\"btn-toolbar\" style=\"float: left;\">";

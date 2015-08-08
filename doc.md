@@ -17,3 +17,9 @@ Enable different ways of crypto
 
 Add an easy way to let everyone develop apps
 
+=Mittelfristig=
+
+Tabellen und dazugehörige Api
+
+universe Derivate miteinander Sprechen lassen
+

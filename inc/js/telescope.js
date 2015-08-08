@@ -3,7 +3,7 @@ var telescope = new function(){
     this.init = function(){
         var grid = {width: 5, height:  4, top: 6, left: 3, hidden: true};
         if(proofLogin())
-            grid = {width: 8, height:  8, top: 1, left: 2, hidden: true};
+            grid = {width: 8, height:  8, top: 2, left: 2, hidden: true};
         this.applicationVar = new application('telescope');
         this.applicationVar.create('Telescope', 'html', "<div id='telescopeFrame'></div>", grid);
         
@@ -285,7 +285,7 @@ var telescope = new function(){
         html +=       '<li class="categoryTitle active" style="margin-left:1px;"><span class="icon blue-reader"></span>Everything</li>';
         html +=       '<li style="margin-left:130px;" class="categoryTitle"><span class="icon blue-gear"></span>universeOS</li>';
         html +=       '<li data-type="folders"><span class="icon blue-folder"></span>Folders'+this.showResultLength(results.folders.length)+'</li>';
-        html +=       '<li data-type="collections"><span class="icon blue-archive"></span>Collections'+this.showResultLength(results.collections.length)+'</li>';
+        html +=       '<li data-type="collections"><span class="icon blue-filesystem"></span>Collections'+this.showResultLength(results.collections.length)+'</li>';
         html +=       '<li data-type="files"><span class="icon blue-file"></span>Files'+this.showResultLength(results.files.length)+'</li>';
 //        html +=       '<li class="spacer"></li>';
 //        html +=       '<li data-type="folder"><span class="icon blue-eye"></span>Public</li>';
