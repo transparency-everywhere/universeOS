@@ -30,14 +30,16 @@ class folder {
             $dbClass = new db();
             $folderData = $dbClass->select('folders', array('id', $superiorFolder));
             $folderClass = new folder($superiorFolder);
-            $folderpath = universeBasePath . '/' . $folderClass->getPath() . urldecode("$titleURL");
-            if (!file_exists("$folderpath")) {
-                mkdir($folderpath);
+            $relativePath = $folderClass->getPath() . urldecode("$titleURL");
+            $absolutePath = universeBasePath . '/' . $relativePath;
+            $oldmask = umask(0);
+            if (!file_exists($absolutePath) && mkdir($absolutePath,0755)) {
+                umask($oldmask);
                 $time = time();
 
                 $values['folder'] = $superiorFolder;
                 $values['name'] = $title;
-                $values['path'] = $folderpath;
+                $values['path'] = $relativePath;
                 $values['creator'] = $user;
                 $values['timestamp'] = $time;
                 $values['privacy'] = $privacy;
@@ -53,7 +55,8 @@ class folder {
 
                 return $folderId;
             } else {
-                jsAlert("The folder already exists.");
+                jsAlert("The folder hasnt been created.");
+                return false;
             }
         } else {
             jsAlert("The title contains forbidden characters.");
