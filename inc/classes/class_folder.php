@@ -179,7 +179,7 @@ class folder {
             $elements = $db->shiftResult($db->select('elements', array('folder', $folderId)), 'id');
             foreach ($elements as $elementData) {
                 $elementData['iconsrc'] = "gfx/icons/filesystem/element.png";
-                if(authorize($elementData['privacy'], "show", $elementData['creator']))
+                if(authorize($elementData['privacy'], "show", $elementData['author']))
                     $result[] = array('type' => 'element', 'data' => $elementData);
             }
 
@@ -201,7 +201,7 @@ class folder {
                     foreach ($elements as $elementData) {
                         $elementData['iconsrc'] = "gfx/icons/filesystem/element.png";
                         $elementData['shortcut'] = true;
-                        if(authorize($elementData['privacy'], "show", $elementData['creator'])){
+                        if(authorize($elementData['privacy'], "show", $elementData['author'])){
                             $result[] = array('type' => 'element', 'data' => $elementData);
                         }
                     }
