@@ -1388,13 +1388,6 @@ span.icon.blue-chevron-down {}
     margin-left: 10px;
 }
 
-#filesystem .frameRight span.emptyFileList  {
-    padding-left: 10px;
-    padding-right: 10px;
-    display: block;
-    min-height: 45px;
-}
-
 #filesystem .tabFrame .frameRight > ul > li  {
     display: inline-block;
     width: 100%;
@@ -1402,8 +1395,23 @@ span.icon.blue-chevron-down {}
     line-height: 2.6;
 }
 
-#filesystem .tabFrame .frameRight > ul > li:hover{
+#filesystem .frameRight > ul > li:hover{
     background-color: #cfd8dc;
+}
+
+#filesystem .frameRight > ul span.emptyFileList  {
+    padding-left: 10px;
+    padding-right: 10px;
+    display: block;
+    min-height: 45px;
+}
+
+#filesystem .frameRight > ul  span.emptyFileList  {
+    background-color: #FFFFFF;
+}
+
+#filesystem .frameRight > ul span.emptyFileList:hover{
+    background-color: #FFFFFF;
 }
 
 #filesystem .tabFrame .frameRight #blueList, #filesystem .tabFrame .frameRight #greySmall, #filesystem .tabFrame .frameRight #greyLarge {
@@ -2225,6 +2233,11 @@ ul .elementSettings {
 }
 
 
+#reader .readerStartpage .welcomearea .userPicture img {
+    width: 40px;
+}
+
+
 #reader .readerStartpage .welcomearea .welcomeText {
     padding: 30px 0 0 0;
 }
@@ -2259,6 +2272,15 @@ ul .elementSettings {
 
 #reader .readerStartpage .navi li:first-of-type {
     width: 40px;
+    background-color: #00bcd4;
+}
+
+#reader .readerStartpage .navi li:first-of-type:hover {
+    background-color:  #37474f;
+}
+
+#reader .readerStartpage .navi li:first-of-type span{
+    margin-top: 3px;
 }
 
 #reader .readerStartpage .tabs .singletab {
@@ -2299,9 +2321,14 @@ ul .elementSettings {
     cursor: pointer;
 }
 
-#reader .readerStartpage .tabs .singletab .sectionA > .itemsA > ul > li.active,
-#reader .readerStartpage .tabs .singletab .sectionB > .itemsB > ul > li.active  {
-    background-color: #cfd8dc;
+#reader .readerStartpage .tabs .singletab .sectionA > .itemsA .emptyHistory {
+    width: 100%;
+    cursor: default;
+    background-color: #FFFFFF;
+}
+
+#reader .readerStartpage .tabs .singletab .sectionA > .itemsA .emptyHistory:hover {
+    background-color: #FFFFFF;
 }
 
 #reader .readerStartpage .tabs .singletab .sectionA, #reader .readerStartpage .tabs .singletab .sectionB {
@@ -4162,6 +4189,9 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 .uploadify {
 	position: relative;
 	margin-bottom: 1em;
+        font:normal ubuntu, arial,sans-serif!important;
+	font-family: ubuntu!important;
+	font-style: normal!important;
 }
 .uploadify-button {
 	background-color: #505050;
@@ -4181,7 +4211,9 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 	background-repeat: no-repeat;
 	border: 2px solid #808080;
 	color: #FFF;
-	font: normal 12px Arial, Helvetica, sans-serif;
+	font:normal ubuntu, arial,sans-serif;
+	font-family: ubuntu;
+	font-style: normal;
 	text-align: center;
 	text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
 	width: 100%;
@@ -4207,15 +4239,11 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 	color: #808080;
 }
 .uploadify-queue {
-	position: absolute;
 	margin-bottom: 1em;
 	color: #1c1c1c;
 }
 .uploadify-queue-item {
 	background-color: #F5F5F5;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
 	font: 11px Verdana, Geneva, sans-serif;
 	margin-top: 5px;
 	padding: 10px;
