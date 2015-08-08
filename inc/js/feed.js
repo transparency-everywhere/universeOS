@@ -110,7 +110,7 @@ var feed = new function(){
         
         var output = '<div class="feedEntry feedNo'+feedData['id']+'">';
             debug.log('     showSignature');
-            output += User.showSignature(feedData['author'], feedData['timestamp'], true)+gui.text(feedContent);
+            output += User.showSignature(feedData['author'], feedData['timestamp'], true)+feedContent;
             output += '<div class="options">';
                 output += item.showScoreButton('feed', feedData['id']);//load score button
                 

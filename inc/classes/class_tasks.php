@@ -20,11 +20,12 @@ limitations under the License.
 
 class tasks{
 	public function create($user, $timestamp, $status, $title, $description, $privacy){
+            
 		$values['user'] = $user;
 		$values['timestamp'] = $timestamp;
-		$values['status'] = $status;
-		$values['title'] = $title;
-		$values['description'] = $description;
+		$values['status'] = sanitizeText($status);
+		$values['title'] = sanitizeText($title);
+		$values['description'] = sanitizeText($description);
 		$values['privacy'] = $privacy;
 		
 		$db = new db();
@@ -33,7 +34,7 @@ class tasks{
 	public function update($id, $user, $timestamp, $status, $title, $description, $privacy){
 		
 		$db = new db();
-		$db->update('tasks', array('user'=>$user, 'timestamp'=>$timestamp, 'status'=>$status, 'title'=>$title, 'description'=>$description,  'privacy'=>$privacy), array('id',$id));
+		$db->update('tasks', array('user'=>$user, 'timestamp'=>$timestamp, 'status'=>sanitizeText($status), 'title'=>sanitizeText($title), 'description'=>sanitizeText($description),  'privacy'=>$privacy), array('id',$id));
 	
 	}
 	public function changeStatus($id, $status){
@@ -41,7 +42,7 @@ class tasks{
 		if(authorize($eventData['privacy'], 'edit', $eventData['user'])){
 			
 			$db = new db();
-			$db->update('tasks', array('status'=>$status), array('id',$id));
+			$db->update('tasks', array('status'=>  sanitizeText($status)), array('id',$id));
 		
 		}
 	}
