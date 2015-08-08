@@ -46,7 +46,7 @@ var reader = new function(){
                 html += '<div class="welcomearea"><div class="userPicture"><img style="max-width:100px; max-height: 100px;" src="' + getUserPicture(User.userid) + '" onclick="User.showProfile(User.userid); return false"></div><div class="welcomeText">Hidiho, <a href="#" onclick="User.showProfile(User.userid); return false">'+ useridToUsername(User.userid) +'</a>,<br />good to see you!<div></div>';
                 html += '<div class="navi">';
                     html += '<ul>';
-                        html += "<li onclick=\"$( '.hometab' ).show();$( '.groupstab' ).hide();$( '.favoritestab' ).hide();$( '.playliststab' ).hide();$( '.myFilestab' ).hide();return false\">" + filesystem.generateIcon('home', 'blue') + '</li>';
+                        html += "<li onclick=\"$( '.hometab' ).show();$( '.groupstab' ).hide();$( '.favoritestab' ).hide();$( '.playliststab' ).hide();$( '.myFilestab' ).hide();return false\">" + filesystem.generateIcon('home', 'white') + '</li>';
                         html += "<li onclick=\"$( '.hometab' ).hide();$( '.groupstab' ).show();$( '.favoritestab' ).hide();$( '.playliststab' ).hide();$( '.myFilestab' ).hide();return false\">Groups</li>";
                         html += "<li onclick=\"$( '.hometab' ).hide();$( '.groupstab' ).hide();$( '.favoritestab' ).show();$( '.playliststab' ).hide();$( '.myFilestab' ).hide();return false\">Favorites</li>";
                         html += "<li onclick=\"$( '.hometab' ).hide();$( '.groupstab' ).hide();$( '.favoritestab' ).hide();$( '.playliststab' ).show();$( '.myFilestab' ).hide();return false\">Playlists</li>";
@@ -419,9 +419,11 @@ var reader = new function(){
         var itemsA = userHistoryArray;
         var tab = 'home';
         var html = '<ul>';
+        var i = 0;
         if(typeof itemsA !== 'undefined' || itemsA !== undefined){
             var onclick = "";
             $.each(itemsA, function(key, value){
+                i++;
                 if( value['type'] === 'element'){
                     onclick = "onclick=\"elements.open('" + value['itemId'] + "'); return false;\"";
                 } else if( value['type'] === 'file'){
@@ -441,6 +443,11 @@ var reader = new function(){
                 html += '</li>';
             });
         };
+        if (i === 0){
+            html += '<li class="emptyHistory">';
+                html += '<div>Your history ist empty. The history is only stored locally in your cache and it\'s reseted every time you log out or reload the universeOS. We don\'t log or analyze your activities!</div>';
+            html += '</li>';
+        }
         html += '</ul>'; 
         return html;
     };

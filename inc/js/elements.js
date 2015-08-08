@@ -101,8 +101,8 @@ var elements = new function(){
                 date = new Date(data['timestamp']*1000).toString().substr(11, 5) + new Date(data['timestamp']*1000).toString().substr(4, 4) + new Date(data['timestamp']*1000).toString().substr(8, 2); //year + month + day
                 image = filesystem.generateIcon(data['type'], 'grey');
                 html += '<li data-id="' + data['id'] + '" data-type="' + data['type'] + '" data-title="' + data['title'] + '" data-date="' + date + '" data-size="' + data['size'] + '">';
-                    html += '<span class="icons"><a href="./out/?file=' + data['id'] + '" onclick="'+handlerType+' return false">' + image + '</a></span>';
-                    html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="'+handlerType+' return false">' + data['title'] + '</a></span>';
+                    html += '<span class="icons"><a onclick="'+handlerType+' return false">' + image + '</a></span>';
+                    html += '<span class="title"><a onclick="'+handlerType+' return false">' + data['title'] + '</a></span>';
                     html += '<span class="buttons">';
                         html += item.showScoreButton(value['type'], data['id']);
                         if(data['download']){
@@ -144,8 +144,8 @@ var elements = new function(){
                 date = new Date(data['timestamp']*1000).toString().substr(11, 5) + new Date(data['timestamp']*1000).toString().substr(4, 4) + new Date(data['timestamp']*1000).toString().substr(8, 2); //year + month + day
                 image = filesystem.generateIcon(data['type'], 'grey');
                 html += '<li data-id="' + data['id'] + '" data-type="' + data['type'] + '" data-title="' + data['title'] + '" data-date="' + date + '" data-size="' + data['size'] + '">';
-                    html += '<span class="icons"><a href="./out/?file=' + data['id'] + '" onclick="'+handlerType+' return false">' + image + '</a></span>';
-                    html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="'+handlerType+' return false">' + data['title'] + '</a></span>';
+                    html += '<span class="icons"><a onclick="'+handlerType+' return false">' + image + '</a></span>';
+                    html += '<span class="title"><a onclick="'+handlerType+' return false">' + data['title'] + '</a></span>';
                     html += '<span class="buttons">'
                         html += item.showScoreButton(value['type'], data['id']);
                         if(data['download']){
@@ -185,14 +185,14 @@ var elements = new function(){
                 if(value['type'] === 'link'){
                     handlerType = 'handlers.links.handler('+data['id']+');';
                 }
-                if(value['type'] === 'file'){
-                    handlerType = 'handlers.files.handler('+data['id']+');';
-                }
+//                if(value['type'] === 'file'){
+//                    handlerType = 'handlers.files.handler('+data['id']+');';
+//                }
                 date = new Date(data['timestamp']*1000).toString().substr(11, 5) + new Date(data['timestamp']*1000).toString().substr(4, 4) + new Date(data['timestamp']*1000).toString().substr(8, 2); //year + month + day
                 image = filesystem.generateIcon(data['type'], 'grey');
                 html += '<li data-id="' + data['id'] + '" data-type="' + data['type'] + '" data-title="' + data['title'] + '" data-date="' + date + '" data-size="' + data['size'] + '">';
-                    html += '<span class="icons"><a href="./out/?file=' + data['id'] + '" onclick="'+handlerType+' return false">' + image + '</a></span>';
-                    html += '<span class="title"><a href="./out/?file=' + data['id'] + '" onclick="'+handlerType+' return false">' + data['title'] + '</a></span>';
+                    html += '<span class="icons"><a onclick="'+handlerType+' return false">' + image + '</a></span>';
+                    html += '<span class="title"><a onclick="'+handlerType+' return false">' + data['title'] + '</a></span>';
                     html += '<span class="buttons">'
                         html += item.showScoreButton(value['type'], data['id']);
                         if(data['download']){
