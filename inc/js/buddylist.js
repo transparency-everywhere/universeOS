@@ -119,6 +119,9 @@ var buddylist = new function(){
         return output;
     };
     this.init = function(){
+        //preload all userpictures to save requests
+        getUserPicture(this.getBuddies());
+        
         var output="";
         output += "<div id=\"buddyListFrame\">";
         output += this.generateBuddylist();

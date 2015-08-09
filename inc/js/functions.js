@@ -2358,7 +2358,7 @@ function getUserPicture(request){
 			            }else{
 			                var response = new Array();
 			                
-			                var userPictureObject = JSON.parse(result);
+			                var userPictureObject = result;
 			                $.each(userPictureObject, function(index, value) {
 			                        //add value to userPictures var
 			                        userPictures[index]=htmlentities(value);

@@ -88,7 +88,7 @@ class api{
 		}else {
 			$numeric = false;
 			//array of requests
-			$userids = json_decode($request,true);
+			$userids = $request;
 		}
 			foreach($userids AS $userid){
 				$userClass = new user($userid);
