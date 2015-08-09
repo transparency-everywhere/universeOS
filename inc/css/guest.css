@@ -207,7 +207,7 @@ and (max-width : 320px) {
 }
 
 #guestArea #subheader{
-    width:848px;
+    width: 910px;
     display:block;
     margin-bottom: 25px;
 }

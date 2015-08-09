@@ -875,7 +875,12 @@ var User = new function(){
                 var itemId = value['item_id'];
                 var title = value['title'];
                 if(typeof title === 'undefined' || title === null || title === ''){
-                    title = handlers[type+'s'].getTitle(itemId);//plus "s" because handlers are in plural (element > elements)
+                    try {
+                        title = handlers[type+'s'].getTitle(itemId);//plus "s" because handlers are in plural (element > elements)
+                    }
+                    catch(err) {
+                        console.log('handler get title error:'+err);
+                    }
                 }
                 historyArray.push({type: type, itemId: itemId, title: title, timestamp: ''});
             });
