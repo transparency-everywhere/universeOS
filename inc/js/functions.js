@@ -1135,11 +1135,23 @@ var User = new function(){
         });
     };
     this.getRealName = function(userid){
-        var realname = this.getProfileInfo(userid)['realname'];
-        if(empty(realname)){
-            realname = 'Juergen Vogel';
-        }
-        return realname;
+        var profileInfo = this.getProfileInfo(userid);
+        if(is_numeric(userid)){
+            if(empty(profileInfo['realname']))
+                return 'Juergen Vogel';
+            else
+                return profileInfo['realname'];
+	}else{
+		 var response = new Array();
+		                
+		$.each(profileInfo, function(index, value) {
+                    if(empty(value['realname']))
+                        response[index]='Juergen Vogel';
+                    else
+                        response[index]=value['realname'];
+                });
+                return response;  
+	}
     };
     this.getPrivacy = function(){
         return api.query('api/user/getPrivacy/', {});
