@@ -19,6 +19,10 @@ include('../../../inc/config.php');
 include('../../../inc/functions.php');
     
 
+$requestFunction = function($request){
+    $item = new contextMenu($request['type'], $request['itemId']);
+    return $item->getOptions();
+};
 
-    $item = new contextMenu($_POST['type'], $_POST['itemId']);
-    echo json_encode($item->getOptions());
+$api = new api();
+$api->handleRequest($_POST['request'], $requestFunction);
