@@ -1150,26 +1150,63 @@ function showProfile(userid){
     User.showProfile(userid);
 };
 
-function useridToUsername(id){
-		if(usernames[id] == undefined){
-			
-		    var result="";
+        function useridToUsername(request){
+            var post;
+            if(is_numeric(request)){
+                //check if username is stored
+                if(typeof usernames[request] !== 'undefined'){
+                    //return stored username
+                    return usernames[request];
+                }else{
+                    post = request;
+                }
+            }else{
+                post = request;
+            }
+            
+                    //load data from server
+                    var result="";
+            
 		    $.ajax({
-		      url:"api.php?action=useridToUsername",
-		      async: false,  
-			  type: "POST",
-			  data: { request : id },
-		      success:function(data) {
-		         result = data; 
-		      }
-		   });
-		   usernames[id] = result;
-		   return result;
-		}else{
-			return usernames[id];
-		}
+                        url:sourceURL+"/api.php?action=useridToUsername",
+                        async: false,  
+                            type: "POST",
+                            data: { 
+                                    request : post 
+                                },
+                        success:function(data) {
+                           result = data; 
+                        }
+                    });
+            
+            if(is_numeric(request)){
+                if(result.length > 0){
+                    
+                }
+                    usernames[request]=htmlentities(result);
+            }else{
+                var response = new Array();
                 
-}
+                var usernamees = JSON.parse(result);
+                $.each(usernamees, function(index, value) {
+                        usernames[index]=htmlentities(value);
+                        response[index]=htmlentities(value);
+                    });
+                
+                
+            }
+            
+            
+            
+            if(is_numeric(request)){
+                return usernames[request];
+            }else{
+                return response;
+                console.log(response);
+            }
+		
+		
+	}
 
 function usernameToUserid(username){
 			
