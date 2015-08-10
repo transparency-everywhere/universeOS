@@ -4921,8 +4921,11 @@ a#text {}
 			}
 			
 			.calendarFrame.boxes .day header .dropdown{
-				float: right;
-			}
+				position: absolute;
+			
+				left: 0;
+				margin-top: 45px;
+}
 			
 			.calendarFrame.list .day header .dropdown{
 				float:right;
@@ -4940,7 +4943,9 @@ a#text {}
 			.calendarFrame .day header{
 				padding: 10px;
 				font-size: 20px;
-			}
+			
+				position: relative;
+}
 			
 			.calendarFrame .day:hover .dropdown{
 				display: inline-block!important;
