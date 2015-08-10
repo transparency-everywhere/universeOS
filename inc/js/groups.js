@@ -163,7 +163,7 @@ var groups = new function(){
         };
         this.showProfile = function(group_id){
             var output = this.generateProfile(group_id);
-            reader.show();
+            applications.show('reader');
             reader.tabs.addTab('Profile', 'html', output);
             
             //load feed

@@ -32,11 +32,7 @@ var calendar = new function(){
             return colors[calendar.usedColors];
         };
 	this.show = function(){
-			  		if($('#calendarMain').length === 0){
-			  			calendar.init();
-			  		}else{
-			  			this.applicationVar.show();
-			  		}
+			  		applications.show('calendar');
 			  	};
 	
 	this.init = function(){

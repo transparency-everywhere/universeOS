@@ -71,13 +71,13 @@ class dashBoard{
 		$title = "Your Apps";
 		
 		$content = "<ul class=\"appList\">";
-	    	$content .= "<li onclick=\"feed.show()\" onmouseup=\"closeDockMenu()\"><i class=\"icon icon-navicon\" style=\"height:16px;width:16px;\">Feed</li>";
-	    	$content .= "<li onclick=\"calendar.show();\" onmouseup=\"closeDockMenu()\"><i class=\"icon icon-calendar\" style=\"height:16px;width:16px;\">Calendar</li>";
-			$content .= "<li onclick=\"filesystem.show()\" onmouseup=\"closeDockMenu()\"><i class=\"icon icon-folder\" style=\"height:16px;width:16px;\">Filesystem</li>";
-	 		$content .= "<li onclick=\"javascript: reader.show();\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/viewer.png\" border=\"0\" height=\"16\">Reader</li>";
-	   		$content .= "<li onclick=\"javascript: buddylist.show()\" onmouseup=\"closeDockMenu()\"><i class=\"icon icon-user\" style=\"height:16px;width:16px;\"></i>Buddylist</li>";
-	    	$content .= "<li onclick=\"javascript: chat.init()\" onmouseup=\"closeDockMenu()\">><i class=\"icon icon-user\" style=\"height:16px;width:16px;\"></i>Chat</li>";
-	    	$content .= "<li onclick=\"javascript: settings.show();\" onmouseup=\"closeDockMenu()\"><i class=\"icon icon-gear\" style=\"height:16px;width:16px;\"></i>Settings</li>";
+	    	$content .= "<li onclick=\"applications.show('feed');\" onmouseup=\"closeDockMenu()\"><i class=\"icon icon-navicon\" style=\"height:16px;width:16px;\">Feed</li>";
+	    	$content .= "<li onclick=\"applications.show('calendar');\" onmouseup=\"closeDockMenu()\"><i class=\"icon icon-calendar\" style=\"height:16px;width:16px;\">Calendar</li>";
+			$content .= "<li onclick=\"applications.show('filesystem');\" onmouseup=\"closeDockMenu()\"><i class=\"icon icon-folder\" style=\"height:16px;width:16px;\">Filesystem</li>";
+	 		$content .= "<li onclick=\"applications.show('reader');\" onmouseup=\"closeDockMenu()\"><img src=\"./gfx/viewer.png\" border=\"0\" height=\"16\">Reader</li>";
+	   		$content .= "<li onclick=\"applications.show('buddylist');\" onmouseup=\"closeDockMenu()\"><i class=\"icon icon-user\" style=\"height:16px;width:16px;\"></i>Buddylist</li>";
+	    	$content .= "<li onclick=\"applications.show('chat');\" onmouseup=\"closeDockMenu()\">><i class=\"icon icon-user\" style=\"height:16px;width:16px;\"></i>Chat</li>";
+	    	$content .= "<li onclick=\"applications.show('settings');\" onmouseup=\"closeDockMenu()\"><i class=\"icon icon-gear\" style=\"height:16px;width:16px;\"></i>Settings</li>";
 	    $content .= "</ul>";
 		
 		$output = $this->showDashBox($title, $content," ", "app", $grid);

@@ -348,7 +348,7 @@ var telescope = new function(){
     };
     
     this.show = function(){
-        this.applicationVar.show();
-    }
+        applications.show('telescope');
+    };
         
 };

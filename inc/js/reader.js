@@ -18,7 +18,6 @@
         
 
 var reader = new function(){
-    this.applicationVar;
     this.tabs;
     
     this.uffChecksums = []; //var to store checksums for reload
@@ -36,7 +35,8 @@ var reader = new function(){
 	this.tabs.addTab('Home', '', reader.generateStartpage());
     };
     this.show = function(){
-        reader.applicationVar.show();
+        
+        applications.show('reader');
     };
     this.generateStartpage = function(){
         console.log('generateStartpage');

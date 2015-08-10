@@ -45,7 +45,7 @@ var dashBoard = new function(){
 		var content = "<ul class=\"appList\">";
                 
                 $.each(applications.getList(),function(index,value){
-                    content+= "<li onclick=\""+value.className+".show()\" onmouseup=\"closeDockMenu()\"><img src=\""+value.icon+"\" border=\"0\" height=\"32\" width=\"32\">"+value.title+"</li>";
+                    content+= "<li onclick=\"applications.show('"+value.className+"');\" onmouseup=\"closeDockMenu()\"><img src=\""+value.icon+"\" border=\"0\" height=\"32\" width=\"32\">"+value.title+"</li>";
                 });
             
                 $('#dashBoard #scrollFrame').prepend(dashBoard.generateDashBox('Applications', content, '', 'appBox'));

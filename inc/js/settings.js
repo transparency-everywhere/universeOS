@@ -45,10 +45,7 @@ var settings = new function(){
         });
     };
     this.show = function(){
-        if(this.applicationVar)
-            settings.applicationVar.show();
-        else
-            this.init();
+        applications.show('settings');
     };
     
     this.updateProfileInfo = function(realname, city, hometown, birthdate, school, university, work){

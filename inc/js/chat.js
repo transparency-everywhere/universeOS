@@ -47,8 +47,7 @@ var chat = new function(){
         var chatFrameHTML = chat.generateLeftFrame();
             chatFrameHTML += '<div class="chatRightFrame chatFrame_'+userid+'">'+gui.loadPage("modules/chat/chatreload.php?buddy="+username+"")+'</div>';
             
-        
-        chat.applicationVar.show();
+        applications.show('chat');
       
       	//check if dialoge allready exists
         if($(".chatFrame_"+ userid).length == 0){

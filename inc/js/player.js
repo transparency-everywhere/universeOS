@@ -17,7 +17,6 @@
         
 
 var player = new function(){
-    this.applicationVar;
     this.tabs;
     this.activeItem = {};
     this.updateActiveItemObject = function(tab, type, is_playlist, playlist_data){
@@ -43,7 +42,8 @@ var player = new function(){
 	this.tabs.addTab('Home', 'html',initHTML);
     };
     this.show = function(){
-        player.applicationVar.show();
+        
+        applications.show('show');
     };
     
     this.prev = function(){

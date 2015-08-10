@@ -286,7 +286,7 @@ class buddylist{
    	
    	$buddies = $this->buddyListArray($userid);
 	
-	if(in_array($_SESSION['userid'], $buddies) OR $userid == $_SESSION['userid']){
+	if(in_array(getUser(), $buddies) OR $userid == getUser()){
 		return true;
 	}
    }

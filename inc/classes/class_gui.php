@@ -25,7 +25,7 @@ class gui {
         echo "                          <a id=\"startButton\" title=\"toggle Dashboard\" href=\"#\">"
            . "                              <i class=\"icon dark-eye\"></i><span class=\"iconAlert\" id=\"appAlerts\"></span>"
                 . "                         <i class=\"icon dark-user\"></i><span class=\"iconAlert\" id=\"openFriendRequests\"></span>"
-                . "                         <i class=\"icon dark-comment\"></i><span class=\"iconAlert\" id=\"newMessages\" onclick=\"chat.applicationVar.show(); return false\"></span>"
+                . "                         <i class=\"icon dark-comment\"></i><span class=\"iconAlert\" id=\"newMessages\" onclick=\"applications.show('chat'); return false\"></span>"
            . "                          </a><td>\n";
         echo "                    <td><div class=\"\" id=\"logout\" onclick=\"User.logout();\" target=\"submitter\" style=\"tex-decoration: none; color: #FFF; min-width:10px; margin-left:10px;\" title=\"logout\">&nbsp;<i class=\"icon white-logout\"></i>&nbsp;</div></td>\n";
 
@@ -35,7 +35,7 @@ class gui {
         echo '<li><span class="next icon white-arrow-right" onclick="player.next();"></span></li>';
         echo '<li></li>';
         echo '</ul></td>';
-        echo "                    <td align=\"right\" style=\"color: #FFFFFF; float: right\"><a href=\"#\" id=\"clockDiv\" style=\"color: #FFFFFF; float: right\" onclick=\"calendar.show();\"></a></td>\n";
+        echo "                    <td align=\"right\" style=\"color: #FFFFFF; float: right\"><a href=\"#\" id=\"clockDiv\" style=\"color: #FFFFFF; float: right\" onclick=\"applications.show('calendar')\"></a></td>\n";
         
         echo "                    <td align=\"right\" style=\"color: #FFFFFF; float: right\"><a href='#search' title='search something' id='searchTrigger'><span class='icon white-search'></span></a></td>\n";
         

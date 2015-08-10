@@ -476,6 +476,8 @@ var universe = new function(){
         
         //init reload and load sessionInformation
         if(proofLogin()){
+            
+            gui.loadScript('inc/js/clientDB.js');
             universe.sessionInfo = session.getSessionInfo();
             
             if(universe.sessionInfo.length === 0){
@@ -486,7 +488,6 @@ var universe = new function(){
                 $('#addSessionFormContainer .dynForm').submit();
             }
             session.load(universe.sessionInfo);
-            
             
             
             setInterval(function()
@@ -1089,7 +1090,7 @@ var User = new function(){
     };
     this.showProfile = function(user_id){
         var output = this.generateProfile(user_id);
-        reader.show();
+        applications.show('reader');
         reader.tabs.addTab('Profile', 'html', output);
         
         //load feed
@@ -1284,17 +1285,19 @@ function jsAlert(type, message){
 //encryption functions
 
 function getSalt(type, itemId, key){
-			var encryptedSalt = '';
-			$.ajax({
-			  url:"api.php?action=getSalt",
-			  async: false,  
-			  type: "POST",
-			  data: { type : type, itemId : itemId },
-			  success:function(data) {
-			     encryptedSalt = data; 
-			  }
-			});
+		var encryptedSalt = '';
+            
+                
+                var dbResult = clientDB.select('salts', {'type':type, 'itemId':itemId});
+                if(!dbResult){
+                    var encryptedSalt = api.query('api.php?action=getSalt', { type : type, itemId : itemId });
+                
+                    clientDB.insert('salts',{'type':type, 'itemId':itemId, 'encryptedSalt':encryptedSalt});
+           
+                }else
+                    encryptedSalt = dbResult.encryptedSalt;
 	    	var salt = sec.symDecrypt(key, encryptedSalt); //encrypt salt using key
+
 	    	return salt;
 }
 
@@ -2021,15 +2024,14 @@ function toggleGroupTabs(id){
 
 
 function openFolder(folderId){
-        filesystem.show();
+        applications.show('filesystem');
         filesystem.openFolder(folderId);
         return false;
         
     }
 
 function openElement(elementId, title){
-        filesystem.show();
-        
+        applications.show('filesystem');
         filesystem.tabs.addTab(title, '',gui.loadPage('modules/filesystem/showElement.php?element='+elementId));
 }
 
@@ -2040,7 +2042,7 @@ function openFile(type, typeId, title, typeInfo, extraInfo1, extraInfo2){
         userHistory.push(type, typeId);
         
         //bring reader to front
-        reader.applicationVar.show();
+        applications.show('reader');
         
         
         //Link types
@@ -2182,7 +2184,7 @@ function openURL(url, title){
     		url = 'modules/reader/browser/?url='+url;
                 
             reader.tabs.addTab(title, '',gui.loadPage(url));
-            reader.applicationVar.show();
+            applications.show('reader');
             return false;
     }
     
@@ -2767,7 +2769,6 @@ var handlers = {
     }
 };
 
-
 var userHistory = new function(){
     this.storage = [];
     this.push = function(type, item_id, title){
@@ -2782,30 +2783,6 @@ var userHistory = new function(){
         return this.storage;
     };
 };
-
-var clientDB = new function(){
-    this.databases = {};
-    this.createDB = function(dbName){
-        this.databases[dbName] = TAFFY();
-    };
-    this.insert = function(dbName, values){
-        if($.isArray(values)){
-            //each array insert value
-            values.forEach(function(value){
-                this.databases[dbName].insert(values);
-            });
-        }else{
-            this.databases[dbName].insert(values);
-        }
-    };
-    this.update = function(dbName, values){
-        
-    };
-    this.select = function(dbName, object){
-        return this.databases[dbName](object);
-    };
-};
-
 
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();

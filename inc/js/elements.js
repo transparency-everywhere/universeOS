@@ -19,7 +19,7 @@ var elements = new function(){
     this.open = function(element, tabId){
         var elementData = this.getData(element);
         userHistory.push('element', element);
-        filesystem.show();
+        applications.show('filesystem');
         if(typeof tabId === 'undefined')
             tabId = filesystem.tabs.addTab(elementData['title'], '', '');
         filesystem.tabs.updateTabContent(tabId, this.generate(element, tabId));

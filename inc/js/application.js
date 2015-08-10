@@ -135,6 +135,13 @@ var applications = new function(){
         });
     };
     
+    //@way to choose
+    this.show = function(applicationTitle){
+        if(typeof window[applicationTitle].applicationVar === 'undefined')
+            window[applicationTitle].init();
+        
+        window[applicationTitle].applicationVar.show();
+    };
 };
 
               

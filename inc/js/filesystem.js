@@ -48,7 +48,7 @@ var filesystem =  new function() {
     };
     
     this.openUploadTab = function(element, elementTabId){
-        filesystem.applicationVar.show();
+        applications.show('filesystem');
         var uploaderTabId = filesystem.tabs.addTab('Upload in #'+element, '', '');
         filesystem.tabs.updateTabContent(uploaderTabId, filesystem.generateUploadTab(element, elementTabId, uploaderTabId));
         initUploadify('#uploader_file', 'api/files/uploadTemp/', element, '', ''); //the two empty strings are timeStamp and salt - could be empty
@@ -458,7 +458,7 @@ var filesystem =  new function() {
     };
     
     this.show = function(){
-        this.applicationVar.show();
+        applications.show('filesystem');
     };
     
     this.readFile = function(file_id){

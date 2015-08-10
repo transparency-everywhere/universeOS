@@ -43,7 +43,7 @@ class contextMenu{
                 $delete[] = '';
                 $protect[] = '';
                 $undeletable[] = '';
-				
+                //$options = [];
                 $db = new db();
 		switch($this->type){
 			case 'feed':
@@ -457,8 +457,8 @@ class contextMenu{
                                 if($buddyListClass->buddy($itemId)){
                                             $delete['title'] = 'Delete Buddy';
                                             $delete['href'] = "javascript:buddylist.removeBuddy('$itemId');";
+                                            $options[] = $delete;
                                 }
-                                $options[] = $delete;
                             break;
                         case "custom": 
                             
