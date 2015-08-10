@@ -121,7 +121,7 @@ var buddylist = new function(){
     this.init = function(){
         //preload all userpictures to save requests
         getUserPicture(this.getBuddies());
-        
+        useridToUsername(this.getBuddies());
         var output="";
         output += "<div id=\"buddyListFrame\">";
         output += this.generateBuddylist();

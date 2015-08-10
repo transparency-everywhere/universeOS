@@ -852,7 +852,17 @@ var User = new function(){
         
     };
     this.getProfileInfo = function(userid){
-        return api.query('api/user/getProfileInfo/', { user_id:userid });
+        
+        //if type or itemId is array, handle as request for multiple items
+        if(typeof userid === 'object'){
+            var requests = [];
+            $.each(userid,function(index, value){
+                //you can also enter a single type instead of multiple values
+                requests.push({userid : value});
+            });
+            return api.query('api/user/getProfileInfo/', { request: requests});
+        }else
+            return api.query('api/user/getProfileInfo/', { request: [{userid : userid}]});
     }
     this.getAllData = function(userid){
         //data will only be returned if getUser()==userid or userid is on buddylist of getUser()

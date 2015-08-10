@@ -454,9 +454,9 @@ class contextMenu{
 		   		break;
                         case "user":
                                 $buddyListClass = new buddylist();
-                                if($buddyListClass->buddy($itemId)){
-                                            $delete['title'] = 'Delete Buddy';
-                                            $delete['href'] = "javascript:buddylist.removeBuddy('$itemId');";
+                                if(!$buddyListClass->buddy($itemId)){
+                                            $delete['title'] = 'Add Buddy';
+                                            $delete['href'] = "javascript:buddylist.addBuddy('$itemId');";
                                             $options[] = $delete;
                                 }
                             break;

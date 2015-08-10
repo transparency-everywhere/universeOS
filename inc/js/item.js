@@ -89,12 +89,22 @@ var item = new function(){
     };
     
     this.showScoreButton = function(type, itemId){
-        
+        var score = this.getScore(type, itemId);
         if(typeof itemId === 'array'){
-            
+            var result = [];
+            $.each(score, function(index, value){
+                var output = '<span class="scoreButton '+type+'_'+itemId+'">';
+                    if(proofLogin())
+                        output += '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('dislike', 'gray') + '</a>';
+                    output += '<a class="btn btn-xs counter" href="#">'+score+'</a>';
+                    if(proofLogin())
+                        output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('like', 'gray') + '</a>';
+                output += '</span>';
+                result.push(output);
+            });
+            return result;
         }else{
             
-            var score = this.getScore(type, itemId);
 
 
             var output = '<span class="scoreButton '+type+'_'+itemId+'">';
@@ -110,7 +120,21 @@ var item = new function(){
     };
     
     this.getOptions = function(type, itemId){
-        return api.query('api/item/getOptions/', { type : type, itemId: itemId});
+        //if type or itemId is array, handle as request for multiple items
+        if(typeof type === 'object' || typeof itemId === 'object'){
+            var requestType = type;
+            var requests = [];
+            $.each(itemId,function(index, value){
+                //you can also enter a single type instead of multiple values
+                if(typeof type === 'object'){
+                    requestType = type[index];
+                }
+                requests.push({ type : requestType, itemId: value});
+            });
+            return api.query('api/item/getOptions/', { request: requests});
+        }else
+            return api.query('api/item/getOptions/', { request: [{type : type, itemId: itemId}]});
+        
     };
     this.showRightClickMenu = function(type, itemId){
         var options = this.getOptions(type, itemId);
@@ -190,9 +214,50 @@ var item = new function(){
         return list;
     };
     this.showItemSettings = function(type, itemId){
+        
         var options = this.getOptions(type, itemId);
         if(options === null)
             return '';
+        
+        if(typeof itemId === 'array'){
+            var result = [];
+            $.each(options, function(index, value){
+                
+                var list = this.buildList(value);
+                var href = '';
+                var onclick = '';
+                var target = '';	
+                var html = "<a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"itemSettingsButton\">" + filesystem.generateIcon('settings', 'grey') + "</a>\n\
+                  <div class=\"itemSettingsWindow\">\n\
+                              <ul>";
+                      html += list;
+
+
+                      html += "</ul>\n\
+                          </div>";
+                result.push(html);
+            });
+            return result;
+        }else{
+            var list = this.buildList(options);
+            var href = '';
+            var onclick = '';
+            var target = '';	
+            var html = "<a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"itemSettingsButton\">" + filesystem.generateIcon('settings', 'grey') + "</a>\n\
+              <div class=\"itemSettingsWindow\">\n\
+                          <ul>";
+                  html += list;
+
+
+                  html += "</ul>\n\
+                      </div>";
+
+              return html;
+        
+        }
+        
+        
+        
 	var list = this.buildList(options);
         var href = '';
         var onclick = '';

@@ -33,17 +33,19 @@ var Feed = function(type, $selector, initTypeId){
         var pointer = this;
         var loadedFeeds = this.loadFeeds(initType, initTypeId, limit);
         
+        
+        
         //prepare preloading of comments.count, item.getScore etc.
         var feedIds = [];
         $.each(loadedFeeds,function(index, value){
             feedIds.push(value.id);
         });
         var commentCounts  = comments.count('feed', feedIds);
-        var feedScores = item.getScore('feed', feedIds);
+        var feedScoreButtons = item.showScoreButton('feed', feedIds);
         var i = 0;
         $.each(loadedFeeds,function(index, value){
             value['commentCount'] = commentCounts[i];
-            value['score'] = feedScores[i];
+            value['scoreButton'] = feedScoreButtons[i];
             output += pointer.generateSingleFeed(value);
             i++;
         });
@@ -112,9 +114,18 @@ var feed = new function(){
             debug.log('     showSignature');
             output += User.showSignature(feedData['author'], feedData['timestamp'], true)+feedContent;
             output += '<div class="options">';
-                output += item.showScoreButton('feed', feedData['id']);//load score button
+            
+                //if scorebuttons and itemsettings are pushed into the result use them
+                //otherwise use item class for request
+                if(typeof feedData['scoreButton'] === 'undefined')
+                    output += item.showScoreButton('feed', feedData['id']);//load score button
+                else
+                    output += feedData['scoreButton'];
                 
-                output += item.showItemSettings('feed', feedData['id']);
+                if(typeof feedData['itemSettings'] === 'undefined')
+                    output += item.showItemSettings('feed', feedData['id']);
+                else
+                    output += feedData['itemSettings']
                 
                 output += '<a href="javascript:comments.loadComments(\'feed\',\''+feedData['id']+'\');" class="commentButton" style="color: #607D80;"><i class="icon icon-comment"></i>('+feedData['commentCount']+')</a>';
              
