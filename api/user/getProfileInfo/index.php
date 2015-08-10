@@ -18,5 +18,10 @@
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
 
-$user = new user();
-echo json_encode($user->getProfileInfo($_POST['user_id']));
+$requestFunction = function($request){
+    $user = new user();
+    return $user->getProfileInfo($request['user_id']);
+};
+
+$api = new api();
+$api->handleRequest($_POST['request'], $requestFunction);
