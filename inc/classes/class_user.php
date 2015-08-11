@@ -101,7 +101,6 @@ class user {
                      return array();
                  }
         }
-        
 	$db = new db();
 	return $db->select('user', array('userid', $userid), array('realname', 'birthdate', 'school1', 'university1', 'employer', 'place', 'home', 'homefolder'));
     }
@@ -189,7 +188,7 @@ class user {
             $values['username'] = $username;
             $values['email'] = ''; //could be usefull for businesses
             $values['regdate'] = $time;
-            $values['usergroup'] = 1;
+            $values['usergroup'] = 0;
             $values['lastactivity'] = $time;
             
             $db = new db();

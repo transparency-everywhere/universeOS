@@ -409,7 +409,7 @@ var reader = new function(){
                 
                 break;
         }
-        reader.applicationVar.show();
+        applications.showApplication('reader');
         return output;
         
     };

@@ -378,7 +378,7 @@ span.icon.blue-chevron-down {}
 }
 #searchMenu, #searchMenu a, #searchMenu a:link, #searchMenu a:visited{
     color: #fefefe;
-    font-size: 20px; /* NÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¤herungswert aufgrund einer Schriftersetzung */
+    font-size: 20px; /* NÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤herungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: left;
 }
@@ -481,7 +481,7 @@ span.icon.blue-chevron-down {}
 .resultList li:hover .icon.dark{
     display:none;
 }
-#searchMenu .loadAll,ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â #searchMenu .loadAll{
+#searchMenu .loadAll,ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â #searchMenu .loadAll{
     font-size: 14px;
     margin-top: 15px;
     text-align:right;
@@ -851,7 +851,7 @@ span.icon.blue-chevron-down {}
 .blueModal {
 	
     position: absolute;
-    z-index: 99999;
+    z-index: 99998;
     overflow: auto;
     top: 70px;
     left: 50%;
@@ -1879,7 +1879,7 @@ color: #FFF;
     margin-right: 20px;
 }
 
-#mailListÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
+#mailListÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
     width: 450px;
     margin-left: 150px;
 }
@@ -1919,7 +1919,7 @@ color: #FFF;
 	line-height: 8px;
 }
 
-#buddyListTableÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â { 
+#buddyListTableÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â { 
     overflow: none;
 }
     
@@ -2094,7 +2094,7 @@ color: #FFF;
     margin: 0px;
 }
 
-#feedTableÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â { 
+#feedTableÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â { 
     overflow: none;
 }
 
@@ -2873,7 +2873,7 @@ color:#FFFFFF;
     
 }
 
-#pepperSteakItemÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
+#pepperSteakItemÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
     background-color: #72aa00; 
 }
 
@@ -2972,7 +2972,7 @@ color:#FFFFFF;
 .white-gradient {
     background-color: rgb(255, 255, 255);font-family: Ubuntu;
     color:  #313131;
-    font-size: 16px; /* NÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¤herungswert aufgrund einer Schriftersetzung */
+    font-size: 16px; /* NÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤herungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: left;
 }
@@ -2986,11 +2986,11 @@ color:#FFFFFF;
     box-sizing: border-box;
 }
 
-.floatRightÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
+.floatRightÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
     float: right;
 }
 
-.clearÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
+.clearÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
     clear: both;
 }
 
@@ -3667,7 +3667,7 @@ margin-bottom: -5px;
 }
 
 .itemSettingsWindow{
-    /* position: fixed; */
+    position: fixed;
     min-width: 100px;
     z-index: 9999;
     display: none;
@@ -4037,7 +4037,7 @@ display: block;
 
 
 
-#profileWrapÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
+#profileWrapÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
     position: absolute;
     margin-top: 20%;
     margin-left: 50%;
@@ -4921,11 +4921,8 @@ a#text {}
 			}
 			
 			.calendarFrame.boxes .day header .dropdown{
-				position: absolute;
-			
-				left: 0;
-				margin-top: 45px;
-}
+				float: right;
+			}
 			
 			.calendarFrame.list .day header .dropdown{
 				float:right;
@@ -4943,9 +4940,7 @@ a#text {}
 			.calendarFrame .day header{
 				padding: 10px;
 				font-size: 20px;
-			
-				position: relative;
-}
+			}
 			
 			.calendarFrame .day:hover .dropdown{
 				display: inline-block!important;

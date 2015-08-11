@@ -338,8 +338,8 @@ class item {
     
 	
     function protect(){
-               $type = $this->type;
-               $typeid = $this->typeid;
+               $type = mysql_real_escape_string($this->type);
+               $typeId = mysql_real_escape_string($this->typeid);
                     if(hasRight('protectFileSystemItems')){
                             $type = save($type);
                             $typeId = save($typeId);
@@ -405,8 +405,8 @@ class item {
 
                     if(hasRight('editProtectedFilesystemItem')){
 
-                        $type = $this->type;
-                        $typeid = $this->typeid;
+                        $type = mysql_real_escape_string($this->type);
+                        $typeId = mysql_real_escape_string($this->typeid);
 
                             switch($type){
                                     case 'folder':
@@ -467,8 +467,8 @@ class item {
 
                     if(hasRight('undeletableFilesystemItems')){
 
-                            $type = $this->type;
-                            $typeid = $this->typeid;
+                            $type = mysql_real_escape_string($this->type);
+                            $typeId = mysql_real_escape_string($this->typeid);
                             switch($type){
                                     case 'folder':
 
@@ -531,8 +531,8 @@ class item {
     function makeDeletable(){
                     if(hasRight("editUndeletableFilesystemItems")){
 
-                    $type = $this->type;
-                    $typeid = $this->typeid;
+                    $type = mysql_real_escape_string($this->type);
+                    $typeId = mysql_real_escape_string($this->typeid);
                     switch($type){
                             case 'folder':
                                     $table = 'folders';

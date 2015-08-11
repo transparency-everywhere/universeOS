@@ -90,13 +90,13 @@ var item = new function(){
     
     this.showScoreButton = function(type, itemId){
         var score = this.getScore(type, itemId);
-        if(typeof itemId === 'array'){
+        if(typeof itemId === 'object'){
             var result = [];
             $.each(score, function(index, value){
                 var output = '<span class="scoreButton '+type+'_'+itemId+'">';
                     if(proofLogin())
                         output += '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('dislike', 'gray') + '</a>';
-                    output += '<a class="btn btn-xs counter" href="#">'+score+'</a>';
+                    output += '<a class="btn btn-xs counter" href="#">'+score[index]+'</a>';
                     if(proofLogin())
                         output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('like', 'gray') + '</a>';
                 output += '</span>';
@@ -219,11 +219,12 @@ var item = new function(){
         if(options === null)
             return '';
         
-        if(typeof itemId === 'array'){
+        
+        if(typeof itemId === 'object'){
             var result = [];
             $.each(options, function(index, value){
                 
-                var list = this.buildList(value);
+                var list = item.buildList(value);
                 var href = '';
                 var onclick = '';
                 var target = '';	
@@ -239,20 +240,24 @@ var item = new function(){
             });
             return result;
         }else{
-            var list = this.buildList(options);
+            var list = this.buildList(options[0]);
             var href = '';
             var onclick = '';
             var target = '';	
-            var html = "<a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"itemSettingsButton\">" + filesystem.generateIcon('settings', 'grey') + "</a>\n\
-              <div class=\"itemSettingsWindow\">\n\
-                          <ul>";
-                  html += list;
+            if(!empty(list)){
+                var html = "<a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"itemSettingsButton\">" + filesystem.generateIcon('settings', 'grey') + "</a>\n\
+                  <div class=\"itemSettingsWindow\">\n\
+                              <ul>";
+                      html += list;
 
 
-                  html += "</ul>\n\
-                      </div>";
+                      html += "</ul>\n\
+                          </div>";
 
-              return html;
+                  return html;
+            }else{
+                return '';
+            }
         
         }
         

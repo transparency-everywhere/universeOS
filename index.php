@@ -60,13 +60,13 @@ else{
     include("views/header/scripts.html");
     echo '<script>User.userid = '.getUser().';</script>';
     
-    echo '<div id="alerter"></div>';
     
     //include dashboard
     include("modules/desktop/dashboard.php");
     
     
     echo    '<div id="bodywrap">';
+    echo '<div id="alerter"></div>';
     echo        '<ul id="systemAlerts">';
     echo        '</ul>';
     echo        '<div id="loader"></div>';

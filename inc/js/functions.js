@@ -461,6 +461,8 @@ var universe = new function(){
         
         gui.loadScript('inc/js/shortcuts.js');
         
+        gui.loadScript('inc/js/clientDB.js');
+        
         applications.init();
         
         //init draggable windows
@@ -477,7 +479,6 @@ var universe = new function(){
         //init reload and load sessionInformation
         if(proofLogin()){
             
-            gui.loadScript('inc/js/clientDB.js');
             universe.sessionInfo = session.getSessionInfo();
             
             if(universe.sessionInfo.length === 0){
@@ -858,11 +859,11 @@ var User = new function(){
             var requests = [];
             $.each(userid,function(index, value){
                 //you can also enter a single type instead of multiple values
-                requests.push({userid : value});
+                requests.push({user_id : value});
             });
             return api.query('api/user/getProfileInfo/', { request: requests});
         }else
-            return api.query('api/user/getProfileInfo/', { request: [{userid : userid}]});
+            return api.query('api/user/getProfileInfo/', { request: [{user_id : userid}]})[0];
     }
     this.getAllData = function(userid){
         //data will only be returned if getUser()==userid or userid is on buddylist of getUser()
@@ -1162,63 +1163,26 @@ function showProfile(userid){
     User.showProfile(userid);
 };
 
-        function useridToUsername(request){
-            var post;
-            if(is_numeric(request)){
-                //check if username is stored
-                if(typeof usernames[request] !== 'undefined'){
-                    //return stored username
-                    return usernames[request];
-                }else{
-                    post = request;
-                }
-            }else{
-                post = request;
-            }
-            
-                    //load data from server
-                    var result="";
-            
+function useridToUsername(id){
+		if(usernames[id] == undefined){
+			
+		    var result="";
 		    $.ajax({
-                        url:sourceURL+"/api.php?action=useridToUsername",
-                        async: false,  
-                            type: "POST",
-                            data: { 
-                                    request : post 
-                                },
-                        success:function(data) {
-                           result = data; 
-                        }
-                    });
-            
-            if(is_numeric(request)){
-                if(result.length > 0){
-                    
-                }
-                    usernames[request]=htmlentities(result);
-            }else{
-                var response = new Array();
+		      url:"api.php?action=useridToUsername",
+		      async: false,  
+			  type: "POST",
+			  data: { request : id },
+		      success:function(data) {
+		         result = data; 
+		      }
+		   });
+		   usernames[id] = result;
+		   return result;
+		}else{
+			return usernames[id];
+		}
                 
-                var usernamees = JSON.parse(result);
-                $.each(usernamees, function(index, value) {
-                        usernames[index]=htmlentities(value);
-                        response[index]=htmlentities(value);
-                    });
-                
-                
-            }
-            
-            
-            
-            if(is_numeric(request)){
-                return usernames[request];
-            }else{
-                return response;
-                console.log(response);
-            }
-		
-		
-	}
+}
 
 function usernameToUserid(username){
 			
@@ -1749,7 +1713,7 @@ var tabs = function(parentIdentifier){
                         });
                     };
     this.addTab = function(title, contentType, content, onClose){
-                        parentIdentifier = this.parentIdentifier;
+                            parentIdentifier = this.parentIdentifier;
                             var numberOfTabs = $(parentIdentifier+' .tabFrame .tab').length;
 
                             var headerId = randomString(6, '#aA');
@@ -1866,7 +1830,7 @@ var tabs = function(parentIdentifier){
                         $(parentIdentifier+' .tabFrame .tab.tab_'+tab_identifier).remove();
 
                     };
-this.moveTab = function(parentIdentifier, tab){
+    this.moveTab = function(parentIdentifier, tab){
 			
 		};
 };

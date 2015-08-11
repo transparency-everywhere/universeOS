@@ -26,10 +26,11 @@ else if($_GET['action'] == "showBuddySuggestList"){
      
 else if($_GET['action'] == "protectFileSystemItems"){
     $item = new item($_GET['type'], $_GET['itemId']);
-            	$item->protectFilesystemItem($_GET['type'], $_GET['itemId']);
+            	$item->protect($_GET['type'], $_GET['itemId']);
 				jsAlert("This Item can not be edited anymore.");
             }
 else if($_GET['action'] == "removeProtectionFromFileSystemItems"){
+    error_reporting(E_ALL);
             	$item = new item($_GET['type'], $_GET['itemId']);
             	$item->removeProtection($_GET['type'], $_GET['itemId']);
 				jsAlert("This Item can be edited again.");

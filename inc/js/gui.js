@@ -465,7 +465,7 @@ var gui = new function(){
         return state;
     };
     this.requiredAlert = function(){
-        alert('asd');
+        gui.alert('Please fill out all the required fields.');
     };
     this.modal = function(){
         this.html;
