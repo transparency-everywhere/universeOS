@@ -462,7 +462,6 @@ var universe = new function(){
         gui.loadScript('inc/js/shortcuts.js');
         
         gui.loadScript('inc/js/clientDB.js');
-        
         applications.init();
         
         //init draggable windows
@@ -861,10 +860,17 @@ var User = new function(){
                 //you can also enter a single type instead of multiple values
                 requests.push({user_id : value});
             });
-            return api.query('api/user/getProfileInfo/', { request: requests});
-        }else
-            return api.query('api/user/getProfileInfo/', { request: [{user_id : userid}]})[0];
-    }
+            
+            return clientDB.savePipe('users', api.query('api/user/getProfileInfo/', { request: requests}));
+        }else{
+            //userid is string :/
+            var result = clientDB.select('users',{'userid':userid+''});
+            if(result)
+                return result
+            
+            return clientDB.savePipe('users', api.query('api/user/getProfileInfo/', { request: [{user_id : userid}]})[0]);
+        };
+        }
     this.getAllData = function(userid){
         //data will only be returned if getUser()==userid or userid is on buddylist of getUser()
         return api.query('api/user/getAllData/', { user_id:userid });
@@ -1164,24 +1170,17 @@ function showProfile(userid){
 };
 
 function useridToUsername(id){
-		if(usernames[id] == undefined){
-			
-		    var result="";
-		    $.ajax({
-		      url:"api.php?action=useridToUsername",
-		      async: false,  
-			  type: "POST",
-			  data: { request : id },
-		      success:function(data) {
-		         result = data; 
-		      }
-		   });
-		   usernames[id] = result;
-		   return result;
-		}else{
-			return usernames[id];
-		}
-                
+        var profileInfo = User.getProfileInfo(id);
+        if(is_numeric(id)){
+                return profileInfo['username'];
+	}else{
+		var response = new Array();
+		console.log(profileInfo);
+		$.each(profileInfo, function(index, value) {
+                        response[index]=value['username'];
+                });
+                return response;  
+	}
 }
 
 function usernameToUserid(username){
