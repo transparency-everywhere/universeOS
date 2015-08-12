@@ -103,7 +103,11 @@ var applications = new function(){
             app['active'] = true;
             app['position'] = {width: 2, height:  5, top: 0, left: 9};
             app['icon'] = 'gfx/applicationIcons/white/buddylist.svg';
-            apps[7] = app;
+            //apps[7] = app;
+            
+            //change places with reader, to use preloading of buddy data to save requests
+            apps[7] = apps[1];
+            apps[1] = app;
             
             //buddylist
             var app = [];
