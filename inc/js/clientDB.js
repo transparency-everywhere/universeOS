@@ -20,6 +20,17 @@ var clientDB = new function(){
     this.update = function(dbName, values){
         
     };
+    this.savePipe = function(dbName, object){
+        console.log(typeof object[0]);
+        if(typeof object[0] === 'string')
+            this.insert(dbName, object);
+        else{
+            $.each(object, function(index, singleValue){
+                clientDB.insert(dbName, singleValue);
+            });
+        }
+        return object;
+    };
     this.select = function(dbName, object){
         if(typeof this.databases[dbName] === 'undefined')
             return null;
