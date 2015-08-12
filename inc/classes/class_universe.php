@@ -22,6 +22,8 @@ class universe {
 		
 		$_SESSION['loggedOut'] = true;
 	}
+        $gui = new gui();
+        $gui->generate();
     }
     //reload page if session is expired is used in reload.php
     function proofSession(){
