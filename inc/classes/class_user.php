@@ -102,7 +102,7 @@ class user {
                  }
         }
 	$db = new db();
-	return $db->select('user', array('userid', $userid), array('realname', 'birthdate', 'school1', 'university1', 'employer', 'place', 'home', 'homefolder'));
+	return $db->select('user', array('userid', $userid), array('userid','username','realname', 'birthdate', 'school1', 'university1', 'employer', 'place', 'home', 'homefolder'));
     }
     public function getData($selector=NULL){
         if($selector == NULL){
@@ -303,7 +303,6 @@ class user {
 
           }
     }
-
     
 }
 
