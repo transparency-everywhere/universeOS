@@ -4364,15 +4364,7 @@ margin-bottom: 3px;
 		right: 0;
                 
                 background: rgba(0,0,0,0.85); /* Old browsers */
-                    
-		-moz-box-pack: center;
-		-moz-box-align: center;
-		display: -webkit-box;
-		-webkit-box-pack: center;
-		-webkit-box-align: center;
-		display: box;
-		box-pack: center;
-		box-align: center;       
+                           
                 overflow-y: hidden;          
 	}
 	
