@@ -635,14 +635,16 @@ var universe = new function(){
             request:requests
         };
         
-        var response = api.query('api/reload/', requestData);
         
-        //@async
-        var temp = this;
-        if(response)
-            $.each(response, function(key, value){
-                temp.handleReloadTypes(value);
-            });
+        var response = api.query('api/reload/', requestData, function(response){
+            if(response !== 'null'){
+                response = JSON.parse(response);
+                $.each(response, function(key, value){
+                    universe.handleReloadTypes(value);
+                });
+            }
+        });
+        
         
     };
     this.generateMessage = function(userid, message){
@@ -1175,10 +1177,11 @@ function useridToUsername(id){
                 return profileInfo['username'];
 	}else{
 		var response = new Array();
-		console.log(profileInfo);
-		$.each(profileInfo, function(index, value) {
-                        response[index]=value['username'];
-                });
+                if(response.length > 0){
+                    $.each(profileInfo, function(index, value) {
+                            response[index]=value['username'];
+                    }); 
+                }
                 return response;  
 	}
 }
@@ -2344,7 +2347,6 @@ function clock() {
               }
 
 function getUserPicture(request){
-            debug.log('getUserPicture initizialized with request'+request);
 			            var post;
 			            var userid;
 			            if(is_numeric(request)){
@@ -2383,12 +2385,13 @@ function getUserPicture(request){
 			                var response = new Array();
 			                
 			                var userPictureObject = result;
-			                $.each(userPictureObject, function(index, value) {
-			                        //add value to userPictures var
-			                        userPictures[index]=htmlentities(value);
-			                        response[index]=htmlentities(value);
-			                    });
-			                
+                                        if(response.length > 0){
+                                            $.each(userPictureObject, function(index, value) {
+                                                    //add value to userPictures var
+                                                    userPictures[index]=htmlentities(value);
+                                                    response[index]=htmlentities(value);
+                                                });
+                                        }
 			                
 			            }
 			            if(is_numeric(request)){

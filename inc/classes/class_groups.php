@@ -110,6 +110,10 @@ class groups{
                                 $db->update('groupAttachments',array('validated'=>1), array('group', $group,'AND','item','user','AND','itemId',$user));
 
                         }
+                        
+                        $feed = "joined the group";
+                        $feedClass = new feed();
+                        $feedClass->create($user, $feed, "", '', $group.'//'.$group);
                     
                 }
                 

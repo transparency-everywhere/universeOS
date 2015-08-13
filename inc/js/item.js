@@ -188,6 +188,7 @@ var item = new function(){
         var href = '';
         var onclick = '';
         var target = '';
+        if(options)
 	$.each(options,function(index,option){
 		if(option['title']){
 			
@@ -227,7 +228,7 @@ var item = new function(){
                 var list = item.buildList(value);
                 var href = '';
                 var onclick = '';
-                var target = '';	
+                var target = '';
                 var html = "<a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"itemSettingsButton\">" + filesystem.generateIcon('settings', 'grey') + "</a>\n\
                   <div class=\"itemSettingsWindow\">\n\
                               <ul>";
@@ -260,23 +261,6 @@ var item = new function(){
             }
         
         }
-        
-        
-        
-	var list = this.buildList(options);
-        var href = '';
-        var onclick = '';
-        var target = '';	
-                              var html = "<a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"itemSettingsButton\">" + filesystem.generateIcon('settings', 'grey') + "</a>\n\
-                                <div class=\"itemSettingsWindow\">\n\
-                                            <ul>";
-                                    html += list;
-                                    
-                                    
-                                    html += "</ul>\n\
-                                        </div>";
-                        
-				return html;
     };
     this.initSettingsToggle = function(){
        

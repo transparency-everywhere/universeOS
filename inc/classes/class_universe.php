@@ -19,7 +19,6 @@ class universe {
             $checkData = $db->select('user', array('userid', getUser()), array('userid', 'hash'));
             //sense?
 	}else{
-		
 		$_SESSION['loggedOut'] = true;
 	}
         $gui = new gui();

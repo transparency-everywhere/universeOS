@@ -21,7 +21,11 @@ var clientDB = new function(){
         
     };
     this.savePipe = function(dbName, object){
-        console.log(typeof object[0]);
+        console.log(typeof object);
+        if(object == null){
+            
+            return object;
+        }
         if(typeof object[0] === 'string')
             this.insert(dbName, object);
         else{

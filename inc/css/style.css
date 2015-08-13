@@ -378,7 +378,7 @@ span.icon.blue-chevron-down {}
 }
 #searchMenu, #searchMenu a, #searchMenu a:link, #searchMenu a:visited{
     color: #fefefe;
-    font-size: 20px; /* NÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤herungswert aufgrund einer Schriftersetzung */
+    font-size: 20px; /* NÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤herungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: left;
 }
@@ -481,7 +481,7 @@ span.icon.blue-chevron-down {}
 .resultList li:hover .icon.dark{
     display:none;
 }
-#searchMenu .loadAll,ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â #searchMenu .loadAll{
+#searchMenu .loadAll,ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â #searchMenu .loadAll{
     font-size: 14px;
     margin-top: 15px;
     text-align:right;
@@ -1879,7 +1879,7 @@ color: #FFF;
     margin-right: 20px;
 }
 
-#mailListÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
+#mailListÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
     width: 450px;
     margin-left: 150px;
 }
@@ -1919,7 +1919,7 @@ color: #FFF;
 	line-height: 8px;
 }
 
-#buddyListTableÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â { 
+#buddyListTableÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â { 
     overflow: none;
 }
     
@@ -2094,7 +2094,7 @@ color: #FFF;
     margin: 0px;
 }
 
-#feedTableÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â { 
+#feedTableÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â { 
     overflow: none;
 }
 
@@ -2873,7 +2873,7 @@ color:#FFFFFF;
     
 }
 
-#pepperSteakItemÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
+#pepperSteakItemÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
     background-color: #72aa00; 
 }
 
@@ -2972,7 +2972,7 @@ color:#FFFFFF;
 .white-gradient {
     background-color: rgb(255, 255, 255);font-family: Ubuntu;
     color:  #313131;
-    font-size: 16px; /* NÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤herungswert aufgrund einer Schriftersetzung */
+    font-size: 16px; /* NÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤herungswert aufgrund einer Schriftersetzung */
     font-weight: 300;
     text-align: left;
 }
@@ -2986,11 +2986,11 @@ color:#FFFFFF;
     box-sizing: border-box;
 }
 
-.floatRightÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
+.floatRightÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
     float: right;
 }
 
-.clearÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
+.clearÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
     clear: both;
 }
 
@@ -3091,13 +3091,16 @@ color:#FFFFFF;
             font-weight: 300;
             height: 40px;
         
+            overflow: scroll;
 }
         
         .tabFrame>header ul{
+    display: table-row;
             
-        }
+        
+}
         .tabFrame>header li {
-            float: left;
+            /* float: left; */
             padding: 10px 10px;
             padding-bottom: 0;
             background: #eceff1;
@@ -3105,8 +3108,10 @@ color:#FFFFFF;
             cursor: pointer;
             height: 40px;
         
-            min-width: 140px;
-        }
+            min-width: 104px;
+        
+            display: table-cell;
+}
         
         .tabFrame>header li.active{
             background:#fff;
@@ -4037,7 +4042,7 @@ display: block;
 
 
 
-#profileWrapÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
+#profileWrapÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â {
     position: absolute;
     margin-top: 20%;
     margin-left: 50%;
