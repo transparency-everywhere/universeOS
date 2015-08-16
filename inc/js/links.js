@@ -107,9 +107,10 @@ var links = new function(){
         
         modalOptions['action'] = function(){
             var callback = function(){
-                gui.alert('The links has been added');
+                gui.alert('The link has been added');
                 $('.blueModal').remove();
-                filesystem.tabs.updateTabContent(2 , gui.loadPage('modules/filesystem/showElement.php?element='+element+'&reload=1'));
+                
+                filesystem.tabs.updateTabContent(filesystem.tabs.getLastTabId(), elements.generate(element, filesystem.tabs.getLastTabId()));
             };
             links.create(element, $('#createLinkFormContainer #link_title').val(), $('#createLinkFormContainer #type').val(),  $('#createLinkFormContainer #privacyField :input').serialize(), $('#createLinkFormContainer #link').val(),callback);
         };

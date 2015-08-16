@@ -86,9 +86,10 @@ var filesystem =  new function() {
         html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'1\'));return false"><a href="#">' + filesystem.generateIcon('filesystem', 'blue') + ' All Files</a></li>';		  			
         html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'document\'));return false"><a href="#">' + filesystem.generateIcon('file', 'blue') + ' Documents</a></li>';		  			
         html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'audio\'));return false"><a href="#">' + filesystem.generateIcon('playlist', 'blue') + ' Audio Files</a></li>';		  			
-        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'video\'));return false"><a href="#">' + filesystem.generateIcon('play', 'blue') + ' Video Files</a></li>';		  			
+        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'video\'));return false"><a href="#">' + filesystem.generateIcon('play', 'blue') + ' Video Files</a></li>';	  			
         if(proofLogin()){
-            html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'fav\'));return false"><a href="#">' + filesystem.generateIcon('fav', 'blue') + ' Fav</a></li>';		  			
+            html += '              <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'fav\'));return false"><a href="#">' + filesystem.generateIcon('fav', 'blue') + ' Fav</a></li>';		  			
+        html += '                  <li onclick="filesystem.showMyFiles();return false"><a href="#">' + filesystem.generateIcon('file', 'blue') + ' My Files</a></li>';		  			
         }
         html += '                  <!-- <li><i class="icon-warning-sign"></i> deleted</li> -->';		  			
         html += '              </ul>';		  			
@@ -665,6 +666,16 @@ var filesystem =  new function() {
         }
         
         return myFiles;
+    };
+    this.showMyFiles = function(userid){
+        
+        var myFiles_items = filesystem.getMyFiles(User.userid); //get folder, elements and files of the user
+        filesystem.tabs.addTab('My Files', 'html', 
+        this.generateLeftNav()+
+        '<div class="frameRight">'+
+        reader.buildTab('myFiles', 'file', 'My files', myFiles_items)+
+        '</div>');
+        
     };
 };
 //@param select folder/element

@@ -1734,7 +1734,8 @@ var tabs = function(parentIdentifier){
                             this.tabHistory.push(numberOfTabs+1);
 
                             var $tab = $('<div class="tab tab_'+(numberOfTabs+1)+'"></div>');
-                            $tab.append(content);
+                            if(typeof content === 'string')
+                                $tab.append(content);
 
                             $(parentIdentifier+' .tabFrame').append($tab);
 
@@ -1778,6 +1779,9 @@ var tabs = function(parentIdentifier){
                     };
 
     //is used after closing a tab to show the last tab that was shown
+    this.getLastTabId = function(){
+        return this.tabHistory[this.tabHistory.length-1];
+    };
     this.showLastTab = function(current_tab){
                         var last_tab;
                         var i = this.tabHistory.length-1;

@@ -22,7 +22,7 @@ var telescope = new function(){
         
         html += this.generateNav(results);
         
-        html += this.generateFrame(results);
+        html += this.generateFrame(this.pushSettingsButtonToResult(results));
         
         html += '</div>';
         
@@ -217,6 +217,7 @@ var telescope = new function(){
     
     this.parseResults = function(results){
         var html;
+        
         html = telescope.parseResult('folders', results.folders);
         html += telescope.parseResult('collections', results.collections);
         html += telescope.parseResult('files', results.files);
@@ -225,10 +226,50 @@ var telescope = new function(){
         return html;
     };
     
-    
+    this.pushSettingsButtonToResult = function(results){
+        var settingsButtonTypes = [];
+        var settingsButtonIds = [];
+        //loop through categories
+        $.each(results, function(catIndex, catValue){
+            switch(catIndex){
+                case'youtube':
+                case'wikipedia':
+                    catIndex = 'link';
+                    break;
+                    
+            }
+            //loop through results
+            $.each(catValue, function(index, value){
+                settingsButtonTypes.push(catIndex);
+                settingsButtonIds.push(value);
+            });
+        });
+        
+        //load buttons
+        var buttons = item.showItemSettings(settingsButtonTypes, settingsButtonIds);
+        
+        var i = 0;
+        var newResults = [];
+        //loop through categories
+        $.each(results, function(catIndex, catValue){
+            //loop through results
+            var newSubResults = [];
+            $.each(catValue, function(index, value){
+                var newValue = [value, buttons[i]];
+                i++;
+                newSubResults.push(newValue);
+            });
+            newResults[catIndex] = newSubResults;
+        });
+        console.log(newResults);
+        return newResults;
+        
+        
+    };
     //builds result thumb
     this.buildThumb = function(type, selector){
-
+        var button = selector[1];
+        var selector = selector[0];
         if(selector !== null){
             var html;
                 html = '<div>'+handlers[type].getThumbnail(selector)+'<h2>'+gui.shorten(handlers[type].getTitle(selector), 28)+'</h2></div>';
@@ -244,7 +285,7 @@ var telescope = new function(){
                         itemType = type;
                         break;
                 }
-                html += '<div class="settings">'+item.showItemSettings(itemType,selector)+'</div>';
+                html += '<div class="settings">'+button+'</div>';
             return html;
         }else{
             return '';
@@ -255,6 +296,7 @@ var telescope = new function(){
     this.parseResult = function(type, results){
         var html = '';
         $.each(results, function(index, value){
+            console.log(value);
             html += '<li class="type_'+type+'" data-type="'+type+'" data-selector="'+value+'">'+telescope.buildThumb(type,value)+'</li>';
         });
         return html;
@@ -300,6 +342,7 @@ var telescope = new function(){
         return html;
     };
     
+    
     this.generateFrame = function(results){
         var html,header;
         html = "<div class='frameRight' style='border-top: 1px solid #dcdcdc;' id='telescopeFrame'>";
@@ -339,7 +382,7 @@ var telescope = new function(){
         
         html += this.generateNav(results);
         
-        html += this.generateFrame(results);
+        html += this.generateFrame(this.pushSettingsButtonToResult(results));
         
         html += '</div>';
         

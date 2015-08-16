@@ -35,7 +35,6 @@ var reader = new function(){
 	this.tabs.addTab('Home', '', reader.generateStartpage());
     };
     this.show = function(){
-        
         applications.show('reader');
     };
     this.generateStartpage = function(){
