@@ -32,9 +32,8 @@ class link {
                     $feedLink1 = mysql_insert_id();
                     $feedLink2 = $folder;
                     $feedClass = new feed();
-                    $feedClass->add(getUser(), $feedText, folderAdd, $feedLink1, $feedLink2);
-					
-					return true;
+                    $feedClass->create(getUser(), $feedText, 0, 'folderAdd', $privacy, $feedLink1, $feedLink2);
+                    return true;
                 }
 	}
         

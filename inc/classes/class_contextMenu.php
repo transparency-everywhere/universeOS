@@ -20,7 +20,7 @@ class contextMenu{
 	
 	
 	
-	function __construct($type, $itemId, $title, $info1) {
+	function __construct($type, $itemId, $title=NULL, $info1=NULL) {
       	$this->type = $type;
       	$this->itemId = $itemId;
 		if(!empty($title)){

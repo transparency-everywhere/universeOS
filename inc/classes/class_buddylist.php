@@ -289,6 +289,7 @@ class buddylist{
 	if(in_array(getUser(), $buddies) OR $userid == getUser()){
 		return true;
 	}
+        return false;
    }
 }
 

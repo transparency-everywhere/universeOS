@@ -21,10 +21,10 @@ limitations under the License.
 class api{
         public function handleRequest($request, $function){
             foreach($request AS $parameters){
-                echo json_decode($parameters);
                 $result[] = $function($parameters);
             }
             echo json_encode($result);
+            return true;
         }
 	public function useridToUsername($request){
 		if(is_numeric($request)){
