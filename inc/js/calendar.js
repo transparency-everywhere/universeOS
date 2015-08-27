@@ -1101,6 +1101,117 @@ var events = new function(){
               			
               			return false;
               		});
+                        
+                        
+                        
+                        
+                                        
+                                        
+                                        var formModal = new gui.modal();
+
+                                        var fieldArray = [];
+                                        var options = [];
+                                        options['headline'] = '';
+                                        options['buttonTitle'] = 'Save';
+                                        options['noButtons'] = true;
+
+                                        var field0 = [];
+                                        field0['caption'] = 'Title';
+                                        field0['required'] = true;
+                                        field0['inputName'] = 'eventTitle';
+                                        field0['type'] = 'text';
+                                        fieldArray[0] = field0;
+
+                                        var field1 = [];
+                                        field1['caption'] = 'Place';
+                                        field1['inputName'] = 'eventPlace';
+                                        field1['type'] = 'text';
+                                        fieldArray[1] = field1;
+
+
+                                        var field = "<input type='text' name='startDate' id='startDate' class='startDate datepicker' value='"+formattedDate+"' style='width: 72px;margin-right:5px;'>";
+					field += "&nbsp;<input type='text' name='startTime' id='startTime' class='startTime eventTime' value='15:30' style='width: 37px;'><span class='endDate eventTime'>&nbsp;to&nbsp;</span>";
+					field += "&nbsp;<input type='text' name='endTime' id='endTime' class='endTime eventTime' value='16:30' style='width: 37px;'>";
+					  		    	
+
+                                        var field2 = [];
+                                        field2['caption'] = 'Day';
+                                        field2['inputName'] = 'day';
+                                        field2['type'] = 'html';
+                                        field2['value'] = field;
+                                        fieldArray[2] = field2;
+
+                                        var field3 = [];
+                                        field3['caption'] = 'All-Day';
+                                        field3['type'] = 'html';
+                                        field3['value'] = "<input type='checkbox' name='allDay' id='eventAllDay' value='true' onclick='$(\'.eventTime\').toggle();'>";
+                                        fieldArray[3] = field3;
+
+                                        var field4 = [];
+                                        field4['caption'] = 'Privacy';
+                                        field4['type'] = 'privacy';
+                                        field4['value'] = 'f//f';
+                                        fieldArray[4] = field4;
+
+                                        var field5 = [];
+                                        field5['caption'] = '';
+                                        field5['type'] = 'html';
+                                        field5['value'] = "<div style='margin-top:30px'></div>";
+                                        fieldArray[5] = field5;
+
+                                        var field6 = [];
+                                        field6['caption'] = 'Users';
+                                        field6['type'] = 'html';
+                                        field6['value'] = "<div class='userSelectionInput'></div>";
+                                        fieldArray[6] = field6;
+
+                                        var modalOptions = {};
+                                        modalOptions['buttonTitle'] = 'Create Event';
+
+                                        modalOptions['action'] = function(){
+                                                if($('#eventTitle').val().length > 0 && $('#startDate').val().length > 0 && $('#endTime').val().length > 0){
+                                                        var callback = function(){
+                                                            calendar.loadEvents();
+                                                            calendar.loadEventsIntoSide(new Date(calendar.shownTimeObject.getFullYear(), calendar.shownTimeObject.getMonth(), 1, 0, 0, 0));
+                                                            gui.alert('The Event has been added', 'Events');
+                                                            $('.blueModal').slideUp()
+                                                        };
+                                                        
+                                                        var startDate = $('#startDate').val();
+                                                        if($('#eventAllDay').is('checked')){
+                                                            var startDate = new Date($('#startDate').val()+"-00:00");
+                                                            var stopDate = new Date($('#startDate').val()+"-23:59");
+                                                            
+                                                            var startTime = startDate.getTime()/1000-3599;
+                                                            var stopTime = stopDate.getTime()/1000-3599;
+                                                            //$startTime = strtotime($_POST['startDate']."-00:00")-3599;
+                                                            //$stopTime = strtotime($_POST['startDate']."-23:59")-3599; //no idea why, but it works	
+                                                        }else{
+                                                            var startDate = new Date($('#startDate').val()+"-"+$('#startTime').val());
+                                                            var stopDate = new Date($('#startDate').val()+"-"+$('#endTime').val());
+                                                            
+                                                            var startTime = startDate.getTime()/1000;
+                                                            var stopTime = stopDate.getTime()/1000;
+                                                            //$startTime = strtotime($_POST['startDate']."-".$_POST['startTime']);
+                                                            //$stopTime = strtotime($_POST['startDate']."-".$_POST['endTime']);
+                                                        }
+                                                        
+                                                        events.create(startTime, stopTime, $('#createEventFormContainer #eventTitle').val(),  $('#createEventFormContainer #eventPlace').val(), $('#createEventFormContainer #privacyField :input').serialize(), callback);
+
+                                                }else{
+                                                    gui.alert('You need to fill out all the fields.');
+                                                }};
+                                        formModal.init('Create Event', '<div id="createEventFormContainer"></div>', modalOptions);
+                                        gui.createForm('#createEventFormContainer',fieldArray, options);
+                                        
+                                        
+                                        //init datepicker in modal
+                                        $('.datepicker').datepicker();
+
+                                        $('.userSelectionInput').userSearch();
+                        
+                        
+                        
 			  		
 			  	};
 	

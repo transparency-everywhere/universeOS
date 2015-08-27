@@ -5409,7 +5409,7 @@ var delay = (function(){
 				
 				
 				//load suggestions from API
- 				var suggestions = searchUserByString($(this).val(), '0,30');
+ 				var suggestions = User.searchByString($(this).val(), '0,30');
 				$.each(suggestions, function( index, value ) {
 					  			if(value !== undefined && !in_array(index, shownUsers)){
 					  			

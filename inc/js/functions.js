@@ -2555,6 +2555,37 @@ function nl2br(str, is_xhtml) {
 
 var handler = new function(){
   this.query = function(handler_title, query, offset, max_results){
+      
+        //if type or itemId is array, handle as request for multiple items
+        if(typeof handler_title === 'object'||typeof query === 'object'){
+            var requests = [];
+            $.each(query,function(index, value){
+                //you can also enter a single type instead of multiple values
+                requests.push({
+                                'handler_title':handler_title,
+                                'action':'getTitle',
+                                'parameters': {
+                                    'query':value,
+                                    'offset':offset,
+                                    'max_results':max_results
+                                }});
+            });
+            return api.query('api/handlers/', { request: requests});
+        }else{
+            
+            return api.query('api/handlers/', { request: [{
+                                'handler_title':handler_title,
+                                'action':'query',
+                                'parameters': {
+                                    'query':query,
+                                    'offset':offset,
+                                    'max_results':max_results
+                                }}]});
+        };
+  
+      
+      
+      
       return api.query('api/handlers/', {
           'handler_title':handler_title,
           'action':'query',
@@ -2613,7 +2644,6 @@ var handler = new function(){
         };
   };
   this.getThumbnail = function(handler_title, url){
-      
         if(typeof handler_title === 'object'||typeof url === 'object'){
             var requests = [];
             $.each(url,function(index, value){
@@ -2722,8 +2752,17 @@ var handlers = {
                         return handler.getDescription('youtube', link).replace(/^"(.+(?="$))"$/, '$1');
                     },
                     getThumbnail : function(link){
-                        
-                        return '<img src=\''+handler.getThumbnail('youtube', link).replace(/^"(.+(?="$))"$/, '$1')+'\'/>';
+                        console.log(typeof link);
+                        try{
+                            link=JSON.parse(link);
+                        }catch(e){
+                            console.log(e); //error in the above string(in this case,yes)!
+                        }
+                        console.log(typeof link);
+                        if(typeof link === 'object')
+                            return 'null';
+                        else
+                            return '<img src=\''+handler.getThumbnail('youtube', link).replace(/^"(.+(?="$))"$/, '$1')+'\'/>';
                     },
                     query: function(query, offset, max_results){
                         return handler.query('youtube', query, offset, max_results);

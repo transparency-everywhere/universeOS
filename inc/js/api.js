@@ -19,6 +19,14 @@
 var api = new function(){
     this.basePath = 'http://dev.transparency-everywhere.com/universeos/';
     
+    
+    this.multiQuery = function(action, parameters, callback){
+        if(parameters instanceof Array)
+            return api.query(action, { request: parameters}, callback);
+        else
+            return api.query(action, { request: [parameters]}, callback);
+    };
+    
     this.query = function(action, parameters, callback){
         var async;
         if(typeof callback !== 'undefined'){

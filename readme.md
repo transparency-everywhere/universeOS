@@ -1,5 +1,10 @@
 The universeOS
 -----------------
+
+The universeOS is a Project which tries to give users and groups a platform for anonymous conspirative communication.
+ 
+
+
 Website: http://www.universeOS.org
 
 IRC: #universeOS, @universeOS
@@ -49,12 +54,21 @@ Developing UniverseOS:
 
 =Recent=
 ----------
+-Speed Up
+    Feed!
+    Telescope
+    Userprofile
+    Groupprofile
+
+
 Update between the Beta version and now:
 We improved the usability and design and added more functionality: Adding services like the Wikipedia and video services like Youtube is much easier now.
 Also, the source code has been tidied out and documented and is ready for public release.
 
 =Close Future=
 ---------------
+-Add crypto layer to api
+
 -Decentralize the whole architecture
 
 -Find ways to give the single user more ways of democratic participation

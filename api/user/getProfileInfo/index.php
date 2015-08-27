@@ -14,10 +14,8 @@
 //limitations under the License.
 //
 //@author nicZem for Tranpanrency-everywhere.com
-
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
-
 $requestFunction = function($request){
     $user = new user();
     return $user->getProfileInfo($request['user_id']);

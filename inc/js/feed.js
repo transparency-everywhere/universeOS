@@ -111,7 +111,6 @@ var feed = new function(){
         //load contextmenue(s)
         
         var output = '<div class="feedEntry feedNo'+feedData['id']+'">';
-            debug.log('     showSignature');
             output += User.showSignature(feedData['author'], feedData['timestamp'], true)+feedContent;
             output += '<div class="options">';
             
