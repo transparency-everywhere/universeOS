@@ -951,6 +951,14 @@ var User = new function(){
             return output;
         
     };
+    
+    
+    
+    /**
+     * Generates HTML for Profile
+     * @param {number} userid of user.
+     * @returns {string} HTML
+    */
     this.generateProfile = function(user_id){
         var profile_userdata = this.getProfileInfo(user_id);
         var realname = '', city = '', birthdate = '';
@@ -968,6 +976,8 @@ var User = new function(){
         if(!buddylist.isBuddy(user_id) || user_id != User.userid){
             buttons = '<a class="button" onclick="buddylist.addBuddy('+user_id+'); $(this).text(\'request sent\');">Add Friend</a>';
         }
+        if(user_id ===User.userid)
+            buttons += '<a class="button" onclick="settings.showUpdateProfileForm()">Edit Your Profile</a>';
         
         
         var output   = '<div class="profile userProfile" data-userid="'+user_id+'">';
@@ -1016,16 +1026,16 @@ var User = new function(){
                             output += '<div class="profile_tab files_tab">'+filesystem.showFileBrowser(profile_userdata['homefolder'])+'</div>';
                             output += '<div class="profile_tab playlists_tab">';
                                 
-                                output += '<ul>';
-                                var profile_playlists = playlists.getUserPlaylists('show',user_id);
-                                if(profile_playlists['ids'])
-                                    $.each(profile_playlists['ids'], function(index, value){
-                                        output += '<li onclick="playlists.showInfo(\''+value+'\');"><div><span class="icon icon-playlist"></span>';
-                                        output += '<span  style="font-size:18px; padding-top: 5px;" onclick="">'+profile_playlists['titles'][index]+'</span>';
-                                        //output += item.showItemSettings('user', value);
-                                        output += '</div></li>';
-                                    });
-                                output += '</ul>';
+//                                output += '<ul>';
+//                                var profile_playlists = playlists.getUserPlaylists('show',user_id);
+//                                if(profile_playlists['ids'])
+//                                    $.each(profile_playlists['ids'], function(index, value){
+//                                        output += '<li onclick="playlists.showInfo(\''+value+'\');"><div><span class="icon icon-playlist"></span>';
+//                                        output += '<span  style="font-size:18px; padding-top: 5px;" onclick="">'+profile_playlists['titles'][index]+'</span>';
+//                                        //output += item.showItemSettings('user', value);
+//                                        output += '</div></li>';
+//                                    });
+//                                output += '</ul>';
                             output += '</div>';
                             
                             
@@ -1035,16 +1045,16 @@ var User = new function(){
                             
                             //buddies
                             output += '<div class="profile_tab friends_tab">';
-                                output += '<ul>';
-                                var profile_buddylist = buddylist.getBuddies(user_id);
-                                $.each(profile_buddylist, function(index, value){
-                                    output += '<li><div>'+User.showPicture(value);
-                                    output += '<span class="username" style="padding-top: 5px; font-size:18px;">'+useridToUsername(value)+'</span>';
-                                    output += '<span class="realname">'+useridToUsername(value)+'</span>';
-                                    output += item.showItemSettings('user', value);
-                                    output += '</div></li>';
-                                });
-                                output += '</ul>';
+//                                output += '<ul>';
+//                                var profile_buddylist = buddylist.getBuddies(user_id);
+//                                $.each(profile_buddylist, function(index, value){
+//                                    output += '<li><div>'+User.showPicture(value);
+//                                    output += '<span class="username" style="padding-top: 5px; font-size:18px;">'+useridToUsername(value)+'</span>';
+//                                    output += '<span class="realname">'+useridToUsername(value)+'</span>';
+//                                    output += item.showItemSettings('user', value);
+//                                    output += '</div></li>';
+//                                });
+//                                output += '</ul>';
                             output += '</div>';
                             
                             //userinfo
@@ -1083,16 +1093,16 @@ var User = new function(){
                             //groups
                             output += '<div class="profile_tab groups_tab">';
                             
-                                output += '<ul>';
-                                var profile_groups = groups.get(user_id);
-                                if(typeof profile_groups !== 'undefined'){
-                                    $.each(profile_groups, function(index, value){
-                                        output += '<li onclick="groups.showProfile('+value+')"><div><span class="icon icon-group"></span>';
-                                        output += '<span class="username" style="font-size: 20px; padding-top: 10px;">'+groups.getTitle(value)+'</span>';
-                                        output += '</div></li>';
-                                    });
-                                }
-                                output += '</ul>';
+//                                output += '<ul>';
+//                                var profile_groups = groups.get(user_id);
+//                                if(typeof profile_groups !== 'undefined'){
+//                                    $.each(profile_groups, function(index, value){
+//                                        output += '<li onclick="groups.showProfile('+value+')"><div><span class="icon icon-group"></span>';
+//                                        output += '<span class="username" style="font-size: 20px; padding-top: 10px;">'+groups.getTitle(value)+'</span>';
+//                                        output += '</div></li>';
+//                                    });
+//                                }
+//                                output += '</ul>';
                             output += '</div>';
                         
                         output += '</div>';
@@ -1101,13 +1111,22 @@ var User = new function(){
             output  += '</div>';
             return output;
     };
+    /**
+     * Initializes handlers for profile
+     * @param {number} userid of user.
+    */
     this.initProfileHandlers = function(user_id){
         
     };
+    /**
+     * Shows profile
+     * @param {number} userid of user.
+    */
     this.showProfile = function(user_id){
-        var output = this.generateProfile(user_id);
         applications.show('reader');
-        reader.tabs.addTab('Profile', 'html', output);
+        var profileTab =reader.tabs.addTab('Profile', 'html', '');
+        var output = this.generateProfile(user_id);
+        reader.tabs.updateTabContent(profileTab, output);
         
         //load feed
         var profileFeed = new Feed('user', '.activity_tab', user_id);
@@ -1133,6 +1152,16 @@ var User = new function(){
         userHistory.push('user', user_id, useridToUsername(user_id));
         
     };
+    
+    this.searchByString = function(string, limit){
+        var result = api.query('api.php?action=searchUserByString', { string : string, limit : limit });
+
+        if(result.length === 0 && result == null){
+            result = false;           
+        }
+        return result;
+    }
+    
     this.logout = function(){
         gui.alert('Goodbye :)', '');
         api.query('api/user/logout/index.php', {},function(data){
@@ -1278,15 +1307,6 @@ function universeText(string){
 
 function proofLogin(){
     return User.proofLogin();
-}
-			
-function searchUserByString(string, limit){
-    var result = api.query('api.php?action=searchUserByString', { string : string, limit : limit });
-    
-    if(result.length === 0 && result == null){
-        result = false;           
-    }
-    return result;
 }
 
 function jsAlert(type, message){
@@ -1660,8 +1680,98 @@ var sec =  new function() {
 
 
 
-var support = new function(){
+	
+function getPublicKey(type, itemId){
+			var key = '';
+			$.ajax({
+			  url:"api.php?action=getPublicKey",
+			  async: false,  
+			  type: "POST",
+			  data: { type : type, itemId : itemId },
+			  success:function(data) {
+			     key = data; 
+			  }
+			});
+	    	return key;
+	}
+	
+function storeMessageKey(messageId, key){
+        messageKeys[messageId] = key;
+    }
+
+function getStoredKey(messageId){
+        return messageKeys[messageId];
+    }
     
+function isStored(messageId){
+        if(messageKeys[messageId] !== undefined){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    
+
+var support = new function(){
+    this.alert = function($attachedTo, message,callback, arrowPosition){
+        
+        var $box = $('<div class="alert support"><div>'+message+'</div></div>');
+        
+        // .position() uses position relative to the offset parent, 
+        var pos = $attachedTo.offset();
+
+        // .outerWidth() takes into account border and padding.
+        var width = $attachedTo.outerWidth();
+        
+        if(pos.left+width > $(window).width()){
+            pos.left = pos.left-width;
+        }
+        var boxHeight = 50, boxWidth = 80,iconClass = '';
+//        var arrowUp = 'arrowDown';
+//        if(pos.top+$box.height() > $(window).height()){
+//            var arrowClass = 'arrowDown';
+//            // move box to top
+//        }
+        
+        if(typeof arrowPosition === 'undefined')
+            arrowPosition = 'bottom';
+        var arrowClass = 'arrow-'+arrowPosition;
+        
+        switch(arrowClass){
+            case 'arrow-bottom':
+                pos.top = pos.top-boxHeight;
+                iconClass = 'down';
+                break;
+            case 'arrow-top':
+                pos.top = pos.top+boxHeight;
+                iconClass = 'up';
+                break;
+            case 'arrow-left':
+                pos.left = pos.left+boxWidth;
+                iconClass = 'left';
+                break;
+            case 'arrow-right':
+                pos.left = pos.left-boxWidth;
+                iconClass = 'right';
+                break;
+        }
+        $box.append('<span class="icon blue-chevron-'+iconClass+'"></span>');
+        
+        //show the menu directly over the placeholder
+        $box.css({
+            top: pos.top + "px",
+            left: (pos.left) + "px"
+        }).addClass(arrowClass).show();
+        
+        $('#loader').append($box);
+        $('.alert').delay(8000).fadeOut(function(){
+	    //$box.remove();
+            callback();
+            console.log($box.height());
+	});
+        
+    };
     this.loadArticle = function(title, callback){
         var url = 'http://wiki.transparency-everywhere.com/en/api.php?action=parse&page='+encodeURIComponent(title)+'&format=json';
         console.log(url);
@@ -1837,38 +1947,6 @@ var tabs = function(parentIdentifier){
 			
 		};
 };
-
-	
-function getPublicKey(type, itemId){
-			var key = '';
-			$.ajax({
-			  url:"api.php?action=getPublicKey",
-			  async: false,  
-			  type: "POST",
-			  data: { type : type, itemId : itemId },
-			  success:function(data) {
-			     key = data; 
-			  }
-			});
-	    	return key;
-	}
-	
-function storeMessageKey(messageId, key){
-        messageKeys[messageId] = key;
-    }
-
-function getStoredKey(messageId){
-        return messageKeys[messageId];
-    }
-    
-function isStored(messageId){
-        if(messageKeys[messageId] !== undefined){
-            return true;
-        }else{
-            return false;
-        }
-    }
-    
     
               
 //general functions
@@ -1954,20 +2032,6 @@ function getElementsByClassName(node,classname) {
 		  }
 		}
 
-
-//loads URL into an iFrame
-function loadIframe(iframeName, url) {
-                    $('#' + iframeName).html('');
-                    var $iframe = $('#' + iframeName);
-                    if ( $iframe.length ) {
-                        $iframe.attr('src',url);   
-                        return false;
-                    }
-                    return true;
-                }
-//api connection stuff
-
-
 function getUserSalt(id){
 		//returns user salt (aes encrypted with pw hash)
 		
@@ -1985,10 +2049,6 @@ function getUserSalt(id){
 		   
 		   return result;
 	}
-        
-//reload
-
-
 //feed
 function feedLoadMore(destination ,type, user, limit){
 	    $.get("doit.php?action=feedLoadMore&user="+user+"&limit="+limit+"&type="+type,function(data){
@@ -1998,7 +2058,6 @@ function feedLoadMore(destination ,type, user, limit){
        
 
 //filesystem
-
 function smallSymbols() {
     $('#showElement').removeClass('largeSymbols');
     $('#showElement').addClass('smallSymbols');
@@ -2038,15 +2097,6 @@ function initUploadify(id, uploader, element, timestamp, token){
                                 
 	}
 	
-//reader
-function toggleProfileTabs(id){
-        $(".profileSlider").hide();
-        $("#" + id + "").slideDown();
-    }                
-function toggleGroupTabs(id){
-        $(".groupSlider").hide();
-        $("#" + id + "").slideDown();
-    }
 
 
 function openFolder(folderId){
@@ -2151,7 +2201,7 @@ function zoomOut(element){
        $("#viewedPicture_"+element).css("width", newWidth);
     }
 
-	//UFF
+//UFF
 //what you see is what you get            
 function initWysiwyg(id, readOnly){
     if(readOnly == 'false'){
@@ -2312,39 +2362,8 @@ function deleteFromPersonals(id){
                   $("#loader").load("doit.php?action=deleteFromPersonals&id=" + id + "");
               }
 
-//outdated
-function showPlaylist(id){
-    playlists.showInfo(id);
-}
-  
-function startPlayer(type, typeid){
-              $("#dockplayer").load("player/dockplayer.php?reload=1&" + type +"=" + typeid + "");
-              }
-
 function closeDockMenu(){
                 $("#dockMenu").hide("fast");
-              }
-  
-function clock() {
-    
-    var dayNames=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
-    var monthNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-                var now = new Date();
-
-                    var hours = now.getHours();
-                    var minutes = now.getMinutes();
-                    var pad = "00";
-                    var day =  now.getDay();
-                    var month =  now.getMonth();
-
-                    var minutesRoundedOne = "" + minutes;
-                    var minutesRoundedTwo = pad.substring(0, pad.length - minutesRoundedOne.length)+''+minutesRoundedOne;
-                    var hoursRoundedOne = "" + hours;
-                    var hoursRoundedTwo = pad.substring(0, pad.length - hoursRoundedOne.length) + hoursRoundedOne;
-
-                var outStr = dayNames[day]+', '+monthNames[month]+'. '+now.getDate()+'.<span style="margin-left:8px;">'+hoursRoundedTwo+':'+minutesRoundedTwo+'</span>';
-                $('#clockDiv').html(outStr);
-                setTimeout('clock()',36000);
               }
 
 function getUserPicture(request){
@@ -2488,7 +2507,6 @@ function htmlspecialchars(string, quote_style, charset, double_encode) {
   return string;
 }
 
-
 //taken from: http://stackoverflow.com/questions/1181575/javascript-determine-whether-an-array-contains-a-value - eyelidlessness
 var indexOf = function(needle) {
     if(typeof Array.prototype.indexOf === 'function') {
@@ -2510,7 +2528,6 @@ var indexOf = function(needle) {
 
     return indexOf.call(this, needle);
 };
-
 
 function nl2br(str, is_xhtml) {
   //  discuss at: http://phpjs.org/functions/nl2br/
@@ -2549,39 +2566,75 @@ var handler = new function(){
       });
   };
   this.getTitle = function(handler_title, url){
-      
-      
-      return api.query('api/handlers/', {
-          'handler_title':handler_title,
-          'action':'getTitle',
-          'parameters': {
-              'url':url
-          }
-          
-      });
-      
+        //if type or itemId is array, handle as request for multiple items
+        if(typeof handler_title === 'object'||typeof url === 'object'){
+            var requests = [];
+            $.each(url,function(index, value){
+                //you can also enter a single type instead of multiple values
+                requests.push({
+                                'handler_title':handler_title,
+                                'action':'getTitle',
+                                'parameters': {
+                                    'url':value
+                                }});
+            });
+            return api.query('api/handlers/', { request: requests});
+        }else{
+            
+            return api.query('api/handlers/', { request: [{
+                                'handler_title':handler_title,
+                                'action':'getTitle',
+                                'parameters': {
+                                    'url':url
+                                }}]});
+        };
   };
   this.getDescription = function(handler_title, url){
-      
-      return api.query('api/handlers/', {
-          'handler_title':handler_title,
-          'action':'getDescription',
-          'parameters': {
-              'url':url
-          }
-          
-      });
+        if(typeof handler_title === 'object'||typeof url === 'object'){
+            var requests = [];
+            $.each(url,function(index, value){
+                //you can also enter a single type instead of multiple values
+                requests.push({
+                                'handler_title':handler_title,
+                                'action':'getDescription',
+                                'parameters': {
+                                    'url':value
+                                }});
+            });
+            return api.query('api/handlers/', { request: requests});
+        }else{
+            
+            return api.query('api/handlers/', { request: [{
+                                                            'handler_title':handler_title,
+                                                            'action':'getDescription',
+                                                            'parameters': {
+                                                                'url':url
+                                                            }}]});
+        };
   };
   this.getThumbnail = function(handler_title, url){
       
-      return api.query('api/handlers/', {
-          'handler_title':handler_title,
-          'action':'getThumbnail',
-          'parameters': {
-              'url':url
-          }
-          
-      });
+        if(typeof handler_title === 'object'||typeof url === 'object'){
+            var requests = [];
+            $.each(url,function(index, value){
+                //you can also enter a single type instead of multiple values
+                requests.push({
+                                'handler_title':handler_title,
+                                'action':'getThumbnail',
+                                'parameters': {
+                                    'url':value
+                                }});
+            });
+            return api.query('api/handlers/', { request: requests});
+        }else{
+            
+            return api.query('api/handlers/', { request: [{
+                                                            'handler_title':handler_title,
+                                                            'action':'getThumbnail',
+                                                            'parameters': {
+                                                                'url':url
+                                                            }}]});
+        };
   };
   this.getLinkHandlerName = function(link){
       var ret = null;
@@ -2789,7 +2842,6 @@ var handlers = {
     'links': {
                     handler: function(id){
                         var linkData = links.getData(id);
-                        console.log(linkData['type']+'asdasd');
                         reader.openLink(handler.getLinkHandlerName(linkData['link']), linkData.link, linkData.title);
                     }
     }
@@ -2802,7 +2854,6 @@ var userHistory = new function(){
             title = '';
         this.storage.unshift({type:type, item_id:item_id, title:title});
         //reload history in display
-        console.log(User.getHistoryArray());
         $("#reader .hometab .home.sectionA div.itemsA").html(reader.buildHistory(User.getHistoryArray()));
     };
     this.get = function(){
