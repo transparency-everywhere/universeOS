@@ -246,7 +246,7 @@ class gui {
         }
 
         include("views/header/header.html");
-        echo '<body onclick="clearMenu()" onload="clock()'.$userData['startLink'].'">';
+        echo '<body onclick="clearMenu()" onload="'.$userData['startLink'].'">';
 
                 //define bg-image
                 if(!empty($userdata['backgroundImg'])){ 

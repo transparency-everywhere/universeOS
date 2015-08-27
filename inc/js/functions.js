@@ -171,31 +171,7 @@ var init = new function(){
 				$(this).parent('.dashBox').slideUp();
 			});	
 	};
-	
-//	this.toolTipper = function(){
-//  
-//  
-//
-//          $(document).mousemove(function(event){
-//              window.mouseX = event.pageX;
-//              window.mouseY = event.pageY;
-//              $('.mousePop').hide();
-//          });
-//          
-//          
-//          
-//          //initialize mousePop(tooltip)
-//          $('.tooltipper').mouseenter(function(){
-//              
-//              var type = $(this).attr("data-popType");
-//              var id = $(this).attr("data-typeId");
-//              var text = $(this).attr("data-text");
-//              mousePop(type, id, text);
-//          }).mouseleave(function(){
-//              $('.mousePop').hide();
-//          });
-//		
-//	};
+
 	this.search = function(){
 		//init search
 			$("#searchField").keyup(function()
@@ -236,6 +212,27 @@ var init = new function(){
                     $(this).parent().toggleClass('active');
                     $(this).parent().children('li').not('.trigger').toggle();
                 });
+        };
+        
+        this.clock = function(){
+            var dayNames=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
+            var monthNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+                var now = new Date();
+
+                    var hours = now.getHours();
+                    var minutes = now.getMinutes();
+                    var pad = "00";
+                    var day =  now.getDay();
+                    var month =  now.getMonth();
+
+                    var minutesRoundedOne = "" + minutes;
+                    var minutesRoundedTwo = pad.substring(0, pad.length - minutesRoundedOne.length)+''+minutesRoundedOne;
+                    var hoursRoundedOne = "" + hours;
+                    var hoursRoundedTwo = pad.substring(0, pad.length - hoursRoundedOne.length) + hoursRoundedOne;
+
+                var outStr = dayNames[day]+', '+monthNames[month]+'. '+now.getDate()+'.<span style="margin-left:8px;">'+hoursRoundedTwo+':'+minutesRoundedTwo+'</span>';
+                $('#clockDiv').html(outStr);
+                setTimeout('init.clock()',36000);
         };
 	
 	//this function is called to initialzie GUI
@@ -499,7 +496,7 @@ var universe = new function(){
 
 
         //loads clock into the dock, yeah.
-        clock();
+        init.clock();
         
 //        
 //        var scripts = [];
