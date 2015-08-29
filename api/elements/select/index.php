@@ -19,6 +19,16 @@
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
 
-$element = new element($_POST['element_id']);
-echo json_encode($element->getData());
+
+
+
+
+$requestFunction = function($request){
+    $element = new element($request['element_id']);
+    return ($element->getData($request['element_id']));
+};
+
+$api = new api();
+$api->handleRequest($_POST['request'], $requestFunction);
+    
 ?>

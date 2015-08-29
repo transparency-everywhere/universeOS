@@ -2597,6 +2597,8 @@ var handler = new function(){
       });
   };
   this.getTitle = function(handler_title, url){
+        if(handler_title === 'folders'||handler_title === 'collections'||handler_title === 'files')
+            return handlers[handler_title].getTitle(url);
         //if type or itemId is array, handle as request for multiple items
         if(typeof handler_title === 'object'||typeof url === 'object'){
             var requests = [];
@@ -2677,6 +2679,18 @@ var handler = new function(){
   };
 };
 
+function singleOrMulti(item, cb){
+    if(typeof item === 'object'){
+        var results = [];
+        $.each(item,function(index, value){
+            results.push(cb(value));
+        });
+        return results;
+    }else{
+        return cb(item);
+    }
+}
+
 var handlers = {
     'youtube': {
                     application : 'reader',
@@ -2746,23 +2760,40 @@ var handlers = {
                     },
                     
                     getTitle : function(link){
-                        return handler.getTitle('youtube', link);
+                        if(typeof link === 'object'){
+                            //return '';
+                            var sources = handler.getTitle('youtube', link);
+                            var results = [];
+                            $.each(sources, function(index, value){
+                                results.push(value);
+                            });
+                            return results;
+                        }else
+                            return handler.getTitle('youtube', link);
                     },
                     getDescription : function(link){
-                        return handler.getDescription('youtube', link).replace(/^"(.+(?="$))"$/, '$1');
+                        if(typeof link === 'object'){
+                            //return '';
+                            var sources = handler.getDescription('youtube', link);
+                            var results = [];
+                            $.each(sources, function(index, value){
+                                results.push(value);
+                            });
+                            console.log(results);
+                            return results;
+                        }else
+                            return toString(handler.getDescription('youtube', link)).replace(/^"(.+(?="$))"$/, '$1');
                     },
                     getThumbnail : function(link){
-                        console.log(typeof link);
-                        try{
-                            link=JSON.parse(link);
-                        }catch(e){
-                            console.log(e); //error in the above string(in this case,yes)!
-                        }
-                        console.log(typeof link);
-                        if(typeof link === 'object')
-                            return 'null';
-                        else
-                            return '<img src=\''+handler.getThumbnail('youtube', link).replace(/^"(.+(?="$))"$/, '$1')+'\'/>';
+                        if(typeof link === 'object'){
+                            var sources = handler.getThumbnail('youtube', link);
+                            var results = [];
+                            $.each(sources, function(index, value){
+                                results.push('<img src=\''+value.replace(/^"(.+(?="$))"$/, '$1')+'\'/>');
+                            });
+                            return results;
+                        }else
+                            return '<img src=\''+toString(handler.getThumbnail('youtube', link)).replace(/^"(.+(?="$))"$/, '$1')+'\'/>';
                     },
                     query: function(query, offset, max_results){
                         return handler.query('youtube', query, offset, max_results);
@@ -2782,7 +2813,10 @@ var handlers = {
                             $target.html('<iframe style="border:none;position: absolute; top: 0; left: 0; height: 100%;width: 100%;right: 0;" src="https://'+langCode[4]+'.wikipedia.org/w/index.php?title='+title+'&printable=yes"></iframe>');
                     },
                     getTitle : function(link){
-                        return link.replace(/((http|https):\/\/)?((www|(.*?))\.)(wikipedia\.org)(\/)?([a-zA-Z0-9\-\.]+)\/?/, '');
+                        return singleOrMulti(link, function(value){
+                            return toString(value).replace(/((http|https):\/\/)?((www|(.*?))\.)(wikipedia\.org)(\/)?([a-zA-Z0-9\-\.]+)\/?/, '');
+                        });
+                        
                     },
                     getDescription : function(link){
                         return handler.getDescription('wikipedia', link);
@@ -2812,6 +2846,7 @@ var handlers = {
                         return handler.query('folders', query, offset, max_results);
                     },
                     getTitle: function(id){
+                        console.log(id);
                         return folders.folderIdToFolderTitle(id);
                     },
                     getDescription: function(id){
@@ -2829,14 +2864,21 @@ var handlers = {
                     query: function(query, offset, max_results){
                         return handler.query('elements', query, offset, max_results);
                     },
-                    getTitle: function(id){
-                        return elements.getTitle(id);
+                    getTitle: function(selector){
+                        
+                            return elements.getTitle(selector);
+                        
                     },
                     getDescription: function(id){
-                        return 'wubba dubba du. wubbta asdasd';
+                        
+                        return singleOrMulti(id, function(value){
+                            return 'wubba dubba du. wubbta asdasd';
+                        });
                     },
                     getThumbnail: function(id){
-                        return '<span class="icon icon-filesystem"></span>';
+                        return singleOrMulti(id, function(value){
+                            return '<span class="icon icon-filesystem"></span>';
+                        });
                     },
                     handler: function(id){
                         elements.open(id);
@@ -2866,13 +2908,17 @@ var handlers = {
                         return handler.query('files', query, offset, max_results);
                     },
                     getTitle: function(id){
-                        return folders.folderIdToFolderTitle(id);
+                        return filesystem.getFileTitle(id);
                     },
                     getDescription: function(id){
-                        return 'wubba dubba du. wubbta asdasd';
+                        return singleOrMulti(id, function(value){
+                            return 'wubba dubba du. wubbta asdasd';
+                        });
                     },
                     getThumbnail: function(id){
-                        return '<span class="icon icon-folder"></span>';
+                        return singleOrMulti(id, function(value){
+                            return '<span class="icon icon-folder"></span>';
+                        });
                     },
                     handler: function(id){
                         reader.openFile(id);

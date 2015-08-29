@@ -225,7 +225,7 @@ var telescope = new function(){
         html += telescope.parseResult('wikipedia', results.wikipedia);
         return html;
     };
-    
+    //prevents single request for each result
     this.pushSettingsButtonToResult = function(results){
         var settingsButtonTypes = [];
         var settingsButtonIds = [];
@@ -246,8 +246,10 @@ var telescope = new function(){
         });
         
         //load buttons
+        if(settingsButtonIds.length === 0)
+            return results;
         var buttons = item.showItemSettings(settingsButtonTypes, settingsButtonIds);
-        
+        console.log(buttons.length);
         var i = 0;
         var newResults = [];
         //loop through categories
@@ -255,22 +257,58 @@ var telescope = new function(){
             //loop through results
             var newSubResults = [];
             $.each(catValue, function(index, value){
-                var newValue = [value, buttons[i]];
-                i++;
-                newSubResults.push(newValue);
+                if(typeof buttons[i] !== 'undefined'){
+                    var newValue = [value, buttons[i]];
+                    i++;
+                    newSubResults.push(newValue);
+                }
             });
             newResults[catIndex] = newSubResults;
         });
-        console.log(newResults);
         return newResults;
         
         
     };
-    //builds result thumb
+    //builds result thumb div
     this.buildThumb = function(type, selector){
         var button = selector[1];
         var selector = selector[0];
-        if(selector !== null){
+        
+                        try{
+                            selector=JSON.parse(selector);
+                        }catch(e){
+                            console.log(e); //error in the above string(in this case,yes)!
+                        }
+        if(typeof selector === 'object'){
+            var results = [];
+            var thumbs = handlers[type].getThumbnail(selector);
+            var descriptions = handlers[type].getDescription(selector);
+            var titles = handler.getTitle(type, selector);
+            console.log(selector);
+            console.log(type);
+            console.log(titles);
+            $.each(selector, function(index, value){
+                var i = index;
+                //preload data(description etc), generate thumb and push thumb to resultArray
+                var html =  '';
+                    html = '<div>'+thumbs[i]+'<h2>'+gui.shorten(titles[i], 28)+'</h2></div>';
+                    html += '<div>'+nl2br(gui.shorten(descriptions[i], 50))+'</div>';
+                    html += '<div></div>';
+                    var itemType;
+                    switch(type){
+
+                        default:
+                            itemType = 'link';
+                            break;
+                        case 'file'||'element'||'folder'||'user':
+                            itemType = type;
+                            break;
+                    }
+                    html += '<div class="settings">'+button+'</div>';
+                results.push(html);
+            });
+            return results;
+        }else{
             var html;
                 html = '<div>'+handlers[type].getThumbnail(selector)+'<h2>'+gui.shorten(handlers[type].getTitle(selector), 28)+'</h2></div>';
                 html += '<div>'+nl2br(gui.shorten(handlers[type].getDescription(selector), 50))+'</div>';
@@ -287,17 +325,32 @@ var telescope = new function(){
                 }
                 html += '<div class="settings">'+button+'</div>';
             return html;
-        }else{
-            return '';
         }
+        return '';
     };
     
     //parses results to li
     this.parseResult = function(type, results){
+        
+        
+        
+        
         var html = '';
-        $.each(results, function(index, value){
-            console.log(value);
-            html += '<li class="type_'+type+'" data-type="'+type+'" data-selector="'+value+'">'+telescope.buildThumb(type,value)+'</li>';
+        $.each(results, function(index, subResults){
+                var resultArray = subResults[0];
+                try{
+                    resultArray=JSON.parse(subResults[0]);
+                }catch(e){
+                    console.log(e); //error in the above string(in this case,yes)!
+                }
+                var thumbs = telescope.buildThumb(type,subResults);
+                //console.log(thumbs);
+            $.each(resultArray, function(i, value){
+                //console.log('value'+value);
+                var thumb = thumbs[i];
+                html += '<li class="type_'+type+'" data-type="'+type+'" data-selector="'+value+'">'+thumb+'</li>';
+            });
+            
         });
         return html;
     };
@@ -383,7 +436,8 @@ var telescope = new function(){
         html += this.generateNav(results);
         
         html += this.generateFrame(this.pushSettingsButtonToResult(results));
-        
+        //html += this.generateFrame(results);
+
         html += '</div>';
         
         this.tabs.addTab(query, '', html);

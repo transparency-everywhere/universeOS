@@ -34,7 +34,8 @@ class contextMenu{
 		$itemId = $this->itemId;
 		$title = $this->title;
 		$info1 = $this->info1;
-				//init vars
+		//init vars
+                $options = array();
 	        $open[] = '';
 	        $fav[] = '';
 	        $privacy[] = '';
@@ -389,57 +390,60 @@ class contextMenu{
 					$playlist['title'] = 'Add to Playlist';
 					$playlist['href'] = '#';
 					$playlist['onclick'] = "popper('doit.php?action=addFileToPlaylist&link=$itemId');";
-			  	}
-			  
-		      	if(authorize($checkLinkData['privacy'], "edit", $checkLinkData['author'])){
-		      		$privacy['title'] = 'Privacy';
-					$privacy['href'] = '#';
-					$privacy['onclick'] = "privacy.showUpdatePrivacyForm('link', $itemId);";
-                                        
-					$edit['title'] = 'Edit';
-					$edit['href'] = '#';
-					$edit['onclick'] = "popper('doit.php?action=editItem&type=link&itemId=$itemId')";
-				
-					$delete['title'] = 'Delete';
-					$delete['href'] = "javascript:links.verifyRemoval('$itemId');";
-					$delete['target'] = 'submitter';
-		      	}
+                                }
+                        if(is_array($checkLinkData)){
+                        
+                            if(authorize($checkLinkData['privacy'], "edit", $checkLinkData['author'])){
+                                    $privacy['title'] = 'Privacy';
+                                            $privacy['href'] = '#';
+                                            $privacy['onclick'] = "privacy.showUpdatePrivacyForm('link', $itemId);";
+
+                                            $edit['title'] = 'Edit';
+                                            $edit['href'] = '#';
+                                            $edit['onclick'] = "popper('doit.php?action=editItem&type=link&itemId=$itemId')";
+
+                                            $delete['title'] = 'Delete';
+                                            $delete['href'] = "javascript:links.verifyRemoval('$itemId');";
+                                            $delete['target'] = 'submitter';
+                            }
+                            $privacyClass = new privacy($checkLinkData['privacy']);
+                            //check if person has rights to protect filesystem items of changes
+                            if(hasRight("protectFileSystemItems")){
+                                    if(!$privacyClass->isProtected()){
+                                            $protect['title'] = 'Protect';
+                                            $protect['href'] = '#';
+                                            $protect['onclick'] = "javascript: popper('doit.php?action=protectFileSystemItems&type=link&itemId=$itemId')";
+
+                                    }else{
+
+                                            $protect['title'] = 'Unprotect';
+                                            $protect['href'] = '#';
+                                            $protect['onclick'] = "javascript: popper('doit.php?action=removeProtectionFromFileSystemItems&type=link&itemId=$itemId')";
+
+                                    }
+                            }
+                            //check if person has rights to make files undeletable
+                            if(hasRight("undeletableFilesystemItems")){
+                                    if(!$privacyClass->isUndeletable()){
+
+                                            $undeletable['title'] = 'Make Undeletable';
+                                            $undeletable['href'] = '#';
+                                            $undeletable['onclick'] = "javascript: popper('doit.php?action=makeFileSystemItemUndeletable&type=link&itemId=$itemId');";
+
+                                    }else{
+
+                                            $undeletable['title'] = 'Make Deletable';
+                                            $undeletable['href'] = '#';
+                                            $undeletable['onclick'] = "javascript: popper('doit.php?action=makeFileSystemItemDeletable&type=link&itemId=$itemId');";
+
+                                    }
+
+                            }
+                        }
 			 
 			  
 			  
-                                $privacyClass = new privacy($checkLinkData['privacy']);
-				//check if person has rights to protect filesystem items of changes
-				if(hasRight("protectFileSystemItems")){
-					if(!$privacyClass->isProtected()){
-						$protect['title'] = 'Protect';
-						$protect['href'] = '#';
-						$protect['onclick'] = "javascript: popper('doit.php?action=protectFileSystemItems&type=link&itemId=$itemId')";
-	
-					}else{
-						
-						$protect['title'] = 'Unprotect';
-						$protect['href'] = '#';
-						$protect['onclick'] = "javascript: popper('doit.php?action=removeProtectionFromFileSystemItems&type=link&itemId=$itemId')";
-						
-					}
-				}
-				//check if person has rights to make files undeletable
-				if(hasRight("undeletableFilesystemItems")){
-					if(!$privacyClass->isUndeletable()){
-						
-						$undeletable['title'] = 'Make Undeletable';
-						$undeletable['href'] = '#';
-						$undeletable['onclick'] = "javascript: popper('doit.php?action=makeFileSystemItemUndeletable&type=link&itemId=$itemId');";
-					
-					}else{
-						
-						$undeletable['title'] = 'Make Deletable';
-						$undeletable['href'] = '#';
-						$undeletable['onclick'] = "javascript: popper('doit.php?action=makeFileSystemItemDeletable&type=link&itemId=$itemId');";
-					
-					}
-					
-				}
+                                
 			  
 			  	
 				$options[] = $open;
@@ -468,9 +472,7 @@ class contextMenu{
                             break;
 			
 		}
-		
-			  
-			  return $options;
+		return $options;
 	}
 	public function d_showRightClick(){
 		

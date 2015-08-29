@@ -418,12 +418,31 @@ var filesystem =  new function() {
     
     this.getFileData = function(file_id){
         
-        return api.query('api/files/select/', { file_id : file_id});
+        if(typeof file_id === 'object'){
+            var requests = [];
+            $.each(file_id,function(index, value){
+                //you can also enter a single type instead of multiple values
+                requests.push({file_id : value});
+            });
+                return api.query('api/files/select/', { request: requests});
+        }else
+            return api.query('api/files/select/',{request: [{file_id : file_id}]});
         
     };
     this.getFileTitle = function(file_id){
+        if(typeof file_id === 'object' && file_id.length === 0)
+            return null;
         var fileData = this.getFileData(file_id);
-        return fileData['title'];
+        console.log('fileData');
+        console.log(fileData);
+        if(typeof file_id === 'object'){
+            var results = [];
+            $.each(fileData, function(index, value){
+                results.push(value['title']);
+            });
+            return results;
+        }
+        return fileData[0]['title'];
     };
     this.downloadFile = function(fileId){
         $('#submitter').attr('src','out/download/?fileId='+fileId);

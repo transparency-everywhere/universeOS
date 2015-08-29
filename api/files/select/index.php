@@ -19,6 +19,11 @@
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
 
-$folder = new file($_POST['file_id']);
-echo json_encode($folder->getFileData());
+$requestFunction = function($request){
+    $folder = new file($request['file_id']);
+    return ($folder->getFileData());
+};
+
+$api = new api();
+$api->handleRequest($_POST['request'], $requestFunction);
 ?>

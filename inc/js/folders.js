@@ -23,7 +23,16 @@ var folders = new function(){
         return false;
     };
     this.getData = function(folder_id){
-	return api.query('api/folders/select/', {folder_id : folder_id});
+        
+        if(typeof folder_id === 'object'){
+            var requests = [];
+            $.each(folder_id,function(index, value){
+                //you can also enter a single type instead of multiple values
+                requests.push({folder_id : value});
+            });
+                return api.query('api/folders/select/', { request: requests});
+        }else
+            return api.query('api/folders/select/',{request: [{folder_id : folder_id}]});
     };
               	
     this.getPath = function(folder_id){
@@ -105,7 +114,17 @@ var folders = new function(){
     };
     
     this.folderIdToFolderTitle = function(folderId){
-        return folders.getData(folderId)['name'];
+        if(typeof folderId === 'object' && folderId.length === 0)
+            return null;
+        var folderData = this.getData(folderId);
+        if(typeof folderId === 'object'){
+            var results = [];
+            $.each(folderData, function(index, value){
+                results.push(value['name']);
+            });
+            return results;
+        }
+        return folderData[0]['name'];
     };
     this.createFolder = function(parent_folder, name, privacy, callback){
         var result="";

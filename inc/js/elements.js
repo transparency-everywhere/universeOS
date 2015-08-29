@@ -236,12 +236,30 @@ var elements = new function(){
     };
     
     this.getData = function(element_id){
-        return api.query('api/elements/select/',{element_id : element_id});
+        
+        if(typeof element_id === 'object'){
+            var requests = [];
+            $.each(element_id,function(index, value){
+                //you can also enter a single type instead of multiple values
+                requests.push({element_id : value});
+            });
+                return api.query('api/elements/select/', { request: requests});
+        }else
+            return api.query('api/elements/select/',{request: [{element_id : element_id}]});
+        
     };
     
     this.getTitle = function(element_id){
         var elementData = this.getData(element_id);
-        return elementData['title'];
+        console.log(elementData);
+        if(typeof element_id === 'object'){
+            var results = [];
+            $.each(elementData, function(index, value){
+                results.push(value['title']);
+            });
+            return results;
+        }
+        return elementData[0]['title'];
     };
     
     this.getAuthorData = function(user_id){

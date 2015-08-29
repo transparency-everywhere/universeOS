@@ -18,7 +18,6 @@
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
     
-
 $requestFunction = function($request){
     $item = new contextMenu($request['type'], $request['itemId']);
     return $item->getOptions();
