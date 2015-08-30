@@ -17,8 +17,11 @@
 
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
-    
 
+$requestFunction = function($request){
+    $item = new item();
+    return $item->showItemThumb($request['itemType'], $request['itemId']);
+};
 
-    $item = new item($_POST['type'], $_POST['itemId']);
-    echo $item->showItemThumb();
+$api = new api();
+$api->handleRequest($_POST['request'], $requestFunction);

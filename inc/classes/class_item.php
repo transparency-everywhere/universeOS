@@ -14,7 +14,7 @@
 class item {
     public $type;
     public $typeid;
-    function __construct($type, $typeid){
+    function __construct($type=NULL, $typeid=NULL){
            $this->type = $type;
            $this->typeid = $typeid;
         }
@@ -185,12 +185,13 @@ class item {
             return "$path";
         }
     //shows a box with item title, item link and settings
-    function showItemThumb(){
+    function showItemThumb($itemType=NULL,$itemId=NULL){
+        if(empty($itemType))
            $itemType = $this->type;
+        if(empty($itemId))
            $itemId = $this->typeid;
            $itemId = save($itemId);
            $db = new db();
-           
             switch($itemType){
                 case 'folder':
                     $folderClass = new folder($itemId);
@@ -303,22 +304,21 @@ class item {
                         <td style=\"width: 35px;\" valign=\"top\" $imgColumnStyle>
                             <i class=\"icon blue-$img\"></i>
                         </td>";
-
                     //add information
                     if(!empty($info[0]) || !empty($info[1])){
-                    $return .=  "<td>
-                            <table>
-                                <tr>
-                                    <td colspan=\"2\"><a href=\"#\" onclick=\"$link;return false;\" title=\"$title\"><strong>$shortTitle</strong></a></td>
-                                </tr>
-                                <tr>
-                                    <td style=\"text-align: right\">$info[0]:&nbsp;</td>
-                                    <td class=\"ellipsis\"><span class=\"ellipsis\">$info[1]</span></td>
-                                </tr>
-                            </table>
-                        </td>";}
-                    $contextMenu = new contextMenu($itemType, $itemId);
-                    $classComments = new comments();
+                        $return .=  "<td>
+                                <table>
+                                    <tr>
+                                        <td colspan=\"2\"><a href=\"#\" onclick=\"$link;return false;\" title=\"$title\"><strong>$shortTitle</strong></a></td>
+                                    </tr>
+                                    <tr>
+                                        <td style=\"text-align: right\">$info[0]:&nbsp;</td>
+                                        <td class=\"ellipsis\"><span class=\"ellipsis\">$info[1]</span></td>
+                                    </tr>
+                                </table>
+                            </td>";
+
+                    }
                     $return .=  "</tr>
                 </table>
             </div>";

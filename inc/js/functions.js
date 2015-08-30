@@ -809,7 +809,11 @@ var User = new function(){
         var radius = size/2;
          
         if(typeof userid === 'object'){
-            var userpictures = getUserPicture(userid);
+            var userpictures = getUserPictureBASE64(userid);
+            
+            console.log(userid);
+            console.log(userpictures);
+            
             var lastActivities = this.getLastActivity(userid);
             var returns = [];
             $.each(userid, function(index, value){
@@ -872,7 +876,7 @@ var User = new function(){
     this.getAllData = function(userid){
         //data will only be returned if getUser()==userid or userid is on buddylist of getUser()
         return api.query('api/user/getAllData/', { user_id:userid });
-    }
+    };
     this.getGroups = function(){
         return api.query('api/user/getGroups/', { });
     };
@@ -942,7 +946,7 @@ var User = new function(){
             output += "        <\/tr>";
             output += "    <\/table>";
             output += "    <\/div>";
-
+            return output;
     };
     this.showSignature = function(userid, timestamp, reverse){
         
@@ -1213,7 +1217,7 @@ function useridToUsername(id){
                 return profileInfo['username'];
 	}else{
 		var response = new Array();
-                if(response.length > 0){
+                if(profileInfo.length > 0){
                     $.each(profileInfo, function(index, value) {
                             response[index]=value['username'];
                     }); 

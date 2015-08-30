@@ -36,19 +36,34 @@ var Feed = function(type, $selector, initTypeId){
         
         
         //prepare preloading of comments.count, item.getScore etc.
-        var feedIds = [];
-        var feedUserIds = [];
+        var feedIds = [],feedUserIds = [],feedTimetamps = [], attachmentTypes = [], attachmentIds = [];
+        
+        
         $.each(loadedFeeds,function(index, value){
             feedIds.push(value.id);
-            
+            feedTimetamps.push(value.timestamp);
             feedUserIds.push(value.author);
+            if(value['type'] === 'showThumb'){
+                    attachmentTypes.push(value['attachedItem']);
+                    attachmentIds.push(value['attachedItemId']);
+            }
         });
         var commentCounts  = comments.count('feed', feedIds);
         var feedScoreButtons = item.showScoreButton('feed', feedIds);
+        var userSignatures = User.showSignature(feedUserIds, feedTimetamps, true);
+        var itemSettings = item.showItemSettings('feed', feedIds);
+        var attachments = item.showItemThumb(attachmentTypes, attachmentIds);
         var i = 0;
+        var j = 0;
         $.each(loadedFeeds,function(index, value){
             value['commentCount'] = commentCounts[i];
+            value['itemSettings'] = itemSettings[i];
             value['scoreButton'] = feedScoreButtons[i];
+            value['userSignature'] = userSignatures[i];
+            if(value['type'] === 'showThumb'){
+                    value['feedAttachment'] = attachments[j];
+                    j++;
+            }
             output += pointer.generateSingleFeed(value);
             i++;
         });
@@ -106,7 +121,10 @@ var feed = new function(){
         var feedContent = '<div class="feedContent">'+feed.feedText(feedData['feed'])+'</div>';
                 if(feedData['type'] === 'showThumb'){
                     debug.log('     showItemThumb');
-                    feedContent += '<div class="feedAttachment">'+item.showItemThumb(feedData['attachedItem'], feedData['attachedItemId'])+'</div>';
+                    if(typeof feedData['feedAttachment'] !== 'undefined')
+                        feedContent += '<div class="feedAttachment">'+feedData['feedAttachment']+'</div>';
+                    else
+                        feedContent += '<div class="feedAttachment">'+item.showItemThumb(feedData['attachedItem'], feedData['attachedItemId'])+'</div>';
                 }
         
         //load comments
@@ -115,8 +133,13 @@ var feed = new function(){
         
         var output = '<div class="feedEntry feedNo'+feedData['id']+'">';
         
-            output += User.showSignature(feedData['author'], feedData['timestamp'], true);
+            //add user signature
+            if(typeof feedData['userSignature'] !== 'undefined')
+                output += feedData['userSignature'];
+            else
+                output += User.showSignature(feedData['author'], feedData['timestamp'], true);
             
+            //add main feed
             output += feedContent;
             
             output += '<div class="options">';

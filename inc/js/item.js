@@ -27,7 +27,20 @@ var item = new function(){
         });
     };
     this.showItemThumb = function(type, itemId){
-        return api.query('api/item/getItemThumb/', { type : type, itemId: itemId});
+        //if type or itemId is array, handle as request for multiple items
+        if(typeof itemId === 'object'){
+            var requests = [];
+            $.each(itemId,function(index, value){
+                var eachType = type;
+                if(typeof type === 'object')
+                    eachType = type[index];
+                //you can also enter a single type instead of multiple values
+                requests.push({ itemType : eachType, itemId: value});
+            });
+            
+            return api.query('api/item/getItemThumb/', { request: requests});
+        }
+        return api.query('api/item/getItemThumb/', {request:{ itemType : type, itemId: itemId}})[0];
     };
     
     this.getScore = function(type, itemId){

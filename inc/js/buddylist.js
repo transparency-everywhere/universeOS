@@ -87,18 +87,20 @@ var buddylist = new function(){
         output += '<table width="100%" cellspacing="0">';
 
         var buddies = this.getBuddies();
+        var userpictures = User.showPicture(buddies, undefined, 40);
+        var usernames = useridToUsername(buddies);
         var checksum = '';
         $.each(buddies, function(index, value){
             checksum += value;
             var username = useridToUsername(value);
             output += "                <tr class=\"height60 greyHover\"\">";
-            output += "	                 <td style=\"padding:0 10px; width: 43px;\">"+User.showPicture(value, undefined, 40)+"<\/td>";
+            output += "	                 <td style=\"padding:0 10px; width: 43px;\">"+userpictures[index]+"<\/td>";
             output += "                  <td>";
-            output += "                     <a href=\"#\" onclick=\"im.openDialogue('"+username+"');\">"+username+"<\/a>";
-            output += "                 <br><a href=\"#\" onclick=\"im.openDialogue('"+username+"');\" class=\"realname\">"+User.getRealName(value)+"<\/a><\/td>";
+            output += "                     <a href=\"#\" onclick=\"im.openDialogue('"+usernames[index]+"');\">"+usernames[index]+"<\/a>";
+            output += "                 <br><a href=\"#\" onclick=\"im.openDialogue('"+usernames[index]+"');\" class=\"realname\">"+User.getRealName(value)+"<\/a><\/td>";
             output += "	                 <td align=\"right\" style=\"padding: 0 10px;\">";
             output += "						    <a href=\"#\" onclick=\"User.showProfile('"+value+"'); return false\" title=\"open Profile\"><span class=\"icon icon-user\"><\/span><\/a>";
-            output += "						    <a href=\"#\" onclick=\"im.openDialogue('"+username+"'); return false\" title=\"write Message\"><span class=\"icon icon-envelope\"><\/span><\/a>";
+            output += "						    <a href=\"#\" onclick=\"im.openDialogue('"+usernames[index]+"'); return false\" title=\"write Message\"><span class=\"icon icon-envelope\"><\/span><\/a>";
             output += "						    <a href=\"#\" onclick=\"settings.showUpdateBuddylistForm(); return false\" title=\"write Message\">" + filesystem.generateIcon('settings') + "<\/a>";
             output += "			<\/td>";
             output += "                <\/tr>";
