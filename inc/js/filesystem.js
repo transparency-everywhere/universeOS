@@ -88,8 +88,8 @@ var filesystem =  new function() {
         html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'audio\'));return false"><a href="#">' + filesystem.generateIcon('playlist', 'blue') + ' Audio Files</a></li>';		  			
         html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'video\'));return false"><a href="#">' + filesystem.generateIcon('play', 'blue') + ' Video Files</a></li>';	  			
         if(proofLogin()){
-            html += '              <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'fav\'));return false"><a href="#">' + filesystem.generateIcon('fav', 'blue') + ' Fav</a></li>';		  			
-        html += '                  <li onclick="filesystem.showMyFiles();return false"><a href="#">' + filesystem.generateIcon('file', 'blue') + ' My Files</a></li>';		  			
+            html += '              <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'fav\'));return false"><a href="#">' + filesystem.generateIcon('fav', 'blue') + ' Fav</a></li>';
+            html += '              <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'myfiles\'));return false"><a href="#">' + filesystem.generateIcon('file', 'blue') + ' My Files</a></li>';		
         }
         html += '                  <!-- <li><i class="icon-warning-sign"></i> deleted</li> -->';		  			
         html += '              </ul>';		  			
