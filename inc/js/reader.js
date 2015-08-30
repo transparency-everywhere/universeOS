@@ -80,19 +80,17 @@ var reader = new function(){
 
             //generate groups view        
             var group_items = groups.getGroupArray(User.userid); //get groups of the user
-            
             var popular_groups = groups.getPublicGroupArray(User.userid); //popular groups > public and with the highest membercount
+            console.log(popular_groups);
             html += this.buildTab('groups', 'group', 'My groups', group_items, 'suggestion', 'Popular groups', popular_groups);
 
             //generate favorites view
             var fav_history = fav.getFavHistory(); //get latest 5 favorites of the user
-            
             var fav_items = fav.getFavArray(User.userid); //get favorites of the user   
             html += this.buildTab('favorites', 'clock', 'My latest favorites', fav_history, 'fav', 'All my favorites', fav_items);
 
             //generate playlist view
             var playlist_items = playlists.getPlaylistArray(User.userid); //get playlists of the user
-            
             var public_playlists = playlists.getPublicPlaylistArray(); //get latest public playlists
             html += this.buildTab('playlists', 'playlist', 'My playlists', playlist_items, 'suggestion', 'The latest public playlists', public_playlists);
 
@@ -141,7 +139,7 @@ var reader = new function(){
                                 }
                                 html += '<li ' + onclick + '>';
                                     html += '<div class="' + tab + ' itemsA icon">' + filesystem.generateIcon(value['type']) + '</div>';
-                                    html += '<div class="' + tab + ' itemsA title">' + gui.shorten(value['title'], 30) + '</div>';
+                                    html += '<div class="' + tab + ' itemsA title">' + gui.shorten(value['title'], 25) + '</div>';
                                 html += '</li>';
                             });
                         };
@@ -184,7 +182,7 @@ var reader = new function(){
                         }
                         html += '<li ' + onclick + '>';
                             html += '<div class="' + tab + ' itemsB icon">' + filesystem.generateIcon(value['type']) + '</div>';
-                            html += '<div class="' + tab + ' itemsB title">' + gui.shorten(value['title'], 30) + '</div>';
+                            html += '<div class="' + tab + ' itemsB title">' + gui.shorten(value['title'], 25) + '</div>';
                         html += '</li>';
                     });
                     html += '</ul>';
@@ -195,6 +193,7 @@ var reader = new function(){
         return html;
     }
     this.openFile = function(file_id){
+        applications.show('reader');
         var fileData = filesystem.getFileData(file_id);
         var zoomInString = 'zoomIn(' + fileData['folder'] + ')';
         var zoomOutString = 'zoomOut(' + fileData['folder'] + ')';
@@ -396,13 +395,13 @@ var reader = new function(){
                 
                 break;
         }
-        applications.showApplication('reader');
         return output;
         
     };
     this.openLink = function(type, link, title){
         player.openItem(type, link);
         userHistory.push('link', id, title);
+
     };
     this.buildHistory = function(userHistoryArray){
         var itemsA = userHistoryArray;

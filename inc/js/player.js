@@ -81,7 +81,7 @@ var player = new function(){
     };
     //adds tab and loads item
     this.openItem = function(type, link){
-        userHistory.push(type, link);
+        //userHistory.push(type, link);
         var playerFrameId = gui.generateId();
         this.show();
         var tab_id = this.tabs.addTab('Player', 'html', '<div class="playerFrame" id="'+playerFrameId+'"></div>', function(){/*onclose*/});

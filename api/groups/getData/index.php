@@ -25,7 +25,7 @@ include('../../../inc/functions.php');
 
 $requestFunction = function($request){
     $groupsClass = new groups();
-    return json_encode($groupsClass->getGroupData($request['group_id']));
+    return ($groupsClass->getGroupData($request['group_id']));
 };
 
 $api = new api();

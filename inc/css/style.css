@@ -1135,12 +1135,29 @@ span.icon.blue-chevron-down {
     padding: 20px;
 }
 
+#filesystem .uploadTab small {
+    color: #ffffff;
+}
+
 #filesystem .uploadTab form > .uploadify {
     margin-bottom: 40px;
 }
 
 #filesystem .uploadTab form > .uploadify .uploadify-queue {
+    display: block;
+}
+
+#filesystem .uploadTab form > .uploadify .uploadify-queue > div {
     display: none;
+}
+
+#filesystem .uploadTab form > .uploadify .uploadify-queue > div:nth-of-type(1) {
+    display: block;
+    margin-top: 25px;
+}
+
+#filesystem .uploadTab form > .uploadify .uploadify-queue > div:nth-of-type(2) {
+    display: block;
 }
 
 #filesystem .uploadTab form > .uploadify #queue {
@@ -1150,6 +1167,7 @@ span.icon.blue-chevron-down {
 #filesystem .uploadTab form > .uploadify .tempFilelist {
     background-color: #ffffff;
     color:  #313131;
+    margin-top: 25px;
 }
 
 #filesystem .uploadTab form > .uploadify .tempFilelist li {
@@ -2371,6 +2389,7 @@ ul .elementSettings {
     float: left;
     clear: none;
     width: 130px;
+    height: 115px;
     margin: 2px;
 }
 
