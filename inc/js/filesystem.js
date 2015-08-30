@@ -159,7 +159,10 @@ var filesystem =  new function() {
 
     this.showFileBrowser = function(folder){
         var subpath = './';
-        var rightClick = true;
+        var rightClick = false; //currently not included
+        var folderIds = []; //to minimize requests
+        var folderTypes = []; //to minimize requests
+
         var html = '<table cellspacing="0" class="filetable">';
        
         if(empty(folder)){
@@ -193,6 +196,14 @@ var filesystem =  new function() {
             }
 
             var itemsInFolder = folders.getItems(folder);
+            $.each(itemsInFolder,function(index, value){
+                folderIds.push(value.data.id);
+                folderTypes.push(value.type);
+            });
+            var scoreButtons = item.showScoreButton(folderTypes, folderIds);
+            var settingButtons = item.showItemSettings(folderTypes, folderIds);
+            console.log(settingButtons);
+
             if(itemsInFolder !== null){
                 $.each(itemsInFolder,function(key, value){
                     //generate row with folders and elements
@@ -209,11 +220,11 @@ var filesystem =  new function() {
                         html += '                    <td onclick="openFolder(' + value['data']['id'] + '); return false;">' + filesystem.generateIcon('folder', 'grey') + '</td>';
                         html += '                    <td onclick="openFolder(' + value['data']['id'] + '); return false;">' + gui.shorten(name, 40) + '</td>';
                         html += '                    <td>';
-                        html += item.showScoreButton('folder', value['data']['id']);
+                        html += scoreButtons[key];
                         html += '                    </td>';
                         html += '                    <td>';
                         if(proofLogin()){
-                            html += item.showItemSettings('folder', value['data']['id']);
+                            html += settingButtons[key];
                         }
                         html += '                    </td>';
                         html += '                </tr>';
@@ -222,19 +233,21 @@ var filesystem =  new function() {
 
                     if(value['type'] === "element"){
                         var title = value['data']['title'];
-                        html += "                        <tr class=\"greyHover\" oncontextmenu=\"showMenu('element" + value['data']['id'] + "'); return false;\">";
-                        html += "                           <td onclick=\"elements.open('" + value['data']['id'] + "'); return false;\">" + filesystem.generateIcon('element', 'grey') + "</td>";
-                        html += "                           <td onclick=\"elements.open('" + value['data']['id'] + "'); return false;\">" + gui.shorten(title, 40) + "</td>";
-                        html += "                           <td>" + item.showScoreButton('element', value['data']['id']) + "</td>";
-                        html += "                           <td>";
+                        html += "               <tr class=\"greyHover\" oncontextmenu=\"showMenu('element" + value['data']['id'] + "'); return false;\">";
                         if(rightClick){
-                            html += item.showItemSettings('element', value['data']['id']);
+                            html += ''; //option to add rightClick function, currently deactivated - item.showRightClickMenu('element', value['data']['id'])
                         }
-                        html += "                           </td>";
-                        html += "                        </tr>";
-                        if(rightClick){
-                            html += ''; //option to add rightClick function, currently deactivated
+                        html += "                    <td onclick=\"elements.open('" + value['data']['id'] + "'); return false;\">" + filesystem.generateIcon('element', 'grey') + "</td>";
+                        html += "                    <td onclick=\"elements.open('" + value['data']['id'] + "'); return false;\">" + gui.shorten(title, 40) + "</td>";
+                        html += '                    <td>';
+                        html += scoreButtons[key];
+                        html += '                    </td>';
+                        html += "                    <td>";
+                        if(proofLogin()){
+                            html += settingButtons[key];
                         }
+                        html += "                    </td>";
+                        html += "                </tr>";
                     }
                 });
             }

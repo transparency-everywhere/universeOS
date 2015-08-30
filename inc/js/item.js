@@ -106,12 +106,15 @@ var item = new function(){
         if(typeof itemId === 'object'){
             var result = [];
             $.each(score, function(index, value){
-                var output = '<span class="scoreButton '+type+'_'+itemId+'">';
-                    if(proofLogin())
-                        output += '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('dislike', 'gray') + '</a>';
-                    output += '<a class="btn btn-xs counter" href="#">'+score[index]+'</a>';
-                    if(proofLogin())
-                        output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('like', 'gray') + '</a>';
+                if(typeof type === 'object')
+                    var output = '<span class="scoreButton '+type[index]+'_'+itemId[index]+'">';
+                else
+                    var output = '<span class="scoreButton '+type+'_'+itemId+'">';
+                if(proofLogin())
+                    output += '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('dislike', 'gray') + '</a>';
+                output += '<a class="btn btn-xs counter" href="#">'+score[index]+'</a>';
+                if(proofLogin())
+                    output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('like', 'gray') + '</a>';
                 output += '</span>';
                 result.push(output);
             });
