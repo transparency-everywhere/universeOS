@@ -163,8 +163,9 @@ var groups = new function(){
         };
         this.showProfile = function(group_id){
             var output = this.generateProfile(group_id);
+            var title = groups.getTitle(group_id);
             applications.show('reader');
-            reader.tabs.addTab('Profile', 'html', output);
+            reader.tabs.addTab(gui.shorten(title, 8), 'html', output);
             
             //load feed
             var profileFeed = new Feed('group', '.groupProfile_'+group_id+' .activity_tab', group_id);
@@ -177,7 +178,7 @@ var groups = new function(){
                 $(this).parent().parent().parent().find('.content .profile_tab').hide();
                 $(this).parent().parent().parent().find('.content .'+type+'_tab').show();
             });
-            userHistory.push('group', group_id, groups.getTitle(group_id));
+            userHistory.push('group', group_id, title);
 
         };
         
@@ -240,7 +241,7 @@ var groups = new function(){
             } else {
                 var data = groups.getData(groupIds);
                 $.each(groupIds, function(key, value){
-                    groupArray.push({type:'group', itemId: data['id'], title:data['title'], timestamp: ''});
+                    groupArray.push({type:'group', itemId: data[key]['id'], title:data[key]['title'], timestamp: ''});
                 });
                 return groupArray;
             }

@@ -1134,7 +1134,7 @@ var User = new function(){
     */
     this.showProfile = function(user_id){
         applications.show('reader');
-        var profileTab =reader.tabs.addTab('Profile', 'html', '');
+        var profileTab =reader.tabs.addTab(gui.shorten(useridToUsername(user_id), 8), 'html', '');
         var output = this.generateProfile(user_id);
         reader.tabs.updateTabContent(profileTab, output);
         
