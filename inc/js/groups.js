@@ -238,8 +238,8 @@ var groups = new function(){
             if(groupIds === undefined){
                 return groupArray;
             } else {
+                var data = groups.getData(groupIds);
                 $.each(groupIds, function(key, value){
-                    var data = groups.getData(value);
                     groupArray.push({type:'group', itemId: data['id'], title:data['title'], timestamp: ''});
                 });
                 return groupArray;
