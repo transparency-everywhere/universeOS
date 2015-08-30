@@ -219,14 +219,14 @@ class folder {
                 $folders = $db->shiftResult($db->query("SELECT * FROM folders ORDER BY score DESC LIMIT 0,10"), 'id');
                 $elements = $db->shiftResult($db->query("SELECT * FROM elements ORDER BY score DESC LIMIT 0,10"), 'id');
             }else if($specialType === "myfiles"){
-                $folders = $db->shiftResult($db->query("SELECT * FROM folders WHERE creator = " . getUser()), 'id');
-                $elements = $db->shiftResult($db->query("SELECT * FROM elements WHERE author  = " . getUser()), 'id');
+                $folders = $db->shiftResult($db->query("SELECT * FROM folders WHERE creator = " . getUser() . " ORDER BY name ASC"), 'id');
+                $elements = $db->shiftResult($db->query("SELECT * FROM elements WHERE author  = " . getUser() . " ORDER BY title ASC"), 'id');
             }else if($specialType === "audio"){
-                $elements = $db->shiftResult($db->query("SELECT * FROM elements WHERE type LIKE '%audio%' LIMIT 0,10"), 'id');
+                $elements = $db->shiftResult($db->query("SELECT * FROM elements WHERE type LIKE '%audio%' ORDER BY score DESC LIMIT 0,10"), 'id');
             }else if($specialType === "video"){
-                $elements = $db->shiftResult($db->query("SELECT * FROM elements WHERE type LIKE '%video%' LIMIT 0,10"), 'id');
+                $elements = $db->shiftResult($db->query("SELECT * FROM elements WHERE type LIKE '%video%'  ORDER BY score DESC LIMIT 0,10"), 'id');
             }else if($specialType === "document"){
-                $elements = $db->shiftResult($db->query("SELECT * FROM elements WHERE type LIKE '%document%' LIMIT 0,10"), 'id');
+                $elements = $db->shiftResult($db->query("SELECT * FROM elements WHERE type LIKE '%document%'  ORDER BY score DESC LIMIT 0,10"), 'id');
             }
             if(isset($folders)){
                 foreach ($folders as $folderData) {
