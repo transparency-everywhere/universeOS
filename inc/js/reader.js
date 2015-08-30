@@ -68,48 +68,36 @@ var reader = new function(){
         console.log('initTabs');
         
         var html = '';
-            
-            
-        var history_items = User.getHistoryArray(); //get array with 5 dummy entries (functions.js)
-        
-        var popular_items = filesystem.getPopularItemsArray(); //get popular public items
-        
-        var feature = false; //maybe later
-        
-        
-        var group_items = groups.getGroupArray(User.userid); //get groups of the user
-        
-        var popular_groups = groups.getPublicGroupArray(User.userid); //popular groups > public and with the highest membercount
-        
-        
-        var fav_history = fav.getFavHistory(); //get latest 5 favorites of the user
-        
-        var fav_items = fav.getFavArray(User.userid); //get favorites of the user   
-        
-        
-        var playlist_items = playlists.getPlaylistArray(User.userid); //get playlists of the user
-        
-        var public_playlists = playlists.getPublicPlaylistArray(); //get latest public playlists
-        
-        
-        var myFiles_items = filesystem.getMyFiles(User.userid); //get folder, elements and files of the user
-
-
         html += '<div class="tabs">';
         
             //generate home view
+            var history_items = User.getHistoryArray(); //get user history
+            
+            var popular_items = filesystem.getPopularItemsArray(); //get popular public items
+            
+            var feature = false; //maybe later
             html += this.buildTab('home', 'clock', 'My current history', history_items, 'suggestion', 'Popular in the universeOS', popular_items, feature);
 
-            //generate groups view
+            //generate groups view        
+            var group_items = groups.getGroupArray(User.userid); //get groups of the user
+            
+            var popular_groups = groups.getPublicGroupArray(User.userid); //popular groups > public and with the highest membercount
             html += this.buildTab('groups', 'group', 'My groups', group_items, 'suggestion', 'Popular groups', popular_groups);
 
             //generate favorites view
+            var fav_history = fav.getFavHistory(); //get latest 5 favorites of the user
+            
+            var fav_items = fav.getFavArray(User.userid); //get favorites of the user   
             html += this.buildTab('favorites', 'clock', 'My latest favorites', fav_history, 'fav', 'All my favorites', fav_items);
 
             //generate playlist view
+            var playlist_items = playlists.getPlaylistArray(User.userid); //get playlists of the user
+            
+            var public_playlists = playlists.getPublicPlaylistArray(); //get latest public playlists
             html += this.buildTab('playlists', 'playlist', 'My playlists', playlist_items, 'suggestion', 'The latest public playlists', public_playlists);
 
             //generate my files view
+            var myFiles_items = filesystem.getMyFiles(User.userid); //get folder, elements and files of the user
             html += this.buildTab('myFiles', 'file', 'My files', myFiles_items);
 
         html += '</div>';

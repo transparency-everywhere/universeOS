@@ -202,7 +202,6 @@ var filesystem =  new function() {
             });
             var scoreButtons = item.showScoreButton(folderTypes, folderIds);
             var settingButtons = item.showItemSettings(folderTypes, folderIds);
-            console.log(settingButtons);
 
             if(itemsInFolder !== null){
                 $.each(itemsInFolder,function(key, value){
