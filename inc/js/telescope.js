@@ -131,7 +131,6 @@ var telescope = new function(){
         
         //init toggle view buttons
         $('#telescope .frameRight .headerbuttons .icon').click(function(){
-            console.log('wubba');
             var classes = $(this).attr('class');
             
             
@@ -249,7 +248,7 @@ var telescope = new function(){
         if(settingsButtonIds.length === 0)
             return results;
         var buttons = item.showItemSettings(settingsButtonTypes, settingsButtonIds);
-        console.log(buttons.length);
+        
         var i = 0;
         var newResults = [];
         //loop through categories
@@ -284,9 +283,6 @@ var telescope = new function(){
             var thumbs = handlers[type].getThumbnail(selector);
             var descriptions = handlers[type].getDescription(selector);
             var titles = handler.getTitle(type, selector);
-            console.log(selector);
-            console.log(type);
-            console.log(titles);
             $.each(selector, function(index, value){
                 var i = index;
                 //preload data(description etc), generate thumb and push thumb to resultArray
@@ -337,6 +333,7 @@ var telescope = new function(){
         
         var html = '';
         $.each(results, function(index, subResults){
+            console.log(type);
                 var resultArray = subResults[0];
                 try{
                     resultArray=JSON.parse(subResults[0]);
@@ -346,6 +343,7 @@ var telescope = new function(){
                 var thumbs = telescope.buildThumb(type,subResults);
                 //console.log(thumbs);
             $.each(resultArray, function(i, value){
+                //console.log(i);
                 //console.log('value'+value);
                 var thumb = thumbs[i];
                 html += '<li class="type_'+type+'" data-type="'+type+'" data-selector="'+value+'">'+thumb+'</li>';
@@ -425,23 +423,31 @@ var telescope = new function(){
     };
     
     this.query = function(query){
+        search.hideSearchMenu();
         this.applicationVar.show();
-        var results = this.loadResults(query);
-        var html;
+        var tabId = this.tabs.addTab(query, '', '<div class="loadingImage"><img src="./gfx/ripple.gif"/></div>');
         
-        html = this.generateHeader(query);
-        
-        html += '<div class="searchFrame">';
-        
-        html += this.generateNav(results);
-        
-        html += this.generateFrame(this.pushSettingsButtonToResult(results));
-        //html += this.generateFrame(results);
+	delay(function(){
+		
+                var results = telescope.loadResults(query);
+                var html;
 
-        html += '</div>';
+                html = telescope.generateHeader(query);
+
+                html += '<div class="searchFrame">';
+
+                html += telescope.generateNav(results);
+
+                html += telescope.generateFrame(telescope.pushSettingsButtonToResult(results));
+                //html += this.generateFrame(results);
+
+                html += '</div>';
+
+                telescope.tabs.updateTabContent(tabId, html);
+                telescope.initHandlers();
+                
+	}, 500 );
         
-        this.tabs.addTab(query, '', html);
-        this.initHandlers();
     };
     
     this.show = function(){
