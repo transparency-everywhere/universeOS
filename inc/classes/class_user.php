@@ -145,6 +145,32 @@ class user {
         echo '</script>';
         
     }
+    public function getUserPictureBASE64($userid){
+        
+	$userData = $this->getData($userid);
+	
+	//check if user is standard user
+	if(empty($userData['userPicture'])){
+		$src = universeBasePath.'/gfx/standardusersm.png';
+	}else{
+		$src = universeBasePath.'/upload/userFiles/'.$userid.'/userPictures/thumb/300/'.$userData['userPicture'];
+	}
+	$mime = mime_content_type($src);
+        $file = fopen($src, 'r');
+        $output = base64_encode(fread($file, filesize($src)));
+	return 'data:'.$mime.';base64,'.$output;
+    }
+    
+    public function getLastActivity($userid){
+        $db = new db();
+        $data = $db->select('user', array('userid', $userid), array('lastactivity'));
+        
+	$diff = time() - $data['lastactivity'];
+	if($diff < 90){
+		return 1;
+	}
+        return 0;
+    }
     
     public function getFav($userid=NULL){
         $return;

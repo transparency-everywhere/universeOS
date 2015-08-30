@@ -245,7 +245,7 @@ var elements = new function(){
             });
                 return api.query('api/elements/select/', { request: requests});
         }else
-            return api.query('api/elements/select/',{request: [{element_id : element_id}]});
+            return api.query('api/elements/select/',{request: [{element_id : element_id}]})[0];
         
     };
     
@@ -259,7 +259,7 @@ var elements = new function(){
             });
             return results;
         }
-        return elementData[0]['title'];
+        return elementData['title'];
     };
     
     this.getAuthorData = function(user_id){

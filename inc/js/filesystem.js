@@ -426,15 +426,13 @@ var filesystem =  new function() {
             });
                 return api.query('api/files/select/', { request: requests});
         }else
-            return api.query('api/files/select/',{request: [{file_id : file_id}]});
+            return api.query('api/files/select/',{request: [{file_id : file_id}]})[0];
         
     };
     this.getFileTitle = function(file_id){
         if(typeof file_id === 'object' && file_id.length === 0)
             return null;
         var fileData = this.getFileData(file_id);
-        console.log('fileData');
-        console.log(fileData);
         if(typeof file_id === 'object'){
             var results = [];
             $.each(fileData, function(index, value){
@@ -442,7 +440,7 @@ var filesystem =  new function() {
             });
             return results;
         }
-        return fileData[0]['title'];
+        return fileData['title'];
     };
     this.downloadFile = function(fileId){
         $('#submitter').attr('src','out/download/?fileId='+fileId);

@@ -354,8 +354,8 @@ switch($action){
 	case 'getLastActivity':
 	
 	
-       $api = new api();
-	   echo $api->getLastActivity($_POST['request']);
+            $api = new api();
+            echo $api->getLastActivity($_POST['request']);
 		
 		break;
 		

@@ -17,15 +17,14 @@
 
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
-    if(proofLogin()){
-                    //set privacy
-                    $customShow = $_POST['privacyCustomSee'];
-                    $customEdit = $_POST['privacyCustomEdit'];
-                    
-                    $privacyString = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
-                
-                   
-                    $privacy = new privacy();
-                    $privacy->updateItemPrivacy($_POST['type'], $_POST['itemId'], $privacyString);
-    }
-            
+
+
+
+
+$requestFunction = function($request){
+    $user = new user();
+    return $user->getLastActivity($request['userid']);
+};
+
+$api = new api();
+$api->handleRequest($_POST['request'], $requestFunction);

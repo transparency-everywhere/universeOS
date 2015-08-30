@@ -37,8 +37,11 @@ var Feed = function(type, $selector, initTypeId){
         
         //prepare preloading of comments.count, item.getScore etc.
         var feedIds = [];
+        var feedUserIds = [];
         $.each(loadedFeeds,function(index, value){
             feedIds.push(value.id);
+            
+            feedUserIds.push(value.author);
         });
         var commentCounts  = comments.count('feed', feedIds);
         var feedScoreButtons = item.showScoreButton('feed', feedIds);
@@ -111,7 +114,11 @@ var feed = new function(){
         //load contextmenue(s)
         
         var output = '<div class="feedEntry feedNo'+feedData['id']+'">';
-            output += User.showSignature(feedData['author'], feedData['timestamp'], true)+feedContent;
+        
+            output += User.showSignature(feedData['author'], feedData['timestamp'], true);
+            
+            output += feedContent;
+            
             output += '<div class="options">';
             
                 //if scorebuttons and itemsettings are pushed into the result use them

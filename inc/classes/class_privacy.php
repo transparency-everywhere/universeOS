@@ -217,7 +217,61 @@ class privacy {
        }
     }
     
-    
+    function updateItemPrivacy($type, $itemId, $privacyString, $hidden=false){
+        switch($type){
+            case 'folder':
+                $tableName = 'folders';
+                $userColumnName = 'creator';
+                break;
+            case'element':
+                $tableName = 'elements';
+                $userColumnName = 'author';
+                break;
+            case'comment':
+                $tableName = 'comments';
+                $userColumnName = 'author';
+                break;
+            case'feed':
+                $tableName = 'feed';
+                //$userColumnName = 'author';
+                break;
+            case'file':
+                $tableName = 'files';
+                //$userColumnName = 'author';
+                break;
+            case'link':
+                $tableName = 'links';
+                //$userColumnName = 'author';
+                break;
+        }
+        $db = new db();
+        //select privacyData and check if current user is allowed to update item privacy
+        if(isset($userColumnName))
+            $privacyDataColumnArray = array('privacy', $userColumnName);
+        else
+            $privacyDataColumnArray = array('privacy');
+        
+        $privacyData = $db->select($tableName, array('id',$itemId), $privacyDataColumnArray);
+        echo $privacyData[$userColumnName];
+        if(isset($userColumnName))
+            $authorize = authorize($privacyData['privacy'], "edit", $privacyData[$userColumnName]);
+        else
+            $authorize = authorize($privacyData['privacy'], "edit");
+        
+        if(!$authorize)
+            return 0;
+        
+        $db->update($tableName,array('privacy'=>$privacyString),array('id',$itemId));
+        
+        if(!$hidden&&isset($userColumnName)){
+           //add user
+           $db->update($tableName,array($userColumnName=>getUser()),array('id',$itemId));
+        }else{
+            //remove user
+           $db->update($tableName,array($userColumnName=>0),array('id',$itemId));
+        }
+        echo '1';
+    }
 }
 
 

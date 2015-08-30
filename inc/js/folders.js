@@ -32,7 +32,7 @@ var folders = new function(){
             });
                 return api.query('api/folders/select/', { request: requests});
         }else
-            return api.query('api/folders/select/',{request: [{folder_id : folder_id}]});
+            return api.query('api/folders/select/',{request: [{folder_id : folder_id}]})[0];
     };
               	
     this.getPath = function(folder_id){
@@ -124,7 +124,7 @@ var folders = new function(){
             });
             return results;
         }
-        return folderData[0]['name'];
+        return folderData['name'];
     };
     this.createFolder = function(parent_folder, name, privacy, callback){
         var result="";

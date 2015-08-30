@@ -800,55 +800,54 @@ var User = new function(){
     };
     this.showPicture = function(userid, lastActivity, size){
 	 
-        debug.log('showPicture initialized...');
-        var userpicture = getUserPicture(userid);
-        if(typeof lastActivity === 'undefined'){
-            debug.log('     get user activity for user '+userid);
-            var lastActivity = User.getLastActivity(userid); //get last activity so the border of the userpicture can show if the user is online or offline
-        }
+         
         if(typeof size === 'undefined'){
-            
             debug.log('     set size to standard size');
             var size = 20;
         }
-        
+
         var radius = size/2;
-
-        var ret;
-        ret = '<div class="userPicture userPicture_'+userid+'" style="background: url(\''+userpicture+'\'); '+User.getBorder(lastActivity)+'; width: '+size+'px;height:  '+size+'px;background-size: 100%;border-radius:'+radius+'px"></div>';
-
-        debug.log('     update border for all other userpictures of this user');
-        $('.userPicture_'+userid).css('border', User.getBorder(lastActivity)); //update all shown pictures of the user
-
-        debug.log('...showSignature finished');
-        return ret;
-	            
+         
+        if(typeof userid === 'object'){
+            var userpictures = getUserPicture(userid);
+            var lastActivities = this.getLastActivity(userid);
+            var returns = [];
+            $.each(userid, function(index, value){
+                var html = '<div class="userPicture userPicture_'+value+'" style="background: url(\''+userpictures[index]+'\'); '+User.getBorder(lastActivities[index])+'; width: '+size+'px;height:  '+size+'px;background-size: 100%;border-radius:'+radius+'px"></div>';
+                returns.push(html);
+            });
+            return returns;
+        }else{
+            
+            var userpicture = getUserPicture(userid);
+            if(typeof lastActivity === 'undefined'){
+                var lastActivity = User.getLastActivity(userid); //get last activity so the border of the userpicture can show if the user is online or offline
+            }
+            var ret;
+            ret = '<div class="userPicture userPicture_'+userid+'" style="background: url(\''+userpicture+'\'); '+User.getBorder(lastActivity)+'; width: '+size+'px;height:  '+size+'px;background-size: 100%;border-radius:'+radius+'px"></div>';
+            // $('.userPicture_'+userid).css('border', User.getBorder(lastActivity)); //update all shown pictures of the user
+            return ret;
+        }
     };
-    this.getLastActivity = function(request){
-		            //load data from server
-                            var result = api.query('api.php?action=getLastActivity',{ request : request });
-		            
-		            if(is_numeric(request)){
-                                return result;
-		            }else{
-		                var response = new Array();
-		                
-		                var lastActivityArray = JSON.parse(result);
-		                $.each(lastActivityArray, function(index, value) {
-		                        response[index]=parseInt(value); 
-		                   });
-		                
-		                
-		            }
-		            
-		            
-		            
-		            if(is_numeric(request)){
-		                return parseInt(response);
-		            }else{
-		                return response
-		            }
+    this.getLastActivity = function(userid){
         
+//        getLastActivity
+//        showUserPicture
+//        showSignature
+//        feed
+//        
+        //if type or itemId is array, handle as request for multiple items
+        if(typeof userid === 'object'){
+            var requests = [];
+            $.each(userid,function(index, value){
+                //you can also enter a single type instead of multiple values
+                requests.push({userid : value});
+            });
+            
+            return api.query('api/user/getLastActivity/', { request: requests});
+        }
+        return api.query('api/user/getLastActivity/', { request: [{userid : userid}]})[0];
+    
     };
     this.getProfileInfo = function(userid){
         
@@ -903,17 +902,14 @@ var User = new function(){
     this.inGroup = function(group_id){
         return jQuery.inArray(group_id+'', User.getGroups());
     };
-    this.showSignature = function(userid, timestamp, reverse){
+    this.generateSingleSignature = function(userid, timestamp, username, userpicture, reverse){
         
-        debug.log('showSignature for user '+userid+' initialized...');
-        var username = useridToUsername(userid);
-        
-        var output="";
+            var output="";
             output += "<div class=\"signature\">";
             output += "    <table width=\"100%\">";
             output += "        <tr width=\"100%\">";
             if(reverse){
-                output += "            <td style=\"width:50px; padding-right:10px;\">"+User.showPicture(userid, undefined, 40)+"<\/td>";
+                output += "            <td style=\"width:50px; padding-right:10px;\">"+userpicture+"<\/td>";
                 output += "            <td>";
                 output += "                <table>";
                 output += "                    <tr>";
@@ -941,14 +937,28 @@ var User = new function(){
                 output += "                    <\/tr>";
                 output += "                <\/table>";
                 output += "            <\/td>";
-                output += "            <td><span class=\"pictureInSignature\">"+User.showPicture(userid, undefined, 40)+"<\/span><\/td>";
+                output += "            <td><span class=\"pictureInSignature\">"+userpicture+"<\/span><\/td>";
             }
             output += "        <\/tr>";
             output += "    <\/table>";
             output += "    <\/div>";
 
-         debug.log('...showSignature finished');
-            return output;
+    };
+    this.showSignature = function(userid, timestamp, reverse){
+        
+        if(typeof userid === 'object'||typeof timestamp === 'object'){
+            var userpictures = User.showPicture(userid, undefined, 40);
+            var usernames = useridToUsername(userid);
+            var results = [];
+            $.each(userid, function(index, value){
+                
+                results.push(User.generateSingleSignature(value, timestamp[index], usernames[index], userpictures[index], reverse));
+                
+            });
+            return results;
+        }else{
+            return this.generateSingleSignature(userid, timestamp, useridToUsername(userid), User.showPicture(userid, undefined, 40), reverse);
+        }
         
     };
     
@@ -2365,56 +2375,69 @@ function deleteFromPersonals(id){
 function closeDockMenu(){
                 $("#dockMenu").hide("fast");
               }
-
+function getUserPictureBASE64(userid){
+    
+        //if type or itemId is array, handle as request for multiple items
+        if(typeof userid === 'object'){
+            var requests = [];
+            $.each(userid,function(index, value){
+                //you can also enter a single type instead of multiple values
+                requests.push({userid : value});
+            });
+            
+            return api.query('api/user/getPicture/', { request: requests});
+        }
+        return api.query('api/user/getPicture/', { request: [{userid : userid}]})[0];
+}
 function getUserPicture(request){
-			            var post;
-			            var userid;
-			            if(is_numeric(request)){
-                                        debug.log('     numeric request');
-			                userid = request;
-			                //check if username is stored
-			                if(typeof userPictures[userid] !== 'undefined'){
-			                    //return stored username
-                                            
-                                            debug.log('     username for userid '+userid+'is stored:'+userPictures[userid]);
-			                    return userPictures[userid];
-			                }else{
-                                            
-			                    post = request;
-			                }
-			            }else{
-                                        
-                                        debug.log('     string request - request should be a username');
-			                post = request;
-			            }
-			            
-			            //load data from sercer
-			            var result = '';
-                                    
-                                    debug.log('     ajax request initialized');
-                                    result = api.query('api.php?action=getUserPicture', {request : post});
-			            
-			            if(is_numeric(request)){
-                                        
-                                        debug.log('     numeric request');
-			                if(result.length > 0){
-			                    
-			                }
-			                userPictures[userid]=result;
-			            }else{
-			                var response = new Array();
-			                
-			                var userPictureObject = result;
-                                        if(response.length > 0){
-                                            $.each(userPictureObject, function(index, value) {
-                                                    //add value to userPictures var
-                                                    userPictures[index]=htmlentities(value);
-                                                    response[index]=htmlentities(value);
-                                                });
+    var post;
+    var userid;
+    if(is_numeric(request)){
+                                            debug.log('     numeric request');
+                                            userid = request;
+                                            //check if username is stored
+                                            if(typeof userPictures[userid] !== 'undefined'){
+                                                //return stored username
+
+                                                debug.log('     username for userid '+userid+'is stored:'+userPictures[userid]);
+                                                return userPictures[userid];
+                                            }else{
+
+                                                post = request;
+                                            }
+                                        }else{
+
+                                            debug.log('     string request - request should be a username');
+                                            post = request;
                                         }
-			                
-			            }
-			            if(is_numeric(request)){
+
+    //load data from sercer
+    var result = '';
+
+    debug.log('     ajax request initialized');
+    result = api.query('api.php?action=getUserPicture', {request : post});
+
+    if(is_numeric(request)){
+
+                                            debug.log('     numeric request');
+                                            if(result.length > 0){
+
+                                            }
+                                            userPictures[userid]=result;
+                                        }else{
+                                            var response = new Array();
+
+                                            var userPictureObject = result;
+                                            if(response.length > 0){
+                                                $.each(userPictureObject, function(index, value) {
+                                                        //add value to userPictures var
+                                                        userPictures[index]=htmlentities(value);
+                                                        response[index]=htmlentities(value);
+                                                    });
+                                            }
+
+                                        }
+if(is_numeric(request)){
                                         
                                         debug.log('     return numeric response');
 			                return userPictures[userid];
@@ -2424,7 +2447,7 @@ function getUserPicture(request){
                                     
                                     
 				
-			}
+}
 
 function is_url(str) {
     var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
@@ -2596,6 +2619,10 @@ var handler = new function(){
           }
       });
   };
+  //example
+  //handler.getTitle('folders',1);
+  //example
+  //handler.getTitle('files',[1,2,9,54]);
   this.getTitle = function(handler_title, url){
         if(handler_title === 'folders'||handler_title === 'collections'||handler_title === 'files')
             return handlers[handler_title].getTitle(url);
