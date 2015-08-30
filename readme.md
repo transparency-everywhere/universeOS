@@ -54,6 +54,20 @@ Developing UniverseOS:
 
 =Recent=
 ----------
+-Authorize
+    Folders
+        create,update,delete
+    Collections
+        create,update,delete
+    Files
+        create,update,delete
+    Links
+        create,update,delete
+    Feeds
+        create,update,delete
+    Comments
+        create,update,delete
+
 -Speed Up
     Feed!
     Telescope
