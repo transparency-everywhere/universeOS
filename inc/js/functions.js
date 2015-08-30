@@ -195,7 +195,7 @@ var init = new function(){
 			});
                         
                         
-                        $('#searchTrigger').bind('click', function(){
+                        $('#searchTrigger').bind('mousedown', function(){
                             search.toggleSearchMenu();
                         });
                         
@@ -399,7 +399,6 @@ var session = new function(){
         gui.createForm('#addSessionFormContainer',fieldArray, options);
         
         $('#addSessionFormContainer #type').change(function(){
-            console.log($(this).val());
             if($(this).val() === 'temporarily')
                 $('#addSessionFormContainer #title').hide();
             
@@ -810,9 +809,6 @@ var User = new function(){
          
         if(typeof userid === 'object'){
             var userpictures = getUserPictureBASE64(userid);
-            
-            console.log(userid);
-            console.log(userpictures);
             
             var lastActivities = this.getLastActivity(userid);
             var returns = [];
@@ -1401,13 +1397,7 @@ var search = new function(){
         $('#bodywrap').unbind('click');
         if($searchMenu.hasClass('open')){
             
-            $('#bodywrap').animate({
-                    marginLeft: 0
-            }, ms);
-            $searchMenu.animate({
-                    marginRight: -337
-            }, ms);  
-            $searchMenu.removeClass('open');
+            this.hideSearchMenu();
             
         }else{
           
@@ -1424,8 +1414,19 @@ var search = new function(){
             });
         }
     };
+    this.hideSearchMenu = function(){
+        $('#bodywrap').unbind('click');
+        var $searchMenu = $('#searchMenu');
+        var ms = 700;
+            $('#bodywrap').animate({
+                    marginLeft: 0
+            }, ms);
+            $searchMenu.animate({
+                    marginRight: -337
+            }, ms);  
+            $searchMenu.removeClass('open');
+    };
     this.initResultHandlers = function(query){
-        console.log(query);
                 item.initRightClick();
                 $('.resultList a:link, .resultList .icon-gear, .resultList .white-gear').unbind('click');
 		$('.resultList a:link').bind('click', function(){
@@ -1439,7 +1440,7 @@ var search = new function(){
                 
                 var openInTelescope = function(){
                     telescope.query(query);
-                    search.toggleSearchMenu();
+                    //search.toggleSearchMenu();
                 };
                 $('#searchMenu .loadAll a').unbind('click');
                 $('#searchMenu .loadAll a').bind('click', function(){
@@ -1669,7 +1670,6 @@ var sec =  new function() {
 
 		var privateKey = cypher.getPrivateKey('user', userid);
 		var keysNew = cypher.createKeysForUser(newPassword);
-                console.log(keysNew);
                 privateKey = sec.symEncrypt(keysNew['keyHash'], privateKey); //encrypt privatestring, using the password hash
 	    
                 $.post("api.php?action=updatePassword", {
@@ -2810,7 +2810,6 @@ var handlers = {
                             $.each(sources, function(index, value){
                                 results.push(value);
                             });
-                            console.log(results);
                             return results;
                         }else
                             return toString(handler.getDescription('youtube', link)).replace(/^"(.+(?="$))"$/, '$1');

@@ -18,5 +18,15 @@
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
 
-$groupsClass = new groups();
-echo json_encode($groupsClass->getGroupData($_POST['group_id']));
+
+
+
+
+
+$requestFunction = function($request){
+    $groupsClass = new groups();
+    return json_encode($groupsClass->getGroupData($request['group_id']));
+};
+
+$api = new api();
+$api->handleRequest($_POST['request'], $requestFunction);

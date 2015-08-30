@@ -251,7 +251,6 @@ var elements = new function(){
     
     this.getTitle = function(element_id){
         var elementData = this.getData(element_id);
-        console.log(elementData);
         if(typeof element_id === 'object'){
             var results = [];
             $.each(elementData, function(index, value){
