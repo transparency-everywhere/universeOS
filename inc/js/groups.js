@@ -198,7 +198,16 @@ var groups = new function(){
 	};
         this.getData = function(groupId){
             
-            return api.query('api/groups/getData/', { group_id : groupId });
+            
+        if(typeof groupId === 'object'){
+            var requests = [];
+            $.each(groupId,function(index, value){
+                //you can also enter a single type instead of multiple values
+                requests.push({group_id : value});
+            });
+                return api.query('api/groups/getData/', { request: requests});
+        }else
+            return api.query('api/groups/getData/',{request: [{group_id : groupId}]})[0];
             
         };
         this.getPublicGroups = function(){
