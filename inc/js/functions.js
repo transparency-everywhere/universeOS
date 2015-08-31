@@ -2876,11 +2876,10 @@ var handlers = {
                         return handler.query('folders', query, offset, max_results);
                     },
                     getTitle: function(id){
-                        console.log(id);
                         return folders.folderIdToFolderTitle(id);
                     },
                     getDescription: function(id){
-                        return 'wubba dubba du. wubbta asdasd';
+                        return 'wubba dubba du. wubbta tralala';
                     },
                     getThumbnail: function(id){
                         return '<span class="icon icon-folder"></span>';

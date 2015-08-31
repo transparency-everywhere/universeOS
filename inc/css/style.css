@@ -2695,7 +2695,13 @@ ul .elementSettings {
     left: 0;
 }    
 
-.imageReader .previewImages img {
+.imageReader .previewImages div {
+    height: 140px;
+    overflow: auto;
+    width: auto;
+}
+
+.imageReader .previewImages div img {
     display: block;
     float: left;
     height: 100%;

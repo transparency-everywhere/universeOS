@@ -186,7 +186,6 @@ var elements = new function(){
         html += '<span class="heading">Links</span>';
         var f = 0;
         $.each(fileList, function(key, value){
-            console.log(value);
             if(value['type'] === 'link') {
                 //generate fileList for an element with an unordered list <ul>
                 var data = value['data'];

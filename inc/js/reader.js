@@ -81,7 +81,6 @@ var reader = new function(){
             //generate groups view        
             var group_items = groups.getGroupArray(User.userid); //get groups of the user
             var popular_groups = groups.getPublicGroupArray(User.userid); //popular groups > public and with the highest membercount
-            console.log(popular_groups);
             html += this.buildTab('groups', 'group', 'My groups', group_items, 'suggestion', 'Popular groups', popular_groups);
 
             //generate favorites view
@@ -124,9 +123,11 @@ var reader = new function(){
                         if(typeof itemsA !== 'undefined' || itemsA !== undefined){
                             var onclick = "";
                             $.each(itemsA, function(key, value){
+                                if(value['type'] === 'image/jpeg' ||value['type'] === 'image/png' ||value['type'] === 'image/tiff' ||value['type'] === 'image/gif')
+                                    value['type'] = 'image';
                                 if( value['type'] === 'element'){
                                     onclick = "onclick=\"elements.open('" + value['itemId'] + "'); return false;\"";
-                                } else if( value['type'] === 'file'){
+                                } else if( value['type'] === 'file' || value['type'] === 'image'){
                                     onclick = "onclick=\"reader.openFile('" + value['itemId'] + "'); return false;\"";
                                 } else if( value['type'] === 'link'){
                                     onclick = "onclick=\"reader.openLink('" + value['itemId'] + "'); return false;\"";
@@ -136,6 +137,8 @@ var reader = new function(){
                                     onclick = "onclick=\"groups.show('" + value['itemId'] + "'); return false;\"";
                                 } else if( value['type'] === 'playlist'){
                                     onclick = "onclick=\"playlists.playPlaylist('" + value['itemId'] + "'); return false;\"";
+                                } else if( value['type'] === 'user'){
+                                    onclick = "onclick=\"User.showProfile('" + value['itemId'] + "'); return false;\"";
                                 }
                                 html += '<li ' + onclick + '>';
                                     html += '<div class="' + tab + ' itemsA icon">' + filesystem.generateIcon(value['type']) + '</div>';
@@ -166,10 +169,12 @@ var reader = new function(){
                     html += '<div class="' + tab + ' itemsB">';
                     html += '<ul>';
                     var onclick = "";
-                    $.each(itemsB, function(key, value){
+                    $.each(itemsB, function(key, value){                                
+                        if(value['type'] === 'image/jpeg' ||value['type'] === 'image/png' ||value['type'] === 'image/tiff' ||value['type'] === 'image/gif')
+                            value['type'] = 'image';
                         if( value['type'] === 'element'){
                             onclick = "onclick=\"elements.open('" + value['itemId'] + "'); return false;\"";
-                        } else if( value['type'] === 'file'){
+                        } else if( value['type'] === 'file' || value['type'] === 'image'){
                             onclick = "onclick=\"reader.openFile('" + value['itemId'] + "'); return false;\"";
                         } else if( value['type'] === 'link'){
                             onclick = "onclick=\"reader.openLink('" + value['itemId'] + "'); return false;\"";
@@ -179,6 +184,8 @@ var reader = new function(){
                             onclick = "onclick=\"groups.show('" + value['itemId'] + "'); return false;\"";
                         } else if( value['type'] === 'playlist'){
                             onclick = "onclick=\"playlists.playPlaylist('" + value['itemId'] + "'); return false;\"";
+                        } else if( value['type'] === 'user'){
+                            onclick = "onclick=\"User.showProfile('" + value['itemId'] + "'); return false;\"";
                         }
                         html += '<li ' + onclick + '>';
                             html += '<div class="' + tab + ' itemsB icon">' + filesystem.generateIcon(value['type']) + '</div>';
@@ -192,7 +199,7 @@ var reader = new function(){
         html += '</div>';
         return html;
     }
-    this.openFile = function(file_id){
+    this.openFile = function(file_id, tabId){
         applications.show('reader');
         var fileData = filesystem.getFileData(file_id);
         var zoomInString = 'zoomIn(' + fileData['folder'] + ')';
@@ -214,7 +221,11 @@ var reader = new function(){
         var halfPath = '' + encodeURIComponent(folders.getPath(elements.getData(fileData['folder'])['folder']) + fileData['filename']);
         var secondHalf = halfPath.replace(/%2F/g, '/');
         var path = "./upload/" + secondHalf;
-        userHistory.push(fileData['type'], file_id, fileData['title']);
+        if(fileData['type'] === 'image/jpeg' || fileData['type'] === 'image/png' || fileData['type'] === 'image/tiff' || fileData['type'] === 'image/gif')
+            var type = "image";
+        else
+            var type = fileData['type'];
+        userHistory.push(type, file_id, fileData['title']);
         
         switch(fileData['type']){
             //cases: text, uff, image, pdf?, audio?, video?
@@ -231,14 +242,14 @@ var reader = new function(){
                             output += "<div class=\"mainImage\">";
                                 output += "<img src=\"" + path + "\" / id=\"viewedPicture_" + fileData['folder'] + "\">";
                             output += "</div>";
-                            output += "<div class=\"previewImages\">";
+                            output += "<div class=\"previewImages\"><div>";
                                 $.each(elements.getFileList(fileData['folder']), function(key, value){
                                     var thumbPath = "./upload/" + folders.getPath(elements.getData(fileData['folder'])['folder']) + "thumbs/" + value['data']['filename'];
                                     if(value['data']['type'] === "image" || value['data']['type'] === "image/jpeg" || value['data']['type'] === "image/png" || value['data']['type'] === "image/tiff" || value['data']['type'] === "image/gif"){
-                                        output += "<img src=\"" + thumbPath + "\" onclick=\"reader.openFile('" + value['data']['id'] + "'); return false\"/>";
+                                        output += "<img src=\"" + thumbPath + "\" onclick=\"reader.openFile('" + value['data']['id'] + "', reader.tabs.getTabByTitle('" + title + "')); return false\"/>";
                                     }
                                 });
-                            output += "</div>";
+                            output += "</div></div>";
                         output += "</div>";
                     output += '</div>';
                 output += '</div>';
@@ -374,11 +385,14 @@ var reader = new function(){
                 output += '</div>';
             break;
         }
-        
-        reader.tabs.addTab(title, 'html', output, function(){
-            //onclose
-            delete reader.uffChecksums[file_id];
-        });
+        if(typeof tabId === "string"){
+            reader.tabs.updateTabContent(tabId, output);
+        }else{
+            reader.tabs.addTab(title, 'html', output, function(){
+                //onclose
+                delete reader.uffChecksums[file_id];
+            });
+        }
         switch(fileData['type']){
             case'UFF':
                 
@@ -414,7 +428,7 @@ var reader = new function(){
                 i++;
                 if( value['type'] === 'element'){
                     onclick = "onclick=\"elements.open('" + value['itemId'] + "'); return false;\"";
-                } else if( value['type'] === 'file'){
+                } else if( value['type'] === 'file' || value['type'] === 'image'){
                     onclick = "onclick=\"reader.openFile('" + value['itemId'] + "'); return false;\"";
                 } else if( value['type'] === 'link'){
                     onclick = "onclick=\"reader.openLink('" + value['itemId'] + "'); return false;\"";
