@@ -206,7 +206,13 @@ var telescope = new function(){
         var results = this.loadResults(query);
         return this.generateNav(results)+this.generateFrame(results);
     };
-    this.showResultLength = function(length){
+    this.showResultLength = function(resultObject){
+        //JSON.parse(resultObject[0])
+        if(resultObject.length === 0)
+            length = 0;
+        else{
+            var length = JSON.parse(resultObject[0][0]).length;
+        }
         if(length >= 50)
             return '&nbsp;<span class="label label-info">'+50+'+</span>';
         else{
@@ -278,7 +284,10 @@ var telescope = new function(){
                         }catch(e){
                             console.log(e); //error in the above string(in this case,yes)!
                         }
-        if(typeof selector === 'object'){
+        if((typeof selector === 'object')){
+            if(typeof selector[0]=='undefined'){
+                return [];
+            }
             var results = [];
             var thumbs = handlers[type].getThumbnail(selector);
             var descriptions = handlers[type].getDescription(selector);
@@ -377,15 +386,15 @@ var telescope = new function(){
         html +=    '<ul>';
         html +=       '<li class="categoryTitle active" style="margin-left:1px;"><span class="icon blue-reader"></span>Everything</li>';
         html +=       '<li style="margin-left:130px;" class="categoryTitle"><span class="icon blue-gear"></span>universeOS</li>';
-        html +=       '<li data-type="folders"><span class="icon blue-folder"></span>Folders'+this.showResultLength(results.folders.length)+'</li>';
-        html +=       '<li data-type="collections"><span class="icon blue-filesystem"></span>Collections'+this.showResultLength(results.collections.length)+'</li>';
-        html +=       '<li data-type="files"><span class="icon blue-file"></span>Files'+this.showResultLength(results.files.length)+'</li>';
+        html +=       '<li data-type="folders"><span class="icon blue-folder"></span>Folders'+this.showResultLength(results.folders)+'</li>';
+        html +=       '<li data-type="collections"><span class="icon blue-filesystem"></span>Collections'+this.showResultLength(results.collections)+'</li>';
+        html +=       '<li data-type="files"><span class="icon blue-file"></span>Files'+this.showResultLength(results.files)+'</li>';
 //        html +=       '<li class="spacer"></li>';
 //        html +=       '<li data-type="folder"><span class="icon blue-eye"></span>Public</li>';
 //        html +=       '<li data-type="folder"><span class="icon blue-eye"></span>Hidden</li>';
         html +=       '<li style="margin-left:270px;" class="categoryTitle"><span class="icon blue-rss"></span>Web</li>';
-        html +=       '<li data-type="youtube"><span class="icon blue-youtube"></span>Youtube'+this.showResultLength(results.youtube.length)+'</li>';
-        html +=       '<li data-type="wikipedia"><span class="icon blue-wikipedia"></span>Wikipedia'+this.showResultLength(results.wikipedia.length)+'</li>';
+        html +=       '<li data-type="youtube"><span class="icon blue-youtube"></span>Youtube'+this.showResultLength(results.youtube)+'</li>';
+        html +=       '<li data-type="wikipedia"><span class="icon blue-wikipedia"></span>Wikipedia'+this.showResultLength(results.wikipedia)+'</li>';
         html +=       '<li class="categoryTitle spacer"></li>';//empty title row at the end of navigation, otherwise the toggle function doesnt work
         html +=         '<span class="icon white-chevron-right toggleLeftNav"></span>';
         html +=   '</ul>';
@@ -429,7 +438,7 @@ var telescope = new function(){
         
 	delay(function(){
 		
-                var results = telescope.loadResults(query);
+                var results = telescope.pushSettingsButtonToResult(telescope.loadResults(query));
                 var html;
 
                 html = telescope.generateHeader(query);
@@ -438,7 +447,7 @@ var telescope = new function(){
 
                 html += telescope.generateNav(results);
 
-                html += telescope.generateFrame(telescope.pushSettingsButtonToResult(results));
+                html += telescope.generateFrame(results);
                 //html += this.generateFrame(results);
 
                 html += '</div>';

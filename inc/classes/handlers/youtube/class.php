@@ -98,95 +98,86 @@ class youtube_handler {
     }
     public function getTitle($link){
         $video_id = $this->getId($link);
-
-        // $output contains the output string
-        
-
-        $cache = phpFastCache();
-
-        // try to get from Cache first.
-        $output = $cache->get("youtube_snippet_".$video_id);
-        if($output == null) {
-            
-            $ch = curl_init(); 
-
-            // set url 
-            curl_setopt($ch, CURLOPT_URL, 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id='.$video_id.'&key='.$this->dev_key); 
-
-            //return the transfer as a string 
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-            
-            $output = curl_exec($ch);
-            
-            // Write to Cache Save API Calls next time
-            $cache->set("youtube_snippet_".$video_id, $output, 3600*24);
-        }
-        
-        $results = json_decode($output, true);
-        // close curl resource to free up system resources 
-        curl_close($ch);
-        
+        $results = $this->getSnippet($video_id);
         return $results['items'][0]['snippet']['title'];
     }
     
     public function getDescription($link){
         $video_id = $this->getId($link);
-        $cache = phpFastCache();
-
-        // try to get from Cache first.
-        $output = $cache->get("youtube_snippet_".$video_id);
-
-        if($output == null) {
-            
-            $ch = curl_init(); 
-
-            // set url 
-            curl_setopt($ch, CURLOPT_URL, 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id='.$video_id.'&key='.$this->dev_key); 
-
-            //return the transfer as a string 
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-            
-            $output = curl_exec($ch);
-            
-            // Write to Cache Save API Calls next time
-            $cache->set("youtube_snippet_".$video_id, $output, 3600*24);
-        }
-        $results = json_decode($output, true);
-        // close curl resource to free up system resources 
-        curl_close($ch);
-        
+        $results = $this->getSnippet($video_id);
         return $results['items'][0]['snippet']['description'];
         
     }
     public function getThumbnail($link){
         $video_id = $this->getId($link);
+        $results = $this->getSnippet($video_id);
+        return $results['items'][0]['snippet']['thumbnails']['default']['url'];
+    }
+    //is used to preload snippets into cache to reduce execution time
+    public function preload($links){
+        
+        
+        $id = $this->getId($links);
+        $idChecksum = md5($id);
+        
+        //it would suck to check if any of the snippets is cached already.
+        //instead every new request of a certain link combination(the array $links) is saved as a md5 checksum to prevent double requests
+        
         $cache = phpFastCache();
+        //check if result is cached allready
+        $output = $cache->get("youtube_snippet_checksum_".$idChecksum);
+        if($output == NULL){
+            $this->getSnippet($id);
 
+            $cache->set("youtube_snippet_checksum_".$idChecksum, 3600*24);
+        }
+        return true;
+    }
+    public function getSnippet($video_id){
+        $multi = false;
+        $output = null;
+        if (strpos($video_id,',') !== false) {
+            $multi = true;
+        }
+        
+        $cache = phpFastCache();
+        
+        if(!$multi){
+            $output = $cache->get("youtube_snippet_".$video_id);
+        }
         // try to get from Cache first.
-        $results = $cache->get("youtube_snippet_".$video_id);
-
-        if($output == null) {
+        if(empty($output)) {
             
             $ch = curl_init(); 
 
             // set url 
             curl_setopt($ch, CURLOPT_URL, 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id='.$video_id.'&key='.$this->dev_key); 
-
             //return the transfer as a string 
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
             
+            
             $output = curl_exec($ch);
             
-            // Write to Cache Save API Calls next time
-            $cache->set("youtube_snippet_".$video_id, $output, 3600*24);
+            // close curl resource to free up system resources 
+            curl_close($ch);
+            $json = json_decode($output, true);
+            if($multi){
+                //json[0] is an info object with totalResults and resultsPerPage, json[1] are the results in an array
+                foreach($json['items'] AS $singleOutput){
+                    $saveResult['items'][0] = $singleOutput;
+                    $cache->set("youtube_snippet_".$singleOutput['id'], json_encode($saveResult,true), 3600*24);
+                }
+                $output = array();
+                $output['items'] = $json['items'];
+                return $output;
+            }else{
+                $cache->set("youtube_snippet_".$video_id, $output, 3600*24);
+            }
         }
-        $results = json_decode($output, true);
-        // close curl resource to free up system resources 
-        curl_close($ch);
-        return $results['items'][0]['snippet']['thumbnails']['default']['url'];
+        return json_decode($output, true);
     }
-    function getId($text) {
-       $text = preg_replace('~
+    function getSingleId($text){
+        $text = preg_replace('~
             # Match non-linked youtube URL in the wild. (Rev:20111012)
             https?://         # Required scheme. Either http or https.
             (?:[0-9A-Z-]+\.)? # Optional subdomain.
@@ -211,6 +202,17 @@ class youtube_handler {
             $text);
         
         return $text;
+    }
+    function getId($url) {
+        $result = array();
+        if(is_array($url)&&count($url)>0){
+            //var_dump($url);
+            foreach($url AS $singleUrl){
+                $result[] = $this->getSingleId($singleUrl);
+            }
+            return implode(',', $result);
+        }
+        return $this->getSingleId($url);
     }
 }
 

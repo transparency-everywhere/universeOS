@@ -22,6 +22,7 @@
  * @author niczem
  */
 class handler {
+    
     public function getHandler($handler_title){
         $handlers[] = array('title'=>'youtube', 'class_name'=>'youtube_handler');
         $handlers[] = array('title'=>'wikipedia', 'class_name'=>'wikipedia_handler');
@@ -55,6 +56,10 @@ class handler {
                 break;
             case 'getThumbnail':
                 return $handler_class->getThumbnail($parameters['url']);
+                break;
+            case 'preload':
+                if(method_exists($handler_class,'preload'))
+                    return $handler_class->preload($parameters);
                 break;
         }
     }

@@ -7,7 +7,7 @@
 class folder_handler {
     public function query($query, $offset, $max_results=50){
         $k = (int)$offset.','.(int)$max_results;
-        
+        $query = mysql_real_escape_string($query);
         $results = array();
         //folders
         $folderSuggestSQL = mysql_query("SELECT id, name, privacy, creator FROM folders WHERE name LIKE '%$query%' LIMIT $k");
