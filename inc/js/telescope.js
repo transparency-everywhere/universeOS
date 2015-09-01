@@ -114,8 +114,8 @@ var telescope = new function(){
             var $this = $(this);
             delay(function(){
                 $this.parent().next().html(telescope.updateResult(query));
-                $this.parent().next().children('.leftNav').children().children('li').show();
-            
+                //$this.parent().next().children('.leftNav').children().children('li').show();
+                telescope.initHandlers();
             }, 500);
         });
         
@@ -203,7 +203,7 @@ var telescope = new function(){
     
     //updates result in opened telescope tab
     this.updateResult = function(query){
-        var results = this.loadResults(query);
+        var results = this.pushSettingsButtonToResult(this.loadResults(query));
         return this.generateNav(results)+this.generateFrame(results);
     };
     this.showResultLength = function(resultObject){

@@ -410,7 +410,7 @@ var session = new function(){
 
 var universe = new function(){
     this.notificationArray = [];
-    this.reloadState = true;
+    this.reloadState = false;
     this.init = function(){
         
         gui.loadScript('inc/js/privacy.js');
@@ -830,12 +830,6 @@ var User = new function(){
         }
     };
     this.getLastActivity = function(userid){
-        
-//        getLastActivity
-//        showUserPicture
-//        showSignature
-//        feed
-//        
         //if type or itemId is array, handle as request for multiple items
         if(typeof userid === 'object'){
             var requests = [];
@@ -2722,6 +2716,15 @@ function singleOrMulti(item, cb){
     }
 }
 
+
+//this class is used to add service objects
+//IT IS NOT SUPPOSED FOR DIRECT CALLS
+//USE WRAPPER handler INSTEAD
+//E.G.:
+//instead of useing
+//handlers.youtube.getTitle('https://www.youtube.com/watch?v=9bZkp7q19f0');
+//use
+//handler.getTitle('youtube', 'https://www.youtube.com/watch?v=9bZkp7q19f0');
 var handlers = {
     'youtube': {
                     application : 'reader',

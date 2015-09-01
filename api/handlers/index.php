@@ -2,7 +2,8 @@
 include("../../inc/config.php");
 include("../../inc/functions.php");
 include("../../inc/classes/phpfastcache.php");
-
+$cache = new phpFastCache();
+$cache->clean();
 if(isset($_POST['handler_title'])){
     $handler = new handler();
     echo $handler->api($_POST['handler_title'], $_POST['action'], $_POST['parameters']);

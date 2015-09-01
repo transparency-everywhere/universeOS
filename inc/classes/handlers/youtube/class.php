@@ -161,6 +161,7 @@ class youtube_handler {
             // close curl resource to free up system resources 
             curl_close($ch);
             $json = json_decode($output, true);
+            //var_dump($json);
             if($multi){
                 //json[0] is an info object with totalResults and resultsPerPage, json[1] are the results in an array
                 foreach($json['items'] AS $singleOutput){
