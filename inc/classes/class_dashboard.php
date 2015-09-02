@@ -107,7 +107,7 @@ class dashBoard{
 							$output .= '<i class="icon white-user" style="height:20px; width: 20px;margin-bottom: -5px;"></i>';
 						$output .="</span>";
 						$output .="<span>";
-							$output .= shorten($groupsClass->getGroupName($group),19);
+							$output .= shorten($groupsClass->getGroupName($group),14);
 						$output .="</span>";
 					$output .="</li>";
 					$i++;
@@ -147,7 +147,7 @@ class dashBoard{
                                                 $output .= "</span>";
                                                 $output .= "<span>";
                                                         $output .= "<a href=\"#\" onclick=\"playlists.showInfo('".$list_id."');\">";
-                                                        $output .=  $playlists['titles'][$key];
+                                                        $output .=  shorten($playlists['titles'][$key],14);
                                                         $output .= "</a>";
                                                 $output .= "</span>";
                                         $output .= "</li>";
@@ -234,7 +234,7 @@ class dashBoard{
 		$output = '<ul>';
 		foreach($taskArray AS $task){
 			$editable = authorize($task['privacy'], 'edit', $task['user']);
-			$output .= '<li onclick="tasks.show('.$task['id'].','.$editable.');">'.date('d.m.', $task['timestamp']).' - '.$task['title'].'</li>';
+			$output .= '<li onclick="tasks.show('.$task['id'].','.$editable.');">'.shorten(date('d.m.', $task['timestamp']).' - '.$task['title'],14).'</li>';
 		}
 		$output .= '</ul>';
 		
