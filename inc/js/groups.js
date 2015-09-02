@@ -105,6 +105,8 @@ var groups = new function(){
             if(!empty(buttonText))
                 buttons = '<a href="#" onclick="'+onClick+'" class="button">'+buttonText+'</a>'+adminButton;
 
+            console.log(groupdata);
+
             var output   = '<div class="profile groupProfile_'+group_id+'" data-groupid="'+group_id+'">';
                     output += '<header>';
                             output += groups.showPicture(group_id);
@@ -140,7 +142,6 @@ var groups = new function(){
                                 output += '<li data-type="members">Members</li>';
                             output += '</ul>';
                             output += '<div class="content">';
-                                
                                 output += '<div class="profile_tab files_tab">'+filesystem.showFileBrowser(groupdata['homeFolder'])+'</div>';
                                 output += '<div class="profile_tab playlists_tab">';
                                     var groupPlaylists = playlists.getGroupPlaylists(group_id);
@@ -207,7 +208,7 @@ var groups = new function(){
             });
                 return api.query('api/groups/getData/', { request: requests});
         }else
-            return api.query('api/groups/getData/',{request: [{group_id : groupId}]})[0];
+            return JSON.parse(api.query('api/groups/getData/',{request: [{group_id : groupId}]})[0]);
             
         };
         this.getPublicGroups = function(){
