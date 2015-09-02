@@ -41,7 +41,7 @@ var folders = new function(){
               	
     this.getItems = function(folder_id){
         
-        var result = "";
+        var result = [];
     	$.ajax({
                 url:"api/folders/getItems/",
                 async: false,  
@@ -51,6 +51,9 @@ var folders = new function(){
                    result = JSON.parse(data);
                 }
 	});
+        if(result === null){
+            result = [];
+        }
 	return result;
     };
     

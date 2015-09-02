@@ -181,8 +181,14 @@ var filesystem =  new function() {
             if(folder === userfolder){
                     parentFolderData['folder'] = 1;
             };
+            
         };
 
+                if(typeof parentFolderData === 'undefined'){
+                    var folderData = folders.getData(folder);
+                    var parentFolderData = folders.getData(folderData['parentFolder']);
+                }
+                    
             //generate parent folder row
             if(!empty(folder) && (folder !== "1") && is_numeric(folder)){
                 if(parentFolderData['folder'] !== "1")
@@ -196,14 +202,15 @@ var filesystem =  new function() {
             }
 
             var itemsInFolder = folders.getItems(folder);
-            $.each(itemsInFolder,function(index, value){
-                folderIds.push(value.data.id);
-                folderTypes.push(value.type);
-            });
-            var scoreButtons = item.showScoreButton(folderTypes, folderIds);
-            var settingButtons = item.showItemSettings(folderTypes, folderIds);
-            console.log(settingButtons);
-
+            if(itemsInFolder.length){
+                $.each(itemsInFolder,function(index, value){
+                    folderIds.push(value.data.id);
+                    folderTypes.push(value.type);
+                });
+                var scoreButtons = item.showScoreButton(folderTypes, folderIds);
+                var settingButtons = item.showItemSettings(folderTypes, folderIds);
+            }
+            
             if(itemsInFolder !== null){
                 $.each(itemsInFolder,function(key, value){
                     //generate row with folders and elements
@@ -465,7 +472,6 @@ var filesystem =  new function() {
         var callback = function(){
             $('.blueModal').hide();
             gui.alert('The file has been removed');
-            console.log(elementData.title.substr(0,10));
             filesystem.tabs.updateTabContent(elementData.title.substr(0,10) ,this.generateFullFileBrowser(elementData['id']));
         };
         api.query('api/files/delete/', { file_id : fileId }, callback);
