@@ -387,7 +387,7 @@ var reader = new function(){
                 output += '</div>';
             break;
         }
-        
+        applications.show('reader');
         reader.tabs.addTab(title, 'html', output, function(){
             //onclose
             delete reader.uffChecksums[file_id];

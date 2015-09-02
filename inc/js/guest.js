@@ -15,6 +15,7 @@ function getUserCypher(id){
 }
 
 function randomString(length, chars) {
+        //@sec
 	//nimphios at http://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript
 	
     var mask = '';
