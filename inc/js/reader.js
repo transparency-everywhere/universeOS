@@ -68,48 +68,33 @@ var reader = new function(){
         console.log('initTabs');
         
         var html = '';
-            
-            
-        var history_items = User.getHistoryArray(); //get array with 5 dummy entries (functions.js)
-        
-        var popular_items = filesystem.getPopularItemsArray(); //get popular public items
-        
-        var feature = false; //maybe later
-        
-        
-        var group_items = groups.getGroupArray(User.userid); //get groups of the user
-        
-        var popular_groups = groups.getPublicGroupArray(User.userid); //popular groups > public and with the highest membercount
-        
-        
-        var fav_history = fav.getFavHistory(); //get latest 5 favorites of the user
-        
-        var fav_items = fav.getFavArray(User.userid); //get favorites of the user   
-        
-        
-        var playlist_items = playlists.getPlaylistArray(User.userid); //get playlists of the user
-        
-        var public_playlists = playlists.getPublicPlaylistArray(); //get latest public playlists
-        
-        
-        var myFiles_items = filesystem.getMyFiles(User.userid); //get folder, elements and files of the user
-
-
         html += '<div class="tabs">';
         
             //generate home view
+            var history_items = User.getHistoryArray(); //get user history
+            
+            var popular_items = filesystem.getPopularItemsArray(); //get popular public items
+            
+            var feature = false; //maybe later
             html += this.buildTab('home', 'clock', 'My current history', history_items, 'suggestion', 'Popular in the universeOS', popular_items, feature);
 
-            //generate groups view
+            //generate groups view        
+            var group_items = groups.getGroupArray(User.userid); //get groups of the user
+            var popular_groups = groups.getPublicGroupArray(User.userid); //popular groups > public and with the highest membercount
             html += this.buildTab('groups', 'group', 'My groups', group_items, 'suggestion', 'Popular groups', popular_groups);
 
             //generate favorites view
+            var fav_history = fav.getFavHistory(); //get latest 5 favorites of the user
+            var fav_items = fav.getFavArray(User.userid); //get favorites of the user   
             html += this.buildTab('favorites', 'clock', 'My latest favorites', fav_history, 'fav', 'All my favorites', fav_items);
 
             //generate playlist view
+            var playlist_items = playlists.getPlaylistArray(User.userid); //get playlists of the user
+            var public_playlists = playlists.getPublicPlaylistArray(); //get latest public playlists
             html += this.buildTab('playlists', 'playlist', 'My playlists', playlist_items, 'suggestion', 'The latest public playlists', public_playlists);
 
             //generate my files view
+            var myFiles_items = filesystem.getMyFiles(User.userid); //get folder, elements and files of the user
             html += this.buildTab('myFiles', 'file', 'My files', myFiles_items);
 
         html += '</div>';
@@ -138,9 +123,11 @@ var reader = new function(){
                         if(typeof itemsA !== 'undefined' || itemsA !== undefined){
                             var onclick = "";
                             $.each(itemsA, function(key, value){
+                                if(value['type'] === 'image/jpeg' ||value['type'] === 'image/png' ||value['type'] === 'image/tiff' ||value['type'] === 'image/gif')
+                                    value['type'] = 'image';
                                 if( value['type'] === 'element'){
                                     onclick = "onclick=\"elements.open('" + value['itemId'] + "'); return false;\"";
-                                } else if( value['type'] === 'file'){
+                                } else if( value['type'] === 'file' || value['type'] === 'image'){
                                     onclick = "onclick=\"reader.openFile('" + value['itemId'] + "'); return false;\"";
                                 } else if( value['type'] === 'link'){
                                     onclick = "onclick=\"reader.openLink('" + value['itemId'] + "'); return false;\"";
@@ -150,10 +137,12 @@ var reader = new function(){
                                     onclick = "onclick=\"groups.show('" + value['itemId'] + "'); return false;\"";
                                 } else if( value['type'] === 'playlist'){
                                     onclick = "onclick=\"playlists.playPlaylist('" + value['itemId'] + "'); return false;\"";
+                                } else if( value['type'] === 'user'){
+                                    onclick = "onclick=\"User.showProfile('" + value['itemId'] + "'); return false;\"";
                                 }
                                 html += '<li ' + onclick + '>';
                                     html += '<div class="' + tab + ' itemsA icon">' + filesystem.generateIcon(value['type']) + '</div>';
-                                    html += '<div class="' + tab + ' itemsA title">' + gui.shorten(value['title'], 30) + '</div>';
+                                    html += '<div class="' + tab + ' itemsA title">' + gui.shorten(value['title'], 25) + '</div>';
                                 html += '</li>';
                             });
                         };
@@ -180,10 +169,12 @@ var reader = new function(){
                     html += '<div class="' + tab + ' itemsB">';
                     html += '<ul>';
                     var onclick = "";
-                    $.each(itemsB, function(key, value){
+                    $.each(itemsB, function(key, value){                                
+                        if(value['type'] === 'image/jpeg' ||value['type'] === 'image/png' ||value['type'] === 'image/tiff' ||value['type'] === 'image/gif')
+                            value['type'] = 'image';
                         if( value['type'] === 'element'){
                             onclick = "onclick=\"elements.open('" + value['itemId'] + "'); return false;\"";
-                        } else if( value['type'] === 'file'){
+                        } else if( value['type'] === 'file' || value['type'] === 'image'){
                             onclick = "onclick=\"reader.openFile('" + value['itemId'] + "'); return false;\"";
                         } else if( value['type'] === 'link'){
                             onclick = "onclick=\"reader.openLink('" + value['itemId'] + "'); return false;\"";
@@ -193,10 +184,12 @@ var reader = new function(){
                             onclick = "onclick=\"groups.show('" + value['itemId'] + "'); return false;\"";
                         } else if( value['type'] === 'playlist'){
                             onclick = "onclick=\"playlists.playPlaylist('" + value['itemId'] + "'); return false;\"";
+                        } else if( value['type'] === 'user'){
+                            onclick = "onclick=\"User.showProfile('" + value['itemId'] + "'); return false;\"";
                         }
                         html += '<li ' + onclick + '>';
                             html += '<div class="' + tab + ' itemsB icon">' + filesystem.generateIcon(value['type']) + '</div>';
-                            html += '<div class="' + tab + ' itemsB title">' + gui.shorten(value['title'], 30) + '</div>';
+                            html += '<div class="' + tab + ' itemsB title">' + gui.shorten(value['title'], 25) + '</div>';
                         html += '</li>';
                     });
                     html += '</ul>';
@@ -206,7 +199,8 @@ var reader = new function(){
         html += '</div>';
         return html;
     }
-    this.openFile = function(file_id){
+    this.openFile = function(file_id, tabId){
+        applications.show('reader');
         var fileData = filesystem.getFileData(file_id);
         var zoomInString = 'zoomIn(' + fileData['folder'] + ')';
         var zoomOutString = 'zoomOut(' + fileData['folder'] + ')';
@@ -227,7 +221,11 @@ var reader = new function(){
         var halfPath = '' + encodeURIComponent(folders.getPath(elements.getData(fileData['folder'])['folder']) + fileData['filename']);
         var secondHalf = halfPath.replace(/%2F/g, '/');
         var path = "./upload/" + secondHalf;
-        userHistory.push(fileData['type'], file_id, fileData['title']);
+        if(fileData['type'] === 'image/jpeg' || fileData['type'] === 'image/png' || fileData['type'] === 'image/tiff' || fileData['type'] === 'image/gif')
+            var type = "image";
+        else
+            var type = fileData['type'];
+        userHistory.push(type, file_id, fileData['title']);
         
         switch(fileData['type']){
             //cases: text, uff, image, pdf?, audio?, video?
@@ -244,14 +242,14 @@ var reader = new function(){
                             output += "<div class=\"mainImage\">";
                                 output += "<img src=\"" + path + "\" / id=\"viewedPicture_" + fileData['folder'] + "\">";
                             output += "</div>";
-                            output += "<div class=\"previewImages\">";
+                            output += "<div class=\"previewImages\"><div>";
                                 $.each(elements.getFileList(fileData['folder']), function(key, value){
                                     var thumbPath = "./upload/" + folders.getPath(elements.getData(fileData['folder'])['folder']) + "thumbs/" + value['data']['filename'];
                                     if(value['data']['type'] === "image" || value['data']['type'] === "image/jpeg" || value['data']['type'] === "image/png" || value['data']['type'] === "image/tiff" || value['data']['type'] === "image/gif"){
-                                        output += "<img src=\"" + thumbPath + "\" onclick=\"reader.openFile('" + value['data']['id'] + "'); return false\"/>";
+                                        output += "<img src=\"" + thumbPath + "\" onclick=\"reader.openFile('" + value['data']['id'] + "', reader.tabs.getTabByTitle('" + title + "')); return false\"/>";
                                     }
                                 });
-                            output += "</div>";
+                            output += "</div></div>";
                         output += "</div>";
                     output += '</div>';
                 output += '</div>';
@@ -388,10 +386,14 @@ var reader = new function(){
             break;
         }
         applications.show('reader');
-        reader.tabs.addTab(title, 'html', output, function(){
-            //onclose
-            delete reader.uffChecksums[file_id];
-        });
+        if(typeof tabId === "string"){
+            reader.tabs.updateTabContent(tabId, output);
+        }else{
+            reader.tabs.addTab(title, 'html', output, function(){
+                //onclose
+                delete reader.uffChecksums[file_id];
+            });
+        }
         switch(fileData['type']){
             case'UFF':
                 
@@ -408,13 +410,13 @@ var reader = new function(){
                 
                 break;
         }
-        applications.showApplication('reader');
         return output;
         
     };
     this.openLink = function(type, link, title){
         player.openItem(type, link);
         userHistory.push('link', id, title);
+
     };
     this.buildHistory = function(userHistoryArray){
         var itemsA = userHistoryArray;
@@ -427,7 +429,7 @@ var reader = new function(){
                 i++;
                 if( value['type'] === 'element'){
                     onclick = "onclick=\"elements.open('" + value['itemId'] + "'); return false;\"";
-                } else if( value['type'] === 'file'){
+                } else if( value['type'] === 'file' || value['type'] === 'image'){
                     onclick = "onclick=\"reader.openFile('" + value['itemId'] + "'); return false;\"";
                 } else if( value['type'] === 'link'){
                     onclick = "onclick=\"reader.openLink('" + value['itemId'] + "'); return false;\"";

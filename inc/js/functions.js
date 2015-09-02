@@ -1128,7 +1128,7 @@ var User = new function(){
     */
     this.showProfile = function(user_id){
         applications.show('reader');
-        var profileTab =reader.tabs.addTab('Profile', 'html', '');
+        var profileTab =reader.tabs.addTab(gui.shorten(useridToUsername(user_id), 8), 'html', '');
         var output = this.generateProfile(user_id);
         reader.tabs.updateTabContent(profileTab, output);
         
@@ -2879,11 +2879,10 @@ var handlers = {
                         return handler.query('folders', query, offset, max_results);
                     },
                     getTitle: function(id){
-                        console.log(id);
                         return folders.folderIdToFolderTitle(id);
                     },
                     getDescription: function(id){
-                        return 'wubba dubba du. wubbta asdasd';
+                        return 'wubba dubba du. wubbta tralala';
                     },
                     getThumbnail: function(id){
                         return '<span class="icon icon-folder"></span>';

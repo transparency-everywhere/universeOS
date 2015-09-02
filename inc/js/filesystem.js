@@ -30,9 +30,9 @@ var filesystem =  new function() {
                         html += '<div><h3>You will upload files to this collection:</h3></div>';
                         html += '<div class="titleAndIcon"><span class="title">' + elements.getTitle(element) + '</span>' + filesystem.generateIcon('element', 'white') + '</div>';
                     html += '</div>';
-                    html += '<h3>Privacy settings:</h2>';
+                    html += '<h3>Privacy settings:</h3>';
                     html += '<div class="uploadPrivacy"></div>';
-                    html += '<h3>Add files:<br /><small>Max. 20 megabyte per file</h2>';
+                    html += '<h3>Add files:<br /><small>Max. 20 megabyte per file</small></h3>';
                     html += '<div class="uploadify">';
                         html += '<input id="uploader_file" name="feedFile" type="file" multiple="true">';
                         html += '<ul class="tempFilelist"></ul>';
@@ -136,7 +136,7 @@ var filesystem =  new function() {
                             html += '                       <li onclick="fav.add(\'folder\', ' + folderId + ')">' + filesystem.generateIcon('fav', 'white') + '<span class="text">Add to favorites</span></li>';
                         }		  			
                         if(privacy.authorize(folderData['privacy'], folderData['creator'])){
-                            html += '        		<li onclick="javascript: elements.showCreateElementForm(\'' + folderId + '\');return false">' + filesystem.generateIcon('element', 'white') + '<span class="text">Add element</span></li>';
+                            html += '        		<li onclick="javascript: elements.showCreateElementForm(\'' + folderId + '\');return false">' + filesystem.generateIcon('element', 'white') + '<span class="text">Add collection</span></li>';
                             html += '                   <li onclick="javascript: folders.showCreateFolderForm(' + folderId + ');return false">' + filesystem.generateIcon('folder', 'white') + '<span class="text">Add folder</span></li>';
                             html += '        		<li onclick="shortcuts.showChooseShortcutTypeForm(' + folderId + ');">' + filesystem.generateIcon('shortcut', 'white') + '<span class="text">Add shortcut</span></li>';
                         }		  			
@@ -202,16 +202,14 @@ var filesystem =  new function() {
             }
 
             var itemsInFolder = folders.getItems(folder);
-            if(itemsInFolder.length){
+            if(itemsInFolder !== null){
                 $.each(itemsInFolder,function(index, value){
                     folderIds.push(value.data.id);
                     folderTypes.push(value.type);
                 });
                 var scoreButtons = item.showScoreButton(folderTypes, folderIds);
                 var settingButtons = item.showItemSettings(folderTypes, folderIds);
-            }
-            
-            if(itemsInFolder !== null){
+
                 $.each(itemsInFolder,function(key, value){
                     //generate row with folders and elements
                     if(value['type'] === "folder"){

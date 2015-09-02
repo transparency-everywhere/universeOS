@@ -74,6 +74,8 @@ var elements = new function(){
         var i = 0;
         var html = "";
         var link = "";
+        var elementIds = [];
+        var elementTypes = [];
         var rightLink = "";
         var image = "";
         var date = "";
@@ -89,6 +91,14 @@ var elements = new function(){
         html += '<ul>';
         html += '<span class="heading">Files</span>';
         var f = 0; // count files
+        $.each(fileList,function(index, value){
+            elementIds.push(value['data']['id']);
+            elementTypes.push(value['type']);
+        });
+        if(fileList.length !== 0){
+            var scoreButtons = item.showScoreButton(elementTypes, elementIds);
+            var settingButtons = item.showItemSettings(elementTypes, elementIds);
+        }
         $.each(fileList, function(key, value){
             if(value['type'] === 'file' && value['data']['type'] !== 'image' && value['data']['type'] !== 'image/jpeg' && value['data']['type'] !== 'image/png' && value['data']['type'] !== 'image/gif' && value['data']['type'] !== 'image/tiff') {
                 //generate fileList for an element with an unordered list <ul>
@@ -104,12 +114,12 @@ var elements = new function(){
                     html += '<span class="icons"><a onclick="'+handlerType+' return false">' + image + '</a></span>';
                     html += '<span class="title"><a onclick="'+handlerType+' return false">' + gui.shorten(data['title'], 40) + '</a></span>';
                     html += '<span class="buttons">';
-                        html += item.showScoreButton(value['type'], data['id']);
+                        html += scoreButtons[key];
                         if(data['download']){
                             html += '<a href="./out/download/?fileId=' + data['id'] + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download', 'grey') + '</a>';
                         }
                         if(!grid){
-                            html += item.showItemSettings(value['type'], data['id']);
+                            html += settingButtons[key];
                         }
                     html += '</span>';
                     var size = Math.round(data['size']/1024);
@@ -147,12 +157,12 @@ var elements = new function(){
                     html += '<span class="icons"><a onclick="'+handlerType+' return false">' + image + '</a></span>';
                     html += '<span class="title"><a onclick="'+handlerType+' return false">' + gui.shorten(data['title'], 40) + '</a></span>';
                     html += '<span class="buttons">'
-                        html += item.showScoreButton(value['type'], data['id']);
+                        html += scoreButtons[key];
                         if(data['download']){
                             html += '<a href="./out/download/?fileId=' + data['id'] + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download', 'grey') + '</a>';
                         }
                         if(!grid){
-                            html += item.showItemSettings(value['type'], data['id']);
+                            html += settingButtons[key];
                         }
                     html += '</span>';
                     var size = Math.round(data['size']/1024);
@@ -176,7 +186,6 @@ var elements = new function(){
         html += '<span class="heading">Links</span>';
         var f = 0;
         $.each(fileList, function(key, value){
-            console.log(value);
             if(value['type'] === 'link') {
                 //generate fileList for an element with an unordered list <ul>
                 var data = value['data'];
@@ -185,21 +194,18 @@ var elements = new function(){
                 if(value['type'] === 'link'){
                     handlerType = 'handlers.links.handler('+data['id']+');';
                 }
-//                if(value['type'] === 'file'){
-//                    handlerType = 'handlers.files.handler('+data['id']+');';
-//                }
                 date = new Date(data['timestamp']*1000).toString().substr(11, 5) + new Date(data['timestamp']*1000).toString().substr(4, 4) + new Date(data['timestamp']*1000).toString().substr(8, 2); //year + month + day
                 image = filesystem.generateIcon(data['type'], 'grey');
                 html += '<li data-id="' + data['id'] + '" data-type="' + data['type'] + '" data-title="' + data['title'] + '" data-date="' + date + '" data-size="' + data['size'] + '">';
                     html += '<span class="icons"><a onclick="'+handlerType+' return false">' + image + '</a></span>';
                     html += '<span class="title"><a onclick="'+handlerType+' return false">' + gui.shorten(data['title'], 40) + '</a></span>';
                     html += '<span class="buttons">'
-                        html += item.showScoreButton(value['type'], data['id']);
+                        html += scoreButtons[key];
                         if(data['download']){
                             html += '<a href="./out/download/?fileId=' + data['id'] + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download', 'grey') + '</a>';
                         }
                         if(!grid){
-                            html += item.showItemSettings(value['type'], data['id']);
+                            html += settingButtons[key];
                         }
                     html += '</span>';
                     var size = Math.round(data['size']/1024);
