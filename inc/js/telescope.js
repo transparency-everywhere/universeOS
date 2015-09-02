@@ -84,7 +84,7 @@ var telescope = new function(){
            $('#telescope .leftNav .categoryTitle').not(this).removeClass('active');
            var $searchFrame = $(this).parent().parent().parent();
            $(this).parent().find('li').not('.categoryTitle').hide();
-           if($(this).hasClass('active') === true){
+           if($(this).hasClass('active') === true&&$(this).text()!=='Everything'){
                 $searchFrame.addClass('navOpen');
                 $(this).nextUntil('.categoryTitle').slideDown();
            }else{
@@ -396,7 +396,6 @@ var telescope = new function(){
         html +=       '<li data-type="youtube"><span class="icon blue-youtube"></span>Youtube'+this.showResultLength(results.youtube)+'</li>';
         html +=       '<li data-type="wikipedia"><span class="icon blue-wikipedia"></span>Wikipedia'+this.showResultLength(results.wikipedia)+'</li>';
         html +=       '<li class="categoryTitle spacer"></li>';//empty title row at the end of navigation, otherwise the toggle function doesnt work
-        html +=         '<span class="icon white-chevron-right toggleLeftNav"></span>';
         html +=   '</ul>';
         html += '</div>';
         return html;
