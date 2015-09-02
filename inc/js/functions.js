@@ -104,67 +104,6 @@ var init = new function(){
               }
           });
 	};
-	this.setApplicationsToStartupSizes = function(){
-		//old creepy way to initalize windows => in future => css media width
-  	
-  	
-      var oneSixthWidth = ($(document).width())/6;
-      var oneSixthHeight = $(document).height()/6;
-      
-      var offsetTop = oneSixthHeight/2;
-      var offsetRight = oneSixthWidth/2;
-      var offsetLeft = offsetRight;
-      
-      var widthSm = oneSixthWidth;
-      var heightSm = oneSixthHeight*4;
-      
-      var widthBig = oneSixthWidth*3;
-      var heightBig = heightSm;
-      
-      
-      
-//              
-//          $("#buddylist").css({
-//          'top' : offsetTop,
-//          'right' : offsetRight+20,
-//          'width' : widthSm,
-//          'height' : heightBig,
-//          'z-index' : '9998'
-//              });
-//          
-//          $("#feed").css({
-//          'top' : offsetTop+20,
-//          'right' : offsetRight,
-//          'width' : widthSm,
-//          'height' : heightBig,
-//          'z-index' : '9997'
-//              });
-//              
-//              
-//          $("#chat").css({
-//          'top' : offsetTop,
-//          'left' : offsetLeft,
-//          'width' : widthBig,
-//          'height' : heightBig,
-//          'z-index' : '997'
-//              });
-//              
-//          $("#filesystem").css({
-//          'top' : offsetTop+20,
-//          'left' : offsetLeft+20,
-//          'width' : widthBig,
-//          'height' : heightBig,
-//          'z-index' : '998'
-//              });
-//              
-//          $("#reader").css({
-//          'top' : offsetTop+40,
-//          'left' : offsetLeft+40,
-//          'width' : widthBig,
-//          'height' : heightBig,
-//          'z-index' : '999'
-//              });
-	};
 	this.dashBox = function(){
             //init dashcloses 
 			$('.dashBox .dashClose').click(function(){
@@ -241,7 +180,6 @@ var init = new function(){
 		this.draggableApplications();
 		this.resizableApplications();
 		this.applicationOnTop();
-		this.setApplicationsToStartupSizes();
 		
 		this.dashBox();
 		
