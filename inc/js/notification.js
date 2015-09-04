@@ -58,6 +58,7 @@ var notification = function(options){
             data = 'data-'+value.caption+'="'+value.value+'"';
         });
         
+        console.log(options);
         
         //if empty id => generate random id
         if(!options.id)
@@ -79,6 +80,12 @@ var notification = function(options){
         
         return html;
     };
+    this.countNotifications = function(category){
+        $('#notifications>ul li').each(function(indix, value){
+            
+        });
+    };
+    
 };
 
 var notifications = new function(){

@@ -433,7 +433,7 @@ var telescope = new function(){
     this.query = function(query){
         search.hideSearchMenu();
         this.applicationVar.show();
-        var tabId = this.tabs.addTab(query, '', '<div class="loadingImage"><img src="./gfx/ripple.gif"/></div>');
+        var tabId = this.tabs.addTab(query, '', gui.generateLoadingArea());
         
 	delay(function(){
 		

@@ -202,7 +202,7 @@ var filesystem =  new function() {
             }
 
             var itemsInFolder = folders.getItems(folder);
-            if(itemsInFolder !== null){
+            if(itemsInFolder.length >0){
                 $.each(itemsInFolder,function(index, value){
                     folderIds.push(value.data.id);
                     folderTypes.push(value.type);

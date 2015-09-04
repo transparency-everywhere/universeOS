@@ -18,6 +18,5 @@
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
 
-
-$user = new user($_POST['userid']);
-echo json_encode($user->updateProfileInfo($_POST['realname'], $_POST['city'], $_POST['hometown'], $_POST['birthdate'], $_POST['school'], $_POST['university'], $_POST['work']));
+$user = new user();
+echo $user->updatePassword($_POST['oldPasswordHash'], $_POST['newPasswordHash'], $_POST['newAuthSalt'], getUser());

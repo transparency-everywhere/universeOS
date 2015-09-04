@@ -1,18 +1,4 @@
 
-function getUserCypher(id){
-		var result="";
-		    $.ajax({
-		      url:"api.php?action=getUserCypher",
-		      async: false, 
-			  type: "POST",
-			  data: { userid : id },
-		      success:function(data) {
-		         result = data; 
-		      }
-		   });
-		   
-		   return result;
-}
 
 function randomString(length, chars) {
         //@sec
@@ -241,7 +227,7 @@ function login(){
 	var username = $('#loginUsername').val();
 	var password = $('#loginPassword').val();
 	var userid = usernameToUserid(username);
-	var userCypher = getUserCypher(userid);
+	var userCypher = User.getCypher(userid);
 	
 	var shaPass = hash.SHA512(password);
                 

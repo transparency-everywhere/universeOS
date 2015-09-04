@@ -21,6 +21,9 @@ var gui = new function(){
     this.text = function(string){
         return htmlspecialchars(string);
     };
+    this.generateLoadingArea = function(){
+        return '<div class="loadingImage"><img src="./gfx/ripple.gif"/></div>';
+    };
     this.generateList = function(values, captions, preselected, caption){
         var html = '';
         $.each(values, function( index, value ) {
@@ -79,7 +82,7 @@ var gui = new function(){
                         case'dropdown':
                             break;
                         case'password':
-                            mainHTML += '<td class="caption">' + fieldData.caption + '</td><td>&nbsp;</td>';
+                            //mainHTML += '<td class="caption">' + fieldData.caption + '</td><td>&nbsp;</td>';
                             break;
                         case'button':
                             mainHTML += '<td class="caption">' + fieldData.caption + '</td><td>&nbsp;</td>';

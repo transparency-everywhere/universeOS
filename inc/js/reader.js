@@ -63,7 +63,7 @@ var reader = new function(){
         console.log('generateStartpage done');
         return html;
             
-    }
+    };
     this.initTabs = function(){
         console.log('initTabs');
         
@@ -102,7 +102,6 @@ var reader = new function(){
         return html;
     }
     this.buildTab = function(tab, iconA, titleA, itemsA, iconB, titleB, itemsB, feature){
-        console.log('buildTab ' + tab);
         //generate view
         var html = '';
         html += '<div class="' + tab + 'tab singletab">';
