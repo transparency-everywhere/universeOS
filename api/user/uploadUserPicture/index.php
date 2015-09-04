@@ -17,6 +17,7 @@
 
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
+error_reporting(E_ALL);
 
 $user = new user(getUser());
 $user->updateUserPicture($_FILES['userpicture']);

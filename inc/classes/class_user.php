@@ -145,6 +145,31 @@ class user {
         echo '</script>';
         
     }
+    public function updatePassword($oldPasswordHash, $newPasswordHash, $newAuthSalt, $userid=NULL){
+        if($userid == NULL)
+            $userid = $this->userid;
+        
+        
+	$userClass = new user($userid);
+	$userData = $userClass->getData($userid);
+	if($userData['password'] == $oldPasswordHash){
+		
+                $saltClass = new salt();
+		if(!empty($newAuthSalt)){
+			//store salt
+			$saltClass->update('auth', $userid, $newAuthSalt);
+		}
+		  
+		$db = new db();
+                $values['password'] = $newPasswordHash;
+                $db->update('user', $values, array('userid', $userid));
+                
+  		return true;
+	}else{
+		return 'Old Password was wrong';
+	}
+        
+    }
     public function getUserPictureBASE64($userid){
         
 	$userData = $this->getData($userid);
@@ -160,6 +185,7 @@ class user {
         $output = base64_encode(fread($file, filesize($src)));
 	return 'data:'.$mime.';base64,'.$output;
     }
+    
     
     public function getLastActivity($userid){
         $db = new db();
@@ -333,7 +359,7 @@ class user {
 }
 
 
-
+//@old, @sec
 function updateUserPassword($oldPassword, $newPassword, $newAuthSalt=NULL, $newKeySalt=NULL, $privateKey=NULL, $userid=NULL){
   	if($userid == NULL){
   		$userid = getUser();

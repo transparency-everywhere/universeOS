@@ -19,6 +19,7 @@ class files {
             $this->id = $id;
         }
     }
+    //uploads temporary file which is validated with files->validateTempFile()
     function uploadTempfile($file, $element, $folder, $privacy, $user, $lang=NULL, $download=true){
 	 	
 	 	//upload file
@@ -111,6 +112,19 @@ class files {
         $fileFolderData = $dbClass->select('folders', array('id', $folder));
         
         
+        //if element == userpictureelement, userpictureupload and thumb creation
+        $additionalPath = '';
+        if(!empty($user)){
+            
+            $user = new user($user);
+            $userData  = $user->getData();
+            $element = $userData['profilepictureelement'];
+            if($userData['profilepictureelement'] === $element){
+                $additionalPath = 'userPictures';
+            }
+        }
+        
+        
         $FileElementData = $dbClass->select('elements', array('id', $element), array('title'));
         $folderClass = new folder($folder);
         $folderpath = universeBasePath.'/'.$folderClass->getPath();
@@ -126,14 +140,22 @@ class files {
         move_uploaded_file($file['tmp_name'], $folderpath.$file['name']);
         rename($folderpath.$filename, $folderpath.$imgName);
         if($type == "image/jpg" || $type == "image/jpeg" || $type == "image/png"){
+            $imageClass = new image();
+            //extra case for userpictures
+            if($additionalPath = 'userPictures'){
+                       $imageClass -> mkthumb($imgName,1024,1024,$folderpath,$folderpath.$additionalPath);
+                       $imageClass -> mkthumb($imgName,25,25,$folderpath,$folderpath.$additionalPath.'/thumb/25');
+                       $imageClass -> mkthumb($imgName,40,40,$folderpath,$folderpath.$additionalPath.'/thumb/40');
+                       $imageClass -> mkthumb($imgName,300,300,$folderpath,$folderpath.$additionalPath.'/thumb/300');
+            }else{
                     $thumbPath= $thumbPath;
-                    $imageClass = new image();
                     if(is_dir($thumbPath)){
                        $imageClass -> mkthumb($imgName,600,600,$folderpath,$thumbPath);
                     } else{
                         mkdir($thumbPath,0755);
                         $imageClass -> mkthumb($imgName,600,600,$folderpath,$thumbPath);
                     }
+            }
         }
         
         //add db entry and add temp value

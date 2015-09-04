@@ -119,7 +119,7 @@ class folder {
                 while (($folder != "0" || $folder != "0") && $i < $maxqueries) {
                     if (!empty($folder)) {
                         $folderData = $db->select('folders', array('id', $folder), array('name', 'folder'));
-
+                        //var_dump($folderData);
 
                         $folder = $folderData['folder'];
                         if ($folder != 0) {

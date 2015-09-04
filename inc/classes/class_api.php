@@ -98,7 +98,7 @@ class api{
 				if(empty($userData['userPicture'])){
 					$src = 'gfx/standardusersm.png';
 				}else{
-					$src = 'upload/userFiles/'.$userid.'/userPictures/thumb/300/'.$userData['userPicture'];
+					$src = 'upload/userFiles/'.$userid.'/'.$userData['userPicture'];
 				}
 				$mime = mime_content_type($src);
 				
