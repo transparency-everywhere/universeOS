@@ -185,20 +185,19 @@ var settings = new function(){
     };
     this.showUpdatePasswordForm = function(){
          settings.show();
-         var user_info = User.getProfileInfo(User.userid);
         
         var fieldArray = [];
         var options = [];
-        options['headline'] = 'Update Profile';
+        options['headline'] = 'Update Password';
         options['buttonTitle'] = 'Save';
         options['noButtons'] = true;
         //Realname, City, Hometown, Birthdate, School, University, Work
         
         
         var field0 = [];
-        field0['caption'] = 'Picture';
+        field0['caption'] = '';
         field0['type'] = 'html';
-        field0['value'] = "<div id='userpicture_area'></div><a href='#' class='button' id='changePicture'>Change Picture</a>";
+        field0['value'] = "";
         field0['caption_position'] = 'left';
         fieldArray[0] = field0;
         
@@ -218,19 +217,38 @@ var settings = new function(){
         
         var field3 = [];
         field3['caption'] = 'Repeat New Password';
-        field3['inputName'] = 'password';
-        field3['type'] = 'text';
+        field3['inputName'] = 'repeat_new_password';
+        field3['type'] = 'password';
         field3['caption_position'] = 'left';
         fieldArray[3] = field3;
+        
+        var field4 = [];
+        field4['caption'] = '';
+        field4['inputName'] = 'buttons';
+        field4['type'] = 'html';
+        field4['value'] = '<div id=\'buttons\'><input type=\'submit\' value=\'Update password\' class=\'button pull-right\'></div>';
+        fieldArray[4] = field4;
+        
         
         $('#settingsFrame').html('<div id="updatePasswordContainer"></div>');
         
        // formModal.init('Update Profile', '<div id="updateProfileFormContainer"></div>', modalOptions);
         gui.createForm('#updatePasswordContainer',fieldArray, options);
         
-        $('#updateProfileFormContainer .dynForm').submit(function(e){
-            e.preventDefault();
-            settings.updateProfileInfo($('#updateProfileFormContainer #realname').val(), $('#updateProfileFormContainer #city').val(), $('#updateProfileFormContainer #hometown').val(), birthdate, $('#updateProfileFormContainer #school').val(), $('#updateProfileFormContainer #university').val(), $('#updateProfileFormContainer #work').val());
+        $('#updatePasswordContainer .dynForm').submit(function(){
+            if($('#updatePasswordContainer #new_password').val() === $('#updatePasswordContainer #repeat_new_password').val()){
+                User.updatePassword(User.userid, 
+                                    $('#updatePasswordContainer #old_password').val(), 
+                                    $('#updatePasswordContainer #new_password').val(), function(result){
+                                        if(result === '1'){
+                                            gui.alert('Your password has been changed');
+                                            settings.showSecurityOverview()
+                                        }else
+                                            gui.alert(result);
+                                    });
+            }else{
+                gui.alert('Your passwords don\'t match');
+            }
             
         });
         
@@ -239,8 +257,7 @@ var settings = new function(){
     };
     this.showUpdateProfileForm = function(){
         settings.show();
-        var user_info = User.getProfileInfo(User.userid);
-        
+        var user_info = User.getProfileInfo();
         var fieldArray = [];
         var options = [];
         options['headline'] = 'Update Profile';

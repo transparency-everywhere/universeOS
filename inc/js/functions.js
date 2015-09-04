@@ -785,13 +785,16 @@ var User = new function(){
         
         //if type or itemId is array, handle as request for multiple items
         if(typeof userid === 'object'){
-            var requests = [];
-            $.each(userid,function(index, value){
+            if(userid.length === 0)
+                return [];
+                var requests = [];
+                $.each(userid,function(index, value){
                 //you can also enter a single type instead of multiple values
                 requests.push({user_id : value});
             });
             
-            return clientDB.savePipe('users', api.query('api/user/getProfileInfo/', { request: requests}));
+                return clientDB.savePipe('users', api.query('api/user/getProfileInfo/', { request: requests}));
+            
         }else{
             //userid is string :/
             var result = clientDB.select('users',{'userid':userid+''});
@@ -801,6 +804,44 @@ var User = new function(){
             return clientDB.savePipe('users', api.query('api/user/getProfileInfo/', { request: [{user_id : userid}]})[0]);
         };
         }
+        
+   
+    this.getCypher = function(id){
+		var result="";
+		    $.ajax({
+		      url:"api.php?action=getUserCypher",
+		      async: false, 
+			  type: "POST",
+			  data: { userid : id },
+		      success:function(data) {
+		         result = data; 
+		      }
+		   });
+		   
+		   return result;
+    }
+    this.updatePassword = function(user_id, old_password, new_password, callback){
+        //generate old password hash for authentification
+	var userCypher = User.getCypher(user_id);
+	var shaPass = hash.SHA512(old_password);
+	var oldPasswordHash = cypher.getKey('auth', user_id, shaPass);
+        console.log(oldPasswordHash);
+        
+        
+        //generate hash and encrypted salt
+        var keys = cypher.createKeysForUser(new_password);
+        
+        var newPasswordHash = keys['authHash'];
+        var newAuthSaltEncrypted = keys['authSaltEncrypted'];
+        
+        api.query('api/user/updatePassword/', {oldPasswordHash:oldPasswordHash,newPasswordHash:newPasswordHash, newAuthSalt:newAuthSaltEncrypted}, function(result){
+            
+            if(typeof callback === 'function'){
+                callback(result);
+            }
+        });
+    };
+        
     this.getAllData = function(userid){
         //data will only be returned if getUser()==userid or userid is on buddylist of getUser()
         return api.query('api/user/getAllData/', { user_id:userid });
@@ -1066,7 +1107,7 @@ var User = new function(){
     */
     this.showProfile = function(user_id){
         applications.show('reader');
-        var profileTab =reader.tabs.addTab(gui.shorten(useridToUsername(user_id), 8), 'html', '');
+        var profileTab =reader.tabs.addTab(gui.shorten(useridToUsername(user_id), 8), 'html', gui.generateLoadingArea());
         var output = this.generateProfile(user_id);
         reader.tabs.updateTabContent(profileTab, output);
         
@@ -1140,6 +1181,7 @@ function showProfile(userid){
 };
 
 function useridToUsername(id){
+    console.log(id);
         var profileInfo = User.getProfileInfo(id);
         if(is_numeric(id)){
                 return profileInfo['username'];
