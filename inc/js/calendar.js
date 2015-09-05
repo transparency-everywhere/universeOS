@@ -1216,6 +1216,18 @@ var events = new function(){
 			  	};
 	
 	this.get = function(startStamp, stopStamp, privacy){
+            
+            if(typeof startStamp === 'object'){
+                var requests = [];
+                $.each(startStamp,function(index, value){
+                    //you can also enter a single type instead of multiple values
+                    requests.push({ startStamp: startStamp[index],stopStamp: stopStamp[index],privacy: privacy});
+                });
+                    return api.query('api/calendar/events/getEvents/', { request: requests});
+            }else
+                return api.query('api/calendar/events/getEvents/',{request: [{ startStamp: startStamp,stopStamp: stopStamp,privacy: privacy}]})[0];
+            
+            
             return api.query('api/calendar/events/getEvents/',{ startStamp: startStamp,stopStamp: stopStamp,privacy: privacy});
 	};
 };

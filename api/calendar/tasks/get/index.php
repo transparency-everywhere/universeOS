@@ -21,9 +21,9 @@ include('../../../../inc/functions.php');
 
 $requestFunction = function($request){
     
-    $events = new events();
-    return ($events->get(getUser(), $request['startStamp'], $request['stopStamp'], $request['privacy']));
-
+		$tasks = new tasks();
+		return ($tasks->get(getUser(), $_POST['startStamp'], $_POST['stopStamp'], $_POST['privacy']));
+		
 };
 
 $api = new api();
