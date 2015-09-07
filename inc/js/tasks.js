@@ -111,11 +111,21 @@ var tasks = new function(){
               //init datepicker in modal
               $('.datepicker').datepicker();
 	};
-	
+        
 	this.get = function(startStamp, stopStamp, privacy){
-	   
-	   return api.query('api.php?action=getTasks',{startStamp: startStamp, stopStamp: stopStamp, privacy: privacy});
-           
+            
+            if(typeof startStamp === 'object'){
+                var requests = [];
+                $.each(startStamp,function(index, value){
+                    //you can also enter a single type instead of multiple values
+                    requests.push({ startStamp: startStamp[index],stopStamp: stopStamp[index],privacy: privacy});
+                });
+                    return api.query('api/calendar/tasks/get/', { request: requests});
+            }else
+                return api.query('api/calendar/tasks/get/',{request: [{ startStamp: startStamp,stopStamp: stopStamp,privacy: privacy}]})[0];
+            
+            
+            return api.query('api/calendar/tasks/get/',{ startStamp: startStamp,stopStamp: stopStamp,privacy: privacy});
 	};
 	
 	this.show = function(taskId, editable){

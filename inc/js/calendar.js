@@ -184,11 +184,35 @@ var calendar = new function(){
 			  		return privacy.join(';');
 			  	};
 	
+        this.filterTasksAndEvents = function(startstamp, objects){
+            var results = [];
+            $.each(objects, function(index, value){
+                if(typeof value.timestamp !== 'undefined'){
+                    var timestamp = value.timestamp;
+                }
+                if(typeof value.startStamp !== 'undefined'){
+                    var timestamp = value.startStamp;
+                }
+                var stopstamp = timestamp;
+                if(typeof value.stopStamp !== 'undefined'){
+                    stopstamp = value.stopStamp;
+                }
+                if((timestamp>startstamp)&&(timestamp<(startstamp+86400))||(stopstamp>startstamp)&&(stopstamp<(startstamp+86400))){
+                    results.push(value);
+                }
+            });
+            return results;
+        };
 	this.loadTasks = function(){
+                                        var firstTimestamp = this.getFirstTimestamp();
+                                        var lastTimestamp = this.getLastTimestamp();
+                                        var loadedTasks = tasks.get(firstTimestamp, lastTimestamp, calendar.getPrivacy());
+                                        
 			  		$('.calendarFrame .day').each(function(){
 			  			var startstamp = $(this).data("timestamp");
 			  			
-			  			var taskList = tasks.get(startstamp, startstamp+86400, calendar.getPrivacy());
+                                                var taskList = calendar.filterTasksAndEvents(startstamp, loadedTasks);
+			  			//var taskList = tasks.get(startstamp, startstamp+86400, calendar.getPrivacy());
 						var list = '';
 					
 							if(taskList){
@@ -228,6 +252,13 @@ var calendar = new function(){
 			  		
 			  	};
 	
+        this.getFirstTimestamp = function(){
+            return $('.calendarFrame .day').first().data('timestamp');
+        };
+        this.getLastTimestamp = function(){
+            return $('.calendarFrame .day').last().data('timestamp')+86400;
+        };
+        
 	this.toggleTasks = function(){
 			  		if($('#showTasks').is(':checked')){
 						$('#side #taskList li').not('.header').slideDown();
@@ -279,14 +310,16 @@ var calendar = new function(){
         };
         
 	this.loadEvents = function(){
-			  		if($('#showTasks').is(':checked')){
 			  			calendar.loadTasks();
-			  		}
+                                        
+                                        var firstTimestamp = this.getFirstTimestamp();
+                                        var lastTimestamp = this.getLastTimestamp();
+                                        var loadedEvents = events.get(firstTimestamp, lastTimestamp, calendar.getPrivacy());
+                                        //console.log(loadedEvents);
 			  		$('.calendarFrame .day').each(function(){
 			  			var startstamp = $(this).data("timestamp");
-			  			
-			  			var appointments = events.get(startstamp, startstamp+86400, calendar.getPrivacy());
-						var list = '';
+			  			var appointments = calendar.filterTasksAndEvents(startstamp, loadedEvents);
+			  			var list = '';
 					
 							if(appointments){
 								$.each( appointments, function( key, value ) {
@@ -539,7 +572,7 @@ var calendar = new function(){
 					$('.calendarFrame').html(html);
 					
 					clearTimeout(this.loader);
-					this.loader = setTimeout(function() {calendar.loadEvents();}, 1000);
+					this.loader = setTimeout(function() {calendar.loadEvents();}, 100);
 					this.updateViewDetail('day', this.shownTimeObject);
 			  	};
 	

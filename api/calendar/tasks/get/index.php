@@ -21,8 +21,8 @@ include('../../../../inc/functions.php');
 
 $requestFunction = function($request){
     
-		$tasks = new tasks();
-		return ($tasks->get(getUser(), $_POST['startStamp'], $_POST['stopStamp'], $_POST['privacy']));
+    $tasks = new tasks();
+    return ($tasks->get(getUser(), $request['startStamp'], $request['stopStamp'], $request['privacy']));
 		
 };
 

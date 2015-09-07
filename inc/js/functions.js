@@ -1181,7 +1181,6 @@ function showProfile(userid){
 };
 
 function useridToUsername(id){
-    console.log(id);
         var profileInfo = User.getProfileInfo(id);
         if(is_numeric(id)){
                 return profileInfo['username'];

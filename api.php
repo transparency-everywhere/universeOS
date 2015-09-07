@@ -653,7 +653,7 @@ switch($action){
 		
 	break;
 	case 'getTasks':
-		
+		//@del
 		$tasks = new tasks();
 		echo json_encode($tasks->get(getUser(), $_POST['startStamp'], $_POST['stopStamp'], $_POST['privacy']));
 		
