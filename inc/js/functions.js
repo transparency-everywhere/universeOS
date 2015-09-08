@@ -922,6 +922,8 @@ var User = new function(){
         if(typeof userid === 'object'||typeof timestamp === 'object'){
             var userpictures = User.showPicture(userid, undefined, 40);
             var usernames = useridToUsername(userid);
+            console.log(userid);
+            console.log(usernames);
             var results = [];
             $.each(userid, function(index, value){
                 

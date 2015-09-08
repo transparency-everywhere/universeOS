@@ -16,6 +16,23 @@ class user {
     function __construct($userid=NULL) {
         $this->userid = $userid;
     }
+    public function exists($selector){
+        
+        if($selector == NULL){
+            $userid = $this->userid;
+        }else{
+            if(is_numeric($selector))
+                $userid = $selector;
+            else
+                $userid = $this->usernameToUserid($selector);
+        }
+  	if(empty($userid))
+  		$userid = getUser();
+        
+        $db = new db();
+        $data = $db->query('user', array('userid', $userid), array('userid'));
+        return isset($data['userid']);
+    }
     public function login($username, $password){
   
         $username = mysql_real_escape_string($username);
@@ -92,9 +109,12 @@ class user {
         }
         
         
-  	if(empty($userid)){
+  	if(empty($userid)&&$userid!=0){
   		$userid = getUser();
-  	}else{
+  	}else if($userid==0){
+            //returns anon userdata
+                return array('userid'=>0,'username'=>'anonymous', 'realname'=>'Ano Nymous');
+        }else{
                  //check privacy rights!
                  $privacy = new userPrivacy($userid);
                  if(!$privacy->proofRight('info')){
@@ -102,7 +122,12 @@ class user {
                  }
         }
 	$db = new db();
-	return $db->select('user', array('userid', $userid), array('userid','username','realname', 'birthdate', 'school1', 'university1', 'employer', 'place', 'home', 'homefolder'));
+	$data = $db->select('user', array('userid', $userid), array('userid','username','realname', 'birthdate', 'school1', 'university1', 'employer', 'place', 'home', 'homefolder'));
+        
+        if(is_array($data)){
+            return $data;
+        }else
+            return array();
     }
     public function getData($selector=NULL){
         if($selector == NULL){
@@ -132,7 +157,7 @@ class user {
     public function updateUserPicture($fileArray){
         $userData = $this->getData();
         $fileClass = new files();
-        $fileId = $fileClass->addFile($fileArray, $userData['profilepictureelement'], $userData['homefolder'], 'p', $this->userid);
+        $fileId = $fileClass->addFile($fileArray, $userData['profilepictureelement'], $userData['homefolder'], 'p', $this->userid, NULL, true, false);
 
         $file = new file($fileId);
         $fileData = $file->getFileData();

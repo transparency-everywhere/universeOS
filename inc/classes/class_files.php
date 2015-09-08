@@ -97,7 +97,7 @@ class files {
 	        }
 	 }
          
-    function addFile($file, $element, $folder, $privacy, $user, $lang=NULL, $download=true){
+    function addFile($file, $element, $folder, $privacy, $user, $lang=NULL, $download=true, $addFeed=true){
         
         //upload file
         $target_path = basename( $file['tmp_name']);
@@ -188,13 +188,13 @@ class files {
                 filesystem.tabs.updateTabContent('<?=substr($FileElementData['title'], 0, 10);?>' ,gui.loadPage('modules/filesystem/showElement.php?element=<?=$element;?>&reload=1'));
         <?php
         echo '</script>';
-        $time = time();
         
         //add feed entry
-        $feed = "has uploaded a file";
-        
-        $feedClass = new feed();
-        $feedClass->create($user, $feed, "", "showThumb", $privacy, "file", $fileId);
+        if($addFeed){
+            $feed = "has uploaded a file";
+            $feedClass = new feed();
+            $feedClass->create($user, $feed, "", "showThumb", $privacy, "file", $fileId);
+        }
         return $fileId;
         
     }
