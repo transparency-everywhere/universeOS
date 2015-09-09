@@ -293,6 +293,8 @@ li.notHidden{
 
 span.icon.blue-chevron-down {
     margin-left: -10px;
+    left: 0;
+    bottom: 0;
 }
 #searchMenu header ul li .icon{
 	width: 32px;
@@ -329,7 +331,7 @@ span.icon.blue-chevron-down {
 }
 
 #searchMenu header .blue-search{
-    margin-top: -33px;
+    margin-top: -46px;
     
     margin-left: 265px;
 }
@@ -5271,17 +5273,29 @@ and (max-width : 320px) {
 
 .alert.support{
     position: fixed; 
-    z-index: 999999; 
+    z-index: 999999;
     /* display: none; */
     background: #607D8B;
     color: #FFF;
     border-radius: 0;
+    height: 120px;
+    width: 280px;
 }
+
+.alert.support footer{
+    position: absolute;
+    bottom: 0;
+    right: 0px;
+    left: 0px;
+}
+.alert.support footer .button{
+    margin: 5px;
+}
+
 
 .alert.support .icon{
     position: absolute;
-    left: 0;
-    margin-top: 2px;
+    margin-bottom: -18px;
 }
 .alert.support .blue-chevron-up{
     margin-top: -54px;
@@ -5292,8 +5306,10 @@ and (max-width : 320px) {
     
 }
 
-.alert.support .blue-chevron-bottom{
-    
+.alert.support .blue-chevron-down.right{
+    left: auto;
+    right: 0;
+    margin-right: -10px;
 }
 .alert.support .blue-chevron-left{
     margin-left: -18px;
