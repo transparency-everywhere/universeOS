@@ -25,7 +25,7 @@ var clientDB = new function(){
             
             return object;
         }
-        if(typeof object[0] === 'string')
+        if(typeof object[0] !== 'object')
             this.insert(dbName, object);
         else{
             $.each(object, function(index, singleValue){
