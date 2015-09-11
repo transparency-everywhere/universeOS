@@ -57,7 +57,7 @@ var comments = new function(){
         html += '</div>';
         
         
-        
+        //@speed
         $.each(loadedComments, function(index, commentData){
             
             html += '<div class="shadow subComment commentBox'+commentData['id']+'" id="'+commentData['type']+'Comment" style="background-color: #FFF;">';
@@ -67,15 +67,15 @@ var comments = new function(){
                 html += '<div style="padding: 8px; ">';
                     html += '<div>';
                         html += '<span style="float:left;">';
-                        html + item.showScoreButton(type,item_id);
+                        html += item.showScoreButton('comment',item_id);
                         html += '</span>';
-                        html += '<span style="float:left;">';
-                        html + item.showItemSettings(type,item_id);
+                        html += '<span style="float:left;">asd';
+                        html += item.showItemSettings('comment',commentData['id']);
                         html += '</span>';
                     html += '</div>';
                 html += '</div>';
             html += '</div>';
-            
+
         });
         html += '</div>';
         return html;
@@ -105,7 +105,6 @@ var comments = new function(){
     comments.init();
   };
   this.loadComments = function(type, itemId){
-    console.log("#comment_" + type + "_"+itemId);
     $("#comment_" + type + "_"+itemId).html(comments.generate(type, itemId));
     $("#comment_" + type + "_"+itemId).toggle("slow");
     comments.init();
@@ -115,5 +114,25 @@ var comments = new function(){
     $("#feed" + feedId + "").html('<div id="comment_feed_'+feedId+'">'+comments.generate('feed', feedId)+'</div>');
     $("#feed" + feedId + "").toggle("slow");
     comments.init();
+  };
+  this.verifyRemoval = function(comment_id){
+        var confirmParameters = {};
+        confirmParameters['title'] = 'Delete Comment';
+        confirmParameters['text'] = 'Are you sure to delete this comment?';
+        confirmParameters['submitButtonTitle'] = 'Delete';
+        confirmParameters['submitFunction'] = function(){
+            
+            api.query('api/item/comments/delete/', {comment_id:comment_id},function(){
+                gui.alert('The comment has been deleted');
+            });
+            
+        };
+        confirmParameters['cancelButtonTitle'] = 'Cancel';
+        confirmParameters['cancelFunction'] = function(){
+            //alert('cancel');
+        };
+        
+        gui.confirm(confirmParameters);
+      
   };
 };

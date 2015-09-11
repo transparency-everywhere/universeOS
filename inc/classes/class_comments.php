@@ -42,6 +42,10 @@ function addComment($type, $itemid, $author, $message){
         }
    }
 
+function delete($commentId){
+    $db = new db();
+    $db->delete('comments', array('id', $commentId));
+}
    
 function deleteComments($type, $itemid){
         $db = new db();
