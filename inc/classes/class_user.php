@@ -165,6 +165,9 @@ class user {
         $db = new db();
         $db->update('user', array('userPicture'=>$fileData['filename']), array('userid',getUser()));
 
+        $feed = new feed();
+        $feed->create($this->userid, 'has a new userpicture', 0, 'feed', 'f//f');
+        
         echo '<script>';
         echo 'parent.settings.showUpdateProfileForm();parent.User.updateUserpicture('.getUser().');parent.gui.alert(\'Your userpicture has been changed. You will see the change after the next login.\');';
         echo '</script>';
