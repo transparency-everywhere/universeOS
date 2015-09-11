@@ -115,7 +115,6 @@ var init = new function(){
 		//init search
 			$("#searchField").keyup(function()
 			{
-				
 				delay(function(){
 					
                                         var $loadingArea = $('#searchMenu #loadingArea');
@@ -134,7 +133,7 @@ var init = new function(){
 			});
                         
                         
-                        $('#searchTrigger').bind('mousedown', function(){
+                        $('#searchTrigger').bind('click', function(){
                             search.toggleSearchMenu();
                         });
                         
@@ -348,7 +347,7 @@ var session = new function(){
 
 var universe = new function(){
     this.notificationArray = [];
-    this.reloadState = false;
+    this.reloadState = true;
     this.init = function(){
         
         gui.loadScript('inc/js/privacy.js');
@@ -407,7 +406,8 @@ var universe = new function(){
         //init bootstrap alert
         $(".alert").alert();
         
-        
+        //init counter handler
+        notifications.updateCounters();
         
         //init reload and load sessionInformation
         if(proofLogin()){
@@ -576,6 +576,7 @@ var universe = new function(){
                 $.each(response, function(key, value){
                     universe.handleReloadTypes(value);
                 });
+                notifications.updateCounters();
             }
         });
         
@@ -602,7 +603,8 @@ var universe = new function(){
                                                     cancelButton:{
                                                         action: 'buddylist.denyBuddyRequest('+responseElement.data.userid+')',
                                                         value: 'decline'
-                                                    }
+                                                    },
+                                                    type: 'buddylist'
                                                 });
                     this.notificationArray[notificationId].push();
                     
@@ -622,7 +624,8 @@ var universe = new function(){
                                                     cancelButton:{
                                                         action: 'groups.declineRequest('+responseElement.data.group_id+')',
                                                         value: 'decline'
-                                                    }
+                                                    },
+                                                    type: 'global'
                                                 });
                     this.notificationArray[notificationId].push();
                     
@@ -661,7 +664,8 @@ var universe = new function(){
                                                     cancelButton:{
                                                         action: '',
                                                         value: 'ignore'
-                                                    }
+                                                    },
+                                                    type:'notification'
                                                 });
                     this.notificationArray[notificationId].push();
                     
@@ -782,7 +786,8 @@ var User = new function(){
     
     };
     this.getProfileInfo = function(userid){
-        
+        if(typeof userid === 'undefined')
+            userid = User.userid;
         //if type or itemId is array, handle as request for multiple items
         if(typeof userid === 'object'){
             if(userid.length === 0)
@@ -803,7 +808,7 @@ var User = new function(){
             
             return clientDB.savePipe('users', api.query('api/user/getProfileInfo/', { request: [{user_id : userid}]})[0]);
         };
-        }
+    }
         
    
     this.getCypher = function(id){
@@ -1703,36 +1708,41 @@ function isStored(messageId){
     
 
 var support = new function(){
-    this.alert = function($attachedTo, message,callback, arrowPosition){
+    this.alert = function($attachedTo, message,callback, arrowPosition, $actionTarget){
+        var footer = '<footer><a class="button pull-right next">Next</a></footer>';
+        if(typeof $actionTarget === 'object')
+            footer = '<footer></footer>';
         
-        var $box = $('<div class="alert support"><div>'+message+'</div></div>');
+        var $box = $('<div class="alert support"><div>'+message+'</div>'+footer+'</div>');
         
         // .position() uses position relative to the offset parent, 
         var pos = $attachedTo.offset();
-
         // .outerWidth() takes into account border and padding.
         var width = $attachedTo.outerWidth();
         
-        if(pos.left+width > $(window).width()){
-            pos.left = pos.left-width;
+        if((pos.left)+width > $(window).width()){
+            var temp = (pos.left)-width;
+            pos.left = temp;
         }
-        var boxHeight = 50, boxWidth = 80,iconClass = '';
-//        var arrowUp = 'arrowDown';
-//        if(pos.top+$box.height() > $(window).height()){
-//            var arrowClass = 'arrowDown';
-//            // move box to top
-//        }
+        var boxHeight = 140, boxWidth = 280,iconClass = '';
         
         if(typeof arrowPosition === 'undefined')
             arrowPosition = 'bottom';
         var arrowClass = 'arrow-'+arrowPosition;
         
         switch(arrowClass){
-            case 'arrow-bottom':
+            case 'arrow-bottom-left':
                 pos.top = pos.top-boxHeight;
                 iconClass = 'down';
                 break;
+            case 'arrow-bottom-right':
+                pos.top = pos.top-boxHeight;
+                pos.left = pos.left-boxWidth;
+                iconClass = 'down right';
+                break;
             case 'arrow-top':
+                
+                
                 pos.top = pos.top+boxHeight;
                 iconClass = 'up';
                 break;
@@ -1745,7 +1755,7 @@ var support = new function(){
                 iconClass = 'right';
                 break;
         }
-        $box.append('<span class="icon blue-chevron-'+iconClass+'"></span>');
+        $box.children('footer').append('<span class="icon blue-chevron-'+iconClass+'"></span>');
         
         //show the menu directly over the placeholder
         $box.css({
@@ -1754,10 +1764,13 @@ var support = new function(){
         }).addClass(arrowClass).show();
         
         $('#loader').append($box);
-        $('.alert').delay(8000).fadeOut(function(){
-	    //$box.remove();
+        
+        if(typeof $actionTarget === 'undefined'){
+            $actionTarget = $('.alert.support .next');
+        }
+        $actionTarget.click(function(){
+            $('.alert.support').remove();
             callback();
-            console.log($box.height());
 	});
         
     };
@@ -1780,6 +1793,82 @@ var support = new function(){
             var i = 0;
             console.log($(html+'').children('#'+section_title).parent().nextUntil('h2').text());
         });
+    };
+    this.showTour = function(){
+        var callbacks = {};
+      //dock
+      
+      
+        callbacks['openSearchResult'] = function(){
+            
+        };
+      
+        callbacks['searchSomething'] = function(){
+                                    support.alert($('#searchField'), 'Enter a keyword, lets say for a youtube video',function(){}, 'right', $('#searchField'));
+        };
+      
+        callbacks['searchTrigger'] = function(){
+                                    support.alert($('#searchTrigger'), 'Click on this icon to open the search bar',callbacks['searchSomething'], 'bottom-right', $('#searchTrigger'));  
+        };
+        
+        callbacks['openFilesystem'] = function(){
+            applications.hide('feed');
+            applications.show('filesystem');
+            support.alert($('#filesystem'), 'This is the filesystem. Open Folders, Archives and files.',callbacks['searchTrigger'], 'left');
+            $('.alert.support').css('marginLeft', '-95px');
+        };
+        
+        
+        callbacks['sendFeed'] = function(){
+            support.alert($('#feedInput'), 'Send your first feed. But be carefull, everything you post can be seen by everyone unless you change the privacy.',callbacks['openFilesystem'], 'left');
+            $('.alert.support').css('marginLeft', '-95px');
+        };
+        
+        callbacks['dashTasks'] = function(){
+            delay(function(){
+                                    support.alert($('#taskBox'), 'Add Tasks for you or certain groups.',callbacks['dashGroups'], 'right');
+            },700);
+                                    
+        };
+        callbacks['dashGroups'] = function(){
+                                    support.alert($('#groupBox'), 'You can create groups and invite your friends or colleagues to share files and other items with them.',callbacks['applicationList'], 'left');
+                                    $('.alert.support').css('marginLeft', '-95px');
+        };
+                                
+        callbacks['applicationList'] = function(){
+                                    support.alert($('#appBox_box li:nth-of-type(2)'), 'You can open all available Applications with this list. Click on "Feed" to open the Application.',callbacks['sendFeed'], 'left', $('#appBox_box li:nth-of-type(3)'));
+                                        $('.alert.support').css('marginLeft', '-95px');
+        };
+        
+        callbacks['openDashboard'] = function(){
+                                    support.alert($('#toggleDashboardButton'), 'Klick on this button you can toggle the "Dashboard" the second important panel inside the universe',callbacks['dashTasks'], 'bottom-left',$('#toggleDashboardButton'));
+        };
+      
+        callbacks['init'] = function(){
+                                    support.alert($('#dock'), 'This is the Dock, it is the main control for the universe',callbacks['openDashboard'], 'bottom-left');
+        };
+        
+        
+            //search something and play video
+            //pause video inside the dock
+            //toggle dashboard
+            //open application feed
+      
+      //applications
+            //feed
+                //say your friends what you are doing
+            //filesystem
+                //open your userfolder
+                //create element
+                //add link or upload file
+                //change privacy
+            //settings
+            
+       
+        applications.hideAll();
+        
+        callbacks['init']();
+            
     };
 };
 

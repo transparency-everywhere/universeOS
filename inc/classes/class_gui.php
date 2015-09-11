@@ -23,9 +23,9 @@ class gui {
         echo "                    <td>"
                                         . "<i class=\"icon white-chevron-up\" id=\"toggleDashboardButton\" onclick=\"dashBoard.toggle();\"></i>";
         echo "                          <a id=\"startButton\" title=\"toggle Dashboard\" href=\"#\">"
-           . "                              <i class=\"icon dark-eye\"></i><span class=\"iconAlert\" id=\"appAlerts\"></span>"
-                . "                         <i class=\"icon dark-user\"></i><span class=\"iconAlert\" id=\"openFriendRequests\"></span>"
-                . "                         <i class=\"icon dark-comment\"></i><span class=\"iconAlert\" id=\"newMessages\" onclick=\"applications.show('chat'); return false\"></span>"
+           . "                              <i class=\"icon white-eye\"></i><span class=\"iconAlert\" id=\"globalAlerts\"></span>"
+                . "                         <i class=\"icon white-user\"></i><span class=\"iconAlert\" id=\"buddylistAlerts\"></span>"
+                . "                         <i class=\"icon white-comment\"></i><span class=\"iconAlert\" id=\"notificationAlerts\" onclick=\"applications.show('chat'); return false\"></span>"
            . "                          </a><td>\n";
         echo "                    <td><div class=\"\" id=\"logout\" onclick=\"User.logout();\" target=\"submitter\" style=\"tex-decoration: none; color: #FFF; min-width:10px; margin-left:10px;\" title=\"logout\">&nbsp;<i class=\"icon white-logout\"></i>&nbsp;</div></td>\n";
 

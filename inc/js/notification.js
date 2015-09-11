@@ -28,8 +28,9 @@ var notification = function(options){
         
     };
     this.initClicks = function(){
-      $('#notifications li').on('click',function(){
-         $(this).hide(); 
+      $('#notifications li .messageButton a').on('click',function(){
+         $(this).hide();
+         notifications.updateCounters();
       });
     };
     this.push = function(){
@@ -40,7 +41,7 @@ var notification = function(options){
         if($('.'+optionChecksum).length === 0){
             var note = this.generateNotification();
             $('#notifications>ul').append(note);
-
+            notifications.updateCounters();
             this.initClicks();
         }
     };
@@ -55,18 +56,15 @@ var notification = function(options){
         var data = '';
         if(options.data)
         $.each(options.data, function(key, value){
-            data = 'data-'+value.caption+'="'+value.value+'"';
+            data += ' data-'+value.caption+'="'+value.value+'"';
         });
-        
-        console.log(options);
-        
         //if empty id => generate random id
         if(!options.id)
             options.id = randomString(6, '#aA');
         
         
         
-        var html = '<li id="'+options.id+'" class="'+optionChecksum+'" '+data+'>\n\
+        var html = '<li id="'+options.id+'" data-notetype="'+options.type+'" class="'+optionChecksum+'" '+data+'>\n\
             <div class="messageMain">\n\
                 '+options.message+'\n\
             </div>\n\
@@ -80,11 +78,6 @@ var notification = function(options){
         
         return html;
     };
-    this.countNotifications = function(category){
-        $('#notifications>ul li').each(function(indix, value){
-            
-        });
-    };
     
 };
 
@@ -92,5 +85,32 @@ var notifications = new function(){
     this.ignoredNotifications = [];
     this.ignore = function(uniqueIdentifier){
         ignoredNotifications.push(uniqueIdentifier);
+    };
+    this.count = function(){
+        var count = {global:0,buddylist:0,notification:0};
+        $('#notifications>ul li').each(function(index, value){
+            var type = $(this).attr('data-notetype');
+            count[type]++;
+        });
+        return count;
+    };
+    this.updateCounters = function(){
+        var counts = this.count();
+        var totalCount = 0;
+        $.each(counts, function(index, value){
+            if(value === 0){
+                $('#'+index+'Alerts').html('');
+            }else{
+                $('#'+index+'Alerts').html(value);
+            }
+            totalCount = totalCount+value;
+        });
+        
+        if(totalCount === 0)
+            $('#startButton').bind('click',function(){
+                gui.alert('No notifications :/');
+            });
+        else
+            $('#startButton').unbind('click');
     };
 };
