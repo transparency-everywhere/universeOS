@@ -44,14 +44,17 @@ var chat = new function(){
     this.openDialogue = function(userid){
         var username = useridToUsername(userid);
         
-        var chatFrameHTML = chat.generateLeftFrame();
-            chatFrameHTML += '<div class="chatRightFrame chatFrame_'+userid+'">'+gui.loadPage("modules/chat/chatreload.php?buddy="+username+"")+'</div>';
-            
         applications.show('chat');
+      
+        var mainPage = gui.loadPage("modules/chat/chatreload.php?buddy="+username+"");
+      
       
       	//check if dialoge allready exists
         if($(".chatFrame_"+ userid).length == 0){
 
+        var chatFrameHTML = chat.generateLeftFrame();
+            chatFrameHTML += '<div class="chatRightFrame chatFrame_'+userid+'">'+mainPage+'</div>';
+            
             userid = usernameToUserid(username);
             chat.tabs.addTab(username, '',chatFrameHTML);
             openDialogueInterval = window.setInterval("chatDecrypt("+userid+")", 500);
@@ -60,8 +63,8 @@ var chat = new function(){
             //if dialoge doesnt exists => bring dialoge to front..
             var dialogue_tab_id = chat.tabs.getTabByTitle(username);
             
-            chat.tabs.updateTabContent(dialogue_tab_id, chatFrameHTML);
-            chat.tabs.showTab(dialogue_tab_id)
+            $('.chatRightFrame.chatFrame_'+userid).html(mainPage);
+            chat.tabs.showTab(dialogue_tab_id);
 
 
         }
