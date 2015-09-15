@@ -29,7 +29,7 @@ var notification = function(options){
     };
     this.initClicks = function(){
       $('#notifications li .messageButton a').on('click',function(){
-         $(this).hide();
+         $(this).parent().parent().parent().hide();
          notifications.updateCounters();
       });
     };
