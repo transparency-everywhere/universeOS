@@ -43,8 +43,12 @@ function addComment($type, $itemid, $author, $message){
    }
 
 function delete($commentId){
-    $db = new db();
-    $db->delete('comments', array('id', $commentId));
+    $commentData = $this->getData($comment_id);
+    if(authorize($commentData['privacy'], "show", $commentData['author'])){
+        $db = new db();
+        $db->delete('comments', array('id', $comment_id));
+    }
+    
 }
    
 function deleteComments($type, $itemid){
@@ -147,6 +151,11 @@ function showComments($type, $itemid) {
     
     }
     echo"</div>";
+}
+
+public function getData($comment_id){
+    $db = new db();
+    return $db->select('comments', array('id', $comment_id));
 }
 
 function get($type, $itemId){
