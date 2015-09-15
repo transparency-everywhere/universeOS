@@ -149,7 +149,7 @@ var item = new function(){
             });
             return api.query('api/item/getOptions/', { request: requests});
         }else
-            return api.query('api/item/getOptions/', { request: [{type : type, itemId: itemId}]});
+            return api.query('api/item/getOptions/', { request: [{type : type, itemId: itemId}]})[0];
         
     };
     this.showRightClickMenu = function(type, itemId){
@@ -257,10 +257,10 @@ var item = new function(){
             });
             return result;
         }else{
-            var list = this.buildList(options[0]);
+            var list = this.buildList(options);
             var href = '';
             var onclick = '';
-            var target = '';	
+            var target = '';
             if(!empty(list)){
                 var html = "<a href=\"#\" onclick=\"$(this).next('.itemSettingsWindow').slideToggle(); $('.itemSettingsWindow').this(this).hide();\" class=\"itemSettingsButton\">" + filesystem.generateIcon('settings', 'grey') + "</a>\n\
                   <div class=\"itemSettingsWindow\">\n\
@@ -270,7 +270,6 @@ var item = new function(){
 
                       html += "</ul>\n\
                           </div>";
-
                   return html;
             }else{
                 return '';

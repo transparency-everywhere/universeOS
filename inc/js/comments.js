@@ -19,7 +19,6 @@ var comments = new function(){
         api.query('api/item/comments/create/', {type: type, itemid: itemid, comment: comment},callback);
     };
     this.init = function(){
-        
         $('.addComment').submit(function(e){
             e.preventDefault();
             var type = $(this).attr('data-type');
@@ -28,19 +27,14 @@ var comments = new function(){
                 comments.reload(type, item_id);
             });
         });
-        
     };
     this.load = function(type, item_id){
         return api.query('api/item/comments/load/', {'type':type, 'item_id':item_id});
     };
-    
     this.reload = function(type, item_id){
         $("#comment_" + type + "_"+item_id).html(comments.generate(type, item_id));
         comments.init();
     };
-    
-    
-    
     this.generate = function(type, item_id){
         var loadedComments = comments.load(type,item_id);
         
@@ -99,7 +93,6 @@ var comments = new function(){
     };
     
   this.loadSubComments = function(commentId){
-      
     $("#comment" + commentId + "").html(comments.generate('comment', commentId));
     $("#comment" + commentId + "").toggle("slow");
     comments.init();
@@ -110,7 +103,6 @@ var comments = new function(){
     comments.init();
   };
   this.loadFeedComments = function(feedId){
-      
     $("#feed" + feedId + "").html('<div id="comment_feed_'+feedId+'">'+comments.generate('feed', feedId)+'</div>');
     $("#feed" + feedId + "").toggle("slow");
     comments.init();

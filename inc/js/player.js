@@ -42,8 +42,7 @@ var player = new function(){
 	this.tabs.addTab('Home', 'html',initHTML);
     };
     this.show = function(){
-        
-        applications.show('show');
+        applications.show('player');
     };
     
     this.prev = function(){
