@@ -53,6 +53,10 @@ var dashBoard = new function(){
                 var content = 'Have a look at the <a href="//wiki.transparency-everywhere.com/en/" target="_blank" title="Open the Transparency-Everywhere Wiki">wiki</a>';
                 
                 $('#dashBoard #scrollFrame').append(dashBoard.generateDashBox('Need Help?', content, '', 'helpBox'));
+                
+                $('#dashBoard').click(function(){
+                    dashBoard.slideDown();
+                });
 	
 	};
 	
