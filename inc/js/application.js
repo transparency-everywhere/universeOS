@@ -63,6 +63,10 @@ var applications = new function(){
             app['icon'] = 'gfx/applicationIcons/white/feed.svg';
             apps[3] = app;
             
+            //change position with display
+            apps[3] = apps[2];
+            apps[2] = app;
+            
             //chat
             var app = [];
             app['title'] = 'chat';
@@ -145,6 +149,13 @@ var applications = new function(){
             window[applicationTitle].init();
         
         window[applicationTitle].applicationVar.show();
+    };
+    this.hideAll = function(){
+        $.each(applications.getList(), function(index,value){
+            if(typeof window[value.title] !== 'undefined')
+            if(typeof window[value.title].applicationVar !== 'undefined')
+                window[value.title].applicationVar.hide();
+        });
     };
 };
 
