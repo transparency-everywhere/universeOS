@@ -56,7 +56,7 @@ class contextMenu{
 					
 
 				$delete['title'] = 'Delete';
-				$privacy['onclick'] = "privacy.showUpdatePrivacyForm('feed', $itemId);";
+				$delete['onclick'] = "feed.verifyRemoval($itemId);";
 				$delete['target'] = 'submitter'; 
                             }
 				

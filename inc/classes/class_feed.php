@@ -90,7 +90,14 @@ class feed {
         return $db->shiftResult($db->query("SELECT * FROM feed $where"));
     }
     
-    
+    function delete($feed_id){
+        $feedData = $this->getData($feed_id);
+        if(authorize($feedData['privacy'], "show", $feedData['author'])){
+            $db = new db();
+            $db->delete('feed', array('id', $feed_id));
+            return true;
+        }
+    }
     function deleteFeeds($type, $itemid){
        $db = new db();
       
