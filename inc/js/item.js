@@ -106,15 +106,23 @@ var item = new function(){
         if(typeof itemId === 'object'){
             var result = [];
             $.each(score, function(index, value){
-                if(typeof type === 'object')
-                    var output = '<span class="scoreButton '+type[index]+'_'+itemId[index]+'">';
-                else
-                    var output = '<span class="scoreButton '+type+'_'+itemId+'">';
+                var currentType = type,
+                    currentItemId = itemId;
+                    
+                if(typeof type === 'object'){
+                    currentType = type[index];
+                    if(typeof currentItemId === 'object')
+                        currentItemId = itemId[index];
+                }
+                    
+                    
+                var output = '<span class="scoreButton '+currentType+'_'+currentItemId+'">';
+                
                 if(proofLogin())
-                    output += '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('dislike', 'gray') + '</a>';
+                    output += '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+currentType+'\', \''+currentItemId+'\');">' + filesystem.generateIcon('dislike', 'gray') + '</a>';
                 output += '<a class="btn btn-xs counter" href="#">'+score[index]+'</a>';
                 if(proofLogin())
-                    output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('like', 'gray') + '</a>';
+                    output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+currentType+'\', \''+currentItemId+'\');">' + filesystem.generateIcon('like', 'gray') + '</a>';
                 output += '</span>';
                 result.push(output);
             });
