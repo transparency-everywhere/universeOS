@@ -257,7 +257,7 @@ class gui {
                             background-attachment: no-repeat;
                         }
                     </style>
-                    <? }
+                    <?php }
         if(!$login) {
             $_SESSION['loggedOut'] = true;
 

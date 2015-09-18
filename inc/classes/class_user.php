@@ -535,7 +535,7 @@ function userSignature($userid, $timestamp, $subpath = NULL, $reverse=NULL){
                     </tr>
                 </table>
             </td>
-            <?}else{?>
+            <?php }else{?>
             <td>
                 <table>
                     <tr>
@@ -551,7 +551,7 @@ function userSignature($userid, $timestamp, $subpath = NULL, $reverse=NULL){
                 </table>
             </td>
             <td><span class="pictureInSignature"><?=showUserPicture($feedUserData['userid'], "40", $subpath);?></span></td>
-            <?}?>
+            <?php } ?>
         </tr>
     </table>
     </div>
