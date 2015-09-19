@@ -82,14 +82,14 @@ var filesystem =  new function() {
     this.generateLeftNav = function(){
         var html = '          <div class="leftNav">';		  			
         html += '              <ul>';		  			                    
-        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'1\'));return false"><a href="#">' + filesystem.generateIcon('filesystem', 'blue') + ' All Files</a></li>';
-        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'pupularity\'));return false"><a href="#">' + filesystem.generateIcon('suggestion', 'blue') + ' Suggestions</a></li>';		  			
-        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'document\'));return false"><a href="#">' + filesystem.generateIcon('file', 'blue') + ' Documents</a></li>';		  			
-        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'audio\'));return false"><a href="#">' + filesystem.generateIcon('playlist', 'blue') + ' Audio Files</a></li>';		  			
-        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'video\'));return false"><a href="#">' + filesystem.generateIcon('play', 'blue') + ' Video Files</a></li>';	  			
+        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'1\'));filesystem.tabs.showTab(1);return false"><a href="#">' + filesystem.generateIcon('filesystem', 'blue') + ' All Files</a></li>';
+        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'pupularity\'));filesystem.tabs.showTab(1);return false"><a href="#">' + filesystem.generateIcon('suggestion', 'blue') + ' Suggestions</a></li>';		  			
+        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'document\'));filesystem.tabs.showTab(1);return false"><a href="#">' + filesystem.generateIcon('file', 'blue') + ' Documents</a></li>';		  			
+        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'audio\'));filesystem.tabs.showTab(1);return false"><a href="#">' + filesystem.generateIcon('playlist', 'blue') + ' Audio Files</a></li>';		  			
+        html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'video\'));filesystem.tabs.showTab(1);return false"><a href="#">' + filesystem.generateIcon('play', 'blue') + ' Video Files</a></li>';	  			
         if(proofLogin()){
-            html += '              <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'fav\'));return false"><a href="#">' + filesystem.generateIcon('fav', 'blue') + ' Fav</a></li>';
-            html += '              <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'myfiles\'));return false"><a href="#">' + filesystem.generateIcon('file', 'blue') + ' My Files</a></li>';		
+            html += '              <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'fav\'));filesystem.tabs.showTab(1);return false"><a href="#">' + filesystem.generateIcon('fav', 'blue') + ' Fav</a></li>';
+            html += '              <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'myfiles\'));filesystem.tabs.showTab(1);return false"><a href="#">' + filesystem.generateIcon('file', 'blue') + ' My Files</a></li>';		
         }
         html += '                  <!-- <li><i class="icon-warning-sign"></i> deleted</li> -->';		  			
         html += '              </ul>';		  			
