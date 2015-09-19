@@ -29,32 +29,55 @@ class element {
     }
     
     function create($folder, $title, $type, $user, $privacy){
+        $db = new db();
         $title = sanitizeText($title);
         $type = sanitizeText($type);
+        $doubleTitle = false;
+        $elements = $db->select('elements', array('folder', $folder));
+        foreach ($elements as $key => $value) {
+            if ($value['title'] === $title) {
+                $doubleTitle = true;
+            }
+        }
         
-        $values['title'] = $title;
-        $values['folder'] = $folder;
-        $values['type'] = $type;
-        $values['author'] = $user;
-        $values['timestamp'] = time();
-        $values['privacy'] =  $privacy;
-        
-        $db = new db();
-        return $db->insert('elements', $values);
+        if ($doubleTitle === false){
+            $values['title'] = $title;
+            $values['folder'] = $folder;
+            $values['type'] = $type;
+            $values['author'] = $user;
+            $values['timestamp'] = time();
+            $values['privacy'] =  $privacy;
+            
+            return $db->insert('elements', $values);
+        } else {
+            return false;
+        }
     }
     
     function update($folder, $title, $type, $privacy){
+        $db = new db();
         $title = sanitizeText($title);
         $type = sanitizeText($type);
+        $doubleTitle = false;
         if($elementId == NULL)
             $elementId = $this->id;
-        $values['folder'] = $folder;
-        $values['title'] = $title;
-        $values['type'] = $type;
-        $values['privacy'] = $privacy;
+        $elements = $db->select('elements', array('folder', $folder));
+        foreach ($elements as $key => $value) {
+            if ($value['title'] === $title) {
+                $doubleTitle = true;
+            }
+        }
         
-        $db = new db();
-        return $db->update('elements', $values, array('id', $elementId));
+        if ($doubleTitle === false){
+            $values['folder'] = $folder;
+            $values['title'] = $title;
+            $values['type'] = $type;
+            $values['privacy'] = $privacy;
+                
+            return $db->update('elements', $values, array('id', $elementId));
+        } else {
+            return false;
+        }
         
     }
     

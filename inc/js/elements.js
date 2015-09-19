@@ -40,7 +40,7 @@ var elements = new function(){
         var link = "./modules/reader/showfile.php?type=" + elementData['type'];
         var header = "<header class=\"white-header\">";
             header += filesystem.generateIcon('element', 'grey');
-            header += "<span class=\"elementtitle\">" + elementData['title'] + "</span>";
+            header += "<span class=\"elementtitle\">" + gui.shorten(elementData['title'], 25) + "</span>";
             header += '<span class="headerbuttons">'; 
                 header += filesystem.generateIcon('list', 'grey', 'greyList', 'listView()');
                 header += filesystem.generateIcon('list', 'blue', 'blueList');
