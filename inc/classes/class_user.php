@@ -122,7 +122,7 @@ class user {
                  }
         }
 	$db = new db();
-	$data = $db->select('user', array('userid', $userid), array('userid','username','realname', 'birthdate', 'school1', 'university1', 'employer', 'place', 'home', 'homefolder'));
+	$data = $db->select('user', array('userid', $userid), array('userid','username','realname', 'birthdate', 'school1', 'university1', 'employer', 'place', 'home', 'homefolder', 'myFiles'));
         
         if(is_array($data)){
             return $data;
