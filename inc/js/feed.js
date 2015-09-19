@@ -117,14 +117,15 @@ var feed = new function(){
     };
     this.generateSingleFeed = function(feedData){
         debug.log('generateSingleFeedInitalized...');
-        
+        console.log(feedData);
+        console.log(feedData['feedAttachment']);
         var feedContent = '<div class="feedContent">'+feed.feedText(feedData['feed'])+'</div>';
                 if(feedData['type'] === 'showThumb'){
                     debug.log('     showItemThumb');
-                    if(typeof feedData['feedAttachment'] !== 'undefined')
+                    if(typeof feedData['feedAttachment'] !== 'undefined'&&!empty(feedData['feedAttachment']))
                         feedContent += '<div class="feedAttachment">'+feedData['feedAttachment']+'</div>';
                     else
-                        feedContent += '<div class="feedAttachment">'+item.showItemThumb(feedData['attachedItem'], feedData['attachedItemId'])+'</div>';
+                        feedContent += '<div class="feedAttachment">'+item.showItemThumb([feedData['attachedItem']], [feedData['attachedItemId']])[0]+'</div>';
                 }
         
         //load comments
@@ -165,14 +166,14 @@ var feed = new function(){
         debug.log('...generateSingleFeed finished');
         return output;
     };
-    this.create = function(content, privacy,callback){
+    this.create = function(content, privacy, attachedItemType, attachedItemId,callback){
         
             var result="";
             $.ajax({
                 url:"api/feed/create/",
                 async: false,  
                 type: "POST",
-                data: $.param({content : content})+'&'+privacy,
+                data: $.param({content : content, attachedItemType : attachedItemType, attachedItemId: attachedItemId})+'&'+privacy,
                 success:function(data) {
                    result = data;
                    if(typeof callback === 'function'){
@@ -213,12 +214,13 @@ var feed = new function(){
             
             $('#feedInputForm').submit(function(e){
                 e.preventDefault();
-                feed.create($('#feedInput').val(), $('#addFeedPrivacy .privacySettings  :input').serialize(),function(){
+                feed.create($('#feedInput').val(), $('#addFeedPrivacy .privacySettings  :input').serialize(), $('#feedInputForm .itemThumb').attr('data-itemtype'), $('#feedInputForm .itemThumb').attr('data-itemid'), function(){
                     $( "#feedheader" ).animate({ height: "61px" }, 500 );
                     $( "#feedFrame" ).animate({ top: "61px" }, 500 );
                     $('#feedInputBar').slideUp(500);
                     $( "#addFeedPrivacy" ).animate({ top: "61px" }, 500 );
                     $('#addFeedPrivacy').slideUp(500);
+                    $('#feedInputForm .itemThumb').remove();
                     feed.reload($('.feedMain .feedFrame').attr('data-type'));
                 });
                 $('#feedInput').val('');
@@ -303,6 +305,7 @@ var feed = new function(){
         output += "            <div style=\"position: absolute;top: 10px;right: 15px;left: 65px;\">";
         output += "                        <textarea id=\"feedInput\" name=\"feedInput\" onclick=\"$(this).val('');\">What's Up?<\/textarea>";
         output += "                        <div style=\"\" id=\"feedInputBar\">";
+        output += "<a href=\"#\" class=\"pull-left\" style=\"margin-left: -45px;\" onclick=\"filesystem.attachItem($('#addFeedPrivacy'));\"><i class=\"icon icon-paperclip\"></i></a>";
         output += "                                <div class=\"btn-toolbar\" style=\"float: left;\">";
         output += "                                        <a class=\"privacyButton\" href=\"#\" onclick=\"$('#feedInput').focus(); $('#addFeedFile').hide('slow'); $('#addFeedPrivacy').slideToggle(500);\" title=\"privacy\"> Privacy <\/a>";
         output += "                                <\/div>";
@@ -323,6 +326,28 @@ var feed = new function(){
     };
     this.loadFeedsFrom = function(startId, type, typeId){
         return api.query('api/feed/loadFrom/', {start_id: startId, type : type, typeId: typeId});
+    };
+    
+    this.verifyRemoval = function(feed_id){
+          var confirmParameters = {};
+          confirmParameters['title'] = 'Delete Feed';
+          confirmParameters['text'] = 'Are you sure to delete this feed?';
+          confirmParameters['submitButtonTitle'] = 'Delete';
+          confirmParameters['submitFunction'] = function(){
+
+              api.query('api/feed/delete/', {feed_id:feed_id},function(){
+                  $('.feedNo'+feed_id).remove();
+                  gui.alert('The feed has been deleted');
+              });
+
+          };
+          confirmParameters['cancelButtonTitle'] = 'Cancel';
+          confirmParameters['cancelFunction'] = function(){
+              //alert('cancel');
+          };
+
+          gui.confirm(confirmParameters);
+
     };
 };
 			  

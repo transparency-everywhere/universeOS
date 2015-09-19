@@ -2150,7 +2150,13 @@ function listView() {
     
 }
 
-function initUploadify(id, uploader, element, timestamp, token){
+
+//wrapper for uploadify
+function initUploadify(id, uploader, element, timestamp, token, multiple){
+    
+    if(typeof multiple === 'undefined'){
+        multiple = true;
+    }
 		
 	    $(function() {
 	            $(id).uploadify({
@@ -2164,6 +2170,13 @@ function initUploadify(id, uploader, element, timestamp, token){
 				        'onUploadSuccess' : function(file, data, response) {
 				        	
 				        	if(response){
+                                                        //if multiple = false empty file list on every upload
+                                                        
+                                                        if(!multiple){
+                                                            $('.tempFilelist').html('');
+                                                        }
+                                                    
+                                                        //@sec
 				        		eval(data); //no esta bien! que?
 				        	}
 				        },

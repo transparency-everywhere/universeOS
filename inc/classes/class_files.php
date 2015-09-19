@@ -82,6 +82,7 @@ class files {
                         $fileValues['type'] = $type;
                         $fileValues['owner'] = $user;
                         $fileValues['votes'] = '';
+                        $fileValues['temp'] = 1;
                         $fileValues['score'] = '';
                         $fileValues['privacy'] = $privacy;
                         $fileValues['var1'] = '';

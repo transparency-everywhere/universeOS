@@ -220,6 +220,7 @@ class item {
                     $info[1] = '/'.$folderClass->getPath(false);
 
                 break;
+                case 'collection':
                 case 'element':
                     $elementData = $db->select('elements', array('id', $itemId), array('title', 'type'));
 
@@ -238,7 +239,8 @@ class item {
                 break;
                 case 'file':
                     $fileData = $db->select('files', array('id', $itemId), array('title', 'type', 'folder', 'size', 'filename'));
-
+                    
+                    
                     $title = $fileData['title'];
                     $shortTitle = $fileData['title'];
                     //shorten filename
@@ -253,14 +255,14 @@ class item {
 
                     //if image no info is shown. the complete first row is used to preview image
                     if($fileData['type'] == "image/jpg" || $fileData['type'] == "image/jpeg" || $fileData['type'] == "image/png"){
-                            $elementData = mysql_fetch_array(mysql_query("SELECT folder FROM elements WHERE id='$fileData[folder]'"));
-                            
-                            $folderClass = new folder($elementData['folder']);
-                            
                             $img = "file";
 
                             //the column which normaly includes the icon needs to fill out the full width
                             $imgColumnStyle = "colspan=\"2\"";
+                            
+                            
+                            $info[0] = "size";
+                            $info[1] = round($fileData['size']/(1024*1024), 2)." MB";
                     }else{
                     $img = "file";
                     //define info 1

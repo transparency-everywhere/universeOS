@@ -18,14 +18,28 @@
 var filesystem =  new function() {
     
     
-    this.generateUploadTab = function(element, elementTabId, uploaderTabId){
-        var html = this.generateLeftNav();
-        //alles aus upload.php in einer onestep lösung zusammenbauen
-        html += '<div class="frameRight">';
+    
+    /**
+    * Generates html for upload tab
+    * @param {element} id of element in which the files will be uploaded.
+    * @param {elementTabId} tab_id for the tab, in which the element is opened.(Needed for Callback)
+    * @param {uploaderTabId} tab_id of uploader.(Needed for Callback)
+    * @param {leftNav} show leftNav
+    */
+    this.generateUploadTab = function(element, elementTabId, uploaderTabId, additional){
+        var html = '';
+        if(typeof additional === 'undefined'||additional === true){
+            //alles aus upload.php in einer onestep lösung zusammenbauen
+            html += '<div class="frameRight">';
+            html = this.generateLeftNav();
+        }
             html += '<div class="uploadTab">';
                 html += '<form action="api/files/submitUploader/" method="post" target="submitter" data-uploadertab="' + uploaderTabId + '" data-elementtab="' + elementTabId + '" data-elementid="' + element + '">';
+                
+        if(typeof additional === 'undefined'||additional === true){
                     html += '<h2>Upload</h1>';
                     html += '<hr />';
+        }
                     html += '<div class="uploaderHeader">';
                         html += '<div><h3>You will upload files to this collection:</h3></div>';
                         html += '<div class="titleAndIcon"><span class="title">' + elements.getTitle(element) + '</span>' + filesystem.generateIcon('element', 'white') + '</div>';
@@ -38,18 +52,25 @@ var filesystem =  new function() {
                         html += '<ul class="tempFilelist"></ul>';
                         html += '<div id="queue"></div>';
                     html += '</div>';
+        
+        if(typeof additional === 'undefined'||additional === true){
                     html += '<div onclick="filesystem.tabs.removeTab(' + uploaderTabId + '); return false" class="uploaderCancelButton">Cancel</div>';
                     html += '<div class="uploaderUploadButton"><input type="submit" value="Upload" class="submitUpload"></div>';
+        }
+        
                 html += '</form>';
             html += '</div>';
-        html += '</div>';
+            
+        if(typeof additional === 'undefined'||additional === true){
+            html += '</div>';
+        }
         privacy.load('.uploadPrivacy', 'p', 'true');
         return html;
     };
     
     this.openUploadTab = function(element, elementTabId){
         applications.show('filesystem');
-        var uploaderTabId = filesystem.tabs.addTab('Upload in #'+element, '', '');
+        var uploaderTabId = filesystem.tabs.addTab('Upload in #'+element, '', '', false);
         filesystem.tabs.updateTabContent(uploaderTabId, filesystem.generateUploadTab(element, elementTabId, uploaderTabId));
         initUploadify('#uploader_file', 'api/files/uploadTemp/', element, '', ''); //the two empty strings are timeStamp and salt - could be empty
         
@@ -59,10 +80,158 @@ var filesystem =  new function() {
             filesystem.tabs.removeTab($form.attr('data-uploadertab'));
             elements.open($form.attr('data-elementid'), $form.attr('data-elementtab'));
         });
-    }
+    };
     
+    this.attachItem = function($appendAfter){
+        //will be added to my files
+        var html = '<ul id="attachItem">';
+            html += '<li data-type="upload"><span class="icon white-plus"></span>Upload Item</li>';
+            html += '<li data-type="choose"><span class="icon white-filesystem"></span>Chose Item frome Filesystem</li>';
+                html += '<li class="chooseSub" style="display:none;" data-type="folder"><span class="icon white-folder"></span>Folder</li>';
+                html += '<li class="chooseSub" style="display:none;" data-type="collection"><span class="icon white-filesystem"></span>Collection</li>';
+                html += '<li class="chooseSub" style="display:none;" data-type="file"><span class="icon white-file"></span>File</li>';
+            html += '</ul>';
+        
+            
+        var formModal = new gui.modal();
+        formModal.init('Attach Item', html, {});
+        
+        $('#attachItem li').bind('click', function(){
+            switch($(this).attr('data-type')){
+                case 'choose':
+                        $('.chooseSub').show();
+                    break;
+                case 'upload':
+                    filesystem.uploadAndAttachItem($appendAfter);
+                    break;
+                case 'folder':
+                case 'collection':
+                case 'file':
+                        filesystem.attachItemFromFileSystemForm($appendAfter, $(this).attr('data-type'));
+                    break;
+            }
+        });
+    };
     
-    
+    this.uploadAndAttachItem = function($appendAfter){
+        
+        
+        
+        var element = User.getProfileInfo()['myFiles'];
+        
+        var html = filesystem.generateUploadTab(element, 'fuck', 'fuck', false);
+        
+        html += 'Files are uploaded to you myFiles Collection.';
+        
+        var formModal = new gui.modal();
+        
+        var fieldArray = [];
+        var options = [];
+        options['headline'] = '';
+        options['buttonTitle'] = 'Save';
+        options['noButtons'] = true;
+        
+        var modalOptions = {};
+        modalOptions['buttonTitle'] = 'Attach Item';
+        
+        modalOptions['action'] = function(){
+            $('.blueModal .uploadTab form').submit(function(){
+            
+            
+                $('.tempFilelist li').each(function(){
+                    var file_id = $(this).attr('data-fileid');
+
+                    $appendAfter.after(item.showItemThumb(['file'], [file_id]));
+                    $appendAfter.next('.itemThumb').prepend('<span class="icon white-close" onclick="$(this).parent().remove();"></span>');
+                });
+
+
+                $('.blueModal').remove();
+
+                
+            });
+            $('.blueModal .uploadTab form').submit();
+            
+            
+        };
+        
+        formModal.init('Attach Item', html, modalOptions);
+        
+        //init uploadify and turn off temp uploading
+        initUploadify('#uploader_file', 'api/files/uploadTemp/', element, '', '', false); //the two empty strings are timeStamp and salt - could be empty
+        
+        $('.uploadTab form').unbind('submit');
+        $('.uploadTab form').bind('submit', function(){
+            
+            //attach itemThumb after append after
+            
+            
+            
+        });
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    };
+    //type string element, folder or file
+    this.attachItemFromFileSystemForm = function($appendAfter, type){
+        
+        var formModal = new gui.modal();
+        
+        var fieldArray = [];
+        var options = [];
+        options['headline'] = '';
+        options['buttonTitle'] = 'Save';
+        options['noButtons'] = true;
+        
+        var field0 = [];
+        switch(type){
+            case 'folder':
+            field0['caption'] = 'Choose a Folder:';
+            field0['inputName'] = 'folder';
+                break;
+            case 'collection':
+            field0['caption'] = 'Choose a Collection:';
+            field0['inputName'] = 'collection';
+                break;
+            case 'file':
+            field0['caption'] = 'Choose a File:';
+            field0['inputName'] = 'file';
+                break;
+        }
+        field0['caption_position'] = 'top';
+        field0['type'] = 'html';
+        field0['value'] = "<div id=\'attachItemFileBrowserFrame\'></div>";
+        fieldArray[0] = field0;
+        
+        
+        var modalOptions = {};
+        modalOptions['buttonTitle'] = 'Attach Item';
+        
+        modalOptions['action'] = function(){
+            var typeId = $('#attachItemFileBrowserFrame .choosenTypeId').val();
+            $('.blueModal').remove();
+            $appendAfter.after(item.showItemThumb([type], [typeId])[0]);
+            $appendAfter.next('.itemThumb').prepend('<span class="icon white-close" onclick="$(this).parent().remove();"></span>');
+        };
+        
+        formModal.init('Attach Item', '<div id="attachItemFromFileSystemFormContainer"></div>', modalOptions);
+        gui.createForm('#attachItemFromFileSystemFormContainer',fieldArray, options);
+        
+        //load minifilebrowser
+        loadMiniFileBrowser($('#attachItemFileBrowserFrame'),"1", '', '', true, type);
+        
+        
+    };
     this.init = function(){
         var html = '<div id="fileBrowserFrame"></div>';
         var grid = {width: 6, height:  4, top: 7, left: 6};

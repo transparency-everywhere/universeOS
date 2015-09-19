@@ -109,8 +109,12 @@ class feed {
    
     function create($author, $feed, $validity, $type, $privacy, $attachedItem=NULL, $attachedItemId=NULL){
         $feed = sanitizeText($feed);
-        $attachedItem = sanitizeText($attechedItem);
+        $attachedItem = sanitizeText($attachedItem);
 		
+        if(!empty($attachedItem)&&!empty($attachedItemId)){
+            $type = 'showThumb';
+        }
+        
        //if privacy==h feed is not shown anyway so an insert would be jabberuserless
        if($privacy != "h"){
        $time = time();

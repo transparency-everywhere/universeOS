@@ -177,7 +177,7 @@ class fileSystem {
 
 function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true, $select=NULL){
             
-            if($showGrid === 'false'||$showGrid != 1){
+            if($showGrid === 'false'){
                 $showGrid = false;
             }else{
                 $showGrid = true;
@@ -204,21 +204,25 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 		//define which buttons are shown
 		$showFolderButton = true;
 		$showElementButton = true;
-		$showFilebutton = true;
+		$showFileButton = true;
 		
 		
-		if($select == "folder"){
+                switch($select){
+                    case 'folder':
 			$showElementButton = false;
-			$showFilebutton = false;
-		}
-		if($select == "element"){
+			$showFileButton = false;
+                        break;
+                    case 'element':
+                    case 'collection':
 			$showFolderButton = false;
-			$showFilebutton = false;
-		}
-		if($select == "file"){
+			$showFileButton = false;
+                        break;
+                    case 'file':
 			$showElementButton = false;
-			$showFilebutton = false;
-		}
+			$showFileButton = false;
+                        break;
+                }
+                
 		
         	
 		if($showGrid){
