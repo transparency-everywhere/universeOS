@@ -28,6 +28,11 @@ if(!mysql_connect("$server","$user","$password") OR !mysql_select_db("$db")) {
     die("Something went wrong with the Database... WTF?!");
 }
 
+//$mysqli = new mysqli("$server", "$user", "$password", "$db");
+//if ($mysqli->connect_errno) {
+//    echo "Something went wrong with the Database... WTF?! - Error Notification: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error; //NOTIFICATION SHOULD BE REMOVED
+//}
+
 
 define('analytic_script',  "<!-- Piwik only on page for unregistered users -->"
     . "<script type=\"text/javascript\"> \n"

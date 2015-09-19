@@ -199,7 +199,7 @@ class privacy {
 																		edit
                                                                 	</div>
                                                                 </li>
-                                                        <?
+                                                        <?php
                                                         }
                                                         if($i < 1){
                                                             echo'<li style="padding-left:10px;">Your are in no group</li>';
