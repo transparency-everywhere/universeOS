@@ -154,7 +154,7 @@ class item {
     //shows a picture of element or folder if available
     function showThumb(){
            $type = $this->type;
-           $typeid = $this->typeid;
+           $typeid = save($this->typeid);
            
            $db = new db();
             switch($type){
@@ -296,7 +296,7 @@ class item {
             }
 
 
-            $return = "<div class=\"itemThumb\">
+            $return = "<div class=\"itemThumb\" data-itemtype=\"$itemType\" data-itemid=\"$itemId\">
                 <table width=\"100%\" cellspacing=\"0\">";
 
              //add icon/thumbnail
