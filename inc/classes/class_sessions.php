@@ -16,7 +16,8 @@
 //
 //@author nicZem for Tranpanrency-everywhere.com
 
-
+//sessions are used to store information on different clients
+//which are need for synchronisation
 class sessions{
     //validates if fingerprint for user -> user() exists
     function checkFingerprint($session_identifier){
@@ -49,8 +50,8 @@ class sessions{
         return $db->insert('sessions', $values);
         
     }
+    //returns values for session (eg. last message received etc.)
     function getSessionInformation($session_identifier){
-        
         $db = new db();
         $data = $db->select('sessions', array('user', getUser(), '&&', 'fingerprint', $session_identifier), NULL, NULL, 1);
     
@@ -63,10 +64,13 @@ class sessions{
         $db = new db();
         $db->update('sessions', array('new_fingerprint'=>$new_fingerprint), array('user', getUser(), '&&', 'fingerprint', $old_fingerprint));
     }
+    //update/add specific value in the session informations
+    //e.g. after a group request has been shown
     function updateSessionInformation($session_identifier, $key, $value){
+        //parse old information
         $parsed_information = json_decode($this->getSessionInformation($session_identifier), true);
+        //update add value to old information
         $parsed_information[$key] = $value;
-        
         
         $values['sessionInfo'] = json_encode($parsed_information);
         $db = new db();

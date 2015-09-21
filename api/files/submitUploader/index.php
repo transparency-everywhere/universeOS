@@ -32,7 +32,6 @@ $privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $cus
 $files = $_POST['uploadedFiles'];
 $successfullUploadedFiles = 0;
 foreach($files AS $file){
-        $woff .= $file;
         $fileClass = new file($file);
         if($fileClass->validateTempFile($privacy)){
             $successfullUploadedFiles++;

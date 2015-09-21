@@ -41,10 +41,7 @@ if(empty($_GET['initter'])){
           </div>
           <div id="test_<?=$buddyName;?>" class="dialoge">
 <? } ?>          
-		  <script>
-		   	chatDecrypt('<?=$buddyid;?>');
-		  </script>
-          <div class="chatMainFrame_<?=$buddyName;?>">
+          <div class="messageFrame chatMainFrame_<?=$buddyName;?>">
 			  <?
 			  $messageClass->showMessages($userid, $buddyid, "0,10");
 		      unset($intWindows);?>
