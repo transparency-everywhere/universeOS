@@ -21,7 +21,9 @@ var reader = new function(){
     this.tabs;
     
     this.uffChecksums = []; //var to store checksums for reload
-    
+    this.showWebShot = function(url){
+        
+    };
     this.init = function(){
         var grid = {width: 5, height:  4, top: 6, left: 3, hidden: true};
         if(proofLogin())
@@ -454,5 +456,16 @@ var reader = new function(){
         }
         html += '</ul>'; 
         return html;
+    };
+    /**
+    * Shows new tab with table 
+    * @param {(string|object)} [input=[[1,'test'],[2,'test2']]] Data that shall be parsed to table
+    */
+    this.showTable = function(input){
+        //proof if data can be shown as table
+        
+    };
+    this.isTable = function(object){
+        
     };
 };

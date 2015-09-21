@@ -15,6 +15,9 @@
 
 
 var applications = new function(){
+    /**
+    * Defines which applications are loaded and in which order they are
+    */
     this.getList = function(){
         
         var apps = [];
@@ -127,6 +130,9 @@ var applications = new function(){
         return apps;
     };
     
+    /**
+    * Loads and initializes scripts which are defined in applications.getList
+    */
     this.init = function(){
         var sessionApplications = this.getList();
         
@@ -135,26 +141,35 @@ var applications = new function(){
             if(value['source']){
                 gui.loadScript('inc/js/'+value['source']);
                 if(value['active']){
-
-                    //eval is evil!!!!!!!! maybe we should look for another solution
                     eval(value['className']).init();
                 };
             }
         });
     };
     
-    //@way to choose
+    /**
+    * Shows application and inits if necessary
+    * @param {string} applicationTitle - The title of the global application var.
+    */
     this.show = function(applicationTitle){
         if(typeof window[applicationTitle].applicationVar === 'undefined')
             window[applicationTitle].init();
         
         window[applicationTitle].applicationVar.show();
     };
+    /**
+    * Hides application
+    * @param {string} applicationTitle - The title of the global application var.
+    */
+    this.hide = function(applicationTitle){
+        if(typeof window[applicationTitle].applicationVar !== 'undefined')
+            window[applicationTitle].applicationVar.show();
+    };
     this.hideAll = function(){
         $.each(applications.getList(), function(index,value){
             if(typeof window[value.title] !== 'undefined')
-            if(typeof window[value.title].applicationVar !== 'undefined')
-                window[value.title].applicationVar.hide();
+                if(typeof window[value.title].applicationVar !== 'undefined')
+                    window[value.title].applicationVar.hide();
         });
     };
 };

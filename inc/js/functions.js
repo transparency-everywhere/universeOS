@@ -1708,7 +1708,9 @@ function isStored(messageId){
     
 
 var support = new function(){
-    this.alert = function($attachedTo, message,callback, arrowPosition, $actionTarget){
+    this.callbackId = 0;
+    this.callback;
+    this.alert = function($attachedTo, message, arrowPosition, $actionTarget){
         var footer = '<footer><a class="button pull-right next">Next</a></footer>';
         if(typeof $actionTarget === 'object')
             footer = '<footer></footer>';
@@ -1764,13 +1766,12 @@ var support = new function(){
         }).addClass(arrowClass).show();
         
         $('#loader').append($box);
-        
         if(typeof $actionTarget === 'undefined'){
             $actionTarget = $('.alert.support .next');
         }
         $actionTarget.click(function(){
             $('.alert.support').remove();
-            callback();
+            support.next();
 	});
         
     };
@@ -1794,7 +1795,27 @@ var support = new function(){
             console.log($(html+'').children('#'+section_title).parent().nextUntil('h2').text());
         });
     };
-    this.showTour = function(){
+    this.openAlertById = function(callbackId){
+        var callbacks = [];
+        
+        callbacks.push('init');
+        callbacks.push('openDashboard');
+        callbacks.push('dashTasks');
+        callbacks.push('dashGroups');
+        callbacks.push('applicationList');
+        callbacks.push('sendFeed');
+        callbacks.push('openFilesystem');
+        callbacks.push('searchTrigger');
+        callbacks.push('searchSomething');
+        callbacks.push('openSearchResult');
+        
+        
+        
+        this.executeCallback(callbacks[callbackId]);
+        this.callbackId++;
+        
+    },
+    this.executeCallback = function(callbackTitle){
         var callbacks = {};
       //dock
       
@@ -1804,70 +1825,69 @@ var support = new function(){
         };
       
         callbacks['searchSomething'] = function(){
-                                    support.alert($('#searchField'), 'Enter a keyword, lets say for a youtube video',function(){}, 'right', $('#searchField'));
+                                    support.alert($('#searchField'), 'Enter a keyword, lets say for a youtube video', 'right', $('#searchField'));
         };
       
         callbacks['searchTrigger'] = function(){
-                                    support.alert($('#searchTrigger'), 'Click on this icon to open the search bar',callbacks['searchSomething'], 'bottom-right', $('#searchTrigger'));  
+                                    support.alert($('#searchTrigger'), 'Click on this icon to open the search bar', 'bottom-right', $('#searchTrigger'));  
         };
         
         callbacks['openFilesystem'] = function(){
             applications.hide('feed');
             applications.show('filesystem');
-            support.alert($('#filesystem'), 'This is the filesystem. Open Folders, Archives and files.',callbacks['searchTrigger'], 'left');
+            support.alert($('#filesystem'), 'This is the filesystem. Open Folders, Archives and files.' , 'left');
             $('.alert.support').css('marginLeft', '-95px');
         };
         
         
         callbacks['sendFeed'] = function(){
-            support.alert($('#feedInput'), 'Send your first feed. But be carefull, everything you post can be seen by everyone unless you change the privacy.',callbacks['openFilesystem'], 'left');
+            support.alert($('#feedInput'), 'Send your first feed. But be carefull, everything you post can be seen by everyone unless you change the privacy.' , 'left');
             $('.alert.support').css('marginLeft', '-95px');
         };
         
         callbacks['dashTasks'] = function(){
+            console.log('start');
             delay(function(){
-                                    support.alert($('#taskBox'), 'Add Tasks for you or certain groups.',callbacks['dashGroups'], 'right');
+            console.log('end');
+                                    support.alert($('#taskBox'), 'Add Tasks for you or certain groups.', 'right');
             },700);
                                     
         };
         callbacks['dashGroups'] = function(){
-                                    support.alert($('#groupBox'), 'You can create groups and invite your friends or colleagues to share files and other items with them.',callbacks['applicationList'], 'left');
+                                    support.alert($('#groupBox'), 'You can create groups and invite your friends or colleagues to share files and other items with them.', 'left');
                                     $('.alert.support').css('marginLeft', '-95px');
         };
                                 
         callbacks['applicationList'] = function(){
-                                    support.alert($('#appBox_box li:nth-of-type(2)'), 'You can open all available Applications with this list. Click on "Feed" to open the Application.',callbacks['sendFeed'], 'left', $('#appBox_box li:nth-of-type(3)'));
+                                    support.alert($('#appBox_box li:nth-of-type(2)'), 'You can open all available Applications with this list. Click on "Feed" to open the Application.', 'left', $('#appBox_box li:nth-of-type(3)'));
                                         $('.alert.support').css('marginLeft', '-95px');
         };
         
         callbacks['openDashboard'] = function(){
-                                    support.alert($('#toggleDashboardButton'), 'Klick on this button you can toggle the "Dashboard" the second important panel inside the universe',callbacks['dashTasks'], 'bottom-left',$('#toggleDashboardButton'));
+                                    support.alert($('#toggleDashboardButton'), 'Klick on this button you can toggle the "Dashboard" the second important panel inside the universe', 'bottom-left',$('#toggleDashboardButton'));
         };
       
         callbacks['init'] = function(){
-                                    support.alert($('#dock'), 'This is the Dock, it is the main control for the universe',callbacks['openDashboard'], 'bottom-left');
+                                    support.alert($('#dock'), 'This is the Dock, it is the main control for the universe', 'bottom-left');
         };
         
+        callbacks[callbackTitle]();
         
-            //search something and play video
-            //pause video inside the dock
-            //toggle dashboard
-            //open application feed
-      
-      //applications
-            //feed
-                //say your friends what you are doing
-            //filesystem
-                //open your userfolder
-                //create element
-                //add link or upload file
-                //change privacy
-            //settings
-            
+    };
+    this.next = function(){
+        console.log(this.callbackId);
+        this.openAlertById(this.callbackId);
+    };
+    this.showTour = function(){
+        
+        
+        
+        
+        
        
         applications.hideAll();
         
-        callbacks['init']();
+        this.openAlertById(this.callbackId);
             
     };
 };
