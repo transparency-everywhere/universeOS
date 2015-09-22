@@ -399,8 +399,7 @@ class contextMenu{
                                             $privacy['onclick'] = "privacy.showUpdatePrivacyForm('link', $itemId);";
 
                                             $edit['title'] = 'Edit';
-                                            $edit['href'] = '#';
-                                            $edit['onclick'] = "popper('doit.php?action=editItem&type=link&itemId=$itemId')";
+                                            $edit['href'] = "javascript: links.showUpdateLinkForm($itemId);";
 
                                             $delete['title'] = 'Delete';
                                             $delete['href'] = "javascript:links.verifyRemoval('$itemId');";
