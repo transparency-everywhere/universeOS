@@ -1,14 +1,14 @@
-<form action="index.php?page=check" method="post">
+<form action="?page=keys" method="post">
 <header>
 <h2>Database</h2>
 </header>
 
 <table class="content">
 		<tr>
-			<td><h4>General Settings</h4></td>
+			<td colspan="2"><h4>General Settings</h4></td>
 		</tr>
 		<tr>
-			<td>Title of your universe:</td>
+			<td>universe Title:</td>
 			<td><input type="text" name="universeTitle" placeholder="The title of your universe"></td>
 		</tr>
 		<tr>
@@ -31,7 +31,7 @@
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td><h4>Database Settings</h4></td>
+			<td colspan="2"><h4>Database Settings</h4></td>
 		</tr>
 		<tr>
 			<td>Host</td>
@@ -52,7 +52,7 @@
 	</table>
 <p> </p>
 <div class="controlBar">
-	<a href="index.php" class="btn pull-left">Back</a>
+	<a href="installer.php" class="btn pull-left">Back</a>
 	<input type="submit" class="btn btn-info pull-right" value="Continue">
 </div>
 <p>&nbsp; </p>
