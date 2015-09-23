@@ -2149,13 +2149,6 @@ function getUserSalt(id){
 		   
 		   return result;
 	}
-//feed
-function feedLoadMore(destination ,type, user, limit){
-	    $.get("doit.php?action=feedLoadMore&user="+user+"&limit="+limit+"&type="+type,function(data){
-	    	$(destination).append(data);
-		},'html');
-	}
-       
 
 //filesystem
 function smallSymbols() {

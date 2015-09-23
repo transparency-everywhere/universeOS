@@ -2,6 +2,9 @@
 session_start();
 include("inc/config.php");
 include("inc/functions.php");
+
+//old file, everything should be moved to /api and deleted as soon as possible
+
 $time = time();
 
 if($_GET['action'] == "addToNotSuggestList"){
@@ -206,11 +209,6 @@ else if($_GET['action'] == "deleteItem"){
             }
         }
         
-        
-        
-        
-        
-        
 else if($_GET['action'] == "chatLoadMore"){
             
             $userid = getUser();
@@ -237,23 +235,6 @@ else if($_GET['action'] == "chatLoadMore"){
                 
         }
         
-        
-else if($_GET['action'] == "feedLoadMore"){
-            $feedClass = new feed();
-            $type = save($_GET['type']);
-            $user = save($_GET['user']);
-            $limit = save($_GET['limit']);
-            
-            //when chatframe is loaded $limit = 0, when load more is clicked the first time $limit=1 etc.
-            //it always adds thirty messages
-            $newLimit = $limit+1;
-            //convert $limit to a mysql LIMIT conform string 
-            $limit = $limit*30;
-            $limit = ($limit).",".($limit+30);
-            $feedClass->show("$type", "$user","$limit");
-            
-            
-        }
 else if($_GET['action'] == "chatSendItem"){
         	if(isset($_POST['submit'])){
         		
@@ -302,42 +283,7 @@ else if($_GET['action'] == "chatSendItem"){
          
 		<?
         }
-else if($_GET['action'] == "createFeed"){
-            
-            if(!empty($_POST['feedInput']) || !empty($_POST['feed1'])){
-            
-                    //set privacy
-                    $customShow = $_POST['privacyCustomSee'];
-                    $customEdit = $_POST['privacyCustomEdit'];
-                    
-                    $privacy = exploitPrivacy($_POST['privacyPublic'], $_POST['privacyHidden'], $customEdit, $customShow);
-                    $user = getUser();
-                    $feed = $_POST['feedInput'].$_POST['feed1'];
-                    
-                    //create feed
-                    $feedClass = new feed();
-                    $id = $feedClass->create(getUser(), $feed, "", "feed", "p");
-            ?>
-            <script>
-            parent.reloadFeed('friends');
-            parent.$('#feedInput').val('');
-            </script>
-            <?php
-                }
-            
-        }
         
-        
-        
-else if($_GET['action'] == "writeUff"){
-    
-    error_reporting(E_ALL);
-                $id = save($_POST['id']);
-                $input = $_POST['input'];
-                $uff = new uff($id);
-                $uff->write($input);
-                
-            }
 else if($_GET['action'] == "changeBackgroundImage"){
         if(proofLogin()){
         if($_GET['type'] == "file"){
