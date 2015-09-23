@@ -160,7 +160,7 @@ include('classes/class_youtube.php');
     
 include('classes/class_links.php');
 	
-include('classes/class_internLink.php');
+include('classes/class_shortcuts.php');
 
 include('classes/class_folder.php');
 
