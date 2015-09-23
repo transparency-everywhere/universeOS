@@ -21,9 +21,6 @@ var reader = new function(){
     this.tabs;
     
     this.uffChecksums = []; //var to store checksums for reload
-    this.showWebShot = function(url){
-        
-    };
     this.init = function(){
         var grid = {width: 5, height:  4, top: 6, left: 3, hidden: true};
         if(proofLogin())
@@ -419,6 +416,13 @@ var reader = new function(){
         userHistory.push('link', id, title);
 
     };
+    this.showWebShot = function(url){
+        applications.show('reader');
+        
+        var html = '<div class="webshotBrowser"><img src="https://webshotserver.herokuapp.com/api/'+encodeURIComponent(url)+'"/></div>';
+	this.tabs.addTab('Webshot', '', html);
+        
+    };
     this.buildHistory = function(userHistoryArray){
         var itemsA = userHistoryArray;
         var tab = 'home';
@@ -461,8 +465,45 @@ var reader = new function(){
     * Shows new tab with table 
     * @param {(string|object)} [input=[[1,'test'],[2,'test2']]] Data that shall be parsed to table
     */
-    this.showTable = function(input){
-        //proof if data can be shown as table
+    this.showTable = function(array, switchAxis){
+        //the basic idea is, that every array can be shown, even if the value also might be an object.
+        //if the value is an object -> show table icon an give the possibility to open object
+        //in new table
+        
+        if(typeof switchAxis === 'undefined')
+            switchAxis = false;
+        
+        
+        var html = '<table>', first = '', second = '';
+        $.each(array, function(index, value){
+            
+            if(!switchAxis)
+                html += '<tr>';
+            
+                    first += '<td>';
+                    first += index;
+                    first += '</td>';
+                    
+                    second += '<td>';
+                    second += value;
+                    second += '</td>';
+                    
+            if(!switchAxis)
+                html += '</tr>';
+                
+        });
+        
+        if(switchAxis){
+            html += '<tr>';
+            html += first;
+            html += '</tr>';
+            html += '<tr>';
+            html += second;
+            html += '</tr>';
+        }
+        html += '</table>';
+        
+        
         
     };
     this.isTable = function(object){
