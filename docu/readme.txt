@@ -1,5 +1,10 @@
 Pleas mark stuff thats depraciated with @old
 
+to do
+    attachments
+    chat
+    showtour
+
 Video
     youtube
     vimeo
@@ -11,14 +16,18 @@ Video
 
 Update
 
-    Delete Users where cypher is md5 or sha512
+    Rename 
+            elements -> collections
+            reader   -> display
 
-    Add session for each user
-        --->    registration get client identifier
+    Delete Users where cypher is md5 or sha512
 
     
 
 todo
+    //@sec = important security stuff
+    //@speed = possile improvements for speeding up the script
+
     docu
         usage of document.cookie
             session
@@ -26,11 +35,11 @@ todo
     get rid of
         mysql_query
         $.post, $.ajax
-
+        thousend different column names for user (author, owner, creator, user etc) instead `user`
+        chat.show(), feed.show(), buddylist.show() etc. use application.show('buddylist') instead
     api
+        typecasting
         api.query(data {if string->utf8} return if string -> JSescape);
-
-
 
     score
         positive ergebnisse #313131;
@@ -42,9 +51,6 @@ todo
 
     all onclick to bind(?)
 
-    group profile button feedback
-        button feedback
-
     fix raster
 
     add protection to userPicture element, groupicture element etc
@@ -53,15 +59,12 @@ todo
 
     fade in applications
 
-    pabst rightclick .rightclick, data-type data-typeId
-
     add type xml and json to openlink
-
-    registration
-        hints for stronger passwords
 
     group admin
         change group picture
+
+
 
 Recent:
       Style
@@ -139,9 +142,28 @@ Components
     Filesystem
         Open Files and Links
 
+______
+Entropy
+
+Main DB
+Installations(id, host, pubKey, version)
 
 
-Files and the use of them (outdated
+universe
+    on install/update:
+        creates keypair
+        sends host, pubkey, version to main DB
+        saves pubkey in file, privkey encrypted in file or db or other secure solution
+        receives list of hosts and stores them as a file
+______ 
+                            
+
+
+
+
+
+
+Files and the use of them (outdated)
 
 	PHP
 		inc/config.php		//mysql server confid

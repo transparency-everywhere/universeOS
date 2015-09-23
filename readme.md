@@ -1,20 +1,18 @@
 The universeOS
 -----------------
-
-The universeOS is a Project which tries to give users and groups a platform for anonymous conspirative communication.
- 
+The universeOS is a Project which tries to give users and groups a platform for anonymous conspirative communication. 
 
 
 Website: http://www.universeOS.org
-
-IRC: #universeOS, @universeOS
+Twitter: https://twitter.com/universeos
 
 The universeOS is a PHP based Webappliction.
 
 Requirements
-PHP >5
-
-mySQL
+--------------
+Minimum 10 MB disk space
+MySQL 5 or later
+PHP 5.4 or later
 
 We ask you to get involved in the project to create a safe and free webspace. The universe shall become an uncomplicated and user friendly Web-Desktop for users who don´t want to get tracked by providers and companies during their online activities.
 It is an space where the own datas and documents can be safed, managed and shared. It is possible to use the chat with buddies and colleagues also within the connected Instant Messenger for all portable devices. The universe connects the functions of a web-desktop and a social network.
@@ -28,7 +26,7 @@ Right now, we do not recommend to handle sensitive data. Because everyone can re
 
 Run the Installer
 1. Download and extract the file on the Webspace of your choice.
-2. Open /install/
+2. Open /install.php
 3. Run the installer
 
 
@@ -43,6 +41,10 @@ We try to get the script as secure as possible. It is important to point out the
         An easy exchange of algorithms
     3. Well written and well documented code
 
+Advertising
+------------
+We think that the universeOS should not be a comerical project. But we also now, that we are trying to compete with services which gather personal data and which can generete enourmous profits with personalized advertising services. I think we should look for ways of advertising methods, which are working without personalized data. (Nic)
+
 Developing UniverseOS:
 -----------------------
 
@@ -51,47 +53,6 @@ Developing UniverseOS:
 
 2. Pull the project dependencies:
 	´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´
-
-=Recent=
-----------
--Authorize
-    Folders
-        create,update,delete
-    Collections
-        create,update,delete
-    Files
-        create,update,delete
-    Links
-        create,update,delete
-    Feeds
-        create,update,delete
-    Comments
-        create,update,delete
-
--Speed Up
-    Feed!
-    Telescope
-    Userprofile
-    Groupprofile
-
-
-Update between the Beta version and now:
-We improved the usability and design and added more functionality: Adding services like the Wikipedia and video services like Youtube is much easier now.
-Also, the source code has been tidied out and documented and is ready for public release.
-
-=Close Future=
----------------
--Add crypto layer to api
-
--Decentralize the whole architecture
-
--Find ways to give the single user more ways of democratic participation
-
--Enable different ways of crypto
-
--We haven't changed the crypto since the release of the Beta. We plan to overhaul the entire crypto protocol. We're looking for help here! So if you're interested in participating, give us a shout.
-
--Add an easy way to let everyone develope apps
 
 How to report bugs
 -------------------
@@ -109,20 +70,12 @@ Please see the file called LICENSE.
 
 Contacts
 ----------
-
-You can contact the team of transparency everywhere via their profiles on the universe:
-
-Nic Zemke
-
-Stefan Pabst
-
-Daniela Di Lena
-
-Joris Grahl
-
-or just write an email to info@transparency-everywhere.com
+email to info@transparency-everywhere.com
 
 
 
-...more docu will follow. See /docu/ and readme.txt
-        
+
+
+
+
+...more docu will follow. See /docu/
