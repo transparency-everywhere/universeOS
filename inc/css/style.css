@@ -290,6 +290,7 @@ li.notHidden{
 	margin-left: -2px;
 }
 #searchMenu header ul li{
+    cursor: pointer;
     display:none;
     line-height: 20px;
     padding: 4px;

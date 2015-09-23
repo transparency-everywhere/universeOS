@@ -74,7 +74,7 @@ var registration = new function(){
                         console.log('all checks false');
                     }
         
-    }
+    };
     this.checkPassword = function(id){
             $('#checkPasswordStatus').show();
             var password = $("#"+id).val();

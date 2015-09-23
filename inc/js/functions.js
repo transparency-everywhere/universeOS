@@ -927,8 +927,6 @@ var User = new function(){
         if(typeof userid === 'object'||typeof timestamp === 'object'){
             var userpictures = User.showPicture(userid, undefined, 40);
             var usernames = useridToUsername(userid);
-            console.log(userid);
-            console.log(usernames);
             var results = [];
             $.each(userid, function(index, value){
                 
@@ -1821,7 +1819,11 @@ var support = new function(){
       
       
         callbacks['openSearchResult'] = function(){
-            
+            support.alert($('#searchField'),
+                          'Enter a keyword, lets say for a youtube video',
+                          'right',
+                          $('#searchField')
+                        );
         };
       
         callbacks['searchSomething'] = function(){
@@ -2797,7 +2799,7 @@ var handler = new function(){
         };
   };
   this.getLinkHandlerName = function(link){
-      var ret = null;
+      var ret = 'URLs';
       $.each(handlers, function(index, value){
           if(value.regex && link.match(value.regex)){
              ret = index;
@@ -2830,7 +2832,7 @@ function singleOrMulti(item, cb){
 //handler.getTitle('youtube', 'https://www.youtube.com/watch?v=9bZkp7q19f0');
 var handlers = {
     'youtube': {
-                    application : 'reader',
+                    application : 'player',
                     regex : /((http|https):\/\/)?(www\.)?(youtube\.com)(\/)?([a-zA-Z0-9\-\.]+)\/?/,
                     open : function($target, link, onStop){
                             var videoId;
@@ -2950,7 +2952,10 @@ var handlers = {
                     },
                     getTitle : function(link){
                         return singleOrMulti(link, function(value){
-                            return toString(value).replace(/((http|https):\/\/)?((www|(.*?))\.)(wikipedia\.org)(\/)?([a-zA-Z0-9\-\.]+)\/?/, '');
+                            if(typeof value !== 'string')
+                                value = toString(value);
+                            
+                            return value.replace(/((http|https):\/\/)?((www|(.*?))\.)(wikipedia\.org)(\/)?([a-zA-Z0-9\-\.]+)\/?/, '');
                         });
                         
                     },
@@ -2968,8 +2973,14 @@ var handlers = {
                         return handler.query('wikipedia', query, offset, max_results);
                     },
                     handler: function(link){
-                        var title = this.getTitle(link);
-                        reader.tabs.addTab('title', 'someHtml');
+                        
+                        var frame_id = gui.generateId();
+                        
+                        applications.show('reader');
+                        var title = handlers.wikipedia.getTitle(link);
+                        reader.tabs.addTab(title, 'html', '<div id="'+frame_id+'"></div>');
+                        
+                        this.open($('#'+frame_id), link);
                     }
                 },
     'folders': {
@@ -3061,8 +3072,28 @@ var handlers = {
                 },
     'links': {
                     handler: function(id){
-                        var linkData = links.getData(id);
-                        reader.openLink(handler.getLinkHandlerName(linkData['link']), linkData.link, linkData.title);
+                        if(is_numeric(id)){
+                            var linkData = links.getData(id);
+                            var id = linkData['link'];
+                        }
+                            
+                        console.log(handler.getLinkHandlerName(id));
+                        handlers[handler.getLinkHandlerName(id)].handler(id);
+                        
+//                        console.log(linkData);
+//                        if(handler[linkData['type'].application === 'player'])
+//                            player.openItem(linkData['type'], linkData['link']);
+//                        else
+//                            reader.showWebShot(linkData.link);
+                    }
+    },
+    'URLs':{
+        handler: function(id){
+                        if(is_numeric(id)){
+                            var linkData = links.getData(id);
+                            var id = linkData['link'];
+                        }
+                        reader.showWebShot(id);
                     }
     }
 };
