@@ -28,11 +28,11 @@ Right now, we do not recommend to handle sensitive data. Because everyone can re
 
 Run the Installer
 
-1. Download and extract the file on the Webspace of your choice.
+- Download and extract the file on the Webspace of your choice.
 
-2. Open /install.php
+- Open /install.php
 
-3. Run the installer
+- Run the installer
 
 
 
@@ -40,11 +40,12 @@ Run the Installer
 Security
 ----------
 We try to get the script as secure as possible. It is important to point out the most important things we need to take care of:
+
     1. Javascript Cryptography
     2. A good Cryptoprotocoll which allows
-        A Public Key Infrastructure
-        Instant Messaging (with Groups)
-        An easy exchange of algorithms
+        - A Public Key Infrastructure
+        - Instant Messaging (with Groups)
+        - An easy exchange of algorithms
     3. Well written and well documented code
 
 Advertising
@@ -55,10 +56,11 @@ Developing UniverseOS:
 -----------------------
 
 1. Clone the repository:
-		´´´´´´´´´´´´´´´´´´´´´´´´´´
 
-2. Pull the project dependencies:
-	´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´
+    `git clone https://github.com/transparency-everywhere/universeOS.git`
+    
+2. Run the installer
+
 
 How to report bugs
 -------------------
