@@ -117,8 +117,6 @@ var feed = new function(){
     };
     this.generateSingleFeed = function(feedData){
         debug.log('generateSingleFeedInitalized...');
-        console.log(feedData);
-        console.log(feedData['feedAttachment']);
         var feedContent = '<div class="feedContent">'+feed.feedText(feedData['feed'])+'</div>';
                 if(feedData['type'] === 'showThumb'){
                     debug.log('     showItemThumb');
@@ -184,7 +182,6 @@ var feed = new function(){
             return result;
     };
     this.init = function(){
-        
         var html = this.generateHeader();
         html += "        <div id=\"feedFrame\">";
         html += "            <div class=\"addFeed\">";
@@ -212,6 +209,8 @@ var feed = new function(){
                 });
             });
             
+            
+            
             $('#feedInputForm').submit(function(e){
                 e.preventDefault();
                 feed.create($('#feedInput').val(), $('#addFeedPrivacy .privacySettings  :input').serialize(), $('#feedInputForm .itemThumb').attr('data-itemtype'), $('#feedInputForm .itemThumb').attr('data-itemid'), function(){
@@ -226,7 +225,21 @@ var feed = new function(){
                 $('#feedInput').val('');
             });
             
+            $('.attachToFeed').click(function(){
+                var $nextWindow = $(this).next('.settingsList');
+                $nextWindow.toggle();
+                
+            });
             
+            $('.settingsList .smiley').click(function(){
+                $('#feed .settingsList').toggle();
+                var $feedInput = $('#feedInput');
+                console.log($feedInput);
+                var code = $(this).attr('data-code');
+                $feedInput.val($feedInput.val()+code);
+            });
+            
+            //@del
             //everything here could probaly be deleted
             $("#showGroups").click(function () {
                 $("#selectGroups").toggle("slow");
@@ -301,11 +314,20 @@ var feed = new function(){
         var output="";
         output += "<div class=\"windowHeader\" id=\"feedheader\">";
         output += "            <i class=\"icon icon-pencil\" style=\"height: 32px; width: 32px; top: 14px;position: absolute; left: 15px;\"></i>";
-        output += "            <form id=\"feedInputForm\" method=\"post\" action=\" doit.php?action=createFeed\" target=\"submitter\">";
+        output += "            <form id=\"feedInputForm\" method=\"post\" target=\"submitter\">";
         output += "            <div style=\"position: absolute;top: 10px;right: 15px;left: 65px;\">";
         output += "                        <textarea id=\"feedInput\" name=\"feedInput\" onclick=\"$(this).val('');\">What's Up?<\/textarea>";
         output += "                        <div style=\"\" id=\"feedInputBar\">";
-        output += "<a href=\"#\" class=\"pull-left\" style=\"margin-left: -45px;\" onclick=\"filesystem.attachItem($('#addFeedPrivacy'));\"><i class=\"icon icon-paperclip\"></i></a>";
+        output += "<a href=\"#\" class=\"pull-left attachToFeed\" style=\"margin-left: -45px;\"><i class=\"icon icon-paperclip\"></i></a>";
+        
+        output += '<div class="settingsList">';
+        output += '<ul>';
+        output += '<li><a class="smiley emoticon-smile" data-code=":)"></a><a class="smiley emoticon-tongue" data-code=":p"></a><a class="smiley emoticon-wink" data-code=";)"></a><a class="smiley emoticon-surprised" data-code=":o"></a></li>';
+        output += '<li><a class="smiley emoticon-laugh" data-code=":D"></a><a class="smiley emoticon-cute" data-code=":3"></a><a class="smiley emoticon-sad" data-code=":("></a><a class="smiley emoticon-cry" data-code=":\'("></a></li>';
+        output += '';
+        output +=' <li><a href="#" onclick=\"filesystem.attachItem($(\'#addFeedPrivacy\'));\" style="color:#FFF">Attach File</a></li></ul>';
+        output += '</div>';
+        
         output += "                                <div class=\"btn-toolbar\" style=\"float: left;\">";
         output += "                                        <a class=\"privacyButton\" href=\"#\" onclick=\"$('#feedInput').focus(); $('#addFeedFile').hide('slow'); $('#addFeedPrivacy').slideToggle(500);\" title=\"privacy\"> Privacy <\/a>";
         output += "                                <\/div>";
