@@ -21,10 +21,13 @@ class files {
     }
     //uploads temporary file which is validated with files->validateTempFile()
     function uploadTempfile($file, $element, $folder, $privacy, $user, $lang=NULL, $download=true){
-	 	
 	 	//upload file
                 $target_path = basename( $file['tmp_name']);
                 $filename = $file['name'];
+                
+                if($filename == '.htaccess'){
+                    return false;
+                }
                 $thumbname = "$filename.thumb";
                 $size = $file['size'];
                 $time = time();
@@ -50,52 +53,59 @@ class files {
                 $thumbPath = universeBasePath.'/'.$folderpath."thumbs/";
                 $imgName = basename($FileElementData['title']."_".$file['name']);
                 $elementName = rawurlencode($FileElementData['title'].'_');
-                $finalName = $FileElementData['title']."_".$file['name'];
+                
+                //sanitize text to avoid xss via filenames
+                $finalName = sanitizeText($FileElementData['title']."_".$file['name']);
 
 
                 //move uploaded file to choosen folder and add .temp 
-                move_uploaded_file($file['tmp_name'], universeBasePath.'/'.$folderpath.$file['name']);
-                rename(universeBasePath.'/'.$folderpath.$file['name'], universeBasePath.'/'.$folderpath.$finalName);
-			
-                //if type is image => create thumbnail before .temp suffix is added
-	        if($type == "image/jpg" || $type == "image/jpeg" || $type == "image/png"){
-	                    $thumbPath= "$thumbPath";
-	                    $path = "$folderpath";
-                            $imageClass = new image();
-	                    if(is_dir($thumbPath)){
-                                $imageClass->mkthumb($finalName, 600, 600, universeBasePath.'/'.$folderpath, $thumbPath);
-	                    }else{
-                                $oldmask = umask(0);
-	                        mkdir($thumbPath,0755);
-                                umask($oldmask);
-                                $imageClass->mkthumb($finalName, 600, 600, universeBasePath.'/'.$folderpath, $thumbPath);
-	                    }
-	        }
-            rename(universeBasePath.'/'.$folderpath.$finalName, universeBasePath.'/'.$folderpath.$finalName.".temp");
-			//add db entry and add temp value
-                        $fileValues['folder'] = $element;
-                        $fileValues['title'] = $imgName;
-                        $fileValues['size'] = $size;
-                        $fileValues['timestamp'] = $time;
-                        $fileValues['filename'] = $imgName;
-                        $fileValues['language'] = $lang;
-                        $fileValues['type'] = $type;
-                        $fileValues['owner'] = $user;
-                        $fileValues['votes'] = '';
-                        $fileValues['temp'] = 1;
-                        $fileValues['score'] = '';
-                        $fileValues['privacy'] = $privacy;
-                        $fileValues['var1'] = '';
-                        $fileValues['download'] = $download;
-                        $fileValues['status'] = true;
-                        $db = new db();
-                        $insertid = $db->insert('files', $fileValues);
-                        
-		if($insertid){
-	        	return $insertid;
-	        }else{
-	        	return false;
-	        }
+                if(move_uploaded_file($file['tmp_name'], universeBasePath.'/'.$folderpath.$file['name'])){
+                    rename(universeBasePath.'/'.$folderpath.$file['name'], universeBasePath.'/'.$folderpath.$finalName);
+		
+                    //if type is image => create thumbnail before .temp suffix is added
+                    if($type == "image/jpg" || $type == "image/jpeg" || $type == "image/png"){
+                                $thumbPath= "$thumbPath";
+                                $path = "$folderpath";
+                                $imageClass = new image();
+                                if(is_dir($thumbPath)){
+                                    $imageClass->mkthumb($finalName, 600, 600, universeBasePath.'/'.$folderpath, $thumbPath);
+                                }else{
+                                    $oldmask = umask(0);
+                                    mkdir($thumbPath,0755);
+                                    umask($oldmask);
+                                    $imageClass->mkthumb($finalName, 600, 600, universeBasePath.'/'.$folderpath, $thumbPath);
+                                }
+                    }
+
+                    rename(universeBasePath.'/'.$folderpath.$finalName, universeBasePath.'/'.$folderpath.$finalName.".temp");
+                            //add db entry and add temp value
+                            $fileValues['folder'] = $element;
+                            $fileValues['title'] = $imgName;
+                            $fileValues['size'] = $size;
+                            $fileValues['timestamp'] = $time;
+                            $fileValues['filename'] = $imgName;
+                            $fileValues['language'] = $lang;
+                            $fileValues['type'] = $type;
+                            $fileValues['owner'] = $user;
+                            $fileValues['votes'] = '';
+                            $fileValues['temp'] = 1;
+                            $fileValues['score'] = '';
+                            $fileValues['privacy'] = $privacy;
+                            $fileValues['var1'] = '';
+                            $fileValues['download'] = $download;
+                            $fileValues['status'] = true;
+                            $db = new db();
+                            $insertid = $db->insert('files', $fileValues);
+
+                    if($insertid){
+                            return $insertid;
+                    }else{
+                            return false;
+                    }
+                }else{
+                    echo 'the file hasn\'t been uploaded';
+                }
+                
 	 }
          
     function addFile($file, $element, $folder, $privacy, $user, $lang=NULL, $download=true, $addFeed=true){
@@ -205,7 +215,8 @@ class files {
     function createFile($element, $title, $filename, $fileValue=NULL, $privacy=NULL){
         
         $type = $this->getMime($filename);
-        $filename = sanitize_file_name($filename);
+        $filename = sanitize_file_name(sanitizeText($filename));
+        
         $user = getUser();
         
         $elementClass = new element($element);
@@ -328,7 +339,7 @@ class files {
         }
     }
     function tidyTempFiles(){
-	 	mysql_query("DELETE FROM `files` WHERE temp='true' AND timestamp<'".(time()-86400)."'");
+            $db->query("DELETE FROM `files` WHERE temp='true' AND timestamp<'".(time()-86400)."'");
 	 }
     function getFileIcon($fileType, $full=false){
         //turns filetype into src of icon

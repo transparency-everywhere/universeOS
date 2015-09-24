@@ -23,15 +23,12 @@ class folder {
 
     function create($superiorFolder, $title, $user, $privacy, $createFeed = true) {
         $title = sanitizeText($title);
-
-        if (strpos($title, '/') == false) {
-            $titleURL = urlencode($title);
-
-            $title = mysql_real_escape_string($title);
+        $title = filename_safe($title);
+            
             $dbClass = new db();
             $folderData = $dbClass->select('folders', array('id', $superiorFolder));
             $folderClass = new folder($superiorFolder);
-            $relativePath = $folderClass->getPath() . urldecode("$titleURL");
+            $relativePath = $folderClass->getPath() . $title;
             $absolutePath = universeBasePath . '/' . $relativePath;
             $oldmask = umask(0);
             if (!file_exists($absolutePath) && mkdir($absolutePath,0755)) {
@@ -59,9 +56,6 @@ class folder {
                 jsAlert("The folder hasnt been created.");
                 return false;
             }
-        } else {
-            jsAlert("The title contains forbidden characters.");
-        }
     }
 
     function select() {

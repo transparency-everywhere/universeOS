@@ -16,6 +16,7 @@ class comments {
 function addComment($type, $itemid, $author, $message){
      $type = sanitizeText($type);
      $message = sanitizeText($message);
+     $itemid = sanitizeText($itemid);
      
      $time = time();
      $db = new db();

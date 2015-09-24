@@ -15,8 +15,8 @@ class item {
     public $type;
     public $typeid;
     function __construct($type=NULL, $typeid=NULL){
-           $this->type = $type;
-           $this->typeid = $typeid;
+           $this->type = mysql_real_escape_string($type);
+           $this->typeid = mysql_real_escape_string($typeid);
         }
         //put your code here
     function plusOne(){
@@ -44,11 +44,10 @@ class item {
            }
            if($type == "link"){
                $tableName = 'links'; 
-
            }
            //score++
            $db = new db();
-           mysql_query("UPDATE `$tableName` SET votes = votes + 1, score = score + 1 WHERE id='$typeid'");
+           $db->query("UPDATE `$tableName` SET votes = votes + 1, score = score + 1 WHERE id='$typeid'");
            return $this->getScore();
            }
     function minusOne(){
@@ -81,7 +80,7 @@ class item {
            }
            //score--
            $db = new db();
-           mysql_query("UPDATE `$tableName` SET votes = votes + 1, score = score - 1 WHERE id='$typeid'");
+           $db->query("UPDATE `$tableName` SET votes = votes + 1, score = score - 1 WHERE id='$typeid'");
            
            return $this->getScore();
            }
@@ -154,15 +153,13 @@ class item {
     //shows a picture of element or folder if available
     function showThumb(){
            $type = $this->type;
-           $typeid = save($this->typeid);
+           $typeid = $this->typeid;
            
            $db = new db();
             switch($type){
                 case 'folder':
-                    $elementSQL = mysql_query("SELECT id FROM elements WHERE folder='$itemId' ORDER BY RAND() LIMIT 0,1");
-                    $elementData = mysql_fetch_array($elementSQL);
                     
-                    $path = showThumb("element", $elementData['id']);
+                    $path = showThumb("folder", $itemId);
 
 
                 break;
@@ -190,7 +187,12 @@ class item {
            $itemType = $this->type;
         if(empty($itemId))
            $itemId = $this->typeid;
+        
+        else{
            $itemId = save($itemId);
+           $itemType = save($itemType);
+            
+        }
            $db = new db();
             switch($itemType){
                 case 'folder':
@@ -343,8 +345,8 @@ class item {
                $type = mysql_real_escape_string($this->type);
                $typeId = mysql_real_escape_string($this->typeid);
                     if(hasRight('protectFileSystemItems')){
-                            $type = save($type);
-                            $typeId = save($typeId);
+                            $type = $type;
+                            $typeId = $typeId;
 
                             switch($type){
                                     case 'folder':
@@ -407,8 +409,8 @@ class item {
 
                     if(hasRight('editProtectedFilesystemItem')){
 
-                        $type = mysql_real_escape_string($this->type);
-                        $typeId = mysql_real_escape_string($this->typeid);
+                        $type = $this->type;
+                        $typeId = $this->typeid;
 
                             switch($type){
                                     case 'folder':
@@ -469,8 +471,8 @@ class item {
 
                     if(hasRight('undeletableFilesystemItems')){
 
-                            $type = mysql_real_escape_string($this->type);
-                            $typeId = mysql_real_escape_string($this->typeid);
+                            $type = $this->type;
+                            $typeId = $this->typeid;
                             switch($type){
                                     case 'folder':
 
@@ -533,8 +535,8 @@ class item {
     function makeDeletable(){
                     if(hasRight("editUndeletableFilesystemItems")){
 
-                    $type = mysql_real_escape_string($this->type);
-                    $typeId = mysql_real_escape_string($this->typeid);
+                    $type = $this->type;
+                    $typeId = $this->typeid;
                     switch($type){
                             case 'folder':
                                     $table = 'folders';

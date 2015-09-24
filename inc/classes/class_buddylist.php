@@ -19,8 +19,8 @@ class buddylist{
    			$user = getUser();
    		}
 		
-		$user = save($user);
-		$buddy = save($buddyid);
+		$user = (int)$user;
+		$buddy = (int)$buddyid;
 		$timestamp = time();
         $dbClass = new db();
         $checkData = $dbClass->query("SELECT * FROM buddylist WHERE (owner='".$user."' && buddy='$buddy') OR (buddy='".$user."' && owner='$buddy')");
@@ -70,8 +70,8 @@ class buddylist{
    			$user = getUser();
    		}
 		
-		$user = save($user);
-		$buddy = save($buddy);
+		$user = (int)$user;
+		$buddy = (int)$buddy;
 		
 		
 		$timestamp = time();
@@ -81,7 +81,7 @@ class buddylist{
                 $db->update('buddylist', $values, array('owner', $buddy, '&&', 'buddy', $user));
                 
                 $values['owner'] = $user;
-                $values['buddy'] = save($buddy);
+                $values['buddy'] = $buddy;
                 $values['timestamp'] = $time;
                 $values['request'] = '0';
                 $db->insert('buddylist', $values);
@@ -94,8 +94,8 @@ class buddylist{
    			$user = getUser();
    		}
 		
-		$user = save($user);
-		$buddy = save($buddy);
+		$user = (int)$user;
+		$buddy = (int)$buddy;
 		$db = new db();
                 $db->delete('buddylist', array('owner', $buddy, '&&', 'buddy', $user));
                 $db->delete('buddylist', array('buddy', $buddy, '&&', 'owner', $user));
@@ -107,8 +107,8 @@ class buddylist{
                              $user = getUser();
                      }
                     $db = new db();
-                    $db->delete('buddylist', array('owner', $buddy, '&&', 'buddy', $user));
-                    $db->delete('buddylist', array('buddy', $buddy, '&&', 'owner', $user));
+                    $db->delete('buddylist', array('owner', (int)$buddy, '&&', 'buddy', (int)$user));
+                    $db->delete('buddylist', array('buddy', (int)$buddy, '&&', 'owner', (int)$user));
                     return true;
         }
         function getOpenRequests($user=NULL){
@@ -150,7 +150,7 @@ class buddylist{
              $buddyListQuery = $db->shiftResult($db->select('buddylist', array('owner', $user, '&&', 'request', $request)), 'owner');
              $buddies = array();
              foreach($buddyListQuery AS $buddylistData){
-                 $buddies[] = $buddylistData['buddy'];
+                 $buddies[] = (int)$buddylistData['buddy'];
              }
 
              return $buddies;
@@ -218,7 +218,7 @@ class buddylist{
 	}
         function addToNotSuggestList($user){
 		
-		$user = save(intval($user));
+		$user = (int)$user;
 		
 		$notSuggest = $this->getNotSuggestList();
 			if(!in_array($user, $notSuggest)){

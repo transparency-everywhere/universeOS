@@ -50,6 +50,9 @@ class user {
         }
  
         if(!empty($userid) && $password == $data['password']){
+            //regenerate session_id
+            session_regenerate_id();
+            
             //set cookies
             $_SESSION['guest'] = false;
             $_SESSION['userid'] = $data['userid'];
