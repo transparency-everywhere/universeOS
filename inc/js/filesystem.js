@@ -28,11 +28,6 @@ var filesystem =  new function() {
     */
     this.generateUploadTab = function(element, elementTabId, uploaderTabId, additional){
         var html = '';
-        if(typeof additional === 'undefined'||additional === true){
-            //alles aus upload.php in einer onestep lösung zusammenbauen
-            html += '<div class="frameRight">';
-            html = this.generateLeftNav();
-        }
             html += '<div class="uploadTab">';
                 html += '<form action="api/files/submitUploader/" method="post" target="submitter" data-uploadertab="' + uploaderTabId + '" data-elementtab="' + elementTabId + '" data-elementid="' + element + '">';
                 
@@ -60,10 +55,6 @@ var filesystem =  new function() {
         
                 html += '</form>';
             html += '</div>';
-            
-        if(typeof additional === 'undefined'||additional === true){
-            html += '</div>';
-        }
         privacy.load('.uploadPrivacy', 'p', 'true');
         return html;
     };

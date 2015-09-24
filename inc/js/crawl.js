@@ -62,5 +62,7 @@ var crawl = new function(){
     this.show = function(){
         applications.show('telescope');
     };
+    
+    
         
 };

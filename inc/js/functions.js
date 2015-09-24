@@ -701,7 +701,7 @@ var User = new function(){
     };
     this.proofLogin = function(){
         if(time()-this.lastLoginCheck > 120){
-            var result = api.query('api.php?action=proofLogin', {});
+            var result = api.query('api/user/proofLogin', {});
             this.lastLoginCheck = time();
             if(result == '1'){
                   this.loggedIn = true;
@@ -722,7 +722,6 @@ var User = new function(){
             });
     };
     this.setUserId = function(id){
-        
         this.userid = id;
     };
     this.getBorder = function(lastActivity){

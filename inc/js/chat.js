@@ -66,7 +66,6 @@ var chat = new function(){
             
             $('.chatFrame_'+userid+' .messageFrame').replaceWith(mainPage);
             chat.tabs.showTab(dialogue_tab_id);
-            console.log('test');
         }
         openDialogueInterval = window.setInterval("chatDecrypt("+userid+")", 500);
         $('.chatAdditionalSettings a').unbind('click');
