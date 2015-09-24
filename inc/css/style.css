@@ -1521,6 +1521,8 @@ span.icon.blue-chevron-down {
     width: auto;
     font-size: 22px;
     line-height: 1.6;
+    position: absolute;
+    margin-left: 40px;
 }
 
 #filesystem .tabFrame .frameRight .white-header > .headerbuttons {
@@ -1530,6 +1532,7 @@ span.icon.blue-chevron-down {
 
 #filesystem .tabFrame .frameRight .white-header > .headerbuttons > .icon, #filesystem .tabFrame .frameRight .white-header > .headerbuttons > a > .icon {
     margin-top: 2px;
+    cursor: pointer;
 }
 
 #filesystem .tabFrame .frameRight .white-header > .headerbuttons > * {
@@ -2932,6 +2935,7 @@ ul .elementSettings {
 .smiley{
     width: 20px;
     height:20px;
+    margin: 8px;
     display: inline-block;
 }
 
@@ -3738,11 +3742,11 @@ margin-bottom: -5px;
 }
 
 
-.rightclick, .itemSettingsWindow{
+.rightclick, .itemSettingsWindow, .settingsList{
     background-color: #37474f;
 }
 
-.itemSettingsWindow{
+.itemSettingsWindow, .settingsList{
     position: fixed;
     min-width: 100px;
     z-index: 9999;
@@ -3788,7 +3792,7 @@ margin-bottom: -5px;
     height: 18px;
 }
 
-.itemSettingsWindow ul, .rightclick ul{
+.itemSettingsWindow ul, .rightclick ul, .settingsList ul{
     margin-bottom: 0;
 }
 
@@ -3796,23 +3800,23 @@ margin-bottom: -5px;
     color:  #607d8b;
 }
 
-.itemSettingsWindow a, fileBrowserSettings a{
+.itemSettingsWindow a, fileBrowserSettings a, .settingsList>ul>*{
     width: 170px;
     height: 40px;
     display: block;
-    padding-left: 13px;
+    padding-left: 13px; 
     line-height: 40px;
-    color:#FFF;
+    color: #FFFFFF;
     font-size: 16px;
     width: 170px;
 }
 
-.itemSettingsWindow a:hover, fileBrowserSettings a:hover{
+.itemSettingsWindow a:hover, fileBrowserSettings a:hover, .settingsList a:hover{
     background-color: #263238;
 }
 
 
-.itemSettingsWindow a:active, .fileBrowserSettings a:active{
+.itemSettingsWindow a:active, .fileBrowserSettings a:active, .settingsList a:active{
         background-color:  #00bcd4;
 }
 
