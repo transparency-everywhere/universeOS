@@ -20,7 +20,7 @@ include_once("inc/functions.php");
 include_once("inc/config.php");
 
 
-
+//0.3 to 0.4
 $db = new db();
 $users = $db->select('user', array(), array('userid'));
 
