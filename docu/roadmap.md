@@ -21,6 +21,9 @@ We think that the universeOS should not be a comerical project. But we also now,
 =Recent=
 ----------
 
+-XSS
+    check php classes for sanitizeText()
+
 -Authorize
     @sec
     Folders
