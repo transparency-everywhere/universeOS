@@ -299,7 +299,7 @@ $universe_indexSalt = \''.$indexSalt.'\';
         <!--Database Form Field -->
         <form action="?page=keys" method="post">
             <header>
-            <h2>Database</h2>
+            <h2>General</h2>
             </header>
             <table class="content">
                             <tr>
@@ -336,6 +336,25 @@ $universe_indexSalt = \''.$indexSalt.'\';
                             <tr>
                                     <td>Host</td>
                                     <td><input type="text" name="host" placeholder="localhost"></td>
+                            </tr>
+                            <tr>
+                                    <td>Database Name</td>
+                                    <td><input type="text" name="dbName"></td>
+                            </tr>
+                            <tr>
+                                    <td>User</td>
+                                    <td><input type="text" name="dbUser"></td>
+                            </tr>
+                            <tr>
+                                    <td>Password</td>
+                                    <td><input type="text" name="dbPassword"></td>
+                            </tr>
+                            <tr>
+                                    <td>&nbsp;</td>
+                                    <td><h4>Analytic Script</h4></td>
+                            </tr>
+                            <tr>
+                                    <td colspan="2"><textarea name="analytic script"></textarea></td>
                             </tr>
                             <tr>
                                     <td>Database Name</td>
@@ -394,7 +413,7 @@ $universe_indexSalt = \''.$indexSalt.'\';
                                     </td>
                             </tr>
                             <tr style="display:none" id="loader" align="center">
-                                <td colspan="2" align="center"><img src="gfx/ripple.gif" width="100"><br>...generating keys. This could take some minutes.</td>
+                                <td colspan="2" align="center"><center><img src="gfx/ripple.gif" width="100"><br>...generating keys. This could take some minutes.</center></td>
                             </tr>
                             <tr class="keyRow">
                                     <td>Public Key</td>

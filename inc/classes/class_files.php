@@ -153,7 +153,7 @@ class files {
             
             $imageClass = new image();
             //extra case for userpictures
-            if($additionalPath = 'userPictures'){
+            if($additionalPath == 'userPictures'){
                        $imageClass -> mkthumb($imgName,1024,1024,$folderpath,$folderpath);
                        $imageClass -> mkthumb($imgName,25,25,$folderpath,$folderpath.'/thumb/25');
                        $imageClass -> mkthumb($imgName,40,40,$folderpath,$folderpath.'/thumb/40');

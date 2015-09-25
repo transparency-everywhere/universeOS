@@ -4,7 +4,6 @@ include("inc/config.php");
 include("inc/functions.php");
 if(proofLogin()){
 if(isset($_POST['comment'])) {
-    echo'<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>';
     $commentClass = new comments();
     $commentClass->addComment($_POST['type'], $_POST['itemid'], $_POST['user'], $_POST['comment']);
     

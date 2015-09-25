@@ -35,7 +35,7 @@ todo
     get rid of
         mysql_query
         $.post, $.ajax
-        api.php, doit.php
+        api.php, doit.php, showComment.php
         thousend different column names for user (author, owner, creator, user etc) instead `user`
         chat.show(), feed.show(), buddylist.show() etc. use application.show('buddylist') instead
     api
@@ -86,23 +86,9 @@ Recent:
 
 
 	Update from running version:
-		DB
-			user
-				+cypher
-				
-			elements
-				+originalTitle
-				+language
-				
-			+signatures
-			+salts
-			
-		_____
-                    ALTER TABLE  `buddylist` ADD PRIMARY KEY (  `owner` ,  `buddy` ) ;
-
 		UPDATE userpw cypher sha512(md5(pass)+username)
 		
-		Add standard rsa private and public key? 
+		Add standard rsa private and public key? -> useless ?!
 		
 	
 
@@ -165,6 +151,13 @@ ______
 
 
 Files and the use of them (outdated)
+
+        modified during installation
+            inc/config/dbConfig
+            
+            inc/config.php
+            
+
 
 	PHP
 		inc/config.php		//mysql server confid
