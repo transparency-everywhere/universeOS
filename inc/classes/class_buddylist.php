@@ -284,9 +284,9 @@ class buddylist{
    	//checks if user with id=$userid is buddy
    	//of user with id=$_SESSION[userid]
    	
-   	$buddies = $this->buddyListArray($userid);
+   	$buddies = $this->buddyListArray();
 	
-	if(in_array(getUser(), $buddies) OR $userid == getUser()){
+	if(in_array($userid, $buddies) OR $userid == getUser()){
 		return true;
 	}
         return false;
