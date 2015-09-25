@@ -135,38 +135,35 @@ class files {
             }
         }
         
-        
         $FileElementData = $dbClass->select('elements', array('id', $element), array('title'));
         $folderClass = new folder($folder);
         $folderpath = universeBasePath.'/'.$folderClass->getPath();
 
-
-        $thumbPath = $folderpath."thumbs";
         $imgName = basename($file['name']);
         $elementName = $FileElementData['title'].'_';
         $imgName = $elementName.$imgName;
 
-
-
         move_uploaded_file($file['tmp_name'], $folderpath.$file['name']);
         rename($folderpath.$filename, $folderpath.$imgName);
+        
         if($type == "image/jpg" || $type == "image/jpeg" || $type == "image/png"){
+            
+            
+        $thumbPath = $folderpath."thumbs";
+            
             $imageClass = new image();
             //extra case for userpictures
             if($additionalPath = 'userPictures'){
-                       $imageClass -> mkthumb($imgName,1024,1024,$folderpath,$folderpath.$additionalPath);
-                       $imageClass -> mkthumb($imgName,25,25,$folderpath,$folderpath.$additionalPath.'/thumb/25');
-                       $imageClass -> mkthumb($imgName,40,40,$folderpath,$folderpath.$additionalPath.'/thumb/40');
-                       $imageClass -> mkthumb($imgName,300,300,$folderpath,$folderpath.$additionalPath.'/thumb/300');
-            }else{
-                    $thumbPath= $thumbPath;
-                    if(is_dir($thumbPath)){
-                       $imageClass -> mkthumb($imgName,600,600,$folderpath,$thumbPath);
-                    } else{
-                        mkdir($thumbPath,0755);
-                        $imageClass -> mkthumb($imgName,600,600,$folderpath,$thumbPath);
-                    }
+                       $imageClass -> mkthumb($imgName,1024,1024,$folderpath,$folderpath);
+                       $imageClass -> mkthumb($imgName,25,25,$folderpath,$folderpath.'/thumb/25');
+                       $imageClass -> mkthumb($imgName,40,40,$folderpath,$folderpath.'/thumb/40');
+                       $imageClass -> mkthumb($imgName,300,300,$folderpath,$folderpath.'/thumb/300');
             }
+            $thumbPath= $thumbPath;
+            if(!is_dir($thumbPath)){
+                        mkdir($thumbPath,0755);
+            }
+            $imageClass -> mkthumb($imgName,600,600,$folderpath,$thumbPath);
         }
         
         //add db entry and add temp value
@@ -466,6 +463,7 @@ class file{
                 echo $path;
 		$oldpath = $path.'.temp';
 		if(rename(universeBasePath.'/'.$oldpath, universeBasePath.'/'.$path)){
+                        chmod(universeBasePath.'/'.$path, 0777);
                         $db = new db();
                         $values['temp'] = '0';
                         $values['status'] = '1';
@@ -550,9 +548,9 @@ class file{
         $fileId = $this->id;
         $dbClass = new db();
         $fileData = $dbClass->select('files', array('id', $fileId));
+        $parentElement = $fileData['folder'];
         
-        
-        $fileElementData =$dbClass->select('elements', array('id', $fileData['folder']), array('id', 'title', 'folder'));
+        $fileElementData =$dbClass->select('elements', array('id', $parentElement), array('id', 'title', 'folder'));
 
         $type = $fileData['type'];
 
@@ -564,35 +562,52 @@ class file{
 
         //file can only be deleted if uploader = deleter
         if(authorize($fileData['privacy'], "edit")){
+            
+            $user = new user();
+            $userData = $user->getData(getUser());
+            if(($parentElement == $userData['profilepictureelement'])&&($fileData['filename'] == $userData['userPicture'])){
+                echo 'You can not delete your current userpicture.';
+            }else if($parentElement == $userData['profilepictureelement']){
+                           $additionalPath = 'userPictures';
+            }
+            
             $folderClass = new folder($fileElementData['folder']);
-            $folderPath = $folderClass->getPath();
-            $fileClass = new file($fileId);
-            $filePath = $fileClass->getFullFilePath($fileId);
-            $thumbPath = $folderPath.'thumbs/'.$title;
-            echo $filePath.'asd';
-            if(unlink(universeBasePath.'/'.$filePath)){
+            $folderPath = universeBasePath.'/'.$folderClass->getPath();
+            
+            $filePath = $folderPath.'/'.$title;
+            
+            if(unlink($filePath)){
                 if($dbClass->delete('files', array('id', $fileId))){
 
                    //delete comments
                    $commentClass = new comments();
                    $commentClass->deleteComments("file", $fileId);
 
+                   
+                   //delete feeds
                    $classFeed = new feed();
                    $classFeed->deleteFeeds("file", $fileId);
 
+                   
+                   //delete shortcuts
                    $classShortcut = new shortcut();
                    $classShortcut->deleteInternLinks("file", $fileId);
 
                    //delete thumbnails
                    if($type == "image/jpg" || $type == "image/jpeg" || $type == "image/png"){
-
+                       
+                       
+                       
                         $thumbPath = $folderPath.'thumbs/'.$title;
-                       if(unlink(universeBasePath.'/'.$thumbPath)){
-                           return true;
-                       }else{
-                           return false;
-                       }
-
+                       
+                        if($additionalPath = 'userPictures'){
+                            unlink($folderPath.$title);
+                            unlink($folderPath.'thumb/25'.'/'.$title);
+                            unlink($folderPath.'thumb/40'.'/'.$title);
+                            unlink($folderPath.'thumb/300'.'/'.$title);
+                        }
+                        unlink($thumbPath);
+                        return true;
                    }else{
                        return true;
                    }
@@ -606,8 +621,6 @@ class file{
     }
     
 }
-
-	
     
 /**
  * from Chyrp

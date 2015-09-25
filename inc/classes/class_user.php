@@ -124,6 +124,7 @@ class user {
                      return array();
                  }
         }
+        
 	$db = new db();
 	$data = $db->select('user', array('userid', $userid), array('userid','username','realname', 'birthdate', 'school1', 'university1', 'employer', 'place', 'home', 'homefolder', 'myFiles'));
         
@@ -160,7 +161,9 @@ class user {
     public function updateUserPicture($fileArray){
         $userData = $this->getData();
         $fileClass = new files();
-        $fileId = $fileClass->addFile($fileArray, $userData['profilepictureelement'], $userData['homefolder'], 'p', $this->userid, NULL, true, false);
+        $elementClass = new element();
+        $elementData = $elementClass->getData($userData['profilepictureelement']);
+        $fileId = $fileClass->addFile($fileArray, $userData['profilepictureelement'], $elementData['folder'], 'p', $this->userid, NULL, true, false);
 
         $file = new file($fileId);
         $fileData = $file->getFileData();
@@ -312,10 +315,10 @@ class user {
             $path4 = universeBasePath."//upload//userFiles//$userid//userPictures//thumb//25";
             $path5 = universeBasePath."//upload//userFiles//$userid//userPictures//thumb//40";
             $path6 = universeBasePath."//upload//userFiles//$userid//userPictures//thumb//300";
-            mkdir($path3);  //Creates Thumbnail Folder
-            mkdir($path4); //Creates Thumbnail Folder
-            mkdir($path5); //Creates Thumbnail Folder
-            mkdir($path6); //Creates Thumbnail Folder
+            mkdir($path3,0755);  //Creates Thumbnail Folder
+            mkdir($path4,0755); //Creates Thumbnail Folder
+            mkdir($path5,0755); //Creates Thumbnail Folder
+            mkdir($path6,0755); //Creates Thumbnail Folder
 
 
             //create Element "myFiles" in userFolder

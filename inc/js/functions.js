@@ -760,7 +760,7 @@ var User = new function(){
             return returns;
         }else{
             
-            var userpicture = getUserPicture(userid);
+            var userpicture = getUserPictureBASE64(userid);
             if(typeof lastActivity === 'undefined'){
                 var lastActivity = User.getLastActivity(userid); //get last activity so the border of the userpicture can show if the user is online or offline
             }
