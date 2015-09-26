@@ -34,20 +34,5 @@ if(!mysql_connect("$server","$user","$password") OR !mysql_select_db("$db")) {
 //}
 
 
-define('analytic_script',  "<!-- Piwik only on page for unregistered users -->"
-    . "<script type=\"text/javascript\"> \n"
-    . "  var _paq = _paq || [];\n"
-    . "  _paq.push(['trackPageView']);\n"
-    . "  _paq.push(['enableLinkTracking']);\n"
-    . "  (function() {\n"
-    . "    var u=((\"https:\" == document.location.protocol) ? \"https\" : \"http\") + \"://analytics.transparency-everywhere.com//\";\n"
-    . "    _paq.push(['setTrackerUrl', u+'piwik.php']);\n"
-    . "    _paq.push(['setSiteId', 1]);\n"
-    . "    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';\n"
-    . "    g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);\n"
-    . "  })();\n"
-    . "</script>\n"
-    . "<noscript><p><img src=\"http://analytics.transparency-everywhere.com/piwik.php?idsite=1\" style=\"border:0\" alt=\"\" /></p></noscript>\n"
-    . "<!-- End Piwik Code -->");
-
+define('analytic_script',  "<!-- Piwik --> <script type=\"text/javascript\"> var _paq = _paq || []; _paq.push(['trackPageView']); _paq.push(['enableLinkTracking']); (function() { var u=\"//analytics.transparency-everywhere.com/piwik/\"; _paq.push(['setTrackerUrl', u+'piwik.php']); _paq.push(['setSiteId', 2]); var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s); })(); </script> <noscript><p><img src=\"//analytics.transparency-everywhere.com/piwik/piwik.php?idsite=2\" style=\"border:0;\" alt=\"\" /></p></noscript> <!-- End Piwik Code -->");
 ?>

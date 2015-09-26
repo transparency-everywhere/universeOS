@@ -55,10 +55,10 @@ class link {
     
     function deleteLink($linkId){
                 $db = new db();
-                $linkData = $db->select('link', array('id', $linkId));
+                $linkData = $db->select('links', array('id', $linkId));
                     
                 //file can only be deleted if uploader = deleter
-                if(authorize($linkData['privacy'], "edit", $linkData['author'])){
+                if(authorize($linkData['privacy'], "edit", $linkData['creator'])){
                         
                        if($db->delete('links', array('id', $linkId))){
                            
