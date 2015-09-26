@@ -20,4 +20,6 @@ include_once("inc/functions.php");
 include_once("inc/config.php");
 
 echo is_writable('upload/');
+echo is_writable('upload/userFiles');
+echo is_writable('views');
 
