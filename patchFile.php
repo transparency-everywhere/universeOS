@@ -19,28 +19,5 @@
 include_once("inc/functions.php");
 include_once("inc/config.php");
 
-
-//0.3 to 0.4
-$db = new db();
-$users = $db->select('user', array(), array('userid'));
-
-foreach($users AS $user){
-    echo $user['userid'];
-    
-            //create record in user_privacy_rights  
-            $privacyValues['userid'] = $user['userid'];
-            $privacyValues['profile_realname'] = 'p';
-            $privacyValues['profile_fav'] = 'p';
-            $privacyValues['profile_files'] = 'p';
-            $privacyValues['profile_playlists'] = 'p';
-            $privacyValues['profile_activity'] = 'p';
-            $privacyValues['receive_messages'] = 'p';
-            $privacyValues['buddylist'] = 'p';
-            $privacyValues['info'] = 'p';
-            $privacyValues['groups'] = 'p';
-            $db->insert('user_privacy_rights', $privacyValues);
-    
-            echo '<br>';
-    
-}
+echo is_writable('upload/');
 
