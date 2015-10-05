@@ -4,3 +4,21 @@
 <script src="inc/js/bootstrap.min.js"></script>
 <script src="inc/plugins/ckeditor/ckeditor.js"></script>
 <script type="text/javascript" src="inc/plugins/ckeditor/jquery.js"></script>
+<!-- Seeds using urandom bits from a server. -->
+<script src="//jsonlib.appspot.com/urandom?callback=Math.seedrandom"></script>
+
+<!-- Seeds mixing in random.org bits -->
+<script>
+(function(x, u, s){
+  try {
+    // Make a synchronous request to random.org.
+    x.open('GET', u, false);
+    x.send();
+    s = unescape(x.response.trim().replace(/^|\s/g, '%'));
+  } finally {
+    // Seed with the response, or autoseed on failure.
+    Math.seedrandom(s, !!s);
+  }
+})(new XMLHttpRequest, 'https://www.random.org/integers/' +
+  '?num=256&min=0&max=255&col=1&base=16&format=plain&rnd=new');
+</script>

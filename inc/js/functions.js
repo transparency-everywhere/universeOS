@@ -1180,6 +1180,10 @@ var User = new function(){
     };
 };
 
+function getUser(){
+    return User.userid;
+}
+
 function showProfile(userid){
     User.showProfile(userid);
 };
@@ -1352,6 +1356,10 @@ var hash = new function(){
 		};
 		this.SHA512 = function(string){
 			var hash = CryptoJS.SHA512(string);
+			return hash.toString(CryptoJS.enc.Hex);
+		};
+		this.SHA256 = function(string){
+			var hash = CryptoJS.SHA256(string);
 			return hash.toString(CryptoJS.enc.Hex);
 		};
 	};
@@ -1633,6 +1641,12 @@ var sec =  new function() {
         return message;
     };
 
+    
+    this.rand = function(){
+        var seed = Math.seedrandom();
+        return hash.SHA512(seed).substr(0,100);
+    };
+    //@old
     this.randomString = function(){
 			    	return hash.SHA512(randomString(64, '#aA'));  //generate salt and hash it.
 			    	

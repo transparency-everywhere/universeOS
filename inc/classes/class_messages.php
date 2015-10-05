@@ -77,7 +77,21 @@ class message{
 		}
 		return $return;
 	}
+        function getMessagesNew($userA, $userB, $offset, $limit){
+            $limit = (int)$offset.','.(int)$limit;
+            $db = new db();
+            return $db->shiftResult($db->select('messages', array('sender', $userA, '&&', 'receiver', $userB, 'OR', 'sender', $userB, '&&', 'receiver', $userA), NULL, array('timestamp', 'DESC'), $limit), 'sender');
+            
+        }
+        
 	function getMessages($userid, $buddyId, $limit){
+            
+            //generate limit from offset, numberOfMessages
+            
+            $db = new db();
+            $db->select('messages', array('sender', $userid, '&&', 'receiver', $buddyId, 'OR', 'sender', $buddyId, '&&', 'receiver', $userid), array('*'), array('timestamp', 'DESC'), $limit);
+            
+            
 		$chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' && receiver='".save($buddyId)."' OR sender='".save($buddyId)."' && receiver='".save($userid)."' ORDER BY timestamp DESC LIMIT ".save($limit)."");
 		while($chatData =  mysql_fetch_array($chatSQL)){
 			$id = $chatData['id'];
