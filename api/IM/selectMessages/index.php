@@ -19,9 +19,12 @@
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
 
+$requestFunction = function($request){
+    $messages = new message();
+    return ($messages->getMessagesNew(getUser(), $request['user_b'], $request['offset'], $request['limit']));
+};
 
-$messageClass = new message();
-$message = $messageClass->send($_POST['receiver_id'], $_POST['message'], '0', getUser());
-if($message)
-	echo $message;
+$api = new api();
+$api->handleRequest($_POST['request'], $requestFunction);
+
 ?>
