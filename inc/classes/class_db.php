@@ -138,7 +138,7 @@ class db{
             }
             
             if(!empty($order)){
-                $ORDER = "ORDER BY $order[0] $order[1]'";
+                $ORDER = "ORDER BY $order[0] $order[1]";
             }else{
                 $ORDER = "";
             }
@@ -150,7 +150,7 @@ class db{
                 $LIMIT = "";
             }
             
-                $query = "SELECT $columnQuery FROM `$table` $WHERE $LIMIT";
+                $query = "SELECT $columnQuery FROM `$table` $WHERE $ORDER $LIMIT";
                 $sql = mysql_query($query);
                 if($sql)
                 while($data = mysql_fetch_array($sql)){
