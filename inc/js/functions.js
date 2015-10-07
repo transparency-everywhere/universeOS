@@ -760,6 +760,10 @@ var User = new function(){
             return returns;
         }else{
             
+            var result = clientDB.select('userpictures',{userid:userid});
+            if(result&&(Date.now()/1000-result.timestamp)<90)
+                return result.picture;
+            
             var userpicture = getUserPictureBASE64(userid);
             if(typeof lastActivity === 'undefined'){
                 var lastActivity = User.getLastActivity(userid); //get last activity so the border of the userpicture can show if the user is online or offline
@@ -767,6 +771,7 @@ var User = new function(){
             var ret;
             ret = '<div class="userPicture userPicture_'+userid+'" style="background: url(\''+userpicture+'\'); '+User.getBorder(lastActivity)+'; width: '+size+'px;height:  '+size+'px;background-size: 100%;border-radius:'+radius+'px"></div>';
             // $('.userPicture_'+userid).css('border', User.getBorder(lastActivity)); //update all shown pictures of the user
+            clientDB.insert('userpictures', {userid:userid, picture:ret, timestamp:Date.now()/1000});
             return ret;
         }
     };
@@ -1123,7 +1128,7 @@ var User = new function(){
             //if openChat openDialogue and return
             if(type === 'openChat'){
                 if(buddylist.isBuddy(user_id))
-                   chat.openDialogue(user_id);
+                   im.openDialogue(user_id);
                 else
                     gui.alert('You need to add '+useridToUsername(user_id)+' to your buddylist to start a chat');
                 return null;
@@ -2496,7 +2501,8 @@ function getUserPictureBASE64(userid){
             
             return api.query('api/user/getPicture/', { request: requests});
         }
-        return api.query('api/user/getPicture/', { request: [{userid : userid}]})[0];
+        
+        return result = api.query('api/user/getPicture/', { request: [{userid : userid}]})[0];
 }
 function getUserPicture(request){
     var post;

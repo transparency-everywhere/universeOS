@@ -22,7 +22,7 @@ var im = new function(){
         var html = '        <div class="chatMainFrame">';
         html += '          <header>';
         html += '               <!-- toggle description key box -->';
-        html += '              <span><a href="javascript: toggleKey(\'<?=$buddyid;?>\');" id="toggleKey_'+userid+'"><i class="lockIcon"></i></a></span>';
+        html += '              <span><a href="javascript: toggleKey(\''+userid+'\');" id="toggleKey_'+userid+'"><i class="lockIcon"></i></a></span>';
         html += '              <span><a href="#" onclick="showProfile('+userid+'); return false;">'+useridToUsername(userid)+'</a></span>';
         html += '          </header>';
         html += '          <!-- box for caht encription key -->';
@@ -54,128 +54,6 @@ var im = new function(){
         html += '      </footer>';
         return html;
     };
-    
-    this.getMessages = function(userB, offset, limit){
-        
-        if(typeof userB === 'object'){
-            var requests = [];
-            $.each(userB,function(index, value){
-                //you can also enter a single type instead of multiple values
-                //$userA, $userB, $offset, $limit
-                requests.push({user_b: value, offset:offset, limit:limit});
-            });
-                return api.query('api/IM/selectMessages/', { request: requests});
-        }else
-            return api.query('api/IM/selectMessages/',{request: [{user_b: userB, offset:offset, limit:limit}]})[0];
-    };
-    
-    
-    this.parseDialogue = function(messages){
-        var output = '';
-        $.each(messages, function(index, value){
-            if(value['sender'] == getUser()){
-                        var messageClass = 'incoming';
-            }else{
-                        var messageClass = 'outgoing';
-            }
-            
-            
-            var html = '';
-            var messageClass = '';
-            html += '<div class="box-shadow chatMessage '+messageClass+'" data-id="'+value['id']+'">';
-                html += '<span class="username">';
-                html += User.showPicture(value['sender']);
-                html += useridToUsername(value['sender']);
-                html += "</span>";
-                html += '<span class="chatMessage">'+im.decryptMessage(value['text'], value['sender'])+'</span>';
-            html += '</div>';
-            
-            output = html+output;
-        });
-        return output;
-        
-    };
-    this.submitMessage = function(message, receiver_id, callback){
-        
-        var publicKeyReceiver = getPublicKey('user', receiver_id); //get public key of receiver
-        //@sec:
-    	var publicKeySender = getPublicKey('user', User.userid); //get public key of receiver
-    	
-    	var randKey = sec.rand();
-   	
-    	var message = sec.symEncrypt(randKey, message); //encrypt message semitrically
-
-    	var symKeyReceiver = sec.asymEncrypt(publicKeyReceiver, randKey); //asym encrypt random generated key for symetric encryption
-   	var symKeySender =  sec.asymEncrypt(publicKeySender, randKey); //asym encryptrandom generated key for symetric encryption
-        
-        
-    	var message = symKeyReceiver+';;;'+symKeySender+'////message////'+message; //message = symetric Key + sym encoded message with key = symKey
-    	
-    	api.query('api/IM/addMessage/', {receiver_id:receiver_id, message:message},callback);
-    };
-    this.decryptMessage = function(content, userid){
-            if(empty(content))
-                return 'empty';
-            //split content into key and message
-            var message = content.split("////message////");
-            var messageKeys = message[0].split(';;;');
-            
-            if(content.indexOf("////message////") === -1){
-                return content;
-            }
-
-
-            var privateKey = cypher.getPrivateKey('user', getUser());
-
-                //the message contains two keys which are splitted into the var messageKeys above
-                //if the first key(messageKeys[0]) doesn't work -> try to encrypt it with the other one(messageKeys[0])
-
-                //encrypt random key with privateKey
-                var randKey = sec.asymDecrypt(privateKey, messageKeys[0]);
-               
-                if(randKey === null)
-                    var randKey = sec.asymDecrypt(privateKey, messageKeys[1]);
-
-
-        if(randKey !== null){
-            //encrypt message with random key
-            var content = universeText(htmlentities(sec.symDecrypt(randKey, message[1])));
-        }else{
-            content = universeText('The key is not stored anymore');
-        }
-
-
-        return content;
-    };
-    this.loadDialogueIntoFrame = function(userid, offset, limit){
-        var messages = this.getMessages(userid,offset, limit);
-        console.log(messages);
-        var html = this.parseDialogue(messages);
-        
-        html += '<a href="#">load more</a>';
-        
-        $('.chatMainFrame_'+userid).html(html);
-    };
-    //opens message either as a notification, as a chat window or updates the chatwindow
-    this.openMessage = function(messageData){
-        if(messageData.receiver == User.userid)
-            this.openDialogue(messageData.sender);
-        else if(messageData.sender == User.userid)
-            this.openDialogue(messageData.receiver);
-    };
-    this.appendToDialogue = function(userid, messageData){
-        
-        var html = this.parseDialogue(messageData);
-        $('.chatMainFrame_'+userid).append(html);
-    };
-    this.prependToDialogue = function(userid, messageData){
-        var html = this.parseDialogue(messageData);
-        $('.chatMainFrame_'+userid).prepend(html);
-    };
-    this.scrollToBottom = function(userid){
-        $('.chatMainFrame_'+userid).parent().scrollTop($('.chatMainFrame_'+userid).parent()[0].scrollHeight);
-        //$('.chatMainFrame_'+userid).animate({ scrollTop: $('.chatMainFrame_'+userid).attr("scrollHeight") - $('.chatMainFrame_'+userid).height() }, 500);
-    };
     this.openDialogue = function(parameter) {
         if(!is_numeric(parameter)){
             var userid= usernameToUserid(parameter);
@@ -205,12 +83,12 @@ var im = new function(){
             //if dialoge doesnt exists => bring dialoge to front..
             var dialogue_tab_id = chat.tabs.getTabByTitle(username);
 
-            im.loadDialogueIntoFrame(userid, 0, 30);
+            im.loadDialogueIntoFrame(userid, 0, 10);
             chat.tabs.showTab(dialogue_tab_id);
         }
         
         
-        this.loadDialogueIntoFrame(userid, 0, 30);
+        this.loadDialogueIntoFrame(userid, 0, 10);
         
         //openDialogueInterval = window.setInterval("chatDecrypt("+userid+")", 500);
         $('.chatAdditionalSettings a').unbind('click');
@@ -251,6 +129,142 @@ var im = new function(){
         
         
         
+    };
+    
+    this.getMessages = function(userB, offset, limit){
+        
+        if(typeof userB === 'object'){
+            var requests = [];
+            $.each(userB,function(index, value){
+                //you can also enter a single type instead of multiple values
+                //$userA, $userB, $offset, $limit
+                requests.push({user_b: value, offset:offset, limit:limit});
+            });
+                return api.query('api/IM/selectMessages/', { request: requests});
+        }else
+            return api.query('api/IM/selectMessages/',{request: [{user_b: userB, offset:offset, limit:limit}]})[0];
+    };
+    
+    
+    this.parseDialogue = function(messages){
+        var output = '';
+        $.each(messages, function(index, value){
+            if(value['sender'] == getUser()){
+                        var messageClass = 'incoming';
+            }else{
+                        var messageClass = 'outgoing';
+            }
+            
+            
+            var html = '';
+            var messageClass = '';
+            html += '<div class="box-shadow chatMessage '+messageClass+'" data-id="'+value['id']+'">';
+                html += '<span class="username">';
+                
+                html += User.showPicture(value['sender']);
+                
+                html += useridToUsername(value['sender']);
+                html += "</span>";
+                html += '<span class="chatMessage decrypted">'+value['text']+'</span>';
+            html += '</div>';
+            
+            output = html+output;
+        });
+        return output;
+        
+    };
+    this.submitMessage = function(message, receiver_id, callback){
+        
+        var publicKeyReceiver = getPublicKey('user', receiver_id); //get public key of receiver
+        //@sec:
+    	var publicKeySender = getPublicKey('user', User.userid); //get public key of receiver
+    	
+    	var randKey = sec.rand();
+   	
+    	var message = sec.symEncrypt(randKey, message); //encrypt message semitrically
+
+    	var symKeyReceiver = sec.asymEncrypt(publicKeyReceiver, randKey); //asym encrypt random generated key for symetric encryption
+   	var symKeySender =  sec.asymEncrypt(publicKeySender, randKey); //asym encryptrandom generated key for symetric encryption
+        
+        
+    	var message = symKeyReceiver+';;;'+symKeySender+'////message////'+message; //message = symetric Key + sym encoded message with key = symKey
+    	
+    	api.query('api/IM/addMessage/', {receiver_id:receiver_id, message:message},callback);
+    };
+    this.decryptMessage = function(content, userid){
+        console.log('start...');
+            if(empty(content))
+                return 'empty';
+            //split content into key and message
+            var message = content.split("////message////");
+            var messageKeys = message[0].split(';;;');
+            
+            if(content.indexOf("////message////") === -1){
+                return content;
+            }
+
+
+            var privateKey = cypher.getPrivateKey('user', getUser());
+
+                //the message contains two keys which are splitted into the var messageKeys above
+                //if the first key(messageKeys[0]) doesn't work -> try to encrypt it with the other one(messageKeys[0])
+
+                //encrypt random key with privateKey
+                var randKey = sec.asymDecrypt(privateKey, messageKeys[0]);
+               
+                if(randKey === null)
+                    var randKey = sec.asymDecrypt(privateKey, messageKeys[1]);
+
+
+        if(randKey !== null){
+            //encrypt message with random key
+            var content = universeText(htmlentities(sec.symDecrypt(randKey, message[1])));
+        }else{
+            content = universeText('The key is not stored anymore');
+        }
+
+        console.log('...fin');
+        return content;
+    };
+    this.loadDialogueIntoFrame = function(userid, offset, limit){
+        var messages = this.getMessages(userid,offset, limit);
+        console.log(messages);
+        html += '<a href="#" class="loadMore">load more</a>';
+        var html = this.parseDialogue(messages);
+        
+        
+        $('.chatMainFrame_'+userid).html(html);
+        this.initDecryption(userid);
+    };
+    this.initDecryption = function(userid){
+        $('.chatMainFrame_'+userid+' .chatMessage.decrypted').each(function(){
+            var text = $(this).html();
+            $(this).html(im.decryptMessage(text, userid));
+            $(this).removeClass('decrypted');
+        });
+    };
+    //opens message either as a notification, as a chat window or updates the chatwindow
+    this.openMessage = function(messageData){
+        if(messageData.receiver == User.userid)
+            this.openDialogue(messageData.sender);
+        else if(messageData.sender == User.userid)
+            this.openDialogue(messageData.receiver);
+    };
+    this.appendToDialogue = function(userid, messageData){
+        
+        var html = this.parseDialogue(messageData);
+        $('.chatMainFrame_'+userid).append(html);
+        this.initDecryption(userid);
+    };
+    this.prependToDialogue = function(userid, messageData){
+        var html = this.parseDialogue(messageData);
+        $('.chatMainFrame_'+userid+' .loadMore').remove();
+        $('.chatMainFrame_'+userid).prepend(html);
+        this.initDecryption(userid);
+    };
+    this.scrollToBottom = function(userid){
+        $('.chatMainFrame_'+userid).parent().scrollTop($('.chatMainFrame_'+userid).parent()[0].scrollHeight);
+        //$('.chatMainFrame_'+userid).animate({ scrollTop: $('.chatMainFrame_'+userid).attr("scrollHeight") - $('.chatMainFrame_'+userid).height() }, 500);
     };
     //proceeds data from reload function
     this.sync = function(data){
