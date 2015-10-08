@@ -22,23 +22,23 @@ var im = new function(){
         var html = '        <div class="chatMainFrame">';
         html += '          <header>';
         html += '               <!-- toggle description key box -->';
-        html += '              <span><a href="javascript: toggleKey(\''+userid+'\');" id="toggleKey_'+userid+'"><i class="lockIcon"></i></a></span>';
+//        html += '              <span><a href="#" id="toggleKey_'+userid+'" class="toggleKeySettings"><i class="icon icon-lock"></i></a></span>';
         html += '              <span><a href="#" onclick="showProfile('+userid+'); return false;">'+useridToUsername(userid)+'</a></span>';
         html += '          </header>';
         html += '          <!-- box for caht encription key -->';
-        html += '          <div id="chatKeySettings_'+userid+'" class="chatKeySettings">';
-        html += '          </div>';
+        html += '          <div id="chatKeySettings_'+userid+'" class="chatKeySettings"></div>';
+        html += '          <div class="attachmentMark"></div>';
         html += '          <div id="test_<?=$buddyName;?>" class="dialoge">';
-        html += '          <div class="messageFrame chatMainFrame_'+userid+'">';
-        html += '              <div onclick="chatLoadMore(\''+userid+'\', \'1\');" class="loadMore">...load more</div>';
-        html += '          </div>';
+        html += '               <div class="messageFrame chatMainFrame_'+userid+'">';
+        html += '                   <div onclick="chatLoadMore(\''+userid+'\', \'1\');" class="loadMore">...load more</div>';
+        html += '               </div>';
         html += '          </div>';
         html += '      </div>';
         html += '      <div class="chatAdditionalSettings" onclick="$(this).hide(); return true;">';
         html += '          <ul>';
         html += '              <li><a class="smiley emoticon-smile" data-code=":)"></a><a class="smiley emoticon-tongue" data-code=":p"></a><a class="smiley emoticon-wink" data-code=";)"></a><a class="smiley emoticon-surprised" data-code=":o"></a></li>';
         html += '              <li><a class="smiley emoticon-laugh" data-code=":D"></a><a class="smiley emoticon-cute" data-code=":3"></a><a class="smiley emoticon-sad" data-code=":("></a><a class="smiley emoticon-cry" data-code=":\'("></a></li>';
-        html += '              <!--<li><a href="#" onclick="popper(\'doit.php?action=chatSendItem&buddy=<?php echo $buddyData[\'userid\'];?>\');" class="sendFile">Send File</a></li>-->';
+        html += "              <li><a href=\"#\" onclick=\"filesystem.attachItem($('.chatMainFrame_"+userid+"').parent().parent().find('.attachmentMark'));\" style=\"color:#FFF\">Attach File</a></li>";
         html += '          </ul>';
         html += '      </div>';
         html += '      <footer>';
@@ -68,8 +68,6 @@ var im = new function(){
         
         applications.show('chat');
       
-      
-      
       	//check if dialoge allready exists
         if($(".chatFrame_"+ userid).length == 0){
 
@@ -90,6 +88,10 @@ var im = new function(){
         
         this.loadDialogueIntoFrame(userid, 0, 10);
         
+//        $('.chatFrame_'+userid).click(function(){
+//            $(this).parent().find('.chatKeySettings').toggle();
+//        });
+        
         //openDialogueInterval = window.setInterval("chatDecrypt("+userid+")", 500);
         $('.chatAdditionalSettings a').unbind('click');
         $('.chatAdditionalSettings a').bind('click', function(){
@@ -101,10 +103,20 @@ var im = new function(){
         $(".chatFrame_"+ userid+' footer form').submit(function(e){
             e.preventDefault();
             var $chatInput = $(this).find('.chatInput');
-            im.submitMessage($chatInput.val(), userid, function(res){
+            var message = $chatInput.val();
+            var $itemThumb = $('.chatMainFrame_'+userid).parent().parent().find('.itemThumb');
+            $itemThumb.each(function(){
+                // data-itemtype="folder" data-itemid="3"
+                var itemType = $(this).attr('data-itemtype');
+                var itemId = $(this).attr('data-itemid');
+                message += "[itemThumb type="+itemType+" typeId="+itemId+"]";
+                $(this).remove();
+            });
+            console.log(message);
+            im.submitMessage(message, userid, function(res){
                 //update to prevent chat sync within reload function
                 im.lastMessageReceived = res;
-                $('#chatInput_'+userid).val($chatInput.val());
+                $('#chatInput_'+userid).val(message);
 
                 im.appendToDialogue(userid, [{
                         crypt: "0",
@@ -228,13 +240,15 @@ var im = new function(){
     };
     this.loadDialogueIntoFrame = function(userid, offset, limit){
         var messages = this.getMessages(userid,offset, limit);
-        console.log(messages);
         html += '<a href="#" class="loadMore">load more</a>';
         var html = this.parseDialogue(messages);
         
         
         $('.chatMainFrame_'+userid).html(html);
-        this.initDecryption(userid);
+        
+            delay(function(){
+                im.initDecryption(userid);
+            },700);
     };
     this.initDecryption = function(userid){
         $('.chatMainFrame_'+userid+' .chatMessage.decrypted').each(function(){
