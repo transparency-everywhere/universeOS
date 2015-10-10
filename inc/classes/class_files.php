@@ -529,18 +529,19 @@ class file{
         
     }
     
-    function returnJson(){
+    function readJson(){
         //based on: http://stackoverflow.com/questions/4811844/csv-to-json-with-php
-            $this->getFileType();
+            if(!$this->getFileType() === 'text/csv')
+                return 'NOT A CSV!';
+            
             $csv = $this->read();
             $rows = explode("\n", trim($csv));
-            $csvarr = array_map(function ($row) {
-                $keys = array('var0','var1','var2','var3','var4','var5','var6','var7','var8','var9','var10');
-                return array_combine($keys, str_getcsv($row));
-            }, $rows);
-            $json = json_encode($csvarr);
-
-            return $json;
+            $result = array();
+            foreach($rows AS $row){
+                $fieldResults = str_getcsv ($row);
+                $result[] = $fieldResults;
+            }
+            return json_encode($result);
     }
     
     function overwrite($string){

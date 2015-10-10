@@ -660,6 +660,9 @@ var filesystem =  new function() {
         return api.query('api/files/read/', { file_id : file_id});
     };
     
+    this.readJson = function(file_id){
+        return api.query('api/files/readJson/', { file_id : file_id});
+    };
     this.generateIcon = function(fileType, color, id, onclick){
     var icons = {};
     var identifier;
@@ -717,6 +720,7 @@ var filesystem =  new function() {
     icons['video'] = 'play';
     icons['UFF'] = 'file';
     icons['text/plain'] = 'file';
+    icons['text/csv'] = 'navicon';
     icons['text/x-c++'] = 'file';
     icons['application/pdf'] = 'file';
     icons['application/vnd.ms-office'] = 'file';
