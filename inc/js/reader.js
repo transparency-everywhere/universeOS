@@ -203,18 +203,19 @@ var reader = new function(){
         var zoomInString = 'zoomIn(' + fileData['folder'] + ')';
         var zoomOutString = 'zoomOut(' + fileData['folder'] + ')';
         
-        var header = "<header class=\"white-gradient\">";
-        header += filesystem.generateIcon(fileData['type'], 'grey');
-        header += "<span class=\"title\">" + fileData['title'] + "</span>";
-        header += '<div class="whiteGradientScoreButton">' + item.showScoreButton('file', file_id) + '</div>';
-        header += '<a href="./out/download/?fileId=' + file_id + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download', 'grey') + '</a>';
-        header += item.showItemSettings('file', file_id);
-        if(fileData['type'] === 'image' || fileData['type'] === 'image/jpeg' || fileData['type'] === 'image/png' || fileData['type'] === 'image/tiff' || fileData['type'] === 'image/gif') {
-            header += '<div id="zoom_in">' + filesystem.generateIcon('plus', 'grey', '', zoomInString) + '</div>';
-            header += '<div id="zoom_out">' + filesystem.generateIcon('minus', 'grey', '', zoomOutString) + '</div>';
+        if(fileData['type'] !== 'text/csv'){
+            var header = "<header class=\"white-gradient\">";
+            header += filesystem.generateIcon(fileData['type'], 'grey');
+            header += "<span class=\"title\">" + fileData['title'] + "</span>";
+            header += '<div class="whiteGradientScoreButton">' + item.showScoreButton('file', file_id) + '</div>';
+            header += '<a href="./out/download/?fileId=' + file_id + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download', 'grey') + '</a>';
+            header += item.showItemSettings('file', file_id);
+            if(fileData['type'] === 'image' || fileData['type'] === 'image/jpeg' || fileData['type'] === 'image/png' || fileData['type'] === 'image/tiff' || fileData['type'] === 'image/gif') {
+                header += '<div id="zoom_in">' + filesystem.generateIcon('plus', 'grey', '', zoomInString) + '</div>';
+                header += '<div id="zoom_out">' + filesystem.generateIcon('minus', 'grey', '', zoomOutString) + '</div>';
+            }
+            header += "</header>";
         }
-        header += "</header>";
-        
         var output = '';
         var halfPath = '' + encodeURIComponent(folders.getPath(elements.getData(fileData['folder'])['folder']) + fileData['filename']);
         var secondHalf = halfPath.replace(/%2F/g, '/');
@@ -370,14 +371,40 @@ var reader = new function(){
                     output += '</div>';
                 output += '</div>';
             break;
-            
+            case 'text/csv':
+                var jsonObj = filesystem.readJson(file_id);
+                
+                output += '<div class="openFile">';
+                
+                
+                
+                var header = "<header class=\"white-gradient\">";
+                header += filesystem.generateIcon(fileData['type'], 'grey');
+                header += "<span class=\"title\">" + fileData['title'] + "</span>";
+                header += "<span class=\"title\"><a href=\"#\" onclick=\"\">flip table</a></span>";
+                header += "<span class=\"title\"><a href=\"#\" onclick=\"\">show table caption</a></span>";
+                //header += '<div class="whiteGradientScoreButton">' + item.showScoreButton('file', file_id) + '</div>';
+                //header += '<a href="./out/download/?fileId=' + file_id + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download', 'grey') + '</a>';
+                header += item.showItemSettings('file', file_id);
+                header += "</header>";
+                
+                
+                
+                
+                    output += header;
+                    
+                    output += '<div class="dbTable">';
+                    output += gui.parseTable(jsonObj);
+                    output += '</div>';
+                    output += '</div>';
+            break;
             default:
                 var title = fileData['title'];
                 output += '<div class="openFile">';
                     output += header;
                     output += "<div class=\"fileWindow\" id=\"fileWindowId\">";
                         output += "<div class=\"swwReader\">";
-                            output += "<span>Sorry, but this file isn't compatible with the universeOS Reader. :( You just can download it by clicking on the download button above.</span>";
+                            output += "<span>Sorry, but this file isn't compatible with the universeOS Reader. :(<br>But you can download it by clicking on the download button above.<br>If you want to improve the source code and the fieltype you want, go to the file inc/js/reader.js and add the file type to the function reader.openFile() or change handlers.files.handler</span>";
                         output += "</div>";
                     output += '</div>';
                 output += '</div>';
@@ -460,51 +487,6 @@ var reader = new function(){
         }
         html += '</ul>'; 
         return html;
-    };
-    /**
-    * Shows new tab with table 
-    * @param {(string|object)} [input=[[1,'test'],[2,'test2']]] Data that shall be parsed to table
-    */
-    this.showTable = function(array, switchAxis){
-        //the basic idea is, that every array can be shown, even if the value also might be an object.
-        //if the value is an object -> show table icon an give the possibility to open object
-        //in new table
-        
-        if(typeof switchAxis === 'undefined')
-            switchAxis = false;
-        
-        
-        var html = '<table>', first = '', second = '';
-        $.each(array, function(index, value){
-            
-            if(!switchAxis)
-                html += '<tr>';
-            
-                    first += '<td>';
-                    first += index;
-                    first += '</td>';
-                    
-                    second += '<td>';
-                    second += value;
-                    second += '</td>';
-                    
-            if(!switchAxis)
-                html += '</tr>';
-                
-        });
-        
-        if(switchAxis){
-            html += '<tr>';
-            html += first;
-            html += '</tr>';
-            html += '<tr>';
-            html += second;
-            html += '</tr>';
-        }
-        html += '</table>';
-        
-        
-        
     };
     this.isTable = function(object){
         
