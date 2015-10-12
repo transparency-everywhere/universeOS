@@ -21,6 +21,101 @@ var gui = new function(){
     this.text = function(string){
         return htmlspecialchars(string);
     };
+    this.addTableCaption = function($table){
+        
+        var alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
+        var $this = $table;
+        var table_id = $table.attr('id');
+        var numberOfColumns = 0, i = 0;
+        $this.find("tr").each(function(){
+            
+            var n = 0;
+            $(this).find("td").each(function(){
+                   n++;
+            });
+            $(this).prepend('<td class="tableCaption">'+(i+1)+'</td>');
+            if(n>numberOfColumns)
+                numberOfColumns = n;
+            i++;
+        });
+        var cols = '';
+        for (i = 0; i < numberOfColumns; i++) { 
+            cols += '<td>'+ alphabet[i] + "</td>";
+        }
+        $this.prepend('<tr class="tableCaption"><td>'+cols+'</td></tr>');
+        
+        //change button
+        $this.parent().find('.gui_table_helper .caption').html('remove caption').attr('onclick', "gui.removeTableCaption($('#"+table_id+"'))");
+        
+    };
+    this.removeTableCaption = function($table){
+        $table.find('.tableCaption').remove();
+        var table_id = $table.attr('id');
+        //change button
+        $table.parent().find('.gui_table_helper .caption').html('add caption').attr('onclick', "gui.addTableCaption($('#"+table_id+"'))");
+        
+    };
+    this.sortTable = function(tdPosition){
+        
+    };
+    this.flipTable = function($table){
+        var $this = $table;
+        this.removeTableCaption($this);
+        var newrows = [];
+        $this.find("tr").each(function(){
+            var i = 0;
+            $(this).find("td").each(function(){
+                i++;
+                if(newrows[i] === undefined) { newrows[i] = $("<tr></tr>"); }
+                newrows[i].append($(this));
+            });
+        });
+        $this.find("tr").remove();
+        console.log(newrows);
+        $.each(newrows, function(){
+            $table.append('<tr>'+$(this).html()+'</tr>')
+        });
+    };
+    /**
+    * Shows tab with table 
+    * @param {(string|object)} [input=[[1,'test'],[2,'test2']]] Data that shall be parsed to table
+    */
+    this.parseTable = function(obj, switchAxis){
+        //the basic idea is, that every array can be shown, even if the value also might be an object.
+        //if the value is an object -> show table icon an give the possibility to open object
+        //in new table
+        var table_id = gui.generateId();
+        if(!switchAxis){
+            var rows = [],i = 0, n = 0, highestNumberOfColumns = 0;
+                    $.each(obj, function(index, value){
+                            rows[i] = [];
+                n = 0;
+                $.each(value, function(subIndex, subValue){
+                    rows[i][n] = '<td>'+subValue+'</td>';
+                    if(n > highestNumberOfColumns){
+                        highestNumberOfColumns = n;
+                    }
+                    n++;
+                });
+                i++;
+            });
+            var output = '<div class="gui_table_helper">';
+                output += "<a href=\"#\" class=\"caption\" onclick=\"gui.addTableCaption($('#"+table_id+"'));\">add caption</a>";
+                output += "<a href=\"#\" class=\"flipTable\" onclick=\"gui.flipTable($('#"+table_id+"'));\">flip table</a>";
+                output += '</div>';
+                output += '<table id="'+table_id+'" class="gui_table">';
+            $.each(rows, function(index, columns){
+                            output += '<tr>';
+                            $.each(columns, function(index, value){
+                                output += value;
+                            });
+                            output += '</tr>';
+            });
+        }
+        output += '</table>';
+        return output;
+        
+    };
     this.generateLoadingArea = function(){
         return '<div class="loadingImage"><img src="./gfx/ripple.gif"/></div>';
     };

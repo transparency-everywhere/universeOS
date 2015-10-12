@@ -19,7 +19,6 @@
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
                     
-
 $fileClass = new file($_POST['file_id']);
-echo $fileClass->read();
+echo $fileClass->readJson();
 ?>
