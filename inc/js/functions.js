@@ -2909,7 +2909,15 @@ var handlers = {
                             }
 
                     },
-                    
+                    linkToId : function(url){
+                        var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+                        var match = url.match(regExp);
+                        if (match&&match[7].length==11){
+                            return match[7];
+                        }else{
+                            debug.log("Url incorrecta");
+                        }
+                    },
                     getTitle : function(link){
                         if(typeof link === 'object'){
                             //return '';
@@ -2942,8 +2950,12 @@ var handlers = {
                                 results.push('<img src=\''+value.replace(/^"(.+(?="$))"$/, '$1')+'\'/>');
                             });
                             return results;
-                        }else
-                            return '<img src=\''+toString(handler.getThumbnail('youtube', link)).replace(/^"(.+(?="$))"$/, '$1')+'\'/>';
+                        }else{
+                            //http://img.youtube.com/vi/<insert-youtube-video-id-here>/sddefault.jpg
+                            var id = this.linkToId(link);
+                            //@sec
+                            return '<img src=\'http://img.youtube.com/vi/'+id+'/sddefault.jpg\'/>';
+                        }
                     },
                     query: function(query, offset, max_results){
                         return handler.query('youtube', query, offset, max_results);
