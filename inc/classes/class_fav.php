@@ -43,7 +43,7 @@ class fav {
                     $fileClass2 = new files();
                     $fileData['iconsrc'] = "fileIcons/".$fileClass2->getFileIcon($fileType);
                     $fileData['favId'] = $favData['id'];
-                    if(authorize($fileData['privacy'], "show", $fileData['creator']))
+                    if(authorize($fileData['privacy'], "show", $fileData['owner']))
                         $result[] = array('type' => 'file', 'data' => $fileData);
                 }
             }else if($favData['type'] == "link"){
