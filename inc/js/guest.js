@@ -242,11 +242,11 @@ function login(){
 	                            if(res == 1){
 	                            	
 	                            	//store needed values in localStorage
-	    							localStorage.currentUser_userid = userid;
-	    							localStorage.currentUser_username = username;
-	    							localStorage.currentUser_passwordHashMD5 = false; // <- delete!
-	    							localStorage.currentUser_shaPass = shaPass;
-	    							
+                                        //@sec
+	    				localStorage.currentUser_userid = userid;
+	    				localStorage.currentUser_username = username;
+	    				localStorage.currentUser_passwordHashMD5 = false; // <- delete!
+	    				localStorage.currentUser_shaPass = shaPass;
 	    							
 	                                //load checked message
 	                                $('#bodywrap').slideUp();

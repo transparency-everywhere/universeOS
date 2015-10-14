@@ -340,16 +340,16 @@ class user {
     
     
     //not in use so far
-    function delete($userid, $reason){
-          $db = new db();
-          $authorization = true;
-          if($authorization){
-
+    function deleteAccount($passwordHash){
+          //get userData from session id
+          $userData = $this->getData(getUser());
+          if($passwordHash == $userData['password']){
+              $db = new db();
               //delete all files
               $files = $db->select('files', array('owner', $userid), array('id'));
               foreach($files AS $fileData){
                   $fileClass = new file($fileData['id']);
-                  $fileClass->deleteFile();
+                  $fileClass->delete();
               }
 
               //delete all links
@@ -385,9 +385,9 @@ class user {
               $db->delete('user', array('userid', $userid));
 
 
-              //log userid, username, reason
-
+              return true;
           }
+          return false;
     }
     
 }
@@ -434,7 +434,8 @@ function proofLogin(){
           return false;
       }
 }
-
+//@sec
+//@del
 function proofLoginMobile($user, $hash){
   	
         $userClass = new user($user);

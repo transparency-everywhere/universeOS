@@ -57,8 +57,6 @@ var settings = new function(){
             gui.alert('Your privacy has been updated', 'Settings');
         });
     };
-    
-    
     this.showUpdatePrivacyForm = function(){
         settings.show();
         var captions = this.getPrivacyCaptions();
@@ -147,6 +145,50 @@ var settings = new function(){
     };
     
     
+    this.showDeleteUserAccountForm = function(){
+        
+        settings.show();
+        
+        
+        
+        var fieldArray = [];
+        var options = [];
+        options['headline'] = 'Are you sure to delete your account?';
+        options['buttonTitle'] = 'DELETE ACCOUNT';
+        options['noButtons'] = false;
+        
+        
+        //grouppicture
+        var field0 = [];
+        field0['caption'] = 'Password';
+        field0['type'] = 'password';
+        field0['inputName'] = 'password';
+        field0['value'] = '';
+        field0['caption_position'] = 'left';
+        fieldArray[0] = field0;
+        
+//        var field1 = [];
+//        field1['caption'] = 'Title';
+//        field1['inputName'] = 'title';
+//        field1['type'] = 'text';
+//        field1['value'] = groupData['title'];
+//        field1['caption_position'] = 'left';
+//        fieldArray[1] = field1;
+        
+        options['action'] = function(){
+            User.deleteAccount($('#deleteUserFormContainer #password').val());
+            
+        };
+        
+        $('#settingsFrame').html('<div id="deleteUserFormContainer"></div>');
+        
+       // formModal.init('Update Profile', '<div id="updateProfileFormContainer"></div>', modalOptions);
+        gui.createForm('#deleteUserFormContainer',fieldArray, options);
+        
+        
+        
+        
+    };
     
     this.showUpdateBuddylistForm = function(){
         settings.show();
@@ -173,13 +215,16 @@ var settings = new function(){
     this.showSecurityOverview = function(){
         settings.show();
         var output = '<div id="settingsSecurity"><h2 style="margin-top:0">Change Password</h2>';
-        output += '<a href="#" class="button" id="changePasswordButton">Change Password</a>';
+        output += '<a href="#" class="button" id="changePasswordButton">Change Password</a><p>&nbsp;</p><h2 style="margin-top:0">Delete Account</h2><a href="#" class="button" id="deleteAccountButton">Delete Account';
         output += '</div>';
         
         $('#settingsFrame').html(output);
         
         $('#changePasswordButton').click(function(){
            settings.showUpdatePasswordForm(); 
+        });
+        $('#deleteAccountButton').click(function(){
+           settings.showDeleteUserAccountForm(); 
         });
         
     };

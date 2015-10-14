@@ -813,7 +813,6 @@ var User = new function(){
             return clientDB.savePipe('users', api.query('api/user/getProfileInfo/', { request: [{user_id : userid}]})[0]);
         };
     }
-        
    
     this.getCypher = function(id){
 		var result="";
@@ -850,7 +849,19 @@ var User = new function(){
             }
         });
     };
+    this.deleteAccount = function(password){
         
+	var shaPass = hash.SHA512(password);
+	var passwordHash = cypher.getKey('auth', User.userid, shaPass);
+        api.query('api/user/deleteAccount/', {passwordHash:passwordHash}, function(result){
+            if(result === ''){
+                gui.alert('Something went wrong. Wrong password?');
+            }else{
+                alert('Your account has been removed');
+                User.logout();
+            }
+        });
+    };
     this.getAllData = function(userid){
         //data will only be returned if getUser()==userid or userid is on buddylist of getUser()
         return api.query('api/user/getAllData/', { user_id:userid });
