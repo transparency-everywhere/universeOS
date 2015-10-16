@@ -1,7 +1,6 @@
 Pleas mark stuff thats depraciated with @old
 
 to do
-    attachments
     chat
     showtour
 
@@ -14,14 +13,6 @@ Video
     twitch
 
 
-Update
-
-    Rename 
-            elements -> collections
-            reader   -> display
-
-    Delete Users where cypher is md5 or sha512
-
     
 
 todo
@@ -32,12 +23,6 @@ todo
         usage of document.cookie
             session
 
-    get rid of
-        mysql_query
-        $.post, $.ajax
-        api.php, doit.php, showComment.php
-        thousend different column names for user (author, owner, creator, user etc) instead `user`
-        chat.show(), feed.show(), buddylist.show() etc. use application.show('buddylist') instead
     api
         typecasting
         api.query(data {if string->utf8} return if string -> JSescape);
@@ -61,9 +46,6 @@ todo
     fade in applications
 
     add type xml and json to openlink
-
-    group admin
-        change group picture
 
 
 
