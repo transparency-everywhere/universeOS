@@ -29,13 +29,7 @@ var buddylist = new function(){
         return ($.inArray(buddy_id, buddylist.getBuddies())!==-1)
     };
     this.addBuddy = function(userid){
-        var res;
-	$.ajax({
-            url:"api/buddies/add/",
-            async: false,
-            data: {buddy:userid},
-            type: "POST",
-            success:function(data) {
+        api.query("api/buddies/add/", {buddy:userid}, function(data){
 	      if(data == '1'){
                   gui.alert('The request has been send.', 'Request Send');
                   $('.friendButton_'+userid).html('request sent');
@@ -45,9 +39,8 @@ var buddylist = new function(){
                   gui.alert('There was an error.', 'Error');
                   
               }
-            }
-	});
-	return res;
+        });
+        return true;
     };
     this.acceptBuddyRequest = function(buddy_id){
         
@@ -63,21 +56,15 @@ var buddylist = new function(){
         alert('needs to be written');
     };
     this.removeBuddy = function(userid){
-        var res;
-	$.ajax({
-            url:"api/buddies/remove/",
-            async: false,
-            data: {buddy:userid},
-            type: "POST",
-            success:function(data) {
+        
+            api.query('api/buddies/remove/', {buddy:userid}, function(data) {
 	      if(data == '1'){
                   gui.alert('The buddy was removed', 'Buddylist');
               }else{
                   gui.alert('There was an error.', 'Error');
               }
-            }
-	});
-	return res;
+            });
+        
     };
     
     

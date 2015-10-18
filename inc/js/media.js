@@ -13,7 +13,7 @@
 //        limitations under the License.
 //        @author nicZem for Tranpanrency - everywhere.com
 
-
+//@old
 //requires jquery
 //adding service to media class:
 //1. add regex to gettype

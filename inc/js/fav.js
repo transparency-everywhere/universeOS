@@ -16,17 +16,7 @@
 
 var fav = new function(){
     this.select = function(user){
-        var result="";
-	$.ajax({
-            url:"api/fav/select/",
-            async: false,  
-            type: "POST",
-            data: {user : user},
-            success:function(data) {
-               result = JSON.parse(data);
-            }
-	});
-	return result;
+	return api.query("api/fav/select/", {user : user});
     };
     this.getFavArray = function(user){
         var favs = this.select(user);

@@ -21,31 +21,10 @@ var playlists = new function(){
     this.activePlaylist = {};
     
     this.getData = function(playlist_id){
-        
-        var result="";
-	$.ajax({
-            url:"api/playlists/select/",
-            async: false,  
-            type: "POST",
-            data: {playlist_id : playlist_id},
-            success:function(data) {
-               result = JSON.parse(data);
-            }
-	});
-	return result;
+	return api.query('api/playlists/select/', {playlist_id : playlist_id});
     };
     this.getTitle = function(playlist_id){
-        var result="";
-	$.ajax({
-            url:"api/playlists/idToTitle/",
-            async: false,  
-            type: "POST",
-            data: {playlist_id : playlist_id},
-            success:function(data) {
-               result = data;
-            }
-	});
-	return result;
+	return api.query('api/playlists/idToTitle/', {playlist_id : playlist_id});
     };
     
     

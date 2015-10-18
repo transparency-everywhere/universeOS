@@ -292,5 +292,3 @@ var im = new function(){
         });
     };
 };
-
-        

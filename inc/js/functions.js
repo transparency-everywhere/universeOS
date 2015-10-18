@@ -815,18 +815,7 @@ var User = new function(){
     }
    
     this.getCypher = function(id){
-		var result="";
-		    $.ajax({
-		      url:"api.php?action=getUserCypher",
-		      async: false, 
-			  type: "POST",
-			  data: { userid : id },
-		      success:function(data) {
-		         result = data; 
-		      }
-		   });
-		   
-		   return result;
+	return api.query('api.php?action=getUserCypher', { userid : id });
     }
     this.updatePassword = function(user_id, old_password, new_password, callback){
         //generate old password hash for authentification
@@ -1220,17 +1209,7 @@ function useridToUsername(id){
 }
 
 function usernameToUserid(username){
-			
-		    var result="";
-		    $.ajax({
-		      url:"api.php?action=usernameToUserid",
-		      async: false,  
-			  type: "POST",
-			  data: { username : username },
-		      success:function(data) {
-		         result = data; 
-		      }
-		   });
+                   var result = api.query('api.php?action=usernameToUserid', { username : username })
 		   usernames[result] = username;
 		   return result;
 		
@@ -1351,18 +1330,8 @@ function getSalt(type, itemId, key){
 }
 
 function createSalt(type, itemId, receiverType, receiverId, salt){
-			var ret;
-			$.ajax({
-                            url:"api.php?action=createSalt",
-                            async: false,  
-                            type: "POST",
-                            data: { type: type, itemId: itemId, receiverType: receiverType, receiverId: receiverId, salt: salt },
-                            success:function(data){
-                              ret = data; 
-                            }
-			});
+			return api.query("api.php?action=createSalt", { type: type, itemId: itemId, receiverType: receiverType, receiverId: receiverId, salt: salt });
 			
-			return ret;
 }
 
 var hash = new function(){
@@ -1535,18 +1504,9 @@ var cypher = new function(){
 	    var privateKey;
             var index = type+'_'+itemId;
             if(typeof privateKeys[index] === 'undefined'){
-                    var encryptedKey = '';
-			$.ajax({
-			  url:"api.php?action=getPrivateKey",
-			  async: false,  
-			  type: "POST",
-			  data: { type : type, itemId : itemId },
-			  success:function(data) {
-			     encryptedKey = data; 
-			  }
-			});
-		
-				var shaPass = localStorage.currentUser_shaPass;
+                    var encryptedKey = api.query("api.php?action=getPrivateKey", { type : type, itemId : itemId });
+			
+                    var shaPass = localStorage.currentUser_shaPass;
 			
 			var salt = getSalt('privateKey', itemId, shaPass);
 		    var keyHash = hash.SHA512(shaPass+salt);
@@ -1562,17 +1522,7 @@ var cypher = new function(){
 	    };
             
         this.getPublicKey = function(type, itemId){
-			var key = '';
-			$.ajax({
-			  url:"api.php?action=getPublicKey",
-			  async: false,  
-			  type: "POST",
-			  data: { type : type, itemId : itemId },
-			  success:function(data) {
-			     key = data; 
-			  }
-			});
-	    	return key;
+	    	return api.query("api.php?action=getPublicKey", { type : type, itemId : itemId });
 	};
 	
 };
@@ -1679,7 +1629,7 @@ var sec =  new function() {
 		var keysNew = cypher.createKeysForUser(newPassword);
                 privateKey = sec.symEncrypt(keysNew['keyHash'], privateKey); //encrypt privatestring, using the password hash
 	    
-                $.post("api.php?action=updatePassword", {
+                api.query("api.php?action=updatePassword", {
                     oldPassword:passwordHash_old,
                     password:keysNew['authHash'],
                     authSalt:keysNew['authSaltEncrypted'],
@@ -1693,7 +1643,7 @@ var sec =  new function() {
 		    	}else{
 		    		gui.alert(result, 'Security');
 		    	}
-	    	}, "html");
+	    	});
 	    
 	    
     };
@@ -1703,17 +1653,7 @@ var sec =  new function() {
 
 	
 function getPublicKey(type, itemId){
-			var key = '';
-			$.ajax({
-			  url:"api.php?action=getPublicKey",
-			  async: false,  
-			  type: "POST",
-			  data: { type : type, itemId : itemId },
-			  success:function(data) {
-			     key = data; 
-			  }
-			});
-	    	return key;
+	    	return api.query("api.php?action=getPublicKey", { type : type, itemId : itemId });
 	}
 	
 function storeMessageKey(messageId, key){
@@ -2162,21 +2102,8 @@ function getElementsByClassName(node,classname) {
 		}
 
 function getUserSalt(id){
-		//returns user salt (aes encrypted with pw hash)
-		
-		
-		var result="";
-		    $.ajax({
-		      url:"api.php?action=getUserSalt",
-		      async: false, 
-			  type: "POST",
-			  data: { userid : id },
-		      success:function(data) {
-		         result = data; 
-		      }
-		   });
-		   
-		   return result;
+            //returns user salt (aes encrypted with pw hash)
+            return api.query("api.php?action=getUserSalt", { userid : id });
 	}
 
 //filesystem

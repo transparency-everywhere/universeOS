@@ -165,7 +165,7 @@ var feed = new function(){
         return output;
     };
     this.create = function(content, privacy, attachedItemType, attachedItemId,callback){
-        
+            
             var result="";
             $.ajax({
                 url:"api/feed/create/",
