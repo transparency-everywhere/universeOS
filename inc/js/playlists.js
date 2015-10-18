@@ -102,7 +102,7 @@ var playlists = new function(){
         
         modalOptions['action'] = function(){
             var callback = function(){
-                gui.alert('', 'The playlist has been added');
+                gui.alert('The playlist has been added');
                 $('.blueModal').remove();
                 
                 

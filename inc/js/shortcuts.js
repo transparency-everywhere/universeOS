@@ -116,7 +116,7 @@ var shortcuts = new function(){
         gui.createForm('#createShortcutFormContainer',fieldArray, options);
         
     };
-    this.verifyShortcutRemoval = function(id){
+    this.verifyRemoval = function(id){
                 var confirmParameters = {};
         var shortcutData = shortcuts.getData(id);
         confirmParameters['title'] = 'Delete Shortcut';

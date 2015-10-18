@@ -67,23 +67,19 @@ class contextMenu{
                             $commentData = $db->select('comments', array('id', $itemId), array('author', 'type', 'typeid', 'privacy'));
 	            
                             //allow profile owner to delete comments that other users made in his profile
-                            if($commentData['type'] == "profile" && $commentData['typeid'] == getUser()){
-                                        $delete['title'] = 'Delete';
-					$delete['href'] = "doit.php?action=deleteItem&type=comment&itemId=$itemId";
-					$delete['target'] = 'submitter'; 
-                            }
-                            if(authorize('p', "edit", $commentData['author'])){
+                            
+                            if(authorize($commentData['privacy'], "edit", $commentData['author'])||($commentData['type'] == "profile" && $commentData['typeid'] == getUser())){
                                         $privacy['title'] = 'Privacy';
 					$privacy['href'] = '#';
 					$privacy['onclick'] = "javascript: popper('doit.php?action=changePrivacy&type=comment&itemId=$itemId')";
 					
 				  	$delete['title'] = 'Delete';
-					$delete['href'] = "doit.php?action=deleteItem&type=comment&itemId=$itemId";
-					$delete['target'] = 'submitter'; 
-                            }
+					$delete['href'] = "#";
+					$delete['onclick'] = 'javascript:comments.verifyRemoval('.$itemId.');'; 
 				
-				$options[] = $delete;
-				$options[] = $privacy;
+                                        $options[] = $delete;
+                                        $options[] = $privacy;
+                            }
 				break;
 			case 'internLink':
                                 $dbClass = new db();
@@ -106,8 +102,9 @@ class contextMenu{
                 
                 if(authorize($shortCutItemData['privacy'], "edit", $user)){
 				  	$delete['title'] = 'Delete';
-					$delete['href'] = "doit.php?action=deleteItem&type=internLink&itemId=$itemId";
-					$delete['target'] = 'submitter'; 
+					$delete['href'] = "#";
+					$delete['onclick'] = 'javascript:shortcuts.verifyRemoval('.$itemId.');'; 
+				
                 }
                 $options[] = $delete;
 				break;
@@ -361,12 +358,12 @@ class contextMenu{
 					$background['title'] = 'Set as Background';
 					$background['href'] = "doit.php?action=changeBackgroundImage&type=file&id=$itemId";
 					$background['target'] = 'submitter';
-			  	}
-				
-			  	if(authorize($checkFileData['privacy'], "edit", $checkFileData['owner'])){
-			  	 	$delete['title'] = 'Delete';
-				 	$delete['href'] = "doit.php?action=deleteItem&type=file&itemId=$itemId";
-				 	$delete['target'] = 'submitter';
+                                        
+                                        if(authorize($checkFileData['privacy'], "edit", $checkFileData['owner'])){
+                                            $delete['title'] = 'Delete';
+                                            $delete['href'] = "#";
+                                            $delete['onclick'] = 'filesystem.verifyFileRemoval('.$itemId.')';
+                                        }
 			  	}
 				$options[] = $open;
 				$options[] = $download;
