@@ -78,7 +78,7 @@ h3{
     color: #454545;
     cursor: move;
     height: 60px;
-    overflow: hidden;
+    overflow: none;
     padding: 20px 0 0 15px;
     text-overflow: ellipsis;
     font-size: 24px;
@@ -89,7 +89,6 @@ h3{
 .fenster .inhalt {
 	background-color: #FFF;
 	top: 60px;
-        overflow: auto;
         position: absolute;
         left: 0;
         right: 0;
@@ -99,16 +98,6 @@ h3{
 }
 .inhalt p {
 	margin-bottom:0px;
-}
-
-/*defines content of a window with overflow auto - etc.*/
-.windowContent{
-    position: absolute;
-    top: 60px;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
-    overflow: auto;
 }
 
 .fullScreen{
@@ -253,7 +242,6 @@ li.notHidden{
     top:0;
     right:0;
     bottom:0;
-    overflow: auto;
     width: 337px;
     margin-right: -337px;
     padding: 20px;
@@ -1728,7 +1716,6 @@ span.icon.blue-chevron-down {
     top: 0px;
     bottom: 0px;
     left: 0px;
-    overflow: auto;
     background: #cfd8dc;
     color: #323232;
 }
@@ -1978,9 +1965,8 @@ color: #FFF;
     position: absolute;
     right: 0;
     left: 0;
-    overflow: hidden;
     font-size: 25px;
-	line-height: 15px;
+    line-height: 15px;
 }
 
 
@@ -2061,7 +2047,6 @@ color: #FFF;
     right: 0px;
     bottom: 0px;
     left: 0px;
-    overflow: auto;
     background-color: #FFFFFF;
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;

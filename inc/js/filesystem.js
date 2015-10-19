@@ -240,7 +240,7 @@ var filesystem =  new function() {
         return html;
     };
     this.generateLeftNav = function(){
-        var html = '          <div class="leftNav">';		  			
+        var html = '          <div class="leftNav autoFlow">';		  			
         html += '              <ul>';		  			                    
         html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'1\'));filesystem.tabs.showTab(1);return false"><a href="#">' + filesystem.generateIcon('filesystem', 'blue') + ' All Files</a></li>';
         html += '                  <li onclick="filesystem.tabs.updateTabContent(1 ,filesystem.generateFullFileBrowser(\'pupularity\'));filesystem.tabs.showTab(1);return false"><a href="#">' + filesystem.generateIcon('suggestion', 'blue') + ' Suggestions</a></li>';		  			
@@ -278,7 +278,7 @@ var filesystem =  new function() {
             showFileBrowser = false;
             favorite = true;
         }      
-        var html = '<div class="frameRight fileBrowser_' + folderId + '">';		  			
+        var html = '<div class="frameRight autoFlow fileBrowser_' + folderId + '">';		  			
 
                     html += '    <div class="path">';		  			
                     if(is_numeric(folderId)){

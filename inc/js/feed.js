@@ -183,7 +183,7 @@ var feed = new function(){
     };
     this.init = function(){
         var html = this.generateHeader();
-        html += "        <div id=\"feedFrame\">";
+        html += "        <div id=\"feedFrame\" class=\"autoFlow\">";
         html += "            <div class=\"addFeed\">";
         html += "            <\/div>";
         html += "            <div class=\"feedMain\">";
