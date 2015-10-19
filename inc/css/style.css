@@ -130,8 +130,17 @@ h3{
 
 .windowMenu .icon{
    width: 32px;
-
    height: 32px;
+}
+
+.windowMenu a .blue-icon{
+    display:none;
+}
+.windowMenu a:hover .blue-icon{
+    display: inline-block;
+}
+.windowMenu a:hover .dark-icon{
+    display:none;
 }
 
 
@@ -3654,11 +3663,19 @@ font-weight:bold;
 }
 
 .scoreButton .counter{
-width: auto;
-min-width: 26px;
-border:1px solid #607D8B;
-border-radius: 0;
-line-height: 18px;
+    width: auto;
+    min-width: 26px;
+    border:1px solid #607D8B;
+    border-radius: 0;
+    line-height: 18px;
+}
+
+.scoreButton .counter.positive{
+    color:#313131;
+}
+
+.scoreButton .counter.negative{
+    color:#607d8b;
 }
 
 

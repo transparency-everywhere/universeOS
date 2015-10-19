@@ -7,11 +7,12 @@ var privacy = new function(){
 			  			editable = false;
 			  		
 			  		
-			  		$.post("api/item/privacy/load/", {
-	                       val:val, editable : editable
-	                       }, function(result){
-		                   		$(selector).html(result);
-	                       }, "html");
+                                        
+			  	api.query("api/item/privacy/load/", {
+                                   val:val, editable : editable
+                                }, function(result){
+		                   $(selector).html(result);
+                                });
 			  		
 			  		
 			  	};

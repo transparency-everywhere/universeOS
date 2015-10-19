@@ -17,13 +17,13 @@ var item = new function(){
     this.plusOne = function(type, itemId){
         
         api.query('api/item/score/scorePlus/',{type: type, item:itemId},function(data){
-                $('span.scoreButton.'+type+'_'+itemId+' .counter').html(data);
+                $('span.scoreButton.'+type+'_'+itemId+' .counter').replaceWith(item.generateScoreButton(data));
         });
         
     };
     this.minusOne = function(type, itemId){
         api.query('api/item/score/scoreMinus/',{type: type, item:itemId},function(data){
-            $('span.scoreButton.'+type+'_'+itemId+' .counter').html(data);
+            $('span.scoreButton.'+type+'_'+itemId+' .counter').replaceWith(item.generateScoreButton(data));
         });
     };
     this.showItemThumb = function(type, itemId){
@@ -101,6 +101,15 @@ var item = new function(){
         return {'image':image, 'title':title, 'subtitle': subtitle};
     };
     
+    this.generateScoreButton = function(score){
+        var scoreClass = '';
+        if(score < 0)
+            scoreClass = "negative";
+        if(score > 0)
+            scoreClass = "positive";
+            
+            return '<a class="btn btn-xs counter '+scoreClass+'" href="#">'+score+'</a>';
+    }
     this.showScoreButton = function(type, itemId){
         var score = this.getScore(type, itemId);
         if(typeof itemId === 'object'){
@@ -120,7 +129,7 @@ var item = new function(){
                 
                 if(proofLogin())
                     output += '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+currentType+'\', \''+currentItemId+'\');">' + filesystem.generateIcon('dislike', 'gray') + '</a>';
-                output += '<a class="btn btn-xs counter" href="#">'+score[index]+'</a>';
+                output +=  item.generateScoreButton(score[index]);
                 if(proofLogin())
                     output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+currentType+'\', \''+currentItemId+'\');">' + filesystem.generateIcon('like', 'gray') + '</a>';
                 output += '</span>';
@@ -134,7 +143,7 @@ var item = new function(){
             var output = '<span class="scoreButton '+type+'_'+itemId+'">';
                     if(proofLogin())
                         output += '<a class="btn btn-xs" href="#" onclick="item.minusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('dislike', 'gray') + '</a>';
-                    output += '<a class="btn btn-xs counter" href="#">'+score+'</a>';
+                    output += item.generateScoreButton(score);
                     if(proofLogin())
                         output += '<a class="btn btn-xs" href="#" onclick="item.plusOne(\''+type+'\', \''+itemId+'\');">' + filesystem.generateIcon('like', 'gray') + '</a>';
                 output += '</span>';

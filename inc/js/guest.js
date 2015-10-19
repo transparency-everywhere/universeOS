@@ -118,7 +118,7 @@ var registration = new function(){
         }else if(username.length > 2){
         
                 //check server for new messages
-                $.post("api.php?action=checkUsername", {
+                api.query("api.php?action=checkUsername", {
                        username:username
                        }, function(result){
                             var res = result;
@@ -129,7 +129,7 @@ var registration = new function(){
                                 $checkUsernameStatus.show();
                                 $checkUsernameStatus.html('<a style="color: red">&nbsp;this username is already in use</a><div class="arrow-right"></div>');
                             }
-                       }, "html");
+                       });
         }else{
             //html to short
             $checkUsernameStatus.html('<a style="color: red">&nbsp;to short</a><div class="arrow-right"></div>');
@@ -170,7 +170,7 @@ var registration = new function(){
 
                     //submit registration
                     //@async
-                    $.post("api/user/create/", {
+                    api.query("api/user/create/", {
                                             username:username,
                                             password:keys['authHash'],
                                             authSalt:keys['authSaltEncrypted'],
@@ -194,7 +194,7 @@ var registration = new function(){
                                                     $('#regLoad').slideUp('');
                                                     $('#regForm').show();
                                             }
-                                        }, "html");
+                                        });
             });
     };
     this.init = function(){
@@ -234,7 +234,7 @@ function login(){
 	var passwordHash = cypher.getKey('auth', userid, shaPass);
         
         //@async
-	$.post("api.php?action=authentificate", {
+	api.query("api.php?action=authentificate", {
 	                       username:username,
 	                       password:passwordHash,
 	                       }, function(result){
@@ -255,7 +255,7 @@ function login(){
 	                                gui.alert('Wrong username and password combination.');
 	                            }
 	                            return false;
-	                       }, "html");
+	                       });
                                
 }
 

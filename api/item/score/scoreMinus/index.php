@@ -17,7 +17,7 @@
 
 include('../../../../inc/config.php');
 include('../../../../inc/functions.php');
-error_reporting(E_ALL);
+
 $type = $_POST['type'];
 $typeid = $_POST['item'];//
 $item = new item($type, $typeid);

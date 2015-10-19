@@ -130,11 +130,9 @@ else if($_GET['action'] == "changeBackgroundImage"){
         if($_GET['type'] == "file"){
             $dbClass = new db();
             $fileData = $dbclass->select('files', array('id', $_GET['id']));
-                $documentElementSQL = mysql_query("SELECT id, folder FROM elements WHERE id='$documentData[folder]'");
-                $documentElementData = mysql_fetch_array($documentElementSQL);
-                $documentFolderSQL = mysql_query("SELECT id, path FROM folders WHERE id='$documentElementData[folder]'");
-                $documentFolderData = mysql_fetch_array($documentFolderSQL);
-                $folderPath = urldecode($documentFolderData[path]);
+                $documentElementData = $dbclass->select('elements', array('id', $documentData['folder']), array('id', 'folder'));
+                $documentFolderData = $dbclass->select('folders', array('id', $documentElementData['folder']), array('id', 'path'));
+                $folderPath = urldecode($documentFolderData['path']);
                 $img = "upload$folderPath/$fileData[title]";
                     }
         else if($type == "link"){
@@ -258,7 +256,8 @@ else if($_GET['action'] == "showStartMessage"){
                 </footer>
             </div>
             <?}else if($_GET['step'] == "4"){
-                mysql_query("UPDATE user SET startLink='' WHERE userid='".getUser()."'");?>
+                $db = new db();
+                $db->query("UPDATE user SET startLink='' WHERE userid='".getUser()."'");?>
             <script>
                 $("#finalStep").click(function(){
                     $(".blueModal").hide("slow", function(){

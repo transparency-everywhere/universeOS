@@ -233,9 +233,9 @@ var application = function(id){
 			output += '<header class="titel">';
 			output += '<p>'+title+'&nbsp;</p>';
 			output += '<p class="windowMenu">';
-				output += '<a href="javascript:'+id+'.applicationVar.hide();"><span class="icon dark-minimize"></span></a>';
-				output += '<a href="#" onclick="'+id+'.applicationVar.fullscreen();" class="fullScreenIcon"><span class="icon dark-maximize"></span></a>';
-                                output += '<a href="javascript:'+id+'.applicationVar.hide();"><span class="icon dark-close"></span></a>'
+				output += '<a href="javascript:'+id+'.applicationVar.hide();"><span class="icon  dark-icon dark-minimize"></span><span class="icon blue-icon blue-minimize"></span></a>';
+				output += '<a href="#" onclick="'+id+'.applicationVar.fullscreen();" class="fullScreenIcon"><span class="icon dark-icon dark-maximize"></span><span class="icon blue-icon blue-maximize"></span></a>';
+                                output += '<a href="javascript:'+id+'.applicationVar.hide();"><span class="icon dark-icon dark-close"></span><span class="icon blue-icon blue-close"></span></a>';
 			output += '</p>';
 		output += '</header>';
 		output += '<div class="inhalt autoflow" id="'+id+'Main">'+content+'</div>';

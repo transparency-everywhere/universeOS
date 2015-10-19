@@ -37,7 +37,6 @@ var elements = new function(){
         
         var elementData = this.getData(element);
         var elementAuthorData = this.getAuthorData(elementData['author']);
-        var link = "./modules/reader/showfile.php?type=" + elementData['type'];
         var header = "<header class=\"white-header\">";
             header += filesystem.generateIcon('element', 'grey');
             header += "<span class=\"elementtitle\">" + gui.shorten(elementData['title'], 25) + "</span>";
