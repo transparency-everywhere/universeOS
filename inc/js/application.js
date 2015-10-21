@@ -238,7 +238,7 @@ var application = function(id){
                                 output += '<a href="javascript:'+id+'.applicationVar.hide();"><span class="icon dark-icon dark-close"></span><span class="icon blue-icon blue-close"></span></a>';
 			output += '</p>';
 		output += '</header>';
-		output += '<div class="inhalt autoflow" id="'+id+'Main">'+content+'</div>';
+		output += '<div class="inhalt autoFlow" id="'+id+'Main">'+content+'</div>';
 		output += '</div>';
 
 		
