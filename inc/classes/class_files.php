@@ -545,8 +545,12 @@ class file{
     }
     
     function overwrite($string){
+        
+        
         $files = new files($this->id);
-        $files->updateFileContent($this->id, $string);
+        $filedata = $this->getFileData();
+        if(authorize($fileData['privacy'], 'show', $fileData['owner']))
+         $files->updateFileContent($this->id, $string);
     }
 
 

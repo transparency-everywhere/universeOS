@@ -71,19 +71,47 @@ var gui = new function(){
             });
         });
         $this.find("tr").remove();
-        console.log(newrows);
         $.each(newrows, function(){
-            $table.append('<tr>'+$(this).html()+'</tr>')
+            if(!empty($(this).html()))
+                $table.append('<tr>'+$(this).html()+'</tr>')
         });
+        
+    };
+    this.tableToJson = function($table){
+        var results = [];
+        $table.find('tr').each(function(){
+            var collumns = [];
+            $(this).find('td').each(function(){
+                collumns.push($(this).html());
+            });
+            results.push(collumns);
+        });
+        return results;
+        
+    };
+    this.jsonToCSV = function(json){
+        var output = '';
+        $.each(json, function(index,value){
+            $.each(value, function(cIndex, cValue){
+                
+                output += cValue+',';
+            });
+            output += '\n';
+        });
+        return output;
     };
     /**
     * Shows tab with table 
     * @param {(string|object)} [input=[[1,'test'],[2,'test2']]] Data that shall be parsed to table
     */
-    this.parseTable = function(obj, switchAxis){
+    this.parseTable = function(obj, switchAxis, options){
         //the basic idea is, that every array can be shown, even if the value also might be an object.
         //if the value is an object -> show table icon an give the possibility to open object
         //in new table
+        
+        if(typeof options === 'undefined')
+            options = {};
+        
         var table_id = gui.generateId();
         if(!switchAxis){
             var rows = [],i = 0, n = 0, highestNumberOfColumns = 0;
@@ -99,10 +127,13 @@ var gui = new function(){
                 });
                 i++;
             });
-            var output = '<div class="gui_table_helper">';
-                output += "<a href=\"#\" class=\"caption\" onclick=\"gui.addTableCaption($('#"+table_id+"'));\">add caption</a>";
-                output += "<a href=\"#\" class=\"flipTable\" onclick=\"gui.flipTable($('#"+table_id+"'));\">flip table</a>";
-                output += '</div>';
+            var output = '';
+                if(typeof options.hideHelper === 'undefined'||options.hideHelper !== true){
+                    output += '<div class="gui_table_helper">';
+                    output += "<a href=\"#\" class=\"caption\" onclick=\"gui.addTableCaption($('#"+table_id+"'));\">add caption</a>";
+                    output += "<a href=\"#\" class=\"flipTable\" onclick=\"gui.flipTable($('#"+table_id+"'));\">flip table</a>";
+                    output += '</div>';
+                }
                 output += '<table id="'+table_id+'" class="gui_table">';
             $.each(rows, function(index, columns){
                             output += '<tr>';

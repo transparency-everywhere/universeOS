@@ -876,6 +876,12 @@ var filesystem =  new function() {
         
     };
 };
+
+var files = new function(){
+    this.update = function(file_id, content, callback){
+        return api.query('api/files/updateFileContent/', {file_id: file_id, content: content},callback);
+    }
+};
 //@param select folder/element
 function loadMiniFileBrowser($target, folder, element, level, showGrid, select){
         $target.html(filesystem.getMiniFileBrowser(folder, element, level, showGrid, select));

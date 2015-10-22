@@ -227,6 +227,10 @@ var reader = new function(){
         userHistory.push(type, file_id, fileData['title']);
         
         switch(fileData['type']){
+            case 'text/csv':
+                reader.openTable(file_id);
+                return true;
+            break;
             //cases: text, uff, image, pdf?, audio?, video?
             case 'image':
             case 'image/jpeg':
@@ -371,33 +375,6 @@ var reader = new function(){
                     output += '</div>';
                 output += '</div>';
             break;
-            case 'text/csv':
-                var jsonObj = filesystem.readJson(file_id);
-                
-                output += '<div class="openFile">';
-                
-                
-                
-                var header = "<header class=\"white-gradient\">";
-                header += filesystem.generateIcon(fileData['type'], 'grey');
-                header += "<span class=\"title\">" + fileData['title'] + "</span>";
-                header += "<span class=\"title\"><a href=\"#\" onclick=\"\">flip table</a></span>";
-                header += "<span class=\"title\"><a href=\"#\" onclick=\"\">show table caption</a></span>";
-                //header += '<div class="whiteGradientScoreButton">' + item.showScoreButton('file', file_id) + '</div>';
-                //header += '<a href="./out/download/?fileId=' + file_id + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download', 'grey') + '</a>';
-                header += item.showItemSettings('file', file_id);
-                header += "</header>";
-                
-                
-                
-                
-                    output += header;
-                    
-                    output += '<div class="dbTable">';
-                    output += gui.parseTable(jsonObj);
-                    output += '</div>';
-                    output += '</div>';
-            break;
             default:
                 var title = fileData['title'];
                 output += '<div class="openFile">';
@@ -414,7 +391,7 @@ var reader = new function(){
         if(typeof tabId === "string"){
             reader.tabs.updateTabContent(tabId, output);
         }else{
-            reader.tabs.addTab(title, 'html', output, function(){
+            var tabId = reader.tabs.addTab(title, 'html', output, function(){
                 //onclose
                 delete reader.uffChecksums[file_id];
             });
@@ -438,6 +415,86 @@ var reader = new function(){
         return output;
         
     };
+    this.openTable = function(file_id){
+        
+        var fileData = filesystem.getFileData(file_id);
+        var output = '';
+        if(fileData['type'] === 'image/jpeg' || fileData['type'] === 'image/png' || fileData['type'] === 'image/tiff' || fileData['type'] === 'image/gif')
+            var type = "image";
+        else
+            var type = fileData['type'];
+        userHistory.push(type, file_id, fileData['title']);
+        var title = fileData['title'];
+        var jsonObj = filesystem.readJson(file_id);
+                
+                output += '<div class="openFile">';
+                
+                
+                
+                var header = "<header class=\"white-gradient\">";
+                header += filesystem.generateIcon(fileData['type'], 'grey');
+                header += "<span class=\"title\">" + fileData['title'] + "</span>";
+                header += "<div class=\"whiteGradientScoreButton\">";
+                    header += "<span><a href=\"#\" class=\"saveFile\" title=\"save file\" style=\"display:none\"><i class=\"icon icon-file\"></i></a></span>";
+                    header += "<span><a href=\"#\" class=\"flipTable\" title=\"flip table\"><i class=\"icon icon-undo\"></i></a></span>";
+                    header += "<span><a href=\"#\" class=\"toggleCaption\" title=\"add caption\"><i class=\"icon icon-list\"></i></a></span>";
+                header += '</div>';
+                //header += '<div class="whiteGradientScoreButton">' + item.showScoreButton('file', file_id) + '</div>';
+                //header += '<a href="./out/download/?fileId=' + file_id + '" target="submitter" class="btn btn-mini" title="download file">' + filesystem.generateIcon('download', 'grey') + '</a>';
+                header += item.showItemSettings('file', file_id);
+                header += "</header>";
+                
+                
+                
+                
+                    output += header;
+                    
+                    output += '<div class="dbTable">';
+                    output += gui.parseTable(jsonObj, false, {hideHelper: true});
+                    output += '</div>';
+                    output += '</div>';
+        
+        
+            applications.show('reader');
+            var tabId = reader.tabs.addTab(title, 'html', output, function(){
+                //onclose
+                delete reader.uffChecksums[file_id];
+            });
+            
+            $('#reader .tab_'+tabId+' .flipTable').click(function(){
+                gui.flipTable($('#reader .tab_'+tabId+' .gui_table'));
+            });
+            $('#reader .tab_'+tabId+' .toggleCaption').click(function(){
+                console.log($(this).attr('title'));
+                if($(this).attr('title') === 'add caption'){
+                    gui.addTableCaption($('#reader .tab_'+tabId+' .gui_table'));
+                    $(this).attr('title', 'remove caption');
+                }else{
+                    gui.removeTableCaption($('#reader .tab_'+tabId+' .gui_table'));
+                    $(this).attr('title', 'add caption');
+                }
+            });
+            
+            $('#reader .tab_'+tabId+' .saveFile').click(function(){
+                files.update(file_id, gui.jsonToCSV(gui.tableToJson($('#reader .tab_'+tabId+' .gui_table'))), function(result){
+                    console.log(result);
+                });
+            });
+            $('#reader .tab_'+tabId+' .gui_table td').click(function(){
+                $(this).attr('contenteditable', true);
+                $(this).focusout(function(){
+                    $('#reader .tab_'+tabId+' header .saveFile').show();
+                    $(this).attr('editable', false);
+                });
+            });
+            
+    };
+    
+    this.updateTable = function(file_id, tab_id){
+        
+    };
+    
+    
     this.openLink = function(type, link, title){
         player.openItem(type, link);
         userHistory.push('link', id, title);
