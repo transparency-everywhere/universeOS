@@ -21,6 +21,15 @@ We think that the universeOS should not be a comerical project. But we also now,
 =Recent=
 ----------
 
+    get rid of
+        mysql_query
+        $.post, $.ajax
+        api.php, doit.php, showComment.php
+        thousend different column names for user (author, owner, creator, user etc) instead `user`
+        chat.show(), feed.show(), buddylist.show() etc. use application.show('buddylist') instead
+
+-add ftp, dropbox etc to the filesystem
+
 -XSS
     check php classes for sanitizeText()
 
@@ -55,7 +64,17 @@ We think that the universeOS should not be a comerical project. But we also now,
 
 -We haven't changed the crypto since the release of the Beta. We plan to overhaul the entire crypto protocol. We're looking for help here! So if you're interested in participating, give us a shout.
 
--Add an easy way to let everyone develope apps
+-Add an easy way to let everyone develop apps
+
+
+Update
+
+    Rename 
+            elements -> collections
+            reader   -> display
+
+    Delete Users where cypher is md5 or sha512
+
 
 
 Licensing
