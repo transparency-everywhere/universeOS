@@ -27,10 +27,6 @@ todo
         typecasting
         api.query(data {if string->utf8} return if string -> JSescape);
 
-    score
-        positive ergebnisse #313131;
-        negative in #607d8b
-
     dock envelop -> commit icon bei nachricht active class gleich turquise
 
     group admin
@@ -53,7 +49,6 @@ Recent:
       Style
             Hover
                 .button, .anti-button
-                fenster: close, minimize, maximize
 
             Background
                 
