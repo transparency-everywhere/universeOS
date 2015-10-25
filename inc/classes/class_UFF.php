@@ -170,12 +170,7 @@ class uff {
     function write($input){
             $fileId = $this->fileId;
             $fileClass = new file($fileId);
-               
-                $filePath = universeBasePath.'/'.$fileClass->getFullFilePath($fileId);
-                $file = fopen($filePath, 'w');
-
-                fwrite($file, $input);
-                fclose($file);
+                $fileClass->overwrite($input);
 
                 $checksum = md5_file($filePath);
                 $this->addChecksumToUffCookie($checksum);
