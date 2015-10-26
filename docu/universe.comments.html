@@ -1,0 +1,32 @@
+<h2>
+    Comments
+</h2>
+<h3>Parameters</h3>
+<table>
+    <tr><td>Type</td><td></td><td>folder, feed, collection, link</td></tr>
+    <tr><td>itemId</td><td>id of type</td><td>1, 19, https://www.youtube.com/watch?v=-tjKdvy_1NE</td></tr>
+</table>
+<h4>Example:</h4>
+
+var myApplication = new function(){
+    //initialize application
+    this = new application('HelloWorld');
+    this.init = function(){
+    
+        var output = '<h2>Hello World</h2>';
+        
+        
+        //get comments for folder universe
+        var comments = comments.getComments('folder', 1);
+        
+        output + = comments;
+        
+        
+	this.create('HelloWorld', //title
+                    'html', //contentType
+                    output, //content
+                    {width: 6, height:  7, top: 2, left: 3} //style
+                    );
+    };
+};
+exportApplication('HelloWorld', myApplication);

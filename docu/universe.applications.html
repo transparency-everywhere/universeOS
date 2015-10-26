@@ -1,0 +1,36 @@
+<h2>
+    Applications
+</h2>
+<p>Applications are containers with javascript whch can be added to the gui by the user. If a user adds an application to the application list the javascript files will be loaded into the users interface</p>
+<h3>The Universe API</h3>
+<p>Register your application</p>
+universe.application
+universe.tabs
+universe.gui
+universe.filesystem
+
+
+<h3>Hello World Application</h3>
+<p>Directory Structure:</p>
+<p>/application.js</p>
+<h4>applications.js</h4>
+
+var myApplication = new function(){
+    //initialize application
+    this = new application('HelloWorld');
+    this.init = function(){
+    
+        var output = '<h2>Hello World</h2>';
+        
+        
+	this.create('HelloWorld', //title
+                    'html', //contentType
+                    output, //content
+                    {width: 6, height:  7, top: 2, left: 3} //style
+                    );
+    };
+};
+exportApplication('HelloWorld', myApplication);
+
+
+

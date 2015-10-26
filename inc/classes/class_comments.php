@@ -72,7 +72,7 @@ public function loadComments($type, $item_id){
         $db = new db();
         return $db->shiftResult($db->select('comments', array('type', $type, '&&', 'typeid', $item_id)),"typeid");
     }
-    
+    //old
 function showComments($type, $itemid) {
     if(proofLogin()){?>
         <div id="<?=$type;?>Comment_<?=$itemid;?>">

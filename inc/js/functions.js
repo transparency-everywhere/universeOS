@@ -1244,44 +1244,44 @@ function universeText(string){
     
     
     var smileys = [];
-    smileys.push([['(yes) ', '(y) '], 'yes']);
-    smileys.push([[';) '], 'wink']);
-    smileys.push([['O.o ', 'O_o ', 'O_ó '], 'weird']);
-    smileys.push([[':P ', ':p '], 'tongue']);
-    smileys.push([[':O ', ':o ', 'O_O'], 'surprised']);
-    smileys.push([['(s) ', '(sun) '], 'sun']);
-    smileys.push([['* '], 'star']);
-    smileys.push([[':| '], 'speechless']);
-    smileys.push([[':) '], 'smile']);
-    smileys.push([['(z) '], 'sleep']);
-    smileys.push([[':/ '], 'skeptic']);
-    smileys.push([[':( '], 'sad']);
-    smileys.push([['(p) ','(puke)'], 'puke']);
-    smileys.push([['(n) '], 'no']);
-    smileys.push([[':x '], 'mute']);
-    smileys.push([['>:( '], 'angry']);
-    smileys.push([['-.- ','-_- '], 'annoyed']);
-    smileys.push([['(a) ','(anon) '], 'anon']);
-    smileys.push([['8) '],'cool']);
-    smileys.push([[":' ("],'cry']);
-    smileys.push([[':3 '],'cute']);
-    smileys.push([['3:) '],'devil']);
-    smileys.push([['(d) ','(dino) '],'dino']);
-    smileys.push([[']:) '],'evil']); 
-    smileys.push([['>:o ', '>:O '],'furious']);
-    smileys.push([['^_^ '],'happy']);
-    smileys.push([['<3 '],'heart']);
-    smileys.push([[':* ',':-* '],'kiss']);
-    smileys.push([[':D '],'laugh']);
-    smileys.push([['(m) ','(music) '],'music']);
+    smileys.push([['(yes)', '(y)'], 'yes']);
+    smileys.push([[';)'],'wink']);
+    smileys.push([['O.o','O_o','O_ó'],'weird']);
+    smileys.push([[':P',':p'],'tongue']);
+    smileys.push([[':O',':o','O_O'],'surprised']);
+    smileys.push([['(s)','(sun)'],'sun']);
+    smileys.push([['*'],'star']);
+    smileys.push([[':|'],'speechless']);
+    smileys.push([[':)'],'smile']);
+    smileys.push([['(z)'],'sleep']);
+    smileys.push([[':/'],'skeptic']);
+    smileys.push([[':('],'sad']);
+    smileys.push([['(p)','(puke)'],'puke']);
+    smileys.push([['(n)'],'no']);
+    smileys.push([[':x'],'mute']);
+    smileys.push([['>:('],'angry']);
+    smileys.push([['-.-','-_-'],'annoyed']);
+    smileys.push([['(a)','(anon)'],'anon']);
+    smileys.push([['8)'],'cool']);
+    smileys.push([[":'("],'cry']);
+    smileys.push([[':3'],'cute']);
+    smileys.push([['3:)'],'devil']);
+    smileys.push([['(d)','(dino)'],'dino']);
+    smileys.push([[']:)'],'evil']); 
+    smileys.push([['>:o','>:O'],'furious']);
+    smileys.push([['^_^'],'happy']);
+    smileys.push([['<3'],'heart']);
+    smileys.push([[':*',':-*'],'kiss']);
+    smileys.push([[':D'],'laugh']);
+    smileys.push([['(m)','(music)'],'music']);
     for(var index in smileys){
         var smiley = smileys[index];
         if(smiley[0].length > 1){
             for(var codeIndex in smiley[0]){
-                string = string.replace(smiley[0][codeIndex], '<span class="smiley emoticon-'+smileys[index][1]+'"></span>');
+                string = string.replace(smiley[0][codeIndex],'<span class="smiley emoticon-'+smileys[index][1]+'"></span>');
             }
         }else{
-            string = string.replace(smileys[index][0][0], '<span class="smiley emoticon-'+smileys[index][1]+'"></span>');
+            string = string.replace(smileys[index][0][0],'<span class="smiley emoticon-'+smileys[index][1]+'"></span>');
         }
     }
 
@@ -1736,7 +1736,7 @@ var support = new function(){
         if(typeof $actionTarget === 'undefined'){
             $actionTarget = $('.alert.support .next');
         }
-        $actionTarget.click(function(){
+        $actionTarget.bind('click',function(){
             $('.alert.support').remove();
             support.next();
 	});
@@ -1785,13 +1785,11 @@ var support = new function(){
     this.executeCallback = function(callbackTitle){
         var callbacks = {};
       //dock
-      
-      
         callbacks['openSearchResult'] = function(){
             support.alert($('#searchField'),
-                          'Enter a keyword, lets say for a youtube video',
+                          'You can also search for people, files and a lot of other things.',
                           'right',
-                          $('#searchField')
+                          $('.resultList li')
                         );
         };
       

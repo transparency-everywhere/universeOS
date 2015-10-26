@@ -242,6 +242,7 @@ switch($action){
 		}
 		
 		break;
+                //@del
 	case 'chatSendMessage':
 		$receiver = $_POST['receiver'];
 		$sender = $_POST['userid'];

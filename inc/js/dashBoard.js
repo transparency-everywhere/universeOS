@@ -50,7 +50,7 @@ var dashBoard = new function(){
             
                 $('#dashBoard #scrollFrame').prepend(dashBoard.generateDashBox('Applications', content, '', 'appBox'));
                 
-                var content = 'Have a look at the <a href="//wiki.transparency-everywhere.com/en/" target="_blank" title="Open the Transparency-Everywhere Wiki">wiki</a>';
+                var content = 'Have a look at the <a href="//wiki.transparency-everywhere.com/en/" target="_blank" title="Open the Transparency-Everywhere Wiki">wiki</a><br>Or take our <a href="#" onclick="support.showTour();">tour</a>';
                 
                 $('#dashBoard #scrollFrame').append(dashBoard.generateDashBox('Need Help?', content, '', 'helpBox'));
                 

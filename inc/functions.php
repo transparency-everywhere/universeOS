@@ -10,6 +10,11 @@ function filename_safe($name) {
     return str_replace($except, '', $name); 
 }
 
+function config_error($type, $info = NULL){
+    if($type = 'db_no_connection'){
+        die('Error: No DB Connection');
+    }
+}
 
 function chmod_R($path, $filemode, $dirmode) { 
     if (is_dir($path) ) { 
