@@ -20,6 +20,7 @@
 <section id="content">
   
   <?php 
+  include('installConfig.php');
   session_start();
   
 	
@@ -212,8 +213,9 @@ $universe_indexSalt = \''.$indexSalt.'\';
 		
 	}
   
-  
-  $page = $_GET['page']; 
+    if(empty($_GET['page']))
+        $_GET['page'] = 'start';
+    $page = $_GET['page']; 
 
     switch($page) {
     case 'check':
