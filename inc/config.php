@@ -6,7 +6,7 @@ error_reporting(0);
 
 
 //include dbConfig
-include("config/dbConfig.php");
+include("config/uni_config.php");
 
 //serverstuf
 $universeURL = 'http://localhost/universe'; //url of current installation
@@ -24,8 +24,10 @@ if(!isset($_SESSION)){
 mysql_connect("$server","$user","$password");
 mysql_select_db("$db");
 
-if(!mysql_connect("$server","$user","$password") OR !mysql_select_db("$db")) {
-    die("Something went wrong with the Database... WTF?!");
+if(!mysql_connect("$server","$user","$password")){
+    config_error('db_no_connection');
+}elseif(!mysql_select_db("$db")){
+    config_error('db_no_db');
 }
 
 //$mysqli = new mysqli("$server", "$user", "$password", "$db");

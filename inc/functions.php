@@ -11,8 +11,15 @@ function filename_safe($name) {
 }
 
 function config_error($type, $info = NULL){
+    if(!file_exists(realpath(dirname(__FILE__)).'config/uni_config.php')){
+        die('There is no config file. Please run the <a href="./installer">installer</a> or check out our support for more infos');
+    }
     if($type = 'db_no_connection'){
         die('Error: No DB Connection');
+    }
+    if($type = 'db_no_db'){
+        echo realpath(dirname(__FILE__));
+        die('Error: No DB Database');
     }
 }
 
