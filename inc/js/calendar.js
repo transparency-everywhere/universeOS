@@ -968,7 +968,10 @@ var events = new function(){
                                         
                                         
                                         //init datepicker in modal
-                                        $('.datepicker').datepicker();
+                                        $('.datepicker').datepicker({
+                                            changeMonth: true,
+                                            changeYear: true
+                                          });
 
                                         $('.userSelectionInput').userSearch();
               		
@@ -1101,7 +1104,10 @@ var events = new function(){
               		modal.create('Event '+eventData.title, content, [onSubmit, 'Save']);
               		
               		//init datepicker in modal
-              		$('.datepicker').datepicker();
+              		$('.datepicker').datepicker({
+                                            changeMonth: true,
+                                            changeYear: true
+                                          });
               		
               		$('#updateEvent').submit(function(e){
               			e.preventDefault();
@@ -1239,7 +1245,10 @@ var events = new function(){
                                         
                                         
                                         //init datepicker in modal
-                                        $('.datepicker').datepicker();
+                                        $('.datepicker').datepicker({
+                                            changeMonth: true,
+                                            changeYear: true
+                                          });
 
                                         $('.userSelectionInput').userSearch();
                         

@@ -109,7 +109,10 @@ var tasks = new function(){
                                         
 		
               //init datepicker in modal
-              $('.datepicker').datepicker();
+              $('.datepicker').datepicker({
+                                            changeMonth: true,
+                                            changeYear: true
+                                          });
 	};
         
 	this.get = function(startStamp, stopStamp, privacy){

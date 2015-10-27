@@ -388,7 +388,10 @@ var settings = new function(){
         
         
         //init datepicker in modal
-        $('#updateProfileFormContainer #birthdate').datepicker();
+        $('#updateProfileFormContainer #birthdate').datepicker({
+                                            changeMonth: true,
+                                            changeYear: true
+                                          });
         
         $('#updateProfileFormContainer .dynForm').submit(function(e){
             e.preventDefault();
