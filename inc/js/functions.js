@@ -101,6 +101,9 @@ var init = new function(){
     			$(".fenster").css('z-index', 999);
               $(this).parent(".fenster").css('z-index', 9999); 
               $(this).parent(".fenster").css('position', 'absolute');
+              
+                $('.fenster').removeClass('onTop');
+                 $(this).parent(".fenster").addClass('onTop');
               }
           });
 	};
@@ -135,6 +138,12 @@ var init = new function(){
                         
                         $('#searchTrigger').bind('click', function(){
                             search.toggleSearchMenu();
+                        });
+                        
+                        
+                        $('#settingsTrigger').bind('click', function(e){
+                            e.preventDefault();
+                            applications.show('settings');
                         });
                         
                         $('#searchMenu #toggleSearchMenu').bind('click',function(){
@@ -1677,7 +1686,7 @@ function isStored(messageId){
 var support = new function(){
     this.callbackId = 0;
     this.callback;
-    this.alert = function($attachedTo, message, arrowPosition, $actionTarget){
+    this.alert = function($attachedTo, message, arrowPosition, $actionTarget, callback){
         var footer = '<footer><a class="button pull-right next">Next</a></footer>';
         if(typeof $actionTarget === 'object')
             footer = '<footer></footer>';
@@ -1738,6 +1747,9 @@ var support = new function(){
         }
         $actionTarget.bind('click',function(){
             $('.alert.support').remove();
+            
+            if(typeof callback === 'function')
+                callback();
             support.next();
 	});
         
@@ -1765,6 +1777,7 @@ var support = new function(){
     this.openAlertById = function(callbackId){
         var callbacks = [];
         
+        //should be replaced with callbacks.each
         callbacks.push('init');
         callbacks.push('openDashboard');
         callbacks.push('dashTasks');
@@ -1774,7 +1787,9 @@ var support = new function(){
         callbacks.push('openFilesystem');
         callbacks.push('searchTrigger');
         callbacks.push('searchSomething');
-        callbacks.push('openSearchResult');
+        callbacks.push('describeSearchResult');
+        callbacks.push('showSettingsButton');
+        callbacks.push('showCalendar');
         
         
         
@@ -1785,11 +1800,28 @@ var support = new function(){
     this.executeCallback = function(callbackTitle){
         var callbacks = {};
       //dock
-        callbacks['openSearchResult'] = function(){
+        callbacks['showCalendar'] = function(){
+            support.alert($('#clockDiv'),
+                          'Click on the time to open the calendar',
+                          'bottom-right',
+                          $('#clockDiv')
+                        );
+        };
+        callbacks['showSettingsButton'] = function(){
+            support.alert($('#settingsTrigger'),
+                          'Click on this icon top open the settings',
+                          'bottom-right',
+                          $('#settingsTrigger'),
+                          function(){
+                              search.hideSearchMenu();
+                          }
+                        );
+        };
+      
+        callbacks['describeSearchResult'] = function(){
             support.alert($('#searchField'),
                           'You can also search for people, files and a lot of other things.',
-                          'right',
-                          $('.resultList li')
+                          'right'
                         );
         };
       

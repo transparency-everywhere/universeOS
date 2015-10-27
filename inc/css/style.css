@@ -73,7 +73,14 @@ h3{
     min-height: 260px;
     border-radius: 3px;
     box-shadow: 1px 3px 8px 0.00px rgba(0, 0, 0, 0.3);
+    opacity: 0.8;
 }
+
+.fenster.onTop{
+    opacity: 1;
+    
+}
+
 .fenster > header {
     color: #454545;
     cursor: move;
