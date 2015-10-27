@@ -97,7 +97,6 @@ var applications = new function(){
             app['source'] = 'calendar.js';
             app['className'] = 'calendar'; // name of the the javascript class object
             app['active'] = false;
-            app['position'] = {width: 2, height:  2, top: 0, left: 9};
             app['icon'] = 'gfx/applicationIcons/white/calendar.svg';
             apps[6] = app;
 
