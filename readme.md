@@ -1,6 +1,6 @@
 The universeOS
 -----------------
-The universeOS is a Project which tries to give users and groups a platform for anonymous conspirative communication. 
+The universeOS is a Project which tries to give users the possibility to "share a desktop" with friends, co-workers or like-minded person.
 
 
 Website: http://www.universeOS.org
@@ -48,9 +48,6 @@ We try to get the script as secure as possible. It is important to point out the
         - An easy exchange of algorithms
     3. Well written and well documented code
 
-Advertising
-------------
-We think that the universeOS should not be a comerical project. But we also now, that we are trying to compete with services which gather personal data and which can generete enourmous profits with personalized advertising services. I think we should look for ways of advertising methods, which are working without personalized data. (Nic)
 
 Developing UniverseOS:
 -----------------------
@@ -60,6 +57,15 @@ Developing UniverseOS:
     `git clone https://github.com/transparency-everywhere/universeOS.git`
     
 2. Run the installer
+
+Some basic informations:
+We don't use any PHP Framework so far. We think about using one, so we don't have to write an own routing enginge to upgrade our current api (/api) to a REST api.
+In Javascript we use a lot of plugins, libraries and/or frameworks. For a complete list, check this Link:
+
+
+Files & Folders
+
+
 
 
 How to report bugs

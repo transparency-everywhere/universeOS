@@ -87,6 +87,32 @@ _____________________
 Notes & Ideas
 
 
+virtual machine
+xen and guac
+
+
+installation hash
+
+A universeInstallation              B transpev server / client who wants to proof
+pubKey  privKey   host              pubKey privKey
+
+B sends Request to A
+using A pubKey to encrypt
+rand
+       ||
+       ||
+       \/
+A decrypts rand and adds hash
+using host
+       ||
+       ||
+       \/
+
+
+
+
+
+
 Group Crypto:
 
 Creation
@@ -99,7 +125,6 @@ Creation
         ||
         \/
     Stored encrypted for each user
-
 Invitation
     User A invites User B
         ||
@@ -112,7 +137,7 @@ Invitation
     Decrypts Key and stores it in Key Database
 
 (if one user is fucked, all groups the user has joined are fucked)
-enter password when joining the group(forbid same password as the user password)
+enter password when joining the group(forbid same password as the user password, forget password procedure)
 joining groups prob
 only invite users who are online
 
