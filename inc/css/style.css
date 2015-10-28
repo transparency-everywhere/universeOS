@@ -74,11 +74,20 @@ h3{
     border-radius: 3px;
     box-shadow: 1px 3px 8px 0.00px rgba(0, 0, 0, 0.3);
     opacity: 0.8;
+    
+	  -webkit-transition: opacity 1s ease-in-out;
+	  -moz-transition: opacity 1s ease-in-out;
+	  -ms-transition: opacity 1s ease-in-out;
+	  -o-transition: opacity 1s ease-in-out;
+	  transition: opacity 1s ease-in-out;
 }
 
 .fenster.onTop{
     opacity: 1;
     
+}
+.fenster:hover{
+	opacity: 1;
 }
 
 .fenster > header {
@@ -244,6 +253,16 @@ li.notHidden{
     bottom: 0;
 }
 
+#settingsTrigger{
+    position: absolute;
+    right: 37px;
+    bottom: 0;
+}
+
+#settingsTrigger .icon{
+	width:28px;
+	height:28px;
+}
 #searchMenu{
     position:absolute;
     top:0;
@@ -1920,8 +1939,8 @@ span.icon.blue-chevron-down {
 
 #privacySettings li div{
 background-color: #607d8b;
-padding: 12px 12px;
-height: 45px;
+padding: 6px 12px;
+line-height: 30px;height: 45px;
 margin-right: 20px;
 color: #FFF;
 }
@@ -1936,7 +1955,7 @@ color: #FFF;
 
 #privacySettings li.active div .icon{
     display: inline-block;
-    margin-bottom: -16px;
+    margin-bottom: -10px;
 }
 
 #privacySettings .button{
@@ -3307,13 +3326,10 @@ color:#FFFFFF;
         
         #dock #clockDiv{
         	position: absolute;
-			
-        	right: 38px;
-			bottom: 10px;
-			
+        	right: 75px;
+        	bottom: 10px;
         	width: 245px;
-			height: 20px;
-			
+        	height: 20px;
         	font-size: 20px;
         }
         
