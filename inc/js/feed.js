@@ -139,7 +139,7 @@ var feed = new function(){
                 output += User.showSignature(feedData['author'], feedData['timestamp'], true);
             
             //add main feed
-            output += feedContent;
+            output += universeText(feedContent);
             
             output += '<div class="options">';
             
