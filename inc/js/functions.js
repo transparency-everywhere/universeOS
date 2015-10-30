@@ -94,7 +94,7 @@ var init = new function(){
               });
 	};
 	this.applicationOnTop = function(){
-          $('.fenster').children().mousedown(function(){
+          $('.fenster').children().bind('mousedown',function(){
 					
              	if($(this) != undefined){
              		
@@ -1293,7 +1293,8 @@ function universeText(string){
             string = string.replace(smileys[index][0][0],'<span class="smiley emoticon-'+smileys[index][1]+'"></span>');
         }
     }
-
+    string = string.replace(/\[itemThumb type=(.*)\ id=(.*)\]/g, "<div class=\"itemThumbLoader\" data-type=\"\$1\" data-id=\"\$2\"></div>");
+    //overwrite var for better readability
     string = string.replace("#(^|[^\"=]{1})(http://|ftp://|mailto:|https://)([^\s<>]+)([\s\n<>]|$)#sm","\\1<a target=\"_blank\" href=\"\\2\\3\">\\3</a>\\4");
        // # Links
         //$str = preg_replace_callback("#\[itemThumb type=(.*)\ typeId=(.*)\]#", 'showChatThumb' , $str);

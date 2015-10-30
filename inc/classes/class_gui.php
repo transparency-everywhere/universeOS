@@ -14,34 +14,7 @@
 class gui {
     //put your code here
     public function showDock(){
-        echo " <div id=\"dockplayer\" style=\"display: none\">\n";
-        echo "        </div>\n";
-        echo "        </div>\n";
-        echo "        <div id=\"dock\">\n";
-        echo "            <table>\n";
-        echo "                <tr>\n";
-        echo "                    <td>"
-                                        . "<i class=\"icon white-chevron-up\" id=\"toggleDashboardButton\" onclick=\"dashBoard.toggle();\"></i>";
-        echo "                          <a id=\"startButton\" title=\"toggle Dashboard\" href=\"#\">"
-           . "                              <i class=\"icon white-eye\"></i><span class=\"iconAlert\" id=\"globalAlerts\"></span>"
-                . "                         <i class=\"icon white-user\"></i><span class=\"iconAlert\" id=\"buddylistAlerts\"></span>"
-                . "                         <i class=\"icon white-comment\"></i><span class=\"iconAlert\" id=\"notificationAlerts\" onclick=\"applications.show('chat'); return false\"></span>"
-           . "                          </a><td>\n";
-        echo "                    <td><div class=\"\" id=\"logout\" onclick=\"User.logout();\" target=\"submitter\" style=\"tex-decoration: none; color: #FFF; min-width:10px; margin-left:10px;\" title=\"logout\">&nbsp;<i class=\"icon white-logout\"></i>&nbsp;</div></td>\n";
-
-        echo '<td align="right"><ul class="dockPlayer">';
-        echo '<li><span class="prev icon white-arrow-left" onclick="player.prev();"></span></li>';
-        echo '<li><span class="play icon white-play"></span></li>';
-        echo '<li><span class="next icon white-arrow-right" onclick="player.next();"></span></li>';
-        echo '<li></li>';
-        echo '</ul></td>';
-        echo "                    <td align=\"right\" style=\"color: #FFFFFF; float: right\"><a href=\"#\" id=\"clockDiv\" style=\"color: #FFFFFF; float: right\" onclick=\"applications.show('calendar')\"></a></td>\n";
-        
-        echo "                    <td align=\"right\" style=\"color: #FFFFFF; float: right\"><a href='#search' title='search something' id='searchTrigger'><span class='icon white-search'></span></a></td>\n";
-        
-        echo "                </tr>\n";
-        echo "            </table>\n";
-        echo "        </div>\n";
+        include('views/desktop/dock.html');
     }
 
     function showLanguageDropdown($value=NULL){
