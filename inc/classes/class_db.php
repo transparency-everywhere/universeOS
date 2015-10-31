@@ -15,10 +15,26 @@ limitations under the License.
 */
 
 function save($str){
-    return mysql_real_escape_string($str);
+    return escape::sql($str);
+}
+
+class escape{
+    function sql($string){
+        //@speed
+        $db = new db();
+        return $db->escape($string);
+    }
 }
 
 class db{
+        private $pdoDB;
+        function __construct(){
+            $this->pdoDB = new PDO('mysql:host='.uni_config_database_host.';dbname='.uni_config_database_name.';charset=utf8', uni_config_database_user, uni_config_database_password);
+        }
+        public function escape($string){
+            //@sec
+            return substr($this->pdoDB->quote($string), 1, -1);
+        }
         public function generateWhere($primary){
             if(is_array($primary)){
                 
@@ -77,9 +93,8 @@ class db{
             $query = "(".implode(',', $query).")";
             $values = "(".implode(',', $values).");";
 
-
-            mysql_query("INSERT INTO `$table` $query VALUES $values");
-            return mysql_insert_id();
+            $result = $this->pdoDB->exec("INSERT INTO `$table` $query VALUES $values");
+            return $this->pdoDB->lastInsertId();
 	}
         /**
         *Updates record with $primary[0]=$primary[1] in db $table 
@@ -100,9 +115,7 @@ class db{
             }
             $query = implode(',', $query);
 
-            
-            mysql_query("UPDATE `$table` SET $query $WHERE");
-            return mysql_affected_rows();
+            return $this->pdoDB->exec("UPDATE `$table` SET $query $WHERE");
 	}
         /**
         *Updates record with $primary[0]=$primary[1] in db $table 
@@ -110,10 +123,8 @@ class db{
         *@primary array Primary id of the record 
         */
         public function delete($table, $primary){
-            
             $WHERE = $this->generateWhere($primary);
-            mysql_query("DELETE FROM `$table` $WHERE");
-            return mysql_affected_rows();
+            return $this->pdoDB->exec("DELETE FROM `$table` $WHERE");
         }
         /**
         *Updates record with $primary[0]=$primary[1] in db $table 
@@ -124,10 +135,6 @@ class db{
         */
         public function select($table, $primary=NULL, $columns=NULL, $order=NULL, $limit=NULL){
             $WHERE = $this->generateWhere($primary);
-            
-            
-            
-            
             if(!empty($columns)){
                 foreach($columns AS $column){
                     $columnQuery[] = '`'.$column.'`';
@@ -144,18 +151,17 @@ class db{
             }
             
             if(!empty($limit)){
-                $limit = mysql_real_escape_string($limit);
+                $limit = escape::sql($limit);
                 $LIMIT = "LIMIT $limit";
             }else{
                 $LIMIT = "";
             }
             
                 $query = "SELECT $columnQuery FROM `$table` $WHERE $ORDER $LIMIT";
-                $sql = mysql_query($query);
-                if($sql)
-                while($data = mysql_fetch_array($sql)){
+                foreach($this->pdoDB->query($query) AS $data){
                     $return[] = $data;
                 }
+                
                 if(empty($return)){
                     return "the query '$query' didn't return any results";
                 }else{
@@ -171,11 +177,10 @@ class db{
         }
         
         public function query($query){
-            $sql = mysql_query($query);
-                if($sql)
-                while($data = mysql_fetch_array($sql)){
+                foreach($this->pdoDB->query($query) AS $data){
                     $return[] = $data;
                 }
+                
                 if(empty($return)){
                     return "the query '$query' didn't return any results";
                 }else{
@@ -185,6 +190,9 @@ class db{
                         return $return;
                     }
                 }
+
+
+            return $return;
 
         }
  }

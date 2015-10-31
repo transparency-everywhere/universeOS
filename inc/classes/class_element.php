@@ -193,12 +193,12 @@ class element {
             $db = new db();
             $fileClass = new files();
             
-            $files = $db->shiftResult($db->select('files', array('folder', mysql_real_escape_string($elementId))), 'id');
+            $files = $db->shiftResult($db->select('files', array('folder', escape::sql($elementId))), 'id');
             foreach ($files as $fileData) {
                 if(authorize($fileData['privacy'], "show", $fileData['owner']))
                     $result[] = array('type' => 'file', 'data' => $fileData);
             }
-            $links = $db->shiftResult($db->select('links', array('folder', mysql_real_escape_string($elementId))), 'id');
+            $links = $db->shiftResult($db->select('links', array('folder', escape::sql($elementId))), 'id');
             foreach ($links as $linkData) {
                 if(authorize($linkData['privacy'], "show", $linkData['author']))
                     $result[] = array('type' => 'link', 'data' => $linkData);
@@ -206,14 +206,14 @@ class element {
             $shortcutList = $db->shiftResult($db->select('shortcuts',  array('parentType', 'element', 'AND', 'parentId', $elementId)), 'id');
             foreach ($shortcutList as $shortCutData) {
                 if($shortCutData['type'] == "file"){
-                    $files = $db->shiftResult($db->select('files', array('folder', mysql_real_escape_string($shortCutData['typeId']))), 'id');
+                    $files = $db->shiftResult($db->select('files', array('folder', escape::sql($shortCutData['typeId']))), 'id');
                     foreach ($files as $fileData) {
                         if(authorize($fileData['privacy'], "show", $fileData['owner']))
                             $result[] = array('type' => 'file', 'data' => $fileData);
                     }
                 }
                 if($shortCutData['type'] == "link"){
-                    $files = $db->shiftResult($db->select('links', array('folder', mysql_real_escape_string($shortCutData['typeId']))), 'id');
+                    $files = $db->shiftResult($db->select('links', array('folder', escape::sql($shortCutData['typeId']))), 'id');
                     foreach ($links as $linkData) {
                         if(authorize($linkData['privacy'], "show", $linkData['author']))
                             $result[] = array('type' => 'link', 'data' => $linkData);
@@ -236,7 +236,7 @@ class element {
             if(empty($element)){
                 $query = $fileQuery;
             }else{
-                $query = "folder='".mysql_real_escape_string($element)."'";
+                $query = "folder='".escape::sql($element)."'";
                 $shortCutQuery = "WHERE parentType='element' AND parentId='$element'";
             }
                 $db = new db();

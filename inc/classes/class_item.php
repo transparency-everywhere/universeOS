@@ -15,8 +15,8 @@ class item {
     public $type;
     public $typeid;
     function __construct($type=NULL, $typeid=NULL){
-           $this->type = mysql_real_escape_string($type);
-           $this->typeid = mysql_real_escape_string($typeid);
+           $this->type = escape::sql($type);
+           $this->typeid = escape::sql($typeid);
         }
         //put your code here
     function plusOne(){
@@ -341,8 +341,8 @@ class item {
     
 	
     function protect(){
-               $type = mysql_real_escape_string($this->type);
-               $typeId = mysql_real_escape_string($this->typeid);
+               $type = escape::sql($this->type);
+               $typeId = escape::sql($this->typeid);
                     if(hasRight('protectFileSystemItems')){
                             $type = $type;
                             $typeId = $typeId;

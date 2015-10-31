@@ -62,7 +62,7 @@ function deleteComments($type, $itemid){
    
 function countComment($type, $itemid){
         $db = new db();
-        $data = $db->query("SELECT COUNT(`typeid`) AS number FROM `comments` WHERE type='".mysql_real_escape_string($type)."' && typeid='".mysql_real_escape_string($itemid)."'");
+        $data = $db->query("SELECT COUNT(`typeid`) AS number FROM `comments` WHERE type='".escape::sql($type)."' && typeid='".escape::sql($itemid)."'");
         return $data['number'];
     }
     

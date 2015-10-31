@@ -139,7 +139,7 @@ class rss {
        echo" 
        <div style='font-family:arial; font-size: 12pt;' class='newsArticleBox'>
        <h3 style='line-height: 30px;'>{$item->title}</h3>
-       $newstring <br><br><a href='#' onclick=\"openURL('{$item->guid}', '{".mysql_real_escape_string($item->title)."}'); return false\" target='_blank' class='btn btn-info'>read all</a>
+       $newstring <br><br><a href='#' onclick=\"openURL('{$item->guid}', '{".escape::sql($item->title)."}'); return false\" target='_blank' class='btn btn-info'>read all</a>
        <br /><br /> 
        </div> 
        ";  

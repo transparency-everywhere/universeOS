@@ -186,10 +186,10 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
             }
 
             if(!empty($folder))
-                $folder = mysql_real_escape_string ($folder);
+                $folder = escape::sql($folder);
             
             if(!empty($element))
-                $element = mysql_real_escape_string($element);
+                $element = escape::sql($element);
             
     
 		//$level is used to give the list a regular margin
@@ -305,7 +305,7 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 			
 	        //shows list of files which are in the element $element or which meets criteria of $fileQuery
 	        //if git=1 => only basic information without itemsettings etc.
-	            $query = "folder='".mysql_real_escape_string($element)."'";
+	            $query = "folder='".escape::sql($element)."'";
 	        
                     
                     $filedsql = $db->shiftResult($db->query("SELECT * FROM files WHERE $query"), 'id');

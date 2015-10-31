@@ -87,7 +87,7 @@ class feed {
         $where = $this->generateWhere($type, $typeId, $limit);
         
         $db = new db();
-        return $db->shiftResult($db->query("SELECT * FROM feed $where"));
+        return $db->shiftResult($db->query("SELECT * FROM feed $where"), 'id');
     }
     
     function delete($feed_id){

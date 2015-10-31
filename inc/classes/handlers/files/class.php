@@ -7,7 +7,7 @@
 class file_handler {
     public function query($query, $offset, $max_results=50){
         $k = (int)$offset.','.(int)$max_results;
-        $query = mysql_real_escape_string($query);
+        $query = escape::sql($query);
         $results = array();
         
         $fileSuggestSQL = $db->shiftResult($db->query("SELECT id, title, privacy, type, owner FROM files WHERE title LIKE '%$query%' LIMIT $k"), 'id');

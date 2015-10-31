@@ -35,7 +35,7 @@ class user {
     }
     public function login($username, $password){
   
-        $username = mysql_real_escape_string($username);
+        $username = escape::sql($username);
         $db = new db();
         $data = $db->select('user', array('username', $username), array('userid', 'password', 'hash', 'cypher'));
         $userid = $data['userid'];
