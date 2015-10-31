@@ -5,7 +5,7 @@ require_once("inc/functions.php");
 $action = save($_GET['action']);
 $subaction = save($_GET['subaction']);
 //here should be a proof if the user is a admin
-
+$db = new db();
 switch($action){
     default:
 ?>
@@ -60,8 +60,8 @@ case 'users':
                           </tr>
                             <?PHP
                             unset($i);
-                    $userSql = mysql_query("SELECT * FROM  `user` ORDER BY lastactivity DESC");
-                    while($userData = mysql_fetch_array($userSql)){
+                            $userSQL = $db->shiftResult($db->query("SELECT * FROM  `user` ORDER BY lastactivity DESC"),'userid');
+                    foreach($userSQL AS $userData){
                             if($i%2 == 0){
                                 $color="FFFFFF";
                             }else{
@@ -133,8 +133,9 @@ case 'users':
 	                     	<td><input type="hidden" value="<?=$_GET[user];?>" name="user">
 	                     		<select name="usergroup">
 	                     			<?
-	                     			$groupSQL = mysql_query("SELECT * FROM userGroups ORDER BY title ASC");
-									while($groupData = mysql_fetch_array($groupSQL)){
+                                                $groupSQL = $db->shiftResult($db->query("SELECT * FROM userGroups ORDER BY title ASC"),'id');
+	                     			
+									foreach($groupSQL AS $groupData){
 										if($groupData[id] == $userData[usergroup]){
 											$checked = 'selected="selected"';
 										}else{
@@ -296,7 +297,8 @@ case 'messages':
     }else if($subaction == "show"){
         
     }else if($subaction == "delete"){
-                    $messageSql = mysql_query("DELETE FROM  `adminMessages` WHERE id='$_GET[message]'");
+        
+                    $db->query("DELETE FROM  `adminMessages` WHERE id='$_GET[message]'");
                     echo"
                     <script>
                     $('#loader').load('admin.php?action=messages');
@@ -379,7 +381,7 @@ case 'contents':
        }else if($_GET[subaction] == "add"){
            if(isset($_POST[submit])){
                if(!empty($_POST[title])){
-                   mysql_query("INSERT INTO `staticContents` (`id`, `title`, `content`, `comment`) VALUES (NULL, '$_POST[title]', '$_POST[content]', '$_POST[comment]');");
+                   $db->query("INSERT INTO `staticContents` (`id`, `title`, `content`, `comment`) VALUES (NULL, '$_POST[title]', '$_POST[content]', '$_POST[comment]');");
                    jsAlert("The content has been added");
                    ?>
                    
@@ -441,7 +443,7 @@ case 'contents':
        }else if($_GET[subaction] == "edit"){
            if(isset($_POST[submit])){
                if(!empty($_POST[title])){
-                   mysql_query("UPDATE `staticContents` SET `title` = '$_POST[title]', `content` = '$_POST[content]', `comment` = '$_POST[comment]' WHERE `id`='$_GET[content]';");
+                   $db->query("UPDATE `staticContents` SET `title` = '$_POST[title]', `content` = '$_POST[content]', `comment` = '$_POST[comment]' WHERE `id`='$_GET[content]';");
                    jsAlert("The content has been updated");
                    ?>
                    
@@ -503,7 +505,7 @@ case 'contents':
         </script>
         <?
        }else if($_GET[subaction] == "delete"){
-           mysql_query("DELETE FROM staticContents WHERE id='$_GET[content]'");
+           $db->query("DELETE FROM staticContents WHERE id='$_GET[content]'");
            jsAlert("The content has been deleted");
                    ?>
                    

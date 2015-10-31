@@ -21,4 +21,5 @@ include('../../../inc/functions.php');
                     
                     
 $timstamp = time();
-mysql_query("INSERT INTO `adminMessages` (`timestamp` ,`author` ,`category` ,`type` ,`message`) VALUES ('$time', '".getUser()."', '1', '".mysql_real_escape_string($_POST['reason'])."', 'reported file id: ".mysql_real_escape_string($_POST['file_id'])."     ".mysql_real_escape_string($_POST['message'])."');");
+$db = new db();
+$db->query("INSERT INTO `adminMessages` (`timestamp` ,`author` ,`category` ,`type` ,`message`) VALUES ('$time', '".getUser()."', '1', '".escape::sql($_POST['reason'])."', 'reported file id: ".escape::sql($_POST['file_id'])."     ".escape::sql($_POST['message'])."');");

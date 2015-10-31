@@ -18,22 +18,8 @@
 
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
-
-$db = new db();
-$checkData = $db->query('folders', array('id', $_POST['folder']), array('privacy', 'creator'));
-if(authorize($checkData['privacy'], "edit", $checkData['creator'])){
-             
-    //set privacy
-    $customShow = $_POST['privacyCustomSee'];
-    $customEdit = $_POST['privacyCustomEdit'];
-
-
-    $privacy = exploitPrivacy("".$_POST['privacyPublic']."", "".$_POST['privacyHidden']."", $customEdit, $customShow);
-    $user = getUser();
-    if(!empty($_POST['folder']) AND !empty($_POST['name'])){
-        $folder = new folder();
-        $answer = $folder->create($_POST['folder'], $_POST['name'], $user, $privacy);
-
-    }
-}
+                    
+            error_reporting(E_ALL);
+            $fileClass = new file($_POST['file_id']);
+            $fileClass->overwrite($_POST['content']);
 ?>

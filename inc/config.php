@@ -20,15 +20,10 @@ if(!isset($_SESSION)){
     session_start(); 
 }
 
-//mysql connect	or die
-mysql_connect("$server","$user","$password");
-mysql_select_db("$db");
-
-if(!mysql_connect("$server","$user","$password")){
-    config_error('db_no_connection');
-}elseif(!mysql_select_db("$db")){
-    config_error('db_no_db');
-}
+define('uni_config_database_host', $server);
+define('uni_config_database_user', $user);
+define('uni_config_database_password', $password);
+define('uni_config_database_name', $db);
 
 //$mysqli = new mysqli("$server", "$user", "$password", "$db");
 //if ($mysqli->connect_errno) {

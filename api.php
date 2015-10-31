@@ -112,9 +112,9 @@ switch($action){
 			$username = save($_GET['username']);
 		else 
 			$username = save($_POST['username']);
-		
-        $loginSQL = mysql_query("SELECT username, password FROM user WHERE username='$username'");
-        $loginData = mysql_fetch_array($loginSQL);
+		$db = new db();
+                $loginData = $db->query('user', array('username', $username), array('username', 'password'));
+                
         
         
         $dbPassword = $loginData['password'];
@@ -137,8 +137,10 @@ switch($action){
 		else 
 			$username = save($_POST['username']);
 		
-        $loginSQL = mysql_query("SELECT username, password FROM user WHERE username='$username'");
-        $loginData = mysql_fetch_array($loginSQL);
+        
+		$db = new db();
+                $loginData = $db->query('user', array('username', $username), array('username', 'password'));
+                
         
         
         $dbPassword = $loginData['password'];
@@ -263,8 +265,10 @@ switch($action){
         $messageId = save($_POST['message']);
         $hash = save($_POST['password']);
         //get the login data
-        $loginSQL = mysql_query("SELECT userid, username, password FROM user WHERE username='$user'");
-        $loginData = mysql_fetch_array($loginSQL);
+        
+		$db = new db();
+                $loginData = $db->query('user', array('username', $username), array('username', 'password'));
+                
         $userid = $loginData['userid'];
         
         //get messageData
@@ -287,15 +291,17 @@ switch($action){
     //returns the javascript functions to load/reload the dialoges on client
     case 'loadNewChatDialoges':
            //get request data
-           $user = save($_POST[username]);
-           $hash = save($_POST[password]);
+           $user = save($_POST['username']);
+           $hash = save($_POST['password']);
            //get the login data
-           $loginSQL = mysql_query("SELECT userid, username, password FROM user WHERE username='$user'");
-           $loginData = mysql_fetch_array($loginSQL);
-           $userid = $loginData[userid];
+           
+            $db = new db();
+            $loginData = $db->query('user', array('username', $username), array('username', 'password'));
+                
+           $userid = $loginData['userid'];
         
             //secret password stuff
-            $dbPassword = $loginData[password];
+            $dbPassword = $loginData['password'];
             $dbPassword = hash('sha1', $dbPassword);
            
            
@@ -387,12 +393,12 @@ switch($action){
 	
     case 'checkForFeeds':
         
-        $user = mysql_real_escape_string($_GET[user]);
+        $user = escape::sql($_GET[user]);
         if(empty($user)){
             $user = $_SESSION[userid];
         }
         
-        $type = mysql_real_escape_string($_GET[type]);
+        $type = escape::sql($_GET[type]);
         
         
         //the limit is set to this value until it causes probs

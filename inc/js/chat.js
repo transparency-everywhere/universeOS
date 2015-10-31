@@ -25,7 +25,12 @@ var chat = new function(){
         
 	this.tabs = new tabs('#chatFrame');
         this.tabs.init();
-	this.tabs.addTab('Home', '',gui.loadPage('modules/chat/chat.php'));
+        var html = '<center>';
+            html += '       <span class="icon blue-comment" style="height: 90px;width: 90px; margin-top:5px;margin-right: -17px;"></span>';
+            html += '                <h2 style="margin-top:0;">Chat</h2>';
+            html += '                <h3>Click on a user in your buddylist to open a dialogue</h3>';
+            html += '            </center>'
+	this.tabs.addTab('Home', '',html);
     };
     this.show = function(){
         this.applicationVar.show();
