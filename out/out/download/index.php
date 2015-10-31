@@ -2,9 +2,11 @@
 session_start();
 include_once("../../../inc/config.php");
 include_once("../../../inc/functions.php");
-
-        $documentSQL = mysql_query("SELECT id, title, type, filename, privacy, owner FROM files WHERE id='".save($_GET['fileId'])."'");
-        $documentData = mysql_fetch_array($documentSQL); 
+        
+        
+        $db = new db();
+        $data = $db->query('files', array('id', $itemId), array('id', 'title', 'type', 'filename', 'privacy', 'owner'));
+        
 		if(authorize($documentData['privacy'], "show", $documentData['owner'])){
                 $classFile = new file($_GET['fileId']);
 	        $downloadfile = $classFile->getPath();

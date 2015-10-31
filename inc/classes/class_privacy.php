@@ -171,9 +171,10 @@ class privacy {
                                                         
                                                         foreach($userGroups AS $groupId){
                                                             $groupsInPrivacy = array_delete($groupsInPrivacy, (int)$groupId);
-                                                             $i++;
-                                                            $groupSql = mysql_query("SELECT id, title FROM groups WHERE id='$groupId'");
-                                                            $groupData = mysql_fetch_array($groupSql);
+                                                            $i++;
+                                                            $db = new db();
+                                                            $groupData = $db->select('groups', array('id', $groupId), array('id', 'title'));
+                                                            
                                                             $title = $groupData['title'];
                                                             $title10 = substr("$title", 0, 10);
                                                             $title15 = substr("$title", 0, 25);
@@ -369,8 +370,9 @@ function authorize($privacy, $type, $author=NULL){
 	                    	
 	                    }
 	                    //get friends from SQL unefizient
-	                    $buddylistSql = mysql_query("SELECT * FROM buddylist WHERE owner='$author' && request='0'");
-	                    while($buddylistData = mysql_fetch_array($buddylistSql)) {
+                            $db = new db();
+                            $buddylistSQL = $db->shiftResult($db->select('buddylist', array('owner', $author, '&&', 'request', '0')),'owner');
+	                    foreach($buddylistSQL AS $buddylistData) {
 	                        
 	                        //check if user is buddy of $author
 	                        if($buddylistData['buddy'] == getUser() && proofLogin()){
@@ -392,8 +394,9 @@ function authorize($privacy, $type, $author=NULL){
 	                
 	                if(proofLogin()){
 	                //check if user is in group which is allowed to see this item
-		                $groupAtSql = mysql_query("SELECT * FROM groupAttachments WHERE item='user' AND itemId='".getUser()."' and validated='1'");
-		                while($groupAtData = mysql_fetch_array($groupAtSql)){
+                                $db = new db();
+                                $groupAtSQL = $db->shiftResult($db->query('groupAttachments', array('item', 'user', '&&', 'itemId', getUser(), '&&', 'validated', '1')),'item');
+		                foreach($groupAtSQL AS $groupAtData){
 		
 		                    if(in_array($groupAtData['group'], $customShow) && proofLogin()){
 		                        $show = true;  

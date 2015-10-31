@@ -5,9 +5,10 @@
 include("../../../inc/config.php");
 	$type = "Folder";
 	$itemId = $_GET['id'];
-	
-	$query = mysql_query("SELECT name, folder FROM folders WHERE id='".mysql_real_escape_string($itemId)."'");
-	$data = mysql_fetch_array($query);
+        
+        
+        $db = new db();
+        $data = $db->query('folders', array('id', $itemId), array('name','folder'));
 	$title = $data['name'];
 	
 	$metaDescriptionContent = "universeOS $type $title.";

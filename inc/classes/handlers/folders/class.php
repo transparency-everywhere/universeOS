@@ -10,8 +10,9 @@ class folder_handler {
         $query = mysql_real_escape_string($query);
         $results = array();
         //folders
-        $folderSuggestSQL = mysql_query("SELECT id, name, privacy, creator FROM folders WHERE name LIKE '%$query%' LIMIT $k");
-        while ($suggestData = mysql_fetch_array($folderSuggestSQL)) {
+        $db = new db();
+        $folderSuggestSQL = $db->shiftResult($db->query("SELECT id, name, privacy, creator FROM folders WHERE name LIKE '%$query%' LIMIT $k"),'id');
+        foreach ($folderSuggestSQL AS $suggestData) {
             if(authorize($suggestData['privacy'], 'show', $suggestData['creator']))
                 $results[] = $suggestData['id'];
         }

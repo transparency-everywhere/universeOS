@@ -43,27 +43,29 @@ class search{
         $results = array();
         
         $handlers = new handler();
+        $db = new db();
+        
         switch($type){
             case'users':
                 
                 //search $users
-                $userSuggestSQL = mysql_query("SELECT userid, username FROM user WHERE username LIKE '%$q%' OR realname LIKE '%$q%' OR email='$q' OR userid='$q' LIMIT $k");
-                while ($suggestData = mysql_fetch_array($userSuggestSQL)) {
+                $userSuggestSQL = $db->shiftResult($db->query("SELECT userid, username FROM user WHERE username LIKE '%$q%' OR realname LIKE '%$q%' OR email='$q' OR userid='$q' LIMIT $k"),'userid');
+                foreach ($userSuggestSQL AS $suggestData) {
                     $results[] = $suggestData;
                 }
                 break;
             case 'folders':
                 //folders
-                $folderSuggestSQL = mysql_query("SELECT id, name, privacy, creator FROM folders WHERE name LIKE '%$q%' LIMIT $k");
-                while ($suggestData = mysql_fetch_array($folderSuggestSQL)) {
+                $folderSuggestSQL = $db->shiftResult($db->query("SELECT id, name, privacy, creator FROM folders WHERE name LIKE '%$q%' LIMIT $k"),'id');
+                foreach ($folderSuggestSQL AS $suggestData) {
                     if(authorize($suggestData['privacy'], 'show', $suggestData['creator']))
                         $results[] = $suggestData;
                 }
                 break;
             case 'elements':
                 //elements
-                $elementSuggestSQL = mysql_query("SELECT id, title, privacy, author FROM elements WHERE title LIKE '%$q%' LIMIT $k");
-                while ($suggestData = mysql_fetch_array($elementSuggestSQL)) {
+                $elementSuggestSQL = $db->shiftResult($db->query("SELECT id, title, privacy, author FROM elements WHERE title LIKE '%$q%' LIMIT $k"),'id');
+                foreach ($elementSuggestSQL AS $suggestData) {
 
                     if(authorize($suggestData['privacy'], 'show', $suggestData['author']))       
                         $results[] = $suggestData;
@@ -71,8 +73,8 @@ class search{
                 break;
                 
             case 'files':
-                $fileSuggestSQL = mysql_query("SELECT id, title, privacy, type, owner FROM files WHERE title LIKE '%$q%' LIMIT $k");
-                while ($suggestData = mysql_fetch_array($fileSuggestSQL)) {
+                $fileSuggestSQL = $db->shiftResult($db->query("SELECT id, title, privacy, type, owner FROM files WHERE title LIKE '%$q%' LIMIT $k"),'id');
+                foreach ($fileSuggestSQL AS $suggestData) {
 
                     if(authorize($suggestData['privacy'], 'show', $suggestData['owner']))       
                         $results[] = $suggestData;
@@ -80,8 +82,8 @@ class search{
                 break;
             case 'groups':
                 //groups
-                $groupSuggestSQL = mysql_query("SELECT id, title FROM groups WHERE title LIKE '%$q%' AND public='1' LIMIT $k");
-                while ($suggestData = mysql_fetch_array($groupSuggestSQL)) {
+                $groupSuggestSQL = $db->shiftResult($db->query("SELECT id, title FROM groups WHERE title LIKE '%$q%' AND public='1' LIMIT $k"),'id');
+                foreach ($groupSuggestSQL AS $suggestData) {
                     $results[] = $suggestData;
                 }
                 break;

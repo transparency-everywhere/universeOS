@@ -15,8 +15,10 @@
 class personalEvents{
     
                 function get(){
-                    $personalEventSql = mysql_query("SELECT * FROM personalEvents WHERE owner='".getUser()."' AND seen='0'");
-                    while($personalEventData = mysql_fetch_array($personalEventSql)){
+                    
+                    $db = new db();
+                    $personalEventSQL = $db->shiftResult($db->query("SELECT * FROM personalEvents WHERE owner='".getUser()."' AND seen='0'"),'id');
+                    foreach($personalEventSQL AS $personalEventData){
                         
 
                             //comments

@@ -47,11 +47,8 @@ class tasks{
 		}
 	}
 	public function getData($id){
-		
-		
-		$query = "WHERE `id`='".save($id)."'";
-		$data = mysql_fetch_array(mysql_query("SELECT * FROM `tasks` $query"));
-		return $data;
+                $db = new db();
+		return $db->query('tasks', array('id', $id));
 	}
 	public function get($user=NULL, $startStamp, $stopStamp, $privacy=NULL){
 		$arr = array();
@@ -61,9 +58,9 @@ class tasks{
 			$privacy = implode('|', $privacy);
 			$privacyQuery = "AND privacy REGEXP '$privacy'";
 		}
-		
-		$sql = mysql_query("SELECT * FROM `tasks` WHERE `timestamp`>'".save($startStamp)."' AND `timestamp`<'".save($stopStamp)."' AND `user`='".save($user)."' $privacyQuery");
-		while($data = mysql_fetch_array($sql)){
+		$db = new db();
+                $taskSQL = $db->shiftResult("SELECT * FROM `tasks` WHERE `timestamp`>'".save($startStamp)."' AND `timestamp`<'".save($stopStamp)."' AND `user`='".save($user)."' $privacyQuery");
+		foreach($taskSQL AS $data){
 			$data['editable'] = authorize($data['privacy'], 'edit', $data['user']);
 			$arr[] = $data;
 		}

@@ -69,8 +69,10 @@ class groups{
         public function getOpenRequests($userid=NULL){
             if(empty($userid))
                     $userid = getUser();
-            $newGroupSql = mysql_query("SELECT * FROM  `groupAttachments` WHERE  item='user' AND  `validated`='0' AND itemId='$userid' ORDER BY timestamp DESC LIMIT 0, 3");
-            while($newGroupData = mysql_fetch_array($newGroupSql)){
+            
+                    $db = new db();
+                    $newGroupSql = $db->shiftResult($db->query("SELECT * FROM  `groupAttachments` WHERE  item='user' AND  `validated`='0' AND itemId='$userid' ORDER BY timestamp DESC LIMIT 0, 3"),'item');
+            foreach($newGroupSql AS $newGroupData){
                 $return[] = array('group_id'=>$newGroupData['group'],'author'=>$newGroupData['author']);
             }
             

@@ -5,8 +5,9 @@
 include("../../../inc/config.php");
 	$type = "Element";
 	$itemId = $_GET['id'];
-	$query = mysql_query("SELECT `folder`, `title` FROM `elements` WHERE id='".mysql_real_escape_string($itemId)."'");
-	$data = mysql_fetch_array($query);
+        
+        $db = new db();
+        $data = $db->query('elements', array('id', $itemId), array('folder','title'));
 	$title = $data['title'];
 	
 	$metaDescriptionContent = "universeOS $type $title.";

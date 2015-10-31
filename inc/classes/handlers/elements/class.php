@@ -9,8 +9,9 @@ class element_handler {
         $k = (int)$offset.','.(int)$max_results;
         $query = mysql_real_escape_string($query);
         $results = array();
-        $elementSuggestSQL = mysql_query("SELECT id, title, privacy, author FROM elements WHERE title LIKE '%$query%' LIMIT $k");
-        while ($suggestData = mysql_fetch_array($elementSuggestSQL)) {
+        $db = new db();
+        $elementSuggestSQL = $db->shiftResult($db->query("SELECT id, title, privacy, author FROM elements WHERE title LIKE '%$query%' LIMIT $k"), 'id');
+        foreach ($elementSuggestSQL AS $suggestData) {
 
             if(authorize($suggestData['privacy'], 'show', $suggestData['author']))       
                 $results[] = $suggestData['id'];

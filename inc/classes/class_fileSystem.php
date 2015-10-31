@@ -56,6 +56,8 @@ class fileSystem {
 
 
             if(!empty($query)){
+                
+                $db = new db();
                     if(!empty($folder) && ($folder !== "1")){
                         $db = new db();
                             if($parentFolderData['folder'] !== 1)
@@ -70,8 +72,8 @@ class fileSystem {
                         </tr>
                             <?php
                     }
-            $filefsql = mysql_query("SELECT * FROM folders $query");
-            while($filefdata = mysql_fetch_array($filefsql)) {
+            $foldersSQL = $db->shiftResult($db->query("SELECT * FROM folders $query"), 'id');
+            foreach($foldersSQL AS $filefdata) {
             if(authorize($filefdata['privacy'], "show", $filefdata['creator'])){
 
                             $name = $filefdata['name'];
@@ -104,8 +106,8 @@ class fileSystem {
                 </tr>
                 <?php
                 }}}
-                $filedsql = mysql_query("SELECT * FROM elements $query2");
-                while($fileddata = mysql_fetch_array($filedsql)) {
+                $elementsSQL = $db->shiftResult($db->query("SELECT * FROM elements $query2"), 'id');
+                foreach($elementsSQL AS $fileddata) {
 
                     $dbClass = new db();
                     $fileFolderData = $dbClass->select('folder', array('id', $folder));
@@ -133,8 +135,8 @@ class fileSystem {
                 }
 
                 $db = new db();
-                $shortCutSql = mysql_query("SELECT * FROM internLinks $shortCutQuery");
-                while($shortCutData = mysql_fetch_array($shortCutSql)){
+                $shortCutSQL = $db->shiftResult($db->query("SELECT * FROM internLinks $shortCutQuery"), 'typeId');
+                foreach($shortCutSQL AS $shortCutData){
                     if($shortCutData['type'] == "folder"){
                         $shortCutItemData = $db->select('folders', array('id', $shortCutData['typeId']), array('name', 'privacy'));
 
@@ -231,15 +233,16 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 		echo'<li class="change" onclick="$(\'.miniFileBrowser .strippedRow\').not(\'.fix\').slideDown();">change</li>';
 		}
 		
+	$db = new db();
         //if folder is empty => load file list
         if($folder !== NULL && !empty($folder)){
             
             $query = "WHERE `folder`='$folder' ORDER BY `name` ASC";
             $query2 = "WHERE `folder`='$folder' ORDER BY `title` ASC";
 
-	        	
-	        $filefsql = mysql_query("SELECT * FROM folders $query");
-	        while($filefdata = mysql_fetch_array($filefsql)) {
+                
+	        $filefsql = $db->shiftResult($db->query("SELECT * FROM folders $query"), 'id');
+	        foreach($filefsql AS $filefdata) {
 		        if(authorize($filefdata['privacy'], "show", $filefdata['creator'])){                                    
 				$action['folders'] = "$('.folder".$filefdata['id']."LoadingFrame').replaceWith(filesystem.getMiniFileBrowser(".$filefdata['id'].", '', $level, 'false', '$select'));return false;";
                                 $trigger['folders'] = "$('.miniFileBrowser .choosenItem').html('<span class=\'icon white-archive\'></span>&nbsp;$filefdata[name]<input type=\'hidden\' name=\'type\' class=\'choosenType\' value=\'folder\'><input type=\'hidden\' name=\'typeId\' class=\'choosenTypeId\' value=\'".$filefdata['id']."\'>');  $('.miniFileBrowser .change').show(); $('.miniFileBrowser .strippedRow:visible').slideUp();";
@@ -264,8 +267,8 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 	            }
 			}
 			
-	        $filedsql = mysql_query("SELECT * FROM elements $query2");
-	        while($fileddata = mysql_fetch_array($filedsql)) {
+	        $filedsql = $db->shiftResult($db->query("SELECT * FROM elements $query2"), 'id');
+	        foreach($filedsql AS $fileddata) {
 	
                     $dbClass = new db();
                     $fileFolderData = $dbClass->select('folders', array('id', $folder));
@@ -304,9 +307,9 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 	        //if git=1 => only basic information without itemsettings etc.
 	            $query = "folder='".mysql_real_escape_string($element)."'";
 	        
-	        
-	            $fileListSQL = mysql_query("SELECT * FROM files WHERE $query");
-	            while($fileListData = mysql_fetch_array($fileListSQL)) {
+                    
+                    $filedsql = $db->shiftResult($db->query("SELECT * FROM files WHERE $query"), 'id');
+	            foreach($filedsql AS $fileListData) {
 	                
 	                if(authorize($fileListData['privacy'], "show", $fileListData['owner'])){
 	                	
@@ -335,14 +338,13 @@ function showMiniFileBrowser($folder=NULL, $element=NULL, $level, $showGrid=true
 	                    <?php
 	
 	            }}
-	            $linkListSQL = mysql_query("SELECT * FROM links WHERE $query");
-	            while($linkListData = mysql_fetch_array($linkListSQL)) {
-	            	
-					
-					
+                    $db = new db();
+                    $linkListSQL = $db->shiftResult($db->query("SELECT * FROM links WHERE $query"), 'id');
+	            foreach($linkListSQL AS $linkListData) {
+                        
 	                $title10 = substr("$linkListData[title]", 0, 10);
 					
-					$action['links'] = "alert('lol'); return false";
+			$action['links'] = "alert('lol'); return false";
 			$classFiles = new files();
 	                $image = $classFiles->getFileIcon($linkListData['type']);
 	                
@@ -557,7 +559,7 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
                         $output .= "<span class=\"download\">$download</span>";
                         $output .= "</header>";
                         $output .= "<div class=\"fileWindow\" id=\"$fileWindowId\">";
-	        
+	        $db = new db();
 	        switch($type){
 	            //link types
 	            case youTube:
@@ -675,22 +677,22 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 						$output .= '<tr>';
 						
 						
-				        $documentSQL = mysql_query("SELECT id, title, folder, privacy, owner FROM files WHERE folder='".$elementData['id']."' AND type IN('image/png','image/jpeg','image')");
-				        while($documentData = mysql_fetch_array($documentSQL)){
-	        				if(authorize($documentData['privacy'], "show", $documentData['owner'])){
-                                                        $folderClass = new folder($elementData['folder']);
-						        if($elementData['title'] == "profile pictures"){
-                                                                
-						        	$thumbPath = $subpath.$folderClass->getPath();    
-						        	$thumbPath = "$thumbPath/thumb/300/";
-						        }else{
-						        	$thumbPath = $subpath.$folderClass->getPath()."thumbs/";
-						        }
-								
-								
-						        $output .= "<td onmouseup=\"showMenu('image".$documentData['id']."')\" oncontextmenu=\"showMenu('image".$documentData['id']."'); return false;\"><div id=\"viewerClick".$documentData['id']."\"><a href=\"#\" onclick=\"filesystem.tabs.updateTabContent('Open ".substr("$elementTitle", 0, 10)."' ,gui.loadPage('./modules/reader/openFile.php?type=image&fileId=".$documentData['id']."'));return false\"><img src=\"$thumbPath$documentData[title]\" height=\"100px\"></a></div></td>";   
-				       		}
-				        }
+                                                $documentSQL = $db->shiftResult($db->query("SELECT id, title, folder, privacy, owner FROM files WHERE folder='".$elementData['id']."' AND type IN('image/png','image/jpeg','image')"), 'id');
+                                                foreach($documentSQL AS $documentData){
+                                                        if(authorize($documentData['privacy'], "show", $documentData['owner'])){
+                                                                $folderClass = new folder($elementData['folder']);
+                                                                if($elementData['title'] == "profile pictures"){
+
+                                                                        $thumbPath = $subpath.$folderClass->getPath();    
+                                                                        $thumbPath = "$thumbPath/thumb/300/";
+                                                                }else{
+                                                                        $thumbPath = $subpath.$folderClass->getPath()."thumbs/";
+                                                                }
+
+
+                                                                $output .= "<td onmouseup=\"showMenu('image".$documentData['id']."')\" oncontextmenu=\"showMenu('image".$documentData['id']."'); return false;\"><div id=\"viewerClick".$documentData['id']."\"><a href=\"#\" onclick=\"filesystem.tabs.updateTabContent('Open ".substr("$elementTitle", 0, 10)."' ,gui.loadPage('./modules/reader/openFile.php?type=image&fileId=".$documentData['id']."'));return false\"><img src=\"$thumbPath$documentData[title]\" height=\"100px\"></a></div></td>";   
+                                                        }
+                                                }
 						$output .= "</tr>";
 						$output .= "</table>";
 						$ouput .="</div>";

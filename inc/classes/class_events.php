@@ -83,9 +83,9 @@ class events{
 			$privacy = implode('|', $privacy);
 			$privacyQuery = "AND privacy REGEXP '$privacy'";
 		}
-		
-		$sql = mysql_query("SELECT * FROM `events` WHERE `startStamp`>'".save($startStamp)."' AND `stopStamp`<'".save($stopStamp)."' AND `user`='".save($user)."' $privacyQuery");
-		while($data = mysql_fetch_array($sql)){
+		$db = new db();
+                $events = $db->shiftResult($db->query("SELECT * FROM `events` WHERE `startStamp`>'".save($startStamp)."' AND `stopStamp`<'".save($stopStamp)."' AND `user`='".save($user)."' $privacyQuery"), 'startStamp');
+		foreach($events AS $data){
 			$data['editable'] = authorize($data['privacy'], 'edit', $data['user']);
 			$arr[] = $data;
 		}

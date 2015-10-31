@@ -74,8 +74,9 @@ class playlist{
                 $query .= "OR (INSTR(`user`, '{$buddies}') > 0)";
         
             //get playlists for user and groups
-            $playListsSql = mysql_query("SELECT id, title, privacy, user FROM playlists WHERE user='".getUser()."' $query");
-            while($playListsData = mysql_fetch_array($playListsSql)){
+            $db = new db();
+            $playListsSql = $db->shiftResult($db->query("SELECT id, title, privacy, user FROM playlists WHERE user='".getUser()."' $query"),'id');
+            foreach($playListsSql AS $playListsData){
                 if(authorize($playListsData['privacy'], $type, $playListsData['user'])){
 	                $ids[] = $playListsData['id'];
 	                $titles[] = $playListsData['title'];

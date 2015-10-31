@@ -55,17 +55,17 @@ class message{
             $db = new db();
             $userClass = new user();
             $userClass->updateActivity($userid);
-            $chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' OR receiver='$userid' ORDER BY timestamp DESC LIMIT 1");
-            $chatData =  mysql_fetch_array($chatSQL);
+            $chatData =  $db->query("SELECT * FROM messages WHERE sender='$userid' OR receiver='$userid' ORDER BY timestamp DESC LIMIT 1");
 
 
             if($chatData['read'] == 0){
                     return $chatData['id'];
             }
     }
-	function getUnseenMessageAuthors($userid){;
-		$chatSQL = mysql_query("SELECT * FROM `messages` WHERE (`sender`='$userid' AND `seen`='0') OR (`read`='0' AND `receiver`='$userid')");
-		while($chatData =  mysql_fetch_array($chatSQL)){
+	function getUnseenMessageAuthors($userid){
+                $db = new db();
+                $chatSQL = $db->shiftResult($db->query("SELECT * FROM `messages` WHERE (`sender`='$userid' AND `seen`='0') OR (`read`='0' AND `receiver`='$userid')"), 'id');
+		foreach($chatSQL AS $chatData){
 			if($chatData['sender'] == $userid){
 				if(!in_array($chatData['receiver'], $return))
 					$return[] = $chatData['receiver'];
@@ -87,13 +87,10 @@ class message{
 	function getMessages($userid, $buddyId, $limit){
             
             //generate limit from offset, numberOfMessages
-            
             $db = new db();
-            $db->select('messages', array('sender', $userid, '&&', 'receiver', $buddyId, 'OR', 'sender', $buddyId, '&&', 'receiver', $userid), array('*'), array('timestamp', 'DESC'), $limit);
+            $chatSQL = $db->shiftResult($db->query("SELECT * FROM messages WHERE sender='$userid' && receiver='".save($buddyId)."' OR sender='".save($buddyId)."' && receiver='".save($userid)."' ORDER BY timestamp DESC LIMIT ".save($limit).""),'id');
             
-            
-		$chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' && receiver='".save($buddyId)."' OR sender='".save($buddyId)."' && receiver='".save($userid)."' ORDER BY timestamp DESC LIMIT ".save($limit)."");
-		while($chatData =  mysql_fetch_array($chatSQL)){
+		foreach($chatSQL AS $chatData){
 			$id = $chatData['id'];
 			$return[$id] = $chatData;
 		}
@@ -109,8 +106,8 @@ class message{
 		$db = new db();
 		
 		
-		$chatSQL = mysql_query("SELECT * FROM messages WHERE sender='$userid' && receiver='$buddyId' OR sender='$buddyId' && receiver='$userid' ORDER BY timestamp DESC LIMIT $limit");
-		while($chatData = mysql_fetch_array($chatSQL)) {
+		$chatSQL = $db->shiftResult($db->query("SELECT * FROM messages WHERE sender='$userid' && receiver='$buddyId' OR sender='$buddyId' && receiver='$userid' ORDER BY timestamp DESC LIMIT $limit"), 'id');
+                foreach($chatSQL AS $chatData) {
 	    
 		    if($chatData['receiver'] == getUser() && $chatData['read'] == "0"){
                         $db->update('messages', array('read'=>'1'), array('id', $chatData['id']));
@@ -171,8 +168,9 @@ class message{
         $returner = array();
    	$listedUsers[] = $user;
         $session = '';
-	$newMessagesSql = mysql_query("SELECT * FROM  `messages` WHERE  receiver='$user' OR sender='$user' ORDER BY timestamp DESC LIMIT 0, 5");
-	while($newMessagesData = mysql_fetch_array($newMessagesSql)){
+        $db = new db();
+        $newMessagesSQL = $db->shiftResult($db->query("SELECT * FROM  `messages` WHERE  receiver='$user' OR sender='$user' ORDER BY timestamp DESC LIMIT 0, 5"),'id');
+	foreach($newMessagesSQL AS $newMessagesData){
 		$session .= "newMessage ".$newMessagesData['id'];
 		
 		

@@ -169,8 +169,7 @@ class item {
                     if(authorize($elementData['privacy'], "show")){
 
                         //select random picture and show thumb of it
-                        $fileSQL = mysql_query("SELECT * FROM files WHERE type IN ('image/jpeg', 'image/png') AND title LIKE '%thumb%' AND folder='$itemId' ORDER BY RAND() LIMIT 0,1");
-                        $fileData = mysql_fetch_array($fileSQL);
+                        $fileData = $db->query("SELECT * FROM files WHERE type IN ('image/jpeg', 'image/png') AND title LIKE '%thumb%' AND folder='$itemId' ORDER BY RAND() LIMIT 0,1");
                         if($fileData){
                             $fileClass = new file($fileData['id']);
                             $path = "upload".$fileClass->getPath();
@@ -444,9 +443,8 @@ class item {
                             $typeId = $this->typeid;
                             switch($type){
                                     case 'folder':
-
-                                            $folderSQL = mysql_query("SELECT `privacy` FROM `folders` WHERE id='$typeId'");
-                                            $folderData = mysql_fetch_array($folderSQL);
+                                            $db = new db();
+                                            $folderData = $db->query('folders', array('id', $typeId), array('privacy'));
 
                                             $privacy = $folderData['privacy'];
                                             if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
@@ -456,9 +454,9 @@ class item {
                                             $table = 'folders';
                                             break;
                                     case 'element':
-
-                                            $elementSQL = mysql_query("SELECT privacy FROM elements WHERE id='$typeId'");
-                                            $elementData = mysql_fetch_array($elementSQL);
+                                            $db = new db();
+                                            $elementData = $db->query('elements', array('id', $typeId), array('privacy'));
+                                            
                                             $privacy = $elementData['privacy'];
                                             if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
                                                     $privacy .= ";UNDELETABLE";
@@ -467,8 +465,8 @@ class item {
                                             $table = 'elements';
                                             break;
                                     case 'file':
-                                            $fileSQL = mysql_query("SELECT privacy FROM files WHERE id='$typeId'");
-                                            $fileData = mysql_fetch_array($fileSQL);
+                                            $db = new db();
+                                            $fileData = $db->query('files', array('id', $typeId), array('privacy'));
                                             $privacy = $fileData['privacy'];
                                             if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
                                                     $privacy .= ";UNDELETABLE";
@@ -478,8 +476,8 @@ class item {
                                             $table = 'files';
                                             break;
                                     case 'link':
-                                            $linkSQL = mysql_query("SELECT privacy FROM links WHERE id='$typeId'");
-                                            $linkData = mysql_fetch_array($linkSQL);
+                                            $db = new db();
+                                            $fileData = $db->query('links', array('id', $typeId), array('privacy'));
 
 
                                             $privacy = $linkData['privacy'];

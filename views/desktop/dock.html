@@ -1,0 +1,18 @@
+<div id="dockplayer" style="display: none"></div>
+</div>
+<div id="dock">
+            <table>
+                <tbody><tr>
+                    <td><i class="icon white-chevron-up" id="toggleDashboardButton" onclick="dashBoard.toggle();"></i>                          <a id="startButton" title="toggle Dashboard" href="#"><i class="icon white-eye"></i><span class="iconAlert" id="globalAlerts"></span><i class="icon white-user"></i><span class="iconAlert" id="buddylistAlerts"></span>                         <i class="icon white-comment"></i><span class="iconAlert" id="notificationAlerts" onclick="applications.show('chat'); return false"></span>                          </a></td>
+                    <td>
+                    </td>
+                    <td>
+                        <div class="" id="logout" onclick="User.logout();" target="submitter" style="tex-decoration: none; color: #FFF; min-width:10px; margin-left:10px;" title="logout">&nbsp;<i class="icon white-logout"></i>&nbsp;</div>
+                    </td>
+                    <td align="right"><ul class="dockPlayer"><li><span class="prev icon white-arrow-left" onclick="player.prev();"></span></li><li><span class="play icon white-play"></span></li><li><span class="next icon white-arrow-right" onclick="player.next();"></span></li><li></li></ul></td>
+                    <td align="right" style="color: #FFFFFF; float: right"><a href="#" id="clockDiv" style="color: #FFFFFF; float: right" onclick="applications.show('calendar')">Tuesday, Oct. 27.<span style="margin-left:8px;">00:36</span></a></td>
+                    <td align="right" style="color: #FFFFFF; float: right"><a href="#settings" title="settings" id="settingsTrigger"><span class="icon white-gear"></span></a></td>
+                    <td align="right" style="color: #FFFFFF; float: right"><a href="#search" title="search something" id="searchTrigger"><span class="icon white-search"></span></a></td>
+                </tr>
+            </tbody></table>
+</div>

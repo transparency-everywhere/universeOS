@@ -4,29 +4,25 @@ include_once("../inc/config.php");
 include_once("../inc/functions.php");
 echo"<html>";
 echo"<head>";
-
+$db = new db();
 //define type and itemId
 if(!empty($_GET['folder'])){
 	$type = "Folder";
 	$itemId = $_GET['folder'];
-	
-	$query = mysql_query("SELECT name, folder FROM folders WHERE id='".mysql_real_escape_string($itemId)."'");
-	$data = mysql_fetch_array($query);
+	$data = $db->select('folders', array('id', $itemId), array('name', 'folder'));
 	$title = $data['name'];
 	
 }else if(!empty($_GET['element'])){
 	
 	$type = "Element";
 	$itemId = $_GET['element'];
-	$query = mysql_query("SELECT `folder` FROM `elements` WHERE id='".mysql_real_escape_string($itemId)."'");
-	$data = mysql_fetch_array($query);
+	$data = $db->select('elements', array('id', $itemId), array('folder', 'title'));
 	$title = $data['title'];
 	
 }else if(!empty($_GET['file'])){
 	$type = "File";
 	$fileId = $_GET['file'];
-	$query = mysql_query("SELECT `title`, `type` FROM `files` WHERE id='".mysql_real_escape_string($fileId)."'");
-	$data = mysql_fetch_array($query);
+	$data = $db->select('files', array('id', $fileId), array('title', 'type'));
 	$title = $data['title'];
 }
 	$metaDescriptionContent = "universeOS $type $title.";
