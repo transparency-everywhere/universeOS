@@ -20,9 +20,8 @@ include('../../../inc/config.php');
 include('../../../inc/functions.php');
 
 $db = new db();
-$checkData = $db->query('folders', array('id', $_POST['folder']), array('privacy', 'creator'));
+$checkData = $db->select('folders', array('id', $_POST['folder']));
 if(authorize($checkData['privacy'], "edit", $checkData['creator'])){
-             
     //set privacy
     $customShow = $_POST['privacyCustomSee'];
     $customEdit = $_POST['privacyCustomEdit'];
