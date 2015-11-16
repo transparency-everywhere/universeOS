@@ -15,8 +15,11 @@
 //limitations under the License.
 //
 //@author nicZem for Tranpanrency-everywhere.com
+
+
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
+
 $appCenterApp = new appCenterApp();
-$appCenterApp->create($_POST['parameters']['appId'],$_POST['parameters']);
+echo json_encode($appCenterApp->prepareAppCreation(),true);
 ?>

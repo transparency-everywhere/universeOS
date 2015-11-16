@@ -17,6 +17,7 @@
 //@author nicZem for Tranpanrency-everywhere.com
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
-$appCenterApp = new appCenterApp();
-$appCenterApp->create($_POST['parameters']['appId'],$_POST['parameters']);
+
+$appCenter = new appCenter();
+echo json_encode($appCenter->getApps());
 ?>

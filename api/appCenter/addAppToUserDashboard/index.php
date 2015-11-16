@@ -17,6 +17,8 @@
 //@author nicZem for Tranpanrency-everywhere.com
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
+error_reporting(E_ALL);
+echo var_dump($_POST['parameters']);
 $appCenterApp = new appCenterApp();
-$appCenterApp->create($_POST['parameters']['appId'],$_POST['parameters']);
+$appCenterApp->addAppToUserDashboard($_POST['parameters']);
 ?>
