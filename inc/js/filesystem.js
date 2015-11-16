@@ -16,9 +16,6 @@
 
 
 var filesystem =  new function() {
-    
-    
-    
     /**
     * Generates html for upload tab
     * @param {element} id of element in which the files will be uploaded.
@@ -26,7 +23,11 @@ var filesystem =  new function() {
     * @param {uploaderTabId} tab_id of uploader.(Needed for Callback)
     * @param {leftNav} show leftNav
     */
-    this.generateUploadTab = function(element, elementTabId, uploaderTabId, additional){
+    this.generateUploadTab = function(element, elementTabId, uploaderTabId, additional, multipleFiles){
+        if (typeof multipleFiles != 'undefined'){
+            multipleFiles = true;
+        }
+        
         var html = '';
             html += '<div class="uploadTab">';
                 html += '<form action="api/files/submitUploader/" method="post" target="submitter" data-uploadertab="' + uploaderTabId + '" data-elementtab="' + elementTabId + '" data-elementid="' + element + '">';
@@ -63,7 +64,7 @@ var filesystem =  new function() {
         applications.show('filesystem');
         var uploaderTabId = filesystem.tabs.addTab('Upload in #'+element, '', '', false);
         filesystem.tabs.updateTabContent(uploaderTabId, filesystem.generateUploadTab(element, elementTabId, uploaderTabId));
-        initUploadify('#uploader_file', 'api/files/uploadTemp/', element, '', ''); //the two empty strings are timeStamp and salt - could be empty
+        this.initUploader('#uploader_file', 'api/files/uploadTemp/', element, '', ''); //the two empty strings are timeStamp and salt - could be empty
         
         $('.uploadTab form').unbind('submit');
         $('.uploadTab form').bind('submit', function(){
@@ -73,7 +74,7 @@ var filesystem =  new function() {
         });
     };
     
-    this.attachItem = function($appendAfter){
+    this.attachItem = function($appendAfter, targetElement, replace){
         //will be added to my files
         var html = '<ul id="attachItem">';
             html += '<li data-type="upload"><span class="icon white-plus"></span>Upload Item</li>';
@@ -93,26 +94,31 @@ var filesystem =  new function() {
                         $('.chooseSub').show();
                     break;
                 case 'upload':
-                    filesystem.uploadAndAttachItem($appendAfter);
+                    filesystem.uploadAndAttachItem($appendAfter, targetElement, replace);
                     break;
                 case 'folder':
                 case 'collection':
                 case 'file':
-                        filesystem.attachItemFromFileSystemForm($appendAfter, $(this).attr('data-type'));
+                        filesystem.attachItemFromFileSystemForm($appendAfter, $(this).attr('data-type'), replace);
                     break;
             }
         });
     };
     
-    this.uploadAndAttachItem = function($appendAfter){
+    this.uploadAndAttachItem = function($appendAfter, targetObject, replace){
         
+        if(typeof replace === 'undefined'){
+            replace = false;
+        }
         
         
         var element = User.getProfileInfo()['myFiles'];
+        if((typeof targetObject === 'object')&&targetObject.objectType=='archive'){
+            element = targetObject.objectId;
+        }
         
         var html = filesystem.generateUploadTab(element, 'fuck', 'fuck', false);
         
-        html += 'Files are uploaded to you myFiles Collection.';
         
         var formModal = new gui.modal();
         
@@ -128,18 +134,18 @@ var filesystem =  new function() {
         modalOptions['action'] = function(){
             $('.blueModal .uploadTab form').submit(function(){
             
-            
                 $('.tempFilelist li').each(function(){
                     var file_id = $(this).attr('data-fileid');
 
                     $appendAfter.after(item.showItemThumb(['file'], [file_id]));
                     $appendAfter.next('.itemThumb').prepend('<span class="icon white-close" onclick="$(this).parent().remove();"></span>');
+                      
                 });
-
+                //if replace = true, the $appendAfterObject will be removed, so the element will be replaced instead of added behind
+                if(replace)
+                    $appendAfter.remove();
 
                 $('.blueModal').remove();
-
-                
             });
             $('.blueModal .uploadTab form').submit();
             
@@ -148,8 +154,7 @@ var filesystem =  new function() {
         
         formModal.init('Attach Item', html, modalOptions);
         
-        //init uploadify and turn off temp uploading
-        initUploadify('#uploader_file', 'api/files/uploadTemp/', element, '', '', false); //the two empty strings are timeStamp and salt - could be empty
+        this.initUploader('#uploader_file', 'api/files/uploadTemp/', element, '', '', false); //the two empty strings are timeStamp and salt - could be empty
         
         $('.uploadTab form').unbind('submit');
         $('.uploadTab form').bind('submit', function(){
@@ -174,7 +179,7 @@ var filesystem =  new function() {
         
     };
     //type string element, folder or file
-    this.attachItemFromFileSystemForm = function($appendAfter, type){
+    this.attachItemFromFileSystemForm = function($appendAfter, type, replace){
         
         var formModal = new gui.modal();
         
@@ -211,8 +216,13 @@ var filesystem =  new function() {
         modalOptions['action'] = function(){
             var typeId = $('#attachItemFileBrowserFrame .choosenTypeId').val();
             $('.blueModal').remove();
+            
             $appendAfter.after(item.showItemThumb([type], [typeId])[0]);
             $appendAfter.next('.itemThumb').prepend('<span class="icon white-close" onclick="$(this).parent().remove();"></span>');
+            
+            //if replace = true, the $appendAfterObject will be removed, so the element will be replaced instead of added behind
+            if(replace)
+                $appendAfter.remove();
         };
         
         formModal.init('Attach Item', '<div id="attachItemFromFileSystemFormContainer"></div>', modalOptions);
@@ -620,6 +630,13 @@ var filesystem =  new function() {
         }
         return fileData['title'];
     };
+    this.getFilePath = function(file_id){
+        var fileData = this.getFileData(file_id);
+        var halfPath = '' + encodeURIComponent(folders.getPath(elements.getData(fileData['folder'])['folder']) + fileData['filename']);
+        var secondHalf = halfPath.replace(/%2F/g, '/');
+        return "./upload/" + secondHalf;
+    };
+    
     this.downloadFile = function(fileId){
         $('#submitter').attr('src','out/download/?fileId='+fileId);
     };
@@ -875,12 +892,43 @@ var filesystem =  new function() {
         '</div>');
         
     };
+    //wrapper for uploadify
+    this.initUploader = function(id, uploader, element, timestamp, token, multiple){
+    
+        if(typeof multiple === 'undefined'){
+            multiple = true;
+        }
+	        $(id).uploadify({
+                        'multi': multiple,
+	                'formData'     : {
+	                        'timestamp' : timestamp,
+	                        'token'     : token,
+	                        'element'   : element
+	                },
+	                'swf'      : 'inc/plugins/uploadify/uploadify.swf',
+	                'uploader' : uploader,
+			'onUploadSuccess' : function(file, data, response) {
+				if(response){
+                                    //if multiple = false empty file list on every upload
+                                    if(!multiple){
+                                        $('.tempFilelist').html('');
+                                    }
+                                    //@sec
+                                    eval(data); //no esta bien! que?
+				}
+                        },
+                        'onUploadError' : function(file, errorCode, errorMsg, errorString) {
+                                alert('The file ' + file.name + ' could not be uploaded: ' + errorString);
+                        }
+	        });
+    };
 };
 
 var files = new function(){
     this.update = function(file_id, content, callback){
         return api.query('api/files/updateFileContent/', {file_id: file_id, content: content},callback);
     }
+    
 };
 //@param select folder/element
 function loadMiniFileBrowser($target, folder, element, level, showGrid, select){
