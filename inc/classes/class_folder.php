@@ -109,7 +109,8 @@ class folder {
                 //maximum while 
                 $maxqueries = 150;
                 $i = 0;
-
+                $returnFolder = array();
+                $returnName = array();
                 while (($folder != "0" || $folder != "0") && $i < $maxqueries) {
                     if (!empty($folder)) {
                         $folderData = $db->select('folders', array('id', $folder), array('name', 'folder'));
