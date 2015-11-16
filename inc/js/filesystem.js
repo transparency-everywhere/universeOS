@@ -631,6 +631,8 @@ var filesystem =  new function() {
         return fileData['title'];
     };
     this.getFilePath = function(file_id){
+        if(empty(file_id)||file_id == 0)
+            return false;
         var fileData = this.getFileData(file_id);
         var halfPath = '' + encodeURIComponent(folders.getPath(elements.getData(fileData['folder'])['folder']) + fileData['filename']);
         var secondHalf = halfPath.replace(/%2F/g, '/');
