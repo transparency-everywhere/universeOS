@@ -52,6 +52,9 @@ function chmod_R($path, $filemode, $dirmode) {
     } 
 }
 
+function log_error($string){
+    return true;
+}
   
 function sanitizeText($data){
         // Fix &entity\n;
@@ -265,6 +268,8 @@ include('classes/class_tasks.php');
 include('classes/class_im.php');
 
 include('classes/class_handlers.php');
+
+include('classes/class_appCenter.php');
 
 
 

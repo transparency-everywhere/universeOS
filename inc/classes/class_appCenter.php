@@ -15,140 +15,154 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
        @author nicZem for transparency-everywhere.com
-       @author pabst for transparency-everywhere.com
  */
-
-class api{
-        public function handleRequest($request, $function){
-            foreach($request AS $parameters){
-                $result[] = $function($parameters);
-            }
-            echo json_encode($result);
-            return true;
+class appCenter{
+    public function getApps(){
+        $db = new db();
+        return $db->shiftResult($db->select('appCenterApps', array('temp',0)),'id');
+    }
+    
+    public function getAppDetailsForUser(){
+        $db = new db();
+        $userApps  = $this->getAppsForUser();
+        
+        $appString = implode(',', $userApps);
+        
+        return $db->shiftResult($db->query("SELECT * FROM appCenterApps WHERE TEMP='0' AND id IN ($appString)"),'id');
+    }
+    public function getAppsForUser(){
+        $results = array();
+        
+        $db = new db();
+        foreach($db->shiftResult($db->select('userApps', array('user_id',getUser()), array('app_id')),'app_id') AS $result){
+            $results[] = $result['app_id'];
         }
-	public function useridToUsername($request){
-		if(is_numeric($request)){
-			//only a single request
-			return useridToUsername($request);
-                }else {
-			//array of requests
-			$userids = json_decode($request,true);
-			
-			foreach($userids as $userid){
-				$ret[$userid] = useridToUsername($userid);
-			}
-			return json_encode($ret);
-		}
-	}
-	public function useridToRealname($request){
-		if(is_numeric($request))
-			//only a single request
-			return useridToRealname($request);
-		else {
-			//array of requests
-			$userids = json_decode($request,true);
-			
-			foreach($userids as $userid){
-				$ret[$userid] = useridToRealname($userid).' ';
-			}
-			
-			return json_encode($ret);
-			
-		}
-	}
-	public function searchUserByString($string, $limit){
-		$q = save($string);
-		$k = save($limit);
-                $db = new db();
-                $results = $db->shiftResult($db->query("SELECT userid, username, realname FROM user WHERE username LIKE '%$q%' OR realname LIKE '%$q%' OR email='$q' OR userid='$q' LIMIT 0,10"), 'userid');
-	
-		foreach($results AS $suggestData) {
-			
-			
-			if(!isset($return[$userid])){		//only return every user once
-				
-				$userid = $suggestData['userid'];
-				$array[] = $suggestData['username'];
-				$array[] = $suggestData['realname'];
-				
-				$return[$userid] = $array;		//add user data tu return array
-				
-			}
-		}
-		
-		return $return;
-	}
-	
-	//returns base64 string with userdata
-	public function getUserPicture($request){
-		//single userid
-		if(is_numeric($request)){
-			$userids[] = save($request);
-			$numeric = true;
-		}else {
-			$numeric = false;
-			//array of requests
-			$userids = $request;
-		}
-			foreach($userids AS $userid){
-				$userClass = new user($userid);
-				$userData = $userClass->getData();
-			
-				//check if user is standard user
-				if(empty($userData['userPicture'])){
-					$src = 'gfx/standardusersm.png';
-				}else{
-					$src = 'upload/userFiles/'.$userid.'/'.$userData['userPicture'];
-				}
-				$mime = mime_content_type($src);
-				
-                                $file = fopen(universeBasePath.'/'.$src, 'r');
-                                $output = base64_encode(fread($file, filesize($src)));
-				$return[$userid] = 'data:'.$mime.';base64,'.$output;
-				
-			}
-			
-			if($numeric){
-				return $return[$request];
-			}else{
-				return json_encode($return);
-			}
-			
-		
-	
-	}
-        //@old
-	public function getLastActivity($request){
-		
-		//single userid
-		if(is_numeric($request)){
-			$userids[] = save($request);
-			$numeric = true;
-		}else {
-			//array of requests
-			$userids = json_decode($request,true);
-		}
-			foreach($userids AS $userid){
-				
-				$userid = save($userid);
-                                $db = new db();
-                                $data = $db->select('user', array('userid', $userid), array('lastactivity'));
-                                
-				$diff = time() - $data['lastactivity'];
-				if($diff < 90){
-					$return[$userid] =  1;
-				}else{
-					$return[$userid] =  0;
-				}
-				
-			}
-			
-			if($numeric){
-				return $return[$request];
-			}else{
-				return json_encode($return);
-			}
-			
-		
-	}
+        return $results;
+    }
+}
+
+
+class appCenterApp{
+    /**
+    * APP ID.
+    *
+    * @var int
+    */
+    public $ID;
+    public function __construct($appCenterId = NULL){
+        
+    }
+    
+    public function prepareAppCreation(){
+        
+        
+        //insert row to get insertID
+        $db = new db();
+        $insertId = $db->insert('appCenterApps', array('temp'=>true));
+        
+        //create archive and folder
+        $class_folders = new folder();
+        $appFolderId = $class_folders->create(uniConfig::$appCenter_folder_id, $insertId, getUser(), 'h');
+        $element = new element();
+        $appArchiveId = $element->create($appFolderId, 'package', 'application', getUser(), 'h');
+        
+        //update row with ids
+        $rows['archive_id'] = $appArchiveId;
+        $rows['folder_id'] = $appFolderId;
+        $db->update('appCenterApps', $rows, array('id',$insertId ));
+        
+        return array('id'=>$insertId, 'archiveId'=>$appArchiveId);
+    }
+    
+    public function getData($appId){
+        
+        $db = new db();
+        return $db->select('appCenterApps', array('id',$appId));
+    }
+    
+    public function addAppToUserDashboard($parameters){
+        $appCenter = new appCenter;
+        $userApps = $appCenter->getAppsForUser();
+        
+        if(!is_numeric($parameters['app_id'])){
+            log_error('no nummeric value given in addAppToUserDashboard:'.$parameters['app_id']);
+            return false;
+        }
+        
+        //check if user already added the app
+        if(in_array($parameters['app_id'], $userApps)){
+            log_error('user tries to add allready added app.'.$parameters['app_id']);
+            return false;
+        }
+        
+        $db = new db();
+        return $db->insert('userApps', array('app_id'=>$parameters['app_id'], 'user_id'=>getUser()));
+    }
+    
+    public function removeAppFromUserDashboard($parameters){
+        $db = new db();
+        return $db->delete('userApps', array('app_id', $parameters['app_id'], '&&' , 'user_id', getUser()));
+    }
+    
+    //updates temp db row
+    //extracts zip archive to application_main folder
+    public function create($appId, $arguments){
+        
+        $insertRows = array();
+        foreach($arguments AS $argumentTitle=>$argumentValue){
+            if(in_array($argumentTitle, array('title', 'version', 'description', 'entryPoint', 'privacy', 'archiveFileId', 'iconFileId'))){
+                $insertRows[$argumentTitle] = $argumentValue;
+            }
+        }
+        //camelCase
+        if($insertRows['entryPoint']){
+            $insertRows['entry_point'] = $insertRows['entryPoint'];
+            unset($insertRows['entryPoint']);
+        }
+        //archive_file_id
+        if($insertRows['archiveFileId']){
+            $insertRows['archive_file_id'] = $insertRows['archiveFileId'];
+            unset($insertRows['archiveFileId']);
+        }
+        //archive_file_id
+        if($insertRows['iconFileId']){
+            $insertRows['icon_file_id'] = $insertRows['iconFileId'];
+            unset($insertRows['iconFileId']);
+        }
+        
+        $insertRows['temp'] = 0;
+        
+        $insertRows['creation_timestamp'] = time();
+        
+        $appData = $this->getData($appId);
+        
+        $folder = new folder($appData['folder_id']);
+        $application_mainFolderPath = universeBasePath . '/' . $folder->getPath().'main';
+        
+        
+        //delete old mainFolderPath and create new
+        system('/bin/rm -rf ' . escapeshellarg($application_mainFolderPath));
+        mkdir($application_mainFolderPath,0755);
+        
+        //get filepath
+        $file = new file($arguments['archiveFileId']);
+        $archive_filePath =  universeBasePath.'/'.$file->getFullFilePath();
+        
+        //extract zip
+        $zip = new ZipArchive;
+        if ($zip->open($archive_filePath) === TRUE) {
+            echo $zip->extractTo($application_mainFolderPath);
+            $zip->close();
+        }else{
+            log_error('zip hasn\'t ben created');
+            return false;
+        }
+        
+        //update dp row
+        $db = new db();
+        $db->update('appCenterApps', $insertRows, array('id', $appId));
+    }
+    public function removeTempApplications(){
+        
+    }
 }
