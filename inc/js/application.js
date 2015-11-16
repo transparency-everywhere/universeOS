@@ -23,108 +23,115 @@ var applications = new function(){
         var apps = [];
         
         //filesystem
-        var app = [];
-        app['title'] = 'filesystem';
-        app['source'] = 'filesystem.js';
-        app['className'] = 'filesystem'; // name of the the javascript class object
-        app['active'] = true;
-        app['position'] = {width: 8, height:  5, top: 0, left: 2};
-        app['icon'] = 'gfx/applicationIcons/white/filesystem.svg';
-        apps[0] = app;
+        apps[0] =   {
+                        'title':'filesystem',
+                        'source':'filesystem.js',
+                        'className':'filesystem',
+                        'active': true,
+                        'position':{width: 8, height:  5, top: 0, left: 2},
+                        'icon':'gfx/applicationIcons/white/filesystem.svg'
+                    };
         
         //reader
-        var app = [];
-        app['title'] = 'Display';
-        app['source'] = 'reader.js'; //display was called reader before
-        app['className'] = 'reader'; // name of the the javascript class object
-        app['active'] = false;
-        app['position'] = {width: 5, height:  4, top: 0, left: 4, hidden: true};
-        app['icon'] = 'gfx/applicationIcons/white/reader.svg';
-        apps[1] = app;
+        apps[1] =  {
+                        'title':'Display',
+                        'source':'reader.js',
+                        'className':'reader',
+                        'active': false,
+                        'position':{width: 5, height:  4, top: 0, left: 4, hidden: true},
+                        'icon':'gfx/applicationIcons/white/filesystem.svg'
+                    };
         
         //telescope
-        var app = [];
-        app['title'] = 'telescope';
-        app['source'] = 'telescope.js';
-        app['className'] = 'telescope'; // name of the the javascript class object
-        app['active'] = true;
-        app['position'] = {width: 8, height:  5, top: 0, left: 2, hidden:true};
-        app['icon'] = 'gfx/applicationIcons/white/telescope.svg';
-        apps[2] = app;
+        apps[2] =  {
+                        'title':'telescope',
+                        'source':'telescope.js',
+                        'className':'telescope',
+                        'active': false,
+                        'position':{width: 8, height:  5, top: 0, left: 2, hidden:true},
+                        'icon':'gfx/applicationIcons/white/filesystem.svg'
+                    };
         
         
         
         
-        if(proofLogin()){
+        if(!proofLogin())
+            return apps;
+        
+        
+        
+        
             //feed
-            var app = [];
-            app['title'] = 'feed';
-            app['source'] = 'feed.js';
-            app['active'] = true;
-            app['className'] = 'feed'; // name of the the javascript class object
-            app['position'] = {width: 2, height:  5, top: 0, left: 0};
-            app['icon'] = 'gfx/applicationIcons/white/feed.svg';
-            apps[3] = app;
-            
             //change position with display
             apps[3] = apps[2];
-            apps[2] = app;
+            apps[2] = {
+                        'title':'feed',
+                        'source':'feed.js',
+                        'className':'feed',
+                        'active': true,
+                        'position':{width: 2, height:  5, top: 0, left: 0},
+                        'icon':'gfx/applicationIcons/white/feed.svg'
+                    };
             
             //chat
-            var app = [];
-            app['title'] = 'chat';
-            app['source'] = 'chat.js';
-            app['className'] = 'chat'; // name of the the javascript class object
-            app['active'] = true;
-            app['position'] = {width: 2, height:  2, top: 0, left: 5, hidden:true};
-            app['icon'] = 'gfx/applicationIcons/white/chat.svg';
-            apps[4] = app;
+            apps[4] =   {
+                        'title':'chat',
+                        'source':'chat.js',
+                        'className':'chat',
+                        'active': true,
+                        'position':{width: 2, height:  2, top: 0, left: 5, hidden:true},
+                        'icon':'gfx/applicationIcons/white/chat.svg'
+                    };
 
-            //settings
-            var app = [];
-            app['title'] = 'settings';
-            app['source'] = 'settings.js';
-            app['className'] = 'settings'; // name of the the javascript class object
-            app['active'] = false;
-            app['position'] = {width: 2, height:  5, top: 0, left: 0};
-            app['icon'] = 'gfx/applicationIcons/white/settings.svg';
-
-            apps[5] = app;
+            apps[5] =   {
+                        'title':'settings',
+                        'source':'settings.js',
+                        'className':'settings',
+                        'active': false,
+                        'position':{width: 2, height:  5, top: 0, left: 0},
+                        'icon':'gfx/applicationIcons/white/settings.svg'
+                    };
 
             //calendar
-            var app = [];
-            app['title'] = 'calendar';
-            app['source'] = 'calendar.js';
-            app['className'] = 'calendar'; // name of the the javascript class object
-            app['active'] = false;
-            app['icon'] = 'gfx/applicationIcons/white/calendar.svg';
-            apps[6] = app;
+            apps[6] =   {
+                        'title':'calendar',
+                        'source':'calendar.js',
+                        'className':'calendar',
+                        'active': false,
+                        'position':{width: 8, height:  5, top: 0, left: 2},
+                        'icon':'gfx/applicationIcons/white/calendar.svg'
+                    };
 
 
             //buddylist
-            var app = [];
-            app['title'] = 'buddylist';
-            app['className'] = 'buddylist'; // name of the the javascript class object
-            app['source'] = 'buddylist.js';
-            app['active'] = true;
-            app['position'] = {width: 2, height:  5, top: 0, left: 9};
-            app['icon'] = 'gfx/applicationIcons/white/buddylist.svg';
-            //apps[7] = app;
-            
+            //
             //change places with reader, to use preloading of buddy data to save requests
             apps[7] = apps[1];
-            apps[1] = app;
+            apps[1] =   {
+                        'title':'buddylist',
+                        'source':'buddylist.js',
+                        'className':'buddylist',
+                        'active': true,
+                        'position':{width: 2, height:  5, top: 0, left: 9},
+                        'icon':'gfx/applicationIcons/white/buddylist.svg'
+                    };
             
-            //buddylist
-            var app = [];
-            app['title'] = 'player';
-            app['className'] = 'player'; // name of the the javascript class object
-            app['source'] = 'player.js';
-            app['active'] = true;
-            app['position'] = {width: 2, height:  5, top: 0, left: 9};
-            app['icon'] = 'gfx/applicationIcons/white/player.svg';
-            apps[8] = app;
-        }
+            apps[8] =   {
+                        'title':'player',
+                        'source':'player.js',
+                        'className':'player',
+                        'active': true,
+                        'position':{width: 2, height:  5, top: 0, left: 9},
+                        'icon':'gfx/applicationIcons/white/player.svg'
+                    };
+            apps[8] =   {
+                        'title':'App Center',
+                        'source':'appCenter.js',
+                        'className':'appCenter',
+                        'active': false,
+                        'position':{width: 8, height:  5, top: 0, left: 2},
+                        'icon':'gfx/applicationIcons/white/player.svg'
+                    };
         
         return apps;
     };
@@ -176,13 +183,16 @@ var applications = new function(){
               
 var application = function(id){
         this.id = id;
-	this.create = function(title, type, value, style){
+	this.create = function(title, type, value, options){
             var id = this.id;
             var content;
             if(type === 'html'){
                 content = value;
             }else if(type === 'url'){
                 content = api.query(value,{});
+            }else if(type === 'appCenterApplication'){
+                //@sec
+                content = "<iframe src=\""+value.path+"\" sandbox></iframe>";
             }
             
 		var windowStyle = '';
@@ -192,35 +202,35 @@ var application = function(id){
                 //for width, height, top, left
                 //if value is not nummeric(eg '222px') use value,
                 //otherwise use pixelraster(see gui class)
-		if(typeof style['width'] != 'undefined'){
-                    if(isNaN(style['width'])){
-			windowStyle +='width:'+style['width']+';';
+		if(typeof options['width'] != 'undefined'){
+                    if(isNaN(options['width'])){
+			windowStyle +='width:'+options['width']+';';
                     }else{
-                        windowStyle +='width:'+gui.getRasterWidth(style['width'])+'px;';
+                        windowStyle +='width:'+gui.getRasterWidth(options['width'])+'px;';
                     }
 		}
                 
-		if(typeof style['height'] != 'undefined'){
-                    if(isNaN(style['width'])){
-			windowStyle +='height:'+style['width']+';';
+		if(typeof options['height'] != 'undefined'){
+                    if(isNaN(options['width'])){
+			windowStyle +='height:'+options['width']+';';
                     }else{
-                        windowStyle +='height:'+gui.getRasterHeight(style['height'])+'px;';
+                        windowStyle +='height:'+gui.getRasterHeight(options['height'])+'px;';
                     }
 		}
                 
-		if(typeof style['top'] != 'undefined'){
-                    if(isNaN(style['top'])){
-			windowStyle +='top:'+style['top']+';';
+		if(typeof options['top'] != 'undefined'){
+                    if(isNaN(options['top'])){
+			windowStyle +='top:'+options['top']+';';
                     }else{
-                        windowStyle +='top:'+gui.getRasterMarginTop(style['top'])+'px;';
+                        windowStyle +='top:'+gui.getRasterMarginTop(options['top'])+'px;';
                     }
 		}
                 
-		if(typeof style['left'] != 'undefined'){
-                    if(isNaN(style['left'])){
-			windowStyle +='left:'+style['left']+';';
+		if(typeof options['left'] != 'undefined'){
+                    if(isNaN(options['left'])){
+			windowStyle +='left:'+options['left']+';';
                     }else{
-                        windowStyle +='left:'+gui.getRasterMarginLeft(style['left'])+'px;';
+                        windowStyle +='left:'+gui.getRasterMarginLeft(options['left'])+'px;';
                     }
 		}
                 
@@ -234,7 +244,7 @@ var application = function(id){
 			output += '<p class="windowMenu">';
 				output += '<a href="javascript:'+id+'.applicationVar.hide();"><span class="icon  dark-icon dark-minimize"></span><span class="icon blue-icon blue-minimize"></span></a>';
 				output += '<a href="#" onclick="'+id+'.applicationVar.fullscreen();" class="fullScreenIcon"><span class="icon dark-icon dark-maximize"></span><span class="icon blue-icon blue-maximize"></span></a>';
-                                output += '<a href="javascript:'+id+'.applicationVar.hide();"><span class="icon dark-icon dark-close"></span><span class="icon blue-icon blue-close"></span></a>';
+                                output += '<a href="javascript:'+id+'.applicationVar.close();"><span class="icon dark-icon dark-close"></span><span class="icon blue-icon blue-close"></span></a>';
 			output += '</p>';
 		output += '</header>';
 		output += '<div class="inhalt autoFlow" id="'+id+'Main">'+content+'</div>';
@@ -243,13 +253,17 @@ var application = function(id){
 		
 		$('#bodywrap').append(output);
                 
-		if(typeof style['hidden'] == 'undefined' || style['hidden'] !== true){
+		if(typeof options['hidden'] == 'undefined' || options['hidden'] !== true){
                         $('#'+id+'.fenster').fadeIn(1000);
 		}
                   
+                if(typeof options['onClose'] == 'function'){
+                    this.onClose = options['onClose'];
+                };
 		
               init.draggableApplications();
               init.resizableApplications();
+              init.applicationOnTop();
               this.onTop();
 	};
 	
@@ -272,6 +286,12 @@ var application = function(id){
           var id = this.id;
           $("#" + id +"").hide();
 	};
+        
+        this.close = function(){
+            if(typeof this.onClose === 'function'){
+                this.onClose();
+            };
+        };
 	
 	this.fullscreen = function(){
             var moduleId = this.id;
