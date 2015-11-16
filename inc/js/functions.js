@@ -210,6 +210,7 @@ var init = new function(){
 	};
 	
 };
+
 var session = new function(){
     this.getGUID = function(){
         //https://andywalpole.me/#!/blog/140739/using-javascript-create-guid-from-users-browser-information
@@ -356,6 +357,7 @@ var session = new function(){
 
 var universe = new function(){
     this.notificationArray = [];
+    this.applications = [];
     this.reloadState = true;
     this.init = function(){
         
@@ -1198,6 +1200,16 @@ function getUser(){
     return User.userid;
 }
 
+
+//any string to camelize. 
+//thx to CMS:http://stackoverflow.com/questions/2970525/converting-any-string-into-camel-case
+function camelize(str) {
+  return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
+    return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
+  }).replace(/\s+/g, '');
+}
+
+
 function showProfile(userid){
     User.showProfile(userid);
 };
@@ -1474,7 +1486,7 @@ var search = new function(){
     };
 };
 
-//different to the one in the guest.js (the one in the guest.js needs to be deleted and the functions on offline page(login, updatepass need to be checked...))
+//different to the one in the guest.js (the one in the guest.js needs to be deleted and the functions on offline page(login, updatepass needs to be checked...))
 var cypher = new function(){
 	
 	this.generateRand = function(){
@@ -2153,42 +2165,7 @@ function listView() {
 }
 
 
-//wrapper for uploadify
-function initUploadify(id, uploader, element, timestamp, token, multiple){
-    
-    if(typeof multiple === 'undefined'){
-        multiple = true;
-    }
-		
-	    $(function() {
-	            $(id).uploadify({
-	                    'formData'     : {
-	                            'timestamp' : timestamp,
-	                            'token'     : token,
-	                            'element'   : element
-	                    },
-	                    'swf'      : 'inc/plugins/uploadify/uploadify.swf',
-	                    'uploader' : uploader,
-				        'onUploadSuccess' : function(file, data, response) {
-				        	
-				        	if(response){
-                                                        //if multiple = false empty file list on every upload
-                                                        
-                                                        if(!multiple){
-                                                            $('.tempFilelist').html('');
-                                                        }
-                                                    
-                                                        //@sec
-				        		eval(data); //no esta bien! que?
-				        	}
-				        },
-                                        'onUploadError' : function(file, errorCode, errorMsg, errorString) {
-                                            alert('The file ' + file.name + ' could not be uploaded: ' + errorString);
-                                        }
-	            });
-	    });
-                                
-	}
+
 	
 
 
