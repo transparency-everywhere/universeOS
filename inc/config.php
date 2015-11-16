@@ -6,7 +6,12 @@ error_reporting(0);
 
 
 //include dbConfig
-include("config/uni_config.php");
+$config_class_file_path = dirname(__FIlE__).'/classes/uni_config.php';
+if(file_exists($config_class_file_path)){
+    include($config_class_file_path);
+}else{
+    die('there is no config file. Please run the installer or check if there is anything wrong with your server');
+}
 
 //serverstuf
 $universeURL = 'http://localhost/universe'; //url of current installation
