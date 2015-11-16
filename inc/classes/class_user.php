@@ -463,9 +463,10 @@ function getUser(){
 function hasRight($type){
 	  //checks if user has right to ...
 	  //whis is defined in config.php
+          if(!getUser())
+              return false;
 	  $db = new db();
-          
-	  $userData = $db->select('user', array('userid', getUser()), array('usergroup'));
+	  $userData = $db->select('user', array('userid', getUser()), array('userid','usergroup'));
           $userGroupData = $db->select('userGroups', array('id', $userData['usergroup']));
           
 	  if($userGroupData[$type] == "1"){
