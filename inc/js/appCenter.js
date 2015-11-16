@@ -226,12 +226,16 @@ var appCenter = new function(){
         var appData = this.getAppData(app_id);
         var path = './upload/'+folders.getPath(appData['folder_id'])+'/main/'+appData['entry_point'];
         
-        console.log(path);
         
-        this.applicationVar = new application(camelize(appData['title']));
-	this.applicationVar.create(appData['title'], 'appCenterApplication', {path:path},{width: 6, height:  7, top: 2, left: 3});
+        
+        var appId = universe.applications.length;
+        var loadedApplication = new application(camelize(appData['title']));
+	loadedApplication.create('universe.applications['+appId+']', 'appCenterApplication', {path:path},{width: 6, height:  7, top: 2, left: 3});
 	this.showApplicationOverview();
-        universe.applications.push(application);
+        
+        
+        
+        universe.applications.push(loadedApplication);
     };
     
     this.show = function(){

@@ -15,12 +15,13 @@ limitations under the License.
 */
 
 function save($str){
-    return escape::sql($str);
+    return ($str);
 }
 
 class escape{
     function sql($string){
         //@speed
+        //@sec
         $db = new db();
         return $db->escape($string);
     }
@@ -28,16 +29,20 @@ class escape{
 
 class db{
         private $pdoDB;
-        function __construct(){
-            $this->pdoDB = new PDO('mysql:host='.uni_config_database_host.';dbname='.uni_config_database_name.';charset=utf8', uni_config_database_user, uni_config_database_password);
+        public function __construct(){
+            try{
+                $this->pdoDB = new PDO('mysql:host='.uni_config_database_host.';dbname='.uni_config_database_name.';charset=utf8', uni_config_database_user, uni_config_database_password);
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+            }
         }
-        public function escape($string){
+        public static function escape($string){
             //@sec
-            return substr($this->pdoDB->quote($string), 1, -1);
+            $db = new db();
+            return substr($db->pdoDB->quote($string), 1, -1);
         }
         public function generateWhere($primary){
             if(is_array($primary)){
-                
                 //if array length is 2 the basic statement is used
                 if(count($primary) == 2){
                     $return = "WHERE `".$primary[0]."`='".save($primary[1])."'";
@@ -49,11 +54,13 @@ class db{
                     while(isset($primary[$arrayCounter])){
                         $return .= '`'.$primary[$arrayCounter];
                         $arrayCounter++;
-                        $return .= "`='".save($primary[$arrayCounter])."' ".$primary[$arrayCounter+1]." ";
+                        $return .= "`='".save($primary[$arrayCounter])."' ";
                         $arrayCounter++;
+                        if(isset($primary[$arrayCounter])){
+                            $return = $primary[$arrayCounter]." ";
+                        }
                         $arrayCounter++;
                     }
-
                 }
             }else{
                 return 'WHERE '.$primary;
@@ -92,7 +99,7 @@ class db{
 
             $query = "(".implode(',', $query).")";
             $values = "(".implode(',', $values).");";
-
+            
             $result = $this->pdoDB->exec("INSERT INTO `$table` $query VALUES $values");
             return $this->pdoDB->lastInsertId();
 	}
@@ -151,12 +158,13 @@ class db{
             }
             
             if(!empty($limit)){
-                $limit = escape::sql($limit);
+                $limit = mysql_real_escape_string($limit);
                 $LIMIT = "LIMIT $limit";
             }else{
                 $LIMIT = "";
             }
             
+                //echo "SELECT $columnQuery FROM `$table` $WHERE $ORDER $LIMIT";
                 $query = "SELECT $columnQuery FROM `$table` $WHERE $ORDER $LIMIT";
                 foreach($this->pdoDB->query($query) AS $data){
                     $return[] = $data;

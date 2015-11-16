@@ -25,10 +25,10 @@ if(!isset($_SESSION)){
     session_start(); 
 }
 
-define('uni_config_database_host', $server);
-define('uni_config_database_user', $user);
-define('uni_config_database_password', $password);
-define('uni_config_database_name', $db);
+define('uni_config_database_host', uniConfig::$db_server);
+define('uni_config_database_user', uniConfig::$db_user);
+define('uni_config_database_password',  uniConfig::$db_password);
+define('uni_config_database_name',  uniConfig::$db_name);
 
 //$mysqli = new mysqli("$server", "$user", "$password", "$db");
 //if ($mysqli->connect_errno) {
