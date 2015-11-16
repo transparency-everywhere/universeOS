@@ -12,6 +12,30 @@
  * @author niczem
  */
 class universe {
+    
+    public function getConfig(){
+        return get_class_vars('uniConfig');
+    }
+    
+    public function createConfig($options){
+		
+		$Datei = universeBasePath."/inc/classes/uni_config.php";
+                
+                $varOutput = '';
+                foreach($options AS $optionTitle=>$option){
+                    $varOutput .= '    public static $'.$optionTitle.' = \''.$option."';\n";
+                }
+                
+$Text = '<?php
+class uniConfig {
+'.$varOutput.'
+} ?>';
+		unlink($Datei);
+		$File = fopen($Datei, "w");
+		fwrite($File, $Text);
+		fclose($File);
+    }
+    
     //put your code here
     public function init(){
 	if(proofLogin()){
