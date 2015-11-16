@@ -135,7 +135,6 @@ var applications = new function(){
         
         return apps;
     };
-    
     /**
     * Loads and initializes scripts which are defined in applications.getList
     */
@@ -178,6 +177,19 @@ var applications = new function(){
                     window[value.title].applicationVar.hide();
         });
     };
+    
+    
+    this.updateApplicationPositions = function(applicationObjects){
+        var self = this;
+        $.each(applicationObjects,function(index, value){
+            self.setSize = function(){
+                
+            };
+        });
+    };
+    this.setSize = function(title, attributes){
+        
+    };
 };
 
               
@@ -185,16 +197,19 @@ var application = function(id){
         this.id = id;
 	this.create = function(title, type, value, options){
             var id = this.id;
+            var applicationDomID =  this.id //used as id attribute of .application
+            
             var content;
             if(type === 'html'){
                 content = value;
             }else if(type === 'url'){
                 content = api.query(value,{});
             }else if(type === 'appCenterApplication'){
+                var applicationDomID =  gui.generateId() //used as id attribute of .application
+                this.id = applicationDomID;
                 //@sec
                 content = "<iframe src=\""+value.path+"\" sandbox></iframe>";
             }
-            
 		var windowStyle = '';
 		
                 
@@ -238,7 +253,7 @@ var application = function(id){
                 
 		
 		
-		var output = '<div class="fenster" id="'+id+'" style="'+windowStyle+'">';
+		var output = '<div class="fenster" id="'+applicationDomID+'" style="'+windowStyle+'">';
 			output += '<header class="titel">';
 			output += '<p>'+title+'&nbsp;</p>';
 			output += '<p class="windowMenu">';
@@ -247,14 +262,14 @@ var application = function(id){
                                 output += '<a href="javascript:'+id+'.applicationVar.close();"><span class="icon dark-icon dark-close"></span><span class="icon blue-icon blue-close"></span></a>';
 			output += '</p>';
 		output += '</header>';
-		output += '<div class="inhalt autoFlow" id="'+id+'Main">'+content+'</div>';
+		output += '<div class="inhalt autoFlow" id="'+applicationDomID+'Main">'+content+'</div>';
 		output += '</div>';
 
 		
 		$('#bodywrap').append(output);
                 
 		if(typeof options['hidden'] == 'undefined' || options['hidden'] !== true){
-                        $('#'+id+'.fenster').fadeIn(1000);
+                        $('#'+applicationDomID+'.fenster').fadeIn(1000);
 		}
                   
                 if(typeof options['onClose'] == 'function'){

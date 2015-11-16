@@ -227,10 +227,10 @@ var appCenter = new function(){
         var path = './upload/'+folders.getPath(appData['folder_id'])+'/main/'+appData['entry_point'];
         
         
-        
         var appId = universe.applications.length;
-        var loadedApplication = new application(camelize(appData['title']));
-	loadedApplication.create('universe.applications['+appId+']', 'appCenterApplication', {path:path},{width: 6, height:  7, top: 2, left: 3});
+        var loadedApplication = {};
+        loadedApplication.applicationVar = new application('universe.applications['+appId+']');
+	loadedApplication.applicationVar.create(appData['title'], 'appCenterApplication', {path:path},{width: 6, height:  7, top: 2, left: 3});
 	this.showApplicationOverview();
         
         
