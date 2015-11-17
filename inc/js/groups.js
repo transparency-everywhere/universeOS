@@ -138,6 +138,7 @@ var groups = new function(){
 
                                 output += '<li data-type="info">Info</li>';
                                 output += '<li data-type="members">Members</li>';
+                                output += '<li data-type="members">Calendar</li>';
                             output += '</ul>';
                             output += '<div class="content">';
                                 output += '<div class="profile_tab files_tab">'+filesystem.showFileBrowser(groupdata['homeFolder'])+'</div>';

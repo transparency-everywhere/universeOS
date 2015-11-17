@@ -23,3 +23,7 @@ echo is_writable('upload/');
 echo is_writable('upload/userFiles');
 echo is_writable('views');
 
+
+$universe = new universe();
+echo $universe->createConfig($universe->getConfig());
+
