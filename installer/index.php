@@ -270,6 +270,9 @@ $universe_indexSalt = \''.$indexSalt.'\';
     case 'database':
         include('database.php');
         break;
+    case 'keys':
+        include('keys.php');
+        break;
     case 'success':
     
         $install->run();

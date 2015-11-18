@@ -1,4 +1,4 @@
-<form action="?page=keys" method="post">
+<form action="?page=success" method="post">
 <header>
 <h2>Database</h2>
 </header>
@@ -52,8 +52,8 @@
 	</table>
 <p> </p>
 <div class="controlBar">
-	<a href="installer.php" class="btn pull-left">Back</a>
-	<input type="submit" class="btn btn-info pull-right" value="Continue">
+	<a href="index.php" class="btn pull-left">Back</a>
+	<input type="submit" class="btn btn-info pull-right" value="Run Installer">
 </div>
 <p>&nbsp; </p>
 </form>
