@@ -10,7 +10,7 @@ $config_class_file_path = dirname(__FIlE__).'/classes/uni_config.php';
 if(file_exists($config_class_file_path)){
     include($config_class_file_path);
 }else{
-    die('there is no config file. Please run the installer or check if there is anything wrong with your server');
+    die('There is no config file. Please run the <a href="./installer/" title="Installer">Installer</a> or check if there is anything wrong with your server');
 }
 
 //serverstuf
