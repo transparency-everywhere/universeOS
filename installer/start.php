@@ -1,5 +1,5 @@
 <header>
-    <h2><img src="gfx/guest/guest_header.svg" height="40">&nbsp;Installer</h2>
+    <h2><img src="../gfx/guest/guest_header.svg" alt="universe" width="100">&nbsp;Installer</h2>
 </header>
 	
 <div class="content">
