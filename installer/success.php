@@ -5,5 +5,7 @@
 <div class="content">
 <p>You successfully installed the UniverseOS.</p>
 <p></p>
-<p>Use it wise!</p>
+<p>Please remove the install dir!</p>
+<p></p>
+<p>Use <a href="../" title="your universe installation">your universe</a> wise!</p>
 </div>

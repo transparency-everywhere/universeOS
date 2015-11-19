@@ -21,6 +21,9 @@
   
   <?php 
   include('installConfig.php');
+  
+                $parentparentdir=realpath('../');
+                define('universeBasePath', $parentparentdir);
   session_start();
   
 	
@@ -116,50 +119,6 @@
 		
 	}
 	
-	function createDbConfigFile(){
-		
-		$serverdb = $_SESSION['server'];
-		$userdb = $_SESSION['user'];
-		$passworddb = $_SESSION['password'];
-		$dbname = $_SESSION['db'];
-		
-		$Datei = "inc/config/test.php";
-$Text = '<?php
-$server = \''.$serverdb.'\';
-$user = \''.$userdb.'\';
-$password = \''.$passworddb.'\';
-$db = \''.$dbname.'\';
-?>';
-		
-		$File = fopen($Datei, "w");
-		fwrite($File, $Text);
-		fclose($File);
-
-		
-	}
-	
-	function createServerConfigFile(){
-		
-		$URL = $_SESSION['URL'];
-		$salt = $_SESSION['salt'];
-		if(!empty($_SESSION['indexSalt']))
-			$indexSalt = $_SESSION['indexSalt'];
-		
-		$Datei = "inc/config/serverConfig.php";
-$Text = '<?php
-$universe_URL = \''.$URL.'\';
-$universe_title = \''.$title.'\';
-$universe_salt = \''.$salt.'\';
-$universe_indexSalt = \''.$indexSalt.'\';
-?>';
-		
-		$File = fopen($Datei, "w");
-		fwrite($File, $Text);
-		fclose($File);
-
-		
-	}
-	
 	function downloadAndUnpack(){
 		ini_set('error_reporting', E_ALL);
 
@@ -178,39 +137,44 @@ $universe_indexSalt = \''.$indexSalt.'\';
 	}
 	
 	function createUniverseDB(){
-		
+                $path = universeBasePath.'/__db.sql';
+                include_once('../inc/config.php');
+                include_once('../inc/functions.php');
+		$db = new db();
+                $db->importFile($path);
 	}
 	
 	function proofRegistration(){
 		
 	}
 	
-	
-	function run(){
-		
-		if($this->checkRequirements()){
-			$this->downloadAndUnpack();
-			$this->createDbConfigFile();
-			$this->createServerConfigFile();
+	function run($options){
+            
+            //, 'uni_basepath'=>$_POST['db_name'], 'uni_sysfolder_folder_id'=>$uni_sysfolder_folder_id, 'appCenter_folder_id'=>$appCenter_folder_id, 
+		if($this->checkRequirements($options['db_server'], $options['db_user'], $options['db_password'], $options['db_name'], $options['universe_title'],  $options['universe_url'],  $options['universe_salt'])){
+
+                        include_once('../inc/classes/class_universe.php');
+                        
+                        //create first config to create folders
+                        $universe = new universe();
+                        $universe->createConfig($options);
+                        $this->createUniverseDB();
+                        
+                        //
+			//$this->createServerConfigFile();
 			
 		}
 		
 	}
-	}
+}
 	
 	
 	
 	$install = new install();
 	
 	if(isset($_POST['submitAndInstall'])){
-		
-		$install->run();
-		
-		
-		
-	
-		
-		
+		$options = array('db_server'=>$_POST['host'],'db_user'=>$_POST['dbUser'], 'db_password'=>$_POST['dbPassword'], 'db_name'=>$_POST['dbName'], 'universe_title'=>$_POST['universeTitle']);
+		$install->run($options);
 	}
   
     if(empty($_GET['page']))
@@ -275,7 +239,9 @@ $universe_indexSalt = \''.$indexSalt.'\';
         break;
     case 'success':
     
-        $install->run();
+		$options = array('db_server'=>$_POST['host'],'db_user'=>$_POST['dbUser'], 'db_password'=>$_POST['dbPassword'], 'db_name'=>$_POST['dbName'], 'universe_title'=>$_POST['universeTitle'], 'universe_salt'=>$_POST['salt'], 'universe_url'=>$_POST['URL']);
+                
+		$install->run($options);
         include('success.php');
         
         

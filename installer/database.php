@@ -12,6 +12,10 @@
 			<td><input type="text" name="universeTitle" placeholder="The title of your universe"></td>
 		</tr>
 		<tr>
+			<td>universe base path:</td>
+			<td><input type="text" name="basePath" placeholder="Basepath"></td>
+		</tr>
+		<tr>
 			<td>Installation URL:</td>
 			<td><input type="text" name="URL" placeholder="The URL under which your universe will be found"></td>
 		</tr>
