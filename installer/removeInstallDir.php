@@ -15,11 +15,11 @@
 //limitations under the License.
 //
 //@author nicZem for Tranpanrency-everywhere.com
-        if(is_writable_recursive('../'))
+        if(is_writable('../'))
             system('/bin/rm -rf ' . escapeshellarg('../installer'));
 
 ?>
 
         <script>
-            top.window.location.href='panel.html';
+            top.window.location.href='../index.php';
         </script>
