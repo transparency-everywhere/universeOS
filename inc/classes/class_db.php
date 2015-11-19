@@ -41,6 +41,25 @@ class db{
             $db = new db();
             return substr($db->pdoDB->quote($string), 1, -1);
         }
+        public function importFile($filePath){
+        // works regardless of statements emulation
+        $this->pdoDB->setAttribute(PDO::ATTR_EMULATE_PREPARES, 0);
+        $file = file_get_contents($filePath, true);
+//        $sql = "
+//        DELETE FROM car; 
+//        INSERT INTO car(name, type) VALUES ('car1', 'coupe'); 
+//        INSERT INTO car(name, type) VALUES ('car2', 'coupe');
+//        ";
+
+        try {
+            $this->pdoDB->exec($file);
+        }
+        catch (PDOException $e)
+        {
+            echo $e->getMessage();
+            die();
+        }
+        }
         public function generateWhere($primary){
             if(is_array($primary)){
                 //if array length is 2 the basic statement is used
