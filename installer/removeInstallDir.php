@@ -15,8 +15,8 @@
 //limitations under the License.
 //
 //@author nicZem for Tranpanrency-everywhere.com
-
-        system('/bin/rm -rf ' . escapeshellarg('../installer'));
+        if(is_writable_recursive('../'))
+            system('/bin/rm -rf ' . escapeshellarg('../installer'));
 
 ?>
 
