@@ -1,7 +1,7 @@
 <?php
 
-include('classes/class_user.php');
-include('classes/class_debug.php');
+include_once('classes/class_user.php');
+include_once('classes/class_debug.php');
   $userid = getUser();
   $time = time();
 
@@ -183,93 +183,93 @@ function json_clean_decode($json, $assoc = false, $depth = 512, $options = 0) {
 }
 
 
-include('classes/class_api.php');
+include_once('classes/class_api.php');
 
-include('classes/class_image.php');
+include_once('classes/class_image.php');
  
-include('classes/class_xml.php');
+include_once('classes/class_xml.php');
 
-include('classes/class_rss.php');
+include_once('classes/class_rss.php');
 
-include('classes/class_salt.php');
+include_once('classes/class_salt.php');
 
-include('classes/class_gui.php');
+include_once('classes/class_gui.php');
 
-include('classes/class_messages.php');
+include_once('classes/class_messages.php');
 
-include('classes/class_userPrivacy.php');
+include_once('classes/class_userPrivacy.php');
 
    
 //fav
 //fav
 //fav
-include('classes/class_fav.php');
+include_once('classes/class_fav.php');
 
 //personal Events
 //personal Events
 //personal Events
-include('classes/class_personalEvents.php');
+include_once('classes/class_personalEvents.php');
     
 //comments
 //comments
 //comments	
-include('classes/class_comments.php');
+include_once('classes/class_comments.php');
 
 //groups
 //groups
 //groups
-include('classes/class_groups.php');
+include_once('classes/class_groups.php');
 
 //basic universe stuff
-include('classes/class_item.php');
+include_once('classes/class_item.php');
 
-include('classes/class_buddylist.php');
+include_once('classes/class_buddylist.php');
 
-include('classes/class_feed.php');
+include_once('classes/class_feed.php');
 
-include('classes/class_universe.php');
+include_once('classes/class_universe.php');
    
-include('classes/class_db.php');
+include_once('classes/class_db.php');
     
-include('classes/class_privacy.php');
+include_once('classes/class_privacy.php');
  
-include('classes/class_playlists.php');
+include_once('classes/class_playlists.php');
     
-include('classes/class_files.php');
+include_once('classes/class_files.php');
 
-include('classes/class_youtube.php');
+include_once('classes/class_youtube.php');
     
-include('classes/class_links.php');
+include_once('classes/class_links.php');
 	
-include('classes/class_shortcuts.php');
+include_once('classes/class_shortcuts.php');
 
-include('classes/class_folder.php');
+include_once('classes/class_folder.php');
 
-include('classes/class_element.php');
+include_once('classes/class_element.php');
 
-include('classes/class_fileSystem.php');
+include_once('classes/class_fileSystem.php');
 
-include('classes/class_UFF.php');
+include_once('classes/class_UFF.php');
 
-include('classes/class_contextMenu.php');
+include_once('classes/class_contextMenu.php');
 
-include('classes/class_dashboard.php');
+include_once('classes/class_dashboard.php');
 
-include('classes/class_signatures.php');
+include_once('classes/class_signatures.php');
 
-include('classes/class_sessionHashes.php');
+include_once('classes/class_sessionHashes.php');
 
-include('classes/class_sec.php');
+include_once('classes/class_sec.php');
 
-include('classes/class_events.php');
+include_once('classes/class_events.php');
 
-include('classes/class_tasks.php');
+include_once('classes/class_tasks.php');
 
-include('classes/class_im.php');
+include_once('classes/class_im.php');
 
-include('classes/class_handlers.php');
+include_once('classes/class_handlers.php');
 
-include('classes/class_appCenter.php');
+include_once('classes/class_appCenter.php');
 
 
 

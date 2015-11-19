@@ -30,7 +30,11 @@ $Text = '<?php
 class uniConfig {
 '.$varOutput.'
 } ?>';
-		unlink($Datei);
+
+
+                if(file_exists($Datei))
+                    unlink($Datei);
+                
 		$File = fopen($Datei, "w");
 		fwrite($File, $Text);
 		fclose($File);
