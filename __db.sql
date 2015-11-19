@@ -533,6 +533,66 @@ CREATE TABLE IF NOT EXISTS `user_privacy_rights` (
 INSERT INTO `user_privacy_rights` (`userid`, `profile_realname`, `profile_fav`, `profile_files`, `profile_playlists`, `profile_activity`, `buddylist`, `info`, `groups`, `receive_messages`) VALUES
 (1, 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p');
 
+
+
+--
+-- Tabellenstruktur für Tabelle `appCenterApps`
+--
+
+CREATE TABLE IF NOT EXISTS `appCenterApps` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) COLLATE utf8_bin NOT NULL,
+  `description` text COLLATE utf8_bin NOT NULL,
+  `version` varchar(255) COLLATE utf8_bin NOT NULL,
+  `entry_point` varchar(255) COLLATE utf8_bin NOT NULL,
+  `privacy` text COLLATE utf8_bin NOT NULL,
+  `folder_id` int(11) NOT NULL,
+  `archive_id` int(11) NOT NULL,
+  `archive_file_id` int(11) NOT NULL,
+  `icon_file_id` int(11) NOT NULL,
+  `temp` tinyint(1) NOT NULL,
+  `creation_timestamp` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `userApps`
+--
+
+CREATE TABLE IF NOT EXISTS `userApps` (
+  `app_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Indizes der exportierten Tabellen
+--
+
+--
+-- Indizes für die Tabelle `appCenterApps`
+--
+ALTER TABLE `appCenterApps`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `userApps`
+--
+ALTER TABLE `userApps`
+  ADD PRIMARY KEY (`app_id`,`user_id`),
+  ADD UNIQUE KEY `app_id` (`app_id`,`user_id`);
+
+--
+-- AUTO_INCREMENT für exportierte Tabellen
+--
+
+--
+-- AUTO_INCREMENT für Tabelle `appCenterApps`
+--
+ALTER TABLE `appCenterApps`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
 --
 -- Indexes for dumped tables
 --
