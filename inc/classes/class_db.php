@@ -36,6 +36,9 @@ class db{
                 echo $e->getMessage();
             }
         }
+        public function __destruct() {
+            $this->pdoDB = null;
+        }
         public static function escape($string){
             //@sec
             $db = new db();

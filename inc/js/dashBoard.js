@@ -46,7 +46,7 @@ var dashBoard = new function(){
                 $.each(applications.getList(),function(index,value){
                     content+= "<li onclick=\"applications.show('"+value.className+"');\" onmouseup=\"closeDockMenu()\"><img src=\""+value.icon+"\" border=\"0\" height=\"32\" width=\"32\">"+value.title+"</li>";
                 });
-                if(proofLogin())
+                if(proofLogin()&&typeof appCenter !== 'undefined')
                     $.each(appCenter.getAppDetailsForUser(), function(index,value){
                         content+= "<li onclick=\"appCenter.loadApplication('"+value.id+"');\" onmouseup=\"closeDockMenu()\"><img src=\""+filesystem.getFilePath(value.icon_file_id)+"\" border=\"0\" height=\"32\" width=\"32\">"+value.title+"</li>";
 

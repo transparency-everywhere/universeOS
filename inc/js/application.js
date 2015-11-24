@@ -124,14 +124,14 @@ var applications = new function(){
                         'position':{width: 2, height:  5, top: 0, left: 9},
                         'icon':'gfx/applicationIcons/white/player.svg'
                     };
-            apps[8] =   {
-                        'title':'App Center',
-                        'source':'appCenter.js',
-                        'className':'appCenter',
-                        'active': false,
-                        'position':{width: 8, height:  5, top: 0, left: 2},
-                        'icon':'gfx/applicationIcons/white/player.svg'
-                    };
+//            apps[8] =   {
+//                        'title':'App Center',
+//                        'source':'appCenter.js',
+//                        'className':'appCenter',
+//                        'active': false,
+//                        'position':{width: 8, height:  5, top: 0, left: 2},
+//                        'icon':'gfx/applicationIcons/white/player.svg'
+//                    };
         
         return apps;
     };

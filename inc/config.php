@@ -29,6 +29,7 @@ define('uni_config_database_host', uniConfig::$db_server);
 define('uni_config_database_user', uniConfig::$db_user);
 define('uni_config_database_password',  uniConfig::$db_password);
 define('uni_config_database_name',  uniConfig::$db_name);
+define('universeBasePath',  uniConfig::$uni_basepath);
 
 //$mysqli = new mysqli("$server", "$user", "$password", "$db");
 //if ($mysqli->connect_errno) {
