@@ -21,7 +21,7 @@ $timestamp = time();
 
 
 //start session
-if(!isset($_SESSION)){ 
+if(!isset($_SESSION)){
     session_start(); 
 }
 
