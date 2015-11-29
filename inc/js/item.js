@@ -112,8 +112,11 @@ var item = new function(){
     }
     this.showScoreButton = function(type, itemId){
         var score = this.getScore(type, itemId);
+
         if(typeof itemId === 'object'){
             var result = [];
+            if(score === null)
+                return result;
             $.each(score, function(index, value){
                 var currentType = type,
                     currentItemId = itemId;
