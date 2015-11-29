@@ -254,7 +254,7 @@
     
 		$options = array('db_server'=>$_POST['host'],'db_user'=>$_POST['dbUser'], 'db_password'=>$_POST['dbPassword'], 'db_name'=>$_POST['dbName'], 'universe_title'=>$_POST['universeTitle'], 'uni_basepath'=>$_POST['basePath']);
 		
-		//$install->run($options);
+		$install->run($options);
         include('success.php');
         
         
