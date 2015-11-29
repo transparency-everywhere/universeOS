@@ -13,7 +13,7 @@
 		</tr>
 		<tr>
 			<td>universe base path:</td>
-			<td><input type="text" name="basePath" placeholder="Basepath"></td>
+			<td><input type="text" name="basePath" value="<?php echo dirname(realpath('../')); ?>" placeholder="Basepath"></td>
 		</tr>
 		<tr>
 			<td>Installation URL:</td>

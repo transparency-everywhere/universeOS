@@ -22,8 +22,19 @@
   <?php 
   include('installConfig.php');
   
+
+
+
                 $parentparentdir=realpath('../');
                 define('universeBasePath', $parentparentdir);
+
+  if(!is_writable(universeBasePath.'/inc/classes')){
+  	die('inc/classes needs to be writable');
+  }
+  if(!is_readable(universeBasePath.'/__db.sql')){
+  	die('./__db.sql needs to be writable');
+  }
+
   session_start();
   
 	
@@ -80,6 +91,8 @@
 			}
 			
 		}
+
+
 		
 		
 		//check if free space is bigger than or euqal to 10MB
@@ -137,10 +150,12 @@
 	}
 	
 	function createUniverseDB(){
+                error_reporting(E_ALL);
                 $path = universeBasePath.'/__db.sql';
-                include_once('../inc/config.php');
-                include_once('../inc/functions.php');
-		$db = new db();
+                include(universeBasePath.'/inc/config.php');
+                include(universeBasePath.'/inc/functions.php');
+                error_reporting(E_ALL);
+				$db = new db();
                 $db->importFile($path);
 	}
 	
@@ -149,12 +164,10 @@
 	}
 	
 	function run($options){
-            
             //, 'uni_basepath'=>$_POST['db_name'], 'uni_sysfolder_folder_id'=>$uni_sysfolder_folder_id, 'appCenter_folder_id'=>$appCenter_folder_id, 
-		if($this->checkRequirements($options['db_server'], $options['db_user'], $options['db_password'], $options['db_name'], $options['universe_title'],  $options['universe_url'],  $options['universe_salt'])){
-
+		//if($this->checkRequirements($options['db_server'], $options['db_user'], $options['db_password'], $options['db_name'], $options['universe_title'],  $options['universe_url'],  $options['universe_salt'])){
+		if(true){
                         include_once('../inc/classes/class_universe.php');
-                        
                         //create first config to create folders
                         $universe = new universe();
                         $universe->createConfig($options);
@@ -173,7 +186,7 @@
 	$install = new install();
 	
 	if(isset($_POST['submitAndInstall'])){
-		$options = array('db_server'=>$_POST['host'],'db_user'=>$_POST['dbUser'], 'db_password'=>$_POST['dbPassword'], 'db_name'=>$_POST['dbName'], 'universe_title'=>$_POST['universeTitle']);
+		$options = array('db_server'=>$_POST['host'],'db_user'=>$_POST['dbUser'], 'db_password'=>$_POST['dbPassword'], 'db_name'=>$_POST['dbName'], 'universe_title'=>$_POST['universeTitle'], 'uni_basepath'=>$_POST['basePath']);
 		$install->run($options);
 	}
   
@@ -239,9 +252,9 @@
         break;
     case 'success':
     
-		$options = array('db_server'=>$_POST['host'],'db_user'=>$_POST['dbUser'], 'db_password'=>$_POST['dbPassword'], 'db_name'=>$_POST['dbName'], 'universe_title'=>$_POST['universeTitle'], 'universe_salt'=>$_POST['salt'], 'universe_url'=>$_POST['URL']);
-                
-		$install->run($options);
+		$options = array('db_server'=>$_POST['host'],'db_user'=>$_POST['dbUser'], 'db_password'=>$_POST['dbPassword'], 'db_name'=>$_POST['dbName'], 'universe_title'=>$_POST['universeTitle'], 'uni_basepath'=>$_POST['basePath']);
+		
+		//$install->run($options);
         include('success.php');
         
         

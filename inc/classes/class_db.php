@@ -47,7 +47,11 @@ class db{
         public function importFile($filePath){
         // works regardless of statements emulation
         $this->pdoDB->setAttribute(PDO::ATTR_EMULATE_PREPARES, 0);
+        if(!is_readable($filePath)){
+        }
+
         $file = file_get_contents($filePath, true);
+
 //        $sql = "
 //        DELETE FROM car; 
 //        INSERT INTO car(name, type) VALUES ('car1', 'coupe'); 
