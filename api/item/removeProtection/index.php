@@ -1,5 +1,4 @@
 <?php
-
 //This file is published by transparency-everywhere with the best deeds.
 //Check transparency-everywhere.com for further information.
 //Licensed under the CC License, Version 4.0 (the "License");
@@ -18,17 +17,7 @@
 
 include('../../../inc/config.php');
 include('../../../inc/functions.php');
+    
 
-
-//upload temp_file
-$file = $_FILES['Filedata'];
-
-$user = getUser();
-$filesClass = new files();
-$id = $filesClass->uploadTempfile($file, $_POST['element'], '', $privacy, $user);
-
-$li = "<li data-fileid=\"$id\"><div>".$file['name']."</div>  <input type=\"hidden\" name=\"uploadedFiles[]\" value=\"$id\">    <span class=\"icon icon-trash\"  onclick=\"$(this).parent(\\'li\\').remove()\"></span></li>";
-
-//add file to filelist in the uploader
-echo'$(".tempFilelist").append(\''.$li.'\');';
-?>
+$item = new item($_POST['type'], $_POST['itemId']);
+$item->removeProtection($_POST['type'], $_POST['itemId']);

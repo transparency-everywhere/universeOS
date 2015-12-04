@@ -234,7 +234,7 @@ class dashBoard{
 		$output = '<ul>';
 		foreach($taskArray AS $task){
 			$editable = authorize($task['privacy'], 'edit', $task['user']);
-			$output .= '<li onclick="tasks.show('.$task['id'].','.$editable.');">'.shorten(date('d.m.', $task['timestamp']).' - '.$task['title'],14).'</li>';
+			$output .= '<li><a href="#" onclick="tasks.show('.$task['id'].','.$editable.');">'.shorten(date('d.m.', $task['timestamp']).' - '.$task['title'],14).'</a><span onclick="tasks.verifyRemoval('.$task['id'].'); return false" class="icon white-close"></span></li>';
 		}
 		$output .= '</ul>';
 		

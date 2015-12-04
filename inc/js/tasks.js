@@ -94,10 +94,10 @@ var tasks = new function(){
                                                             
                         tasks.create(User.userid, startTime, $('#taskTitle').val(), $('#taskDescription').val(), $('#createTaskFormContainer #status').val(), $('#createTaskFormContainer #privacyField :input').serialize(), function(){
                             
-                                            calendar.loadTasks();
-                                            gui.alert('The Task has been added.');
-                                            $('.blueModal').slideUp();
-                                            updateDashbox('task');
+                            gui.alert('The Task has been added.');
+                            $('.blueModal').slideUp();
+                            updateDashbox('task');
+                            calendar.loadTasks();
                         });
                     }else{
                            gui.alert('You need to fill out all the fields.');
@@ -280,6 +280,33 @@ var tasks = new function(){
             });
             return result;
         };
+  this.delete = function(id, callback){
+
+      api.query('api/calendar/tasks/delete/', {id: id},callback);
+
+  };
+  this.verifyRemoval = function(id){
+
+    var self = this;
+
+    var confirmParameters = {};
+        confirmParameters['title'] = 'Delete Task';
+        confirmParameters['text'] = 'Are you sure to delete this task?';
+        confirmParameters['submitButtonTitle'] = 'Delete';
+        confirmParameters['submitFunction'] = function(){
+            tasks.delete(id, function(){
+
+              gui.alert('The task has been deleted');
+              self.update();
+            });
+        };
+        confirmParameters['cancelButtonTitle'] = 'Cancel';
+        confirmParameters['cancelFunction'] = function(){
+            //alert('cancel');
+        };
+        
+        gui.confirm(confirmParameters);
+  }
 	this.markAsDone = function(id){
                 api.query('api.php?action=markTaskAsDone', {eventid : id});
                 $('.task_'+id).addClass('doneTask');

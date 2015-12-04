@@ -227,5 +227,33 @@ var privacy = new function(){
                                         //prev see check
                                     });
         };
+    
+    this.protectItem = function(type, itemId){
+
+        api.query('api/item/protect/', {type:type, itemId:itemId}, function(){
+
+        });
+    };
+    
+    this.removeProtection = function(type, itemId){
+        
+        api.query('api/item/removeProtection/', {type:type, itemId:itemId}, function(){
+
+        });
+    };
+
+    this.makeItemUndeletable = function(type, itemId){
+        
+        api.query('api/item/makeUndeletable/', {type:type, itemId:itemId}, function(){
+
+        });
+    };
+
+    this.makeItemDeletable = function(type, itemId){
+        
+        api.query('api/item/makeDeletable/', {type:type, itemId:itemId}, function(){
+
+        });
+    };
 	
 };

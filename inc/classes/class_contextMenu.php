@@ -147,14 +147,13 @@ class contextMenu{
 					if(!$privacyClass->isProtected()){
 						$protect['title'] = 'Protect';
 						$protect['href'] = '#';
-						$protect['onclick'] = "javascript: popper('doit.php?action=protectFileSystemItems&type=folder&itemId=$itemId')";
+						$protect['onclick'] = "privacy.protectItem('folder', $itemId);";
 
 					}else{
 						
 						$protect['title'] = 'Unprotect';
 						$protect['href'] = '#';
-						$protect['onclick'] = "javascript: popper('doit.php?action=removeProtectionFromFileSystemItems&type=folder&itemId=$itemId')";
-						
+						$protect['onclick'] = "privacy.removeProtection('folder', $itemId);";
 					}
 				}
 	
@@ -164,14 +163,12 @@ class contextMenu{
 						
 						$undeletable['title'] = 'Make Undeletable';
 						$undeletable['href'] = '#';
-						$undeletable['onclick'] = "javascript: popper('doit.php?action=makeFileSystemItemUndeletable&type=folder&itemId=$itemId');";
-					
+						$undeletable['onclick'] = "privacy.makeItemUndeletable('folder', $itemId);";
 					}else{
 						
 						$undeletable['title'] = 'Make Deletable';
 						$undeletable['href'] = '#';
-						$undeletable['onclick'] = "javascript: popper('doit.php?action=makeFileSystemItemDeletable&type=folder&itemId=$itemId');";
-					
+						$undeletable['onclick'] = "privacy.makeItemDeletable('folder', $itemId);";
 					}
 					
 				}
@@ -220,14 +217,12 @@ class contextMenu{
 					if(!$privacyClass->isProtected()){
 						$protect['title'] = 'Protect';
 						$protect['href'] = '#';
-						$protect['onclick'] = "javascript: popper('doit.php?action=protectFileSystemItems&type=element&itemId=$itemId')";
-
+						$protect['onclick'] = "privacy.protectItem('element', $itemId);";
 					}else{
 					
 						$protect['title'] = 'Unprotect';
 						$protect['href'] = '#';
-						$protect['onclick'] = "javascript: popper('doit.php?action=removeProtectionFromFileSystemItems&type=element&itemId=$itemId')";
-					
+						$protect['onclick'] = "privacy.removeProtection('element', $itemId);";
 					}
 				}
 	
@@ -237,13 +232,13 @@ class contextMenu{
 					
 						$undeletable['title'] = 'Make Undeletable';
 						$undeletable['href'] = '#';
-						$undeletable['onclick'] = "javascript: popper('doit.php?action=makeFileSystemItemUndeletable&type=element&itemId=$itemId');";
+						$undeletable['onclick'] = "privacy.makeItemUndeletable('element', $itemId);";
 				
 					}else{
 					
 						$undeletable['title'] = 'Make Deletable';
 						$undeletable['href'] = '#';
-						$undeletable['onclick'] = "javascript: popper('doit.php?action=makeFileSystemItemDeletable&type=element&itemId=$itemId');";
+						$undeletable['onclick'] = "privacy.makeItemDeletable('element', $itemId);";
 					}
 				
 				}
@@ -292,13 +287,11 @@ class contextMenu{
 					if(!$privacyClass->isProtected()){
 						$protect['title'] = 'Protect';
 						$protect['href'] = '#';
-						$protect['onclick'] = "javascript: popper('doit.php?action=protectFileSystemItems&type=file&itemId=$itemId')";
-	
+						$protect['onclick'] = "privacy.protectItem('file', $itemId);";
 					}else{
 						$protect['title'] = 'Unprotect';
 						$protect['href'] = '#';
-						$protect['onclick'] = "javascript: popper('doit.php?action=removeProtectionFromFileSystemItems&type=file&itemId=$itemId')";
-						
+						$protect['onclick'] = "privacy.removeProtection('file', $itemId);";
 					}
 				}
 		
@@ -307,13 +300,11 @@ class contextMenu{
 					if(!$privacyClass->isUndeletable()){
 						$undeletable['title'] = 'Make Undeletable';
 						$undeletable['href'] = '#';
-						$undeletable['onclick'] = "javascript: popper('doit.php?action=makeFileSystemItemUndeletable&type=file&itemId=$itemId');";
-					
+						$undeletable['onclick'] = "privacy.makeItemUndeletable('file', $itemId);";
 					}else{
 						$undeletable['title'] = 'Make Deletable';
 						$undeletable['href'] = '#';
-						$undeletable['onclick'] = "javascript: popper('doit.php?action=makeFileSystemItemDeletable&type=file&itemId=$itemId');";
-					
+						$undeletable['onclick'] = "privacy.makeItemDeletable('file', $itemId);";
 					}
 					
 				}
@@ -408,14 +399,12 @@ class contextMenu{
                                     if(!$privacyClass->isProtected()){
                                             $protect['title'] = 'Protect';
                                             $protect['href'] = '#';
-                                            $protect['onclick'] = "javascript: popper('doit.php?action=protectFileSystemItems&type=link&itemId=$itemId')";
-
+											$protect['onclick'] = "privacy.protectItem('link', $itemId);";
                                     }else{
 
                                             $protect['title'] = 'Unprotect';
                                             $protect['href'] = '#';
-                                            $protect['onclick'] = "javascript: popper('doit.php?action=removeProtectionFromFileSystemItems&type=link&itemId=$itemId')";
-
+											$protect['onclick'] = "privacy.removeProtection('link', $itemId);";
                                     }
                             }
                             //check if person has rights to make files undeletable
@@ -424,14 +413,11 @@ class contextMenu{
 
                                             $undeletable['title'] = 'Make Undeletable';
                                             $undeletable['href'] = '#';
-                                            $undeletable['onclick'] = "javascript: popper('doit.php?action=makeFileSystemItemUndeletable&type=link&itemId=$itemId');";
-
+											$undeletable['onclick'] = "privacy.makeItemUndeletable('link', $itemId);";
                                     }else{
-
                                             $undeletable['title'] = 'Make Deletable';
                                             $undeletable['href'] = '#';
-                                            $undeletable['onclick'] = "javascript: popper('doit.php?action=makeFileSystemItemDeletable&type=link&itemId=$itemId');";
-
+											$undeletable['onclick'] = "privacy.makeItemDeletable('link', $itemId);";
                                     }
 
                             }

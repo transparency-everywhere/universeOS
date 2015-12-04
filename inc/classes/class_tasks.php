@@ -47,8 +47,14 @@ class tasks{
 		}
 	}
 	public function getData($id){
-                $db = new db();
-		return $db->query('tasks', array('id', $id));
+        $db = new db();
+		return $db->select('tasks', array('id', $id));
+	}
+	public function delete($id){
+
+		//@sec
+        $db = new db();
+		return $db->delete('tasks', array('id', $id));
 	}
 	public function get($user=NULL, $startStamp, $stopStamp, $privacy=NULL){
 		$arr = array();
@@ -59,8 +65,14 @@ class tasks{
 			$privacyQuery = "AND privacy REGEXP '$privacy'";
 		}
 		$db = new db();
-                $taskSQL = $db->shiftResult("SELECT * FROM `tasks` WHERE `timestamp`>'".save($startStamp)."' AND `timestamp`<'".save($stopStamp)."' AND `user`='".save($user)."' $privacyQuery");
-		foreach($taskSQL AS $data){
+                if($startStamp+$stopStamp > 0){
+                    $timeQuery = "`timestamp`>'".save($startStamp)."' AND `timestamp`<'".save($stopStamp)."'";
+                }else{
+                    $timeQuery = '1 = 1';
+                }
+                $taskSQL = $db->shiftResult($db->query("SELECT * FROM `tasks` WHERE $timeQuery  AND `user`='".save($user)."' $privacyQuery"),'user');
+                foreach($taskSQL AS $data){
+                    
 			$data['editable'] = authorize($data['privacy'], 'edit', $data['user']);
 			$arr[] = $data;
 		}

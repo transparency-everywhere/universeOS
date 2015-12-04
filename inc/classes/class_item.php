@@ -49,7 +49,7 @@ class item {
            $db = new db();
            $db->query("UPDATE `$tableName` SET votes = votes + 1, score = score + 1 WHERE id='$typeid'");
            return $this->getScore();
-           }
+    }
     function minusOne(){
 
            $type = $this->type;
@@ -83,8 +83,7 @@ class item {
            $db->query("UPDATE `$tableName` SET votes = votes + 1, score = score - 1 WHERE id='$typeid'");
            
            return $this->getScore();
-           }
-
+    }
     function getScore(){
         
            $type = $this->type;
@@ -343,6 +342,7 @@ class item {
     function protect(){
                $type = escape::sql($this->type);
                $typeId = escape::sql($this->typeid);
+
                     if(hasRight('protectFileSystemItems')){
                             $type = $type;
                             $typeId = $typeId;
@@ -376,14 +376,13 @@ class item {
                                 
                                 
                                             
-                                $itemData = $db->select($table, array('privacy'), array('id',$typeId));
-                                
+                                $itemData = $db->select($table, array('id',$typeId), array('privacy'));
                                 $privacy = $itemData['privacy'];
-                                $values['privacy'] = $privacy;
                                 if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
                                             $privacy .= ";PROTECTED";
                                 }
                                             
+                                $values['privacy'] = $privacy;
                                 $db->update($table, $values, array('id', $typeId));
                             }
                     }else{
@@ -423,7 +422,7 @@ class item {
                                
 
                                 $db = new db();
-                                $itemData = $db->select($table, array('privacy'), array('id',$typeId));
+                                $itemData = $db->select($table, array('id',$typeId), array('privacy'));
                                 
                                 $privacy = $itemData['privacy'];
                                 $privacy = str_replace(";PROTECTED", "", $privacy); 
@@ -444,7 +443,7 @@ class item {
                             switch($type){
                                     case 'folder':
                                             $db = new db();
-                                            $folderData = $db->query('folders', array('id', $typeId), array('privacy'));
+                                            $folderData = $db->query('folders', array('privacy'), array('id', $typeId));
 
                                             $privacy = $folderData['privacy'];
                                             if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
@@ -455,7 +454,7 @@ class item {
                                             break;
                                     case 'element':
                                             $db = new db();
-                                            $elementData = $db->query('elements', array('id', $typeId), array('privacy'));
+                                            $elementData = $db->query('elements', array('privacy'), array('id', $typeId));
                                             
                                             $privacy = $elementData['privacy'];
                                             if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
@@ -466,7 +465,7 @@ class item {
                                             break;
                                     case 'file':
                                             $db = new db();
-                                            $fileData = $db->query('files', array('id', $typeId), array('privacy'));
+                                            $fileData = $db->query('files', array('privacy'), array('id', $typeId));
                                             $privacy = $fileData['privacy'];
                                             if(end(explode(";", $privacy)) != "UNDELETABLE" && end(explode(";", $privacy)) != "PROTECTED"){
                                                     $privacy .= ";UNDELETABLE";
@@ -477,7 +476,7 @@ class item {
                                             break;
                                     case 'link':
                                             $db = new db();
-                                            $fileData = $db->query('links', array('id', $typeId), array('privacy'));
+                                            $fileData = $db->query('links', array('privacy'), array('id', $typeId));
 
 
                                             $privacy = $linkData['privacy'];
@@ -525,7 +524,7 @@ class item {
                     if(isset($table)){
 
                         $db = new db();
-                        $itemData = $db->select($table, array('id', $typeId), array('privacy'));
+                        $itemData = $db->select($table, array('privacy'), array('id', $typeId));
 
                         $privacy = $itemData['privacy'];
                         $privacy = str_replace(";UNDELETABLE", "", $privacy);

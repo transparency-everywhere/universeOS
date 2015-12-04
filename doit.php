@@ -25,31 +25,6 @@ else if($_GET['action'] == "showBuddySuggestList"){
      	$false = false;
 		showBuddySuggestions($false);
 }
-     
-     
-else if($_GET['action'] == "protectFileSystemItems"){
-    $item = new item($_GET['type'], $_GET['itemId']);
-            	$item->protect($_GET['type'], $_GET['itemId']);
-				jsAlert("This Item can not be edited anymore.");
-            }
-else if($_GET['action'] == "removeProtectionFromFileSystemItems"){
-    error_reporting(E_ALL);
-            	$item = new item($_GET['type'], $_GET['itemId']);
-            	$item->removeProtection($_GET['type'], $_GET['itemId']);
-				jsAlert("This Item can be edited again.");
-            }
-else if($_GET['action'] == "makeFileSystemItemUndeletable"){
-            	
-            	$item = new item($_GET['type'], $_GET['itemId']);
-            	$item->makeUndeletable($_GET['type'], $_GET['itemId']);
-				jsAlert("This Item can not be deleted anymore.");
-            }
-else if($_GET['action'] == "makeFileSystemItemDeletable"){
-            	
-            	$item = new item($_GET['type'], $_GET['itemId']);
-            	$item->makeDeletable($_GET['type'], $_GET['itemId']);
-				jsAlert("This Item can be deleted again.");
-            }
 else if($_GET['action'] == "chatLoadMore"){
             
             $userid = getUser();
