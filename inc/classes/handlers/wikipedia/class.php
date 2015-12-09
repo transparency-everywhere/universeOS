@@ -24,7 +24,7 @@ class wikipedia_handler {
         $ch = curl_init(); 
 
         // set url
-        curl_setopt($ch, CURLOPT_URL, "http://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=".$query."&srprop=timestamp&srlimit=$url_max_results&sroffset=$url_offset&continue="); 
+        curl_setopt($ch, CURLOPT_URL, "https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=".$query."&srprop=timestamp&srlimit=$url_max_results&sroffset=$url_offset&continue="); 
 
         //return the transfer as a string 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
@@ -37,6 +37,8 @@ class wikipedia_handler {
         //get next page token from result in case that extendResultFunction is called
         
         $wiki_titles = array();
+        
+        
         foreach($results['query']['search'] AS $result){
             if($result['title']){
                 $wiki_titles[] = 'http://en.wikipedia.org/wiki/'.$result['title'];
