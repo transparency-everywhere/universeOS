@@ -1802,7 +1802,10 @@ var support = new function(){
         callbacks.push('searchSomething');
         callbacks.push('describeSearchResult');
         callbacks.push('showSettingsButton');
+        callbacks.push('showProfileSettings');
+        callbacks.push('showPrivacy');
         callbacks.push('showCalendar');
+        callbacks.push('lastOne');
         
         
         
@@ -1812,7 +1815,13 @@ var support = new function(){
     },
     this.executeCallback = function(callbackTitle){
         var callbacks = {};
-      //dock
+        callbacks['lastOne'] = function(){
+            support.alert($('#clockDiv'),
+                          'We are done with the tour. Enjoy the universe :)',
+                          'bottom-right'
+                        );
+        };
+        
         callbacks['showCalendar'] = function(){
             support.alert($('#clockDiv'),
                           'Click on the time to open the calendar',
@@ -1820,9 +1829,30 @@ var support = new function(){
                           $('#clockDiv')
                         );
         };
+        
+        //privacy settings
+        callbacks['showPrivacy'] = function(){
+            support.alert($('#settings .leftNav li:nth-of-type(2)'),
+                          'To update your privacy settings click here',
+                          'top',
+                          $('#settings .leftNav li:nth-of-type(2)'),
+                          function(){
+                              
+                          }
+                        );
+        };
+        
+        //user profile settings
+        callbacks['showProfileSettings'] = function(){
+            support.alert($('#settings #userpicture_area'),
+                          'To update your profile settings just change them here',
+                          'left'
+                        );
+        };
+        
         callbacks['showSettingsButton'] = function(){
             support.alert($('#settingsTrigger'),
-                          'Click on this icon top open the settings',
+                          'Click on this icon to open the settings',
                           'bottom-right',
                           $('#settingsTrigger'),
                           function(){
@@ -1846,13 +1876,22 @@ var support = new function(){
                                     support.alert($('#searchTrigger'), 'Click on this icon to open the search bar', 'bottom-right', $('#searchTrigger'));  
         };
         
+        //upload file
+        
+        //minimize reader (you can easaly open it again. Just click on the application list inside the dashboard
+        
+        //open link or file
+        
+        //open element
+        
+        //open folder
+        
         callbacks['openFilesystem'] = function(){
             applications.hide('feed');
             applications.show('filesystem');
             support.alert($('#filesystem'), 'This is the filesystem. Open Folders, Archives and files.' , 'left');
             $('.alert.support').css('marginLeft', '-95px');
         };
-        
         
         callbacks['sendFeed'] = function(){
             support.alert($('#feedInput'), 'Send your first feed. But be carefull, everything you post can be seen by everyone unless you change the privacy.' , 'left');
@@ -1867,6 +1906,7 @@ var support = new function(){
             },700);
                                     
         };
+        
         callbacks['dashGroups'] = function(){
                                     support.alert($('#groupBox'), 'You can create groups and invite your friends or colleagues to share files and other items with them.', 'left');
                                     $('.alert.support').css('marginLeft', '-95px');

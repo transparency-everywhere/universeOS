@@ -342,7 +342,6 @@ var telescope = new function(){
         
         var html = '';
         $.each(results, function(index, subResults){
-            console.log(type);
                 var resultArray = subResults[0];
                 try{
                     resultArray=JSON.parse(subResults[0]);
@@ -432,7 +431,7 @@ var telescope = new function(){
     
     this.query = function(query){
         search.hideSearchMenu();
-        this.applicationVar.show();
+        applications.show('telescope');
         var tabId = this.tabs.addTab(query, '', gui.generateLoadingArea());
         
 	delay(function(){
