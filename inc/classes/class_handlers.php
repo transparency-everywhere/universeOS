@@ -46,10 +46,12 @@ class handler {
         $handler_class = new $handler['class_name']();
         switch($action){
             case 'query':
-                return json_encode($handler_class->query($parameters['query'], $parameters['offset'], $parameters['max_results']));
+                
+                
+                return json_encode($handler_class->query(urlencode($parameters['query']), $parameters['offset'], $parameters['max_results']));
                 break;
             case 'getTitle':
-                return json_encode($handler_class->getTitle($parameters['url']));
+                return $handler_class->getTitle($parameters['url']);
                 break;
             case 'getDescription':
                 return $handler_class->getDescription($parameters['url']);

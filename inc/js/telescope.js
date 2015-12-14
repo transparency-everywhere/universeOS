@@ -337,9 +337,6 @@ var telescope = new function(){
     //parses results to li
     this.parseResult = function(type, results){
         
-        
-        
-        
         var html = '';
         $.each(results, function(index, subResults){
                 var resultArray = subResults[0];

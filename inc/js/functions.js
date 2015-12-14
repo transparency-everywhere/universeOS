@@ -2973,6 +2973,29 @@ var handlers = {
                         return handler.getDescription('wikipedia', link);
                     },
                     getThumbnail : function(link){
+                        
+                        
+                        if(typeof link === 'object'){
+                            var sources = handler.getThumbnail('wikipedia', link);
+                            var results = [];
+                            $.each(sources, function(index, value){
+                                if(value)
+                                    results.push('<img src=\''+value.replace(/^"(.+(?="$))"$/, '$1')+'\'/>');
+                                else
+                                    results.push('<span class="icon icon-wikipedia"></span>');
+                            });
+                            return results;
+                        }else{
+                            //@sec
+                            return '<span class="icon icon-wikipedia"></span>';
+                        }
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                         var apiResult = handler.getThumbnail('wikipedia', link);
                         if(apiResult)
                             return '<img src="'+apiResult+'"/>';

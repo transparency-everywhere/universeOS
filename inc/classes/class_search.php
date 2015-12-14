@@ -34,7 +34,6 @@ class search{
        $this->query = $query;
    }
    
-   
     function getSearchResults($type, $limit=49){
         $q = $this->query;
         $qEncoded = urlencode($q);    
@@ -248,7 +247,9 @@ class search{
 
                     
                     if($i<$limit){
-                        $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "handlers.wikipedia.handler('$item')", $item);
+                        $handler = new handler();
+                        $itemTitle = $handler->api('wikipedia', 'getTitle', array('url'=>$item));
+                        $output .= $this->buildLI('<span class="icon dark-'.$icon.' dark" style="'.$iconStyle.'"></span><span class="icon white-'.$icon.' white" style="'.$iconStyle.'"></span>', "handlers.wikipedia.handler('$item')", $itemTitle);
                     }else{
                         $loadAll = '<div class="loadAll" data-type="wiki"><a href="#">show all</a></div>';
                     }

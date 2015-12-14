@@ -99,7 +99,7 @@ class youtube_handler {
     public function getTitle($link){
         $video_id = $this->getId($link);
         $results = $this->getSnippet($video_id);
-        return $results['items'][0]['snippet']['title'];
+        return (string)$results['items'][0]['snippet']['title'];
     }
     
     public function getDescription($link){
