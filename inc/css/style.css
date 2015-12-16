@@ -1902,7 +1902,7 @@ span.icon.blue-chevron-down {
 }
 
 #settings #updateProfileFormContainer #changePicture, #settings #groupAdminFormContainer #changePicture{
-    margin-top: 105px;
+    margin-top: 20px;
     float:right;
     margin-bottom: 15px;
 }

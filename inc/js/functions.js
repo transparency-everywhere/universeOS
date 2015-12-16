@@ -115,6 +115,7 @@ var init = new function(){
 	};
 
 	this.search = function(){
+            search.initResultHandlers();
 		//init search
 			$("#searchField").keyup(function()
 			{

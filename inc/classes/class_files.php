@@ -109,6 +109,7 @@ class files {
 	 }
          
     function addFile($file, $element, $folder, $privacy, $user, $lang=NULL, $download=true, $addFeed=true){
+        $user_id = $user;
         
         //upload file
         $target_path = basename( $file['tmp_name']);
@@ -125,9 +126,9 @@ class files {
         
         //if element == userpictureelement, userpictureupload and thumb creation
         $additionalPath = '';
-        if(!empty($user)){
+        if(!empty($user_id)){
             
-            $user = new user($user);
+            $user = new user($user_id);
             $userData  = $user->getData();
             $element = $userData['profilepictureelement'];
             if($userData['profilepictureelement'] === $element){
@@ -174,7 +175,7 @@ class files {
         $fileValues['filename'] = $imgName;
         $fileValues['language'] = $lang;
         $fileValues['type'] = $type;
-        $fileValues['owner'] = $user;
+        $fileValues['owner'] = $user_id;
         $fileValues['votes'] = '';
         $fileValues['score'] = '';
         $fileValues['privacy'] = $privacy;
@@ -184,6 +185,7 @@ class files {
         
                         
         $fileId = $this->insertRecordDB($fileValues);
+        
         if($fileId){
         	
             jsAlert("The file has been uploaded :)");
@@ -201,10 +203,9 @@ class files {
         if($addFeed){
             $feed = "has uploaded a file";
             $feedClass = new feed();
-            $feedClass->create($user, $feed, "", "showThumb", $privacy, "file", $fileId);
+            $feedClass->create($user_id, $feed, "", "showThumb", $privacy, "file", $fileId);
         }
         return $fileId;
-        
     }
     
     
