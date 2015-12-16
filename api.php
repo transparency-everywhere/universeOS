@@ -371,8 +371,8 @@ switch($action){
     case 'checkUsername':
         
     $user = save($_POST[username]);
-    $sql = mysql_query("SELECT username FROM user WHERE username='$user'");
-    $data = mysql_fetch_array($sql);
+    $db = new db();
+    $data = $db->select('user', array('username', $user), array('username'));
     
         if(empty($data[username])){
             echo"1";
