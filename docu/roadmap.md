@@ -1,6 +1,15 @@
 The universeOS Development Roadmap
 ----------------------------------
 
+1. Get a nice API
+    complete encrypted communication via js
+    RESTful
+    Documented
+
+2. Get File Encryption done
+
+
+
 Security
 ----------
 We try to get the script as secure as possible. It is important to point out the most important things we need to take care of:
@@ -14,7 +23,7 @@ We try to get the script as secure as possible. It is important to point out the
 
 Advertising
 ------------
-We think that the universeOS should not be a comerical project. But we also now, that we are trying to compete with services which gather personal data and which can generete enourmous profits with personalized advertising services. I think we should look for ways of advertising methods, which are working without personalized data. (Nic)
+We think that the universeOS should not be a comerical project. But we also now, that we are trying to compete with services which gather personal data and which can generete enourmous profits with personalized advertising services. I think we should look for ways of advertising methods, which are working without personalized data. (Nic, please discuss!)
 
 
 

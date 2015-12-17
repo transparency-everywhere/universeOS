@@ -5269,21 +5269,26 @@ a#text {}
 
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen 
-and (min-device-width : 320px) 
 and (max-device-width : 480px) {
-/* Styles */
-.module{
-	min-width: 60px;
-}
+        /* Styles */
+        .leftNav{
+            display:none;
+        }
+        .frameRight{
+            left:0;
+        }
+        /* Styles */
+        .module{
+                min-width: 60px;
+        }
 
-#clockDiv{
-	display:none;
-}
+        #clockDiv{
+                display:none;
+        }
 
-#searchField{
-	width:115px;
-}
-
+        #searchField{
+                width:115px;
+        }
 }
 
 

@@ -30,7 +30,7 @@ Run the Installer
 
 - Download and extract the file on the Webspace of your choice.
 
-- Open /install.php
+- Open /install/
 
 - Run the installer
 

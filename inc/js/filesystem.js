@@ -235,7 +235,7 @@ var filesystem =  new function() {
     };
     this.init = function(){
         var html = '<div id="fileBrowserFrame"></div>';
-        var grid = {width: 6, height:  4, top: 7, left: 6};
+        var grid = {width: 6, height:  3, top: 6, left: 1};
         if(proofLogin())
             grid = {width: 6, height:  8, top: 1, left: 3};
         this.applicationVar = new application('filesystem');

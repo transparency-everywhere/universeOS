@@ -490,6 +490,8 @@ switch($action){
         
     break;
 	
+    
+    //@del
     case 'showFeedComments':
         $username = save($_POST['username']);
         $hash = $_POST[hash];

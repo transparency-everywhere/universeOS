@@ -158,11 +158,13 @@
 			
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen 
-and (min-device-width : 320px) 
 and (max-device-width : 480px) {
-/* Styles */
-        #topThing, #guestInfoBox, #betaBox{
-                display:none;
+        #guestArea{
+            margin-top: 10px;
+        }
+
+        #topThing, #guestInfoBox, #betaBox, #guestArea #header, #guestArea #subheader{
+                display:none!important;
         }
 
         #bodyWrap{
@@ -174,7 +176,7 @@ and (max-device-width : 480px) {
         }
 
         #loginForm input[type=text], #loginForm input[type=password]{
-                max-width: 120px;
+                max-width: 100%;
         }
 }
 

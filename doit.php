@@ -13,6 +13,7 @@ if($_GET['action'] == "addToNotSuggestList"){
 		echo"<script>parent.$('#buddySuggestions').load('doit.php?action=showBuddySuggestList');</script>";
 		 
 }
+//@del
 else if($_GET['action'] == "showSingleComment"){
         $classComments = new comments();
         if($_GET['type'] == "feed"){

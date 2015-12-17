@@ -39,20 +39,24 @@ todo
 
     item.share icon -> blue-retweet
 
-    fade in applications
-
     add type xml and json to openlink
 
 
 
 Recent:
+
+      SEO
+      
+      Mobile Site
+        Guestpage
+        leftNav
+
+        appCenter
+            example Application
+
       Style
             Hover
                 .button, .anti-button
-
-            Background
-                
-                
 
         Files
             encrypt files                                           x
