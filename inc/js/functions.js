@@ -583,7 +583,8 @@ var universe = new function(){
         
         
         var response = api.query('api/reload/', requestData, function(response){
-            if(response !== 'null'){
+            response = $.trim(response);
+            if(response !== 'null'&&response !== null){
                 response = JSON.parse(response);
                 $.each(response, function(key, value){
                     universe.handleReloadTypes(value);
@@ -713,7 +714,7 @@ var User = new function(){
     };
     this.proofLogin = function(){
         if(time()-this.lastLoginCheck > 120){
-            var result = api.query('api/user/proofLogin', {});
+            var result = api.query('api/user/proofLogin/', {});
             this.lastLoginCheck = time();
             if(result == '1'){
                   this.loggedIn = true;
@@ -1168,7 +1169,7 @@ var User = new function(){
     
     this.logout = function(){
         gui.alert('Goodbye :)', '');
-        api.query('api/user/logout/index.php', {},function(data){
+        api.query('api/user/logout/', {},function(data){
              
             location.reload();
         });

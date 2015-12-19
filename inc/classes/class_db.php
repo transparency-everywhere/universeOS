@@ -19,7 +19,7 @@ function save($str){
 }
 
 class escape{
-    function sql($string){
+    public static function sql($string){
         //@speed
         //@sec
         $db = new db();
