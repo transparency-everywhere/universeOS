@@ -22,7 +22,10 @@ $timestamp = time();
 
 //start session
 if(!isset($_SESSION)){
-    session_start(); 
+    ini_set('session.cookie_secure',1);
+    ini_set('session.cookie_httponly',1);
+    ini_set('session.use_only_cookies',1);
+    session_start();
 }
 
 define('uni_config_database_host', uniConfig::$db_server);
