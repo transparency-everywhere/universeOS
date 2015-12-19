@@ -9,7 +9,6 @@ include("../../../inc/classes/class_search.php");
     
     echo $search->parseSearchResults();
     
-    ?>
-<script>
-    search.initResultHandlers('<?php echo htmlentities($_POST['search']);?>');
-</script>
+echo '<script>';
+    echo"search.initResultHandlers('".htmlentities($_POST['search'])."');";
+echo '</script>';

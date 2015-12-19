@@ -36,11 +36,8 @@ include('../../../inc/functions.php');
                     //create feed
                     $feedClass = new feed();
                     $id = $feedClass->create(getUser(), $feed, "", "feed", "p", $_POST['attachedItemType'], $_POST['attachedItemId']);
-            ?>
-            <script>
-            parent.reloadFeed('friends');
-            parent.$('#feedInput').val('');
-            </script>
-            <?php
-                }
-?>
+            echo"<script>";
+            echo"parent.reloadFeed('friends');";
+            echo"parent.$('#feedInput').val('');";
+            echo"</script>";
+    }

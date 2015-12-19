@@ -35,12 +35,10 @@ include('../../../../inc/functions.php');
                     if($uffClass->create($element, $title, $filename, $privacy)){
                        
                         jsAlert("your file has been created");
-                        ?>
-                        <script>
+                        echo'<script>';
 		        
-                                   parent.filesystem.tabs.updateTabContent('<?=$title10;?>' ,parent.gui.loadPage('modules/filesystem/showElement.php?element=<?=$element;?>&reload=1'));
+                                   echo"parent.filesystem.tabs.updateTabContent('$title10' ,parent.gui.loadPage('modules/filesystem/showElement.php?element=$element&reload=1'));";
                             
-                        </script>
-		                <?
+                        echo'</script>';
                     }
 ?>
