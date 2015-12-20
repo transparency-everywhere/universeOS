@@ -17,8 +17,6 @@
 
 
 var api = new function(){
-    this.basePath = 'http://dev.transparency-everywhere.com/universeos/';
-    
     
     this.multiQuery = function(action, parameters, callback){
         if(parameters instanceof Array)
@@ -28,6 +26,9 @@ var api = new function(){
     };
     
     this.query = function(action, parameters, callback){
+
+        var url = sourceURL+action;
+
         var async;
         if(typeof callback !== 'undefined'){
             async = true;
@@ -37,7 +38,7 @@ var api = new function(){
         var result;
         $.ajax({
             type: 'POST',
-            url: action,
+            url: url,
             data: $.param(parameters),
             success:function(data){
                 if(!async){
