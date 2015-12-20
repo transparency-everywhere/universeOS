@@ -41,16 +41,7 @@ var folders = new function(){
               	
     this.getItems = function(folder_id){
         
-        var result = [];
-    	$.ajax({
-                url:"api/folders/getItems/",
-                async: false,  
-                type: "POST",
-                data: {folder_id : folder_id},
-                success:function(data) {
-                   result = JSON.parse(data);
-                }
-	});
+        var result = api.query('api/folders/getItems/', {folder_id : folder_id});
         if(result === null){
             result = [];
         }
