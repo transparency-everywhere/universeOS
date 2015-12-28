@@ -18,7 +18,7 @@ limitations under the License.
 */
 
   class debug{
-      function write($param){
+      public static function write($param){
           
       }
   }

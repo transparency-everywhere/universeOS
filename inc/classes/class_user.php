@@ -72,9 +72,10 @@ class user {
         }
         
     }
-    public function usernameToUserid($username){
+    public static function usernameToUserid($username){
         $db = new db();
         $userData = $db->select('user', array('username', $username), array('userid', 'username'));
+
         return $userData['userid'];
     }
     public function updateProfileInfo($realname, $city, $hometown, $birthdate, $school, $university, $work, $selector=NULL){

@@ -1312,8 +1312,6 @@ $routes[] = array(
 	'callback'=> function($post_vars){
 
 				
-				include("inc/classes/class_sessions.php");
-				
 				echo json_encode(universe::reload($post_vars['request']));
 				
 				

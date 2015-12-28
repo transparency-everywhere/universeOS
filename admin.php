@@ -3,9 +3,6 @@ die();
 //this file is from an old project and a high security risk but is not deleted until there is a new administration panel
 
 
-
-
-session_start();
 require_once("inc/config.php");
 require_once("inc/functions.php");
 $action = save($_GET['action']);

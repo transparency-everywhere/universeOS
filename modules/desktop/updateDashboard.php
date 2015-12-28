@@ -1,5 +1,4 @@
 <?
-session_start();
 include("../../inc/config.php");
 include("../../inc/functions.php");
 $dashboard = new dashBoard();

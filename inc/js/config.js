@@ -1,3 +1,3 @@
 var universeConfig = {};
 universeConfig.host = 'localhost';
-universeConfig.dir = 'universe';
+universeConfig.dir = 'universe_05';

@@ -17,12 +17,10 @@ if(file_exists($config_class_file_path)){
 $universeURL = 'http://localhost/universe'; //url of current installation
 
 
-$timestamp = time();
-
-
 //start session
 if(!isset($_SESSION)){
-    ini_set('session.cookie_secure',1);
+	//@sec
+    //ini_set('session.cookie_secure',1);
     ini_set('session.cookie_httponly',1);
     ini_set('session.use_only_cookies',1);
     session_start();
@@ -33,12 +31,6 @@ define('uni_config_database_user', uniConfig::$db_user);
 define('uni_config_database_password',  uniConfig::$db_password);
 define('uni_config_database_name',  uniConfig::$db_name);
 define('universeBasePath',  uniConfig::$uni_basepath);
-
-//$mysqli = new mysqli("$server", "$user", "$password", "$db");
-//if ($mysqli->connect_errno) {
-//    echo "Something went wrong with the Database... WTF?! - Error Notification: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error; //NOTIFICATION SHOULD BE REMOVED
-//}
-
 
 define('analytic_script',  "<!-- Piwik --> <script type=\"text/javascript\"> var _paq = _paq || []; _paq.push(['trackPageView']); _paq.push(['enableLinkTracking']); (function() { var u=\"//analytics.transparency-everywhere.com/piwik/\"; _paq.push(['setTrackerUrl', u+'piwik.php']); _paq.push(['setSiteId', 2]); var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s); })(); </script> <noscript><p><img src=\"//analytics.transparency-everywhere.com/piwik/piwik.php?idsite=2\" style=\"border:0;\" alt=\"\" /></p></noscript> <!-- End Piwik Code -->");
 ?>

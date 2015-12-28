@@ -1,22 +1,13 @@
 <?php
 //this api is also used by the messenger so it can't be deleted right now
-
-
-
 include_once("inc/config.php");
 include_once("inc/functions.php");
 header('Access-Control-Allow-Origin: *');
-
-if(!isset($_SESSION)){
-    session_start();
-}
 $action = $_GET['action'];
-
-
 
 switch($action){
 	case 'authentificate':
-                $user = new user();
+        $user = new user();
 		echo $user->login($_POST['username'], $_POST['password']);
 		break;
         case 'proofLogin':
@@ -354,7 +345,9 @@ switch($action){
 		
 		
 	case 'usernameToUserid':
+
 		echo usernameToUserid($_POST['username']);
+		echo NULL;
 		break;
 		
 		
@@ -477,7 +470,6 @@ switch($action){
             $feedClass->show('','','1');
         }
     break;
-	
     case 'submitFeedEntry':
         $username = save($_POST[user]); 
         $message = save($_POST[msg]);
