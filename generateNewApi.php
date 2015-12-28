@@ -14,7 +14,7 @@ foreach(new RecursiveIteratorIterator($it) as $file) {
 }
 class apiGenerator{
 
-	public $postVarName = 'route_post';
+	public $postVarName = 'post_vars';
 
 	public function log($string){
 
@@ -50,11 +50,12 @@ class apiGenerator{
 	public function run(){
 
 		$oldApiFilePaths = $this->getOldApiFilePaths();
-		$output = '';
+		$output = "<?php\nclass uni_routes{";
+		$output .= "\npublic static function getRoutes(){\n";
 		foreach($oldApiFilePaths AS $filePath){
-			$this->log('...reading file "'.$filePath.'"');
+			$this->log('...reading file "'.str_replace("./api/", "", str_replace("/index.php", "/", $filePath)).'"');
 			$output .= '$routes[] = '."array(\n";
-			$output .= "\t'path'='$filePath',\n";
+			$output .= "\t'path'=>'".str_replace("./api/", "", str_replace("/index.php", "/", $filePath))."',\n";
 
 			$oldFile = $this->parseOldApiFile($filePath);
 
@@ -64,25 +65,35 @@ class apiGenerator{
 			    $functionValue = '$'.$this->postVarName;
 			}
 
-			$output .= "\t'function'= function($functionValue){\n";
+			$output .= "\t'callback'=> function($functionValue){\n";
 
 			$output .= $oldFile;
 
+
 			$output .= "\n\t\t\t}\n\t);\n";
+
 			$this->log('......done');
 
 		}
+			$output .= 'return $routes;'."\n}\n}";
+			$this->saveRouteClass($output);
 		echo $output;
 
 
 	}
 
 
+	public function saveRouteClass($content){
+		$filePath = 'inc/classes/uni_routes.php';
+		unlink($filePath);
+		$fp = fopen($filePath, 'w');
+		fwrite($fp, $content);
+		fclose($fp);
+	}
+
 
 
 }
-
-var_dump(rsearch('./api'));
 
 
 $apiGenerator = new apiGenerator();

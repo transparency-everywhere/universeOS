@@ -18,8 +18,6 @@
 include('../../inc/config.php');
 include('../../inc/functions.php');
 
-include("inc/classes/class_sessions.php");
-
 echo json_encode(universe::reload($_POST['request']));
 
 
