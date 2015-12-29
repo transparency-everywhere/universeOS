@@ -21,7 +21,7 @@ var buddylist = new function(){
         if(typeof user_id === 'undefined'){
             var user_id = '';
         }
-	return api.query('api/buddies/get/', {user_id:user_id});
+	   return api.query('api/buddies/get/', {user_id:user_id});
     };
     this.isBuddy = function(buddy_id){
         if(typeof buddy_id !== 'string')
@@ -88,7 +88,7 @@ var buddylist = new function(){
             output += "	                 <td align=\"right\" style=\"padding: 0 10px;\">";
             output += "						    <a href=\"#\" onclick=\"User.showProfile('"+value+"'); return false\" title=\"open Profile\"><span class=\"icon icon-user\"><\/span><\/a>";
             output += "						    <a href=\"#\" onclick=\"im.openDialogue('"+usernames[index]+"'); return false\" title=\"write Message\"><span class=\"icon icon-envelope\"><\/span><\/a>";
-            output += "						    <a href=\"#\" onclick=\"settings.showUpdateBuddylistForm(); return false\" title=\"write Message\">" + filesystem.generateIcon('settings') + "<\/a>";
+            output += "						    <a href=\"#\" onclick=\"settings.showUpdateBuddylistForm(); return false\" title=\"write Message\"><span class=\"icon dark-gear\"></span><\/a>";
             output += "			<\/td>";
             output += "                <\/tr>";
         });
