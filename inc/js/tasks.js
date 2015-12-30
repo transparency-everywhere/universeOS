@@ -26,7 +26,7 @@ var tasks = new function(){
 			var d = new Date();
 			
 		
-		var formattedDate = calendar.beautifyDate((d.getMonth())+1)+'/'+calendar.beautifyDate(d.getDate())+'/'+d.getFullYear();
+		var formattedDate = calendar.beautifyDate((d.getMonth())+1)+'/'+calendar.beautifyDate(d.getDate()+1)+'/'+d.getFullYear();
 		
                      
                 var formModal = new gui.modal();
@@ -76,7 +76,7 @@ var tasks = new function(){
                 var field4 = [];
                 field4['caption'] = 'Privacy';
                 field4['type'] = 'privacy';
-                field4['value'] = 'f//f';
+                field4['value'] = 'h';
                 fieldArray[4] = field4;
                 
                 var modalOptions = {};

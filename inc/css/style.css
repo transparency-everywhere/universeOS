@@ -4666,6 +4666,10 @@ margin-bottom: 3px;
                     margin-bottom: 15px;
                 }
                 
+				#dashBoard li>span.icon{
+					float:right;
+				}
+
                 #dashBoard li.overlength{
                    height: auto!important;
                     background: none!important;
