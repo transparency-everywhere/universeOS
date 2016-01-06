@@ -1170,7 +1170,7 @@ var User = new function(){
     this.logout = function(){
         gui.alert('Goodbye :)', '');
         api.query('api/user/logout/', {},function(data){
-             
+            localStorage.clear();
             location.reload();
         });
     };
@@ -1342,7 +1342,7 @@ function getSalt(type, itemId, key){
                 
                 var dbResult = clientDB.select('salts', {'type':type, 'itemId':itemId});
                 if(!dbResult){
-                    var encryptedSalt = api.query('api.php?action=getSalt', { type : type, itemId : itemId });
+                    var encryptedSalt = api.query('api/salts/get/', { type : type, itemId : itemId });
                 
                     clientDB.insert('salts',{'type':type, 'itemId':itemId, 'encryptedSalt':encryptedSalt});
            
@@ -2518,7 +2518,7 @@ function getUserPicture(request){
     var result = '';
 
     debug.log('     ajax request initialized');
-    result = api.query('api.php?action=getUserPicture', {request : post});
+    result = api.query('api/user/getUserPicture/', {request : post});
 
     if(is_numeric(request)){
 
