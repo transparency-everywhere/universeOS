@@ -536,7 +536,6 @@ var groups = new function(){
         this.join = function(group_id){
             var callback = function(){
                 $('#profileWrap.group_'+group_id+' #joinButton .btn').hide();
-                $('#favTab_Group').load('doit.php?action=showUserGroups');
                 updateDashbox('group');
             };
             api.query('api/groups/join/', { group_id : group_id}, callback);

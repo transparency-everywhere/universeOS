@@ -47,7 +47,5 @@ var chat = new function(){
 };
   
 function chatLoadMore(username, limit){
-     $.get("doit.php?action=chatLoadMore&buddy="+username+"&limit="+limit,function(data){
-              $('.chatMainFrame_'+username).append(data);
-      },'html');
- }
+    alert('function chatLoadMore needs to be replaced with loadMessage and offset!');
+}

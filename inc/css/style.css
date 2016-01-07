@@ -828,33 +828,6 @@ span.icon.blue-chevron-down {
     height: 60px;
 }
 
-
-.mousePop{
-    position: absolute;
-    -webkit-border-radius: 7px;
-    -moz-border-radius: 7px;
-    border-radius: 7px;
-    border: 1px solid #6D6D6D;
-}
-
-.mousePop > .title{
-    font-size:12pt;
-}
-
-.mousePop .close{
-    margin-right: 6px;
-}
-
-.mousePop .content{
-    padding: 20px;
-    color: #C6C6C6;
-}
-
-.mousePop .content table{
-    font-size: 11pt;
-    color: #C6C6C6;
-}
-
 .gui_form_table{
     width: 100%;
 }

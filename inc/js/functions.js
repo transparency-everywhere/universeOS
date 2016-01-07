@@ -657,10 +657,10 @@ var universe = new function(){
                                 
                                 var caretPosition = getCaretPosition(this);
                                 
-                                $.get('doit.php?action=loadUff&id='+responseElement.data['file_id']+'&noJq=true', function(uffContent) {
-                                    $('.uffViewer_'+responseElement.data['file_id']).val(uffContent);
+                                var file_id = responseElement.data['file_id'];
+                                api.query('api/files/read/', { file_id : file_id}, function(uffContent){
+                                    $('.uffViewer_'+file_id).val(uffContent);
                                 });
-                                
                             });
                     }
                 };
@@ -2127,17 +2127,6 @@ function maxLength(string, maxlength){
 function updatePictureStatus(userId, borderColor){
     $('.userPicture_'+userId).css('border-color', borderColor);
 }
-
-function mousePop(type, id, html){
-      $('.mousePop').remove();
-      if($('#mousePop_'+type+id).length == 0){   
-      $("#popper").load("doit.php?action=mousePop&type=&id=&html", {
-          'type': type,
-          'id':id,
-          'html':html
-      });
-      }
-}
       
 function getCaretPosition(editableDiv) {
      var caretPos = 0, containerEl = null, sel, range;
@@ -2469,10 +2458,6 @@ function loader(id, link){
 function popper(url) {
               $("#loader").load("" + url +"");
                 }
-              
-function deleteFromPersonals(id){
-                  $("#loader").load("doit.php?action=deleteFromPersonals&id=" + id + "");
-              }
 
 function closeDockMenu(){
                 $("#dockMenu").hide("fast");

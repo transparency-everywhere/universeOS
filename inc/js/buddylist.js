@@ -34,7 +34,7 @@ var buddylist = new function(){
                   gui.alert('The request has been send.', 'Request Send');
                   $('.friendButton_'+userid).html('request sent');
                   $('.friendButton_'+userid).addClass("disabled");
-		  $('#buddySuggestions').load('doit.php?action=showBuddySuggestList');
+		  $('#buddySuggestions').load('api/buddies/showSuggestions/');
               }else{
                   gui.alert('There was an error.', 'Error');
                   
@@ -46,7 +46,6 @@ var buddylist = new function(){
         
             var callback = function(){
 //                $('#profileWrap.group_'+group_id+' #joinButton .btn').hide();
-//                $('#favTab_Group').load('doit.php?action=showUserGroups');
 //                updateDashbox('group');
                 buddylist.reload();
             };

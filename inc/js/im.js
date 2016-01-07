@@ -100,7 +100,8 @@ var im = new function(){
             $chatInput.val($chatInput.val()+code);
         });
         //init chat submit
-        $(".chatFrame_"+ userid+' footer form').submit(function(e){
+        $(".chatFrame_"+ userid+' footer form').unbind('submit');
+        $(".chatFrame_"+ userid+' footer form').bind('submit', function(e){
             e.preventDefault();
             var $chatInput = $(this).find('.chatInput');
             var message = $chatInput.val();

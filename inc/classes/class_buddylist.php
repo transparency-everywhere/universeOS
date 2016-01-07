@@ -266,7 +266,7 @@ class buddylist{
 				echo"</span>";
 				echo useridToUsername($mayKnow);
 				echo'<a href="#" onclick="buddylist.addBuddy('.$mayKnow.');" class="btn btn-success btn-mini pull-right" target="submitter">add</a>';
-				echo'<a href="doit.php?action=addToNotSuggestList&user='.$mayKnow.'" class="btn btn-mini pull-right" style="margin-right:5px;" target="submitter">later</a>';
+				echo'<a href="api/buddies/showSuggestions/?user='.$mayKnow.'" class="btn btn-mini pull-right" style="margin-right:5px;" target="submitter">later</a>';
 				echo"</a>";
 			echo'</div>';
 			if($frame){

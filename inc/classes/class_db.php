@@ -83,7 +83,7 @@ class db{
                         $return .= "`='".save($primary[$arrayCounter])."' ";
                         $arrayCounter++;
                         if(isset($primary[$arrayCounter])){
-                            $return = $primary[$arrayCounter]." ";
+                            $return .= $primary[$arrayCounter]." ";
                         }
                         $arrayCounter++;
                     }
@@ -192,6 +192,8 @@ class db{
             
                 //echo "SELECT $columnQuery FROM `$table` $WHERE $ORDER $LIMIT";
                 $query = "SELECT $columnQuery FROM `$table` $WHERE $ORDER $LIMIT";
+                
+                
                 foreach($this->pdoDB->query($query) AS $data){
                     $return[] = $data;
                 }

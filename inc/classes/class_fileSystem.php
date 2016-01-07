@@ -499,7 +499,7 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
                             $playlistClass = new playlists();
                             $playlists = $playlistClass->getUserPlaylistArray('', 'edit');
                             //init form and select
-                            $options = "<form action=\"doit.php?action=addYouTubeItemToPlaylistVeryLongName&vId=$vId\" target=\"submitter\" method=\"post\"><select name=\"playlistId\">";
+                            $options = "<form action=\"addTOPLAYLIST$vId\" target=\"submitter\" method=\"post\"><select name=\"playlistId\">";
                             foreach ($playlists['ids'] as $key => $id){
 				
 				
@@ -569,8 +569,8 @@ function openFile($fileId=NULL, $linkId=NULL, $type=NULL, $title=NULL, $typeInfo
 					//DISPLAY VIDEO
 					//define content
                                         $output .= '<div class="iframeFrame" style="background: #000000;">';
-                                        //show an iframe which loads the openyoutube...() function via the doit.php
-                                        $output .= "<iframe src=\"doit.php?action=showYoutube&id=$vId&playList=$playlist&row=$row\" id=\"$iframeId\" name=\"playListLoaderFrame\" frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"auto\"></iframe>";
+                        
+                                        $output .= "<iframe src=\"showYOUTUBE\" id=\"$iframeId\" name=\"playListLoaderFrame\" frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"auto\"></iframe>";
                                         $output .= '</div>';
 					
 					

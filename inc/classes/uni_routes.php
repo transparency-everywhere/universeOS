@@ -71,6 +71,34 @@ class uni_routes{
 
                                 }
                 );
+                
+                
+                
+                
+    //buddies
+        $routes[] = array(
+                'path'=>'buddies/addToNotSuggestList/',
+                'callback'=> function($post_vars){
+
+
+                            $buddylistClass = new buddylist();
+                            $buddylistClass->addToNotSuggestList($post_vars['user']);
+                            echo"<script>parent.$('#buddySuggestions').load('api/buddies/showSuggestions/');</script>";
+
+
+                                }
+                );
+                
+        $routes[] = array(
+                'path'=>'buddies/showSuggestions/',
+                'callback'=> function($post_vars){
+
+
+                                        showBuddySuggestions(false);
+
+                                }
+                );
+                
         $routes[] = array(
                 'path'=>'buddies/acceptRequest/',
                 'callback'=> function($post_vars){
@@ -956,6 +984,7 @@ class uni_routes{
 
 
                                         $requestFunction = function($request){
+                                            
                                             $messages = new message();
                                             return ($messages->getMessagesNew(getUser(), $request['user_b'], $request['offset'], $request['limit']));
                                         };

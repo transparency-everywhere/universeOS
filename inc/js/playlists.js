@@ -86,7 +86,6 @@ var playlists = new function(){
                 
                 
                 updateDashbox('playlist');
-                $('#favTab_playList').load('doit.php?action=showUserPlaylists');
             };
             
             playlists.create($('#createPlaylistFileBrowserFrame .choosenTypeId').val(), $('#createPlaylistFormContainer #title').val(), $('#createPlaylistFormContainer #privacyField :input').serialize(),callback);

@@ -50,10 +50,8 @@ class contextMenu{
 			case 'feed':
                             $feedData = $db->select('feed', array('id', $itemId), array('author', 'privacy'));
                             if(authorize('p', "edit", $feedData['author'])){
-                                $privacy['title'] = 'Privacy';
-				$privacy['href'] = '#';
-				$privacy['onclick'] = "javascript: popper('doit.php?action=changePrivacy&type=feed&itemId=$itemId')";
-					
+                                
+                                //@todo add privacy
 
 				$delete['title'] = 'Delete';
 				$delete['onclick'] = "feed.verifyRemoval($itemId);";
@@ -69,10 +67,10 @@ class contextMenu{
                             //allow profile owner to delete comments that other users made in his profile
                             
                             if(authorize($commentData['privacy'], "edit", $commentData['author'])||($commentData['type'] == "profile" && $commentData['typeid'] == getUser())){
-                                        $privacy['title'] = 'Privacy';
-					$privacy['href'] = '#';
-					$privacy['onclick'] = "javascript: popper('doit.php?action=changePrivacy&type=comment&itemId=$itemId')";
-					
+                                
+                                
+                                        //@todo add privacy
+                                
 				  	$delete['title'] = 'Delete';
 					$delete['href'] = "#";
 					$delete['onclick'] = 'javascript:comments.verifyRemoval('.$itemId.');'; 
@@ -265,9 +263,6 @@ class contextMenu{
 					$fav['href'] = "#";
 					$fav['onclick'] = "fav.add('file', '$itemId');";
 				
-					$playlist['title'] = 'Add to Playlist';
-					$playlist['href'] = '#';
-					$playlist['onclick'] = "javascript: popper('doit.php?action=addFileToPlaylist&file=$itemId');";
 			  	}
 			  
 		       	if(authorize($checkFileData['privacy'], "edit", $checkFileData['owner'])){
@@ -346,10 +341,6 @@ class contextMenu{
 					$fav['href'] = "#";
 					$fav['onclick'] = "fav.add('file', '$itemId');";
 				
-					$background['title'] = 'Set as Background';
-					$background['href'] = "doit.php?action=changeBackgroundImage&type=file&id=$itemId";
-					$background['target'] = 'submitter';
-                                        
                                         if(authorize($checkFileData['privacy'], "edit", $checkFileData['owner'])){
                                             $delete['title'] = 'Delete';
                                             $delete['href'] = "#";
@@ -375,9 +366,6 @@ class contextMenu{
 					$fav['href'] = "#";
 					$fav['onclick'] = "fav.add('link', '$itemId');";
 				
-					$playlist['title'] = 'Add to Playlist';
-					$playlist['href'] = '#';
-					$playlist['onclick'] = "popper('doit.php?action=addFileToPlaylist&link=$itemId');";
                                 }
                         if(is_array($checkLinkData)){
                         
