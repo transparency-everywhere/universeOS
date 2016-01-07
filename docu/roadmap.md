@@ -32,8 +32,8 @@ We think that the universeOS should not be a comerical project. But we also now,
 
     get rid of
         mysql_query
-        $.post, $.ajax
-        api.php, doit.php
+        $.post, $.ajax, load, $.get etc
+        api.php
         thousend different column names for user (author, owner, creator, user etc) instead `user`
         chat.show(), feed.show(), buddylist.show() etc. use application.show('buddylist') instead
 

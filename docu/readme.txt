@@ -143,12 +143,6 @@ Files and the use of them (outdated)
 	PHP
 		inc/config.php		//mysql server confid
 		inc/functions.php 	//collection of all functions used by the universeOS usually included in every file
-		
-		doit.php			//one of the biggest problems, the doit.php is used to show everything that diddn't fit
-							//elsewhere. Now we have the mess. It is seperated by a big switch case which separes it
-							//into > 30 actions (e.g "addFolder", "addElement", "deleteFolder", "addGroup")
-							
-							//all the actions will be seperated in located in /actions/folders or actions/groups etc.
 			
 		Modules and Apps
 		modules/
