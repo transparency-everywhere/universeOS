@@ -118,7 +118,7 @@ var registration = new function(){
         }else if(username.length > 2){
         
                 //check server for new messages
-                api.query("api.php?action=checkUsername", {
+                api.query("api/user/checkUsername/", {
                        username:username
                        }, function(result){
                             var res = result;
@@ -234,7 +234,7 @@ function login(){
 	var passwordHash = cypher.getKey('auth', userid, shaPass);
         
         //@async
-	api.query("api.php?action=authentificate", {
+	api.query("api/user/auth/", {
 	                       username:username,
 	                       password:passwordHash,
 	                       }, function(result){

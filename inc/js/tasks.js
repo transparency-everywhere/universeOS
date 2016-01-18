@@ -16,7 +16,7 @@
 
 var tasks = new function(){
     	this.getData = function(taskId){
-	   return api.query('api.php?action=getTaskData', {taskId: taskId});
+	   return api.query('api/calendar/tasks/getData/', {taskId: taskId});
 	};
 	
 	this.addForm = function(startstamp){
@@ -246,7 +246,7 @@ var tasks = new function(){
                                                       searchString += '&time='+encodeURIComponent($('.blueModal #time').text());
                                                       searchString += '&'+privacy;
 
-                                              $.post("api.php?action=updateTask",searchString,function(data){
+                                              $.post("calendar/tasks/update/",searchString,function(data){
 
                                                           if(empty(data)){
                                                               gui.alert('The task has been updated.', 'Tasks');
@@ -308,14 +308,14 @@ var tasks = new function(){
         gui.confirm(confirmParameters);
   }
 	this.markAsDone = function(id){
-                api.query('api.php?action=markTaskAsDone', {eventid : id});
+                api.query('api/calendar/tasks/markAsDone/', {eventid : id});
                 $('.task_'+id).addClass('doneTask');
                 if(!calendar.showDoneTasks){
                     $('.task_'+id).hide();
                 }
 	};
 	this.markAsPending = function(id){
-            api.query('api.php?action=markTaskAsPending', {eventid : id});
+            api.query('api/calendar/tasks/markAsPending/', {eventid : id});
             $('.task_'+id).removeClass('doneTask');
             $('.task_'+id).show();
 	};

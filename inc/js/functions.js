@@ -828,7 +828,7 @@ var User = new function(){
     }
    
     this.getCypher = function(id){
-	return api.query('api.php?action=getUserCypher', { userid : id });
+	return api.query('api/user/getCypher/', { userid : id });
     }
     this.updatePassword = function(user_id, old_password, new_password, callback){
         //generate old password hash for authentification
@@ -1232,7 +1232,8 @@ function useridToUsername(id){
 }
 
 function usernameToUserid(username){
-                   var result = api.query('api.php?action=usernameToUserid', { username : username })
+    
+                   var result = api.query('api/user/usernameToUserid/', { username : username })
 		   usernames[result] = username;
 		   return result;
 		

@@ -347,7 +347,6 @@ switch($action){
 	case 'usernameToUserid':
 
 		echo usernameToUserid($_POST['username']);
-		echo NULL;
 		break;
 		
 		
@@ -359,22 +358,6 @@ switch($action){
 		
 		break;
 		
-		
-	//checks if a username is taken
-    case 'checkUsername':
-        
-    $user = save($_POST[username]);
-    $db = new db();
-    $data = $db->select('user', array('username', $user), array('username'));
-    
-        if(empty($data[username])){
-            echo"1";
-        }else{
-            echo"0";
-        }
-        
-        
-    break;
 	
     //is used for universeIM registration form
     case 'processSiteRegistrationMobile':
@@ -645,27 +628,11 @@ switch($action){
 		$tasks->update($_POST['taskId'],$_POST['user'], $timestamp, $_POST['status'], $_POST['title'], $_POST['description'], $privacy);
 		
 		break;
-	case 'getTaskData':
-		
-		
-		$events = new tasks();
-		echo json_encode($events->getData($_POST['taskId']));
-		
-		
-	break;
 	case 'getTasks':
 		//@del
 		$tasks = new tasks();
 		echo json_encode($tasks->get(getUser(), $_POST['startStamp'], $_POST['stopStamp'], $_POST['privacy']));
 		
-		break;
-	case 'markTaskAsDone':
-		$tasks = new tasks();
-		$tasks->changeStatus($_POST['eventid'], 'done');
-		break;
-	case 'markTaskAsPending':
-		$tasks = new tasks();
-		$tasks->changeStatus($_POST['eventid'], 'pending');
 		break;
 //filesystem
 	case 'fileIdToFileTitle':

@@ -192,6 +192,34 @@ class uni_routes{
                                 }
                 );
         $routes[] = array(
+                                    'path'=>'calendar/events/update/',
+                                    'callback'=> function($post_vars){
+
+
+
+                                    if($post_vars['allDay'] == "true"){
+
+                                            $startTime = strtotime($post_vars['startDate']."-00:00")-3599;
+                                            $stopTime = strtotime($post_vars['startDate']."-23:59")-3599; //no idea why, but it works
+
+                                    }else{
+
+                                            $startTime = strtotime($post_vars['startDate']."-".$post_vars['startTime']);
+                                            $stopTime = strtotime($post_vars['startDate']."-".$post_vars['endTime']);
+                                    }
+		
+                                    //set privacy
+                                    $customShow = $post_vars['privacyCustomSee'];
+                                    $customEdit = $post_vars['privacyCustomEdit'];
+
+                                    $privacy = exploitPrivacy($post_vars['privacyPublic'], $post_vars['privacyHidden'], $customEdit, $customShow);
+
+                                            $events = new events();
+                                            $events->update($post_vars['eventId'], $startTime, $stopTime, $post_vars['title'], $post_vars['place'], $privacy);
+                                            echo $post_vars['allDay'];
+                                }
+                );
+        $routes[] = array(
                 'path'=>'calendar/events/getEvents/',
                 'callback'=> function($post_vars){
 
@@ -242,6 +270,24 @@ class uni_routes{
                                 }
                 );
         $routes[] = array(
+                'path'=>'calendar/tasks/update/',
+                'callback'=> function($post_vars){
+
+
+                                        //set privacy
+                                        $customShow = $post_vars['privacyCustomSee'];
+                                        $customEdit = $post_vars['privacyCustomEdit'];
+                                        $privacy = exploitPrivacy($post_vars['privacyPublic'], $post_vars['privacyHidden'], $customEdit, $customShow);
+
+                                        //get timestamp
+                                        $timestamp = strtotime($post_vars['date']."-".$post_vars['time']);
+
+                                        $tasks = new tasks();
+                                        $tasks->update($post_vars['taskId'],$post_vars['user'], $timestamp, $post_vars['status'], $post_vars['title'], $post_vars['description'], $privacy);
+		
+                                }
+                );
+        $routes[] = array(
                 'path'=>'calendar/tasks/delete/',
                 'callback'=> function($post_vars){
 
@@ -266,6 +312,29 @@ class uni_routes{
 
                                         $api = new api();
                                         $api->handleRequest($post_vars['request'], $requestFunction);
+                                }
+                );
+        $routes[] = array(
+                'path'=>'calendar/tasks/getData/',
+                'callback'=> function($post_vars){
+            
+                                            $events = new tasks();
+                                            echo json_encode($events->getData($post_vars['taskId']));
+                                }
+                );
+        $routes[] = array(
+                'path'=>'calendar/tasks/markAsDone/',
+                'callback'=> function($post_vars){
+            
+                                            $tasks = new tasks();
+                                            $tasks->changeStatus($post_vars['eventid'], 'done');
+                                }
+                );
+        $routes[] = array(
+                'path'=>'calendar/tasks/markAsPending/',
+                'callback'=> function($post_vars){
+                                            $tasks = new tasks();
+                                            $tasks->changeStatus($post_vars['eventid'], 'done');
                                 }
                 );
         $routes[] = array(
@@ -1517,15 +1586,59 @@ class uni_routes{
                     
                 
         //user
+                    
+            $routes[] = array(
+                    'path'=>'user/auth/',
+                    'callback'=> function($post_vars){
+                                            $user = new user();
+                                            echo $user->login($post_vars['username'], $post_vars['password']);
+                                    }
+                    );
+                    
+                    
+                    
+                    
             $routes[] = array(
                     'path'=>'user/authorize/',
                     'callback'=> function($post_vars){
                                             //checks if user is authorized, to edit an item with privacy $_POST['privacy'].
                                             echo authorize($post_vars['privacy'], 'edit', $post_vars['author']);
                                     }
-                    );   
-		
+                    );  
                     
+                    
+            $routes[] = array(
+                    'path'=>'user/getCypher/',
+                    'callback'=> function($post_vars){
+                                        if(empty($post_vars['userid'])){
+                                                $userid = usernameToUserid($post_vars['username']);
+                                        }else{
+                                                $userid = $post_vars['userid'];
+                                        }
+                                                $userClass = new user($userid);
+                                                $userData = $userClass->getData();
+                                                echo $userData['cypher'];
+                                    }
+                    );
+            $routes[] = array(
+                    'path'=>'user/usernameToUserid/',
+                    'callback'=> function($post_vars){
+                                        echo usernameToUserid($post_vars['username']);
+                                    }
+                    );
+            $routes[] = array(
+                    'path'=>'user/checkUsername/',
+                    'callback'=> function($post_vars){
+                                        $user = save($post_vars['username']);
+                                        $db = new db();
+                                        $data = $db->select('user', array('username', $user), array('username'));
+                                        if(empty($data[username])){
+                                            echo 1;
+                                        }else{
+                                            echo 0;
+                                        }
+                                    }
+                    );
             
             $routes[] = array(
                     'path'=>'user/getUserPicture/',
