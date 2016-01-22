@@ -1124,7 +1124,7 @@ var events = new function(){
               					searchString += '&allDay='+encodeURIComponent($('.blueModal #eventAllDay').is(':checked'));
               					searchString += '&'+privacy;
               					
-	              			$.post("api.php?action=updateEvent",searchString,function(data){
+	              			$.post("api/calendar/events/update/",searchString,function(data){
 					            if(empty(data)){
 					            	gui.alert('The event has been updated.', 'Events');
 					            	$('.blueModal').slideUp();

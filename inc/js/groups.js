@@ -266,12 +266,7 @@ var groups = new function(){
             
         };
 	this.getTitle = function(groupId){
-			  		
-				    var result = api.query('api.php?action=getGroupTitle', {groupId : groupId});
-				    
-				   	if(result){
-				   		return result;
-				   	}
+            return this.getData(groupId)['title'];
 			  		
 			  	};
         this.update = function(groupId, title, description, type, membersInvite){

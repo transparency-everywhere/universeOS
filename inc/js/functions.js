@@ -1159,7 +1159,7 @@ var User = new function(){
     };
     
     this.searchByString = function(string, limit){
-        var result = api.query('api.php?action=searchUserByString', { string : string, limit : limit });
+        var result = api.query('api/user/searchByString/', { string : string, limit : limit });
 
         if(result.length === 0 && result == null){
             result = false;           
@@ -1355,7 +1355,7 @@ function getSalt(type, itemId, key){
 }
 
 function createSalt(type, itemId, receiverType, receiverId, salt){
-			return api.query("api.php?action=createSalt", { type: type, itemId: itemId, receiverType: receiverType, receiverId: receiverId, salt: salt });
+			return api.query("api/salts/create/", { type: type, itemId: itemId, receiverType: receiverType, receiverId: receiverId, salt: salt });
 			
 }
 
@@ -1529,7 +1529,7 @@ var cypher = new function(){
 	    var privateKey;
             var index = type+'_'+itemId;
             if(typeof privateKeys[index] === 'undefined'){
-                    var encryptedKey = api.query("api.php?action=getPrivateKey", { type : type, itemId : itemId });
+                    var encryptedKey = api.query("api/keys/getPrivateKey/", { type : type, itemId : itemId });
 			
                     var shaPass = localStorage.currentUser_shaPass;
 			
@@ -1547,7 +1547,7 @@ var cypher = new function(){
 	    };
             
         this.getPublicKey = function(type, itemId){
-	    	return api.query("api.php?action=getPublicKey", { type : type, itemId : itemId });
+	    	return api.query("api/keys/getPublicKey/", { type : type, itemId : itemId });
 	};
 	
 };
@@ -1642,7 +1642,8 @@ var sec =  new function() {
 			    	return hash.SHA512(randomString(64, '#aA'));  //generate salt and hash it.
 			    	
 			    };
-                            
+     
+    //@old but better
     this.updatePassword = function(oldPassword, newPassword, userid){
     	
 		//cypher old password
@@ -1678,7 +1679,7 @@ var sec =  new function() {
 
 	
 function getPublicKey(type, itemId){
-	    	return api.query("api.php?action=getPublicKey", { type : type, itemId : itemId });
+	    	return api.query("api/keys/getPublicKey/", { type : type, itemId : itemId });
 	}
 	
 function storeMessageKey(messageId, key){
@@ -2178,7 +2179,7 @@ function getElementsByClassName(node,classname) {
 
 function getUserSalt(id){
             //returns user salt (aes encrypted with pw hash)
-            return api.query("api.php?action=getUserSalt", { userid : id });
+            return api.query("api/salts/get/", { userid : id });
 	}
 
 //filesystem

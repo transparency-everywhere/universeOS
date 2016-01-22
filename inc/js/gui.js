@@ -722,7 +722,7 @@ var gui = new function(){
 	                            'token'     : ''
 	                    },
 	                    'swf'      : 'inc/plugins/uploadify/uploadify.swf',
-	                    'uploader' : 'api.php?action=uploadFile',
+	                    'uploader' : 'api/files/upload/',
 				        'onUploadSuccess' : function(file, data, response) {
 				        	
 				        	if(response){

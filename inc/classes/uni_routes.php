@@ -1579,8 +1579,51 @@ class uni_routes{
                                             echo $saltClass->get($post_vars['type'], $post_vars['itemId']);
 
                                     }
-                    );    
+                    );
                     
+            $routes[] = array(
+                    'path'=>'salts/create/',
+                    'callback'=> function($post_vars){
+                                            $type = $post_vars['type'];
+                                            $itemId = $post_vars['itemId'];
+                                            $receiverType = $post_vars['type'];
+                                            $receiverId = $post_vars['receiverId'];
+                                            $salt = $post_vars['salt'];
+
+                                            //store salt
+                                            $saltClass = new salt();
+                                            $saltClass->create($type, $itemId, $receiverType, $receiverId, $salt);
+		
+                                    }
+                    );    
+        //keys
+                    
+            $routes[] = array(
+                    'path'=>'keys/getPublicKey/',
+                    'callback'=> function($post_vars){
+                                            $type = $post_vars['type'];
+                                            $itemId = $post_vars['itemId'];
+                                            $receiverType = $post_vars['type'];
+                                            $receiverId = $post_vars['receiverId'];
+                                            $salt = $post_vars['salt'];
+
+                                            //store salt
+                                            $saltClass = new salt();
+                                            $saltClass->create($type, $itemId, $receiverType, $receiverId, $salt);
+		
+                                    }
+                    );
+            $routes[] = array(
+                    'path'=>'keys/getPrivateKey/',
+                    'callback'=> function($post_vars){
+                                            $type = $post_vars['type'];
+                                            $itemId = $post_vars['itemId'];
+
+                                            $signature = new signatures();
+                                            $data = $signature->get($type, $itemId);
+                                            echo $data['privateKey'];
+                                    }
+                    );
                     
                     
                     
@@ -1678,6 +1721,13 @@ class uni_routes{
                                     }
                     );
             $routes[] = array(
+                    'path'=>'user/searchByString/',
+                    'callback'=> function($post_vars){
+                                            $api = new api();
+                                            echo json_encode($api->searchUserByString($post_vars['string'], '0,10'));
+                                    }
+                    );
+            $routes[] = array(
                     'path'=>'user/getGroups/',
                     'callback'=> function(){
 
@@ -1766,7 +1816,10 @@ class uni_routes{
                     'path'=>'user/updatePassword/',
                     'callback'=> function($post_vars){
 
-
+                                            //@sec
+                                            //@todo
+                                            //echo updateUserPassword($_POST['oldPassword'], $_POST['password'], $_POST['authSalt'], $_POST['keySalt'], $_POST['privateKey']);
+		
                                             $user = new user();
                                             echo $user->updatePassword($post_vars['oldPasswordHash'], $post_vars['newPasswordHash'], $post_vars['newAuthSalt'], getUser());
                                     }
