@@ -107,7 +107,7 @@ var privacy = new function(){
 			  		if(author == localStorage.currentUser_userid)
 			  			return true;
 			  			
-			  		var result = api.query('user/authorize/', {privacy: privacy, author: author});
+			  		var result = api.query('api/user/authorize/', {privacy: privacy, author: author});
 				    
                                         if(parseInt(result) === 1)
                                                      return true;
