@@ -17,6 +17,20 @@
 var buddylist = new function(){
     this.checksum;
     this.app;
+    this.init = function(){
+        //preload all userpictures to save requests
+        getUserPicture(this.getBuddies());
+        useridToUsername(this.getBuddies());
+        var output="";
+        
+        output += "<div id=\"buddyListFrame\">";
+        output += this.generateBuddylist();
+        output += "</div>";
+        
+        this.applicationVar = new application('buddylist');
+	this.applicationVar.create('Buddylist', 'html', output);
+	
+    };
     this.getBuddies = function(user_id){ 
         if(typeof user_id === 'undefined'){
             var user_id = '';
@@ -105,19 +119,6 @@ var buddylist = new function(){
 
         output += "</table>";
         return output;
-    };
-    this.init = function(){
-        //preload all userpictures to save requests
-        getUserPicture(this.getBuddies());
-        useridToUsername(this.getBuddies());
-        var output="";
-        output += "<div id=\"buddyListFrame\">";
-        output += this.generateBuddylist();
-        output += "</div>";
-	
-        this.applicationVar = new application('buddylist');
-	this.applicationVar.create('Buddylist', 'html', output,{width: 2, height:  8, top: 1, left: 9});
-	
     };
     this.show = function(){
         applications.show('buddylist');

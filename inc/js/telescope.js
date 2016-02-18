@@ -1,11 +1,8 @@
 
 var telescope = new function(){
     this.init = function(){
-        var grid = {width: 5, height:  4, top: 6, left: 3, hidden: true};
-        if(proofLogin())
-            grid = {width: 8, height:  8, top: 2, left: 2, hidden: true};
         this.applicationVar = new application('telescope');
-        this.applicationVar.create('Telescope', 'html', "<div id='telescopeFrame'></div>", grid);
+        this.applicationVar.create('Telescope', 'html', "<div id='telescopeFrame'></div>");
         
         
 	this.tabs = new tabs('#telescopeFrame');

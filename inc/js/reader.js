@@ -22,11 +22,8 @@ var reader = new function(){
     
     this.uffChecksums = []; //var to store checksums for reload
     this.init = function(){
-        var grid = {width: 5, height:  4, top: 6, left: 3, hidden: true};
-        if(proofLogin())
-            grid = {width: 8, height:  8, top: 0, left: 2, hidden: true};
         this.applicationVar = new application('reader');
-        this.applicationVar.create('Display', 'url', 'modules/reader/index.php', grid);
+        this.applicationVar.create('Display', 'url', 'modules/reader/index.php');
         
         
 	this.tabs = new tabs('#readerFrame');
