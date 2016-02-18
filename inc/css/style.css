@@ -5413,6 +5413,32 @@ and (max-width : 320px) {
 }
 
 
+.guiPresetChooser{
+    margin-top:25px;
+}
+.guiPresetChooser li{
+    clear:left;
+    cursor:pointer;
+    height: 80px;
+    padding: 10px 0;
+}
+.guiPresetChooser li.active{
+    background:#c9c9c9;
+}
+.guiPresetChooser h3{
+    margin:0;
+}
+.guiPresetChooser header{
+    float: left;
+    padding: 20px;
+    height: 40px;
+}
+.guiPresetChooser p{
+    float:left;
+    max-width:200px;
+    height:40px;
+}
+
 
 .custom-dropdown--large {
     font-size: 1.5em;

@@ -28,17 +28,17 @@ var applications = new function(){
                         'source':'filesystem.js',
                         'className':'filesystem',
                         'active': true,
-                        'position':{width: 8, height:  5, top: 0, left: 2},
+                        'position':{width: 6, height:  5, top: 7, left: 6},
                         'icon':'gfx/applicationIcons/white/filesystem.svg'
                     };
         
         //reader
         apps[1] =  {
-                        'title':'Display',
+                        'title':'display',
                         'source':'reader.js',
                         'className':'reader',
-                        'active': false,
-                        'position':{width: 5, height:  4, top: 0, left: 4, hidden: true},
+                        'active': true,
+                        'position':{width: 5, height:  4, top: 0, left: 4, hidden: false},
                         'icon':'gfx/applicationIcons/white/filesystem.svg'
                     };
         
@@ -47,7 +47,7 @@ var applications = new function(){
                         'title':'telescope',
                         'source':'telescope.js',
                         'className':'telescope',
-                        'active': false,
+                        'active': true,
                         'position':{width: 8, height:  5, top: 0, left: 2, hidden:true},
                         'icon':'gfx/applicationIcons/white/filesystem.svg'
                     };
@@ -58,9 +58,15 @@ var applications = new function(){
         if(!proofLogin())
             return apps;
         
-        
-        
-        
+            //filesystem 
+            apps[0] =   {
+                        'title':'filesystem',
+                        'source':'filesystem.js',
+                        'className':'filesystem',
+                        'active': true,
+                        'position':{width: 6, height:  5, top: 0, left: 3},
+                        'icon':'gfx/applicationIcons/white/filesystem.svg'
+                    };
             //feed
             //change position with display
             apps[3] = apps[2];
@@ -142,6 +148,7 @@ var applications = new function(){
         var sessionApplications = this.getList();
         
         $.each(sessionApplications, function(index, value){
+            
             if(value)
             if(value['source']){
                 gui.loadScript('inc/js/'+value['source']);
@@ -150,6 +157,8 @@ var applications = new function(){
                 };
             }
         });
+        
+        this.initApplicationSizes();
     };
     
     /**
@@ -178,17 +187,168 @@ var applications = new function(){
         });
     };
     
-    
-    this.updateApplicationPositions = function(applicationObjects){
-        var self = this;
-        $.each(applicationObjects,function(index, value){
-            self.setSize = function(){
-                
-            };
+    this.getStyleFromList = function(title){
+        var returnVal;
+        $.each(this.getList(), function(index,value){
+            if(value.title == title){
+                returnVal = value.position;
+            }
         });
+        return returnVal;
     };
-    this.setSize = function(title, attributes){
+    
+           
+    this.initApplicationSizes = function(preset){
+        if(!preset)
+        var preset = 'social';
         
+        if(proofLogin()){
+            
+            if(preset === 'all'){
+                
+                var styleObj = {
+                   "filesystem":
+                   {
+                               "width":gui.getRasterWidth(applications.getStyleFromList('filesystem')['width'])+"px",
+                               "height":gui.getRasterHeight(applications.getStyleFromList('filesystem')['height'])+"px",
+                               "top":gui.getRasterMarginTop(applications.getStyleFromList('filesystem')['top'])+"px",
+                               "left":gui.getRasterMarginLeft(applications.getStyleFromList('filesystem')['left'])+"px",
+                               "display":'block'
+                   },
+                   "feed":
+                   {
+                               "width":gui.getRasterWidth(applications.getStyleFromList('feed')['width'])+"px",
+                               "height":gui.getRasterHeight(applications.getStyleFromList('feed')['height'])+"px",
+                               "top":gui.getRasterMarginTop(applications.getStyleFromList('feed')['top'])+"px",
+                               "left":gui.getRasterMarginLeft(applications.getStyleFromList('feed')['left'])+"px",
+                               "display":'block'
+                   },
+                   "buddylist":
+                   {
+                               "width":gui.getRasterWidth(applications.getStyleFromList('buddylist')['width'])+"px",
+                               "height":gui.getRasterHeight(applications.getStyleFromList('buddylist')['height'])+"px",
+                               "top":gui.getRasterMarginTop(applications.getStyleFromList('buddylist')['top'])+"px",
+                               "left":gui.getRasterMarginLeft(applications.getStyleFromList('buddylist')['left'])+"px",
+                               "display":'block'
+                   }
+               };
+            } 
+            else if(preset === 'social'){
+                
+                var styleObj = {
+                   "reader":
+                   {
+                               "width":gui.getRasterWidth(applications.getStyleFromList('filesystem')['width'])+"px",
+                               "height":gui.getRasterHeight(applications.getStyleFromList('filesystem')['height'])+"px",
+                               "top":gui.getRasterMarginTop(applications.getStyleFromList('filesystem')['top'])+"px",
+                               "left":gui.getRasterMarginLeft(applications.getStyleFromList('filesystem')['left'])+"px",
+                               "display":'block'
+                   },
+                   "feed":
+                   {
+                               "width":gui.getRasterWidth(applications.getStyleFromList('feed')['width'])+"px",
+                               "height":gui.getRasterHeight(applications.getStyleFromList('feed')['height'])+"px",
+                               "top":gui.getRasterMarginTop(applications.getStyleFromList('feed')['top'])+"px",
+                               "left":gui.getRasterMarginLeft(applications.getStyleFromList('feed')['left'])+"px",
+                               "display":'block'
+                   },
+                   "buddylist":
+                   {
+                               "width":gui.getRasterWidth(applications.getStyleFromList('buddylist')['width'])+"px",
+                               "height":gui.getRasterHeight(applications.getStyleFromList('buddylist')['height'])+"px",
+                               "top":gui.getRasterMarginTop(applications.getStyleFromList('buddylist')['top'])+"px",
+                               "left":gui.getRasterMarginLeft(applications.getStyleFromList('buddylist')['left'])+"px",
+                               "display":'block'
+                   }
+               };
+            }
+            else if(preset === 'creative'){
+                
+                var styleObj = {
+                   "telescope":
+                   {
+                               "width":gui.getRasterWidth(6)+"px",
+                               "height":gui.getRasterHeight(10)+"px",
+                               "top":gui.getRasterMarginTop(0)+"px",
+                               "left":gui.getRasterMarginLeft(0)+"px",
+                               "display":'block'
+                   },
+                   "feed":
+                   {
+                               "width":gui.getRasterWidth(3)+"px",
+                               "height":gui.getRasterHeight(10)+"px",
+                               "top":gui.getRasterMarginTop(0)+"px",
+                               "left":gui.getRasterMarginLeft(6)+"px",
+                               "display":'block'
+                   },
+                   "buddylist":
+                   {
+                               "width":gui.getRasterWidth(2)+"px",
+                               "height":gui.getRasterHeight(10)+"px",
+                               "top":gui.getRasterMarginTop(0)+"px",
+                               "left":gui.getRasterMarginLeft(9)+"px",
+                               "display":'block'
+                   }
+               };
+            }
+            
+        }else{
+            var styleObj = {
+                               "filesystem":
+                               {
+                                           "width":gui.getRasterWidth(applications.getStyleFromList('filesystem')['width'])+"px",
+                                           "height":gui.getRasterHeight(applications.getStyleFromList('filesystem')['height'])+"px",
+                                           "top":gui.getRasterMarginTop(applications.getStyleFromList('filesystem')['top'])+"px",
+                                           "left":gui.getRasterMarginLeft(applications.getStyleFromList('filesystem')['left'])+"px",
+                                           "display":'block'
+                               }
+                           };
+        }
+            
+            applications.updateApplicationStyle(styleObj);
+    };
+    
+    this.getStyleForUser = function(){
+        return {"filesystem":{"width":"463px","height":"377px","top":"170.812px","left":"408.844px"},"buddylist":{"width":"250px","height":"377px","top":"60.8163px","left":"745.286px"},"feed":{"width":"250px","height":"377px","top":"60.8163px","left":"20.1429px"},"chat":{"width":"302px","height":"329px","top":"158.122px","left":"261.857px"},"player":{"width":"544px","height":"329px","top":"109.469px","left":"181.286px"}};
+    };
+    
+    this.getStyles = function(){
+        var result = {};
+        $.each(this.getList(), function(index, value){
+            if($('#'+value.className).length > 0){
+                result[value.title] = {
+                    
+                    width:$('#'+value.className).css('width'),
+                    height:$('#'+value.className).css('height'),
+                    top:$('#'+value.className).css('top'),
+                    left:$('#'+value.className).css('left')
+                };
+            }
+        });
+        return result;
+    };
+    
+    
+    
+    this.setToUserStyle = function(){
+        this.updateApplicationStyle(this.getStyleForUser());
+    };
+    
+    this.updateApplicationStyle = function(stylesObj){
+        var applicationList = this.getList();
+        var self = this;
+        
+        $.each(applicationList, function(index,value){
+            if(typeof stylesObj[value.className] !== 'undefined'){
+                self.setStyle(value.className, stylesObj[value.className]);
+            }
+        });
+        
+        
+        
+    };
+    this.setStyle = function(title, attributes){
+        $("#" + title + "").css(attributes);
     };
 };
 
@@ -213,42 +373,43 @@ var application = function(id){
 		var windowStyle = '';
 		
                 
-                //check if style parameters are set
-                //for width, height, top, left
-                //if value is not nummeric(eg '222px') use value,
-                //otherwise use pixelraster(see gui class)
-		if(typeof options['width'] != 'undefined'){
-                    if(isNaN(options['width'])){
-			windowStyle +='width:'+options['width']+';';
-                    }else{
-                        windowStyle +='width:'+gui.getRasterWidth(options['width'])+'px;';
-                    }
-		}
                 
-		if(typeof options['height'] != 'undefined'){
-                    if(isNaN(options['width'])){
-			windowStyle +='height:'+options['width']+';';
-                    }else{
-                        windowStyle +='height:'+gui.getRasterHeight(options['height'])+'px;';
+                if(typeof options != 'undefined'){
+                    //check if style parameters are set
+                    //for width, height, top, left
+                    //if value is not nummeric(eg '222px') use value,
+                    //otherwise use pixelraster(see gui class)
+                    if(typeof options['width'] != 'undefined'){
+                        if(isNaN(options['width'])){
+                            windowStyle +='width:'+options['width']+';';
+                        }else{
+                            windowStyle +='width:'+gui.getRasterWidth(options['width'])+'px;';
+                        }
                     }
-		}
-                
-		if(typeof options['top'] != 'undefined'){
-                    if(isNaN(options['top'])){
-			windowStyle +='top:'+options['top']+';';
-                    }else{
-                        windowStyle +='top:'+gui.getRasterMarginTop(options['top'])+'px;';
+                    if(typeof options['height'] != 'undefined'){
+                        if(isNaN(options['width'])){
+                            windowStyle +='height:'+options['width']+';';
+                        }else{
+                            windowStyle +='height:'+gui.getRasterHeight(options['height'])+'px;';
+                        }
                     }
-		}
-                
-		if(typeof options['left'] != 'undefined'){
-                    if(isNaN(options['left'])){
-			windowStyle +='left:'+options['left']+';';
-                    }else{
-                        windowStyle +='left:'+gui.getRasterMarginLeft(options['left'])+'px;';
+
+                    if(typeof options['top'] != 'undefined'){
+                        if(isNaN(options['top'])){
+                            windowStyle +='top:'+options['top']+';';
+                        }else{
+                            windowStyle +='top:'+gui.getRasterMarginTop(options['top'])+'px;';
+                        }
                     }
-		}
-                
+
+                    if(typeof options['left'] != 'undefined'){
+                        if(isNaN(options['left'])){
+                            windowStyle +='left:'+options['left']+';';
+                        }else{
+                            windowStyle +='left:'+gui.getRasterMarginLeft(options['left'])+'px;';
+                        }
+                    }
+                }
                 windowStyle +='display:none;';
                 
 		
@@ -268,14 +429,14 @@ var application = function(id){
 		
 		$('#bodywrap').append(output);
                 
-		if(typeof options['hidden'] == 'undefined' || options['hidden'] !== true){
-                        $('#'+applicationDomID+'.fenster').fadeIn(1000);
-		}
-                  
-                if(typeof options['onClose'] == 'function'){
-                    this.onClose = options['onClose'];
-                };
-		
+                if(typeof options != 'undefined'){
+                    if((typeof options['hidden'] == 'undefined' || options['hidden'] !== true)){
+                            $('#'+applicationDomID+'.fenster').fadeIn(1000);
+                    }
+                    if(typeof options['onClose'] == 'function'){
+                        this.onClose = options['onClose'];
+                    };
+                }
               init.draggableApplications();
               init.resizableApplications();
               init.applicationOnTop();

@@ -407,7 +407,10 @@ var universe = new function(){
         gui.loadScript('inc/js/shortcuts.js');
         
         gui.loadScript('inc/js/clientDB.js');
+        
         applications.init();
+        
+        applications.initApplicationSizes();
         
         //init draggable windows
         init.GUI();
@@ -1697,8 +1700,7 @@ function isStored(messageId){
             return false;
         }
     }
-    
-    
+
 
 var support = new function(){
     this.callbackId = 0;
@@ -1810,6 +1812,7 @@ var support = new function(){
         callbacks.push('showPrivacy');
         callbacks.push('showCalendar');
         callbacks.push('lastOne');
+        callbacks.push('openGuiPresetChooser');
         
         
         
@@ -1817,8 +1820,77 @@ var support = new function(){
         this.callbackId++;
         
     },
+            
+            
+    this.openGuiPresetChooser = function(){
+        
+        $('.fenster').hide();
+        
+        var formModal = new gui.modal();
+        
+        var fieldArray = [];
+        var options = [];
+        options['headline'] = '';
+        options['buttonTitle'] = 'Save';
+        options['noButtons'] = true;
+        
+        
+        var html = '';
+        html += '<ul class=\'guiPresetChooser\'>';
+            html += '<li data-type=\'social\'>';
+                html += '<header><span class=\'icon white-user\'></span></header>';
+                html += '<h3>Social</h3><p>I want to use the universe to interact with my friends</p>';
+            html += '</li>';
+            html += '<li data-type=\'creative\'>';
+                html += '<header><span class=\'icon white-user\'></span></header>';
+                html += '<h3>Creative</h3><p>I want to use the universe to create awesome stuff</p>';
+            html += '</li>';
+            html += '<li data-type=\'all\'>';
+                html += '<header><span class=\'icon white-user\'></span></header>';
+                html += '<h3>All</h3><p>I want to open every application on startup</p>';
+            html += '</li>';
+        html += '</ul>';
+        
+        
+        
+        var field0 = [];
+        field0['caption'] = '';
+        field0['caption_position'] = 'top';
+        field0['required'] = true;
+        field0['inputName'] = 'title';
+        field0['type'] = 'html';
+        field0['value'] = html;
+        fieldArray[0] = field0;
+        
+        var modalOptions = {};
+        modalOptions['buttonTitle'] = 'Start';
+        
+        
+        var self = this;
+        modalOptions['action'] = function(){
+            
+            applications.initApplicationSizes($('.guiPresetChooser li.active').attr('data-type'));
+            
+        };
+        
+        formModal.init('How do you want to use the universe?', '<div id="guiPresetChooser"></div>', modalOptions);
+        gui.createForm('#guiPresetChooser',fieldArray, options);
+        
+        $('.guiPresetChooser li').click(function(){
+           $('.guiPresetChooser li').removeClass('active');
+           $(this).addClass('active');
+        });
+    };
+            
     this.executeCallback = function(callbackTitle){
+        var self = this;
+        
         var callbacks = {};
+        
+        callbacks['openGuiPresetChooser'] = function(){
+            self.openGuiPresetChooser();
+        };
+        
         callbacks['lastOne'] = function(){
             support.alert($('#clockDiv'),
                           'We are done with the tour. Enjoy the universe :)',
@@ -1830,7 +1902,9 @@ var support = new function(){
             support.alert($('#clockDiv'),
                           'Click on the time to open the calendar',
                           'bottom-right',
-                          $('#clockDiv')
+                          $('#clockDiv'),function(){
+                              
+                          }
                         );
         };
         
@@ -1903,9 +1977,7 @@ var support = new function(){
         };
         
         callbacks['dashTasks'] = function(){
-            console.log('start');
             delay(function(){
-            console.log('end');
                                     support.alert($('#taskBox'), 'Add Tasks for you or certain groups.', 'right');
             },700);
                                     
