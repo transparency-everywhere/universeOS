@@ -229,6 +229,8 @@ include_once('classes/class_buddylist.php');
 
 include_once('classes/class_feed.php');
 
+include_once('classes/class_sessions.php');
+
 include_once('classes/class_universe.php');
    
 include_once('classes/class_db.php');

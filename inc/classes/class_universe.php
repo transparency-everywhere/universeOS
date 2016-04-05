@@ -74,7 +74,6 @@ class uniConfig {
         
     }
     public static function reload($requests){
-                    require('inc/classes/class_sessions.php');
                     $user = getUser();
                     
                     $buddylist = new buddylist();
