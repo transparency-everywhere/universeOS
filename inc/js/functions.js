@@ -1,4 +1,8 @@
+
+if(universeConfig.dir.length>0)
 var sourceURL = 'http://'+universeConfig.host+'/'+universeConfig.dir+'/';
+else
+var sourceURL = 'http://'+universeConfig.host+'/';
 
 
 var usernames = [];
