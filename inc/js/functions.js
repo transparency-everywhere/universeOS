@@ -285,7 +285,8 @@ var session = new function(){
     };
     
     this.load = function(sessionInfo){
-        
+    		alert(sessionInfo.lastMessageReceived);
+        	alert('loading session');
             im.lastMessageReceived = sessionInfo.lastMessageReceived;
     };
     

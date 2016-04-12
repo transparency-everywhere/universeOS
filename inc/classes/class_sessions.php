@@ -33,7 +33,7 @@ class sessions{
         echo 'asdasd';
         $db = new db();
         $data = $db->query('SELECT `sessionInfo` FROM `sessions` WHERE '
-                         //. "TRIM(IFNULL(sessionInfo,'')) <> '' &&"
+                         . "TRIM(IFNULL(sessionInfo,'')) <> '' &&"
                          . '`user`=\''.getUser().'\'  ORDER BY `id` DESC LIMT 1');
         if($data['sessionInfo'] == 't')
             $values['sessionInfo'] = '{}';
@@ -56,13 +56,15 @@ class sessions{
     }
     //returns values for session (eg. last message received etc.)
     function getSessionInformation($session_identifier){
+
         $db = new db();
-        $data = $db->select('sessions', array('user', getUser(), '&&', 'fingerprint', $session_identifier), NULL, NULL, 1);
+        $data = $db->select('sessions', array('user', getUser(), '&&', 'fingerprint', $session_identifier));
     
         if(is_array($data))
             
             return $data['sessionInfo'];
         return null;
+
     }
     function updateFingerprint($old_fingerprint, $new_fingerprint){
         $db = new db();
