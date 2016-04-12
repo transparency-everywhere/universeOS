@@ -1481,9 +1481,6 @@ class uni_routes{
                 'callback'=> function(){
 
 
-                                        include("inc/classes/class_sessions.php");
-
-
                                         //@sec
                                 }
                 );
@@ -1513,7 +1510,6 @@ class uni_routes{
                 'callback'=> function($post_vars){
 
 
-                                        include("inc/classes/class_sessions.php");
 
 
                                         $sessions = new sessions();
@@ -1524,9 +1520,6 @@ class uni_routes{
         $routes[] = array(
                 'path'=>'sessions/updateSessionInfo/',
                 'callback'=> function($post_vars){
-
-
-                                        include("inc/classes/class_sessions.php");
 
 
                                         $sessions = new sessions();
