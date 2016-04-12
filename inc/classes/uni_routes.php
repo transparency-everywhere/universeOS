@@ -1490,12 +1490,9 @@ class uni_routes{
         $routes[] = array(
                 'path'=>'sessions/create/',
                 'callback'=> function($post_vars){
-
-
-                                        include("inc/classes/class_sessions.php");
-
-
+            
                                         $sessions = new sessions();
+                                        
 
                                         echo $sessions->createSession($post_vars['fingerprint'], $post_vars['type'], $post_vars['title']);
                                 }

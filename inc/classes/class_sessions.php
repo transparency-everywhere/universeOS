@@ -30,8 +30,11 @@ class sessions{
         }
     }
     function createSession($identifier, $type, $title){
+        echo 'asdasd';
         $db = new db();
-        $data = $db->query('SELECT `sessionInfo` FROM `sessions` WHERE `user`=\''.getUser().'\' ORDER BY `id` DESC LIMT 1');
+        $data = $db->query('SELECT `sessionInfo` FROM `sessions` WHERE '
+                         //. "TRIM(IFNULL(sessionInfo,'')) <> '' &&"
+                         . '`user`=\''.getUser().'\'  ORDER BY `id` DESC LIMT 1');
         if($data['sessionInfo'] == 't')
             $values['sessionInfo'] = '{}';
         else
@@ -41,6 +44,7 @@ class sessions{
         
         
         $values['type'] = $type;
+        $values['timestamp'] = time();
         $values['fingerprint'] = $identifier;
         $values['user'] = getUser();
         if($title){

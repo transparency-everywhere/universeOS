@@ -61,9 +61,6 @@ var im = new function(){
             var userid = parameter;
         }
         
-        
-        
-        
         var username = useridToUsername(userid);
         
         applications.show('chat');
@@ -134,13 +131,6 @@ var im = new function(){
                 $chatInput.val('').focus();
             });
         });
-        
-        
-        
-        
-        
-        
-        
         
     };
     
