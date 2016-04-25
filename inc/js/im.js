@@ -78,12 +78,12 @@ var im = new function(){
             //if dialoge doesnt exists => bring dialoge to front..
             var dialogue_tab_id = chat.tabs.getTabByTitle(username);
 
-            im.loadDialogueIntoFrame(userid, 0, 10);
+            im.loadDialogueIntoFrame(userid, 0, 500);
             chat.tabs.showTab(dialogue_tab_id);
         }
         
         
-        this.loadDialogueIntoFrame(userid, 0, 10);
+        this.loadDialogueIntoFrame(userid, 0, 500);
         
 //        $('.chatFrame_'+userid).click(function(){
 //            $(this).parent().find('.chatKeySettings').toggle();
