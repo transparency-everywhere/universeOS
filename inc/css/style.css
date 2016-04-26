@@ -27,6 +27,9 @@ body {
         -ms-user-select: none;
         user-select: none;
         overflow:hidden;
+        
+        
+   cursor: default;
 }
 
 ul {
