@@ -59,11 +59,11 @@ var comments = new function(){
                 html += '<div style="padding: 8px; ">'+commentData['text']+'</div>';
 
                 html += '<div style="padding: 8px; ">';
-                    html += '<div>';
+                    html += '<div style="margin-top: -30px;">';
                         html += '<span style="float:left;">';
                         html += item.showScoreButton('comment',item_id);
                         html += '</span>';
-                        html += '<span style="float:left;">asd';
+                        html += '<span style="float:left;">';
                         html += item.showItemSettings('comment',commentData['id']);
                         html += '</span>';
                     html += '</div>';
