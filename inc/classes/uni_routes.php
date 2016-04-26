@@ -996,8 +996,7 @@ class uni_routes{
         $routes[] = array(
                 'path'=>'handlers/',
                 'callback'=> function($post_vars){
-
-                                        include("../../inc/classes/phpfastcache.php");
+                                        include("phpfastcache.php");
                                         $cache = new phpFastCache();
                                         $cache->clean();
                                         if(isset($post_vars['handler_title'])){
@@ -1435,7 +1434,7 @@ class uni_routes{
                 'callback'=> function($post_vars){
 
 
-                                        include("../../../inc/classes/class_search.php");
+                                        include("class_search.php");
 
 
                                             $search = new search($post_vars['search']);
@@ -1452,7 +1451,7 @@ class uni_routes{
                 'callback'=> function($post_vars){
 
 
-                                        include("../../../inc/classes/class_search.php");
+                                        include("class_search.php");
 
 
                                             $search = new search($post_vars['query']);
@@ -1466,7 +1465,7 @@ class uni_routes{
                 'path'=>'search/query/',
                 'callback'=> function($post_vars){
 
-                                        include('../../../inc/classes/class_search.php');
+                                        include('class_search.php');
 
                                         $search = new search($post_vars['query']);
 
@@ -1553,7 +1552,7 @@ class uni_routes{
                     'path'=>'shortcuts/getData/',
                     'callback'=> function($post_vars){
 
-                                            include('../../../inc/classes/class_search.php');
+                                            include('class_search.php');
 
                                             $shortcutClass = new shortcut();
 
