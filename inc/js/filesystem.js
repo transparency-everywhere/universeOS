@@ -267,12 +267,13 @@ var filesystem =  new function() {
         return html;
     };
     this.generateFileBrowser = function(folderId){
+        console.log(folderId);
         var showFileBrowser = true;
         var favorite = false;
         if(is_numeric(folderId) || empty(folderId)){
             if(empty(folderId) || folderId === 0){
                 folderId = '1';
-            }else if(folderId === '2'){
+            }else if(parseInt(folderId) === 2){
                 if(proofLogin()){
                     folderId = User.getAllData(User.userid)['homefolder'];
                     showFileBrowser = true;

@@ -1702,10 +1702,8 @@ class uni_routes{
             $routes[] = array(
                     'path'=>'user/getAllData/',
                     'callback'=> function($post_vars){
-
-
-                                            $user = new user($post_vars['userid']);
-                                            if($post_vars['userid'] == getUser())
+                                            $user = new user($post_vars['user_id']);
+                                            if($post_vars['user_id'] == getUser())
                                             echo json_encode($user->getData());
                                     }
                     );
