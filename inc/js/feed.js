@@ -325,7 +325,7 @@ var feed = new function(){
         output += '<li><a class="smiley emoticon-smile" data-code=":)"></a><a class="smiley emoticon-tongue" data-code=":p"></a><a class="smiley emoticon-wink" data-code=";)"></a><a class="smiley emoticon-surprised" data-code=":o"></a></li>';
         output += '<li><a class="smiley emoticon-laugh" data-code=":D"></a><a class="smiley emoticon-cute" data-code=":3"></a><a class="smiley emoticon-sad" data-code=":("></a><a class="smiley emoticon-cry" data-code=":\'("></a></li>';
         output += '';
-        output +=' <li><a href="#" onclick=\"filesystem.attachItem($(\'#addFeedPrivacy\'));\" style="color:#FFF">Attach File</a></li></ul>';
+        output +=' <li><a href="#" onclick=\"filesystem.attachItem($(\'#addFeedPrivacy\'));\" style="color:#FFF">Attach Item</a></li></ul>';
         output += '</div>';
         
         output += "                                <div class=\"btn-toolbar\" style=\"float: left;\">";
