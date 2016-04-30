@@ -113,6 +113,10 @@ class contextMenu{
 				$open['title'] = 'Open';
 				$open['href'] = '#';
 				$open['onclick'] = "openFolder('$itemId')";
+                                
+				$share['title'] = 'Share';
+				$share['href'] = '#';
+				$share['onclick'] = "filesystem.openShareModal(\'folder\', '$itemId');";
 				
 				if(proofLogin()){
 					
@@ -172,6 +176,7 @@ class contextMenu{
 				}
 				
 				$options[] = $open;
+				$options[] = $share;
 				$options[] = $privacy;
 				$options[] = $edit;
 				$options[] = $delete;
@@ -189,6 +194,11 @@ class contextMenu{
 			 	$open['title'] = 'Open';
 			 	$open['href'] = '#';
 			 	$open['onclick'] = "openElement('$itemId', '$title');";
+                                
+				$share['title'] = 'Share';
+				$share['href'] = '#';
+				$share['onclick'] = "filesystem.openShareModal(\'collection\', '$itemId');";
+				
 			 
 		      	if(authorize($checkElementData['privacy'], "edit", $checkElementData['author'])){
 		      		$privacy['title'] = 'Privacy';
@@ -242,6 +252,7 @@ class contextMenu{
 				}
 			
 				$options[] = $open;
+				$options[] = $share;
 				$options[] = $privacy;
 				$options[] = $edit;
 				$options[] = $delete;
@@ -258,6 +269,10 @@ class contextMenu{
 			  	$open['href'] = '#';
 			  	$open['onclick'] = "reader.openFile($itemId), '$title');";
 			  
+				$share['title'] = 'Share';
+				$share['href'] = '#';
+				$share['onclick'] = "filesystem.openShareModal(\'file\', '$itemId');";
+				
 			  	if(proofLogin()){
 			  		$fav['title'] = 'Add to Fav';
 					$fav['href'] = "#";
@@ -314,6 +329,7 @@ class contextMenu{
 			  	$download['target'] = 'submitter';
 			
 				$options[] = $open;
+				$options[] = $share;
 				$options[] = $privacy;
 				$options[] = $fav;
 				$options[] = $playlist;
@@ -332,6 +348,9 @@ class contextMenu{
 			  	$open['href'] = '#';
 			  	$open['onclick'] = "openFile('image', '$itemId', '$title');";
 			  
+				$share['title'] = 'Share';
+				$share['href'] = '#';
+				$share['onclick'] = "filesystem.openShareModal(\'file\', '$itemId');";
 			  
 			  	$download['title'] = 'Download';
 			  	$download['href'] = "./out/download/?fileId=$itemId";
@@ -348,6 +367,7 @@ class contextMenu{
                                         }
 			  	}
 				$options[] = $open;
+				$options[] = $share;
 				$options[] = $download;
 				$options[] = $fav;
 				$options[] = $background;
@@ -417,6 +437,7 @@ class contextMenu{
 			  
 			  	
 				$options[] = $open;
+				$options[] = $share;
 				$options[] = $fav;
 				$options[] = $playlist;
 				$options[] = $privacy;
