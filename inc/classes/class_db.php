@@ -44,7 +44,7 @@ class db{
             $db = new db();
             return substr($db->pdoDB->quote($string), 1, -1);
         }
-        public static function importFile($filePath){
+        public function importFile($filePath){
         // works regardless of statements emulation
         $this->pdoDB->setAttribute(PDO::ATTR_EMULATE_PREPARES, 0);
         if(!is_readable($filePath)){
@@ -94,7 +94,7 @@ class db{
             
             return $return;
         }
-        public static function shiftResult($result, $testColumn){
+        public function shiftResult($result, $testColumn){
             //check if result is array (if result is empty the sql string will be returned)
             if(!is_array($result)){
                 return array();
@@ -114,7 +114,7 @@ class db{
         *@param array $options Array with insert values mysql_field_name=>values
         *@return int auto_increment value of added record 
         */
-	public static function insert($table, $options){
+	public function insert($table, $options){
 					
             //generate update query	
             foreach($options AS $row=>$value){
@@ -136,7 +136,7 @@ class db{
         *@param primary array Primary id of the record
         *@return int affected rows
         */
-	public static function update($table, $options, $primary){
+	public function update($table, $options, $primary){
             $WHERE = $this->generateWhere($primary);
             //generate update query	
             foreach($options AS $row=>$value){
@@ -155,7 +155,7 @@ class db{
         *@param string $table Name of table
         *@primary array Primary id of the record 
         */
-        public static function delete($table, $primary){
+        public function delete($table, $primary){
             $WHERE = $this->generateWhere($primary);
             return $this->pdoDB->exec("DELETE FROM `$table` $WHERE");
         }
@@ -166,7 +166,7 @@ class db{
         *@collumns array columns that will be selcted ('*' if null)
         *@return array mysql_result 
         */
-        public static function select($table, $primary=NULL, $columns=NULL, $order=NULL, $limit=NULL){
+        public function select($table, $primary=NULL, $columns=NULL, $order=NULL, $limit=NULL){
             $WHERE = $this->generateWhere($primary);
             if(!empty($columns)){
                 foreach($columns AS $column){
@@ -212,7 +212,7 @@ class db{
             return $return;
         }
         
-        public static function query($query){
+        public function query($query){
                 foreach($this->pdoDB->query($query) AS $data){
                     $return[] = $data;
                 }
