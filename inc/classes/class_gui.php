@@ -206,8 +206,12 @@ class gui {
   }
   
    
-    function generate(){
+    function generate($options=null){
 
+            if(!proofLogin()){
+                $_SESSION['loggedOut'] = true;
+            }
+            
         $timestamp = time();
         if(getUser()){
             $userClass = new user(getUser());
@@ -218,7 +222,7 @@ class gui {
             $userData['startLink'] = ''; //otherwise notice 'undefined index'
         }
 
-        include("views/header/header.html");
+        $this->generateHeader($options);
         echo '<body onclick="clearMenu()" onload="'.$userData['startLink'].'">';
 
                 //define bg-image
@@ -231,9 +235,15 @@ class gui {
                         }
                     </style>
                     <?php }
+                    
+                    
+            echo '<!--';
+            var_dump($options);
+            echo'-->';
+            
+            
+            
         if(!$login) {
-            $_SESSION['loggedOut'] = true;
-
             echo '<link rel="stylesheet" type="text/css" href="inc/css/guest.css" media="all" />';
             echo '<div id="bodywrap">';
                 include('views/guestpage/guest_area.html');
@@ -296,6 +306,75 @@ class gui {
             echo '</body>';
         }
     }
+    //@param path  relative path
+    function absURL($path){
+        return uniConfig::uniURL+'/'.$path;
+    }
+    
+    function generateHeader($options=null){
+        if(!isset($options['title']))
+            $options['title'] = 'universeOS';
+                
+            $output = "<!DOCTYPE html>\n";
+            $output .= "<html lang=\"en\" dir=\"ltr\" class=\"client-nojs\">\n";
+            $output .= "        <!--meta information-->\n";
+            $output .= "        <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\">\n";
+            $output .= "		<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\">\n";
+            $output .= "		\n";
+            $output .= "		<meta property=\"twitter:user_id\" content=\"1656521474\" />\n";
+            $output .= "        <meta name=\"twitter:site\" content=\"@universeOS\">\n";
+            $output .= "        <meta name=\"twitter:card\" content=\"summary\">\n";
+            $output .= "        \n";
+            $output .= "        <meta name=\"language\" content=\"en\" />\n";
+            $output .= "        <meta name=\"robots\" content=\"index, follow\" />\n";
+            $output .= "        <meta name=\"author\" content=\"Transparency Everywhere\" />\n";
+            $output .= "        <meta name=\"medium\" content=\"webDesktop\" />\n";
+            $output .= "        \n";
+            $output .= "        <meta property=\"og:site_name\" content=\"universeOS\" />\n";
+            $output .= "        <meta property=\"identifier-URL\" content=\"http://universeos.org\" />\n";
+            $output .= "        <meta name=\"description\" content=\"Discover the social webOS. Connect with your friends, read your favourite book or RSS-Feed, watch your favourite movie, listen your favourite song and be creative...\">\n";
+            $output .= "        <meta name=\"keywords\" content=\"universe, universeos, universe os, webdesktop, web desktop, social webdesktop , youtube, youtube playlist, documents, rss, free speech, human rights, privacy, community, social\">\n";
+            $output .= "        <meta name=\"title\" content=\"universeOS\">\n";
+            $output .= "        <meta name=\"Robots\" content=\"index\">\n";
+            $output .= "        <meta name=\"author\" content=\"Transparency Everywhere\">\n";
+            $output .= "        <meta name=\"classification\" content=\"\">\n";
+            $output .= "        <meta name=\"reply-to\" content=\"info@transparency-everywhere.com\">\n";
+            $output .= "        <meta name=\"Identifier-URL\" content=\"universeOS.org\">\n";
+            $output .= "        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n";
+            $output .= "        \n";
+            $output .= "        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
+            $output .= "        \n";
+            $output .= "        <!--facebook open graph-->\n";
+            $output .= "        <meta property=\"og:image\" content=\"http://universeos.org/gfx/logo.png\">\n";
+            $output .= "        <meta property=\"og:site_name\" content=\"universeOS\">\n";
+            $output .= "        \n";
+            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"57x57\" href=\"gfx/favicon/apple-icon-57x57.png\">\n";
+            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"60x60\" href=\"gfx/favicon/apple-icon-60x60.png\">\n";
+            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"72x72\" href=\"gfx/favicon/apple-icon-72x72.png\">\n";
+            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"76x76\" href=\"gfx/favicon/apple-icon-76x76.png\">\n";
+            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"114x114\" href=\"gfx/favicon/apple-icon-114x114.png\">\n";
+            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"120x120\" href=\"gfx/favicon/apple-icon-120x120.png\">\n";
+            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"144x144\" href=\"gfx/favicon/apple-icon-144x144.png\">\n";
+            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"152x152\" href=\"gfx/favicon/apple-icon-152x152.png\">\n";
+            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"gfx/favicon/apple-icon-180x180.png\">\n";
+            $output .= "        <link rel=\"icon\" type=\"image/png\" sizes=\"192x192\" href=\"gfx/favicon/android-icon-192x192.png\">\n";
+            $output .= "        <link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"gfx/favicon/favicon-32x32.png\">\n";
+            $output .= "        <link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"gfx/favicon/favicon-96x96.png\">\n";
+            $output .= "        <link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"gfx/favicon/favicon-16x16.png\">\n";
+            $output .= "        <link rel=\"manifest\" href=\"gfx/favicon/manifest.json\">\n";
+            $output .= "        <meta name=\"msapplication-TileColor\" content=\"#ffffff\">\n";
+            $output .= "        <meta name=\"msapplication-TileImage\" content=\"gfx/favicon/ms-icon-144x144.png\">\n";
+            $output .= "        <meta name=\"theme-color\" content=\"#ffffff\">\n";
+            $output .= "        \n";
+            $output .= "        <link rel=\"stylesheet\" type=\"text/css\" href=\"inc/css/plugins.css\" />\n";
+            $output .= "        <link rel=\"stylesheet\" type=\"text/css\" href=\"inc/css/style.css\" media=\"all\" />\n";
+            $output .= "        \n";
+            $output .= "        \n";
+            $output .= "        <title>".$options['title']."</title>\n";
+            $output .= "    </head>\n";
+            echo $output;
+    }
+
 }
 
                 
