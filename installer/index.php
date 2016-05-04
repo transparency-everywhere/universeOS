@@ -186,7 +186,7 @@
 	$install = new install();
 	
 	if(isset($_POST['submitAndInstall'])){
-		$options = array('db_server'=>$_POST['host'],'db_user'=>$_POST['dbUser'], 'db_password'=>$_POST['dbPassword'], 'db_name'=>$_POST['dbName'], 'universe_title'=>$_POST['universeTitle'], 'uni_basepath'=>$_POST['basePath']);
+		$options = array('db_server'=>$_POST['host'],'db_user'=>$_POST['dbUser'], 'db_password'=>$_POST['dbPassword'], 'db_name'=>$_POST['dbName'], 'universe_title'=>$_POST['universeTitle'], 'uni_basepath'=>$_POST['basePath'], 'uni_url'=>$_POST['URL']);
 		$install->run($options);
 	}
   
@@ -252,7 +252,7 @@
         break;
     case 'success':
     
-		$options = array('db_server'=>$_POST['host'],'db_user'=>$_POST['dbUser'], 'db_password'=>$_POST['dbPassword'], 'db_name'=>$_POST['dbName'], 'universe_title'=>$_POST['universeTitle'], 'uni_basepath'=>$_POST['basePath']);
+		$options = array('db_server'=>$_POST['host'],'db_user'=>$_POST['dbUser'], 'db_password'=>$_POST['dbPassword'], 'db_name'=>$_POST['dbName'], 'universe_title'=>$_POST['universeTitle'], 'uni_basepath'=>$_POST['basePath'], 'uni_basepath'=>$_POST['basePath']);
 		
 		$install->run($options);
         include('success.php');

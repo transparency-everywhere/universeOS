@@ -16,14 +16,16 @@
 //
 //@author nicZem for Tranpanrency-everywhere.com
 //
-//include_once("inc/functions.php");
-//include_once("inc/config.php");
+include_once("inc/functions.php");
+include_once("inc/config.php");
 
 echo is_writable('upload/');
 echo is_writable('upload/userFiles');
 echo is_writable('views');
 
-//
-//$universe = new universe();
-//echo $universe->createConfig($universe->getConfig());
+
+$universe = new universe();
+$config = $universe->getConfig();
+$config['uni_url'] = 'http://universeOS.org';
+$universe->createConfig($config);
 
