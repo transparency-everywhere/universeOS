@@ -144,21 +144,50 @@ var applications = new function(){
     /**
     * Loads and initializes scripts which are defined in applications.getList
     */
-    this.init = function(){
+    this.init = function(options){
         var sessionApplications = this.getList();
         
+
         $.each(sessionApplications, function(index, value){
             
-            if(value)
-            if(value['source']){
-                gui.loadScript('inc/js/'+value['source']);
-                if(value['active']){
-                    eval(value['className']).init();
-                };
+
+
+
+            if(value){
+
+              if(options.embed){
+                if(value.title !== 'filesystem')
+                  value.active = false;
+              }
+
+              if(value['source']){
+                  gui.loadScript('inc/js/'+value['source']);
+                  if(value['active']){
+                      eval(value['className']).init();
+                  };
+              }
+
+
             }
         });
         
         this.initApplicationSizes();
+
+        if(options.embed){
+          switch(options.embed.type){
+            case 'folder':
+              folders.open(options.embed.itemId);
+              filesystem.applicationVar.show();
+              filesystem.applicationVar.fullscreen();
+            break;
+            case 'element':
+              folders.open(options.embed.itemId);
+              filesystem.applicationVar.show();
+              filesystem.applicationVar.fullscreen();
+            break;
+          }
+        }
+        
     };
     
     /**

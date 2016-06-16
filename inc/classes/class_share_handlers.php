@@ -15,39 +15,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 @author nicZem for Tranpanrency-everywhere.com
+
+
+this class cares about the views which will be opened
+if a link is shared
+    
+kickstarter
+kickstarter is a search engine friendly way of
+redirecting users to the universe and
+open a file/link/collection/dir or whatever
+inside the universeOS
+    
+embed app
+embedding apps is a way to include apps like the filebrowser,
+which opens a certain folder/collection
+ * 
+ * 
  */
 
-
-class sessionHashes{
-	private $validity; //time in seconds untill hash expires
-	
-	
-	function create($userid){
-		
-		//create unique identifyer and hash it with rand salt (the user agent needs to be encrypted!)
-		$uniqueSystemIdentifyer = hash('sha512', $_SERVER['HTTP_USER_AGENT']);
-		//add salt
-		$randomSalt = hash('sha512', $uniqueSystemIdentifyer+substr(str_shuffle("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 1) . substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 10));
-		$db = new db();
-		$db->query("DELETE FROM `sessionHashes` WHERE timestamp>'".(time()-$this->validity)."' AND userid='".save($userid)."' AND uniqueSystemIdentifyer='".save($uniqueSystemIdentifyer)."'");
-		//save id, identifier and salt
-                $values[''] = $type; //???
-                $values['itemId'] = $itemId;
-                $values['privateKey'] = $privateKey;
-                $values['publicKey'] = $publicKey;
-                $values['timestamp'] = time();
-                
-                //mysql class is comment because first row of values array or the first field of query below is ``and the value is $type that should be checked
-                //return $db->insert('signatures', $values);
-                return $db->insert('signatures', $values);
-	}
-	
-	function get($id){
-                $db = new db();
-                return $db->select('signatur',  array('type', $type, '&&', 'itemId', $itemId));;
-	}
-	function delete($type, $itemId){
-                $db = new db();
-                $db->delete('signatures', array('type', $type, '&&', 'itemId', $itemId));
-	}
+class share{
+    
 }

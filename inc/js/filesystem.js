@@ -302,7 +302,8 @@ var filesystem =  new function() {
                     html += '    <div class="underFrame" style="overflow: none;">';		  			
                     html += '        <div class="fileBrowser">';		  			
                     if(!empty(folderId) && is_numeric(folderId)){
-                        html += '        	<ul class="fileBrowserSettings fileBrowserSettings' + folderId + '">';		  			
+                        html += '        	<ul class="fileBrowserSettings fileBrowserSettings' + folderId + '">';	
+                            html += '                       <li onclick="filesystem.openShareModal(\'folder\', ' + folderId + ')">' + filesystem.generateIcon('share', 'white') + '<span class="text">Share</span></li>';	  			
                         if(proofLogin()){
                             html += '                       <li onclick="fav.add(\'folder\', ' + folderId + ')">' + filesystem.generateIcon('fav', 'white') + '<span class="text">Add to favorites</span></li>';
                         }		  			
@@ -437,43 +438,35 @@ var filesystem =  new function() {
               		var content;
               		var kickstarterURL;
               		var embedURL;
-              		switch(type){
-              			case 'file':
-              				var fileTitle = files.fileIdToFileTitle(typeId);
-              				title = 'Share "'+fileTitle+'"';
-              				kickstarterURL = sourceURL+'/out/kickstarter/files/?id='+typeId;
-              				embedURL = sourceURL+'/out/?file='+typeId; //should be the same like fileBrowserURL 
-              			break;
-              			case 'element':
-              				var elementTitle = elements.elementIdToElementTitle(typeId);
-              				title = 'Share "'+elementTitle+'"';
-              				kickstarterURL = sourceURL+'/out/kickstarter/elements/?id='+typeId;
-              				embedURL = sourceURL+'/out/?element='+typeId; //should be the same like fileBrowserURL 
-              			break;
-              		}
+              		kickstarterURL = sourceURL+'/open/'+type+'/'+typeId;
+              		embedURL =sourceURL+'/embed/'+type+'/'+typeId;
+                        
+                        
+                        
+              		var modalTitle = 'Share "'+title+'"';
               		
-              		var facebook = 'window.open(\'http://www.facebook.com/sharer/sharer.php?u='+kickstarterURL+'&t='+fileTitle+'\', \'facebook_share\', \'height=320, width=640, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, directories=no, status=no\');';
+              		var facebook = 'window.open(\'http://www.facebook.com/sharer/sharer.php?u='+kickstarterURL+'&t='+title+'\', \'facebook_share\', \'height=320, width=640, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, directories=no, status=no\');';
               		var twitter = 'window.open(\'http://www.twitter.com/share?url='+kickstarterURL+'\', \'twitter_share\', \'height=320, width=640, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, directories=no, status=no\');';
-					var googleplus = "window.open('https://plus.google.com/share?url="+kickstarterURL+"','', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;";
+			var googleplus = "window.open('https://plus.google.com/share?url="+kickstarterURL+"','', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;";
               		
               		content = '<ul class="shareList">';
-	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #facebook\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">Facebook <img src="gfx/startPage/facebook.png"></li>';
-	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #twitter\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">Twitter <img src="gfx/startPage/twitter.png"></li>';
-	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #googleplus\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">Google+ <img src="gfx/startPage/googleplus.png"></li>';
-	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #embed\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">Embed Code <img src="gfx/startPage/wikipedia.png"></li>';
-	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #url\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">URL <img src="gfx/startPage/wikipedia.png"></li>';
+	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #facebook\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">Facebook <span class="icon white-sc-facebook"></span></li>';
+	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #twitter\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">Twitter <span class="icon white-sc-twitter"></span></li>';
+	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #googleplus\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">Google+  <span class="icon white-sc-google-plus"></span></li>';
+	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #embed\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">Embed Code  <span class="icon white-link"></span></li>';
+	              		content += '<li onclick="$(\'.shareBox li\').hide(); $(\'.shareBox #url\').slideDown(); $(\'.shareList li\').removeClass(\'active\'); $(this).addClass(\'active\');">URL  <span class="icon white-link"></span></li>';
               		content += '</ul>';
               		
               		content += '<ul class="shareBox">';
-              			content += '<li id="facebook"><center><a target="_blank" href="#" onclick="'+facebook+'" class="btn btn-success"><img src="gfx/startPage/facebook.png" height="20"> Click Here To Share</a></center></li>';
+              			content += '<li id="facebook"><center><a target="_blank" href="#" onclick="'+facebook+'" class="btn btn-success"><span class="icon white-sc-facebook"></span> Click Here To Share</a></center></li>';
               			content += '<li id="url"><center><textarea>'+kickstarterURL+'</textarea></center>Just place the HTML code for your Filebrowser wherever<br> you want the Browser to appear on your site.</li>';
               			content += '<li id="embed"><center><textarea><iframe src="'+embedURL+'"></iframe></textarea></center>Just place the HTML code for your Filebrowser wherever<br> you want the Browser to appear on your site.</li>';
-              			content += '<li id="googleplus"><center><a href="#" onclick="'+googleplus+'" class="btn btn-success"><img src="gfx/startPage/googleplus.png" height="20"> Click Here To Share</a></center></li>';
-              			content += '<li id="twitter"><center><a href="#" onclick="'+twitter+'" class="btn btn-success"><img src="gfx/startPage/twitter.png" height="20"> Click Here To Share</a></center></li>';
+              			content += '<li id="googleplus"><center><a href="#" onclick="'+googleplus+'" class="btn btn-success"><span class="icon white-sc-google-plus"></span> Click Here To Share</a></center></li>';
+              			content += '<li id="twitter"><center><a href="#" onclick="'+twitter+'" class="btn btn-success"><span class="icon white-sc-google-plus"></span> Click Here To Share</a></center></li>';
               		content += '</ul>';
               		
               		
-              		modal.create(title, content);
+              		modal.create(modalTitle, content);
               	};
     this.openFolder = function(folderId){
         this.tabs.updateTabContent(1, this.generateFullFileBrowser(folderId));
@@ -725,6 +718,7 @@ var filesystem =  new function() {
     icons['question'] = 'question';
     icons['user'] = 'user';
     icons['group'] = 'group';
+    icons['share'] = 'share-google';
     
     
     //files

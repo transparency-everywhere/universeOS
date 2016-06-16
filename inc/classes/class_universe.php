@@ -53,26 +53,63 @@ class uniConfig {
             });
         }
 
-        $app->post('/arpi/'.$route['path'], function ($request, $response, $args) use ($route) {
-            $route['callback']($request->getParsedBody());
-        });
-
+//        $app->post('/arpi/'.$route['path'], function ($request, $response, $args) use ($route) {
+//            $route['callback']($request->getParsedBody());
+//        });
         $app->get('/', function ($request, $response, $args) {
 
-            if(proofLogin()){
-                    $db = new db();
-                    $checkData = $db->select('user', array('userid', getUser()), array('userid', 'hash'));
-                    //sense?
-            }else{
-                $_SESSION['loggedOut'] = true;
-            }
-                $gui = new gui();
-                $gui->generate();
+            $gui = new gui();
+            $gui->generate();
         });
+        
+        //kickstarter
+        $app->get('/kickstarter/{type}/{itemId}', function ($request, $response, $args) {
+            
+            $type = $args['type'];
+            $itemId = $args['itemId'];
+            
+            include_once(universeBasePath.'/inc/controllers/out.php');
+            outController::kickStarter($type, $itemId);
+            
+        });
+        
+        
+        //open item
+        $app->get('/open/{type}/{itemId}', function ($request, $response, $args) {
+            
+        
+            $type = $args['type'];
+            $itemId = $args['itemId'];
+            
+            include_once(universeBasePath.'/inc/controllers/out.php');
+            $outController = new outController();
+            $outController->open($type, $itemId);
+            
+        });
+        //open item
+        $app->get('/embed/{type}/{itemId}', function ($request, $response, $args) {
+            
+        
+            $type = $args['type'];
+            $itemId = $args['itemId'];
+            
+            include_once(universeBasePath.'/inc/controllers/out.php');
+            $outController = new outController();
+            $outController->embed($type, $itemId);
+            
+        });
+        
+            
+        
+        
+        
+        //embed
+        
         $app->run();
 
         
     }
+    
     public static function reload($requests){
                     $user = getUser();
                     

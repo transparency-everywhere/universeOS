@@ -213,6 +213,8 @@ class gui {
             }
             
         $timestamp = time();
+
+
         if(getUser()){
             $userClass = new user(getUser());
             $userData = $userClass->getData();
@@ -221,6 +223,16 @@ class gui {
             $login = false;
             $userData['startLink'] = ''; //otherwise notice 'undefined index'
         }
+        switch($options['action']){
+            case 'kickstarter':
+
+                $options['js_init_obj'] = ['kickstarter' => ['type'=>$options['action_data']['type'], 'itemId'=>(int)$options['action_data']['itemId']]];
+            break;
+            case 'embed':
+                $options['js_init_obj'] = ['embed' => ['type'=>$options['action_data']['type'], 'itemId'=>(int)$options['action_data']['itemId']]];
+            break;
+        }
+
 
         $this->generateHeader($options);
         echo '<body onclick="clearMenu()" onload="'.$userData['startLink'].'">';
@@ -241,12 +253,11 @@ class gui {
             var_dump($options);
             echo'-->';
             
-            
-            
         if(!$login) {
-            echo '<link rel="stylesheet" type="text/css" href="inc/css/guest.css" media="all" />';
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->absURL('inc/css/guest.css').'" media="all" />';
             echo '<div id="bodywrap">';
-                include('views/guestpage/guest_area.html');
+                if(!in_array($options['action'], ['kickstarter','embed','open']))
+                    echo gui::parseView('views/guestpage/guest_area.html');
 
                 echo '<div id="alerter"></div><div id="loader"></div><iframe name="submitter" style="display:none;" id="submitter"></iframe>';
                 echo '<div id="suggest">';
@@ -255,21 +266,22 @@ class gui {
 
             include('views/guestpage/login_menu.html');
             include('views/guestpage/dock_menu.html');
-            include('views/guestpage/dock.html');
+            if(!isset($options['show_dock'])||$options['show_dock']==true)
+                include('views/guestpage/dock.html');
 
             echo analytic_script;
 
             include('actions/openFileFromLink.php');
             include('views/guestpage/search_menu.html');
 
-            include("views/header/scripts.html");
-            echo '<script type="text/javascript" src="inc/js/guest.js"></script>';
-            echo '</body>';
+            echo $this->parseView("views/header/scripts.html");
+            echo '<script type="text/javascript" src="'.$this->absURL('inc/js/guest.js').'"></script>';
+
 
         }
         else{
             //set userid
-            include("views/header/scripts.html");
+            echo $this->parseView("views/header/scripts.html");
             echo '<script>User.userid = '.getUser().';</script>';
 
 
@@ -294,21 +306,54 @@ class gui {
         //    
         //    echo        '</div>';
 
-            $gui = new gui();
-            $gui->showDock();
-
+            if(!isset($options['show_dock'])||$options['show_dock']==true){
+                $gui = new gui();
+                $gui->showDock();
+            }
+            
             echo    '</div>';
 
             include('views/guestpage/search_menu.html');
 
             include('actions/openFileFromLink.php');
 
-            echo '</body>';
         }
+        if(!isset($options['js_init_obj']))
+            $options['js_init_obj'] = '{}';
+        else
+            $options['js_init_obj'] = json_encode($options['js_init_obj']);
+        echo '<script>$(document).ready(function() {universe.init('.$options['js_init_obj'].');});</script>';
+        echo '</body>';
+            
     }
     //@param path  relative path
     function absURL($path){
-        return uniConfig::uniURL+'/'.$path;
+        return uniConfig::$uni_url.'/'.$path;
+    }
+    
+    public static function parsingCallback($expression){
+        
+        switch($expression[1]){
+            case 'uni_url':
+                return uni_config_url;
+                break;
+        }
+        
+        return '';
+        
+    }
+    
+    public static function parseView($path){
+        
+        
+        
+        return preg_replace_callback(
+            '!\{\{(\w+)\}\}!',
+            "gui::parsingCallback",
+            file_get_contents($path));
+        
+        
+        
     }
     
     function generateHeader($options=null){
@@ -331,7 +376,7 @@ class gui {
             $output .= "        <meta name=\"medium\" content=\"webDesktop\" />\n";
             $output .= "        \n";
             $output .= "        <meta property=\"og:site_name\" content=\"universeOS\" />\n";
-            $output .= "        <meta property=\"identifier-URL\" content=\"http://universeos.org\" />\n";
+            $output .= "        <meta property=\"identifier-URL\" content=\"".$this->absURL('')."\" />\n";
             $output .= "        <meta name=\"description\" content=\"Discover the social webOS. Connect with your friends, read your favourite book or RSS-Feed, watch your favourite movie, listen your favourite song and be creative...\">\n";
             $output .= "        <meta name=\"keywords\" content=\"universe, universeos, universe os, webdesktop, web desktop, social webdesktop , youtube, youtube playlist, documents, rss, free speech, human rights, privacy, community, social\">\n";
             $output .= "        <meta name=\"title\" content=\"universeOS\">\n";
@@ -345,29 +390,29 @@ class gui {
             $output .= "        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
             $output .= "        \n";
             $output .= "        <!--facebook open graph-->\n";
-            $output .= "        <meta property=\"og:image\" content=\"http://universeos.org/gfx/logo.png\">\n";
+            $output .= "        <meta property=\"og:image\" content=\"".$this->absURL('gfx/logo.png')."\">\n";
             $output .= "        <meta property=\"og:site_name\" content=\"universeOS\">\n";
             $output .= "        \n";
-            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"57x57\" href=\"gfx/favicon/apple-icon-57x57.png\">\n";
-            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"60x60\" href=\"gfx/favicon/apple-icon-60x60.png\">\n";
-            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"72x72\" href=\"gfx/favicon/apple-icon-72x72.png\">\n";
-            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"76x76\" href=\"gfx/favicon/apple-icon-76x76.png\">\n";
-            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"114x114\" href=\"gfx/favicon/apple-icon-114x114.png\">\n";
-            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"120x120\" href=\"gfx/favicon/apple-icon-120x120.png\">\n";
-            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"144x144\" href=\"gfx/favicon/apple-icon-144x144.png\">\n";
-            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"152x152\" href=\"gfx/favicon/apple-icon-152x152.png\">\n";
-            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"gfx/favicon/apple-icon-180x180.png\">\n";
-            $output .= "        <link rel=\"icon\" type=\"image/png\" sizes=\"192x192\" href=\"gfx/favicon/android-icon-192x192.png\">\n";
-            $output .= "        <link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"gfx/favicon/favicon-32x32.png\">\n";
-            $output .= "        <link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"gfx/favicon/favicon-96x96.png\">\n";
-            $output .= "        <link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"gfx/favicon/favicon-16x16.png\">\n";
-            $output .= "        <link rel=\"manifest\" href=\"gfx/favicon/manifest.json\">\n";
+            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"57x57\" href=\"".$this->absURL('gfx/favicon/apple-icon-57x57.png')."\">\n";
+            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"60x60\" href=\"".$this->absURL('gfx/favicon/apple-icon-60x60.png')."\">\n";
+            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"72x72\" href=\"".$this->absURL('gfx/favicon/apple-icon-72x72.png')."\">\n";
+            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"76x76\" href=\"".$this->absURL('gfx/favicon/apple-icon-76x76.png')."\">\n";
+            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"114x114\" href=\"".$this->absURL('gfx/favicon/apple-icon-114x114.png')."\">\n";
+            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"120x120\" href=\"".$this->absURL('gfx/favicon/apple-icon-120x120.png')."\">\n";
+            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"144x144\" href=\"".$this->absURL('gfx/favicon/apple-icon-144x144.png')."\">\n";
+            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"152x152\" href=\"".$this->absURL('gfx/favicon/apple-icon-152x152.png')."\">\n";
+            $output .= "        <link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"".$this->absURL('gfx/favicon/apple-icon-180x180.png')."\">\n";
+            $output .= "        <link rel=\"icon\" type=\"image/png\" sizes=\"192x192\" href=\"".$this->absURL('gfx/favicon/android-icon-192x192.png')."\">\n";
+            $output .= "        <link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"".$this->absURL('gfx/favicon/favicon-32x32.png')."\">\n";
+            $output .= "        <link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"".$this->absURL('gfx/favicon/favicon-96x96.png')."\">\n";
+            $output .= "        <link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"".$this->absURL('gfx/favicon/favicon-16x16.png')."\">\n";
+            $output .= "        <link rel=\"manifest\" href=\"".$this->absURL('gfx/favicon/manifest.json')."\">\n";
             $output .= "        <meta name=\"msapplication-TileColor\" content=\"#ffffff\">\n";
-            $output .= "        <meta name=\"msapplication-TileImage\" content=\"gfx/favicon/ms-icon-144x144.png\">\n";
+            $output .= "        <meta name=\"msapplication-TileImage\" content=\"".$this->absURL('gfx/favicon/ms-icon-144x144.png')."\">\n";
             $output .= "        <meta name=\"theme-color\" content=\"#ffffff\">\n";
             $output .= "        \n";
-            $output .= "        <link rel=\"stylesheet\" type=\"text/css\" href=\"inc/css/plugins.css\" />\n";
-            $output .= "        <link rel=\"stylesheet\" type=\"text/css\" href=\"inc/css/style.css\" media=\"all\" />\n";
+            $output .= "        <link rel=\"stylesheet\" type=\"text/css\" href=\"".$this->absURL('inc/css/plugins.css')."\" />\n";
+            $output .= "        <link rel=\"stylesheet\" type=\"text/css\" href=\"".$this->absURL('inc/css/style.css')."\" media=\"all\" />\n";
             $output .= "        \n";
             $output .= "        \n";
             $output .= "        <title>".$options['title']."</title>\n";
