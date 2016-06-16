@@ -1844,6 +1844,22 @@ class uni_routes{
                                             $user->updateUserPicture($_FILES['userpicture']);
                                     }
                     );
+            $routes[] = array(
+                    'path'=>'user/updateApplicationPreset/',
+                    'callback'=> function($post_vars){
+
+
+                                            $user = new user(getUser());
+                                            $user->updateApplicationPreset($post_vars['preset']);
+                                    }
+                    );
+            $routes[] = array(
+                    'path'=>'user/getApplicationPreset/',
+                    'callback'=> function(){
+                                            $user = new user(getUser());
+                                            echo $user->getApplicationPreset();
+                                    }
+                    );
         return $routes;
     }
 }

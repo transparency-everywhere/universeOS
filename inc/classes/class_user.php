@@ -338,6 +338,17 @@ class user {
             return true;
         }
     }
+
+    public function updateApplicationPreset($presetType){
+      $db = new db();
+      $values['application_preset'] = $presetType;
+      $db->update('user', $values, array('user', $userid));
+      return true;
+    }
+    public function getApplicationPreset(){
+      $userData = $this->getData(getUser());
+      return $userData['application_preset'];
+    }
     
     
     //not in use so far

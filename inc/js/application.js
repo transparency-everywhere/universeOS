@@ -18,6 +18,8 @@ var applications = new function(){
     /**
     * Defines which applications are loaded and in which order they are
     */
+
+
     this.getList = function(){
         
         var apps = [];
@@ -225,11 +227,18 @@ var applications = new function(){
         });
         return returnVal;
     };
-    
-           
+
+    this.updatePreset = function(presetType){
+      api.query("api/user/updateApplicationPreset/", { preset : presetType },function(result){
+        alert(result);
+      });
+    };
+    this.getPreset = function(){
+      return api.query("api/user/getApplicationPreset/", {});
+    };
     this.initApplicationSizes = function(preset){
         if(!preset)
-        var preset = 'social';
+          preset = this.getPreset();
         
         if(proofLogin()){
             

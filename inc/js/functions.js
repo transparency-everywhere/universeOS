@@ -1,4 +1,6 @@
 
+
+
 if(universeConfig.dir.length>0)
 var sourceURL = 'http://'+universeConfig.host+'/'+universeConfig.dir+'/';
 else
@@ -39,6 +41,8 @@ function loadScripts(scriptObject, callback){
 var gui = {};
 gui.loadScript = function(url){
     
+        if(typeof sourceURL !== 'undefined')
+            url = sourceURL+url;
         // get some kind of XMLHttpRequest
         var xhrObj = new XMLHttpRequest();
         // open and send a synchronous request
@@ -50,13 +54,6 @@ gui.loadScript = function(url){
         se.text = xhrObj.responseText;
         document.getElementsByTagName('head')[0].appendChild(se);
 };
-
-$(document).ready(function(){
-        
-        universe.init();
-    
-});
-
 
 //window functions
 var init = new function(){
@@ -363,7 +360,7 @@ var universe = new function(){
     this.notificationArray = [];
     this.applications = [];
     this.reloadState = true;
-    this.init = function(){
+    this.init = function(options){
         
         gui.loadScript('inc/js/privacy.js');
         
@@ -411,7 +408,7 @@ var universe = new function(){
         
         gui.loadScript('inc/js/clientDB.js');
         
-        applications.init();
+        applications.init(options);
         
         applications.initApplicationSizes();
         
@@ -1871,7 +1868,7 @@ var support = new function(){
         
         var self = this;
         modalOptions['action'] = function(){
-            
+            applications.updatePreset($('.guiPresetChooser li.active').attr('data-type'));
             applications.initApplicationSizes($('.guiPresetChooser li.active').attr('data-type'));
             
         };

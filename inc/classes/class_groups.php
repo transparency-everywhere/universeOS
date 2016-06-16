@@ -205,10 +205,11 @@ class groups{
                 return 'data:'.$mime.';base64,'.$output;
         }
 
-        function countGroupMembers($groupId){
-                $total = mysql_query("SELECT COUNT(*) FROM `groupAttachments` WHERE `group`='$groupId' AND `item`='user' AND `validated`='1' "); 
-                $total = mysql_fetch_array($total); 
-                return $total[0];
+        public static function countGroupMembers($groupId){
+                $db = new db();
+                $total = $db->query("SELECT COUNT(*) AS count FROM `groupAttachments` WHERE `group`='$groupId' AND `item`='user' AND `validated`='1' "); 
+                
+                return $total['count'];
             }
 
         function createGroup($title, $privacy, $description, $users){
