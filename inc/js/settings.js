@@ -44,6 +44,7 @@ var settings = new function(){
             eval(functionName);
         });
     };
+
     this.show = function(){
         applications.show('settings');
     };
@@ -58,7 +59,7 @@ var settings = new function(){
         });
     };
     this.showUpdatePrivacyForm = function(){
-        settings.show();
+       applications.show('settings')
         var captions = this.getPrivacyCaptions();
         var types = this.getPrivacyTypes();
         
