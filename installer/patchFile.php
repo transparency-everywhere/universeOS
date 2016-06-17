@@ -26,6 +26,6 @@ echo is_writable('views');
 
 $universe = new universe();
 $config = $universe->getConfig();
-$config['uni_url'] = 'http://universeOS.org';
+$config['uni_url'] = '//universeOS.org';
 $universe->createConfig($config);
 
