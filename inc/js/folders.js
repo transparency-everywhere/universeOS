@@ -34,6 +34,9 @@ var folders = new function(){
         }else
             return api.query('api/folders/select/',{request: [{folder_id : folder_id}]})[0];
     };
+    this.getTitle = function(folderId){
+        return this.getData(folderId)['name'];
+    };
               	
     this.getPath = function(folder_id){
 	return api.query('api/folders/getPath/',{folder_id : folder_id});

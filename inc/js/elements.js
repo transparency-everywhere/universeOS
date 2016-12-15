@@ -51,7 +51,9 @@ var elements = new function(){
                 header += '<div class="scoreButtonWhiteGradient">' + item.showScoreButton('element', element) + '</div>';
                 header += '<a href=\"#\" id=\"settingsButton\" onclick=\"$(\'.elementSettings' + element + '\').slideToggle(\'slow\'); return false\" title=\"more...\">' + filesystem.generateIcon('settings', 'grey') + '</a>';  
             header += '</span>';
-            header += '<div class="elementSettings dropdown"><ul class="elementSettings elementSettings' + element + '">';		 
+            header += '<div class="elementSettings dropdown"><ul class="elementSettings elementSettings' + element + '">';	
+            
+                header += '<li onclick="filesystem.openShareModal(\'collection\', ' + element + ')">' + filesystem.generateIcon('share', 'white') + '<span class="text">Share Collection</span></li>';
                 header += '<li onclick="filesystem.showCreateUFFForm(\'' + element + '\'); ">' + filesystem.generateIcon('file', 'white') + '<span class="text">Create an UFF</span></li>';
                 header += '<li onclick="window.links.showCreateLinkForm(\'' + element + '\');">' + filesystem.generateIcon('link', 'white') + '<span class="text">Add a link</span></li>';		  			
                 header += '<li onclick="filesystem.openUploadTab(\'' + element + '\', \'' + tabId + '\');">' + filesystem.generateIcon('file', 'white') + '<span class="text">Upload files</span></li>';

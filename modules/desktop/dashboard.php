@@ -17,10 +17,6 @@ $dashboard = new dashBoard();
 	echo $dashboard->showPlaylistBox();
 	
 //	echo $dashboard->showMessageBox();
-//	
-//	useless? 30-10-2015
-//        $userSql = mysql_query("SELECT username, myFiles FROM user WHERE userid='".getUser()."'");
-//        $userData = mysql_fetch_array($userSql);
         
 		echo $dashboard->showFavBox();
 	

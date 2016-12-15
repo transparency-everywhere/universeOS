@@ -41,6 +41,7 @@ var api = new function(){
             url: url,
             data: $.param(parameters),
             success:function(data){
+                data = data.trim().replace(/^\s+|\s+$/g, '');
                 if(!async){
                     try
                     {

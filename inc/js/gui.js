@@ -546,8 +546,13 @@ var gui = new function(){
 	}
     };
     this.loadScript = function(selector){
+        
+        
+        
         if(typeof selector === 'string'){
             
+            if(typeof sourceURL !== 'undefined')
+                selector = sourceURL+selector;
             // get some kind of XMLHttpRequest
             var xhrObj = new XMLHttpRequest();
             // open and send a synchronous request
