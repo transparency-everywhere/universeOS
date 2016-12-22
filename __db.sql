@@ -1,32 +1,8 @@
--- phpMyAdmin SQL Dump
--- version 4.4.3
--- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Aug 05, 2015 at 11:19 AM
--- Server version: 5.6.24
--- PHP Version: 5.6.8
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
---
--- Database: `universe`
+-- Tabellenstruktur für Tabelle `adminMessages`
 --
 
--- --------------------------------------------------------
-
---
--- Table structure for table `adminMessages`
---
-
-CREATE TABLE IF NOT EXISTS `adminMessages` (
+CREATE TABLE `adminMessages` (
   `id` int(11) NOT NULL,
   `timestamp` int(11) NOT NULL,
   `author` int(11) NOT NULL,
@@ -39,10 +15,31 @@ CREATE TABLE IF NOT EXISTS `adminMessages` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `buddylist`
+-- Tabellenstruktur für Tabelle `appCenterApps`
 --
 
-CREATE TABLE IF NOT EXISTS `buddylist` (
+CREATE TABLE `appCenterApps` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) COLLATE utf8_bin NOT NULL,
+  `description` text COLLATE utf8_bin NOT NULL,
+  `version` varchar(255) COLLATE utf8_bin NOT NULL,
+  `entry_point` varchar(255) COLLATE utf8_bin NOT NULL,
+  `privacy` text COLLATE utf8_bin NOT NULL,
+  `folder_id` int(11) NOT NULL,
+  `archive_id` int(11) NOT NULL,
+  `archive_file_id` int(11) NOT NULL,
+  `icon_file_id` int(11) NOT NULL,
+  `temp` tinyint(1) NOT NULL,
+  `creation_timestamp` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `buddylist`
+--
+
+CREATE TABLE `buddylist` (
   `owner` int(11) NOT NULL,
   `buddy` int(11) NOT NULL,
   `alias` varchar(255) NOT NULL,
@@ -54,10 +51,10 @@ CREATE TABLE IF NOT EXISTS `buddylist` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `comments`
+-- Tabellenstruktur für Tabelle `comments`
 --
 
-CREATE TABLE IF NOT EXISTS `comments` (
+CREATE TABLE `comments` (
   `id` int(11) NOT NULL,
   `type` varchar(255) NOT NULL,
   `typeid` int(11) NOT NULL,
@@ -72,10 +69,10 @@ CREATE TABLE IF NOT EXISTS `comments` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `elements`
+-- Tabellenstruktur für Tabelle `elements`
 --
 
-CREATE TABLE IF NOT EXISTS `elements` (
+CREATE TABLE `elements` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
   `folder` int(11) NOT NULL,
@@ -95,23 +92,25 @@ CREATE TABLE IF NOT EXISTS `elements` (
   `hidden` int(11) NOT NULL COMMENT 'just visible for author',
   `votes` int(11) NOT NULL DEFAULT '0',
   `score` int(11) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `elements`
+-- Daten für Tabelle `elements`
 --
 
 INSERT INTO `elements` (`id`, `title`, `folder`, `creator`, `name`, `year`, `originalTitle`, `language`, `type`, `author`, `license`, `timestamp`, `info1`, `info2`, `info3`, `privacy`, `hidden`, `votes`, `score`) VALUES
 (1, 'myFiles', 4, '', '', '', '', '', 'myFiles', 1, 'Creative Commons Attribution/Share Alike', 1427772434, '', '', '', 'h', 0, 0, 0),
-(2, 'profile pictures', 5, '', '', '', '', '', 'image', 1, 'Creative Commons Attribution/Share Alike', 1427772434, '', '', '', 'p', 0, 0, 0);
+(2, 'profile pictures', 5, '', '', '', '', '', 'image', 1, 'Creative Commons Attribution/Share Alike', 1427772434, '', '', '', 'p', 0, 0, 0),
+(3, 'groupElement', 7, '', '', '', '', '', 'groupElement', 1, 'Creative Commons Attribution/Share Alike', 1461632141, '', '', '', '1//1', 0, 0, 0),
+(4, 'groupPicture', 7, '', '', '', '', '', 'groupPicture', 1, 'Creative Commons Attribution/Share Alike', 1461632141, '', '', '', '1//1', 0, 0, 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `events`
+-- Tabellenstruktur für Tabelle `events`
 --
 
-CREATE TABLE IF NOT EXISTS `events` (
+CREATE TABLE `events` (
   `id` int(11) NOT NULL,
   `user` int(11) NOT NULL,
   `startStamp` int(11) NOT NULL,
@@ -126,10 +125,10 @@ CREATE TABLE IF NOT EXISTS `events` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fav`
+-- Tabellenstruktur für Tabelle `fav`
 --
 
-CREATE TABLE IF NOT EXISTS `fav` (
+CREATE TABLE `fav` (
   `id` int(11) NOT NULL,
   `type` varchar(255) NOT NULL,
   `item` int(11) NOT NULL,
@@ -141,10 +140,10 @@ CREATE TABLE IF NOT EXISTS `fav` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `feed`
+-- Tabellenstruktur für Tabelle `feed`
 --
 
-CREATE TABLE IF NOT EXISTS `feed` (
+CREATE TABLE `feed` (
   `id` int(11) NOT NULL,
   `author` int(11) NOT NULL,
   `feed` text NOT NULL,
@@ -158,13 +157,21 @@ CREATE TABLE IF NOT EXISTS `feed` (
   `score` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Daten für Tabelle `feed`
+--
+
+INSERT INTO `feed` (`id`, `author`, `feed`, `timestamp`, `validity`, `type`, `attachedItem`, `attachedItemId`, `privacy`, `votes`, `score`) VALUES
+(1, 1, 'asd\n', 1454606426, 0, 'feed', '', 0, 'p', 0, 0),
+(2, 1, 'has created a folder', 1454606793, 0, 'showThumb', 'folder', 6, 'p', 0, 0);
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `files`
+-- Tabellenstruktur für Tabelle `files`
 --
 
-CREATE TABLE IF NOT EXISTS `files` (
+CREATE TABLE `files` (
   `id` int(11) NOT NULL,
   `folder` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
@@ -183,13 +190,20 @@ CREATE TABLE IF NOT EXISTS `files` (
   `status` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+--
+-- Daten für Tabelle `files`
+--
+
+INSERT INTO `files` (`id`, `folder`, `title`, `size`, `timestamp`, `filename`, `language`, `type`, `owner`, `votes`, `score`, `privacy`, `download`, `temp`, `var1`, `status`) VALUES
+(1, 5, 'sdasd_bild.jpg', '92451', 1461814001, 'sdasd_bild.jpg', '', 'image/jpeg', 1, 0, 0, 'p', 1, 0, '', 1);
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `folders`
+-- Tabellenstruktur für Tabelle `folders`
 --
 
-CREATE TABLE IF NOT EXISTS `folders` (
+CREATE TABLE `folders` (
   `id` int(11) NOT NULL,
   `folder` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -200,26 +214,26 @@ CREATE TABLE IF NOT EXISTS `folders` (
   `hidden` int(11) NOT NULL COMMENT 'just visible for author',
   `votes` int(11) NOT NULL DEFAULT '0',
   `score` int(11) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `folders`
+-- Daten für Tabelle `folders`
 --
 
 INSERT INTO `folders` (`id`, `folder`, `name`, `path`, `creator`, `timestamp`, `privacy`, `hidden`, `votes`, `score`) VALUES
 (1, 0, 'universe', '', 1, 1373158724, 'p;PROTECTED', 0, 0, 0),
 (2, 1, 'userFiles', '/userFiles', 1, 1373158735, 'p;PROTECTED', 0, 2, 0),
-(3, 1, 'groupFiles', '/groupFiles', 1, 1373158745, 'p;PROTECTED;PROTECTED', 0, 0, 0),
+(3, 1, 'groupFiles', '/groupFiles', 1, 1373158745, 'p;PROTECTED', 0, 0, 0),
 (4, 2, '1', '/Applications/XAMPP/xamppfiles/htdocs/universe/upload/userFiles/1', 1, 1427772434, 'h', 0, 0, 0),
 (5, 4, 'userPictures', '/Applications/XAMPP/xamppfiles/htdocs/universe/upload/userFiles/1/userPictures', 1, 1427772434, 'h', 0, 0, 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `groupAttachments`
+-- Tabellenstruktur für Tabelle `groupAttachments`
 --
 
-CREATE TABLE IF NOT EXISTS `groupAttachments` (
+CREATE TABLE `groupAttachments` (
   `id` int(11) NOT NULL,
   `group` int(11) NOT NULL,
   `item` varchar(255) NOT NULL,
@@ -232,10 +246,10 @@ CREATE TABLE IF NOT EXISTS `groupAttachments` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `groups`
+-- Tabellenstruktur für Tabelle `groups`
 --
 
-CREATE TABLE IF NOT EXISTS `groups` (
+CREATE TABLE `groups` (
   `id` int(11) NOT NULL,
   `title` text NOT NULL,
   `description` text NOT NULL,
@@ -249,10 +263,10 @@ CREATE TABLE IF NOT EXISTS `groups` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `internLinks`
+-- Tabellenstruktur für Tabelle `internLinks`
 --
 
-CREATE TABLE IF NOT EXISTS `internLinks` (
+CREATE TABLE `internLinks` (
   `id` int(11) NOT NULL,
   `parentType` varchar(255) NOT NULL,
   `parentId` int(11) NOT NULL,
@@ -264,10 +278,10 @@ CREATE TABLE IF NOT EXISTS `internLinks` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `links`
+-- Tabellenstruktur für Tabelle `links`
 --
 
-CREATE TABLE IF NOT EXISTS `links` (
+CREATE TABLE `links` (
   `id` int(11) NOT NULL,
   `folder` int(11) NOT NULL,
   `type` varchar(255) NOT NULL,
@@ -283,10 +297,10 @@ CREATE TABLE IF NOT EXISTS `links` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `messages`
+-- Tabellenstruktur für Tabelle `messages`
 --
 
-CREATE TABLE IF NOT EXISTS `messages` (
+CREATE TABLE `messages` (
   `id` int(11) NOT NULL,
   `sender` int(11) NOT NULL,
   `receiver` int(11) NOT NULL,
@@ -301,10 +315,10 @@ CREATE TABLE IF NOT EXISTS `messages` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `personalEvents`
+-- Tabellenstruktur für Tabelle `personalEvents`
 --
 
-CREATE TABLE IF NOT EXISTS `personalEvents` (
+CREATE TABLE `personalEvents` (
   `id` int(11) NOT NULL,
   `owner` int(11) NOT NULL,
   `user` int(11) NOT NULL,
@@ -318,10 +332,10 @@ CREATE TABLE IF NOT EXISTS `personalEvents` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `playlists`
+-- Tabellenstruktur für Tabelle `playlists`
 --
 
-CREATE TABLE IF NOT EXISTS `playlists` (
+CREATE TABLE `playlists` (
   `id` int(11) NOT NULL,
   `file_id` int(11) NOT NULL,
   `user` int(11) NOT NULL,
@@ -332,10 +346,10 @@ CREATE TABLE IF NOT EXISTS `playlists` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `salts`
+-- Tabellenstruktur für Tabelle `salts`
 --
 
-CREATE TABLE IF NOT EXISTS `salts` (
+CREATE TABLE `salts` (
   `type` varchar(255) NOT NULL,
   `itemId` int(11) NOT NULL,
   `receiverType` varchar(255) NOT NULL,
@@ -345,7 +359,7 @@ CREATE TABLE IF NOT EXISTS `salts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `salts`
+-- Daten für Tabelle `salts`
 --
 
 INSERT INTO `salts` (`type`, `itemId`, `receiverType`, `receiverId`, `salt`, `algo`) VALUES
@@ -355,26 +369,26 @@ INSERT INTO `salts` (`type`, `itemId`, `receiverType`, `receiverId`, `salt`, `al
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sessions`
+-- Tabellenstruktur für Tabelle `sessions`
 --
 
-CREATE TABLE IF NOT EXISTS `sessions` (
+CREATE TABLE `sessions` (
   `id` int(11) NOT NULL,
   `user` int(11) NOT NULL,
-  `type` varchar(255) NOT NULL,
+  `type` text NOT NULL,
   `title` varchar(255) NOT NULL,
   `sessionInfo` text NOT NULL,
-  `fingerprint` varchar(255) NOT NULL,
+  `fingerprint` text NOT NULL,
   `timestamp` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `signatures`
+-- Tabellenstruktur für Tabelle `signatures`
 --
 
-CREATE TABLE IF NOT EXISTS `signatures` (
+CREATE TABLE `signatures` (
   `type` varchar(255) NOT NULL,
   `itemId` int(11) NOT NULL,
   `privateKey` text NOT NULL,
@@ -383,7 +397,7 @@ CREATE TABLE IF NOT EXISTS `signatures` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `signatures`
+-- Daten für Tabelle `signatures`
 --
 
 INSERT INTO `signatures` (`type`, `itemId`, `privateKey`, `publicKey`, `timestamp`) VALUES
@@ -392,18 +406,18 @@ INSERT INTO `signatures` (`type`, `itemId`, `privateKey`, `publicKey`, `timestam
 -- --------------------------------------------------------
 
 --
--- Table structure for table `staticContents`
+-- Tabellenstruktur für Tabelle `staticContents`
 --
 
-CREATE TABLE IF NOT EXISTS `staticContents` (
+CREATE TABLE `staticContents` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
   `content` text NOT NULL,
   `comment` text NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `staticContents`
+-- Daten für Tabelle `staticContents`
 --
 
 INSERT INTO `staticContents` (`id`, `title`, `content`, `comment`) VALUES
@@ -412,10 +426,10 @@ INSERT INTO `staticContents` (`id`, `title`, `content`, `comment`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tasks`
+-- Tabellenstruktur für Tabelle `tasks`
 --
 
-CREATE TABLE IF NOT EXISTS `tasks` (
+CREATE TABLE `tasks` (
   `id` int(11) NOT NULL,
   `user` int(11) NOT NULL,
   `timestamp` int(11) NOT NULL,
@@ -428,10 +442,10 @@ CREATE TABLE IF NOT EXISTS `tasks` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user`
+-- Tabellenstruktur für Tabelle `user`
 --
 
-CREATE TABLE IF NOT EXISTS `user` (
+CREATE TABLE `user` (
   `userid` int(11) NOT NULL,
   `usergroup` int(11) NOT NULL DEFAULT '0',
   `username` varchar(255) NOT NULL,
@@ -473,23 +487,35 @@ CREATE TABLE IF NOT EXISTS `user` (
   `backgroundImg` text NOT NULL,
   `startLink` varchar(255) NOT NULL DEFAULT 'doit.php?action=showStartMessage',
   `buddySuggestions` text NOT NULL COMMENT 'is used to save already suggested users',
-  `profile_info` text NOT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  `profile_info` text NOT NULL,
+  `application_preset` varchar(255) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `user`
+-- Daten für Tabelle `user`
 --
 
-INSERT INTO `user` (`userid`, `usergroup`, `username`, `password`, `cypher`, `homefolder`, `myFiles`, `profilepictureelement`, `userPicture`, `email`, `regdate`, `lastactivity`, `birthdate`, `realname`, `home`, `place`, `gender`, `school1`, `school2`, `school3`, `university1`, `university2`, `employer`, `typeofwork`, `status`, `openChatWindows`, `priv_activateProfile`, `priv_showProfile`, `priv_profileInformation`, `priv_profilePicture`, `priv_profileFav`, `priv_profileLog`, `priv_activateFeed`, `priv_buddyRequest`, `priv_foreignerMessages`, `priv_foreignerFeeds`, `hash`, `passwordHash`, `backgroundImg`, `startLink`, `buddySuggestions`, `profile_info`) VALUES
-(1, 0, 'admin', '66e5d8ae01617241fb4e66ef7170b1a60c7e6809ef37117dfdbd12808d4824897dfb13e32c8fe5aa403f6105d58dd92346ec84e4d06b63761a6f0bfd28ab9223', 'sha512_2', 4, 3, 4, '', '', 1427772434, 1427772516, '', '', '', '', '', '', '', '', '', '', '', '', '', '', 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 'f65b8301b3cd89fb9873954f12f47134', '', '', 'doit.php?action=showStartMessage', '', '');
+INSERT INTO `user` (`userid`, `usergroup`, `username`, `password`, `cypher`, `homefolder`, `myFiles`, `profilepictureelement`, `userPicture`, `email`, `regdate`, `lastactivity`, `birthdate`, `realname`, `home`, `place`, `gender`, `school1`, `school2`, `school3`, `university1`, `university2`, `employer`, `typeofwork`, `status`, `openChatWindows`, `priv_activateProfile`, `priv_showProfile`, `priv_profileInformation`, `priv_profilePicture`, `priv_profileFav`, `priv_profileLog`, `priv_activateFeed`, `priv_buddyRequest`, `priv_foreignerMessages`, `priv_foreignerFeeds`, `hash`, `passwordHash`, `backgroundImg`, `startLink`, `buddySuggestions`, `profile_info`, `application_preset`) VALUES
+(1, 0, 'admin', '66e5d8ae01617241fb4e66ef7170b1a60c7e6809ef37117dfdbd12808d4824897dfb13e32c8fe5aa403f6105d58dd92346ec84e4d06b63761a6f0bfd28ab9223', 'sha512_2', 4, 3, 4, '', '', 1427772434, 1481913224, '', '', '', '', '', '', '', '', '', '', '', '', '', '', 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 'ed951a5526c2084dc8e5839ba98e84fd', '', '', 'doit.php?action=showStartMessage', '', '', 'social');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `userGroups`
+-- Tabellenstruktur für Tabelle `userApps`
 --
 
-CREATE TABLE IF NOT EXISTS `userGroups` (
+CREATE TABLE `userApps` (
+  `app_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `userGroups`
+--
+
+CREATE TABLE `userGroups` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
   `showAdminPanel` tinyint(1) NOT NULL,
@@ -497,10 +523,10 @@ CREATE TABLE IF NOT EXISTS `userGroups` (
   `editProtectedFilesystemItem` tinyint(1) NOT NULL,
   `undeletableFilesystemItems` tinyint(1) NOT NULL DEFAULT '0',
   `editUndeletableFilesystemItems` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `userGroups`
+-- Daten für Tabelle `userGroups`
 --
 
 INSERT INTO `userGroups` (`id`, `title`, `showAdminPanel`, `protectFileSystemItems`, `editProtectedFilesystemItem`, `undeletableFilesystemItems`, `editUndeletableFilesystemItems`) VALUES
@@ -510,10 +536,10 @@ INSERT INTO `userGroups` (`id`, `title`, `showAdminPanel`, `protectFileSystemIte
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_privacy_rights`
+-- Tabellenstruktur für Tabelle `user_privacy_rights`
 --
 
-CREATE TABLE IF NOT EXISTS `user_privacy_rights` (
+CREATE TABLE `user_privacy_rights` (
   `userid` int(11) NOT NULL,
   `profile_realname` text NOT NULL,
   `profile_fav` text NOT NULL,
@@ -527,53 +553,141 @@ CREATE TABLE IF NOT EXISTS `user_privacy_rights` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `user_privacy_rights`
+-- Daten für Tabelle `user_privacy_rights`
 --
 
 INSERT INTO `user_privacy_rights` (`userid`, `profile_realname`, `profile_fav`, `profile_files`, `profile_playlists`, `profile_activity`, `buddylist`, `info`, `groups`, `receive_messages`) VALUES
 (1, 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p');
-
-
-
---
--- Tabellenstruktur für Tabelle `appCenterApps`
---
-
-CREATE TABLE IF NOT EXISTS `appCenterApps` (
-  `id` int(11) NOT NULL,
-  `title` varchar(255) COLLATE utf8_bin NOT NULL,
-  `description` text COLLATE utf8_bin NOT NULL,
-  `version` varchar(255) COLLATE utf8_bin NOT NULL,
-  `entry_point` varchar(255) COLLATE utf8_bin NOT NULL,
-  `privacy` text COLLATE utf8_bin NOT NULL,
-  `folder_id` int(11) NOT NULL,
-  `archive_id` int(11) NOT NULL,
-  `archive_file_id` int(11) NOT NULL,
-  `icon_file_id` int(11) NOT NULL,
-  `temp` tinyint(1) NOT NULL,
-  `creation_timestamp` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `userApps`
---
-
-CREATE TABLE IF NOT EXISTS `userApps` (
-  `app_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Indizes der exportierten Tabellen
 --
 
 --
+-- Indizes für die Tabelle `adminMessages`
+--
+ALTER TABLE `adminMessages`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indizes für die Tabelle `appCenterApps`
 --
 ALTER TABLE `appCenterApps`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `buddylist`
+--
+ALTER TABLE `buddylist`
+  ADD PRIMARY KEY (`owner`,`buddy`);
+
+--
+-- Indizes für die Tabelle `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `elements`
+--
+ALTER TABLE `elements`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `events`
+--
+ALTER TABLE `events`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `fav`
+--
+ALTER TABLE `fav`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `feed`
+--
+ALTER TABLE `feed`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `files`
+--
+ALTER TABLE `files`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `folders`
+--
+ALTER TABLE `folders`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `groupAttachments`
+--
+ALTER TABLE `groupAttachments`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `groups`
+--
+ALTER TABLE `groups`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `internLinks`
+--
+ALTER TABLE `internLinks`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `links`
+--
+ALTER TABLE `links`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `messages`
+--
+ALTER TABLE `messages`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `personalEvents`
+--
+ALTER TABLE `personalEvents`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `playlists`
+--
+ALTER TABLE `playlists`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `sessions`
+--
+ALTER TABLE `sessions`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `staticContents`
+--
+ALTER TABLE `staticContents`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `tasks`
+--
+ALTER TABLE `tasks`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`userid`);
 
 --
 -- Indizes für die Tabelle `userApps`
@@ -583,256 +697,126 @@ ALTER TABLE `userApps`
   ADD UNIQUE KEY `app_id` (`app_id`,`user_id`);
 
 --
--- AUTO_INCREMENT für exportierte Tabellen
---
-
---
--- AUTO_INCREMENT für Tabelle `appCenterApps`
---
-ALTER TABLE `appCenterApps`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `adminMessages`
---
-ALTER TABLE `adminMessages`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `buddylist`
---
-ALTER TABLE `buddylist`
-  ADD PRIMARY KEY (`owner`,`buddy`);
-
---
--- Indexes for table `comments`
---
-ALTER TABLE `comments`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `elements`
---
-ALTER TABLE `elements`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `events`
---
-ALTER TABLE `events`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `fav`
---
-ALTER TABLE `fav`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `feed`
---
-ALTER TABLE `feed`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `files`
---
-ALTER TABLE `files`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `folders`
---
-ALTER TABLE `folders`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `groupAttachments`
---
-ALTER TABLE `groupAttachments`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `groups`
---
-ALTER TABLE `groups`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `internLinks`
---
-ALTER TABLE `internLinks`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `links`
---
-ALTER TABLE `links`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `messages`
---
-ALTER TABLE `messages`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `personalEvents`
---
-ALTER TABLE `personalEvents`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `playlists`
---
-ALTER TABLE `playlists`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `sessions`
---
-ALTER TABLE `sessions`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `staticContents`
---
-ALTER TABLE `staticContents`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `tasks`
---
-ALTER TABLE `tasks`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `user`
---
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`userid`);
-
---
--- Indexes for table `userGroups`
+-- Indizes für die Tabelle `userGroups`
 --
 ALTER TABLE `userGroups`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user_privacy_rights`
+-- Indizes für die Tabelle `user_privacy_rights`
 --
 ALTER TABLE `user_privacy_rights`
   ADD PRIMARY KEY (`userid`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT für exportierte Tabellen
 --
 
 --
--- AUTO_INCREMENT for table `adminMessages`
+-- AUTO_INCREMENT für Tabelle `adminMessages`
 --
 ALTER TABLE `adminMessages`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `comments`
+-- AUTO_INCREMENT für Tabelle `appCenterApps`
+--
+ALTER TABLE `appCenterApps`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT für Tabelle `comments`
 --
 ALTER TABLE `comments`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `elements`
+-- AUTO_INCREMENT für Tabelle `elements`
 --
 ALTER TABLE `elements`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
--- AUTO_INCREMENT for table `events`
+-- AUTO_INCREMENT für Tabelle `events`
 --
 ALTER TABLE `events`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `fav`
+-- AUTO_INCREMENT für Tabelle `fav`
 --
 ALTER TABLE `fav`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `feed`
+-- AUTO_INCREMENT für Tabelle `feed`
 --
 ALTER TABLE `feed`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
--- AUTO_INCREMENT for table `files`
+-- AUTO_INCREMENT für Tabelle `files`
 --
 ALTER TABLE `files`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
--- AUTO_INCREMENT for table `folders`
+-- AUTO_INCREMENT für Tabelle `folders`
 --
 ALTER TABLE `folders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
--- AUTO_INCREMENT for table `groupAttachments`
+-- AUTO_INCREMENT für Tabelle `groupAttachments`
 --
 ALTER TABLE `groupAttachments`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `groups`
+-- AUTO_INCREMENT für Tabelle `groups`
 --
 ALTER TABLE `groups`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `internLinks`
+-- AUTO_INCREMENT für Tabelle `internLinks`
 --
 ALTER TABLE `internLinks`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `links`
+-- AUTO_INCREMENT für Tabelle `links`
 --
 ALTER TABLE `links`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `messages`
+-- AUTO_INCREMENT für Tabelle `messages`
 --
 ALTER TABLE `messages`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `personalEvents`
+-- AUTO_INCREMENT für Tabelle `personalEvents`
 --
 ALTER TABLE `personalEvents`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `playlists`
+-- AUTO_INCREMENT für Tabelle `playlists`
 --
 ALTER TABLE `playlists`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `sessions`
+-- AUTO_INCREMENT für Tabelle `sessions`
 --
 ALTER TABLE `sessions`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `staticContents`
+-- AUTO_INCREMENT für Tabelle `staticContents`
 --
 ALTER TABLE `staticContents`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
--- AUTO_INCREMENT for table `tasks`
+-- AUTO_INCREMENT für Tabelle `tasks`
 --
 ALTER TABLE `tasks`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `user`
+-- AUTO_INCREMENT für Tabelle `user`
 --
 ALTER TABLE `user`
-  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
--- AUTO_INCREMENT for table `userGroups`
+-- AUTO_INCREMENT für Tabelle `userGroups`
 --
 ALTER TABLE `userGroups`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
