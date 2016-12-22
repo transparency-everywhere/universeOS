@@ -1,8 +1,8 @@
 <?php
 
 //disable error reporting
-error_reporting(0);
-//@ini_set('display_errors', 0);
+//error_reporting(E_ALL);
+ini_set('display_errors', 0);
 
 
 //include dbConfig
@@ -31,6 +31,7 @@ define('uni_config_database_user', uniConfig::$db_user);
 define('uni_config_database_password',  uniConfig::$db_password);
 define('uni_config_database_name',  uniConfig::$db_name);
 define('universeBasePath',  uniConfig::$uni_basepath);
+define('uni_config_url',  uniConfig::$uni_url);
 
 define('analytic_script',  "<!-- Piwik --> <script type=\"text/javascript\"> var _paq = _paq || []; _paq.push(['trackPageView']); _paq.push(['enableLinkTracking']); (function() { var u=\"//analytics.transparency-everywhere.com/piwik/\"; _paq.push(['setTrackerUrl', u+'piwik.php']); _paq.push(['setSiteId', 2]); var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s); })(); </script> <noscript><p><img src=\"//analytics.transparency-everywhere.com/piwik/piwik.php?idsite=2\" style=\"border:0;\" alt=\"\" /></p></noscript> <!-- End Piwik Code -->");
 ?>
