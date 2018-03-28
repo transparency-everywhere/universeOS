@@ -21,11 +21,6 @@ We try to get the script as secure as possible. It is important to point out the
     3. Well written and well documented code
 
 
-Advertising
-------------
-We think that the universeOS should not be a comerical project. But we also now, that we are trying to compete with services which gather personal data and which can generete enourmous profits with personalized advertising services. I think we should look for ways of advertising methods, which are working without personalized data. (Nic, please discuss!)
-
-
 
 =Recent=
 ----------
@@ -37,7 +32,7 @@ We think that the universeOS should not be a comerical project. But we also now,
         thousend different column names for user (author, owner, creator, user etc) instead `user`
         chat.show(), feed.show(), buddylist.show() etc. use application.show('buddylist') instead
 
--add ftp, dropbox etc to the filesystem
+-add ftp, dropbox like service etc to the filesystem
 
 -XSS
     check php classes for sanitizeText()
@@ -184,7 +179,7 @@ Chat
 
 Filesystem
     Folders and Collections
-    showCollection
+    showCollections
 
 
 Elements
