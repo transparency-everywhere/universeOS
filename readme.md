@@ -1,3 +1,7 @@
+*This Repo is discontinued. We started to rewrite the whole system, which you can fine here:
+https://gitlab.com/creators-of-the-universe*
+
+
 The universeOS
 -----------------
 The universeOS is a Project which tries to give users the possibility to "share a desktop" with friends, co-workers or like-minded person.
